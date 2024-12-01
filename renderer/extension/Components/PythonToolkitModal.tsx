@@ -2,9 +2,9 @@ import {Button, Divider, Modal, ModalBody, ModalContent, ModalFooter, ModalHeade
 import {Dispatch, Key, SetStateAction, useState} from 'react';
 
 import {modalMotionProps} from '../../src/App/Utils/Constants';
-import InstalledPythons from './InstalledPythons';
-import PythonPackageManager from './PythonPackageManager';
-import VenvPython from './VenvPython';
+import InstalledPythons from './InstalledPythons/InstalledPythons';
+import PythonPackageManager from './InstalledPythons/PythonPackageManager';
+import VenvPython from './VenvPython/VenvPython';
 
 type ModalProps = {
   isOpen: boolean;

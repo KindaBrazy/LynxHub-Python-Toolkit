@@ -1,6 +1,6 @@
 import {Button} from '@nextui-org/react';
 
-import {getIconByName} from '../../src/assets/icons/SvgIconsContainer';
+import {getIconByName} from '../../../src/assets/icons/SvgIconsContainer';
 import PythonInstalledCard from './PythonInstalledCard';
 
 export default function InstalledPythons() {
