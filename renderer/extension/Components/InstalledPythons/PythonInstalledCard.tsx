@@ -1,32 +1,41 @@
 import {Button, Chip, Progress} from '@nextui-org/react';
 import {Card} from 'antd';
+import {isNil} from 'lodash';
+import {useMemo} from 'react';
 
+import {formatSizeMB} from '../../../../cross/CrossUtils';
+import rendererIpc from '../../../src/App/RendererIpc';
 import {getIconByName} from '../../../src/assets/icons/SvgIconsContainer';
+import {PythonInstallation, UninstallResult} from '../../Types';
 
 type Props = {
-  version: string;
-  isDefault: boolean;
-  architecture: string;
-  location: string;
-  diskUsage: number;
+  python: PythonInstallation;
+  diskUsage: {path: string; value: number | undefined}[];
   maxDiskValue: number;
 };
-export default function PythonInstalledCard({
-  version,
-  isDefault,
-  location,
-  architecture,
-  diskUsage,
-  maxDiskValue,
-}: Props) {
+export default function PythonInstalledCard({python, diskUsage, maxDiskValue}: Props) {
+  const size = useMemo(() => {
+    return diskUsage.find(usage => usage.path === python.installFolder)?.value;
+  }, [diskUsage]);
+
   const makeDefault = () => {};
-  const remove = () => {};
+
+  const remove = () => {
+    window.electron.ipcRenderer.invoke('uninstall-python', python.installPath).then((result: UninstallResult) => {
+      console.log(result);
+    });
+  };
+
+  const openPath = () => {
+    rendererIpc.file.openPath(python.installFolder);
+  };
+
   return (
     <Card
       className={
         `w-[30rem] transition-colors duration-300 shadow-small` +
         ` ${
-          isDefault
+          python.isDefault
             ? 'border-success border-opacity-60 hover:border-opacity-100'
             : 'dark:hover:border-white/20 hover:border-black/20 '
         }`
@@ -35,17 +44,17 @@ export default function PythonInstalledCard({
         <div className="flex flex-row justify-between items-center">
           <div className="flex flex-col my-3">
             <span>
-              Python {version}
-              {isDefault && (
+              Python {python.version}
+              {python.isDefault && (
                 <Chip size="sm" radius="sm" variant="light" color="success">
                   Default
                 </Chip>
               )}
             </span>
-            <span className="text-tiny text-foreground-500">{architecture}</span>
+            <span className="text-tiny text-foreground-500">{python.architecture}</span>
           </div>
           <div className="space-x-2 flex items-center">
-            {!isDefault && (
+            {!python.isDefault && (
               <Button size="sm" variant="light" onPress={makeDefault}>
                 Set as Default
               </Button>
@@ -58,17 +67,19 @@ export default function PythonInstalledCard({
       }
       classNames={{body: 'gap-y-4'}}>
       <div className="gap-y-4 flex flex-col">
-        <Button size="sm" variant="light" className="flex flex-row justify-start -ml-3">
+        <Button size="sm" variant="light" onPress={openPath} className="flex flex-row justify-start -ml-3">
           {getIconByName('Folder2', {className: 'flex-shrink-0'})}
-          <span className="truncate">{location}</span>
+          <span className="truncate">{python.installFolder}</span>
         </Button>
         <Progress
           size="sm"
           minValue={0}
-          value={diskUsage}
+          value={size}
+          color="secondary"
           label="Disk Usage:"
           maxValue={maxDiskValue}
-          valueLabel={`${diskUsage} MB`}
+          isIndeterminate={isNil(size)}
+          valueLabel={formatSizeMB(size || 0)}
           showValueLabel
         />
       </div>
