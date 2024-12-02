@@ -8,7 +8,7 @@ export default function VenvPython() {
     <div className="w-full flex flex-col gap-y-4">
       <div className="w-full flex flex-row justify-between items-center">
         <span className="font-bold">Virtual Environments</span>
-        <Button radius="sm" variant="flat" startContent={getIconByName('Add')}>
+        <Button radius="sm" variant="solid" startContent={getIconByName('Add')}>
           Create Environments
         </Button>
       </div>

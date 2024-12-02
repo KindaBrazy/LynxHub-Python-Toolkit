@@ -8,7 +8,7 @@ export default function InstalledPythons() {
     <div className="w-full flex flex-col gap-y-4">
       <div className="w-full flex flex-row justify-between items-center">
         <span className="font-bold">Installed Versions</span>
-        <Button radius="sm" variant="flat" startContent={getIconByName('Add')}>
+        <Button radius="sm" variant="solid" startContent={getIconByName('Add')}>
           Install New Version
         </Button>
       </div>

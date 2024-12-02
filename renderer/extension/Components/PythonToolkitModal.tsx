@@ -3,7 +3,7 @@ import {Dispatch, Key, SetStateAction, useState} from 'react';
 
 import {modalMotionProps} from '../../src/App/Utils/Constants';
 import InstalledPythons from './InstalledPythons/InstalledPythons';
-import PythonPackageManager from './InstalledPythons/PythonPackageManager';
+import PythonPackageManager from './PackagePython/PythonPackageManager';
 import VenvPython from './VenvPython/VenvPython';
 
 type ModalProps = {
@@ -26,7 +26,7 @@ export default function PythonToolkitModal({isOpen, setIsOpen}: ModalProps) {
       motionProps={modalMotionProps}
       classNames={{backdrop: '!top-10', closeButton: 'cursor-default', wrapper: '!top-10'}}
       hideCloseButton>
-      <ModalContent>
+      <ModalContent className="overflow-hidden">
         <ModalHeader>
           <Tabs color="primary" onSelectionChange={setCurrentTab} selectedKey={currentTab.toString()} fullWidth>
             <Tab key="installation" title="Installations" />
