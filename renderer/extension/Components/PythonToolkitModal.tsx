@@ -21,8 +21,8 @@ export default function PythonToolkitModal({isOpen, setIsOpen}: ModalProps) {
       isOpen={isOpen}
       onClose={onClose}
       isDismissable={false}
-      className="max-w-[90%]"
       scrollBehavior="inside"
+      className="max-w-[90%]"
       motionProps={modalMotionProps}
       classNames={{backdrop: '!top-10', closeButton: 'cursor-default', wrapper: '!top-10'}}
       hideCloseButton>

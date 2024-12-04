@@ -1,24 +1,35 @@
 import {Button, Chip, Progress} from '@nextui-org/react';
 import {Card} from 'antd';
-import {isNil} from 'lodash';
+import {isNil, startCase} from 'lodash';
 import {useMemo} from 'react';
 
+import {PythonInstallation, UninstallResult} from '../../../../cross/CrossExtensions';
 import {formatSizeMB} from '../../../../cross/CrossUtils';
 import rendererIpc from '../../../src/App/RendererIpc';
 import {getIconByName} from '../../../src/assets/icons/SvgIconsContainer';
-import {PythonInstallation, UninstallResult} from '../../Types';
 
 type Props = {
   python: PythonInstallation;
   diskUsage: {path: string; value: number | undefined}[];
   maxDiskValue: number;
+  updateDefault: (installFolder: string) => void;
 };
-export default function PythonInstalledCard({python, diskUsage, maxDiskValue}: Props) {
+export default function PythonInstalledCard({python, diskUsage, maxDiskValue, updateDefault}: Props) {
   const size = useMemo(() => {
     return diskUsage.find(usage => usage.path === python.installFolder)?.value;
   }, [diskUsage]);
 
-  const makeDefault = () => {};
+  const makeDefault = () => {
+    window.electron.ipcRenderer
+      .invoke('set-default-python', python.installFolder)
+      .then(() => {
+        updateDefault(python.installFolder);
+        console.log('deafult set');
+      })
+      .catch(error => {
+        console.error(error);
+      });
+  };
 
   const remove = () => {
     window.electron.ipcRenderer.invoke('uninstall-python', python.installPath).then((result: UninstallResult) => {
@@ -30,10 +41,21 @@ export default function PythonInstalledCard({python, diskUsage, maxDiskValue}: P
     rendererIpc.file.openPath(python.installFolder);
   };
 
+  const installTypeColor = useMemo(() => {
+    switch (python.installationType) {
+      case 'official':
+        return 'text-[#28A745]';
+      case 'conda':
+        return 'text-[#007BFF]';
+      case 'other':
+        return 'text-[#FFA500FFA500]';
+    }
+  }, [python.installationType]);
+
   return (
     <Card
       className={
-        `w-[30rem] transition-colors duration-300 shadow-small` +
+        `w-[27rem] transition-colors duration-300 shadow-small` +
         ` ${
           python.isDefault
             ? 'border-success border-opacity-60 hover:border-opacity-100'
@@ -51,7 +73,10 @@ export default function PythonInstalledCard({python, diskUsage, maxDiskValue}: P
                 </Chip>
               )}
             </span>
-            <span className="text-tiny text-foreground-500">{python.architecture}</span>
+            <div>
+              <span className="text-tiny text-foreground-500">{python.architecture}</span>
+              <span className={'text-tiny ml-2 ' + installTypeColor}>{startCase(python.installationType)}</span>
+            </div>
           </div>
           <div className="space-x-2 flex items-center">
             {!python.isDefault && (
@@ -68,7 +93,7 @@ export default function PythonInstalledCard({python, diskUsage, maxDiskValue}: P
       classNames={{body: 'gap-y-4'}}>
       <div className="gap-y-4 flex flex-col">
         <Button size="sm" variant="light" onPress={openPath} className="flex flex-row justify-start -ml-3">
-          {getIconByName('Folder2', {className: 'flex-shrink-0'})}
+          {getIconByName('OpenFolder', {className: 'flex-shrink-0'})}
           <span className="truncate">{python.installFolder}</span>
         </Button>
         <Progress

@@ -1,16 +1,23 @@
 import {ipcMain} from 'electron';
 
 import {ExtensionMainApi, MainExtensionUtils} from '../Managements/Plugin/Extensions/ExtensionTypes_Main';
-import PythonDetector from './PythonDetector';
+import {getAvailablePythonVersions} from './Utils/Available';
+import {setDefaultPython} from './Utils/DefaultPython';
+import detectPythonInstallations from './Utils/Detector';
+import installPython from './Utils/Installer';
+import uninstallPython from './Utils/Uninstaller';
+
+interface PythonVersion {
+  version: string;
+  url: string;
+}
 
 export async function initialExtension(lynxApi: ExtensionMainApi, _utils: MainExtensionUtils) {
   lynxApi.listenForChannels(() => {
-    const detector = new PythonDetector();
-    ipcMain.handle('get-pythons', async () => {
-      return await detector.detectPythonInstallations();
-    });
-    ipcMain.handle('uninstall-python', async (_, path: string) => {
-      return await detector.uninstallPython(path);
-    });
+    ipcMain.handle('get-pythons', () => detectPythonInstallations());
+    ipcMain.handle('uninstall-python', (_, path: string) => uninstallPython(path));
+    ipcMain.handle('get-available-pythons', () => getAvailablePythonVersions());
+    ipcMain.handle('install-python', (_, version: PythonVersion) => installPython(version));
+    ipcMain.handle('set-default-python', (_, pythonPath: string) => setDefaultPython(pythonPath));
   });
 }

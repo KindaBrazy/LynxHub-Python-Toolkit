@@ -15,7 +15,10 @@ function ToolsPage() {
   };
   return (
     <>
-      <Button onPress={openModal} className="w-60 h-auto dark:bg-[#1b1b1b] bg-white py-4 shadow-small">
+      <Button
+        variant="faded"
+        onPress={openModal}
+        className="w-60 h-auto py-4 shadow-small hover:shadow-medium transition-shadow duration-300">
         <div className="space-y-4 size-full">
           <span className="justify-center flex font-semibold text-[13pt]">Python Toolkit</span>
           <Python_Icon className="size-full p-4 opacity-70" />
