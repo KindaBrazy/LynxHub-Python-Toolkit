@@ -29,7 +29,6 @@ export async function setDefaultPython(pythonPath: string): Promise<void> {
         break;
       case 'darwin':
       case 'linux':
-        await setDefaultPythonUnix(pythonPath);
         break;
     }
     console.log(`Python ${pythonPath} set as default`);
@@ -85,16 +84,4 @@ async function setDefaultPythonWindows(pythonPath: string): Promise<void> {
     const errorMessage = error instanceof Error ? error.message : String(error);
     throw new Error(`Failed to update Python path: ${errorMessage}`);
   }
-}
-
-async function setDefaultPythonUnix(version: string): Promise<void> {
-  const pythonBinary =
-    platform() === 'darwin'
-      ? `/usr/local/bin/python${version.split('.').slice(0, 2).join('.')}`
-      : `/usr/local/bin/python${version}`;
-
-  await execAsync(`
-            sudo update-alternatives --install /usr/bin/python python "${pythonBinary}" 1 && \
-            sudo update-alternatives --set python "${pythonBinary}"
-        `);
 }

@@ -24,25 +24,6 @@ const commonPaths: {[key: string]: string[]} = {
     '%USERPROFILE%\\Miniconda3',
     '%USERPROFILE%\\Miniconda3\\envs*',
   ],
-  darwin: [
-    '/usr/local/bin/python*',
-    '/usr/bin/python*',
-    '/opt/homebrew/bin/python*',
-    '~/anaconda3',
-    '~/anaconda3/envs/*',
-    '~/miniconda3',
-    '~/miniconda3/envs/*',
-    '/Library/Frameworks/Python.framework/Versions/*',
-  ],
-  linux: [
-    '/usr/bin/python*',
-    '/usr/local/bin/python*',
-    '~/anaconda3',
-    '~/anaconda3/envs/*',
-    '~/miniconda3',
-    '~/miniconda3/envs/*',
-    '/opt/python*',
-  ],
 };
 
 function matchPattern(filename: string, pattern: string): boolean {

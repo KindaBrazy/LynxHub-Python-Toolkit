@@ -1,8 +1,10 @@
-import {exec} from 'node:child_process';
-import {dirname, join} from 'node:path';
+import {exec, execFile} from 'node:child_process';
+import {readdirSync} from 'node:fs';
+import {homedir} from 'node:os';
+import path, {dirname} from 'node:path';
 import {promisify} from 'node:util';
 
-import {existsSync, promises} from 'graceful-fs';
+import {existsSync} from 'graceful-fs';
 import {platform} from 'os';
 
 import {removeDir} from '../../Managements/Ipc/Methods/IpcMethods';
@@ -28,99 +30,94 @@ async function uninstallCondaPython(pythonPath: string): Promise<{success: boole
 }
 
 async function uninstallWindowsPython(pythonPath: string): Promise<{success: boolean; message: string}> {
-  try {
-    const version = await parseVersion(pythonPath);
-    const versionString = `${version.major}.${version.minor}`;
-    console.log('versionString', versionString);
+  const version = await parseVersion(pythonPath);
+  const versionString = `${version.major}.${version.minor}`;
 
-    // Fallback to manual removal
-    await removeDir(dirname(pythonPath));
-    await cleanupWindowsRegistry(versionString);
-    await removePythonFromPath();
+  try {
+    const installerToUninstall = findPythonInstallerByVersion(versionString);
+
+    if (!installerToUninstall) {
+      throw new Error(`No Python installer found for version ${version}`);
+    }
+
+    await uninstallPythonWindows(installerToUninstall);
     return {
       success: true,
       message: 'Successfully removed Python installation manually',
     };
-  } catch (error) {
-    return {
-      success: false,
-      // @ts-ignore-next-line
-      message: `Failed to uninstall Python on Windows: ${error.message}`,
-    };
+  } catch {
+    try {
+      // Fallback to manual removal
+      await removeDir(dirname(pythonPath));
+      await cleanupWindowsRegistry(versionString);
+      await removePythonFromPath();
+      return {
+        success: true,
+        message: 'Successfully removed Python installation manually',
+      };
+    } catch (error) {
+      return {
+        success: false,
+        // @ts-ignore-next-line
+        message: `Failed to uninstall Python on Windows: ${error.message}`,
+      };
+    }
   }
 }
 
-async function uninstallMacOSPython(pythonPath: string): Promise<{success: boolean; message: string}> {
-  try {
-    // Check if it's a framework installation
-    const isFramework = pythonPath.includes('Python.framework');
-
-    if (isFramework) {
-      const frameworkPath = pythonPath.split('/Python.framework')[0] + '/Python.framework';
-      await removeDir(frameworkPath);
-    } else {
-      await removeDir(pythonPath);
+async function uninstallPythonWindows(installerPath: string): Promise<string> {
+  return new Promise((resolve, reject) => {
+    // Verify installer exists
+    if (!existsSync(installerPath)) {
+      return reject(new Error(`Installer not found at ${installerPath}`));
     }
 
-    // Remove symlinks
-    const binPath = '/usr/local/bin';
-    const version = await parseVersion(pythonPath);
-    const versionString = `${version.major}.${version.minor}`;
+    // Construct uninstall arguments
+    const uninstallArgs = [
+      '/uninstall',
+      '/quiet', // Similar to silent mode
+    ];
 
-    const symlinks = [`python${versionString}`, `pip${versionString}`, `python${version.major}`, `pip${version.major}`];
-
-    for (const link of symlinks) {
-      try {
-        await promises.unlink(join(binPath, link));
-      } catch (error) {
-        // Ignore errors for non-existent symlinks
+    // Execute the uninstaller
+    execFile(installerPath, uninstallArgs, (error, stdout) => {
+      if (error) {
+        console.error('Uninstall error:', error);
+        return reject(error);
       }
-    }
 
-    return {
-      success: true,
-      message: 'Successfully uninstalled Python on macOS',
-    };
-  } catch (error) {
-    return {
-      success: false,
-      // @ts-ignore-next-line
-      message: `Failed to uninstall Python on macOS: ${error.message}`,
-    };
-  }
+      console.log('Python uninstall output:', stdout);
+      resolve('Python uninstalled successfully');
+    });
+  });
 }
 
-async function uninstallLinuxPython(pythonPath: string): Promise<{success: boolean; message: string}> {
+const defaultPackageCachePath = path.join(homedir(), 'AppData', 'Local', 'Package Cache');
+
+function findPythonInstallerByVersion(version: string): string | null {
   try {
-    // Check if installed via package manager
-    const {stdout: packageManager} = await execAsync('which apt-get || which dnf || which yum');
+    // Read directories in Package Cache
+    const directories = readdirSync(defaultPackageCachePath);
 
-    if (packageManager) {
-      const version = await parseVersion(pythonPath);
-      const packageName = `python${version.major}.${version.minor}`;
+    // Normalize version input (remove any leading/trailing whitespace)
+    const normalizedVersion = version.trim();
 
-      if (packageManager.includes('apt-get')) {
-        await execAsync(`sudo apt-get remove -y ${packageName}`);
-      } else if (packageManager.includes('dnf')) {
-        await execAsync(`sudo dnf remove -y ${packageName}`);
-      } else if (packageManager.includes('yum')) {
-        await execAsync(`sudo yum remove -y ${packageName}`);
-      }
-    } else {
-      // Manual installation, remove directory
-      await removeDir(pythonPath);
+    // Find matching installer
+    const matchingInstaller = directories.find(
+      dir =>
+        // Check if directory contains the exact version
+        dir.includes(`python-${normalizedVersion}`) && dir.endsWith('-amd64.exe'),
+    );
+
+    if (!matchingInstaller) {
+      console.log(`No installer found for Python version ${version}`);
+      return null;
     }
 
-    return {
-      success: true,
-      message: 'Successfully uninstalled Python on Linux',
-    };
+    // Construct full path to the installer
+    return path.join(defaultPackageCachePath, matchingInstaller, `python-${normalizedVersion}-amd64.exe`);
   } catch (error) {
-    return {
-      success: false,
-      // @ts-ignore-next-line
-      message: `Failed to uninstall Python on Linux: ${error.message}`,
-    };
+    console.error('Error searching for Python installers:', error);
+    return null;
   }
 }
 
@@ -214,9 +211,7 @@ async function uninstallOfficialPython(pythonPath: string): Promise<{success: bo
       case 'win32':
         return await uninstallWindowsPython(pythonPath);
       case 'darwin':
-        return await uninstallMacOSPython(pythonPath);
       case 'linux':
-        return await uninstallLinuxPython(pythonPath);
       default:
         return {
           success: false,

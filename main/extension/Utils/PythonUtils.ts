@@ -51,9 +51,8 @@ export function getBaseInstallPath(): string {
     case 'win32':
       return path.join(homedir(), 'AppData', 'Local', 'Programs', 'Python');
     case 'darwin':
-      return '/usr/local/opt/python';
     default:
-      return '/usr/local/python';
+      return '';
   }
 }
 

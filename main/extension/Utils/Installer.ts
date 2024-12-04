@@ -4,11 +4,9 @@ import path from 'node:path';
 import {exec} from 'child_process';
 import {app, BrowserWindow} from 'electron';
 import {download} from 'electron-dl';
-import * as tar from 'tar';
 import {promisify} from 'util';
 
 import {PythonVersion} from '../../../cross/CrossExtensions';
-import {getBaseInstallPath} from './PythonUtils';
 
 const execAsync = promisify(exec);
 
@@ -24,10 +22,8 @@ export default async function installPython(version: PythonVersion): Promise<voi
         await installOnWindows(file.savePath);
         break;
       case 'darwin':
-        await installOnMacOS(file.savePath);
-        break;
       default:
-        await installOnLinux(file.savePath, version.version);
+        break;
     }
 
     console.log(`Python ${version.version} installed successfully`);
@@ -49,26 +45,4 @@ async function installOnWindows(installerPath: string): Promise<void> {
           });
       });
   });
-}
-
-async function installOnMacOS(installerPath: string): Promise<void> {
-  await execAsync(`sudo installer -pkg "${installerPath}" -target /`);
-}
-
-async function installOnLinux(tarPath: string, version: string): Promise<void> {
-  const extractPath = path.join(getBaseInstallPath(), `Python-${version}`);
-
-  // Extract
-  await tar.x({
-    file: tarPath,
-    cwd: getBaseInstallPath(),
-  });
-
-  // Configure and install
-  await execAsync(`
-            cd "${extractPath}" && \
-            ./configure --enable-optimizations && \
-            make -j $(nproc) && \
-            sudo make altinstall
-        `);
 }
