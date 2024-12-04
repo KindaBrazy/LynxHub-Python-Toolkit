@@ -1,7 +1,7 @@
-import {access} from 'node:fs/promises';
 import {platform} from 'node:os';
 
 import {exec} from 'child_process';
+import {promises} from 'graceful-fs';
 import {promisify} from 'util';
 import which from 'which';
 
@@ -10,7 +10,7 @@ const execAsync = promisify(exec);
 // Helper function to validate path exists
 async function validatePath(path: string): Promise<boolean> {
   try {
-    await access(path);
+    await promises.access(path);
     return true;
   } catch {
     return false;

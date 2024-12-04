@@ -1,5 +1,5 @@
 import {platform} from 'node:os';
-import path from 'node:path';
+import {join} from 'node:path';
 
 import {exec} from 'child_process';
 import {app, BrowserWindow} from 'electron';
@@ -14,7 +14,7 @@ export default async function installPython(version: PythonVersion): Promise<voi
   try {
     const file = await download(BrowserWindow.getFocusedWindow()!, version.url, {
       showBadge: false,
-      directory: path.join(app.getPath('downloads'), 'LynxHub'),
+      directory: join(app.getPath('downloads'), 'LynxHub'),
     });
 
     switch (platform()) {

@@ -1,8 +1,8 @@
 import {platform} from 'node:os';
-import path from 'node:path';
+import {join} from 'node:path';
 
 import {exec} from 'child_process';
-import {existsSync} from 'fs';
+import {existsSync} from 'graceful-fs';
 import {homedir} from 'os';
 import {promisify} from 'util';
 
@@ -49,7 +49,7 @@ export async function detectInstallationType(pythonPath: string): Promise<Python
 export function getBaseInstallPath(): string {
   switch (platform()) {
     case 'win32':
-      return path.join(homedir(), 'AppData', 'Local', 'Programs', 'Python');
+      return join(homedir(), 'AppData', 'Local', 'Programs', 'Python');
     case 'darwin':
     default:
       return '';

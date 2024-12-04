@@ -1,16 +1,25 @@
 import {exec, execFile} from 'node:child_process';
-import {readdirSync} from 'node:fs';
 import {homedir} from 'node:os';
-import path, {dirname} from 'node:path';
+import {dirname, join, resolve} from 'node:path';
 import {promisify} from 'node:util';
 
-import {existsSync} from 'graceful-fs';
+import {existsSync, promises, readdirSync} from 'graceful-fs';
 import {platform} from 'os';
 
-import {removeDir} from '../../Managements/Ipc/Methods/IpcMethods';
 import {detectInstallationType} from './PythonUtils';
 
 const execAsync = promisify(exec);
+
+async function removeDir(dir: string): Promise<void> {
+  try {
+    const resolvedPath = resolve(dir);
+    console.log(`Removing directory: ${resolvedPath}`);
+    return await promises.rm(resolvedPath, {recursive: true, force: true});
+  } catch (e) {
+    console.error(e);
+    throw e;
+  }
+}
 
 async function uninstallCondaPython(pythonPath: string): Promise<{success: boolean; message: string}> {
   try {
@@ -91,7 +100,7 @@ async function uninstallPythonWindows(installerPath: string): Promise<string> {
   });
 }
 
-const defaultPackageCachePath = path.join(homedir(), 'AppData', 'Local', 'Package Cache');
+const defaultPackageCachePath = join(homedir(), 'AppData', 'Local', 'Package Cache');
 
 function findPythonInstallerByVersion(version: string): string | null {
   try {
@@ -114,7 +123,7 @@ function findPythonInstallerByVersion(version: string): string | null {
     }
 
     // Construct full path to the installer
-    return path.join(defaultPackageCachePath, matchingInstaller, `python-${normalizedVersion}-amd64.exe`);
+    return join(defaultPackageCachePath, matchingInstaller, `python-${normalizedVersion}-amd64.exe`);
   } catch (error) {
     console.error('Error searching for Python installers:', error);
     return null;

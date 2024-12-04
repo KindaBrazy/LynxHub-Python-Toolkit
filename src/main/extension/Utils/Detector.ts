@@ -1,7 +1,7 @@
 import {basename, dirname, join} from 'node:path';
 
 import {exec} from 'child_process';
-import {existsSync, promises as fs} from 'fs';
+import {existsSync, promises} from 'graceful-fs';
 import {arch, homedir, platform} from 'os';
 import {promisify} from 'util';
 import which from 'which';
@@ -34,7 +34,7 @@ function matchPattern(filename: string, pattern: string): boolean {
 
 async function fileExists(filePath: string): Promise<boolean> {
   try {
-    await fs.access(filePath);
+    await promises.access(filePath);
     return true;
   } catch {
     return false;
@@ -77,21 +77,21 @@ async function findInCommonLocations(): Promise<string[]> {
     const pattern = basename(expandedPath);
 
     try {
-      const files = await fs.readdir(basePath);
+      const files = await promises.readdir(basePath);
       for (const file of files) {
         if (matchPattern(file, pattern)) {
           const fullPath = join(basePath, file);
-          const stats = await fs.stat(fullPath);
+          const stats = await promises.stat(fullPath);
           if (stats.isDirectory()) {
             const pythonExecutable = join(fullPath, 'python.exe');
             if (await fileExists(pythonExecutable)) {
               expandedPaths.push(pythonExecutable);
             } else {
               // Check for subdirectories
-              const subFiles = await fs.readdir(fullPath);
+              const subFiles = await promises.readdir(fullPath);
               for (const subFile of subFiles) {
                 const subPath = join(fullPath, subFile);
-                const subStats = await fs.stat(subPath);
+                const subStats = await promises.stat(subPath);
                 if (subStats.isDirectory()) {
                   const subPythonExecutable = join(subPath, 'python.exe');
                   if (await fileExists(subPythonExecutable)) {
