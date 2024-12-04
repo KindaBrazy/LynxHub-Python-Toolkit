@@ -3,7 +3,8 @@ import {Button} from '@nextui-org/react';
 import {getIconByName} from '../../../src/assets/icons/SvgIconsContainer';
 import PythonVenvCard from './PythonVenvCard';
 
-export default function VenvPython() {
+export default function VenvPython({visible}: {visible: boolean}) {
+  if (!visible) return null;
   return (
     <div className="w-full flex flex-col gap-y-4">
       <div className="w-full flex flex-row justify-between items-center">

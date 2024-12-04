@@ -10,7 +10,7 @@ import {getIconByName} from '../../../src/assets/icons/SvgIconsContainer';
 import InstallNewPythonModal from './InstallNewPythonModal';
 import PythonInstalledCard from './PythonInstalledCard';
 
-export default function InstalledPythons() {
+export default function InstalledPythons({visible}: {visible: boolean}) {
   const [pythons, setPythons] = useState<PythonInstallation[]>([]);
   const [loadingPythons, setLoadingPythons] = useState<boolean>(false);
   const [diskUsage, setDiskUsage] = useState<{path: string; value: number | undefined}[]>([]);
@@ -80,6 +80,8 @@ export default function InstalledPythons() {
     );
   };
 
+  if (!visible) return null;
+
   return (
     <div className="w-full flex flex-col gap-y-4">
       <InstallNewPythonModal
@@ -96,7 +98,11 @@ export default function InstalledPythons() {
       </div>
       <div className={`flex flex-row gap-8 flex-wrap ${(loadingPythons || isEmpty(pythons)) && 'justify-center'}`}>
         {loadingPythons ? (
-          <CircularProgress size="lg" label="Detecting pythons..." classNames={{indicator: 'stroke-[#ffe66e]'}} />
+          <CircularProgress
+            size="lg"
+            label="Searching for installed pythons..."
+            classNames={{indicator: 'stroke-[#ffe66e]'}}
+          />
         ) : isEmpty(pythons) ? (
           <Empty description="No Python installation detected." />
         ) : (

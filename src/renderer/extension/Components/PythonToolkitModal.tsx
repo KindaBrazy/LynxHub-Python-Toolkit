@@ -24,7 +24,7 @@ export default function PythonToolkitModal({isOpen, setIsOpen}: ModalProps) {
       scrollBehavior="inside"
       className="max-w-[90%]"
       motionProps={modalMotionProps}
-      classNames={{backdrop: '!top-10', wrapper: '!top-10 pb-6'}}
+      classNames={{backdrop: '!top-10', wrapper: '!top-10 pb-8'}}
       hideCloseButton>
       <ModalContent className="overflow-hidden">
         <ModalHeader>
@@ -36,11 +36,9 @@ export default function PythonToolkitModal({isOpen, setIsOpen}: ModalProps) {
         </ModalHeader>
         <Divider />
         <ModalBody className="scrollbar-hide my-4">
-          <>
-            {currentTab === 'installation' && <InstalledPythons />}
-            {currentTab === 'venv' && <VenvPython />}
-            {currentTab === 'packages' && <PythonPackageManager />}
-          </>
+          <InstalledPythons visible={currentTab === 'installation'} />
+          <VenvPython visible={currentTab === 'venv'} />
+          <PythonPackageManager visible={currentTab === 'packages'} />
         </ModalBody>
         <Divider />
         <ModalFooter>
