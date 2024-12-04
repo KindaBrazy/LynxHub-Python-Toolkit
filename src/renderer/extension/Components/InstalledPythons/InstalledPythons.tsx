@@ -84,7 +84,7 @@ export default function InstalledPythons() {
       </div>
       <div className={`flex flex-row gap-8 flex-wrap ${(loadingPythons || isEmpty(pythons)) && 'justify-center'}`}>
         {loadingPythons ? (
-          <CircularProgress size="lg" label="Detecting pythons..." />
+          <CircularProgress size="lg" label="Detecting pythons..." classNames={{indicator: 'stroke-[#ffe66e]'}} />
         ) : isEmpty(pythons) ? (
           <Empty description="No Python installation detected." />
         ) : (

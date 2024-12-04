@@ -1,5 +1,6 @@
 import {
   Button,
+  CircularProgress,
   Input,
   Link,
   Modal,
@@ -16,7 +17,6 @@ import {useEffect, useState} from 'react';
 
 import {PythonVersion} from '../../../../cross/CrossExtensions';
 import {useAppState} from '../../../src/App/Redux/App/AppReducer';
-import {searchInStrings} from '../../../src/App/Utils/UtilFunctions';
 import {getIconByName} from '../../../src/assets/icons/SvgIconsContainer';
 
 type Props = {
@@ -27,13 +27,19 @@ type Props = {
 export default function InstallNewPythonModal({isOpen, closeModal}: Props) {
   const [versions, setVersions] = useState<PythonVersion[]>([]);
   const [searchVersions, setSearchVersions] = useState<PythonVersion[]>([]);
+  const [loadingList, setLoadingList] = useState<boolean>(false);
+
   const isDarkMode = useAppState('darkMode');
 
   useEffect(() => {
-    window.electron.ipcRenderer.invoke('get-available-pythons').then((result: PythonVersion[]) => {
-      setVersions(result);
-    });
-  }, []);
+    if (isOpen && isEmpty(versions)) {
+      setLoadingList(true);
+      window.electron.ipcRenderer.invoke('get-available-pythons').then((result: PythonVersion[]) => {
+        setVersions(result);
+        setLoadingList(false);
+      });
+    }
+  }, [isOpen, versions]);
 
   const [inputValue, setInputValue] = useState<string>('');
 
@@ -41,7 +47,7 @@ export default function InstallNewPythonModal({isOpen, closeModal}: Props) {
     if (isEmpty(inputValue)) {
       setSearchVersions(versions);
     } else {
-      setSearchVersions(versions.filter(version => searchInStrings(inputValue, [version.version])));
+      setSearchVersions(versions.filter(version => version.version.startsWith(inputValue)));
     }
   }, [inputValue, versions]);
 
@@ -70,7 +76,7 @@ export default function InstallNewPythonModal({isOpen, closeModal}: Props) {
         onClose={closeModal}
         isDismissable={false}
         scrollBehavior="inside"
-        classNames={{backdrop: '!top-10', closeButton: 'cursor-default', wrapper: '!top-10'}}
+        classNames={{backdrop: '!top-10', wrapper: '!top-10 pb-8'}}
         hideCloseButton>
         <ModalContent className="overflow-hidden">
           <ModalHeader className="bg-foreground-100 justify-center">Python Installer</ModalHeader>
@@ -90,17 +96,24 @@ export default function InstallNewPythonModal({isOpen, closeModal}: Props) {
               options={{
                 overflow: {x: 'hidden', y: 'scroll'},
                 scrollbars: {
-                  autoHide: 'scroll',
+                  autoHide: 'move',
                   clickScroll: true,
                   theme: isDarkMode ? 'os-theme-light' : 'os-theme-dark',
                 },
               }}
-              className="pr-3 mr-1 pl-4 pb-4">
+              className={`pr-3 mr-1 pl-4 pb-4`}>
               {!isEmpty(installingVersion) ? (
                 <Progress
                   className="my-4 px-2"
                   label={`Installing Python v${installingVersion}, Please wait...`}
                   isIndeterminate
+                />
+              ) : loadingList ? (
+                <CircularProgress
+                  size="lg"
+                  className="justify-self-center my-4"
+                  label="Loading available pythons..."
+                  classNames={{indicator: 'stroke-[#ffe66e]'}}
                 />
               ) : (
                 <List
@@ -111,7 +124,7 @@ export default function InstallNewPythonModal({isOpen, closeModal}: Props) {
                           Install
                         </Button>,
                       ]}
-                      className="hover:bg-foreground-100 transition-colors duration-300">
+                      className="hover:bg-foreground-100 transition-colors duration-150">
                       <Link size="sm" href={item.url} color="foreground" isExternal showAnchorIcon>
                         {item.version}
                       </Link>
@@ -125,8 +138,8 @@ export default function InstallNewPythonModal({isOpen, closeModal}: Props) {
             </OverlayScrollbarsComponent>
           </ModalBody>
           <ModalFooter className="bg-foreground-100">
-            <Button size="sm" variant="faded" color="warning" onPress={closeModal} fullWidth>
-              Close
+            <Button size="sm" color="danger" variant="faded" onPress={closeModal} fullWidth>
+              Cancel
             </Button>
           </ModalFooter>
         </ModalContent>
