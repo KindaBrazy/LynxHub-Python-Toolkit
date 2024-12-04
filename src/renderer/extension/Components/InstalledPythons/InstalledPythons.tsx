@@ -28,10 +28,8 @@ export default function InstalledPythons() {
     });
   }, [diskUsage]);
 
-  useEffect(() => {
-    setLoadingPythons(true);
+  const getInstalledPythons = () => {
     window.electron.ipcRenderer.invoke('get-pythons').then((result: PythonInstallation[]) => {
-      console.log('get-pythons', result);
       setPythons(result);
       setLoadingPythons(false);
 
@@ -48,6 +46,11 @@ export default function InstalledPythons() {
         });
       }
     });
+  };
+
+  useEffect(() => {
+    setLoadingPythons(true);
+    getInstalledPythons();
   }, []);
 
   const [installModalOpen, setInstallModalOpen] = useState<boolean>(false);
@@ -57,6 +60,10 @@ export default function InstalledPythons() {
   };
   const closeInstallModal = () => {
     setInstallModalOpen(false);
+  };
+
+  const refresh = () => {
+    getInstalledPythons();
   };
 
   const updateDefault = (installFolder: string) => {
@@ -91,6 +98,7 @@ export default function InstalledPythons() {
           pythons.map(python => (
             <PythonInstalledCard
               python={python}
+              refresh={refresh}
               diskUsage={diskUsage}
               key={python.installFolder}
               maxDiskValue={maxDiskValue}

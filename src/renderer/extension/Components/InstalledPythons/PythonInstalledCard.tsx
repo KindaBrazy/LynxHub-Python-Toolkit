@@ -13,8 +13,9 @@ type Props = {
   diskUsage: {path: string; value: number | undefined}[];
   maxDiskValue: number;
   updateDefault: (installFolder: string) => void;
+  refresh: () => void;
 };
-export default function PythonInstalledCard({python, diskUsage, maxDiskValue, updateDefault}: Props) {
+export default function PythonInstalledCard({python, diskUsage, maxDiskValue, updateDefault, refresh}: Props) {
   const size = useMemo(() => {
     return diskUsage.find(usage => usage.path === python.installFolder)?.value;
   }, [diskUsage]);
@@ -32,9 +33,14 @@ export default function PythonInstalledCard({python, diskUsage, maxDiskValue, up
   };
 
   const remove = () => {
-    window.electron.ipcRenderer.invoke('uninstall-python', python.installPath).then((result: UninstallResult) => {
-      console.log(result);
-    });
+    window.electron.ipcRenderer
+      .invoke('uninstall-python', python.installPath)
+      .then((result: UninstallResult) => {
+        console.log(result);
+      })
+      .finally(() => {
+        refresh();
+      });
   };
 
   const openPath = () => {
