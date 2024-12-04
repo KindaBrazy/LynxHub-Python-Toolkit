@@ -4,22 +4,39 @@ import {join} from 'node:path';
 import {exec} from 'child_process';
 import {app, BrowserWindow} from 'electron';
 import {download} from 'electron-dl';
+import {readdirSync, statSync} from 'graceful-fs';
 import {promisify} from 'util';
 
 import {PythonVersion} from '../../../cross/CrossExtensions';
 
 const execAsync = promisify(exec);
 
-export default async function installPython(version: PythonVersion): Promise<void> {
-  try {
-    const file = await download(BrowserWindow.getFocusedWindow()!, version.url, {
-      showBadge: false,
-      directory: join(app.getPath('downloads'), 'LynxHub'),
-    });
+function findFileInDir(dirPath: string, fileName: string | undefined): string | null {
+  if (!fileName) return null;
+  const files = readdirSync(dirPath);
 
+  for (const file of files) {
+    const filePath = join(dirPath, file);
+    const stats = statSync(filePath);
+
+    if (stats.isDirectory()) {
+      const result = findFileInDir(filePath, fileName);
+      if (result) {
+        return result;
+      }
+    } else if (stats.isFile() && file === fileName) {
+      return filePath;
+    }
+  }
+
+  return null;
+}
+
+async function installPython(filePath: string, version: PythonVersion): Promise<void> {
+  try {
     switch (platform()) {
       case 'win32':
-        await installOnWindows(file.savePath);
+        await installOnWindows(filePath);
         break;
       case 'darwin':
       default:
@@ -27,10 +44,56 @@ export default async function installPython(version: PythonVersion): Promise<voi
     }
 
     console.log(`Python ${version.version} installed successfully`);
-  } catch (error) {
-    // @ts-ignore-next-line
-    throw new Error(`Failed to install Python ${version.version}: ${error.message}`);
+  } catch (err: any) {
+    console.error(`Failed to install Python ${version.version}: ${err.message}`);
+    throw new Error(`Failed to install Python ${version.version}: ${err.message}`);
   }
+}
+
+export default async function downloadPython(version: PythonVersion): Promise<void> {
+  return new Promise(async (resolve, reject) => {
+    const window = BrowserWindow.getFocusedWindow()!;
+
+    const fileName = version.url.split('/').pop();
+    const targetPath = join(app.getPath('downloads'), 'LynxHub');
+
+    const found = findFileInDir(targetPath, fileName);
+
+    if (found) {
+      try {
+        window.webContents.send('download-python-progress', 'installing');
+        await installPython(found, version);
+        resolve();
+      } catch (e) {
+        reject(e);
+      }
+    } else {
+      download(window, version.url, {
+        showBadge: false,
+        directory: targetPath,
+        onProgress: progress => {
+          window.webContents.send('download-python-progress', 'downloading', {
+            percentage: progress.percent,
+            downloaded: progress.transferredBytes,
+            total: progress.totalBytes,
+          });
+        },
+      })
+        .then(async item => {
+          window.webContents.send('download-python-progress', 'installing');
+          try {
+            await installPython(item.savePath, version);
+            resolve();
+          } catch (e) {
+            reject(e);
+          }
+        })
+        .catch((err: any) => {
+          console.error(`Failed to download Python ${version.version}: ${err.message}`);
+          reject(`Failed to download Python ${version.version}: ${err.message}`);
+        });
+    }
+  });
 }
 
 async function installOnWindows(installerPath: string): Promise<void> {

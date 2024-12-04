@@ -16,15 +16,17 @@ import {OverlayScrollbarsComponent} from 'overlayscrollbars-react';
 import {useEffect, useState} from 'react';
 
 import {PythonVersion} from '../../../../cross/CrossExtensions';
+import {formatSize} from '../../../../cross/CrossUtils';
 import {useAppState} from '../../../src/App/Redux/App/AppReducer';
 import {getIconByName} from '../../../src/assets/icons/SvgIconsContainer';
 
 type Props = {
   isOpen: boolean;
   closeModal: () => void;
+  refresh: () => void;
 };
 
-export default function InstallNewPythonModal({isOpen, closeModal}: Props) {
+export default function InstallNewPythonModal({isOpen, closeModal, refresh}: Props) {
   const [versions, setVersions] = useState<PythonVersion[]>([]);
   const [searchVersions, setSearchVersions] = useState<PythonVersion[]>([]);
   const [loadingList, setLoadingList] = useState<boolean>(false);
@@ -51,21 +53,40 @@ export default function InstallNewPythonModal({isOpen, closeModal}: Props) {
     }
   }, [inputValue, versions]);
 
-  const [installingVersion, setInstallingVersion] = useState<string>('');
+  const [installingVersion, setInstallingVersion] = useState<PythonVersion | undefined>(undefined);
+  const [downloadProgress, setDownloadProgress] = useState<
+    | {
+        percentage: number;
+        downloaded: number;
+        total: number;
+      }
+    | undefined
+  >(undefined);
+  const [installStage, setInstallStage] = useState<'installing' | 'downloading'>();
 
   const installPython = (version: PythonVersion) => {
-    setInstallingVersion(version.version);
+    setInstallingVersion(version);
+
+    window.electron.ipcRenderer.removeAllListeners('download-python-progress');
+    window.electron.ipcRenderer.on('download-python-progress', (_e, stage, progress: typeof downloadProgress) => {
+      setInstallStage(stage);
+      if (stage === 'downloading') {
+        setDownloadProgress(progress);
+      }
+    });
 
     window.electron.ipcRenderer
       .invoke('install-python', version)
       .then(() => {
+        refresh();
+        closeModal();
         console.log('installed', version);
       })
       .catch(err => {
         console.log(err);
       })
       .finally(() => {
-        setInstallingVersion('');
+        setInstallingVersion(undefined);
       });
   };
 
@@ -103,11 +124,21 @@ export default function InstallNewPythonModal({isOpen, closeModal}: Props) {
               }}
               className={`pr-3 mr-1 pl-4 pb-4`}>
               {!isEmpty(installingVersion) ? (
-                <Progress
-                  className="my-4 px-2"
-                  label={`Installing Python v${installingVersion}, Please wait...`}
-                  isIndeterminate
-                />
+                installStage === 'installing' ? (
+                  <Progress
+                    className="my-4 px-2"
+                    label={`Installing Python v${installingVersion?.version}, Please wait...`}
+                    isIndeterminate
+                  />
+                ) : (
+                  <Progress
+                    className="my-4 px-2"
+                    value={downloadProgress?.percentage}
+                    label={`Downloading ${installingVersion?.url.split('/').pop()}, Please wait...`}
+                    valueLabel={`${formatSize(downloadProgress?.downloaded)} of ${formatSize(downloadProgress?.total)}`}
+                    showValueLabel
+                  />
+                )
               ) : loadingList ? (
                 <CircularProgress
                   size="lg"

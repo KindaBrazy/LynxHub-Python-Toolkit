@@ -4,7 +4,7 @@ import {ExtensionMainApi, MainExtensionUtils} from '../Managements/Plugin/Extens
 import {getAvailablePythonVersions} from './Utils/Available';
 import {setDefaultPython} from './Utils/DefaultPython';
 import detectPythonInstallations from './Utils/Detector';
-import installPython from './Utils/Installer';
+import downloadPython from './Utils/Installer';
 import uninstallPython from './Utils/Uninstaller';
 
 interface PythonVersion {
@@ -17,7 +17,7 @@ export async function initialExtension(lynxApi: ExtensionMainApi, _utils: MainEx
     ipcMain.handle('get-pythons', () => detectPythonInstallations());
     ipcMain.handle('uninstall-python', (_, path: string) => uninstallPython(path));
     ipcMain.handle('get-available-pythons', () => getAvailablePythonVersions());
-    ipcMain.handle('install-python', (_, version: PythonVersion) => installPython(version));
+    ipcMain.handle('install-python', (_, version: PythonVersion) => downloadPython(version));
     ipcMain.handle('set-default-python', (_, pythonPath: string) => setDefaultPython(pythonPath));
   });
 }
