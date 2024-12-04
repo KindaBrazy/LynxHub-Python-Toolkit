@@ -10,7 +10,7 @@ import {
   ModalHeader,
   Progress,
 } from '@nextui-org/react';
-import {List} from 'antd';
+import {List, Tooltip} from 'antd';
 import {isEmpty} from 'lodash';
 import {OverlayScrollbarsComponent} from 'overlayscrollbars-react';
 import {useEffect, useState} from 'react';
@@ -34,15 +34,17 @@ export default function InstallNewPythonModal({isOpen, closeModal, refresh, inst
 
   const isDarkMode = useAppState('darkMode');
 
+  const fetchPythonList = () => {
+    setLoadingList(true);
+    window.electron.ipcRenderer.invoke('get-available-pythons').then((result: PythonVersion[]) => {
+      setVersions(result.filter(item => !installed.includes(item.version)));
+      setLoadingList(false);
+    });
+  };
+
   useEffect(() => {
-    if (isOpen && isEmpty(versions)) {
-      setLoadingList(true);
-      window.electron.ipcRenderer.invoke('get-available-pythons').then((result: PythonVersion[]) => {
-        setVersions(result.filter(item => !installed.includes(item.version)));
-        setLoadingList(false);
-      });
-    }
-  }, [isOpen, versions, installed]);
+    if (isOpen && isEmpty(versions)) fetchPythonList();
+  }, [isOpen, versions]);
 
   const [inputValue, setInputValue] = useState<string>('');
 
@@ -104,15 +106,25 @@ export default function InstallNewPythonModal({isOpen, closeModal, refresh, inst
           <ModalHeader className="bg-foreground-100 justify-center">Python Installer</ModalHeader>
           <ModalBody className="pt-4 pb-0 px-0">
             {isEmpty(installingVersion) && (
-              <Input
-                size="sm"
-                type="search"
-                className="px-4"
-                value={inputValue}
-                onValueChange={setInputValue}
-                startContent={getIconByName('Circle')}
-                placeholder="Search for python version..."
-              />
+              <div className="flex flex-row gap-x-2 px-4">
+                <Input
+                  size="sm"
+                  type="search"
+                  value={inputValue}
+                  onValueChange={setInputValue}
+                  startContent={getIconByName('Circle')}
+                  placeholder="Search for python version..."
+                />
+                <Tooltip title="Refresh list">
+                  <Button
+                    size="sm"
+                    variant="flat"
+                    onPress={fetchPythonList}
+                    startContent={getIconByName('Refresh')}
+                    isIconOnly
+                  />
+                </Tooltip>
+              </div>
             )}
             <OverlayScrollbarsComponent
               options={{
