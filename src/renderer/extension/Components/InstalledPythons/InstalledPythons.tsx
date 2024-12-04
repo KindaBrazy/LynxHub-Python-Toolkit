@@ -82,7 +82,12 @@ export default function InstalledPythons() {
 
   return (
     <div className="w-full flex flex-col gap-y-4">
-      <InstallNewPythonModal refresh={refresh} isOpen={installModalOpen} closeModal={closeInstallModal} />
+      <InstallNewPythonModal
+        refresh={refresh}
+        isOpen={installModalOpen}
+        closeModal={closeInstallModal}
+        installed={pythons.map(item => item.version)}
+      />
       <div className="w-full flex flex-row justify-between items-center">
         <span className="font-bold">Installed Versions</span>
         <Button radius="sm" variant="solid" onPress={openInstallModal} startContent={getIconByName('Add')}>

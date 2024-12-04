@@ -24,9 +24,10 @@ type Props = {
   isOpen: boolean;
   closeModal: () => void;
   refresh: () => void;
+  installed: string[];
 };
 
-export default function InstallNewPythonModal({isOpen, closeModal, refresh}: Props) {
+export default function InstallNewPythonModal({isOpen, closeModal, refresh, installed}: Props) {
   const [versions, setVersions] = useState<PythonVersion[]>([]);
   const [searchVersions, setSearchVersions] = useState<PythonVersion[]>([]);
   const [loadingList, setLoadingList] = useState<boolean>(false);
@@ -37,11 +38,11 @@ export default function InstallNewPythonModal({isOpen, closeModal, refresh}: Pro
     if (isOpen && isEmpty(versions)) {
       setLoadingList(true);
       window.electron.ipcRenderer.invoke('get-available-pythons').then((result: PythonVersion[]) => {
-        setVersions(result);
+        setVersions(result.filter(item => !installed.includes(item.version)));
         setLoadingList(false);
       });
     }
-  }, [isOpen, versions]);
+  }, [isOpen, versions, installed]);
 
   const [inputValue, setInputValue] = useState<string>('');
 
