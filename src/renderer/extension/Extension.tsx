@@ -1,20 +1,36 @@
 import './index.css';
 
 import {Button} from '@nextui-org/react';
-import {useState} from 'react';
+import {ConfigProvider, theme} from 'antd';
+import {useMemo, useState} from 'react';
 
 import {ExtensionRendererApi} from '../src/App/Extensions/ExtensionTypes_Renderer_Api';
+import {useAppState} from '../src/App/Redux/App/AppReducer';
 import PythonToolkitModal from './Components/PythonToolkitModal';
 import {Python_Icon} from './Components/SvgIcons';
 
 function ToolsPage() {
   const [isOpen, setIsOpen] = useState(false);
+  const darkMode = useAppState('darkMode');
 
   const openModal = () => {
     setIsOpen(true);
   };
+
+  const algorithm = useMemo(() => (darkMode ? theme.darkAlgorithm : theme.defaultAlgorithm), [darkMode]);
+  const colorBgSpotlight = useMemo(() => (darkMode ? '#424242' : 'white'), [darkMode]);
+  const colorTextLightSolid = useMemo(() => (darkMode ? 'white' : 'black'), [darkMode]);
+
   return (
-    <>
+    <ConfigProvider
+      theme={{
+        algorithm,
+        components: {
+          Button: {colorPrimaryBorder: 'rgba(0,0,0,0)'},
+          Tooltip: {colorBgSpotlight, colorTextLightSolid},
+        },
+        token: {colorBgMask: 'rgba(0, 0, 0, 0.2)', fontFamily: 'Nunito, sans-serif'},
+      }}>
       <Button
         variant="faded"
         onPress={openModal}
@@ -25,7 +41,7 @@ function ToolsPage() {
         </div>
       </Button>
       <PythonToolkitModal isOpen={isOpen} setIsOpen={setIsOpen} />
-    </>
+    </ConfigProvider>
   );
 }
 
