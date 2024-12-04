@@ -64,7 +64,7 @@ export default function PythonInstalledCard({python, diskUsage, maxDiskValue, up
         `w-[27rem] transition-colors duration-300 shadow-small` +
         ` ${
           python.isDefault
-            ? 'border-success border-opacity-60 hover:border-opacity-100'
+            ? 'border-secondary border-opacity-60 hover:border-opacity-100'
             : 'dark:hover:border-white/20 hover:border-black/20 '
         }`
       }
@@ -74,7 +74,7 @@ export default function PythonInstalledCard({python, diskUsage, maxDiskValue, up
             <span>
               Python {python.version}
               {python.isDefault && (
-                <Chip size="sm" radius="sm" variant="light" color="success">
+                <Chip size="sm" radius="sm" variant="light" color="secondary" classNames={{content: '!font-semibold'}}>
                   Default
                 </Chip>
               )}
@@ -106,7 +106,7 @@ export default function PythonInstalledCard({python, diskUsage, maxDiskValue, up
           size="sm"
           minValue={0}
           value={size}
-          color="secondary"
+          color="primary"
           label="Disk Usage:"
           maxValue={maxDiskValue}
           isIndeterminate={isNil(size)}
