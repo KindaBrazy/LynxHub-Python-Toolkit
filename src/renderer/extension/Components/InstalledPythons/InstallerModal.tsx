@@ -189,7 +189,7 @@ export default function InstallerModal({isOpen, closeModal, refresh, installed}:
               color="warning"
               variant="faded"
               onPress={closeModal}
-              disabled={!isEmpty(installingVersion)}
+              isDisabled={!isEmpty(installingVersion)}
               fullWidth>
               Close
             </Button>
