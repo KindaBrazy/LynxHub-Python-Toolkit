@@ -13,7 +13,7 @@ export default function VenvPython({visible}: {visible: boolean}) {
           Create Environments
         </Button>
       </div>
-      <div className="flex flex-row gap-8 flex-wrap">
+      <div className="flex flex-row flex-wrap gap-8">
         <PythonVenvCard size={100} isActive={true} title="web-project" pythonVersion="3.11.4" installedPackages={12} />
         <PythonVenvCard size={100} isActive={false} title="web-project" pythonVersion="3.9.13" installedPackages={52} />
       </div>

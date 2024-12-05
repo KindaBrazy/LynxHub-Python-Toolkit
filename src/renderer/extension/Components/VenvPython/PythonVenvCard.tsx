@@ -16,7 +16,7 @@ export default function PythonVenvCard({title, isActive, installedPackages, pyth
   return (
     <Card
       className={
-        `w-[27rem] transition-colors duration-300 shadow-small` +
+        `min-w-[27rem] grow transition-colors duration-300 shadow-small` +
         ` ${
           isActive
             ? 'border-success border-opacity-60 hover:border-opacity-100'

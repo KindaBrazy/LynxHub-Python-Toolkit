@@ -63,7 +63,7 @@ export default function InstalledCard({python, diskUsage, maxDiskValue, updateDe
   }, [python.installationType]);
 
   return (
-    <div className="relative">
+    <div className="grow relative">
       {isUninstalling && (
         <div className="absolute size-full dark:bg-black/50 bg-white/50 z-10 content-center text-center">
           <Spin className="absolute" tip="Uninstalling python, please wait..." />
@@ -71,7 +71,7 @@ export default function InstalledCard({python, diskUsage, maxDiskValue, updateDe
       )}
       <Card
         className={
-          `w-[27rem] transition-colors duration-300 shadow-small` +
+          `min-w-[27rem] transition-colors duration-300 shadow-small` +
           ` ${
             python.isDefault
               ? 'border-secondary border-opacity-60 hover:border-opacity-100'

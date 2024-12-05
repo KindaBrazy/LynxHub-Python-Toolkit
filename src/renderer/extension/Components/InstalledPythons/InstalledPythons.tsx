@@ -98,7 +98,7 @@ export default function InstalledPythons({visible}: {visible: boolean}) {
           </Tooltip>
         </div>
       </div>
-      <div className={`flex flex-row gap-8 flex-wrap ${(loadingPythons || isEmpty(pythons)) && 'justify-center'}`}>
+      <div className={`flex flex-row flex-wrap gap-8 ${(loadingPythons || isEmpty(pythons)) && 'justify-center'}`}>
         {loadingPythons ? (
           <CircularProgress
             size="lg"
