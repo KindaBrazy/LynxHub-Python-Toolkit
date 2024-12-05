@@ -58,10 +58,19 @@ export function getBaseInstallPath(): string {
 
 export async function parseVersion(pythonPath: string): Promise<{major: number; minor: number; patch: number}> {
   try {
-    const {stdout} = await execAsync(`"${pythonPath}" --version`);
-    const version = stdout.trim().split(' ')[1];
-    const [major, minor, patch] = version.split('.').map(Number);
-    return {major, minor, patch};
+    const {stdout} = await execAsync(`"${pythonPath}" --version 2>&1`);
+    const versionMatch = stdout.trim().match(/Python (\d+)\.(\d+)(?:\.(\d+))?/i);
+
+    if (!versionMatch) {
+      throw new Error('Unable to parse version string');
+    }
+
+    const [, major, minor, patch] = versionMatch;
+    return {
+      major: Number(major),
+      minor: Number(minor),
+      patch: patch ? Number(patch) : 0,
+    };
   } catch (error) {
     throw new Error(`Failed to parse Python version: ${error}`);
   }
