@@ -19,10 +19,11 @@ export default function InstalledPythons({visible}: {visible: boolean}) {
   useEffect(() => {
     diskUsage.forEach(disk => {
       setMaxDiskValue(prevState => {
-        if (prevState >= (disk.value || 0)) {
+        const size = disk.value || 0;
+        if (prevState >= size) {
           return prevState;
         } else {
-          return (disk.value || 0) + 1000;
+          return size < 500 ? size + 500 : size + 1000;
         }
       });
     });

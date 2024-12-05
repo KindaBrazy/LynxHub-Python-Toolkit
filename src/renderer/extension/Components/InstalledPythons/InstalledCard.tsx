@@ -65,7 +65,7 @@ export default function InstalledCard({python, diskUsage, maxDiskValue, updateDe
   return (
     <div className="relative">
       {isUninstalling && (
-        <div className="absolute size-full bg-black/50 z-10 content-center text-center">
+        <div className="absolute size-full dark:bg-black/50 bg-white/50 z-10 content-center text-center">
           <Spin className="absolute" tip="Uninstalling python, please wait..." />
         </div>
       )}

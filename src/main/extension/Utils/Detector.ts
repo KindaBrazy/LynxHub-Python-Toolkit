@@ -26,10 +26,10 @@ const commonPaths: {[key: string]: string[]} = {
   ],
 };
 
-function matchPattern(filename: string, pattern: string): boolean {
+function matchPattern(file: string, pattern: string) {
   const regexPattern = pattern.replace(/\*/g, '.*');
   const regex = new RegExp(`^${regexPattern}$`);
-  return regex.test(filename);
+  return regex.test(file);
 }
 
 async function fileExists(filePath: string): Promise<boolean> {
@@ -60,7 +60,6 @@ async function findPythonInPath(): Promise<string[]> {
     return [];
   }
 }
-
 async function findInCommonLocations(): Promise<string[]> {
   const os = platform();
   const paths = commonPaths[os] || [];
@@ -79,7 +78,7 @@ async function findInCommonLocations(): Promise<string[]> {
     try {
       const files = await promises.readdir(basePath);
       for (const file of files) {
-        if (matchPattern(file, pattern)) {
+        if (await matchPattern(file, pattern)) {
           const fullPath = join(basePath, file);
           const stats = await promises.stat(fullPath);
           if (stats.isDirectory()) {
