@@ -1,8 +1,8 @@
 import {platform} from 'node:os';
-import {join} from 'node:path';
+import {join, resolve} from 'node:path';
 
 import {exec} from 'child_process';
-import {existsSync} from 'graceful-fs';
+import {existsSync, promises, readdirSync, statSync} from 'graceful-fs';
 import {homedir} from 'os';
 import {promisify} from 'util';
 
@@ -64,5 +64,37 @@ export async function parseVersion(pythonPath: string): Promise<{major: number; 
     return {major, minor, patch};
   } catch (error) {
     throw new Error(`Failed to parse Python version: ${error}`);
+  }
+}
+
+export function findFileInDir(dirPath: string, fileName: string | undefined): string | null {
+  if (!fileName) return null;
+  const files = readdirSync(dirPath);
+
+  for (const file of files) {
+    const filePath = join(dirPath, file);
+    const stats = statSync(filePath);
+
+    if (stats.isDirectory()) {
+      const result = findFileInDir(filePath, fileName);
+      if (result) {
+        return result;
+      }
+    } else if (stats.isFile() && file.toLowerCase().includes(fileName.toLowerCase())) {
+      return filePath;
+    }
+  }
+
+  return null;
+}
+
+export async function removeDir(dir: string): Promise<void> {
+  try {
+    const resolvedPath = resolve(dir);
+    console.log(`Removing directory: ${resolvedPath}`);
+    return await promises.rm(resolvedPath, {recursive: true, force: true});
+  } catch (e) {
+    console.error(e);
+    throw e;
   }
 }

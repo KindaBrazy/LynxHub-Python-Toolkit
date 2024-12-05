@@ -5,7 +5,7 @@ import {getAvailablePythonVersions} from './Utils/Available';
 import {setDefaultPython} from './Utils/DefaultPython';
 import detectPythonInstallations from './Utils/Detector';
 import downloadPython from './Utils/Installer';
-import uninstallPython from './Utils/Uninstaller';
+import uninstallPython from './Utils/Uninstaller/Uninstaller';
 
 interface PythonVersion {
   version: string;

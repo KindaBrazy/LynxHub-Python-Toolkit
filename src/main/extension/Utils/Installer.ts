@@ -4,33 +4,12 @@ import {join} from 'node:path';
 import {exec} from 'child_process';
 import {app, BrowserWindow} from 'electron';
 import {download} from 'electron-dl';
-import {readdirSync, statSync} from 'graceful-fs';
 import {promisify} from 'util';
 
 import {PythonVersion} from '../../../cross/CrossExtensions';
+import {findFileInDir} from './PythonUtils';
 
 const execAsync = promisify(exec);
-
-function findFileInDir(dirPath: string, fileName: string | undefined): string | null {
-  if (!fileName) return null;
-  const files = readdirSync(dirPath);
-
-  for (const file of files) {
-    const filePath = join(dirPath, file);
-    const stats = statSync(filePath);
-
-    if (stats.isDirectory()) {
-      const result = findFileInDir(filePath, fileName);
-      if (result) {
-        return result;
-      }
-    } else if (stats.isFile() && file === fileName) {
-      return filePath;
-    }
-  }
-
-  return null;
-}
 
 async function installPython(filePath: string, version: PythonVersion): Promise<void> {
   try {
