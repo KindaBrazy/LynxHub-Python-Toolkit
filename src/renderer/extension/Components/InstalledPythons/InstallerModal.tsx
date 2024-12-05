@@ -27,7 +27,7 @@ type Props = {
   installed: string[];
 };
 
-export default function InstallNewPythonModal({isOpen, closeModal, refresh, installed}: Props) {
+export default function InstallerModal({isOpen, closeModal, refresh, installed}: Props) {
   const [versions, setVersions] = useState<PythonVersion[]>([]);
   const [searchVersions, setSearchVersions] = useState<PythonVersion[]>([]);
   const [loadingList, setLoadingList] = useState<boolean>(false);
@@ -96,6 +96,7 @@ export default function InstallNewPythonModal({isOpen, closeModal, refresh, inst
   return (
     <>
       <Modal
+        size="xl"
         isOpen={isOpen}
         onClose={closeModal}
         isDismissable={false}
@@ -146,7 +147,8 @@ export default function InstallNewPythonModal({isOpen, closeModal, refresh, inst
                 ) : (
                   <Progress
                     className="my-4 px-2"
-                    value={downloadProgress?.percentage}
+                    value={(downloadProgress?.percentage || 0.1) * 100}
+                    classNames={{label: '!text-small', value: '!text-small'}}
                     label={`Downloading ${installingVersion?.url.split('/').pop()}, Please wait...`}
                     valueLabel={`${formatSize(downloadProgress?.downloaded)} of ${formatSize(downloadProgress?.total)}`}
                     showValueLabel
@@ -182,8 +184,14 @@ export default function InstallNewPythonModal({isOpen, closeModal, refresh, inst
             </OverlayScrollbarsComponent>
           </ModalBody>
           <ModalFooter className="bg-foreground-100">
-            <Button size="sm" color="danger" variant="faded" onPress={closeModal} fullWidth>
-              Cancel
+            <Button
+              size="sm"
+              color="warning"
+              variant="faded"
+              onPress={closeModal}
+              disabled={!isEmpty(installingVersion)}
+              fullWidth>
+              Close
             </Button>
           </ModalFooter>
         </ModalContent>
