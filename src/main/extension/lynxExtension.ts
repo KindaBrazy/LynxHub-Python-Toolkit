@@ -1,16 +1,12 @@
 import {ipcMain} from 'electron';
 
+import {PythonVersion} from '../../cross/CrossExtensions';
 import {ExtensionMainApi, MainExtensionUtils} from '../Managements/Plugin/Extensions/ExtensionTypes_Main';
 import {getAvailablePythonVersions} from './Utils/Available';
 import {setDefaultPython} from './Utils/DefaultPython';
 import detectPythonInstallations from './Utils/Detector';
 import downloadPython from './Utils/Installer';
 import uninstallPython from './Utils/Uninstaller/Uninstaller';
-
-interface PythonVersion {
-  version: string;
-  url: string;
-}
 
 export async function initialExtension(lynxApi: ExtensionMainApi, _utils: MainExtensionUtils) {
   lynxApi.listenForChannels(() => {

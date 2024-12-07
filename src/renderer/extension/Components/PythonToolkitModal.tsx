@@ -16,6 +16,7 @@ export default function PythonToolkitModal({isOpen, setIsOpen}: ModalProps) {
   const onClose = () => {
     setIsOpen(false);
   };
+
   return (
     <Modal
       isOpen={isOpen}
