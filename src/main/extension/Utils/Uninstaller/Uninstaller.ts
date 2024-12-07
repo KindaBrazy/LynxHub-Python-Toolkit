@@ -21,6 +21,7 @@ export default async function uninstallPython(pythonPath: string): Promise<{succ
       case 'conda':
         return await uninstallCondaPython(pythonPath);
       case 'official':
+      case 'other':
         return await uninstallOfficialPython(pythonPath);
       default:
         return {
