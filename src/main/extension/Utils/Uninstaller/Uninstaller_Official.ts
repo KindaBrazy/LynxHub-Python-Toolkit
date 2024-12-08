@@ -104,8 +104,6 @@ async function uninstallPythonWindows(installerPath: string): Promise<string> {
 
     const uninstallArgs = ['/uninstall', '/quiet'];
 
-    console.log(installerPath, uninstallArgs);
-
     execFile(installerPath, uninstallArgs, (error, stdout) => {
       if (error) {
         console.error('Uninstall error:', error);

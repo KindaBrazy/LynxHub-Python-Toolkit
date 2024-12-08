@@ -1,4 +1,5 @@
 import {exec} from 'node:child_process';
+import {basename} from 'node:path';
 import {promisify} from 'node:util';
 
 const execAsync = promisify(exec);
@@ -19,10 +20,10 @@ export async function uninstallCondaPython(pythonPath: string): Promise<{success
   }
 }
 
-async function getCondaEnvName(pythonPath: string): Promise<string> {
+export async function getCondaEnvName(pythonPath: string): Promise<string> {
   try {
     const {stdout} = await execAsync(`"${pythonPath}" -c "import sys; print(sys.prefix.split('/')[-1])"`);
-    return stdout.trim();
+    return basename(stdout.trim());
   } catch (err: any) {
     throw new Error(`Failed to get conda environment name: ${err.message}`);
   }
