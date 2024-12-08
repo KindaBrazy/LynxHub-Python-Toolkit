@@ -77,7 +77,7 @@ export default async function downloadPython(version: PythonVersion): Promise<vo
 
 async function installOnWindows(installerPath: string): Promise<void> {
   return new Promise((resolve, reject) => {
-    execAsync(`"${installerPath}" /passive InstallAllUsers=0 PrependPath=1 Include_test=0 Include_pip=1 `)
+    execAsync(`"${installerPath}" /quiet InstallAllUsers=0 PrependPath=1 Include_test=0 Include_pip=1 `)
       .then(() => resolve())
       .catch(() => {
         execAsync(`"${installerPath}" /repair`)
