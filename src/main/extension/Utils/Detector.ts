@@ -60,6 +60,7 @@ async function findPythonInPath(): Promise<string[]> {
     return [];
   }
 }
+
 async function findInCommonLocations(): Promise<string[]> {
   const os = platform();
   const paths = commonPaths[os] || [];
@@ -122,11 +123,15 @@ async function detectArchitecture(pythonPath: string): Promise<'32bit' | '64bit'
 async function getPipPath(pythonPath: string): Promise<string | undefined> {
   try {
     const {stdout} = await execAsync(`"${pythonPath}" -m pip --version`);
-    const pipPath = stdout.split(' ')[1];
-    return existsSync(pipPath) ? pipPath : undefined;
+    const match = stdout.match(/pip \d+\.\d+\.\d+ from (\S+)/);
+    if (match && match[1]) {
+      const pipPath = match[1];
+      return existsSync(pipPath) ? pipPath : undefined;
+    }
   } catch (error) {
-    return undefined;
+    // Ignore error
   }
+  return undefined;
 }
 
 async function getVenvPaths(pythonPath: string): Promise<string[]> {
