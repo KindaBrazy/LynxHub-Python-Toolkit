@@ -43,7 +43,6 @@ async function uninstallWindowsPython(pythonPath: string): Promise<{success: boo
 
   try {
     const installerToUninstall = findPythonInstallerByVersion(versionString);
-    console.log(installerToUninstall);
 
     if (!installerToUninstall) {
       throw new Error(`No Python installer found for version ${version}`);
@@ -60,7 +59,7 @@ async function uninstallWindowsPython(pythonPath: string): Promise<{success: boo
       // Fallback to manual removal
       await removeDir(dirname(pythonPath));
       await cleanupWindowsRegistry(versionString);
-      await removePythonFromPath();
+      await removePythonFromPath(pythonPath);
       return {
         success: true,
         message: 'Successfully removed Python installation manually',
@@ -150,7 +149,7 @@ async function cleanupWindowsRegistry(version: string): Promise<void> {
   }
 }
 
-async function removePythonFromPath(): Promise<void> {
+async function removePythonFromPath(pythonPath: string): Promise<void> {
   try {
     // Get current user's PATH from registry
     const {stdout: currentPath} = await execAsync('reg query "HKEY_CURRENT_USER\\Environment" /v Path');
@@ -163,7 +162,7 @@ async function removePythonFromPath(): Promise<void> {
 
     // Get existing paths and filter out Python-related paths
     const paths = match[1].split(';').filter(Boolean);
-    const nonPythonPaths = paths.filter(path => !path.toLowerCase().includes('python'));
+    const nonPythonPaths = paths.filter(path => !path.toLowerCase().includes(pythonPath.toLowerCase()));
 
     // If no paths were removed, return early
     if (paths.length === nonPythonPaths.length) {
