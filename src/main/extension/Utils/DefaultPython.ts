@@ -1,4 +1,5 @@
 import {platform} from 'node:os';
+import {join} from 'node:path';
 
 import {exec} from 'child_process';
 import {promises} from 'graceful-fs';
@@ -58,7 +59,7 @@ async function setDefaultPythonWindows(pythonPath: string): Promise<void> {
 
     const nonPythonPaths = paths.filter(path => !path.toLowerCase().includes('python'));
 
-    const newPaths = [pythonPath, ...nonPythonPaths];
+    const newPaths = [pythonPath, join(pythonPath, 'Scripts'), ...nonPythonPaths];
 
     const newPathValue = newPaths.join(';');
 
