@@ -100,6 +100,9 @@ export default function InstalledCard({python, diskUsage, maxDiskValue, updateDe
               <div>
                 <span className="text-tiny text-foreground-500">{python.architecture}</span>
                 <span className={'text-tiny ml-2 ' + installTypeColor}>{startCase(python.installationType)}</span>
+                {python.installationType === 'conda' && (
+                  <span className={'text-tiny ml-2 ' + installTypeColor}>{python.condaName}</span>
+                )}
               </div>
             </div>
             <div className="space-x-2 flex items-center">
