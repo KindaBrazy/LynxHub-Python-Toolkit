@@ -143,7 +143,7 @@ async function getVenvPaths(pythonPath: string): Promise<string[]> {
 
 async function getSitePackagesPath(pythonPath: string): Promise<string> {
   try {
-    const {stdout} = await execAsync(`"${pythonPath}" -c "import site; print(site.getsitepackages()[0])"`);
+    const {stdout} = await execAsync(`"${pythonPath}" -c "import site; print(site.getsitepackages()[1])"`);
     return stdout.trim();
   } catch (error) {
     throw new Error(`Failed to get site-packages location: ${error}`);
