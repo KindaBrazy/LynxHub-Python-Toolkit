@@ -11,36 +11,28 @@ import {PythonInstallation} from '../../../cross/CrossExtensions';
 const execAsync = promisify(exec);
 
 export async function detectInstallationType(pythonPath: string): Promise<PythonInstallation['installationType']> {
-  // Helper function to normalize string comparisons
   const normalize = (str: string) => str.toLowerCase();
 
   try {
-    // Validate if the pythonPath is a valid executable
     if (!existsSync(pythonPath)) {
-      return 'other'; // Invalid path
+      return 'other';
     }
 
-    // Check for known patterns in the path
     const normalizedPath = normalize(pythonPath);
     if (normalizedPath.includes('conda')) return 'conda';
 
-    // Execute a Python command to get environment details
     const {stdout} = await execAsync(`"${pythonPath}" -c "import sys; print(sys.prefix)"`);
     const normalizedStdout = normalize(stdout);
 
-    // Check the output of the Python command
     if (normalizedStdout.includes('conda')) return 'conda';
 
-    // System-wide or default installation
     const {stdout: versionStdout} = await execAsync(`"${pythonPath}" --version`);
     if (versionStdout.toLowerCase().includes('python')) {
       return 'official';
     }
 
-    // If no match, classify as 'other'
     return 'other';
   } catch (error) {
-    // Handle unexpected errors
     console.error(`Error detecting installation type for ${pythonPath}:`, error);
     return 'other';
   }

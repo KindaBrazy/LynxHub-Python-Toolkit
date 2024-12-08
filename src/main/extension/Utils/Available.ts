@@ -19,17 +19,14 @@ export async function getAvailablePythonVersions(): Promise<PythonVersion[]> {
     const response = await fetch('https://www.python.org/downloads/');
     const text = await response.text();
 
-    // Extract version numbers using regex
     const versionRegex = /Python\s+(\d+\.\d+\.\d+)/g;
     const matches = [...text.matchAll(versionRegex)];
 
-    // Create download URLs
     const result = matches.map(match => ({
       version: match[1],
       url: getPythonDownloadUrl(match[1]),
     }));
 
-    // Filter out versions with non-existent download URLs
     const validVersions = await Promise.all(
       result.map(async version => {
         try {
@@ -41,7 +38,6 @@ export async function getAvailablePythonVersions(): Promise<PythonVersion[]> {
       }),
     );
 
-    // Remove duplicates and return
     return removeDuplicateUrls(validVersions.filter((v): v is PythonVersion => v !== null));
   } catch (error: any) {
     throw new Error(`Failed to fetch Python versions: ${error.message}`);

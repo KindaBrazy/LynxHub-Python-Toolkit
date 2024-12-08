@@ -11,11 +11,10 @@ export async function uninstallCondaPython(pythonPath: string): Promise<{success
       success: true,
       message: `Successfully removed conda environment ${envName}`,
     };
-  } catch (error) {
+  } catch (err: any) {
     return {
       success: false,
-      // @ts-ignore-next-line
-      message: `Failed to remove conda environment: ${error.message}`,
+      message: `Failed to remove conda environment: ${err.message}`,
     };
   }
 }
@@ -24,8 +23,7 @@ async function getCondaEnvName(pythonPath: string): Promise<string> {
   try {
     const {stdout} = await execAsync(`"${pythonPath}" -c "import sys; print(sys.prefix.split('/')[-1])"`);
     return stdout.trim();
-  } catch (error) {
-    // @ts-ignore-next-line
-    throw new Error(`Failed to get conda environment name: ${error.message}`);
+  } catch (err: any) {
+    throw new Error(`Failed to get conda environment name: ${err.message}`);
   }
 }

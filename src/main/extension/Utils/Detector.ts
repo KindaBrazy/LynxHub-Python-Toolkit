@@ -72,7 +72,6 @@ async function findInCommonLocations(): Promise<string[]> {
       .replace('%USERPROFILE%', homedir())
       .replace('~', homedir());
 
-    // Handle wildcards in the path
     const basePath = dirname(expandedPath);
     const pattern = basename(expandedPath);
 
@@ -87,7 +86,6 @@ async function findInCommonLocations(): Promise<string[]> {
             if (await fileExists(pythonExecutable)) {
               expandedPaths.push(pythonExecutable);
             } else {
-              // Check for subdirectories
               const subFiles = await promises.readdir(fullPath);
               for (const subFile of subFiles) {
                 const subPath = join(fullPath, subFile);
@@ -159,12 +157,10 @@ export default async function detectPythonInstallations(): Promise<PythonInstall
   const installations: PythonInstallation[] = [];
   const paths = new Set<string>();
 
-  // Collect paths from all sources
   const pathSources = await Promise.all([findPythonInPath(), findInCommonLocations()]);
 
   pathSources.flat().forEach(path => paths.add(path));
 
-  // Analyze each unique Python installation
   for (const pythonPath of paths) {
     try {
       const version = await parseVersion(pythonPath);

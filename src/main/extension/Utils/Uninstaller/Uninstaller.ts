@@ -8,7 +8,6 @@ export default async function uninstallPython(pythonPath: string): Promise<{succ
   try {
     const installType = await detectInstallationType(pythonPath);
 
-    // Verify the python installation exists
     if (!existsSync(pythonPath)) {
       return {
         success: false,
@@ -16,7 +15,6 @@ export default async function uninstallPython(pythonPath: string): Promise<{succ
       };
     }
 
-    // Handle different installation types
     switch (installType) {
       case 'conda':
         return await uninstallCondaPython(pythonPath);
@@ -29,11 +27,10 @@ export default async function uninstallPython(pythonPath: string): Promise<{succ
           message: `Unknown installation type: ${installType}`,
         };
     }
-  } catch (error) {
+  } catch (err: any) {
     return {
       success: false,
-      // @ts-ignore-next-line
-      message: `Uninstallation failed: ${error.message}`,
+      message: `Uninstallation failed: ${err.message}`,
     };
   }
 }

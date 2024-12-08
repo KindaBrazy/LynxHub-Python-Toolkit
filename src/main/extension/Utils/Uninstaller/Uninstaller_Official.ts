@@ -28,11 +28,10 @@ export async function uninstallOfficialPython(pythonPath: string): Promise<{succ
           message: `Unsupported operating system: ${os}`,
         };
     }
-  } catch (error) {
+  } catch (err: any) {
     return {
       success: false,
-      // @ts-ignore-next-line
-      message: `Uninstallation failed: ${error.message}`,
+      message: `Uninstallation failed: ${err.message}`,
     };
   }
 }
@@ -56,7 +55,6 @@ async function uninstallWindowsPython(pythonPath: string): Promise<{success: boo
   } catch (err) {
     console.log(err);
     try {
-      // Fallback to manual removal
       await removeDir(dirname(pythonPath));
       await cleanupWindowsRegistry(versionString);
       await removePythonFromPath(pythonPath);
@@ -64,11 +62,10 @@ async function uninstallWindowsPython(pythonPath: string): Promise<{success: boo
         success: true,
         message: 'Successfully removed Python installation manually',
       };
-    } catch (error) {
+    } catch (err: any) {
       return {
         success: false,
-        // @ts-ignore-next-line
-        message: `Failed to uninstall Python on Windows: ${error.message}`,
+        message: `Failed to uninstall Python on Windows: ${err.message}`,
       };
     }
   }
@@ -76,14 +73,12 @@ async function uninstallWindowsPython(pythonPath: string): Promise<{success: boo
 
 function findPythonInstallerByVersion(version: string): string | null {
   try {
-    // Read directories in Package Cache
     const directories = readdirSync(defaultPackageCachePath);
 
-    // Normalize version input (remove any leading/trailing whitespace)
     const normalizedVersion = version.trim();
 
     let fileName: string | null = null;
-    // Find matching installer
+
     directories.find(dir => {
       fileName = findFileInDir(join(defaultPackageCachePath, dir), `python-${normalizedVersion}`);
       return !isNil(fileName);
@@ -94,7 +89,6 @@ function findPythonInstallerByVersion(version: string): string | null {
       return null;
     }
 
-    // Construct full path to the installer
     return fileName;
   } catch (error) {
     console.error('Error searching for Python installers:', error);
@@ -104,20 +98,14 @@ function findPythonInstallerByVersion(version: string): string | null {
 
 async function uninstallPythonWindows(installerPath: string): Promise<string> {
   return new Promise((resolve, reject) => {
-    // Verify installer exists
     if (!existsSync(installerPath)) {
       return reject(new Error(`Installer not found at ${installerPath}`));
     }
 
-    // Construct uninstall arguments
-    const uninstallArgs = [
-      '/uninstall',
-      '/quiet', // Similar to silent mode
-    ];
+    const uninstallArgs = ['/uninstall', '/quiet'];
 
     console.log(installerPath, uninstallArgs);
 
-    // Execute the uninstaller
     execFile(installerPath, uninstallArgs, (error, stdout) => {
       if (error) {
         console.error('Uninstall error:', error);
@@ -151,35 +139,27 @@ async function cleanupWindowsRegistry(version: string): Promise<void> {
 
 async function removePythonFromPath(pythonPath: string): Promise<void> {
   try {
-    // Get current user's PATH from registry
     const {stdout: currentPath} = await execAsync('reg query "HKEY_CURRENT_USER\\Environment" /v Path');
 
-    // Extract the current PATH value
     const match = currentPath.match(/REG_\w+\s+(.+)/);
     if (!match) {
       throw new Error('Failed to retrieve current PATH');
     }
 
-    // Get existing paths and filter out Python-related paths
     const paths = match[1].split(';').filter(Boolean);
     const nonPythonPaths = paths.filter(path => !path.toLowerCase().includes(pythonPath.toLowerCase()));
 
-    // If no paths were removed, return early
     if (paths.length === nonPythonPaths.length) {
       console.log('No Python paths found in PATH');
       return;
     }
 
-    // Construct new PATH value
     const newPathValue = nonPythonPaths.join(';');
 
-    // Use REG ADD with proper escaping and quotes
     const regCommand = `REG ADD "HKEY_CURRENT_USER\\Environment" /v Path /t REG_EXPAND_SZ /d "${newPathValue}" /f`;
 
-    // Execute the registry update
     await execAsync(regCommand);
 
-    // Update current process PATH
     process.env.PATH = newPathValue;
 
     console.log('Python paths removed successfully');
