@@ -134,14 +134,9 @@ export default function InstalledCard({python, diskUsage, maxDiskValue, updateDe
                 <PopoverContent>
                   <div className="p-2 space-y-2">
                     {python.installationType === 'conda' ? (
-                      <span>
-                        The entire Conda environment, including all packages and data, will be removed. Are you sure?
-                      </span>
+                      <span>Delete entire selected Conda environment and all packages? This cannot be undone.</span>
                     ) : (
-                      <span>
-                        Python will be completely removed from your system along with all packages and data. Are you
-                        sure?
-                      </span>
+                      <span>Uninstall Python and delete all packages? This action is permanent.</span>
                     )}
                     <Button size="sm" onPress={uninstall} fullWidth>
                       Uninstall
