@@ -1,7 +1,18 @@
-import {Button, Chip, Popover, PopoverContent, PopoverTrigger, Progress} from '@nextui-org/react';
+import {
+  Button,
+  Chip,
+  Dropdown,
+  DropdownItem,
+  DropdownMenu,
+  DropdownTrigger,
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+  Progress,
+} from '@nextui-org/react';
 import {Card, Divider, Spin} from 'antd';
 import {isNil, startCase} from 'lodash';
-import {useMemo, useState} from 'react';
+import {SVGProps, useMemo, useState} from 'react';
 
 import {PythonInstallation, UninstallResult} from '../../../../cross/CrossExtensions';
 import {formatSizeMB} from '../../../../cross/CrossUtils';
@@ -15,6 +26,20 @@ type Props = {
   updateDefault: (installFolder: string) => void;
   refresh: () => void;
 };
+
+type SvgProps = SVGProps<SVGSVGElement>;
+
+function CheckSvg(props: SvgProps) {
+  return (
+    <svg {...props} width="24" height="24" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+      <g fill="none" strokeWidth="1.5" stroke="currentColor" strokeLinecap="round" strokeLinejoin="round">
+        <path opacity="0.5" d="m4 12.9l3.143 3.6L15 7.5" />
+        <path d="m20 7.563l-8.571 9L11 16" />
+      </g>
+    </svg>
+  );
+}
+
 export default function InstalledCard({python, diskUsage, maxDiskValue, updateDefault, refresh}: Props) {
   const size = useMemo(() => {
     return diskUsage.find(usage => usage.path === python.installFolder)?.value;
@@ -112,12 +137,23 @@ export default function InstalledCard({python, diskUsage, maxDiskValue, updateDe
                 )}
               </div>
             </div>
-            <div className="space-x-2 flex items-center">
-              {!python.isDefault && (
-                <Button size="sm" variant="light" onPress={makeDefault}>
-                  Set as Default
-                </Button>
-              )}
+            <div className="space-x-1 flex items-center">
+              <Dropdown size="sm" className="dark:bg-LynxRaisinBlack">
+                <DropdownTrigger>
+                  <Button size="sm" variant="light" isIconOnly>
+                    {getIconByName('MenuDots', {className: 'rotate-90 size-3.5'})}
+                  </Button>
+                </DropdownTrigger>
+                <DropdownMenu>
+                  <DropdownItem
+                    key="system-default"
+                    onPress={makeDefault}
+                    startContent={python.isDefault ? getIconByName('Refresh3', {className: 'size-4'}) : <CheckSvg />}>
+                    Set as <span className="font-bold">System Default</span>
+                  </DropdownItem>
+                </DropdownMenu>
+              </Dropdown>
+
               <Popover
                 size="sm"
                 color="danger"
