@@ -1,4 +1,4 @@
-import {Button, Chip, Progress} from '@nextui-org/react';
+import {Button, Chip, Popover, PopoverContent, PopoverTrigger, Progress} from '@nextui-org/react';
 import {Card, Divider, Spin} from 'antd';
 import {isNil, startCase} from 'lodash';
 import {useMemo, useState} from 'react';
@@ -35,6 +35,7 @@ export default function InstalledCard({python, diskUsage, maxDiskValue, updateDe
   };
 
   const uninstall = () => {
+    setPopoverUninstaller(false);
     setIsUninstalling(true);
     window.electron.ipcRenderer
       .invoke('uninstall-python', python.installPath)
@@ -61,6 +62,8 @@ export default function InstalledCard({python, diskUsage, maxDiskValue, updateDe
         return 'text-[#FFA500FFA500]';
     }
   }, [python.installationType]);
+
+  const [popoverUninstaller, setPopoverUninstaller] = useState<boolean>(false);
 
   return (
     <div className="grow relative">
@@ -115,9 +118,37 @@ export default function InstalledCard({python, diskUsage, maxDiskValue, updateDe
                   Set as Default
                 </Button>
               )}
-              <Button size="sm" color="danger" variant="light" onPress={uninstall} isIconOnly>
-                {getIconByName('Trash', {className: 'size-[50%]'})}
-              </Button>
+              <Popover
+                size="sm"
+                color="danger"
+                placement="left"
+                className="max-w-[15rem]"
+                isOpen={popoverUninstaller}
+                onOpenChange={setPopoverUninstaller}
+                showArrow>
+                <PopoverTrigger>
+                  <Button size="sm" color="danger" variant="light" isIconOnly>
+                    {getIconByName('Trash', {className: 'size-[50%]'})}
+                  </Button>
+                </PopoverTrigger>
+                <PopoverContent>
+                  <div className="p-2 space-y-2">
+                    {python.installationType === 'conda' ? (
+                      <span>
+                        The entire Conda environment, including all packages and data, will be removed. Are you sure?
+                      </span>
+                    ) : (
+                      <span>
+                        Python will be completely removed from your system along with all packages and data. Are you
+                        sure?
+                      </span>
+                    )}
+                    <Button size="sm" onPress={uninstall} fullWidth>
+                      Uninstall
+                    </Button>
+                  </div>
+                </PopoverContent>
+              </Popover>
             </div>
           </div>
         }
