@@ -6,8 +6,8 @@ import {app, BrowserWindow} from 'electron';
 import {download} from 'electron-dl';
 import {promisify} from 'util';
 
-import {PythonVersion} from '../../../cross/CrossExtensions';
-import {findFileInDir} from './PythonUtils';
+import {pythonChannels, PythonVersion} from '../../../../cross/CrossExtensions';
+import {findFileInDir} from '../PythonUtils';
 
 const execAsync = promisify(exec);
 
@@ -40,7 +40,7 @@ export default async function downloadPython(version: PythonVersion): Promise<vo
 
     if (found) {
       try {
-        window.webContents.send('download-python-progress', 'installing');
+        window.webContents.send(pythonChannels.downloadProgressOfficial, 'installing');
         await installPython(found, version);
         resolve();
       } catch (e) {
@@ -51,7 +51,7 @@ export default async function downloadPython(version: PythonVersion): Promise<vo
         showBadge: false,
         directory: targetPath,
         onProgress: progress => {
-          window.webContents.send('download-python-progress', 'downloading', {
+          window.webContents.send(pythonChannels.downloadProgressOfficial, 'downloading', {
             percentage: progress.percent,
             downloaded: progress.transferredBytes,
             total: progress.totalBytes,
@@ -59,7 +59,7 @@ export default async function downloadPython(version: PythonVersion): Promise<vo
         },
       })
         .then(async item => {
-          window.webContents.send('download-python-progress', 'installing');
+          window.webContents.send(pythonChannels.downloadProgressOfficial, 'installing');
           try {
             await installPython(item.savePath, version);
             resolve();

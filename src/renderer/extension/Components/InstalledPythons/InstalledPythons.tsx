@@ -8,7 +8,7 @@ import {bytesToMegabytes} from '../../../../cross/CrossUtils';
 import rendererIpc from '../../../src/App/RendererIpc';
 import {getIconByName} from '../../../src/assets/icons/SvgIconsContainer';
 import InstalledCard from './InstalledCard';
-import InstallerModal from './InstallerModal';
+import InstallerModal from './Installer/InstallerModal';
 
 export default function InstalledPythons({visible}: {visible: boolean}) {
   const [pythons, setPythons] = useState<PythonInstallation[]>([]);
@@ -32,6 +32,7 @@ export default function InstalledPythons({visible}: {visible: boolean}) {
   const getInstalledPythons = () => {
     setLoadingPythons(true);
     window.electron.ipcRenderer.invoke('get-pythons').then((result: PythonInstallation[]) => {
+      console.log(result);
       setPythons(result);
       setLoadingPythons(false);
 
@@ -82,10 +83,16 @@ export default function InstalledPythons({visible}: {visible: boolean}) {
   return (
     <div className="w-full flex flex-col gap-y-4">
       <InstallerModal
+        installed={pythons.map(item => {
+          const {version, installationType} = item;
+          return {
+            version,
+            installationType,
+          };
+        })}
         isOpen={installModalOpen}
         refresh={getInstalledPythons}
         closeModal={closeInstallModal}
-        installed={pythons.map(item => item.version)}
       />
       <div className="w-full flex flex-row justify-between items-center">
         <span className="font-bold">Installed Versions</span>
