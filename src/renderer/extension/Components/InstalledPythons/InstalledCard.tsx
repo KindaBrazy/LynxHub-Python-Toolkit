@@ -1,5 +1,5 @@
 import {Button, Chip, Progress} from '@nextui-org/react';
-import {Card, Spin} from 'antd';
+import {Card, Divider, Spin} from 'antd';
 import {isNil, startCase} from 'lodash';
 import {useMemo, useState} from 'react';
 
@@ -99,9 +99,13 @@ export default function InstalledCard({python, diskUsage, maxDiskValue, updateDe
               </span>
               <div>
                 <span className="text-tiny text-foreground-500">{python.architecture}</span>
-                <span className={'text-tiny ml-2 ' + installTypeColor}>{startCase(python.installationType)}</span>
+                <Divider type="vertical" />
+                <span className={'text-tiny ' + installTypeColor}>{startCase(python.installationType)}</span>
                 {python.installationType === 'conda' && (
-                  <span className={'text-tiny ml-2 ' + installTypeColor}>{python.condaName}</span>
+                  <>
+                    <Divider type="vertical" />
+                    <span className={'text-tiny text-cyan-500'}>{python.condaName}</span>
+                  </>
                 )}
               </div>
             </div>
