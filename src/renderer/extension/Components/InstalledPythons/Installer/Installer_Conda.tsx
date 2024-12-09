@@ -149,7 +149,17 @@ export default function InstallerConda({refresh, installed, closeModal, isOpen, 
                     </PopoverTrigger>
                     <PopoverContent>
                       <div className="px-2 py-1 space-y-2 text-center">
-                        <Input size="sm" value={envName} onValueChange={setEnvName} placeholder="Environment name..." />
+                        <Input
+                          onKeyUp={event => {
+                            if (event.key === 'Enter') {
+                              installPython(item);
+                            }
+                          }}
+                          size="sm"
+                          value={envName}
+                          onValueChange={setEnvName}
+                          placeholder="Environment name..."
+                        />
                         <Button size="sm" onPress={() => installPython(item)} fullWidth>
                           Install v{item}
                         </Button>
