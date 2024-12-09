@@ -4,14 +4,30 @@ import {PythonVersion} from '../../../cross/CrossExtensions';
 
 function removeDuplicateUrls(versions: PythonVersion[]): PythonVersion[] {
   const seenUrls = new Set();
-  return versions.filter(version => {
-    if (seenUrls.has(version.url)) {
-      return false;
-    } else {
-      seenUrls.add(version.url);
-      return true;
-    }
-  });
+  return versions
+    .filter(version => {
+      if (seenUrls.has(version.url)) {
+        return false;
+      } else {
+        seenUrls.add(version.url);
+        return true;
+      }
+    })
+    .sort((a, b) => {
+      const aParts = a.version.split('.').map(Number);
+      const bParts = b.version.split('.').map(Number);
+
+      for (let i = 0; i < Math.max(aParts.length, bParts.length); i++) {
+        const aPart = aParts[i] || 0;
+        const bPart = bParts[i] || 0;
+
+        if (aPart !== bPart) {
+          return bPart - aPart;
+        }
+      }
+
+      return 0;
+    });
 }
 
 export async function getAvailablePythonVersions(): Promise<PythonVersion[]> {
