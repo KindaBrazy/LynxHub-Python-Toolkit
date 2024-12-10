@@ -11,14 +11,22 @@ export type PythonInstallation = {
   isDefault: boolean;
 };
 
-export type UninstallResult = {
-  success: boolean;
-  message: string;
+export type PythonVenvs = {
+  title: string;
+  pythonVersion: string;
+  installedPackages: number;
+  size: number;
 };
 
 export type PythonVersion = {
   version: string;
   url: string;
+};
+
+export type VenvCreateOptions = {
+  pythonPath: string;
+  destinationFolder: string;
+  venvName: string;
 };
 
 export const pythonChannels = {
@@ -34,4 +42,6 @@ export const pythonChannels = {
   getAvailableOfficial: 'get-available-pythons',
   downloadProgressOfficial: 'download-python-progress',
   installOfficial: 'install-official-python',
+
+  createVenv: 'create-venv',
 };

@@ -1,13 +1,14 @@
 import {ipcMain} from 'electron';
 
-import {pythonChannels, PythonVersion} from '../../cross/CrossExtensions';
+import {pythonChannels, PythonVersion, VenvCreateOptions} from '../../cross/CrossExtensions';
 import {ExtensionMainApi, MainExtensionUtils} from '../Managements/Plugin/Extensions/ExtensionTypes_Main';
 import {getAvailablePythonVersions} from './Utils/Available';
 import {setDefaultPython} from './Utils/DefaultPython';
 import detectPythonInstallations from './Utils/Detector';
-import {createEnvWithPython, isCondaInstalled, listAvailablePythons} from './Utils/Installer/Installer_Conda';
+import {createCondaEnv, isCondaInstalled, listAvailablePythons} from './Utils/Installer/Installer_Conda';
 import downloadPython from './Utils/Installer/Installer_Official';
 import uninstallPython from './Utils/Uninstaller/Uninstaller';
+import createPythonVenv from './Utils/VirtualEnv/CreateVenv';
 
 export async function initialExtension(lynxApi: ExtensionMainApi, _utils: MainExtensionUtils) {
   lynxApi.listenForChannels(() => {
@@ -20,8 +21,10 @@ export async function initialExtension(lynxApi: ExtensionMainApi, _utils: MainEx
 
     ipcMain.handle(pythonChannels.getAvailableConda, () => listAvailablePythons());
     ipcMain.handle(pythonChannels.installConda, (_, envName: string, version: string) =>
-      createEnvWithPython(envName, version),
+      createCondaEnv(envName, version),
     );
     ipcMain.handle(pythonChannels.isCondaInstalled, () => isCondaInstalled());
+
+    ipcMain.handle(pythonChannels.createVenv, (_, options: VenvCreateOptions) => createPythonVenv(options));
   });
 }

@@ -1,6 +1,7 @@
 import {Button, Divider, Modal, ModalBody, ModalContent, ModalFooter, ModalHeader, Tab, Tabs} from '@nextui-org/react';
 import {Dispatch, Key, SetStateAction, useState} from 'react';
 
+import {PythonInstallation} from '../../../cross/CrossExtensions';
 import {modalMotionProps} from '../../src/App/Utils/Constants';
 import InstalledPythons from './InstalledPythons/InstalledPythons';
 import PythonPackageManager from './PackagePython/PythonPackageManager';
@@ -12,6 +13,8 @@ type ModalProps = {
 };
 
 export default function PythonToolkitModal({isOpen, setIsOpen}: ModalProps) {
+  const [installedPythons, setInstalledPythons] = useState<PythonInstallation[]>([]);
+
   const [currentTab, setCurrentTab] = useState<Key>('installation');
   const onClose = () => {
     setIsOpen(false);
@@ -37,8 +40,12 @@ export default function PythonToolkitModal({isOpen, setIsOpen}: ModalProps) {
         </ModalHeader>
         <Divider />
         <ModalBody className="scrollbar-hide my-4">
-          <InstalledPythons visible={currentTab === 'installation'} />
-          <VenvPython visible={currentTab === 'venv'} />
+          <InstalledPythons
+            installedPythons={installedPythons}
+            visible={currentTab === 'installation'}
+            setInstalledPythons={setInstalledPythons}
+          />
+          <VenvPython visible={currentTab === 'venv'} installedPythons={installedPythons} />
           <PythonPackageManager visible={currentTab === 'packages'} />
         </ModalBody>
         <Divider />

@@ -42,7 +42,7 @@ export async function listAvailablePythons(): Promise<string[]> {
  * @param pythonVersion - The Python version to install in the new environment (e.g., "3.9.7").
  * @returns Promise<void> - Resolves when the environment is created and Python is installed.
  */
-export const createEnvWithPython = async (envName: string, pythonVersion: string): Promise<void> => {
+export const createCondaEnv = async (envName: string, pythonVersion: string): Promise<void> => {
   return new Promise((resolve, reject) => {
     const window = BrowserWindow.getFocusedWindow()!;
     const command = `conda create --name ${envName} python=${pythonVersion} -y`;

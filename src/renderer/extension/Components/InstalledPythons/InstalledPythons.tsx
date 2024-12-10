@@ -1,7 +1,7 @@
 import {Button, CircularProgress} from '@nextui-org/react';
-import {Empty, Tooltip} from 'antd';
+import {Empty} from 'antd';
 import {isEmpty} from 'lodash';
-import {useEffect, useState} from 'react';
+import {Dispatch, SetStateAction, useEffect, useState} from 'react';
 
 import {pythonChannels, PythonInstallation} from '../../../../cross/CrossExtensions';
 import {bytesToMegabytes} from '../../../../cross/CrossUtils';
@@ -10,8 +10,12 @@ import {getIconByName} from '../../../src/assets/icons/SvgIconsContainer';
 import InstalledCard from './InstalledCard';
 import InstallerModal from './Installer/InstallerModal';
 
-export default function InstalledPythons({visible}: {visible: boolean}) {
-  const [pythons, setPythons] = useState<PythonInstallation[]>([]);
+type Props = {
+  visible: boolean;
+  installedPythons: PythonInstallation[];
+  setInstalledPythons: Dispatch<SetStateAction<PythonInstallation[]>>;
+};
+export default function InstalledPythons({visible, installedPythons, setInstalledPythons}: Props) {
   const [loadingPythons, setLoadingPythons] = useState<boolean>(false);
   const [diskUsage, setDiskUsage] = useState<{path: string; value: number | undefined}[]>([]);
   const [maxDiskValue, setMaxDiskValue] = useState<number>(0);
@@ -33,7 +37,7 @@ export default function InstalledPythons({visible}: {visible: boolean}) {
     setLoadingPythons(true);
     window.electron.ipcRenderer.invoke(pythonChannels.getInstalledPythons).then((result: PythonInstallation[]) => {
       console.log(result);
-      setPythons(result);
+      setInstalledPythons(result);
       setLoadingPythons(false);
 
       for (const python of result) {
@@ -65,7 +69,7 @@ export default function InstalledPythons({visible}: {visible: boolean}) {
   };
 
   const updateDefault = (installFolder: string) => {
-    setPythons(prevState =>
+    setInstalledPythons(prevState =>
       prevState.map(python => {
         if (python.installFolder === installFolder) {
           python.isDefault = true;
@@ -83,7 +87,7 @@ export default function InstalledPythons({visible}: {visible: boolean}) {
   return (
     <div className="w-full flex flex-col gap-y-4">
       <InstallerModal
-        installed={pythons.map(item => {
+        installed={installedPythons.map(item => {
           const {version, installationType} = item;
           return {
             version,
@@ -100,22 +104,25 @@ export default function InstalledPythons({visible}: {visible: boolean}) {
           <Button radius="sm" variant="solid" onPress={openInstallModal} startContent={getIconByName('Add')}>
             Install New Version
           </Button>
-          <Tooltip title="Refresh">
-            <Button variant="faded" onPress={getInstalledPythons} startContent={getIconByName('Refresh')} isIconOnly />
-          </Tooltip>
+          <Button variant="faded" onPress={getInstalledPythons} startContent={getIconByName('Refresh')}>
+            Refresh
+          </Button>
         </div>
       </div>
-      <div className={`flex flex-row flex-wrap gap-8 ${(loadingPythons || isEmpty(pythons)) && 'justify-center'}`}>
+      <div
+        className={
+          `flex flex-row flex-wrap gap-8 ` + `${(loadingPythons || isEmpty(installedPythons)) && 'justify-center'}`
+        }>
         {loadingPythons ? (
           <CircularProgress
             size="lg"
             label="Searching for installed pythons..."
             classNames={{indicator: 'stroke-[#ffe66e]'}}
           />
-        ) : isEmpty(pythons) ? (
+        ) : isEmpty(installedPythons) ? (
           <Empty description="No Python installation detected." />
         ) : (
-          pythons.map(python => (
+          installedPythons.map(python => (
             <InstalledCard
               python={python}
               diskUsage={diskUsage}
