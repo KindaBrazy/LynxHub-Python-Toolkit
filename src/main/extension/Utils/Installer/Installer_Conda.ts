@@ -77,3 +77,15 @@ export const createEnvWithPython = async (envName: string, pythonVersion: string
     });
   });
 };
+
+export function isCondaInstalled(): Promise<boolean> {
+  return new Promise(resolve => {
+    exec('conda --version', (error, _stdout, stderr) => {
+      if (error || stderr) {
+        resolve(false);
+      } else {
+        resolve(true);
+      }
+    });
+  });
+}

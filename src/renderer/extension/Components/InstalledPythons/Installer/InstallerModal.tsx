@@ -20,11 +20,11 @@ export default function InstallerModal({isOpen, closeModal, refresh, installed}:
   const [currentTab, setCurrentTab] = useState<Key>('official');
 
   const installedOfficial = useMemo(
-    () => installed.filter(item => item.installationType === 'conda').map(item => item.version),
+    () => installed.filter(item => item.installationType !== 'conda').map(item => item.version),
     [installed],
   );
   const installedConda = useMemo(
-    () => installed.filter(item => item.installationType !== 'conda').map(item => item.version),
+    () => installed.filter(item => item.installationType === 'conda').map(item => item.version),
     [installed],
   );
 
@@ -51,7 +51,7 @@ export default function InstallerModal({isOpen, closeModal, refresh, installed}:
               <Tab key="conda" title="Conda" />
             </Tabs>
           </ModalHeader>
-          <ModalBody className="pt-4 pb-0 px-0">
+          <ModalBody className="pt-4 pb-0 px-0 scrollbar-hide">
             {currentTab === 'official' && (
               <InstallerOfficial
                 isOpen={isOpen}

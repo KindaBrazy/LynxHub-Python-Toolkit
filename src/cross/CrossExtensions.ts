@@ -25,6 +25,7 @@ export const pythonChannels = {
   getAvailableConda: 'get-available-conda-pythons',
   downloadProgressConda: 'download-conda-python-progress',
   installConda: 'install-conda-python',
+  isCondaInstalled: 'is-conda-installed',
 
   getAvailableOfficial: 'get-available-pythons',
   downloadProgressOfficial: 'download-python-progress',

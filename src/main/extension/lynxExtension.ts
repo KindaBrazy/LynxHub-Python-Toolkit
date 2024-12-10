@@ -5,7 +5,7 @@ import {ExtensionMainApi, MainExtensionUtils} from '../Managements/Plugin/Extens
 import {getAvailablePythonVersions} from './Utils/Available';
 import {setDefaultPython} from './Utils/DefaultPython';
 import detectPythonInstallations from './Utils/Detector';
-import {createEnvWithPython, listAvailablePythons} from './Utils/Installer/Installer_Conda';
+import {createEnvWithPython, isCondaInstalled, listAvailablePythons} from './Utils/Installer/Installer_Conda';
 import downloadPython from './Utils/Installer/Installer_Official';
 import uninstallPython from './Utils/Uninstaller/Uninstaller';
 
@@ -21,6 +21,7 @@ export async function initialExtension(lynxApi: ExtensionMainApi, _utils: MainEx
     ipcMain.handle(pythonChannels.installConda, (_, envName: string, version: string) =>
       createEnvWithPython(envName, version),
     );
+    ipcMain.handle(pythonChannels.isCondaInstalled, () => isCondaInstalled());
 
     ipcMain.handle('set-default-python', (_, pythonPath: string) => setDefaultPython(pythonPath));
   });
