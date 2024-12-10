@@ -7,7 +7,8 @@ import {Dispatch, SetStateAction, useEffect, useState} from 'react';
 import {pythonChannels, PythonVersion} from '../../../../../cross/CrossExtensions';
 import {formatSize} from '../../../../../cross/CrossUtils';
 import {useAppState} from '../../../../src/App/Redux/App/AppReducer';
-import {getIconByName} from '../../../../src/assets/icons/SvgIconsContainer';
+import {Circle_Icon} from '../../../../src/assets/icons/SvgIcons/SvgIcons1';
+import {Refresh_Icon} from '../../../../src/assets/icons/SvgIcons/SvgIcons2';
 
 type DownloadProg = {percentage: number; downloaded: number; total: number} | undefined;
 const CACHE_KEY = 'available-pythons-list';
@@ -101,15 +102,15 @@ export default function InstallerOfficial({refresh, installed, closeModal, isOpe
             type="search"
             value={inputValue}
             onValueChange={setInputValue}
-            startContent={getIconByName('Circle')}
+            startContent={<Circle_Icon />}
             placeholder="Search for python version..."
           />
           <Tooltip title="Refresh from server">
             <Button
               size="sm"
               variant="flat"
+              startContent={<Refresh_Icon />}
               onPress={() => fetchPythonList(true)}
-              startContent={getIconByName('Refresh')}
               isIconOnly
             />
           </Tooltip>

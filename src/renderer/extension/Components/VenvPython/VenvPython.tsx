@@ -4,7 +4,7 @@ import {isEmpty} from 'lodash';
 import {useEffect, useState} from 'react';
 
 import {PythonInstallation, PythonVenvs} from '../../../../cross/CrossExtensions';
-import {getIconByName} from '../../../src/assets/icons/SvgIconsContainer';
+import {OpenFolder_Icon} from '../../../src/assets/icons/SvgIcons/SvgIcons4';
 import PythonVenvCard from './PythonVenvCard';
 import VenvCreator from './VenvCreator';
 
@@ -43,7 +43,7 @@ export default function VenvPython({visible, installedPythons}: Props) {
         <div className="space-x-2">
           <VenvCreator refresh={refresh} installedPythons={installedPythons} />
 
-          <Button radius="sm" variant="faded" startContent={getIconByName('OpenFolder')}>
+          <Button radius="sm" variant="faded" startContent={<OpenFolder_Icon />}>
             Locate
           </Button>
         </div>

@@ -5,7 +5,9 @@ import {useCallback, useEffect, useMemo, useState} from 'react';
 
 import {pythonChannels, PythonInstallation, VenvCreateOptions} from '../../../../cross/CrossExtensions';
 import rendererIpc from '../../../src/App/RendererIpc';
-import {getIconByName} from '../../../src/assets/icons/SvgIconsContainer';
+import {Add_Icon} from '../../../src/assets/icons/SvgIcons/SvgIcons1';
+import {MenuDots_Icon} from '../../../src/assets/icons/SvgIcons/SvgIcons2';
+import {OpenFolder_Icon} from '../../../src/assets/icons/SvgIcons/SvgIcons4';
 
 type Props = {refresh: () => void; installedPythons: PythonInstallation[]};
 
@@ -61,7 +63,7 @@ export default function VenvCreator({installedPythons, refresh}: Props) {
   return (
     <Popover size="lg" isOpen={isOpen} placement="bottom" onOpenChange={setIsOpen} showArrow>
       <PopoverTrigger>
-        <Button radius="sm" variant="solid" startContent={getIconByName('Add')} isDisabled={isEmpty(installedPythons)}>
+        <Button radius="sm" variant="solid" startContent={<Add_Icon />} isDisabled={isEmpty(installedPythons)}>
           Create Environments
         </Button>
       </PopoverTrigger>
@@ -103,8 +105,8 @@ export default function VenvCreator({installedPythons, refresh}: Props) {
                 variant="faded"
                 onPress={selectFolder}
                 className="justify-between"
-                endContent={getIconByName('MenuDots')}
-                startContent={getIconByName('OpenFolder')}>
+                endContent={<MenuDots_Icon />}
+                startContent={<OpenFolder_Icon />}>
                 {targetFolder || 'Select destination folder'}
               </Button>
               <Divider />

@@ -1,7 +1,8 @@
 import {Button, Progress} from '@nextui-org/react';
 import {Card} from 'antd';
 
-import {getIconByName} from '../../../src/assets/icons/SvgIconsContainer';
+import {Download_Icon} from '../../../src/assets/icons/SvgIcons/SvgIcons1';
+import {Trash_Icon} from '../../../src/assets/icons/SvgIcons/SvgIcons3';
 import {WarnIcon} from '../SvgIcons';
 import {DataType} from './PythonPackageManager';
 
@@ -28,11 +29,11 @@ export default function PackageCard({version, versionUpdate, name, size, maxDisk
             </span>
           </div>
           <div className="space-x-2 flex items-center">
-            <Button size="sm" color="danger" variant="light" startContent={getIconByName('Trash')}>
+            <Button size="sm" color="danger" variant="light" startContent={<Trash_Icon />}>
               Uninstall
             </Button>
             {versionUpdate && (
-              <Button size="sm" variant="flat" color="success" startContent={getIconByName('Download')}>
+              <Button size="sm" variant="flat" color="success" startContent={<Download_Icon />}>
                 Update
               </Button>
             )}

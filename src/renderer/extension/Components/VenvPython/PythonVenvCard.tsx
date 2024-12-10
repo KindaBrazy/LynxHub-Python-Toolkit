@@ -1,7 +1,7 @@
 import {Button} from '@nextui-org/react';
 import {Card} from 'antd';
 
-import {getIconByName} from '../../../src/assets/icons/SvgIconsContainer';
+import {Trash_Icon} from '../../../src/assets/icons/SvgIcons/SvgIcons3';
 
 type Props = {
   title: string;
@@ -25,7 +25,7 @@ export default function PythonVenvCard({title, installedPackages, pythonVersion,
           </div>
           <div className="space-x-2 flex items-center">
             <Button size="sm" color="danger" variant="light" onPress={remove} isIconOnly>
-              {getIconByName('Trash', {className: 'size-[50%]'})}
+              <Trash_Icon className="size-[50%]" />
             </Button>
           </div>
         </div>

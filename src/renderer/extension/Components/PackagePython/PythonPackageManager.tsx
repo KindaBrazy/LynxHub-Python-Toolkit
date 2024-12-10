@@ -2,7 +2,8 @@ import {Button, Input} from '@nextui-org/react';
 import {List} from 'antd';
 import {useState} from 'react';
 
-import {getIconByName} from '../../../src/assets/icons/SvgIconsContainer';
+import {Add_Icon, Circle_Icon} from '../../../src/assets/icons/SvgIcons/SvgIcons1';
+import {Refresh3_Icon} from '../../../src/assets/icons/SvgIcons/SvgIcons4';
 import PackageCard from './PackageCard';
 
 export type DataType = {
@@ -36,16 +37,16 @@ export default function PythonPackageManager({visible}: {visible: boolean}) {
       <div className="w-full flex flex-row justify-between items-center">
         <span className="font-bold">Package Management</span>
         <div className="space-x-2">
-          <Button radius="sm" variant="faded" color="success" startContent={getIconByName('Refresh3')}>
+          <Button radius="sm" variant="faded" color="success" startContent={<Refresh3_Icon />}>
             Update All
           </Button>
-          <Button radius="sm" variant="solid" startContent={getIconByName('Add')}>
+          <Button radius="sm" variant="solid" startContent={<Add_Icon />}>
             Install Package
           </Button>
         </div>
       </div>
       <div className="flex flex-row gap-8 flex-wrap">
-        <Input radius="sm" placeholder="Search packages..." startContent={getIconByName('Circle')} />
+        <Input radius="sm" startContent={<Circle_Icon />} placeholder="Search packages..." />
         <List
           renderItem={item => (
             <List.Item className="w-full">

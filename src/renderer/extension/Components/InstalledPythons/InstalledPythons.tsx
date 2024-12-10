@@ -6,7 +6,8 @@ import {Dispatch, SetStateAction, useEffect, useState} from 'react';
 import {pythonChannels, PythonInstallation} from '../../../../cross/CrossExtensions';
 import {bytesToMegabytes} from '../../../../cross/CrossUtils';
 import rendererIpc from '../../../src/App/RendererIpc';
-import {getIconByName} from '../../../src/assets/icons/SvgIconsContainer';
+import {Add_Icon} from '../../../src/assets/icons/SvgIcons/SvgIcons1';
+import {Refresh_Icon} from '../../../src/assets/icons/SvgIcons/SvgIcons2';
 import InstalledCard from './InstalledCard';
 import InstallerModal from './Installer/InstallerModal';
 
@@ -101,10 +102,10 @@ export default function InstalledPythons({visible, installedPythons, setInstalle
       <div className="w-full flex flex-row justify-between items-center">
         <span className="font-bold">Installed Versions</span>
         <div className="justify-center items-center flex gap-x-2">
-          <Button radius="sm" variant="solid" onPress={openInstallModal} startContent={getIconByName('Add')}>
+          <Button radius="sm" variant="solid" onPress={openInstallModal} startContent={<Add_Icon />}>
             Install New Version
           </Button>
-          <Button variant="faded" onPress={getInstalledPythons} startContent={getIconByName('Refresh')}>
+          <Button variant="faded" onPress={getInstalledPythons} startContent={<Refresh_Icon />}>
             Refresh
           </Button>
         </div>

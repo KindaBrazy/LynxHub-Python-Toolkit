@@ -17,7 +17,9 @@ import {SVGProps, useMemo, useState} from 'react';
 import {pythonChannels, PythonInstallation} from '../../../../cross/CrossExtensions';
 import {formatSizeMB} from '../../../../cross/CrossUtils';
 import rendererIpc from '../../../src/App/RendererIpc';
-import {getIconByName} from '../../../src/assets/icons/SvgIconsContainer';
+import {MenuDots_Icon} from '../../../src/assets/icons/SvgIcons/SvgIcons2';
+import {Trash_Icon} from '../../../src/assets/icons/SvgIcons/SvgIcons3';
+import {OpenFolder_Icon, Refresh3_Icon} from '../../../src/assets/icons/SvgIcons/SvgIcons4';
 
 type Props = {
   python: PythonInstallation;
@@ -140,14 +142,14 @@ export default function InstalledCard({python, diskUsage, maxDiskValue, updateDe
               <Dropdown size="sm" className="dark:bg-LynxRaisinBlack">
                 <DropdownTrigger>
                   <Button size="sm" variant="light" isIconOnly>
-                    {getIconByName('MenuDots', {className: 'rotate-90 size-3.5'})}
+                    <MenuDots_Icon className="rotate-90 size-3.5" />
                   </Button>
                 </DropdownTrigger>
                 <DropdownMenu>
                   <DropdownItem
                     key="system-default"
                     onPress={makeDefault}
-                    startContent={python.isDefault ? getIconByName('Refresh3', {className: 'size-4'}) : <CheckSvg />}>
+                    startContent={python.isDefault ? <Refresh3_Icon className="size-4" /> : <CheckSvg />}>
                     Set as <span className="font-bold">System Default</span>
                   </DropdownItem>
                 </DropdownMenu>
@@ -163,7 +165,7 @@ export default function InstalledCard({python, diskUsage, maxDiskValue, updateDe
                 showArrow>
                 <PopoverTrigger>
                   <Button size="sm" color="danger" variant="light" isIconOnly>
-                    {getIconByName('Trash', {className: 'size-[50%]'})}
+                    <Trash_Icon className="size-[50%]" />
                   </Button>
                 </PopoverTrigger>
                 <PopoverContent>
@@ -185,7 +187,7 @@ export default function InstalledCard({python, diskUsage, maxDiskValue, updateDe
         classNames={{body: 'gap-y-4'}}>
         <div className="gap-y-4 flex flex-col">
           <Button size="sm" variant="light" onPress={openPath} className="flex flex-row justify-start -ml-3">
-            {getIconByName('OpenFolder', {className: 'flex-shrink-0'})}
+            <OpenFolder_Icon className="flex-shrink-0" />
             <span className="truncate">{python.installFolder}</span>
           </Button>
           <Progress
