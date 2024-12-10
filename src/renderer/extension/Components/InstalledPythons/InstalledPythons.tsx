@@ -3,7 +3,7 @@ import {Empty, Tooltip} from 'antd';
 import {isEmpty} from 'lodash';
 import {useEffect, useState} from 'react';
 
-import {PythonInstallation} from '../../../../cross/CrossExtensions';
+import {pythonChannels, PythonInstallation} from '../../../../cross/CrossExtensions';
 import {bytesToMegabytes} from '../../../../cross/CrossUtils';
 import rendererIpc from '../../../src/App/RendererIpc';
 import {getIconByName} from '../../../src/assets/icons/SvgIconsContainer';
@@ -31,7 +31,7 @@ export default function InstalledPythons({visible}: {visible: boolean}) {
 
   const getInstalledPythons = () => {
     setLoadingPythons(true);
-    window.electron.ipcRenderer.invoke('get-pythons').then((result: PythonInstallation[]) => {
+    window.electron.ipcRenderer.invoke(pythonChannels.getInstalledPythons).then((result: PythonInstallation[]) => {
       console.log(result);
       setPythons(result);
       setLoadingPythons(false);

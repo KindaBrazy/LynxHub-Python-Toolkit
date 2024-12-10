@@ -11,8 +11,9 @@ import uninstallPython from './Utils/Uninstaller/Uninstaller';
 
 export async function initialExtension(lynxApi: ExtensionMainApi, _utils: MainExtensionUtils) {
   lynxApi.listenForChannels(() => {
-    ipcMain.handle('get-pythons', () => detectPythonInstallations());
-    ipcMain.handle('uninstall-python', (_, path: string) => uninstallPython(path));
+    ipcMain.handle(pythonChannels.getInstalledPythons, () => detectPythonInstallations());
+    ipcMain.handle(pythonChannels.uninstallPython, (_, path: string) => uninstallPython(path));
+    ipcMain.handle(pythonChannels.setDefaultPython, (_, pythonPath: string) => setDefaultPython(pythonPath));
 
     ipcMain.handle(pythonChannels.getAvailableOfficial, () => getAvailablePythonVersions());
     ipcMain.handle(pythonChannels.installOfficial, (_, version: PythonVersion) => downloadPython(version));
@@ -22,7 +23,5 @@ export async function initialExtension(lynxApi: ExtensionMainApi, _utils: MainEx
       createEnvWithPython(envName, version),
     );
     ipcMain.handle(pythonChannels.isCondaInstalled, () => isCondaInstalled());
-
-    ipcMain.handle('set-default-python', (_, pythonPath: string) => setDefaultPython(pythonPath));
   });
 }

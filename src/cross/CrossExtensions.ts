@@ -27,6 +27,10 @@ export const pythonChannels = {
   installConda: 'install-conda-python',
   isCondaInstalled: 'is-conda-installed',
 
+  getInstalledPythons: 'get-installed-pythons',
+  uninstallPython: 'uninstall-python',
+  setDefaultPython: 'set-default-python',
+
   getAvailableOfficial: 'get-available-pythons',
   downloadProgressOfficial: 'download-python-progress',
   installOfficial: 'install-official-python',

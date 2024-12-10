@@ -14,7 +14,7 @@ import {Card, Divider, Spin} from 'antd';
 import {isNil, startCase} from 'lodash';
 import {SVGProps, useMemo, useState} from 'react';
 
-import {PythonInstallation} from '../../../../cross/CrossExtensions';
+import {pythonChannels, PythonInstallation} from '../../../../cross/CrossExtensions';
 import {formatSizeMB} from '../../../../cross/CrossUtils';
 import rendererIpc from '../../../src/App/RendererIpc';
 import {getIconByName} from '../../../src/assets/icons/SvgIconsContainer';
@@ -49,7 +49,7 @@ export default function InstalledCard({python, diskUsage, maxDiskValue, updateDe
 
   const makeDefault = () => {
     window.electron.ipcRenderer
-      .invoke('set-default-python', python.installFolder)
+      .invoke(pythonChannels.setDefaultPython, python.installFolder)
       .then(() => {
         updateDefault(python.installFolder);
       })
@@ -62,7 +62,7 @@ export default function InstalledCard({python, diskUsage, maxDiskValue, updateDe
     setPopoverUninstaller(false);
     setIsUninstalling(true);
     window.electron.ipcRenderer
-      .invoke('uninstall-python', python.installPath)
+      .invoke(pythonChannels.uninstallPython, python.installPath)
       .catch(err => {
         console.error(err);
       })
