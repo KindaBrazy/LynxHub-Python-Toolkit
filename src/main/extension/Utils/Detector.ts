@@ -52,7 +52,7 @@ async function findPythonInPath(): Promise<string[]> {
         const path = await which(cmd);
         if (path) paths.push(path.replace('.EXE', '.exe'));
       } catch (error) {
-        // Command not found, continue
+        // Command wasn't found, continue
       }
     }
 
@@ -79,7 +79,7 @@ async function findInCommonLocations(): Promise<string[]> {
     try {
       const files = await promises.readdir(basePath);
       for (const file of files) {
-        if (await matchPattern(file, pattern)) {
+        if (matchPattern(file, pattern)) {
           const fullPath = join(basePath, file);
           const stats = await promises.stat(fullPath);
           if (stats.isDirectory()) {

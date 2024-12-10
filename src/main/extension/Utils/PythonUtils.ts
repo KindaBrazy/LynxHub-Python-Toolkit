@@ -1,9 +1,8 @@
-import {platform} from 'node:os';
 import {join, resolve} from 'node:path';
 
 import {exec} from 'child_process';
 import {existsSync, promises, readdirSync, statSync} from 'graceful-fs';
-import {homedir} from 'os';
+import {isNil} from 'lodash';
 import {promisify} from 'util';
 
 import {PythonInstallation} from '../../../cross/CrossExtensions';
@@ -38,34 +37,26 @@ export async function detectInstallationType(pythonPath: string): Promise<Python
   }
 }
 
-export function getBaseInstallPath(): string {
-  switch (platform()) {
-    case 'win32':
-      return join(homedir(), 'AppData', 'Local', 'Programs', 'Python');
-    case 'darwin':
-    default:
-      return '';
-  }
-}
-
 export async function parseVersion(pythonPath: string): Promise<{major: number; minor: number; patch: number}> {
-  try {
-    const {stdout} = await execAsync(`"${pythonPath}" --version 2>&1`);
-    const versionMatch = stdout.trim().match(/Python (\d+)\.(\d+)(?:\.(\d+))?/i);
+  return new Promise(async (resolve, reject) => {
+    try {
+      const {stdout} = await execAsync(`"${pythonPath}" --version 2>&1`);
+      const versionMatch = stdout.trim().match(/Python (\d+)\.(\d+)(?:\.(\d+))?/i);
 
-    if (!versionMatch) {
-      throw new Error('Unable to parse version string');
+      if (isNil(versionMatch)) {
+        reject(new Error('Unable to parse version string'));
+      }
+
+      const [, major, minor, patch] = versionMatch!;
+      resolve({
+        major: Number(major),
+        minor: Number(minor),
+        patch: patch ? Number(patch) : 0,
+      });
+    } catch (error) {
+      reject(new Error(`Failed to parse Python version: ${error}`));
     }
-
-    const [, major, minor, patch] = versionMatch;
-    return {
-      major: Number(major),
-      minor: Number(minor),
-      patch: patch ? Number(patch) : 0,
-    };
-  } catch (error) {
-    throw new Error(`Failed to parse Python version: ${error}`);
-  }
+  });
 }
 
 export function findFileInDir(dirPath: string, fileName: string | undefined): string | null {

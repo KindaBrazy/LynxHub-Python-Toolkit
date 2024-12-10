@@ -47,31 +47,32 @@ export async function isDefaultPython(pythonPath: string): Promise<boolean> {
 }
 
 async function setDefaultPythonWindows(pythonPath: string): Promise<void> {
-  try {
-    const {stdout: currentPath} = await execAsync('reg query "HKEY_CURRENT_USER\\Environment" /v Path');
+  return new Promise(async (resolve, reject) => {
+    try {
+      const {stdout: currentPath} = await execAsync('reg query "HKEY_CURRENT_USER\\Environment" /v Path');
 
-    const match = currentPath.match(/REG_\w+\s+(.+)/);
-    if (!match) {
-      throw new Error('Failed to retrieve current PATH');
+      const match = currentPath.match(/REG_\w+\s+(.+)/);
+      if (!match) {
+        reject(new Error('Failed to retrieve current PATH'));
+      }
+
+      const paths = match ? match[1].split(';').filter(Boolean) : [];
+
+      const nonPythonPaths = paths.filter(path => !path.toLowerCase().includes('python'));
+
+      const newPaths = [pythonPath, join(pythonPath, 'Scripts'), ...nonPythonPaths];
+
+      const newPathValue = newPaths.join(';');
+
+      const regCommand = `REG ADD "HKEY_CURRENT_USER\\Environment" /v Path /t REG_EXPAND_SZ /d "${newPathValue}" /f`;
+
+      await execAsync(regCommand);
+
+      process.env.PATH = newPathValue;
+      resolve();
+    } catch (error) {
+      const errorMessage = error instanceof Error ? error.message : String(error);
+      reject(new Error(`Failed to update Python path: ${errorMessage}`));
     }
-
-    const paths = match[1].split(';').filter(Boolean);
-
-    const nonPythonPaths = paths.filter(path => !path.toLowerCase().includes('python'));
-
-    const newPaths = [pythonPath, join(pythonPath, 'Scripts'), ...nonPythonPaths];
-
-    const newPathValue = newPaths.join(';');
-
-    const regCommand = `REG ADD "HKEY_CURRENT_USER\\Environment" /v Path /t REG_EXPAND_SZ /d "${newPathValue}" /f`;
-
-    await execAsync(regCommand);
-
-    process.env.PATH = newPathValue;
-
-    console.log('Python path updated successfully');
-  } catch (error) {
-    const errorMessage = error instanceof Error ? error.message : String(error);
-    throw new Error(`Failed to update Python path: ${errorMessage}`);
-  }
+  });
 }

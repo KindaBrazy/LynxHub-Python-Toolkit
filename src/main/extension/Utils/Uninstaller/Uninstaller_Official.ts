@@ -44,7 +44,10 @@ async function uninstallWindowsPython(pythonPath: string): Promise<{success: boo
     const installerToUninstall = findPythonInstallerByVersion(versionString);
 
     if (!installerToUninstall) {
-      throw new Error(`No Python installer found for version ${version}`);
+      return {
+        success: false,
+        message: `No Python installer found for version ${version}`,
+      };
     }
 
     await uninstallPythonWindows(installerToUninstall);
@@ -136,33 +139,36 @@ async function cleanupWindowsRegistry(version: string): Promise<void> {
 }
 
 async function removePythonFromPath(pythonPath: string): Promise<void> {
-  try {
-    const {stdout: currentPath} = await execAsync('reg query "HKEY_CURRENT_USER\\Environment" /v Path');
+  return new Promise(async (resolve, reject) => {
+    try {
+      const {stdout: currentPath} = await execAsync('reg query "HKEY_CURRENT_USER\\Environment" /v Path');
 
-    const match = currentPath.match(/REG_\w+\s+(.+)/);
-    if (!match) {
-      throw new Error('Failed to retrieve current PATH');
+      const match = currentPath.match(/REG_\w+\s+(.+)/);
+      if (!match) {
+        reject(new Error('Failed to retrieve current PATH'));
+      }
+
+      const paths = match ? match[1].split(';').filter(Boolean) : [];
+      const nonPythonPaths = paths.filter(path => !path.toLowerCase().includes(pythonPath.toLowerCase()));
+
+      if (paths.length === nonPythonPaths.length) {
+        console.log('No Python paths found in PATH');
+        return;
+      }
+
+      const newPathValue = nonPythonPaths.join(';');
+
+      const regCommand = `REG ADD "HKEY_CURRENT_USER\\Environment" /v Path /t REG_EXPAND_SZ /d "${newPathValue}" /f`;
+
+      await execAsync(regCommand);
+
+      process.env.PATH = newPathValue;
+
+      console.log('Python paths removed successfully');
+      resolve();
+    } catch (error) {
+      const errorMessage = error instanceof Error ? error.message : String(error);
+      reject(new Error(`Failed to remove Python from PATH: ${errorMessage}`));
     }
-
-    const paths = match[1].split(';').filter(Boolean);
-    const nonPythonPaths = paths.filter(path => !path.toLowerCase().includes(pythonPath.toLowerCase()));
-
-    if (paths.length === nonPythonPaths.length) {
-      console.log('No Python paths found in PATH');
-      return;
-    }
-
-    const newPathValue = nonPythonPaths.join(';');
-
-    const regCommand = `REG ADD "HKEY_CURRENT_USER\\Environment" /v Path /t REG_EXPAND_SZ /d "${newPathValue}" /f`;
-
-    await execAsync(regCommand);
-
-    process.env.PATH = newPathValue;
-
-    console.log('Python paths removed successfully');
-  } catch (error) {
-    const errorMessage = error instanceof Error ? error.message : String(error);
-    throw new Error(`Failed to remove Python from PATH: ${errorMessage}`);
-  }
+  });
 }
