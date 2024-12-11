@@ -23,6 +23,7 @@ export default function PythonToolkitModal({isOpen, setIsOpen}: ModalProps) {
   return (
     <Modal
       isOpen={isOpen}
+      backdrop="blur"
       onClose={onClose}
       isDismissable={false}
       scrollBehavior="inside"
