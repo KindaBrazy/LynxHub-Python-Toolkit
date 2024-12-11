@@ -21,6 +21,13 @@ export default function VenvCreator({installedPythons, refresh}: Props) {
 
   const [isOpen, setIsOpen] = useState<boolean>(false);
 
+  useEffect(() => {
+    if (!isOpen) {
+      setTargetFolder('');
+      setEnvName('');
+    }
+  }, [isOpen]);
+
   const disabledCreate = useMemo(() => {
     return isEmpty(targetFolder) || isEmpty(envName) || isEmpty(selectedVersion);
   }, [targetFolder, envName, selectedVersion]);
