@@ -40,7 +40,7 @@ export function Python_Icon(props: SvgProps): ReactElement {
   );
 }
 
-export function WarnIcon(props: SvgProps): ReactElement {
+export function Warn_Icon(props: SvgProps): ReactElement {
   return (
     <svg {...props} width="24" height="24" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
       <path

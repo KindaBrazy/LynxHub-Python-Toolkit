@@ -1,7 +1,9 @@
 import {Button, Popover, PopoverContent, PopoverTrigger} from '@nextui-org/react';
-import {Card, message} from 'antd';
-import {useState} from 'react';
+import {Card, message, Spin} from 'antd';
+import {isNil} from 'lodash';
+import {useMemo, useState} from 'react';
 
+import {formatSizeMB} from '../../../../cross/CrossUtils';
 import rendererIpc from '../../../src/App/RendererIpc';
 import {Trash_Icon} from '../../../src/assets/icons/SvgIcons/SvgIcons3';
 import {OpenFolder_Icon} from '../../../src/assets/icons/SvgIcons/SvgIcons4';
@@ -10,11 +12,15 @@ type Props = {
   title: string;
   pythonVersion: string;
   installedPackages: number;
-  size: number;
   folder: string;
+  diskUsage: {path: string; value: number | undefined}[];
 };
-export default function PythonVenvCard({title, installedPackages, pythonVersion, size, folder}: Props) {
+export default function PythonVenvCard({title, installedPackages, pythonVersion, folder, diskUsage}: Props) {
   const [popoverUninstaller, setPopoverUninstaller] = useState<boolean>(false);
+
+  const size = useMemo(() => {
+    return diskUsage.find(usage => usage.path === folder)?.value;
+  }, [diskUsage]);
 
   const [isRemoving, setIsRemoving] = useState<boolean>(false);
   const remove = () => {
@@ -88,7 +94,7 @@ export default function PythonVenvCard({title, installedPackages, pythonVersion,
         </div>
         <div className="w-full justify-between flex flex-row">
           <span>Size:</span>
-          <span>{size} MB</span>
+          {isNil(size) ? <Spin size="small" /> : <span>{formatSizeMB(size || 0)}</span>}
         </div>
       </div>
     </Card>

@@ -3,7 +3,7 @@ import {Card} from 'antd';
 
 import {Download_Icon} from '../../../src/assets/icons/SvgIcons/SvgIcons1';
 import {Trash_Icon} from '../../../src/assets/icons/SvgIcons/SvgIcons3';
-import {WarnIcon} from '../SvgIcons';
+import {Warn_Icon} from '../SvgIcons';
 import {DataType} from './PythonPackageManager';
 
 type Props = DataType & {
@@ -22,7 +22,7 @@ export default function PackageCard({version, versionUpdate, name, size, maxDisk
           <div className="flex flex-col my-3">
             <div className="text-large font-semibold flex flex-row items-center space-x-1">
               <span>{name}</span>
-              {versionUpdate && <WarnIcon className="text-warning size-5" />}
+              {versionUpdate && <Warn_Icon className="text-warning size-5" />}
             </div>
             <span className="text-tiny text-foreground-500">
               v{version} {versionUpdate && <span>(v{versionUpdate} Available)</span>}

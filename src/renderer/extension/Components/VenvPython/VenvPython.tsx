@@ -1,20 +1,28 @@
 import {Button, CircularProgress} from '@nextui-org/react';
 import {Empty, message} from 'antd';
-import {isEmpty, random} from 'lodash';
+import {isEmpty} from 'lodash';
 import {useCallback, useEffect, useState} from 'react';
 
 import {pythonChannels, PythonInstallation, PythonVenvs, VenvInfo} from '../../../../cross/CrossExtensions';
+import {bytesToMegabytes} from '../../../../cross/CrossUtils';
+import rendererIpc from '../../../src/App/RendererIpc';
 import {OpenFolder_Icon} from '../../../src/assets/icons/SvgIcons/SvgIcons4';
 import PythonVenvCard from './PythonVenvCard';
 import VenvCreator from './VenvCreator';
 
-type Props = {visible: boolean; installedPythons: PythonInstallation[]; isLoadingPythons: boolean};
+type Props = {
+  visible: boolean;
+  installedPythons: PythonInstallation[];
+  isLoadingPythons: boolean;
+};
 
 export default function VenvPython({visible, installedPythons, isLoadingPythons}: Props) {
   const [pythonVenvs, setPythonVenvs] = useState<PythonVenvs[]>([]);
   const [isLoading, setIsLoading] = useState<boolean>(false);
 
   const [isLocating, setIsLocating] = useState<boolean>(false);
+
+  const [diskUsage, setDiskUsage] = useState<{path: string; value: number | undefined}[]>([]);
 
   const getVenvs = useCallback(() => {
     setIsLoading(true);
@@ -26,10 +34,21 @@ export default function VenvPython({visible, installedPythons, isLoadingPythons}
             title: venv.folderName,
             installedPackages: venv.sitePackagesCount,
             folder: venv.folder,
-            size: random(1000),
           };
         }),
       );
+      for (const venv of result) {
+        rendererIpc.file.calcFolderSize(venv.folder).then(value => {
+          if (value)
+            setDiskUsage(prevState => [
+              ...prevState,
+              {
+                path: venv.folder,
+                value: bytesToMegabytes(value),
+              },
+            ]);
+        });
+      }
       setIsLoading(false);
     });
   }, []);
@@ -85,9 +104,9 @@ export default function VenvPython({visible, installedPythons, isLoadingPythons}
           <>
             {pythonVenvs.map(venv => (
               <PythonVenvCard
-                size={venv.size}
                 title={venv.title}
                 folder={venv.folder}
+                diskUsage={diskUsage}
                 key={`${venv.title}_card`}
                 pythonVersion={venv.pythonVersion}
                 installedPackages={venv.installedPackages}

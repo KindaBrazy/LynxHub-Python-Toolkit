@@ -15,7 +15,6 @@ export type PythonVenvs = {
   title: string;
   pythonVersion: string;
   installedPackages: number;
-  size: number;
   folder: string;
 };
 
