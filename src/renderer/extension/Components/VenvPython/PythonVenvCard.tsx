@@ -1,5 +1,6 @@
-import {Button} from '@nextui-org/react';
-import {Card} from 'antd';
+import {Button, Popover, PopoverContent, PopoverTrigger} from '@nextui-org/react';
+import {Card, message} from 'antd';
+import {useState} from 'react';
 
 import rendererIpc from '../../../src/App/RendererIpc';
 import {Trash_Icon} from '../../../src/assets/icons/SvgIcons/SvgIcons3';
@@ -13,7 +14,24 @@ type Props = {
   folder: string;
 };
 export default function PythonVenvCard({title, installedPackages, pythonVersion, size, folder}: Props) {
-  const remove = () => {};
+  const [popoverUninstaller, setpopoverUninstaller] = useState<boolean>(false);
+
+  const [isRemoving, setIsRemoving] = useState<boolean>(false);
+  const remove = () => {
+    setpopoverUninstaller(false);
+    setIsRemoving(true);
+    rendererIpc.file
+      .trashDir(folder)
+      .then(() => {
+        message.error(`${title} removed successfully`);
+      })
+      .catch(() => {
+        message.error(`Failed to remove ${title}`);
+      })
+      .finally(() => {
+        setIsRemoving(false);
+      });
+  };
   const openPath = () => {
     rendererIpc.file.openPath(folder);
   };
@@ -30,9 +48,31 @@ export default function PythonVenvCard({title, installedPackages, pythonVersion,
             <span className="text-tiny text-foreground-500">Python {pythonVersion}</span>
           </div>
           <div className="space-x-2 flex items-center">
-            <Button size="sm" color="danger" variant="light" onPress={remove} isIconOnly>
-              <Trash_Icon className="size-[50%]" />
-            </Button>
+            <Popover
+              size="sm"
+              color="danger"
+              placement="left"
+              className="max-w-[15rem]"
+              isOpen={popoverUninstaller}
+              onOpenChange={setpopoverUninstaller}
+              showArrow>
+              <PopoverTrigger>
+                <Button size="sm" color="danger" variant="light" isLoading={isRemoving} isIconOnly>
+                  <Trash_Icon className="size-[50%]" />
+                </Button>
+              </PopoverTrigger>
+              <PopoverContent>
+                <div className="p-2 space-y-2">
+                  <span>
+                    This will permanently delete the <span className="font-bold">{title}</span> folder and all its
+                    contents. Are you sure you want to proceed?
+                  </span>
+                  <Button size="sm" onPress={remove} fullWidth>
+                    Remove
+                  </Button>
+                </div>
+              </PopoverContent>
+            </Popover>
           </div>
         </div>
       }
