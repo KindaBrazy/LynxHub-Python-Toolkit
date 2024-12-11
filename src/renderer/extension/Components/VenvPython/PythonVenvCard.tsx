@@ -1,16 +1,22 @@
 import {Button} from '@nextui-org/react';
 import {Card} from 'antd';
 
+import rendererIpc from '../../../src/App/RendererIpc';
 import {Trash_Icon} from '../../../src/assets/icons/SvgIcons/SvgIcons3';
+import {OpenFolder_Icon} from '../../../src/assets/icons/SvgIcons/SvgIcons4';
 
 type Props = {
   title: string;
   pythonVersion: string;
   installedPackages: number;
   size: number;
+  folder: string;
 };
-export default function PythonVenvCard({title, installedPackages, pythonVersion, size}: Props) {
+export default function PythonVenvCard({title, installedPackages, pythonVersion, size, folder}: Props) {
   const remove = () => {};
+  const openPath = () => {
+    rendererIpc.file.openPath(folder);
+  };
   return (
     <Card
       className={
@@ -32,6 +38,10 @@ export default function PythonVenvCard({title, installedPackages, pythonVersion,
       }
       classNames={{body: 'gap-y-4'}}>
       <div className="gap-y-4 flex flex-col">
+        <Button size="sm" variant="light" onPress={openPath} className="flex flex-row justify-start -ml-3">
+          <OpenFolder_Icon className="flex-shrink-0" />
+          <span className="truncate">{folder}</span>
+        </Button>
         <div className="w-full justify-between flex flex-row">
           <span>Packages:</span>
           <span>{installedPackages} Installed</span>

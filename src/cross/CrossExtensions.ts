@@ -16,6 +16,7 @@ export type PythonVenvs = {
   pythonVersion: string;
   installedPackages: number;
   size: number;
+  folder: string;
 };
 
 export type PythonVersion = {
@@ -27,6 +28,13 @@ export type VenvCreateOptions = {
   pythonPath: string;
   destinationFolder: string;
   venvName: string;
+};
+
+export type VenvInfo = {
+  pythonVersion: string;
+  sitePackagesCount: number;
+  folderName: string;
+  folder: string;
 };
 
 export const pythonChannels = {
@@ -44,4 +52,6 @@ export const pythonChannels = {
   installOfficial: 'install-official-python',
 
   createVenv: 'create-venv',
+  getVenvs: 'get-venvs',
+  locateVenv: 'locate-venv',
 };

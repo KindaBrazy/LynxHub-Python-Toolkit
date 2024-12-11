@@ -2,15 +2,21 @@ import {ipcMain} from 'electron';
 
 import {pythonChannels, PythonVersion, VenvCreateOptions} from '../../cross/CrossExtensions';
 import {ExtensionMainApi, MainExtensionUtils} from '../Managements/Plugin/Extensions/ExtensionTypes_Main';
+import StorageManager from '../Managements/Storage/StorageManager';
 import {getAvailablePythonVersions} from './Utils/Available';
 import {setDefaultPython} from './Utils/DefaultPython';
 import detectPythonInstallations from './Utils/Detector';
 import {createCondaEnv, isCondaInstalled, listAvailablePythons} from './Utils/Installer/Installer_Conda';
 import downloadPython from './Utils/Installer/Installer_Official';
 import uninstallPython from './Utils/Uninstaller/Uninstaller';
-import createPythonVenv from './Utils/VirtualEnv/CreateVenv';
+import createPythonVenv, {getVenvs, locateVenv} from './Utils/VirtualEnv/CreateVenv';
 
-export async function initialExtension(lynxApi: ExtensionMainApi, _utils: MainExtensionUtils) {
+export let storageManager: StorageManager | undefined = undefined;
+
+export async function initialExtension(lynxApi: ExtensionMainApi, utils: MainExtensionUtils) {
+  utils.getStorageManager().then(storeManager => {
+    storageManager = storeManager;
+  });
   lynxApi.listenForChannels(() => {
     ipcMain.handle(pythonChannels.getInstalledPythons, () => detectPythonInstallations());
     ipcMain.handle(pythonChannels.uninstallPython, (_, path: string) => uninstallPython(path));
@@ -26,5 +32,7 @@ export async function initialExtension(lynxApi: ExtensionMainApi, _utils: MainEx
     ipcMain.handle(pythonChannels.isCondaInstalled, () => isCondaInstalled());
 
     ipcMain.handle(pythonChannels.createVenv, (_, options: VenvCreateOptions) => createPythonVenv(options));
+    ipcMain.handle(pythonChannels.getVenvs, () => getVenvs());
+    ipcMain.handle(pythonChannels.locateVenv, () => locateVenv());
   });
 }
