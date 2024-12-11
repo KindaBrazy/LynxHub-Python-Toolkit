@@ -8,6 +8,8 @@ import {formatSizeMB} from '../../../../cross/CrossUtils';
 import rendererIpc from '../../../src/App/RendererIpc';
 import {Trash_Icon} from '../../../src/assets/icons/SvgIcons/SvgIcons3';
 import {OpenFolder_Icon} from '../../../src/assets/icons/SvgIcons/SvgIcons4';
+import {HardDrive_Icon} from '../../../src/assets/icons/SvgIcons/SvgIcons5';
+import {Env_Icon, Packages_Icon} from '../SvgIcons';
 
 const TITLE_STORE_KEY = 'title_change_key';
 type StorageItem = {title: string; path: string};
@@ -75,13 +77,14 @@ export default function PythonVenvCard({title, installedPackages, pythonVersion,
   return (
     <Card
       className={
-        `min-w-[27rem] grow transition-colors duration-300 shadow-small` +
+        `min-w-[27rem] grow transition-colors duration-300 shadow-small ` +
         'dark:hover:border-white/20 hover:border-black/20'
       }
       title={
         <div className="flex flex-row justify-between items-center">
           <div className="flex flex-col my-3">
-            <div className="flex flex-row items-center">
+            <div className="flex flex-row items-center gap-x-2">
+              <Env_Icon className="size-[1.2rem]" />
               <span
                 className="pr-7"
                 spellCheck={false}
@@ -121,19 +124,24 @@ export default function PythonVenvCard({title, installedPackages, pythonVersion,
             </Popover>
           </div>
         </div>
-      }
-      classNames={{body: 'gap-y-4'}}>
+      }>
       <div className="gap-y-4 flex flex-col">
         <Button size="sm" variant="light" onPress={openPath} className="flex flex-row justify-start -ml-3">
           <OpenFolder_Icon className="flex-shrink-0" />
           <span className="truncate">{folder}</span>
         </Button>
         <div className="w-full justify-between flex flex-row">
-          <span>Packages:</span>
+          <div className="flex flex-row gap-x-1 items-center">
+            <Packages_Icon className="size-3" />
+            <span>Packages:</span>
+          </div>
           <span>{installedPackages} Installed</span>
         </div>
         <div className="w-full justify-between flex flex-row">
-          <span>Size:</span>
+          <div className="flex flex-row gap-x-1 items-center">
+            <HardDrive_Icon />
+            <span>Disk Usage:</span>
+          </div>
           {isNil(size) ? <Spin size="small" /> : <span>{formatSizeMB(size || 0)}</span>}
         </div>
       </div>

@@ -76,7 +76,7 @@ export default function VenvPython({visible, installedPythons, isLoadingPythons}
     <div className="w-full flex flex-col gap-y-4">
       <div className="w-full flex flex-row justify-between items-center">
         <span className="font-bold">Virtual Environments</span>
-        <div className="space-x-2">
+        <div className="gap-x-2 flex flex-row">
           <VenvCreator refresh={getVenvs} installedPythons={installedPythons} isLoadingPythons={isLoadingPythons} />
 
           <Button

@@ -20,6 +20,8 @@ import rendererIpc from '../../../src/App/RendererIpc';
 import {MenuDots_Icon} from '../../../src/assets/icons/SvgIcons/SvgIcons2';
 import {Trash_Icon} from '../../../src/assets/icons/SvgIcons/SvgIcons3';
 import {OpenFolder_Icon, Refresh3_Icon} from '../../../src/assets/icons/SvgIcons/SvgIcons4';
+import {HardDrive_Icon} from '../../../src/assets/icons/SvgIcons/SvgIcons5';
+import {Python_Icon} from '../SvgIcons';
 
 type Props = {
   python: PythonInstallation;
@@ -113,7 +115,8 @@ export default function InstalledCard({python, diskUsage, maxDiskValue, updateDe
         title={
           <div className="flex flex-row justify-between items-center">
             <div className="flex flex-col my-3">
-              <span>
+              <div className="flex flex-row items-center gap-x-2">
+                <Python_Icon className="size-4" />
                 Python {python.version}
                 {python.isDefault && (
                   <Chip
@@ -125,7 +128,7 @@ export default function InstalledCard({python, diskUsage, maxDiskValue, updateDe
                     Default
                   </Chip>
                 )}
-              </span>
+              </div>
               <div>
                 <span className="text-tiny text-foreground-500">{python.architecture}</span>
                 <Divider type="vertical" />
@@ -191,11 +194,16 @@ export default function InstalledCard({python, diskUsage, maxDiskValue, updateDe
             <span className="truncate">{python.installFolder}</span>
           </Button>
           <Progress
+            label={
+              <div className="flex flex-row gap-x-2 items-center">
+                <HardDrive_Icon />
+                <span>Disk Usage:</span>
+              </div>
+            }
             size="sm"
             minValue={0}
             value={size}
             color="primary"
-            label="Disk Usage:"
             maxValue={maxDiskValue}
             isIndeterminate={isNil(size)}
             valueLabel={formatSizeMB(size || 0)}
