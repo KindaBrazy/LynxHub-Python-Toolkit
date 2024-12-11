@@ -72,7 +72,7 @@ export async function getVenvInfo(venvPath: string): Promise<VenvInfo | null> {
     return {
       pythonVersion,
       sitePackagesCount,
-      folderName,
+      name: folderName,
       folder: venvPath,
     };
   } catch (error) {

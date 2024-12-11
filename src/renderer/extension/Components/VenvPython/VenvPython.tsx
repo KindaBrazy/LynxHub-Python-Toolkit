@@ -31,7 +31,7 @@ export default function VenvPython({visible, installedPythons, isLoadingPythons}
         result.map(venv => {
           return {
             pythonVersion: venv.pythonVersion,
-            title: venv.folderName,
+            title: venv.name,
             installedPackages: venv.sitePackagesCount,
             folder: venv.folder,
           };

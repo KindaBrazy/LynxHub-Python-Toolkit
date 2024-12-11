@@ -32,7 +32,7 @@ export type VenvCreateOptions = {
 export type VenvInfo = {
   pythonVersion: string;
   sitePackagesCount: number;
-  folderName: string;
+  name: string;
   folder: string;
 };
 

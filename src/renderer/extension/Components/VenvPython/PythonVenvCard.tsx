@@ -1,12 +1,16 @@
 import {Button, Popover, PopoverContent, PopoverTrigger} from '@nextui-org/react';
 import {Card, message, Spin} from 'antd';
+import {SHA256} from 'crypto-js';
 import {isNil} from 'lodash';
-import {useMemo, useState} from 'react';
+import {FormEvent, useEffect, useMemo, useState} from 'react';
 
 import {formatSizeMB} from '../../../../cross/CrossUtils';
 import rendererIpc from '../../../src/App/RendererIpc';
 import {Trash_Icon} from '../../../src/assets/icons/SvgIcons/SvgIcons3';
 import {OpenFolder_Icon} from '../../../src/assets/icons/SvgIcons/SvgIcons4';
+
+const TITLE_STORE_KEY = 'title_change_key';
+type StorageItem = {title: string; path: string};
 
 type Props = {
   title: string;
@@ -15,8 +19,18 @@ type Props = {
   folder: string;
   diskUsage: {path: string; value: number | undefined}[];
 };
+
 export default function PythonVenvCard({title, installedPackages, pythonVersion, folder, diskUsage}: Props) {
   const [popoverUninstaller, setPopoverUninstaller] = useState<boolean>(false);
+  const [editedTitle, setEditedTitle] = useState<string>(title);
+
+  useEffect(() => {
+    const storedItems: StorageItem[] = JSON.parse(localStorage.getItem(TITLE_STORE_KEY) || '[]');
+
+    const existingTitle = storedItems.find(item => item.path === SHA256(folder).toString());
+
+    if (existingTitle) setEditedTitle(existingTitle.title);
+  }, [folder]);
 
   const size = useMemo(() => {
     return diskUsage.find(usage => usage.path === folder)?.value;
@@ -41,16 +55,42 @@ export default function PythonVenvCard({title, installedPackages, pythonVersion,
   const openPath = () => {
     rendererIpc.file.openPath(folder);
   };
+
+  const onTitleChange = (event: FormEvent<HTMLSpanElement>) => {
+    const textContent = event.currentTarget.textContent || '';
+
+    const storedItems: StorageItem[] = JSON.parse(localStorage.getItem(TITLE_STORE_KEY) || '[]');
+
+    const existingIndex = storedItems.findIndex(item => item.path === SHA256(folder).toString());
+
+    if (existingIndex > -1) {
+      storedItems[existingIndex].title = textContent;
+    } else {
+      storedItems.push({path: SHA256(folder).toString(), title: textContent});
+    }
+
+    localStorage.setItem(TITLE_STORE_KEY, JSON.stringify(storedItems));
+  };
+
   return (
     <Card
       className={
         `min-w-[27rem] grow transition-colors duration-300 shadow-small` +
-        'dark:hover:border-white/20 hover:border-black/20 '
+        'dark:hover:border-white/20 hover:border-black/20'
       }
       title={
         <div className="flex flex-row justify-between items-center">
           <div className="flex flex-col my-3">
-            <span>{title}</span>
+            <div className="flex flex-row items-center">
+              <span
+                className="pr-7"
+                spellCheck={false}
+                onInput={onTitleChange}
+                contentEditable
+                suppressContentEditableWarning>
+                {editedTitle}
+              </span>
+            </div>
             <span className="text-tiny text-foreground-500">Python {pythonVersion}</span>
           </div>
           <div className="space-x-2 flex items-center">
