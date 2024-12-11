@@ -5,6 +5,11 @@ import {
   DropdownItem,
   DropdownMenu,
   DropdownTrigger,
+  Modal,
+  ModalBody,
+  ModalContent,
+  ModalFooter,
+  ModalHeader,
   Popover,
   PopoverContent,
   PopoverTrigger,
@@ -17,10 +22,12 @@ import {SVGProps, useMemo, useState} from 'react';
 import {pythonChannels, PythonInstallation} from '../../../../cross/CrossExtensions';
 import {formatSizeMB} from '../../../../cross/CrossUtils';
 import rendererIpc from '../../../src/App/RendererIpc';
+import {modalMotionProps} from '../../../src/App/Utils/Constants';
 import {MenuDots_Icon} from '../../../src/assets/icons/SvgIcons/SvgIcons2';
 import {Trash_Icon} from '../../../src/assets/icons/SvgIcons/SvgIcons3';
 import {OpenFolder_Icon, Refresh3_Icon} from '../../../src/assets/icons/SvgIcons/SvgIcons4';
 import {HardDrive_Icon} from '../../../src/assets/icons/SvgIcons/SvgIcons5';
+import PythonPackageManager from '../PackagePython/PythonPackageManager';
 import {Packages_Icon, Python_Icon} from '../SvgIcons';
 
 type Props = {
@@ -93,8 +100,39 @@ export default function InstalledCard({python, diskUsage, maxDiskValue, updateDe
 
   const [popoverUninstaller, setPopoverUninstaller] = useState<boolean>(false);
 
+  const [packageManagerOpen, setPackageManagerOpen] = useState<boolean>(false);
+  const packageManager = () => {
+    setPackageManagerOpen(true);
+  };
+  const closePackageManager = () => {
+    setPackageManagerOpen(false);
+  };
+
   return (
     <div className="grow relative">
+      <Modal
+        size="xl"
+        isDismissable={false}
+        scrollBehavior="inside"
+        isOpen={packageManagerOpen}
+        onClose={closePackageManager}
+        motionProps={modalMotionProps}
+        classNames={{backdrop: '!top-10', wrapper: '!top-10 pb-8'}}
+        hideCloseButton>
+        <ModalContent className="overflow-hidden">
+          <ModalHeader className="bg-foreground-100 justify-center items-center flex-col gap-y-2">
+            Package Manager
+          </ModalHeader>
+          <ModalBody className="pt-4 scrollbar-hide">
+            <PythonPackageManager />
+          </ModalBody>
+          <ModalFooter className="bg-foreground-100">
+            <Button size="sm" color="warning" variant="faded" onPress={closePackageManager} fullWidth>
+              Close
+            </Button>
+          </ModalFooter>
+        </ModalContent>
+      </Modal>
       {isUninstalling && (
         <div className="absolute size-full dark:bg-black/50 bg-white/50 z-10 flex justify-center items-center">
           <div className=" dark:bg-black/80 bg-white/80 p-4 rounded-lg flex flex-col space-y-2">
@@ -142,7 +180,7 @@ export default function InstalledCard({python, diskUsage, maxDiskValue, updateDe
               </div>
             </div>
             <div className="space-x-1 flex items-center">
-              <Dropdown size="sm" className="dark:bg-LynxRaisinBlack">
+              <Dropdown className="dark:bg-LynxRaisinBlack">
                 <DropdownTrigger>
                   <Button size="sm" variant="light" isIconOnly>
                     <MenuDots_Icon className="rotate-90 size-3.5" />
@@ -154,6 +192,12 @@ export default function InstalledCard({python, diskUsage, maxDiskValue, updateDe
                     onPress={makeDefault}
                     startContent={python.isDefault ? <Refresh3_Icon className="size-4" /> : <CheckSvg />}>
                     Set as <span className="font-bold">System Default</span>
+                  </DropdownItem>
+                  <DropdownItem
+                    key="package-manager"
+                    onPress={packageManager}
+                    startContent={<Packages_Icon className="size-4" />}>
+                    Package Manager
                   </DropdownItem>
                 </DropdownMenu>
               </Dropdown>

@@ -1,4 +1,18 @@
-import {Button, Popover, PopoverContent, PopoverTrigger} from '@nextui-org/react';
+import {
+  Button,
+  Dropdown,
+  DropdownItem,
+  DropdownMenu,
+  DropdownTrigger,
+  Modal,
+  ModalBody,
+  ModalContent,
+  ModalFooter,
+  ModalHeader,
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from '@nextui-org/react';
 import {Card, message, Spin} from 'antd';
 import {SHA256} from 'crypto-js';
 import {isNil} from 'lodash';
@@ -6,9 +20,12 @@ import {FormEvent, useEffect, useMemo, useState} from 'react';
 
 import {formatSizeMB} from '../../../../cross/CrossUtils';
 import rendererIpc from '../../../src/App/RendererIpc';
+import {modalMotionProps} from '../../../src/App/Utils/Constants';
+import {MenuDots_Icon} from '../../../src/assets/icons/SvgIcons/SvgIcons2';
 import {Trash_Icon} from '../../../src/assets/icons/SvgIcons/SvgIcons3';
 import {OpenFolder_Icon} from '../../../src/assets/icons/SvgIcons/SvgIcons4';
 import {HardDrive_Icon} from '../../../src/assets/icons/SvgIcons/SvgIcons5';
+import PythonPackageManager from '../PackagePython/PythonPackageManager';
 import {Env_Icon, Packages_Icon} from '../SvgIcons';
 
 const TITLE_STORE_KEY = 'title_change_key';
@@ -74,77 +91,126 @@ export default function PythonVenvCard({title, installedPackages, pythonVersion,
     localStorage.setItem(TITLE_STORE_KEY, JSON.stringify(storedItems));
   };
 
+  const [packageManagerOpen, setPackageManagerOpen] = useState<boolean>(false);
+  const packageManager = () => {
+    setPackageManagerOpen(true);
+  };
+  const closePackageManager = () => {
+    setPackageManagerOpen(false);
+  };
+
   return (
-    <Card
-      className={
-        `min-w-[27rem] grow transition-colors duration-300 shadow-small ` +
-        'dark:hover:border-white/20 hover:border-black/20'
-      }
-      title={
-        <div className="flex flex-row justify-between items-center">
-          <div className="flex flex-col my-3">
-            <div className="flex flex-row items-center gap-x-2">
-              <Env_Icon className="size-[1.2rem]" />
-              <span
-                className="pr-7"
-                spellCheck={false}
-                onInput={onTitleChange}
-                contentEditable
-                suppressContentEditableWarning>
-                {editedTitle}
-              </span>
+    <>
+      <Modal
+        size="xl"
+        isDismissable={false}
+        scrollBehavior="inside"
+        isOpen={packageManagerOpen}
+        onClose={closePackageManager}
+        motionProps={modalMotionProps}
+        classNames={{backdrop: '!top-10', wrapper: '!top-10 pb-8'}}
+        hideCloseButton>
+        <ModalContent className="overflow-hidden">
+          <ModalHeader className="bg-foreground-100 justify-center items-center flex-col gap-y-2">
+            Package Manager
+          </ModalHeader>
+          <ModalBody className="pt-4 scrollbar-hide">
+            <PythonPackageManager />
+          </ModalBody>
+          <ModalFooter className="bg-foreground-100">
+            <Button size="sm" color="warning" variant="faded" onPress={closePackageManager} fullWidth>
+              Close
+            </Button>
+          </ModalFooter>
+        </ModalContent>
+      </Modal>
+      <Card
+        className={
+          `min-w-[27rem] grow transition-colors duration-300 shadow-small ` +
+          'dark:hover:border-white/20 hover:border-black/20'
+        }
+        title={
+          <div className="flex flex-row justify-between items-center">
+            <div className="flex flex-col my-3">
+              <div className="flex flex-row items-center gap-x-2">
+                <Env_Icon className="size-[1.2rem]" />
+                <span
+                  className="pr-7"
+                  spellCheck={false}
+                  onInput={onTitleChange}
+                  contentEditable
+                  suppressContentEditableWarning>
+                  {editedTitle}
+                </span>
+              </div>
+              <span className="text-tiny text-foreground-500">Python {pythonVersion}</span>
             </div>
-            <span className="text-tiny text-foreground-500">Python {pythonVersion}</span>
-          </div>
-          <div className="space-x-2 flex items-center">
-            <Popover
-              size="sm"
-              color="danger"
-              placement="left"
-              className="max-w-[15rem]"
-              isOpen={popoverUninstaller}
-              onOpenChange={setPopoverUninstaller}
-              showArrow>
-              <PopoverTrigger>
-                <Button size="sm" color="danger" variant="light" isLoading={isRemoving} isIconOnly>
-                  <Trash_Icon className="size-[50%]" />
-                </Button>
-              </PopoverTrigger>
-              <PopoverContent>
-                <div className="p-2 space-y-2">
-                  <span>
-                    This will permanently delete the <span className="font-bold">{title}</span> folder and all its
-                    contents. Are you sure you want to proceed?
-                  </span>
-                  <Button size="sm" onPress={remove} fullWidth>
-                    Remove
+            <div className="space-x-2 flex items-center">
+              <Dropdown className="dark:bg-LynxRaisinBlack">
+                <DropdownTrigger>
+                  <Button size="sm" variant="light" isIconOnly>
+                    <MenuDots_Icon className="rotate-90 size-3.5" />
                   </Button>
-                </div>
-              </PopoverContent>
-            </Popover>
+                </DropdownTrigger>
+                <DropdownMenu>
+                  <DropdownItem
+                    key="package-manager"
+                    onPress={packageManager}
+                    startContent={<Packages_Icon className="size-4" />}>
+                    Package Manager
+                  </DropdownItem>
+                </DropdownMenu>
+              </Dropdown>
+
+              <Popover
+                size="sm"
+                color="danger"
+                placement="left"
+                className="max-w-[15rem]"
+                isOpen={popoverUninstaller}
+                onOpenChange={setPopoverUninstaller}
+                showArrow>
+                <PopoverTrigger>
+                  <Button size="sm" color="danger" variant="light" isLoading={isRemoving} isIconOnly>
+                    <Trash_Icon className="size-[50%]" />
+                  </Button>
+                </PopoverTrigger>
+                <PopoverContent>
+                  <div className="p-2 space-y-2">
+                    <span>
+                      This will permanently delete the <span className="font-bold">{title}</span> folder and all its
+                      contents. Are you sure you want to proceed?
+                    </span>
+                    <Button size="sm" onPress={remove} fullWidth>
+                      Remove
+                    </Button>
+                  </div>
+                </PopoverContent>
+              </Popover>
+            </div>
+          </div>
+        }>
+        <div className="gap-y-4 flex flex-col">
+          <Button size="sm" variant="light" onPress={openPath} className="flex flex-row justify-start -ml-3 -mb-1.5">
+            <OpenFolder_Icon className="flex-shrink-0" />
+            <span className="truncate">{folder}</span>
+          </Button>
+          <div className="w-full justify-between flex flex-row">
+            <div className="flex flex-row gap-x-1 items-center">
+              <Packages_Icon className="size-3" />
+              <span>Packages:</span>
+            </div>
+            <span>{installedPackages} Installed</span>
+          </div>
+          <div className="w-full justify-between flex flex-row">
+            <div className="flex flex-row gap-x-1 items-center">
+              <HardDrive_Icon />
+              <span>Disk Usage:</span>
+            </div>
+            {isNil(size) ? <Spin size="small" /> : <span>{formatSizeMB(size || 0)}</span>}
           </div>
         </div>
-      }>
-      <div className="gap-y-4 flex flex-col">
-        <Button size="sm" variant="light" onPress={openPath} className="flex flex-row justify-start -ml-3 -mb-1.5">
-          <OpenFolder_Icon className="flex-shrink-0" />
-          <span className="truncate">{folder}</span>
-        </Button>
-        <div className="w-full justify-between flex flex-row">
-          <div className="flex flex-row gap-x-1 items-center">
-            <Packages_Icon className="size-3" />
-            <span>Packages:</span>
-          </div>
-          <span>{installedPackages} Installed</span>
-        </div>
-        <div className="w-full justify-between flex flex-row">
-          <div className="flex flex-row gap-x-1 items-center">
-            <HardDrive_Icon />
-            <span>Disk Usage:</span>
-          </div>
-          {isNil(size) ? <Spin size="small" /> : <span>{formatSizeMB(size || 0)}</span>}
-        </div>
-      </div>
-    </Card>
+      </Card>
+    </>
   );
 }

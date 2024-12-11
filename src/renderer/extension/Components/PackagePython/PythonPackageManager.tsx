@@ -13,7 +13,7 @@ export type DataType = {
   size: number;
 };
 
-export default function PythonPackageManager({visible}: {visible: boolean}) {
+export default function PythonPackageManager() {
   const [data] = useState<DataType[]>([
     {name: 'requests', version: '2.31.0', size: 5.2},
     {
@@ -31,7 +31,6 @@ export default function PythonPackageManager({visible}: {visible: boolean}) {
   ]);
   const [maxDiskValue] = useState<number>(300);
 
-  if (!visible) return null;
   return (
     <div className="w-full flex flex-col gap-y-4">
       <div className="w-full flex flex-row justify-between items-center">
