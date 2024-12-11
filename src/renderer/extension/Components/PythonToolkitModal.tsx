@@ -4,7 +4,6 @@ import {Dispatch, Key, SetStateAction, useState} from 'react';
 import {PythonInstallation} from '../../../cross/CrossExtensions';
 import {modalMotionProps} from '../../src/App/Utils/Constants';
 import InstalledPythons from './InstalledPythons/InstalledPythons';
-import PythonPackageManager from './PackagePython/PythonPackageManager';
 import VenvPython from './VenvPython/VenvPython';
 
 type ModalProps = {
@@ -36,7 +35,6 @@ export default function PythonToolkitModal({isOpen, setIsOpen}: ModalProps) {
           <Tabs color="primary" onSelectionChange={setCurrentTab} selectedKey={currentTab.toString()} fullWidth>
             <Tab key="installation" title="Installations" />
             <Tab key="venv" title="Virtual Environments" />
-            <Tab key="packages" title="Package Manager" />
           </Tabs>
         </ModalHeader>
         <Divider />
@@ -53,7 +51,6 @@ export default function PythonToolkitModal({isOpen, setIsOpen}: ModalProps) {
             installedPythons={installedPythons}
             isLoadingPythons={isLoadingPythons}
           />
-          <PythonPackageManager visible={currentTab === 'packages'} />
         </ModalBody>
         <Divider />
         <ModalFooter>
