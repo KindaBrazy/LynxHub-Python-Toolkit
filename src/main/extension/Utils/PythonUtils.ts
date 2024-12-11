@@ -90,3 +90,25 @@ export async function removeDir(dir: string): Promise<void> {
     throw e;
   }
 }
+
+export async function getSitePackagesCount(pythonPath: string): Promise<number> {
+  return new Promise((resolve, reject) => {
+    exec(`"${pythonPath}" -m pip list --format=json`, (error, stdout, stderr) => {
+      if (error) {
+        reject(error);
+        return;
+      }
+      if (stderr) {
+        reject(new Error(`Error from pip list: ${stderr}`));
+        return;
+      }
+
+      try {
+        const packages = JSON.parse(stdout);
+        resolve(packages.length); // Number of packages
+      } catch (parseError) {
+        reject(new Error(`Could not parse pip list output: ${parseError}`));
+      }
+    });
+  });
+}

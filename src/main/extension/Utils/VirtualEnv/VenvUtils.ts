@@ -4,6 +4,7 @@ import {basename, join} from 'node:path';
 import {existsSync} from 'graceful-fs';
 
 import {VenvInfo} from '../../../../cross/CrossExtensions';
+import {getSitePackagesCount} from '../PythonUtils';
 
 async function getPythonVersion(venvPath: string): Promise<string> {
   return new Promise((resolve, reject) => {
@@ -33,38 +34,14 @@ async function getPythonVersion(venvPath: string): Promise<string> {
   });
 }
 
-async function getSitePackagesCount(venvPath: string): Promise<number> {
-  return new Promise((resolve, reject) => {
-    const pythonExecutable = join(venvPath, 'Scripts', 'python.exe'); // For Windows
-
-    // Use pip list with the --format=json option
-    exec(`"${pythonExecutable}" -m pip list --format=json`, (error, stdout, stderr) => {
-      if (error) {
-        reject(error);
-        return;
-      }
-      if (stderr) {
-        reject(new Error(`Error from pip list: ${stderr}`));
-        return;
-      }
-
-      try {
-        const packages = JSON.parse(stdout);
-        resolve(packages.length); // Number of packages
-      } catch (parseError) {
-        reject(new Error(`Could not parse pip list output: ${parseError}`));
-      }
-    });
-  });
-}
-
 export async function getVenvInfo(venvPath: string): Promise<VenvInfo | null> {
   try {
     // 1. Get Python Version
     const pythonVersion = await getPythonVersion(venvPath);
 
     // 2. Get Number of Site Packages
-    const sitePackagesCount = await getSitePackagesCount(venvPath);
+    const pythonExecutable = join(venvPath, 'Scripts', 'python.exe'); // For Windows
+    const sitePackagesCount = await getSitePackagesCount(pythonExecutable);
 
     // 3. Get Folder Name
     const folderName = basename(venvPath);

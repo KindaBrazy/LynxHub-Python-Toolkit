@@ -6,6 +6,7 @@ export type PythonInstallation = {
   condaName: string;
   installFolder: string;
   pipPath?: string;
+  packages: number;
   venvPaths: string[];
   sitePackagesPath: string;
   isDefault: boolean;

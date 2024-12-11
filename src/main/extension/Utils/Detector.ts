@@ -8,7 +8,7 @@ import which from 'which';
 
 import {PythonInstallation} from '../../../cross/CrossExtensions';
 import {isDefaultPython} from './DefaultPython';
-import {detectInstallationType, parseVersion} from './PythonUtils';
+import {detectInstallationType, getSitePackagesCount, parseVersion} from './PythonUtils';
 import {getCondaEnvName} from './Uninstaller/Uninstaller_Conda';
 
 const execAsync = promisify(exec);
@@ -168,8 +168,10 @@ export default async function detectPythonInstallations(): Promise<PythonInstall
       const isDefault = await isDefaultPython(pythonPath);
       const installationType = await detectInstallationType(pythonPath);
       const condaName = await getCondaEnvName(pythonPath);
+      const packages = await getSitePackagesCount(pythonPath);
       const installation: PythonInstallation = {
         version: `${version.major}.${version.minor}.${version.patch}`,
+        packages,
         installationType,
         condaName,
         architecture: await detectArchitecture(pythonPath),

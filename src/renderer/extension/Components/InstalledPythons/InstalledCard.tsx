@@ -21,7 +21,7 @@ import {MenuDots_Icon} from '../../../src/assets/icons/SvgIcons/SvgIcons2';
 import {Trash_Icon} from '../../../src/assets/icons/SvgIcons/SvgIcons3';
 import {OpenFolder_Icon, Refresh3_Icon} from '../../../src/assets/icons/SvgIcons/SvgIcons4';
 import {HardDrive_Icon} from '../../../src/assets/icons/SvgIcons/SvgIcons5';
-import {Python_Icon} from '../SvgIcons';
+import {Packages_Icon, Python_Icon} from '../SvgIcons';
 
 type Props = {
   python: PythonInstallation;
@@ -189,10 +189,17 @@ export default function InstalledCard({python, diskUsage, maxDiskValue, updateDe
         }
         classNames={{body: 'gap-y-4'}}>
         <div className="gap-y-4 flex flex-col">
-          <Button size="sm" variant="light" onPress={openPath} className="flex flex-row justify-start -ml-3">
+          <Button size="sm" variant="light" onPress={openPath} className="flex flex-row justify-start -ml-3 -mb-1.5">
             <OpenFolder_Icon className="flex-shrink-0" />
             <span className="truncate">{python.installFolder}</span>
           </Button>
+          <div className="w-full justify-between flex flex-row">
+            <div className="flex flex-row gap-x-1 items-center">
+              <Packages_Icon className="size-3" />
+              <span>Packages:</span>
+            </div>
+            <span>{python.packages} Installed</span>
+          </div>
           <Progress
             label={
               <div className="flex flex-row gap-x-2 items-center">

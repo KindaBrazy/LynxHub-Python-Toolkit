@@ -126,7 +126,7 @@ export default function PythonVenvCard({title, installedPackages, pythonVersion,
         </div>
       }>
       <div className="gap-y-4 flex flex-col">
-        <Button size="sm" variant="light" onPress={openPath} className="flex flex-row justify-start -ml-3">
+        <Button size="sm" variant="light" onPress={openPath} className="flex flex-row justify-start -ml-3 -mb-1.5">
           <OpenFolder_Icon className="flex-shrink-0" />
           <span className="truncate">{folder}</span>
         </Button>
