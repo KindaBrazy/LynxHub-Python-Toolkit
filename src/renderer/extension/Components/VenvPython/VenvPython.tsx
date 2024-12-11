@@ -8,9 +8,9 @@ import {OpenFolder_Icon} from '../../../src/assets/icons/SvgIcons/SvgIcons4';
 import PythonVenvCard from './PythonVenvCard';
 import VenvCreator from './VenvCreator';
 
-type Props = {visible: boolean; installedPythons: PythonInstallation[]};
+type Props = {visible: boolean; installedPythons: PythonInstallation[]; isLoadingPythons: boolean};
 
-export default function VenvPython({visible, installedPythons}: Props) {
+export default function VenvPython({visible, installedPythons, isLoadingPythons}: Props) {
   const [pythonVenvs, setPythonVenvs] = useState<PythonVenvs[]>([]);
   const [isLoading, setIsLoading] = useState<boolean>(false);
 
@@ -58,7 +58,7 @@ export default function VenvPython({visible, installedPythons}: Props) {
       <div className="w-full flex flex-row justify-between items-center">
         <span className="font-bold">Virtual Environments</span>
         <div className="space-x-2">
-          <VenvCreator refresh={getVenvs} installedPythons={installedPythons} />
+          <VenvCreator refresh={getVenvs} installedPythons={installedPythons} isLoadingPythons={isLoadingPythons} />
 
           <Button
             radius="sm"

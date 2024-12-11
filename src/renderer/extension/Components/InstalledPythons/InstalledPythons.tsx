@@ -15,9 +15,16 @@ type Props = {
   visible: boolean;
   installedPythons: PythonInstallation[];
   setInstalledPythons: Dispatch<SetStateAction<PythonInstallation[]>>;
+  isLoadingPythons: boolean;
+  setIsLoadingPythons: Dispatch<SetStateAction<boolean>>;
 };
-export default function InstalledPythons({visible, installedPythons, setInstalledPythons}: Props) {
-  const [loadingPythons, setLoadingPythons] = useState<boolean>(false);
+export default function InstalledPythons({
+  visible,
+  installedPythons,
+  setInstalledPythons,
+  setIsLoadingPythons,
+  isLoadingPythons,
+}: Props) {
   const [diskUsage, setDiskUsage] = useState<{path: string; value: number | undefined}[]>([]);
   const [maxDiskValue, setMaxDiskValue] = useState<number>(0);
 
@@ -35,11 +42,11 @@ export default function InstalledPythons({visible, installedPythons, setInstalle
   }, [diskUsage]);
 
   const getInstalledPythons = () => {
-    setLoadingPythons(true);
+    setIsLoadingPythons(true);
     window.electron.ipcRenderer.invoke(pythonChannels.getInstalledPythons).then((result: PythonInstallation[]) => {
       console.log(result);
       setInstalledPythons(result);
-      setLoadingPythons(false);
+      setIsLoadingPythons(false);
 
       for (const python of result) {
         rendererIpc.file.calcFolderSize(python.installFolder).then(value => {
@@ -112,9 +119,9 @@ export default function InstalledPythons({visible, installedPythons, setInstalle
       </div>
       <div
         className={
-          `flex flex-row flex-wrap gap-8 ` + `${(loadingPythons || isEmpty(installedPythons)) && 'justify-center'}`
+          `flex flex-row flex-wrap gap-8 ` + `${(isLoadingPythons || isEmpty(installedPythons)) && 'justify-center'}`
         }>
-        {loadingPythons ? (
+        {isLoadingPythons ? (
           <CircularProgress
             size="lg"
             label="Searching for installed pythons..."

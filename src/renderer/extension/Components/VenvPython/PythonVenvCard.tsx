@@ -14,11 +14,11 @@ type Props = {
   folder: string;
 };
 export default function PythonVenvCard({title, installedPackages, pythonVersion, size, folder}: Props) {
-  const [popoverUninstaller, setpopoverUninstaller] = useState<boolean>(false);
+  const [popoverUninstaller, setPopoverUninstaller] = useState<boolean>(false);
 
   const [isRemoving, setIsRemoving] = useState<boolean>(false);
   const remove = () => {
-    setpopoverUninstaller(false);
+    setPopoverUninstaller(false);
     setIsRemoving(true);
     rendererIpc.file
       .trashDir(folder)
@@ -54,7 +54,7 @@ export default function PythonVenvCard({title, installedPackages, pythonVersion,
               placement="left"
               className="max-w-[15rem]"
               isOpen={popoverUninstaller}
-              onOpenChange={setpopoverUninstaller}
+              onOpenChange={setPopoverUninstaller}
               showArrow>
               <PopoverTrigger>
                 <Button size="sm" color="danger" variant="light" isLoading={isRemoving} isIconOnly>

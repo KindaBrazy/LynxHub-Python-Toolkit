@@ -14,6 +14,7 @@ type ModalProps = {
 
 export default function PythonToolkitModal({isOpen, setIsOpen}: ModalProps) {
   const [installedPythons, setInstalledPythons] = useState<PythonInstallation[]>([]);
+  const [isLoadingPythons, setIsLoadingPythons] = useState<boolean>(false);
 
   const [currentTab, setCurrentTab] = useState<Key>('installation');
   const onClose = () => {
@@ -42,10 +43,16 @@ export default function PythonToolkitModal({isOpen, setIsOpen}: ModalProps) {
         <ModalBody className="scrollbar-hide my-4">
           <InstalledPythons
             installedPythons={installedPythons}
+            isLoadingPythons={isLoadingPythons}
             visible={currentTab === 'installation'}
+            setIsLoadingPythons={setIsLoadingPythons}
             setInstalledPythons={setInstalledPythons}
           />
-          <VenvPython visible={currentTab === 'venv'} installedPythons={installedPythons} />
+          <VenvPython
+            visible={currentTab === 'venv'}
+            installedPythons={installedPythons}
+            isLoadingPythons={isLoadingPythons}
+          />
           <PythonPackageManager visible={currentTab === 'packages'} />
         </ModalBody>
         <Divider />

@@ -9,9 +9,9 @@ import {Add_Icon} from '../../../src/assets/icons/SvgIcons/SvgIcons1';
 import {MenuDots_Icon} from '../../../src/assets/icons/SvgIcons/SvgIcons2';
 import {OpenFolder_Icon} from '../../../src/assets/icons/SvgIcons/SvgIcons4';
 
-type Props = {refresh: () => void; installedPythons: PythonInstallation[]};
+type Props = {refresh: () => void; installedPythons: PythonInstallation[]; isLoadingPythons: boolean};
 
-export default function VenvCreator({installedPythons, refresh}: Props) {
+export default function VenvCreator({installedPythons, refresh, isLoadingPythons}: Props) {
   const [selectedVersion, setSelectedVersion] = useState<string[]>([]);
 
   const [targetFolder, setTargetFolder] = useState<string>('');
@@ -70,8 +70,13 @@ export default function VenvCreator({installedPythons, refresh}: Props) {
   return (
     <Popover size="lg" isOpen={isOpen} placement="bottom" onOpenChange={setIsOpen} showArrow>
       <PopoverTrigger>
-        <Button radius="sm" variant="solid" startContent={<Add_Icon />} isDisabled={isEmpty(installedPythons)}>
-          Create Environments
+        <Button
+          radius="sm"
+          variant="solid"
+          isLoading={isLoadingPythons}
+          isDisabled={isEmpty(installedPythons)}
+          startContent={!isLoadingPythons && <Add_Icon />}>
+          {isLoadingPythons ? 'Loading Pythons...' : 'Create Environments'}
         </Button>
       </PopoverTrigger>
       <PopoverContent>
