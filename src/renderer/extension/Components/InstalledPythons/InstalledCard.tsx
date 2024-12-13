@@ -164,6 +164,7 @@ export default function InstalledCard({python, diskUsage, maxDiskValue, updateDe
                   <DropdownItem
                     key="system-default"
                     onPress={makeDefault}
+                    textValue="Set as System Default"
                     startContent={python.isDefault ? <Refresh3_Icon className="size-4" /> : <CheckSvg />}>
                     Set as <span className="font-bold">System Default</span>
                   </DropdownItem>

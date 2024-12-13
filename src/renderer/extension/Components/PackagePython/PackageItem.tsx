@@ -1,4 +1,4 @@
-import {Button, Spinner} from '@nextui-org/react';
+import {Button, Popover, PopoverContent, PopoverTrigger, Spinner} from '@nextui-org/react';
 import {List, message} from 'antd';
 import {ReactNode, useCallback, useMemo, useState} from 'react';
 import semver from 'semver';
@@ -46,6 +46,7 @@ type Props = {
 
 export default function PackageItem({item, pythonPath, updated, removed}: Props) {
   const [loading, setLoading] = useState<ReactNode>(undefined);
+  const [isOpenPopover, setIsOpenPopover] = useState<boolean>(false);
 
   const update = useCallback(() => {
     setLoading(<Spinner size="sm" color="success" label="Updating..." />);
@@ -64,15 +65,16 @@ export default function PackageItem({item, pythonPath, updated, removed}: Props)
   }, [item]);
 
   const uninstall = useCallback(() => {
+    setIsOpenPopover(false);
     setLoading(<Spinner size="sm" color="danger" label="Uninstalling..." />);
     window.electron.ipcRenderer
       .invoke(pythonChannels.uninstallPackage, pythonPath, item.name)
       .then(() => {
         removed(item.name);
-        message.success(`${item.name} uninstalled successfully`);
+        message.success(`${item.name} removed successfully`);
       })
       .catch(() => {
-        message.error(`Something goes wrong when uninstalling ${item.name}`);
+        message.error(`Something goes wrong when removing ${item.name}`);
       })
       .finally(() => {
         setLoading(undefined);
@@ -81,15 +83,29 @@ export default function PackageItem({item, pythonPath, updated, removed}: Props)
 
   const actions = useMemo(() => {
     const result = [
-      <Button
-        radius="sm"
+      <Popover
+        size="sm"
         color="danger"
         key="uninstall"
-        variant="light"
-        onPress={uninstall}
-        startContent={<Trash_Icon />}
-        isIconOnly
-      />,
+        placement="left"
+        isOpen={isOpenPopover}
+        className="max-w-[15rem]"
+        onOpenChange={setIsOpenPopover}
+        showArrow>
+        <PopoverTrigger>
+          <Button radius="sm" color="danger" variant="light" startContent={<Trash_Icon />} isIconOnly />
+        </PopoverTrigger>
+        <PopoverContent>
+          <div className="p-2 space-y-2">
+            <span>
+              Are you sure you want to <span className="font-bold"> remove {item.name}</span>?
+            </span>
+            <Button size="sm" onPress={uninstall} fullWidth>
+              Remove
+            </Button>
+          </div>
+        </PopoverContent>
+      </Popover>,
     ];
     if (item.updateVersion)
       result.unshift(
@@ -105,7 +121,7 @@ export default function PackageItem({item, pythonPath, updated, removed}: Props)
       );
 
     return result;
-  }, [item]);
+  }, [item, isOpenPopover]);
 
   return (
     <List.Item actions={actions} className="relative hover:bg-foreground-100 transition-colors duration-150 !pr-1">
