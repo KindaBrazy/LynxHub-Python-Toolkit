@@ -1,9 +1,9 @@
-import {Button} from '@nextui-org/react';
-import {List} from 'antd';
-import {useMemo} from 'react';
+import {Button, Spinner} from '@nextui-org/react';
+import {List, message} from 'antd';
+import {useCallback, useMemo, useState} from 'react';
 import semver from 'semver';
 
-import {PackageInfo} from '../../../../cross/CrossExtensions';
+import {PackageInfo, pythonChannels} from '../../../../cross/CrossExtensions';
 import {Download_Icon} from '../../../src/assets/icons/SvgIcons/SvgIcons1';
 import {Trash_Icon} from '../../../src/assets/icons/SvgIcons/SvgIcons3';
 import {Warn_Icon} from '../SvgIcons';
@@ -37,21 +37,58 @@ function getUpdateVersionColor(currentVersion: string, updateVersion: string) {
   }
 }
 
-export default function PackageItem({item}: {item: PackageInfo}) {
+type Props = {
+  item: PackageInfo;
+  pythonPath: string;
+  updated: (name: string, newVersion: string) => void;
+};
+
+export default function PackageItem({item, pythonPath, updated}: Props) {
+  const [isUpdating, setIsUpdating] = useState<boolean>(false);
+
+  const update = useCallback(() => {
+    setIsUpdating(true);
+    window.electron.ipcRenderer
+      .invoke(pythonChannels.updatePackage, pythonPath, item.name)
+      .then(() => {
+        updated(item.name, item.updateVersion!);
+        message.success(`${item.name} updated successfully`);
+      })
+      .catch(() => {
+        message.error(`Something goes wrong when updating ${item.name}`);
+      })
+      .finally(() => {
+        setIsUpdating(false);
+      });
+  }, [item]);
+
   const actions = useMemo(() => {
     const result = [
       <Button radius="sm" color="danger" key="uninstall" variant="light" startContent={<Trash_Icon />} isIconOnly />,
     ];
     if (item.updateVersion)
       result.unshift(
-        <Button radius="sm" key="update" variant="light" color="success" startContent={<Download_Icon />} isIconOnly />,
+        <Button
+          radius="sm"
+          key="update"
+          variant="light"
+          color="success"
+          onPress={update}
+          startContent={<Download_Icon />}
+          isIconOnly
+        />,
       );
 
     return result;
   }, [item]);
 
   return (
-    <List.Item actions={actions} className="hover:bg-foreground-100 transition-colors duration-150 !pr-1">
+    <List.Item actions={actions} className="relative hover:bg-foreground-100 transition-colors duration-150 !pr-1">
+      {isUpdating && (
+        <div className="inset-0 bg-black/50 z-10 absolute flex justify-center items-center">
+          <Spinner size="sm" color="success" label="Updating..." />
+        </div>
+      )}
       <List.Item.Meta
         title={
           <div className="flex flex-row items-center gap-x-1">

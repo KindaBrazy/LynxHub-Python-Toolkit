@@ -62,6 +62,13 @@ export default function PackageManagerModal({isOpen, setIsOpen, pythonPath}: Pro
     }
   }, [pythonPath, isOpen]);
 
+  const updated = (name: string, newVersion: string) => {
+    setPackagesUpdate(prevState => prevState.filter(item => item.name !== name));
+    setPackages(prevState =>
+      prevState.map(item => (item.name === name ? {name, updateVersion: undefined, version: newVersion} : item)),
+    );
+  };
+
   return (
     <Modal
       size="2xl"
@@ -80,7 +87,7 @@ export default function PackageManagerModal({isOpen, setIsOpen, pythonPath}: Pro
           setSearchValue={setSearchValue}
           checkingUpdates={!isLoading && isLoadingUpdates}
         />
-        <PackageManagerBody isLoading={isLoading} searchData={searchData} />
+        <PackageManagerBody updated={updated} isLoading={isLoading} pythonPath={pythonPath} searchData={searchData} />
         <ModalFooter className="bg-foreground-200 dark:bg-LynxRaisinBlack">
           <Button size="sm" color="warning" variant="faded" onPress={closePackageManager} fullWidth>
             Close

@@ -9,9 +9,11 @@ import PackageItem from './PackageItem';
 type Props = {
   searchData: PackageInfo[];
   isLoading: boolean;
+  pythonPath: string;
+  updated: (name: string, newVersion: string) => void;
 };
 
-export default function PackageManagerBody({searchData, isLoading}: Props) {
+export default function PackageManagerBody({searchData, isLoading, pythonPath, updated}: Props) {
   const isDarkMode = useAppState('darkMode');
 
   return (
@@ -42,7 +44,7 @@ export default function PackageManagerBody({searchData, isLoading}: Props) {
               }}
               dataSource={searchData}
               className="w-full overflow-hidden"
-              renderItem={item => <PackageItem item={item} />}
+              renderItem={item => <PackageItem item={item} updated={updated} pythonPath={pythonPath} />}
               bordered
             />
           )}
