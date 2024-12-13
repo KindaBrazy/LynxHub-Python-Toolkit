@@ -1,8 +1,9 @@
 import {Alert, Button, Input, ModalHeader, Spinner} from '@nextui-org/react';
+import {message} from 'antd';
 import {isEmpty} from 'lodash';
 import {Dispatch, SetStateAction, useEffect, useState} from 'react';
 
-import {PackageInfo, SitePackages_Info} from '../../../../cross/CrossExtensions';
+import {PackageInfo, pythonChannels, SitePackages_Info} from '../../../../cross/CrossExtensions';
 import {Add_Icon, Circle_Icon, Download2_Icon} from '../../../src/assets/icons/SvgIcons/SvgIcons1';
 
 const WARNING_KEY = 'python-package-warning';
@@ -13,6 +14,8 @@ type Props = {
   packages: PackageInfo[];
   packagesUpdate: SitePackages_Info[];
   checkingUpdates: boolean;
+  pythonPath: string;
+  allUpdated: () => void;
 };
 
 export default function PackageManagerHeader({
@@ -21,8 +24,11 @@ export default function PackageManagerHeader({
   packages,
   packagesUpdate,
   checkingUpdates,
+  pythonPath,
+  allUpdated,
 }: Props) {
   const [showWarning, setShowWarning] = useState<boolean>(true);
+  const [isUpdating, setIsUpdating] = useState<boolean>(false);
 
   useEffect(() => {
     setShowWarning(localStorage.getItem(WARNING_KEY) !== 'false');
@@ -33,14 +39,38 @@ export default function PackageManagerHeader({
     localStorage.setItem(WARNING_KEY, 'false');
   };
 
+  const updateAll = () => {
+    setIsUpdating(true);
+    const updateList = packagesUpdate.map(item => item.name);
+    window.electron.ipcRenderer
+      .invoke(pythonChannels.updateAllPackages, pythonPath, updateList)
+      .then(() => {
+        message.success(`All ${updateList.length} packages updated.`);
+        allUpdated();
+      })
+      .catch(() => {
+        message.success(`Something goes wrong when updating.`);
+      })
+      .finally(() => {
+        setIsUpdating(false);
+      });
+  };
+
   return (
     <ModalHeader className="bg-foreground-200 dark:bg-LynxRaisinBlack items-center flex-col gap-y-2">
       <div className="flex flex-row justify-between w-full">
         <span>Package Manager ({packages.length})</span>
         <div className="gap-x-2 flex items-center">
           {!isEmpty(packagesUpdate) && (
-            <Button size="sm" radius="sm" variant="flat" color="success" startContent={<Download2_Icon />}>
-              Update All ({packagesUpdate.length})
+            <Button
+              size="sm"
+              radius="sm"
+              variant="flat"
+              color="success"
+              onPress={updateAll}
+              isLoading={isUpdating}
+              startContent={!isUpdating && <Download2_Icon />}>
+              {isUpdating ? <span>Updating...</span> : <span>Update All ({packagesUpdate.length})</span>}
             </Button>
           )}
           {checkingUpdates && (

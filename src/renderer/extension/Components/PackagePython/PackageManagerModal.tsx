@@ -74,6 +74,16 @@ export default function PackageManagerModal({isOpen, setIsOpen, pythonPath}: Pro
     setPackages(prevState => prevState.filter(item => item.name !== name));
   };
 
+  const allUpdated = () => {
+    setPackages(prevState =>
+      prevState.map(item => {
+        const newVersion = packagesUpdate.find(update => update.name === item.name)?.version;
+        return newVersion ? {name: item.name, updateVersion: undefined, version: newVersion} : item;
+      }),
+    );
+    setPackagesUpdate([]);
+  };
+
   return (
     <Modal
       size="2xl"
@@ -87,6 +97,8 @@ export default function PackageManagerModal({isOpen, setIsOpen, pythonPath}: Pro
       <ModalContent className="overflow-hidden">
         <PackageManagerHeader
           packages={packages}
+          allUpdated={allUpdated}
+          pythonPath={pythonPath}
           searchValue={searchValue}
           packagesUpdate={packagesUpdate}
           setSearchValue={setSearchValue}

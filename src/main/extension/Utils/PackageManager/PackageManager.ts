@@ -71,6 +71,26 @@ export async function updatePythonPackage(pythonExePath: string, packageName: st
   });
 }
 
+export async function updateAllPythonPackages(pythonExePath: string, packages: string[]): Promise<string> {
+  return new Promise((resolve, reject) => {
+    if (packages.length === 0) {
+      resolve('All packages are up to date.');
+      return;
+    }
+
+    const updateCommand = `"${pythonExePath}" -m pip install --upgrade ${packages.join(' ')}`;
+
+    exec(updateCommand, (updateError, updateStdout, updateStderr) => {
+      if (updateError) {
+        reject(`Error updating packages: ${updateError.message}\nstderr: ${updateStderr}`);
+        return;
+      }
+
+      resolve(updateStdout);
+    });
+  });
+}
+
 export async function uninstallPythonPackage(pythonExePath: string, packageName: string): Promise<string> {
   return new Promise((resolve, reject) => {
     const command = `"${pythonExePath}" -m pip uninstall -y "${packageName}"`;

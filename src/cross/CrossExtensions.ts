@@ -69,5 +69,6 @@ export const pythonChannels = {
   getPackagesInfo: 'get-packages-info',
   getPackagesUpdateInfo: 'get-packages-update-info',
   updatePackage: 'update-package',
+  updateAllPackages: 'update-all-packages',
   uninstallPackage: 'uninstall-package',
 };

@@ -12,6 +12,7 @@ import {
   getSitePackagesInfo,
   getSitePackagesUpdates,
   uninstallPythonPackage,
+  updateAllPythonPackages,
   updatePythonPackage,
 } from './Utils/PackageManager/PackageManager';
 import uninstallPython from './Utils/Uninstaller/Uninstaller';
@@ -42,12 +43,16 @@ export async function initialExtension(lynxApi: ExtensionMainApi, utils: MainExt
     ipcMain.handle(pythonChannels.locateVenv, () => locateVenv());
 
     ipcMain.handle(pythonChannels.getPackagesInfo, (_, pythonPath: string) => getSitePackagesInfo(pythonPath));
+    ipcMain.handle(pythonChannels.uninstallPackage, (_, pythonPath: string, packageName: string) =>
+      uninstallPythonPackage(pythonPath, packageName),
+    );
+
     ipcMain.handle(pythonChannels.getPackagesUpdateInfo, (_, pythonPath: string) => getSitePackagesUpdates(pythonPath));
     ipcMain.handle(pythonChannels.updatePackage, (_, pythonPath: string, packageName: string) =>
       updatePythonPackage(pythonPath, packageName),
     );
-    ipcMain.handle(pythonChannels.uninstallPackage, (_, pythonPath: string, packageName: string) =>
-      uninstallPythonPackage(pythonPath, packageName),
+    ipcMain.handle(pythonChannels.updateAllPackages, (_, pythonPath: string, packages: string[]) =>
+      updateAllPythonPackages(pythonPath, packages),
     );
   });
 }
