@@ -56,27 +56,31 @@ export async function getSitePackagesUpdates(pythonExePath: string): Promise<Sit
   });
 }
 
-/**
- * Updates a specified Python package using pip.
- *
- * @param {string} pythonExePath - The full path to the Python executable
- * @param {string} packageName - The name of the Python package to update (e.g., "requests" or "numpy").
- * @returns {Promise<string>} - A promise that resolves with the output of the pip command or rejects with an error.
- */
 export async function updatePythonPackage(pythonExePath: string, packageName: string): Promise<string> {
   return new Promise((resolve, reject) => {
-    // Construct the pip command.
     const command = `"${pythonExePath}" -m pip install --upgrade "${packageName}"`;
 
-    // Execute the command.
     exec(command, (error, stdout, stderr) => {
       if (error) {
-        // If there's an error, reject the promise with the error details.
         reject(`Error updating package ${packageName}: ${error.message}\nstderr: ${stderr}`);
         return;
       }
 
-      // If the command was successful, resolve the promise with the output.
+      resolve(stdout);
+    });
+  });
+}
+
+export async function uninstallPythonPackage(pythonExePath: string, packageName: string): Promise<string> {
+  return new Promise((resolve, reject) => {
+    const command = `"${pythonExePath}" -m pip uninstall -y "${packageName}"`;
+
+    exec(command, (error, stdout, stderr) => {
+      if (error) {
+        reject(`Error uninstalling package ${packageName}: ${error.message}\nstderr: ${stderr}`);
+        return;
+      }
+
       resolve(stdout);
     });
   });

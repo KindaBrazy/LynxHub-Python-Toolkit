@@ -11,9 +11,10 @@ type Props = {
   isLoading: boolean;
   pythonPath: string;
   updated: (name: string, newVersion: string) => void;
+  removed: (name: string) => void;
 };
 
-export default function PackageManagerBody({searchData, isLoading, pythonPath, updated}: Props) {
+export default function PackageManagerBody({searchData, isLoading, pythonPath, updated, removed}: Props) {
   const isDarkMode = useAppState('darkMode');
 
   return (
@@ -42,9 +43,11 @@ export default function PackageManagerBody({searchData, isLoading, pythonPath, u
               locale={{
                 emptyText: <Empty description="No packages found." image={Empty.PRESENTED_IMAGE_SIMPLE} />,
               }}
+              renderItem={item => (
+                <PackageItem item={item} removed={removed} updated={updated} pythonPath={pythonPath} />
+              )}
               dataSource={searchData}
               className="w-full overflow-hidden"
-              renderItem={item => <PackageItem item={item} updated={updated} pythonPath={pythonPath} />}
               bordered
             />
           )}

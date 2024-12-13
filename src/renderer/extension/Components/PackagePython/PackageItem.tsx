@@ -1,6 +1,6 @@
 import {Button, Spinner} from '@nextui-org/react';
 import {List, message} from 'antd';
-import {useCallback, useMemo, useState} from 'react';
+import {ReactNode, useCallback, useMemo, useState} from 'react';
 import semver from 'semver';
 
 import {PackageInfo, pythonChannels} from '../../../../cross/CrossExtensions';
@@ -41,13 +41,14 @@ type Props = {
   item: PackageInfo;
   pythonPath: string;
   updated: (name: string, newVersion: string) => void;
+  removed: (name: string) => void;
 };
 
-export default function PackageItem({item, pythonPath, updated}: Props) {
-  const [isUpdating, setIsUpdating] = useState<boolean>(false);
+export default function PackageItem({item, pythonPath, updated, removed}: Props) {
+  const [loading, setLoading] = useState<ReactNode>(undefined);
 
   const update = useCallback(() => {
-    setIsUpdating(true);
+    setLoading(<Spinner size="sm" color="success" label="Updating..." />);
     window.electron.ipcRenderer
       .invoke(pythonChannels.updatePackage, pythonPath, item.name)
       .then(() => {
@@ -58,13 +59,37 @@ export default function PackageItem({item, pythonPath, updated}: Props) {
         message.error(`Something goes wrong when updating ${item.name}`);
       })
       .finally(() => {
-        setIsUpdating(false);
+        setLoading(undefined);
+      });
+  }, [item]);
+
+  const uninstall = useCallback(() => {
+    setLoading(<Spinner size="sm" color="danger" label="Uninstalling..." />);
+    window.electron.ipcRenderer
+      .invoke(pythonChannels.uninstallPackage, pythonPath, item.name)
+      .then(() => {
+        removed(item.name);
+        message.success(`${item.name} uninstalled successfully`);
+      })
+      .catch(() => {
+        message.error(`Something goes wrong when uninstalling ${item.name}`);
+      })
+      .finally(() => {
+        setLoading(undefined);
       });
   }, [item]);
 
   const actions = useMemo(() => {
     const result = [
-      <Button radius="sm" color="danger" key="uninstall" variant="light" startContent={<Trash_Icon />} isIconOnly />,
+      <Button
+        radius="sm"
+        color="danger"
+        key="uninstall"
+        variant="light"
+        onPress={uninstall}
+        startContent={<Trash_Icon />}
+        isIconOnly
+      />,
     ];
     if (item.updateVersion)
       result.unshift(
@@ -84,11 +109,7 @@ export default function PackageItem({item, pythonPath, updated}: Props) {
 
   return (
     <List.Item actions={actions} className="relative hover:bg-foreground-100 transition-colors duration-150 !pr-1">
-      {isUpdating && (
-        <div className="inset-0 bg-black/50 z-10 absolute flex justify-center items-center">
-          <Spinner size="sm" color="success" label="Updating..." />
-        </div>
-      )}
+      {loading && <div className="inset-0 bg-black/50 z-10 absolute flex justify-center items-center">{loading}</div>}
       <List.Item.Meta
         title={
           <div className="flex flex-row items-center gap-x-1">
