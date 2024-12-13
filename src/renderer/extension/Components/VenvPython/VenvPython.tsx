@@ -1,4 +1,4 @@
-import {Button, CircularProgress} from '@nextui-org/react';
+import {Button, Spinner} from '@nextui-org/react';
 import {Empty, message} from 'antd';
 import {isEmpty} from 'lodash';
 import {useCallback, useEffect, useState} from 'react';
@@ -92,10 +92,10 @@ export default function VenvPython({visible, installedPythons, isLoadingPythons}
       </div>
       <div className="flex justify-center flex-row flex-wrap gap-8">
         {isLoading ? (
-          <CircularProgress
+          <Spinner
             size="lg"
-            classNames={{indicator: 'stroke-[#ffe66e]'}}
             label="Reading and validating venvs, please wait..."
+            classNames={{circle2: 'border-b-[#ffe66e]', circle1: 'border-b-[#ffe66e] '}}
           />
         ) : isEmpty(pythonVenvs) ? (
           <Empty className="my-2" description="No Environments">

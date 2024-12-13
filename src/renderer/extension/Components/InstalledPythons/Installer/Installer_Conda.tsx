@@ -7,6 +7,7 @@ import {
   PopoverContent,
   PopoverTrigger,
   Progress,
+  Spinner,
 } from '@nextui-org/react';
 import {List, Result, Tooltip} from 'antd';
 import {isEmpty, isNil} from 'lodash';
@@ -173,11 +174,11 @@ export default function InstallerConda({refresh, installed, closeModal, isOpen, 
             showValueLabel
           />
         ) : loadingList ? (
-          <CircularProgress
+          <Spinner
             size="lg"
             className="justify-self-center my-4"
             label="Loading available conda pythons..."
-            classNames={{indicator: 'stroke-[#ffe66e]'}}
+            classNames={{circle2: 'border-b-[#ffe66e]', circle1: 'border-b-[#ffe66e] '}}
           />
         ) : (
           <List

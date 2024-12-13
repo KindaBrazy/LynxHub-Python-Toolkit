@@ -1,4 +1,4 @@
-import {Button, CircularProgress} from '@nextui-org/react';
+import {Button, Spinner} from '@nextui-org/react';
 import {Empty} from 'antd';
 import {isEmpty} from 'lodash';
 import {Dispatch, SetStateAction, useEffect, useState} from 'react';
@@ -122,10 +122,10 @@ export default function InstalledPythons({
           `flex flex-row flex-wrap gap-8 ` + `${(isLoadingPythons || isEmpty(installedPythons)) && 'justify-center'}`
         }>
         {isLoadingPythons ? (
-          <CircularProgress
+          <Spinner
             size="lg"
             label="Searching for installed pythons..."
-            classNames={{indicator: 'stroke-[#ffe66e]'}}
+            classNames={{circle2: 'border-b-[#ffe66e]', circle1: 'border-b-[#ffe66e] '}}
           />
         ) : isEmpty(installedPythons) ? (
           <Empty description="No Python installation detected." />

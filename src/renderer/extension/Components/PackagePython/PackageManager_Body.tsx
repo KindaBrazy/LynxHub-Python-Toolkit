@@ -1,4 +1,4 @@
-import {CircularProgress, ModalBody} from '@nextui-org/react';
+import {CircularProgress, ModalBody, Spinner} from '@nextui-org/react';
 import {Empty, List} from 'antd';
 import {OverlayScrollbarsComponent} from 'overlayscrollbars-react';
 
@@ -32,11 +32,11 @@ export default function PackageManagerBody({searchData, isLoading, pythonPath, u
       <div className="w-full flex flex-col gap-y-4">
         <div className="flex flex-row gap-8 flex-wrap justify-center">
           {isLoading ? (
-            <CircularProgress
+            <Spinner
               size="lg"
               className="mb-4"
-              classNames={{indicator: 'stroke-[#ffe66e]'}}
               label="Loading packages data, please wait..."
+              classNames={{circle2: 'border-b-[#ffe66e]', circle1: 'border-b-[#ffe66e] '}}
             />
           ) : (
             <List
