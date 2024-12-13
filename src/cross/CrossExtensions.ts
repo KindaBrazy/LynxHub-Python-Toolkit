@@ -44,6 +44,10 @@ export type SitePackages_Info = {
   version: string;
 };
 
+export type PackageInfo = SitePackages_Info & {
+  updateVersion?: string;
+};
+
 export const pythonChannels = {
   getAvailableConda: 'get-available-conda-pythons',
   downloadProgressConda: 'download-conda-python-progress',
@@ -64,4 +68,5 @@ export const pythonChannels = {
 
   getPackagesInfo: 'get-packages-info',
   getPackagesUpdateInfo: 'get-packages-update-info',
+  updatePackage: 'update-package',
 };

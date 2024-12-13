@@ -8,7 +8,7 @@ import {setDefaultPython} from './Utils/DefaultPython';
 import detectPythonInstallations from './Utils/Detector';
 import {createCondaEnv, isCondaInstalled, listAvailablePythons} from './Utils/Installer/Installer_Conda';
 import downloadPython from './Utils/Installer/Installer_Official';
-import {getSitePackagesInfo, getSitePackagesUpdates} from './Utils/PackageManager/PackageManager';
+import {getSitePackagesInfo, getSitePackagesUpdates, updatePythonPackage} from './Utils/PackageManager/PackageManager';
 import uninstallPython from './Utils/Uninstaller/Uninstaller';
 import createPythonVenv, {getVenvs, locateVenv} from './Utils/VirtualEnv/CreateVenv';
 
@@ -38,5 +38,8 @@ export async function initialExtension(lynxApi: ExtensionMainApi, utils: MainExt
 
     ipcMain.handle(pythonChannels.getPackagesInfo, (_, pythonPath: string) => getSitePackagesInfo(pythonPath));
     ipcMain.handle(pythonChannels.getPackagesUpdateInfo, (_, pythonPath: string) => getSitePackagesUpdates(pythonPath));
+    ipcMain.handle(pythonChannels.updatePackage, (_, pythonPath: string, packageName: string) =>
+      updatePythonPackage(pythonPath, packageName),
+    );
   });
 }

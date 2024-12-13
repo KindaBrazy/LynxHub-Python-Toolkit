@@ -1,30 +1,12 @@
-import {
-  Alert,
-  Button,
-  CircularProgress,
-  Input,
-  Modal,
-  ModalBody,
-  ModalContent,
-  ModalFooter,
-  ModalHeader,
-  Spinner,
-} from '@nextui-org/react';
-import {Empty, List} from 'antd';
+import {Button, Modal, ModalContent, ModalFooter} from '@nextui-org/react';
 import {isEmpty} from 'lodash';
-import {OverlayScrollbarsComponent} from 'overlayscrollbars-react';
 import {Dispatch, SetStateAction, useEffect, useState} from 'react';
-import semver from 'semver';
 
-import {pythonChannels, SitePackages_Info} from '../../../../cross/CrossExtensions';
-import {useAppState} from '../../../src/App/Redux/App/AppReducer';
+import {PackageInfo, pythonChannels, SitePackages_Info} from '../../../../cross/CrossExtensions';
 import {modalMotionProps} from '../../../src/App/Utils/Constants';
 import {searchInStrings} from '../../../src/App/Utils/UtilFunctions';
-import {Add_Icon, Circle_Icon, Download_Icon, Download2_Icon} from '../../../src/assets/icons/SvgIcons/SvgIcons1';
-import {Trash_Icon} from '../../../src/assets/icons/SvgIcons/SvgIcons3';
-import {Warn_Icon} from '../SvgIcons';
-
-const WARNING_KEY = 'python-package-warning';
+import PackageManagerBody from './PackageManager_Body';
+import PackageManagerHeader from './PackageManager_Header';
 
 type Props = {
   isOpen: boolean;
@@ -32,43 +14,7 @@ type Props = {
   pythonPath: string;
 };
 
-type PackageInfo = SitePackages_Info & {
-  updateVersion?: string;
-};
-
-function getUpdateType(currentVersion: string, updateVersion: string) {
-  const currentVersionNormalized = semver.coerce(currentVersion)?.version;
-  const updateVersionNormalized = semver.coerce(updateVersion)?.version;
-
-  if (!currentVersionNormalized || !updateVersionNormalized) {
-    console.warn(`Invalid version(s): current=${currentVersion}, update=${updateVersion}`);
-    return 'text-gray-500';
-  }
-
-  return semver.diff(currentVersionNormalized, updateVersionNormalized);
-}
-
-function getUpdateVersionColor(currentVersion: string, updateVersion: string) {
-  const updateType = getUpdateType(currentVersion, updateVersion);
-
-  switch (updateType) {
-    case 'prerelease':
-      return 'text-blue-500';
-    case 'major':
-      return 'text-red-500';
-    case 'minor':
-      return 'text-yellow-500';
-    case 'patch':
-      return 'text-green-500';
-    default:
-      return 'text-gray-500';
-  }
-}
-
 export default function PackageManagerModal({isOpen, setIsOpen, pythonPath}: Props) {
-  const [showWarning, setShowWarning] = useState<boolean>(true);
-  const isDarkMode = useAppState('darkMode');
-
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [isLoadingUpdates, setIsLoadingUpdates] = useState<boolean>(false);
 
@@ -85,9 +31,6 @@ export default function PackageManagerModal({isOpen, setIsOpen, pythonPath}: Pro
   const closePackageManager = () => {
     setIsOpen(false);
   };
-  useEffect(() => {
-    setShowWarning(localStorage.getItem(WARNING_KEY) !== 'false');
-  }, []);
 
   useEffect(() => {
     if (isOpen && isEmpty(packages)) {
@@ -109,23 +52,16 @@ export default function PackageManagerModal({isOpen, setIsOpen, pythonPath}: Pro
           setIsLoadingUpdates(false);
         });
 
-      console.log('useEffect');
-
       window.electron.ipcRenderer
         .invoke(pythonChannels.getPackagesInfo, pythonPath)
         .then(setPackages)
         .catch(console.log)
         .finally(() => {
-          console.log('useEffect 2');
           setIsLoading(false);
         });
     }
   }, [pythonPath, isOpen]);
 
-  const onWarningClose = () => {
-    setShowWarning(false);
-    localStorage.setItem(WARNING_KEY, 'false');
-  };
   return (
     <Modal
       size="2xl"
@@ -137,136 +73,14 @@ export default function PackageManagerModal({isOpen, setIsOpen, pythonPath}: Pro
       classNames={{backdrop: '!top-10', wrapper: '!top-10 pb-8'}}
       hideCloseButton>
       <ModalContent className="overflow-hidden">
-        <ModalHeader className="bg-foreground-200 dark:bg-LynxRaisinBlack items-center flex-col gap-y-2">
-          <div className="flex flex-row justify-between w-full">
-            <span>Package Manager ({packages.length})</span>
-            <div className="gap-x-2 flex items-center">
-              {!isEmpty(packagesUpdate) && (
-                <Button size="sm" radius="sm" variant="flat" color="success" startContent={<Download2_Icon />}>
-                  Update All ({packagesUpdate.length})
-                </Button>
-              )}
-              {!isLoading && isLoadingUpdates && (
-                <Spinner
-                  size="sm"
-                  color="success"
-                  labelColor="success"
-                  label="Checking for updates..."
-                  classNames={{base: 'flex-row', label: 'text-tiny'}}
-                />
-              )}
-              <Button size="sm" radius="sm" variant="solid" startContent={<Add_Icon />}>
-                Install Package
-              </Button>
-            </div>
-          </div>
-          <Input
-            size="sm"
-            radius="sm"
-            className="pt-1"
-            value={searchValue}
-            startContent={<Circle_Icon />}
-            onValueChange={setSearchValue}
-            placeholder="Search packages..."
-          />
-          <Alert
-            color="warning"
-            className="w-full"
-            title="Update Warning"
-            isVisible={showWarning}
-            onClose={onWarningClose}
-            description="Be carfull updating packagin may break usage, for WebUI's use card menu to manage packages."
-            showIcon
-          />
-        </ModalHeader>
-        <ModalBody
-          options={{
-            overflow: {x: 'hidden', y: 'scroll'},
-            scrollbars: {
-              autoHide: 'move',
-              clickScroll: true,
-              theme: isDarkMode ? 'os-theme-light' : 'os-theme-dark',
-            },
-          }}
-          className="size-full p-4"
-          as={OverlayScrollbarsComponent}>
-          <div className="w-full flex flex-col gap-y-4">
-            <div className="flex flex-row gap-8 flex-wrap justify-center">
-              {isLoading ? (
-                <CircularProgress
-                  size="lg"
-                  className="mb-4"
-                  classNames={{indicator: 'stroke-[#ffe66e]'}}
-                  label="Loading packages data, please wait..."
-                />
-              ) : (
-                <List
-                  locale={{
-                    emptyText: <Empty description="No packages found." image={Empty.PRESENTED_IMAGE_SIMPLE} />,
-                  }}
-                  renderItem={item => {
-                    const actions = [
-                      <Button
-                        radius="sm"
-                        color="danger"
-                        key="uninstall"
-                        variant="light"
-                        startContent={<Trash_Icon />}
-                        isIconOnly
-                      />,
-                    ];
-                    if (item.updateVersion)
-                      actions.unshift(
-                        <Button
-                          radius="sm"
-                          key="update"
-                          variant="light"
-                          color="success"
-                          startContent={<Download_Icon />}
-                          isIconOnly
-                        />,
-                      );
-                    return (
-                      <List.Item
-                        actions={actions}
-                        className="hover:bg-foreground-100 transition-colors duration-150 !pr-1">
-                        <List.Item.Meta
-                          title={
-                            <div className="flex flex-row items-center gap-x-1">
-                              <span>{item.name}</span>
-                              {item.updateVersion && (
-                                <Warn_Icon
-                                  className={`${getUpdateVersionColor(item.version, item.updateVersion)} size-[1.1rem]`}
-                                />
-                              )}
-                            </div>
-                          }
-                          description={
-                            <div className="flex flex-row items-center gap-x-1">
-                              <span>{item.version}</span>
-                              {item.updateVersion && (
-                                <span>
-                                  (
-                                  <span className={getUpdateVersionColor(item.version, item.updateVersion)}>
-                                    {item.updateVersion}
-                                  </span>
-                                  )
-                                </span>
-                              )}
-                            </div>
-                          }
-                        />
-                      </List.Item>
-                    );
-                  }}
-                  dataSource={searchData}
-                  className="w-full overflow-hidden"
-                  bordered
-                />
-              )}
-            </div>
-          </div>
-        </ModalBody>
+        <PackageManagerHeader
+          packages={packages}
+          searchValue={searchValue}
+          packagesUpdate={packagesUpdate}
+          setSearchValue={setSearchValue}
+          checkingUpdates={!isLoading && isLoadingUpdates}
+        />
+        <PackageManagerBody isLoading={isLoading} searchData={searchData} />
         <ModalFooter className="bg-foreground-200 dark:bg-LynxRaisinBlack">
           <Button size="sm" color="warning" variant="faded" onPress={closePackageManager} fullWidth>
             Close
