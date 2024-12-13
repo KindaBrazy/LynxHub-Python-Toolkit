@@ -21,6 +21,7 @@ import {modalMotionProps} from '../../../src/App/Utils/Constants';
 import {searchInStrings} from '../../../src/App/Utils/UtilFunctions';
 import {Add_Icon, Circle_Icon, Download_Icon, Download2_Icon} from '../../../src/assets/icons/SvgIcons/SvgIcons1';
 import {Trash_Icon} from '../../../src/assets/icons/SvgIcons/SvgIcons3';
+import {Warn_Icon} from '../SvgIcons';
 
 const WARNING_KEY = 'python-package-warning';
 
@@ -197,7 +198,20 @@ export default function PackageManagerModal({isOpen, setIsOpen, pythonPath}: Pro
                       <List.Item
                         actions={actions}
                         className="hover:bg-foreground-100 transition-colors duration-150 !pr-1">
-                        <List.Item.Meta title={item.name} description={item.version} />
+                        <List.Item.Meta
+                          description={
+                            <div className="flex flex-row items-center gap-x-1">
+                              <span>{item.version}</span>
+                              {item.updateVersion && <span>({item.updateVersion})</span>}
+                            </div>
+                          }
+                          title={
+                            <div className="flex flex-row items-center gap-x-1">
+                              <span>{item.name}</span>
+                              {item.updateVersion && <Warn_Icon className="text-warning size-[1.1rem]" />}
+                            </div>
+                          }
+                        />
                       </List.Item>
                     );
                   }}
