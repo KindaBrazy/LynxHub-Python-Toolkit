@@ -211,7 +211,7 @@ export default function InstallerConda({refresh, installed, closeModal, isOpen, 
                   </Popover>,
                 ]}
                 className="hover:bg-foreground-100 transition-colors duration-150">
-                <span className="">{item}</span>
+                <span>{item}</span>
               </List.Item>
             )}
             className="overflow-hidden"

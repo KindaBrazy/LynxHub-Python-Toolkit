@@ -31,6 +31,7 @@ export default function VenvPython({visible, installedPythons, isLoadingPythons}
         result.map(venv => {
           return {
             pythonVersion: venv.pythonVersion,
+            pythonPath: venv.pythonPath,
             title: venv.name,
             installedPackages: venv.sitePackagesCount,
             folder: venv.folder,
@@ -108,6 +109,7 @@ export default function VenvPython({visible, installedPythons, isLoadingPythons}
                 folder={venv.folder}
                 diskUsage={diskUsage}
                 key={`${venv.title}_card`}
+                pythonPath={venv.pythonPath}
                 pythonVersion={venv.pythonVersion}
                 installedPackages={venv.installedPackages}
               />

@@ -4,11 +4,6 @@ import {
   DropdownItem,
   DropdownMenu,
   DropdownTrigger,
-  Modal,
-  ModalBody,
-  ModalContent,
-  ModalFooter,
-  ModalHeader,
   Popover,
   PopoverContent,
   PopoverTrigger,
@@ -20,12 +15,11 @@ import {FormEvent, useEffect, useMemo, useState} from 'react';
 
 import {formatSizeMB} from '../../../../cross/CrossUtils';
 import rendererIpc from '../../../src/App/RendererIpc';
-import {modalMotionProps} from '../../../src/App/Utils/Constants';
 import {MenuDots_Icon} from '../../../src/assets/icons/SvgIcons/SvgIcons2';
 import {Trash_Icon} from '../../../src/assets/icons/SvgIcons/SvgIcons3';
 import {OpenFolder_Icon} from '../../../src/assets/icons/SvgIcons/SvgIcons4';
 import {HardDrive_Icon} from '../../../src/assets/icons/SvgIcons/SvgIcons5';
-import PythonPackageManager from '../PackagePython/PythonPackageManager';
+import PackageManagerModal from '../PackagePython/PackageManagerModal';
 import {Env_Icon, Packages_Icon} from '../SvgIcons';
 
 const TITLE_STORE_KEY = 'title_change_key';
@@ -36,10 +30,18 @@ type Props = {
   pythonVersion: string;
   installedPackages: number;
   folder: string;
+  pythonPath: string;
   diskUsage: {path: string; value: number | undefined}[];
 };
 
-export default function PythonVenvCard({title, installedPackages, pythonVersion, folder, diskUsage}: Props) {
+export default function PythonVenvCard({
+  title,
+  installedPackages,
+  pythonVersion,
+  folder,
+  diskUsage,
+  pythonPath,
+}: Props) {
   const [popoverUninstaller, setPopoverUninstaller] = useState<boolean>(false);
   const [editedTitle, setEditedTitle] = useState<string>(title);
 
@@ -95,35 +97,10 @@ export default function PythonVenvCard({title, installedPackages, pythonVersion,
   const packageManager = () => {
     setPackageManagerOpen(true);
   };
-  const closePackageManager = () => {
-    setPackageManagerOpen(false);
-  };
 
   return (
     <>
-      <Modal
-        size="xl"
-        isDismissable={false}
-        scrollBehavior="inside"
-        isOpen={packageManagerOpen}
-        onClose={closePackageManager}
-        motionProps={modalMotionProps}
-        classNames={{backdrop: '!top-10', wrapper: '!top-10 pb-8'}}
-        hideCloseButton>
-        <ModalContent className="overflow-hidden">
-          <ModalHeader className="bg-foreground-100 justify-center items-center flex-col gap-y-2">
-            Package Manager
-          </ModalHeader>
-          <ModalBody className="pt-4 scrollbar-hide">
-            <PythonPackageManager />
-          </ModalBody>
-          <ModalFooter className="bg-foreground-100">
-            <Button size="sm" color="warning" variant="faded" onPress={closePackageManager} fullWidth>
-              Close
-            </Button>
-          </ModalFooter>
-        </ModalContent>
-      </Modal>
+      <PackageManagerModal pythonPath={pythonPath} isOpen={packageManagerOpen} setIsOpen={setPackageManagerOpen} />
       <Card
         className={
           `min-w-[27rem] grow transition-colors duration-300 shadow-small ` +

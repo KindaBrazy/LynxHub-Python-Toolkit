@@ -5,11 +5,6 @@ import {
   DropdownItem,
   DropdownMenu,
   DropdownTrigger,
-  Modal,
-  ModalBody,
-  ModalContent,
-  ModalFooter,
-  ModalHeader,
   Popover,
   PopoverContent,
   PopoverTrigger,
@@ -22,12 +17,11 @@ import {SVGProps, useMemo, useState} from 'react';
 import {pythonChannels, PythonInstallation} from '../../../../cross/CrossExtensions';
 import {formatSizeMB} from '../../../../cross/CrossUtils';
 import rendererIpc from '../../../src/App/RendererIpc';
-import {modalMotionProps} from '../../../src/App/Utils/Constants';
 import {MenuDots_Icon} from '../../../src/assets/icons/SvgIcons/SvgIcons2';
 import {Trash_Icon} from '../../../src/assets/icons/SvgIcons/SvgIcons3';
 import {OpenFolder_Icon, Refresh3_Icon} from '../../../src/assets/icons/SvgIcons/SvgIcons4';
 import {HardDrive_Icon} from '../../../src/assets/icons/SvgIcons/SvgIcons5';
-import PythonPackageManager from '../PackagePython/PythonPackageManager';
+import PackageManagerModal from '../PackagePython/PackageManagerModal';
 import {Packages_Icon, Python_Icon} from '../SvgIcons';
 
 type Props = {
@@ -94,45 +88,25 @@ export default function InstalledCard({python, diskUsage, maxDiskValue, updateDe
       case 'conda':
         return 'text-[#007BFF]';
       case 'other':
-        return 'text-[#FFA500FFA500]';
+        return 'text-[#FFA500]';
     }
   }, [python.installationType]);
 
   const [popoverUninstaller, setPopoverUninstaller] = useState<boolean>(false);
 
   const [packageManagerOpen, setPackageManagerOpen] = useState<boolean>(false);
+
   const packageManager = () => {
     setPackageManagerOpen(true);
-  };
-  const closePackageManager = () => {
-    setPackageManagerOpen(false);
   };
 
   return (
     <div className="grow relative">
-      <Modal
-        size="xl"
-        isDismissable={false}
-        scrollBehavior="inside"
+      <PackageManagerModal
         isOpen={packageManagerOpen}
-        onClose={closePackageManager}
-        motionProps={modalMotionProps}
-        classNames={{backdrop: '!top-10', wrapper: '!top-10 pb-8'}}
-        hideCloseButton>
-        <ModalContent className="overflow-hidden">
-          <ModalHeader className="bg-foreground-100 justify-center items-center flex-col gap-y-2">
-            Package Manager
-          </ModalHeader>
-          <ModalBody className="pt-4 scrollbar-hide">
-            <PythonPackageManager />
-          </ModalBody>
-          <ModalFooter className="bg-foreground-100">
-            <Button size="sm" color="warning" variant="faded" onPress={closePackageManager} fullWidth>
-              Close
-            </Button>
-          </ModalFooter>
-        </ModalContent>
-      </Modal>
+        pythonPath={python.installPath}
+        setIsOpen={setPackageManagerOpen}
+      />
       {isUninstalling && (
         <div className="absolute size-full dark:bg-black/50 bg-white/50 z-10 flex justify-center items-center">
           <div className=" dark:bg-black/80 bg-white/80 p-4 rounded-lg flex flex-col space-y-2">

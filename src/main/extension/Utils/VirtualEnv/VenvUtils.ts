@@ -48,6 +48,7 @@ export async function getVenvInfo(venvPath: string): Promise<VenvInfo | null> {
 
     return {
       pythonVersion,
+      pythonPath: pythonExecutable,
       sitePackagesCount,
       name: folderName,
       folder: venvPath,
