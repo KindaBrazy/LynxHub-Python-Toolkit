@@ -18,6 +18,7 @@ import {Dispatch, SetStateAction, useEffect, useState} from 'react';
 import {pythonChannels, SitePackages_Info} from '../../../../cross/CrossExtensions';
 import {useAppState} from '../../../src/App/Redux/App/AppReducer';
 import {modalMotionProps} from '../../../src/App/Utils/Constants';
+import {searchInStrings} from '../../../src/App/Utils/UtilFunctions';
 import {Add_Icon, Circle_Icon, Download_Icon, Download2_Icon} from '../../../src/assets/icons/SvgIcons/SvgIcons1';
 import {Trash_Icon} from '../../../src/assets/icons/SvgIcons/SvgIcons3';
 
@@ -42,6 +43,13 @@ export default function PackageManagerModal({isOpen, setIsOpen, pythonPath}: Pro
 
   const [packages, setPackages] = useState<PackageInfo[]>([]);
   const [packagesUpdate, setPackagesUpdate] = useState<SitePackages_Info[]>([]);
+
+  const [searchValue, setSearchValue] = useState<string>('');
+  const [searchData, setSearchData] = useState<PackageInfo[]>([]);
+
+  useEffect(() => {
+    setSearchData(packages.filter(item => searchInStrings(searchValue, [item.name])));
+  }, [searchValue, packages]);
 
   const closePackageManager = () => {
     setIsOpen(false);
@@ -125,7 +133,9 @@ export default function PackageManagerModal({isOpen, setIsOpen, pythonPath}: Pro
             size="sm"
             radius="sm"
             className="pt-1"
+            value={searchValue}
             startContent={<Circle_Icon />}
+            onValueChange={setSearchValue}
             placeholder="Search packages..."
           />
           <Alert
@@ -191,7 +201,7 @@ export default function PackageManagerModal({isOpen, setIsOpen, pythonPath}: Pro
                       </List.Item>
                     );
                   }}
-                  dataSource={packages}
+                  dataSource={searchData}
                   className="w-full overflow-hidden"
                   bordered
                 />
