@@ -128,7 +128,7 @@ export default function PackageItem({item, pythonPath, updated, removed}: Props)
       {loading && <div className="inset-0 bg-black/50 z-10 absolute flex justify-center items-center">{loading}</div>}
       <List.Item.Meta
         title={
-          <div className="flex flex-row items-center gap-x-1">
+          <div className="flex flex-row items-center gap-x-1 text-medium font-semibold">
             <span>{item.name}</span>
             {item.updateVersion && (
               <Warn_Icon className={`${getUpdateVersionColor(item.version, item.updateVersion)} size-[1.1rem]`} />
@@ -136,7 +136,7 @@ export default function PackageItem({item, pythonPath, updated, removed}: Props)
           </div>
         }
         description={
-          <div className="flex flex-row items-center gap-x-1">
+          <div className="flex flex-row items-center gap-x-1 text-tiny">
             <span>{item.version}</span>
             {item.updateVersion && (
               <span>
