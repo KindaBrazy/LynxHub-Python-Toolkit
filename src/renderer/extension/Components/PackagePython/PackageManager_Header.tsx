@@ -1,4 +1,14 @@
-import {Alert, Button, Input, ModalHeader, Spinner} from '@nextui-org/react';
+import {
+  Alert,
+  Button,
+  Divider,
+  Input,
+  ModalHeader,
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+  Spinner,
+} from '@nextui-org/react';
 import {message} from 'antd';
 import {isEmpty} from 'lodash';
 import {Dispatch, SetStateAction, useEffect, useState} from 'react';
@@ -16,6 +26,7 @@ type Props = {
   checkingUpdates: boolean;
   pythonPath: string;
   allUpdated: () => void;
+  refresh: () => void;
 };
 
 export default function PackageManagerHeader({
@@ -26,9 +37,14 @@ export default function PackageManagerHeader({
   checkingUpdates,
   pythonPath,
   allUpdated,
+  refresh,
 }: Props) {
   const [showWarning, setShowWarning] = useState<boolean>(true);
   const [isUpdating, setIsUpdating] = useState<boolean>(false);
+  const [installing, setInstalling] = useState<boolean>(false);
+
+  const [installPackageName, setInstallPackageName] = useState<string>('');
+  const [installPopover, setInstallPopover] = useState<boolean>(false);
 
   useEffect(() => {
     setShowWarning(localStorage.getItem(WARNING_KEY) !== 'false');
@@ -49,10 +65,29 @@ export default function PackageManagerHeader({
         allUpdated();
       })
       .catch(() => {
-        message.success(`Something goes wrong when updating.`);
+        message.error(`Something goes wrong when updating.`);
       })
       .finally(() => {
         setIsUpdating(false);
+      });
+  };
+
+  const installPackage = () => {
+    setInstallPopover(false);
+    setInstalling(true);
+    window.electron.ipcRenderer
+      .invoke(pythonChannels.installPackage, pythonPath, installPackageName)
+      .then(() => {
+        message.success(`${installPackageName} installed successfully.`);
+        setInstallPackageName('');
+        refresh();
+      })
+      .catch(e => {
+        console.log(e);
+        message.error(`Something goes wrong when installing ${installPackageName}.`);
+      })
+      .finally(() => {
+        setInstalling(false);
       });
   };
 
@@ -82,9 +117,32 @@ export default function PackageManagerHeader({
               classNames={{base: 'flex-row', label: 'text-tiny'}}
             />
           )}
-          <Button size="sm" radius="sm" variant="solid" startContent={<Add_Icon />}>
-            Install Package
-          </Button>
+          <Popover size="sm" radius="sm" placement="bottom" isOpen={installPopover} onOpenChange={setInstallPopover}>
+            <PopoverTrigger>
+              <Button
+                size="sm"
+                radius="sm"
+                variant="solid"
+                isLoading={installing}
+                startContent={!installing && <Add_Icon />}>
+                {installing ? <span>Installing {installPackageName}...</span> : <span>Install Package</span>}
+              </Button>
+            </PopoverTrigger>
+            <PopoverContent className="py-4 gap-y-2">
+              <span className="font-bold text-[11pt]">Install Python Package</span>
+              <Divider />
+              <Input
+                size="sm"
+                label="Package Name:"
+                value={installPackageName}
+                placeholder="Enter package name..."
+                onValueChange={setInstallPackageName}
+              />
+              <Button size="sm" onPress={installPackage} fullWidth>
+                Install
+              </Button>
+            </PopoverContent>
+          </Popover>
         </div>
       </div>
       <Input

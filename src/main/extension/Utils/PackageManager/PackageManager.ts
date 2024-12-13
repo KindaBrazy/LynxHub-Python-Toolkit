@@ -56,6 +56,25 @@ export async function getSitePackagesUpdates(pythonExePath: string): Promise<Sit
   });
 }
 
+export async function installPythonPackage(pythonExePath: string, packageName: string): Promise<string> {
+  return new Promise((resolve, reject) => {
+    const command = `${pythonExePath} -m pip install ${packageName}`;
+
+    exec(command, (error, stdout, stderr) => {
+      if (error) {
+        reject(new Error(`Error installing package: ${error.message}\nStderr: ${stderr}`));
+        return;
+      }
+
+      if (stderr) {
+        console.warn(`pip stderr: ${stderr}`);
+      }
+
+      resolve(stdout);
+    });
+  });
+}
+
 export async function updatePythonPackage(pythonExePath: string, packageName: string): Promise<string> {
   return new Promise((resolve, reject) => {
     const command = `"${pythonExePath}" -m pip install --upgrade "${packageName}"`;

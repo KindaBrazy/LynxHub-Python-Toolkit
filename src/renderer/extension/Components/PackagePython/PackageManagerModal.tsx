@@ -32,34 +32,36 @@ export default function PackageManagerModal({isOpen, setIsOpen, pythonPath}: Pro
     setIsOpen(false);
   };
 
+  const getPackageList = () => {
+    setIsLoading(true);
+    setIsLoadingUpdates(true);
+
+    window.electron.ipcRenderer
+      .invoke(pythonChannels.getPackagesUpdateInfo, pythonPath)
+      .then((result: SitePackages_Info[]) => {
+        setPackagesUpdate(result);
+        setPackages(prevState =>
+          prevState.map(item => {
+            const updateVersion = result.find(update => update.name === item.name)?.version;
+            return updateVersion ? {...item, updateVersion} : item;
+          }),
+        );
+      })
+      .finally(() => {
+        setIsLoadingUpdates(false);
+      });
+
+    window.electron.ipcRenderer
+      .invoke(pythonChannels.getPackagesInfo, pythonPath)
+      .then(setPackages)
+      .catch(console.log)
+      .finally(() => {
+        setIsLoading(false);
+      });
+  };
+
   useEffect(() => {
-    if (isOpen && isEmpty(packages)) {
-      setIsLoading(true);
-      setIsLoadingUpdates(true);
-
-      window.electron.ipcRenderer
-        .invoke(pythonChannels.getPackagesUpdateInfo, pythonPath)
-        .then((result: SitePackages_Info[]) => {
-          setPackagesUpdate(result);
-          setPackages(prevState =>
-            prevState.map(item => {
-              const updateVersion = result.find(update => update.name === item.name)?.version;
-              return updateVersion ? {...item, updateVersion} : item;
-            }),
-          );
-        })
-        .finally(() => {
-          setIsLoadingUpdates(false);
-        });
-
-      window.electron.ipcRenderer
-        .invoke(pythonChannels.getPackagesInfo, pythonPath)
-        .then(setPackages)
-        .catch(console.log)
-        .finally(() => {
-          setIsLoading(false);
-        });
-    }
+    if (isOpen && isEmpty(packages)) getPackageList();
   }, [pythonPath, isOpen]);
 
   const updated = (name: string, newVersion: string) => {
@@ -99,6 +101,7 @@ export default function PackageManagerModal({isOpen, setIsOpen, pythonPath}: Pro
           packages={packages}
           allUpdated={allUpdated}
           pythonPath={pythonPath}
+          refresh={getPackageList}
           searchValue={searchValue}
           packagesUpdate={packagesUpdate}
           setSearchValue={setSearchValue}

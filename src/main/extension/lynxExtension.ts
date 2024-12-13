@@ -11,6 +11,7 @@ import downloadPython from './Utils/Installer/Installer_Official';
 import {
   getSitePackagesInfo,
   getSitePackagesUpdates,
+  installPythonPackage,
   uninstallPythonPackage,
   updateAllPythonPackages,
   updatePythonPackage,
@@ -45,6 +46,9 @@ export async function initialExtension(lynxApi: ExtensionMainApi, utils: MainExt
     ipcMain.handle(pythonChannels.getPackagesInfo, (_, pythonPath: string) => getSitePackagesInfo(pythonPath));
     ipcMain.handle(pythonChannels.uninstallPackage, (_, pythonPath: string, packageName: string) =>
       uninstallPythonPackage(pythonPath, packageName),
+    );
+    ipcMain.handle(pythonChannels.installPackage, (_, pythonPath: string, packageName: string) =>
+      installPythonPackage(pythonPath, packageName),
     );
 
     ipcMain.handle(pythonChannels.getPackagesUpdateInfo, (_, pythonPath: string) => getSitePackagesUpdates(pythonPath));

@@ -67,8 +67,10 @@ export const pythonChannels = {
   locateVenv: 'locate-venv',
 
   getPackagesInfo: 'get-packages-info',
+  installPackage: 'install-package',
+  uninstallPackage: 'uninstall-package',
+
   getPackagesUpdateInfo: 'get-packages-update-info',
   updatePackage: 'update-package',
   updateAllPackages: 'update-all-packages',
-  uninstallPackage: 'uninstall-package',
 };
