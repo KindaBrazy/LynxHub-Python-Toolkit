@@ -13,14 +13,14 @@ import {SHA256} from 'crypto-js';
 import {isNil} from 'lodash';
 import {FormEvent, useEffect, useMemo, useState} from 'react';
 
-import {formatSizeMB} from '../../../../cross/CrossUtils';
-import rendererIpc from '../../../src/App/RendererIpc';
-import {MenuDots_Icon} from '../../../src/assets/icons/SvgIcons/SvgIcons2';
-import {Trash_Icon} from '../../../src/assets/icons/SvgIcons/SvgIcons3';
-import {OpenFolder_Icon} from '../../../src/assets/icons/SvgIcons/SvgIcons4';
-import {HardDrive_Icon} from '../../../src/assets/icons/SvgIcons/SvgIcons5';
+import {formatSizeMB} from '../../../../../cross/CrossUtils';
+import rendererIpc from '../../../../src/App/RendererIpc';
+import {MenuDots_Icon} from '../../../../src/assets/icons/SvgIcons/SvgIcons2';
+import {Trash_Icon} from '../../../../src/assets/icons/SvgIcons/SvgIcons3';
+import {OpenFolder_Icon} from '../../../../src/assets/icons/SvgIcons/SvgIcons4';
+import {HardDrive_Icon} from '../../../../src/assets/icons/SvgIcons/SvgIcons5';
+import {Env_Icon, Packages_Icon} from '../../SvgIcons';
 import PackageManagerModal from '../PackagePython/PackageManagerModal';
-import {Env_Icon, Packages_Icon} from '../SvgIcons';
 
 const TITLE_STORE_KEY = 'title_change_key';
 type StorageItem = {title: string; path: string};

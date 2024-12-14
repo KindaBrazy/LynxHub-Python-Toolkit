@@ -2,9 +2,9 @@ import {Button, Modal, ModalContent, ModalFooter} from '@nextui-org/react';
 import {isEmpty} from 'lodash';
 import {Dispatch, SetStateAction, useEffect, useState} from 'react';
 
-import {PackageInfo, pythonChannels, SitePackages_Info} from '../../../../cross/CrossExtensions';
-import {modalMotionProps} from '../../../src/App/Utils/Constants';
-import {searchInStrings} from '../../../src/App/Utils/UtilFunctions';
+import {PackageInfo, pythonChannels, SitePackages_Info} from '../../../../../cross/CrossExtensions';
+import {modalMotionProps} from '../../../../src/App/Utils/Constants';
+import {searchInStrings} from '../../../../src/App/Utils/UtilFunctions';
 import PackageManagerBody from './PackageManager_Body';
 import PackageManagerHeader from './PackageManager_Header';
 

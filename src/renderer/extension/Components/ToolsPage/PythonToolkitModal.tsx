@@ -1,8 +1,8 @@
 import {Button, Divider, Modal, ModalBody, ModalContent, ModalFooter, ModalHeader, Tab, Tabs} from '@nextui-org/react';
 import {Dispatch, Key, SetStateAction, useState} from 'react';
 
-import {PythonInstallation} from '../../../cross/CrossExtensions';
-import {modalMotionProps} from '../../src/App/Utils/Constants';
+import {PythonInstallation} from '../../../../cross/CrossExtensions';
+import {modalMotionProps} from '../../../src/App/Utils/Constants';
 import InstalledPythons from './InstalledPythons/InstalledPythons';
 import VenvPython from './VenvPython/VenvPython';
 

@@ -3,11 +3,11 @@ import {message} from 'antd';
 import {capitalize, isEmpty} from 'lodash';
 import {useCallback, useEffect, useMemo, useState} from 'react';
 
-import {pythonChannels, PythonInstallation, VenvCreateOptions} from '../../../../cross/CrossExtensions';
-import rendererIpc from '../../../src/App/RendererIpc';
-import {Add_Icon} from '../../../src/assets/icons/SvgIcons/SvgIcons1';
-import {MenuDots_Icon} from '../../../src/assets/icons/SvgIcons/SvgIcons2';
-import {OpenFolder_Icon} from '../../../src/assets/icons/SvgIcons/SvgIcons4';
+import {pythonChannels, PythonInstallation, VenvCreateOptions} from '../../../../../cross/CrossExtensions';
+import rendererIpc from '../../../../src/App/RendererIpc';
+import {Add_Icon} from '../../../../src/assets/icons/SvgIcons/SvgIcons1';
+import {MenuDots_Icon} from '../../../../src/assets/icons/SvgIcons/SvgIcons2';
+import {OpenFolder_Icon} from '../../../../src/assets/icons/SvgIcons/SvgIcons4';
 
 type Props = {refresh: () => void; installedPythons: PythonInstallation[]; isLoadingPythons: boolean};
 

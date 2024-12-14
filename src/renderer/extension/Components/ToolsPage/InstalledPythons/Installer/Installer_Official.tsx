@@ -4,11 +4,11 @@ import {isEmpty, isNil} from 'lodash';
 import {OverlayScrollbarsComponent} from 'overlayscrollbars-react';
 import {Dispatch, SetStateAction, useEffect, useState} from 'react';
 
-import {pythonChannels, PythonVersion} from '../../../../../cross/CrossExtensions';
-import {formatSize} from '../../../../../cross/CrossUtils';
-import {useAppState} from '../../../../src/App/Redux/App/AppReducer';
-import {Circle_Icon} from '../../../../src/assets/icons/SvgIcons/SvgIcons1';
-import {Refresh_Icon} from '../../../../src/assets/icons/SvgIcons/SvgIcons2';
+import {pythonChannels, PythonVersion} from '../../../../../../cross/CrossExtensions';
+import {formatSize} from '../../../../../../cross/CrossUtils';
+import {useAppState} from '../../../../../src/App/Redux/App/AppReducer';
+import {Circle_Icon} from '../../../../../src/assets/icons/SvgIcons/SvgIcons1';
+import {Refresh_Icon} from '../../../../../src/assets/icons/SvgIcons/SvgIcons2';
 
 type DownloadProg = {percentage: number; downloaded: number; total: number} | undefined;
 const CACHE_KEY = 'available-pythons-list';

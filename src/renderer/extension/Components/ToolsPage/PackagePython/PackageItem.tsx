@@ -3,10 +3,10 @@ import {List, message} from 'antd';
 import {ReactNode, useCallback, useMemo, useState} from 'react';
 import semver from 'semver';
 
-import {PackageInfo, pythonChannels} from '../../../../cross/CrossExtensions';
-import {Download_Icon} from '../../../src/assets/icons/SvgIcons/SvgIcons1';
-import {Trash_Icon} from '../../../src/assets/icons/SvgIcons/SvgIcons3';
-import {Warn_Icon} from '../SvgIcons';
+import {PackageInfo, pythonChannels} from '../../../../../cross/CrossExtensions';
+import {Download_Icon} from '../../../../src/assets/icons/SvgIcons/SvgIcons1';
+import {Trash_Icon} from '../../../../src/assets/icons/SvgIcons/SvgIcons3';
+import {Warn_Icon} from '../../SvgIcons';
 
 function getUpdateType(currentVersion: string, updateVersion: string) {
   const currentVersionNormalized = semver.coerce(currentVersion)?.version;

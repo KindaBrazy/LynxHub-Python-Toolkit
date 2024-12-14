@@ -1,7 +1,7 @@
 import {Button, Modal, ModalBody, ModalContent, ModalFooter, ModalHeader, Tab, Tabs} from '@nextui-org/react';
 import {Key, useMemo, useState} from 'react';
 
-import {modalMotionProps} from '../../../../src/App/Utils/Constants';
+import {modalMotionProps} from '../../../../../src/App/Utils/Constants';
 import InstallerConda from './Installer_Conda';
 import InstallerOfficial from './Installer_Official';
 

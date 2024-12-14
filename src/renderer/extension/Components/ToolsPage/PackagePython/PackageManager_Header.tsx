@@ -13,8 +13,8 @@ import {message} from 'antd';
 import {isEmpty} from 'lodash';
 import {Dispatch, SetStateAction, useEffect, useState} from 'react';
 
-import {PackageInfo, pythonChannels, SitePackages_Info} from '../../../../cross/CrossExtensions';
-import {Add_Icon, Circle_Icon, Download2_Icon} from '../../../src/assets/icons/SvgIcons/SvgIcons1';
+import {PackageInfo, pythonChannels, SitePackages_Info} from '../../../../../cross/CrossExtensions';
+import {Add_Icon, Circle_Icon, Download2_Icon} from '../../../../src/assets/icons/SvgIcons/SvgIcons1';
 
 const WARNING_KEY = 'python-package-warning';
 

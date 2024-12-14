@@ -12,17 +12,17 @@ import {
 } from '@nextui-org/react';
 import {Card, Divider, Spin} from 'antd';
 import {isNil, startCase} from 'lodash';
-import {SVGProps, useMemo, useState} from 'react';
+import {useMemo, useState} from 'react';
 
-import {pythonChannels, PythonInstallation} from '../../../../cross/CrossExtensions';
-import {formatSizeMB} from '../../../../cross/CrossUtils';
-import rendererIpc from '../../../src/App/RendererIpc';
-import {MenuDots_Icon} from '../../../src/assets/icons/SvgIcons/SvgIcons2';
-import {Trash_Icon} from '../../../src/assets/icons/SvgIcons/SvgIcons3';
-import {OpenFolder_Icon, Refresh3_Icon} from '../../../src/assets/icons/SvgIcons/SvgIcons4';
-import {HardDrive_Icon} from '../../../src/assets/icons/SvgIcons/SvgIcons5';
+import {pythonChannels, PythonInstallation} from '../../../../../cross/CrossExtensions';
+import {formatSizeMB} from '../../../../../cross/CrossUtils';
+import rendererIpc from '../../../../src/App/RendererIpc';
+import {MenuDots_Icon} from '../../../../src/assets/icons/SvgIcons/SvgIcons2';
+import {Trash_Icon} from '../../../../src/assets/icons/SvgIcons/SvgIcons3';
+import {OpenFolder_Icon, Refresh3_Icon} from '../../../../src/assets/icons/SvgIcons/SvgIcons4';
+import {HardDrive_Icon} from '../../../../src/assets/icons/SvgIcons/SvgIcons5';
+import {DoubleCheck_Icon, Packages_Icon, Python_Icon} from '../../SvgIcons';
 import PackageManagerModal from '../PackagePython/PackageManagerModal';
-import {Packages_Icon, Python_Icon} from '../SvgIcons';
 
 type Props = {
   python: PythonInstallation;
@@ -31,19 +31,6 @@ type Props = {
   updateDefault: (installFolder: string) => void;
   refresh: () => void;
 };
-
-type SvgProps = SVGProps<SVGSVGElement>;
-
-function CheckSvg(props: SvgProps) {
-  return (
-    <svg {...props} width="24" height="24" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-      <g fill="none" strokeWidth="1.5" stroke="currentColor" strokeLinecap="round" strokeLinejoin="round">
-        <path opacity="0.5" d="m4 12.9l3.143 3.6L15 7.5" />
-        <path d="m20 7.563l-8.571 9L11 16" />
-      </g>
-    </svg>
-  );
-}
 
 export default function InstalledCard({python, diskUsage, maxDiskValue, updateDefault, refresh}: Props) {
   const size = useMemo(() => {
@@ -165,7 +152,7 @@ export default function InstalledCard({python, diskUsage, maxDiskValue, updateDe
                     key="system-default"
                     onPress={makeDefault}
                     textValue="Set as System Default"
-                    startContent={python.isDefault ? <Refresh3_Icon className="size-4" /> : <CheckSvg />}>
+                    startContent={python.isDefault ? <Refresh3_Icon className="size-4" /> : <DoubleCheck_Icon />}>
                     Set as <span className="font-bold">System Default</span>
                   </DropdownItem>
                   <DropdownItem
