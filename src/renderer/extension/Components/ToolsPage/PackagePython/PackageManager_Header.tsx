@@ -11,7 +11,7 @@ import {
 } from '@nextui-org/react';
 import {message} from 'antd';
 import {isEmpty} from 'lodash';
-import {Dispatch, SetStateAction, useEffect, useState} from 'react';
+import {Dispatch, ReactNode, SetStateAction, useEffect, useState} from 'react';
 
 import {PackageInfo, pythonChannels, SitePackages_Info} from '../../../../../cross/CrossExtensions';
 import {Add_Icon, Circle_Icon, Download2_Icon} from '../../../../src/assets/icons/SvgIcons/SvgIcons1';
@@ -19,6 +19,8 @@ import {Add_Icon, Circle_Icon, Download2_Icon} from '../../../../src/assets/icon
 const WARNING_KEY = 'python-package-warning';
 
 type Props = {
+  title: string;
+  actionButtons?: ReactNode[];
   searchValue: string;
   setSearchValue: Dispatch<SetStateAction<string>>;
   packages: PackageInfo[];
@@ -38,6 +40,8 @@ export default function PackageManagerHeader({
   pythonPath,
   allUpdated,
   refresh,
+  title,
+  actionButtons,
 }: Props) {
   const [showWarning, setShowWarning] = useState<boolean>(true);
   const [isUpdating, setIsUpdating] = useState<boolean>(false);
@@ -83,7 +87,7 @@ export default function PackageManagerHeader({
         refresh();
       })
       .catch(e => {
-        console.log(e);
+        console.error(e);
         message.error(`Something goes wrong when installing ${installPackageName}.`);
       })
       .finally(() => {
@@ -94,7 +98,9 @@ export default function PackageManagerHeader({
   return (
     <ModalHeader className="bg-foreground-200 dark:bg-LynxRaisinBlack items-center flex-col gap-y-2">
       <div className="flex flex-row justify-between w-full">
-        <span>Package Manager ({packages.length})</span>
+        <span>
+          {title} ({packages.length})
+        </span>
         <div className="gap-x-2 flex items-center">
           {!isEmpty(packagesUpdate) && (
             <Button
@@ -143,6 +149,8 @@ export default function PackageManagerHeader({
               </Button>
             </PopoverContent>
           </Popover>
+
+          {actionButtons?.map(ActionButton => ActionButton)}
         </div>
       </div>
       <Input

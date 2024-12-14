@@ -1,6 +1,6 @@
 import {Button, Modal, ModalContent, ModalFooter} from '@nextui-org/react';
 import {isEmpty} from 'lodash';
-import {Dispatch, SetStateAction, useEffect, useState} from 'react';
+import {Dispatch, ReactNode, SetStateAction, useEffect, useState} from 'react';
 
 import {PackageInfo, pythonChannels, SitePackages_Info} from '../../../../../cross/CrossExtensions';
 import {modalMotionProps} from '../../../../src/App/Utils/Constants';
@@ -12,9 +12,20 @@ type Props = {
   isOpen: boolean;
   setIsOpen: Dispatch<SetStateAction<boolean>>;
   pythonPath: string;
+
+  title?: string;
+  actionButtons?: ReactNode[];
+  size?: '2xl' | '3xl' | '4xl';
 };
 
-export default function PackageManagerModal({isOpen, setIsOpen, pythonPath}: Props) {
+export default function PackageManagerModal({
+  title = 'Package Manager',
+  size = '2xl',
+  actionButtons,
+  isOpen,
+  setIsOpen,
+  pythonPath,
+}: Props) {
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [isLoadingUpdates, setIsLoadingUpdates] = useState<boolean>(false);
 
@@ -88,7 +99,7 @@ export default function PackageManagerModal({isOpen, setIsOpen, pythonPath}: Pro
 
   return (
     <Modal
-      size="2xl"
+      size={size}
       isOpen={isOpen}
       isDismissable={false}
       scrollBehavior="inside"
@@ -98,11 +109,13 @@ export default function PackageManagerModal({isOpen, setIsOpen, pythonPath}: Pro
       hideCloseButton>
       <ModalContent className="overflow-hidden">
         <PackageManagerHeader
+          title={title}
           packages={packages}
           allUpdated={allUpdated}
           pythonPath={pythonPath}
           refresh={getPackageList}
           searchValue={searchValue}
+          actionButtons={actionButtons}
           packagesUpdate={packagesUpdate}
           setSearchValue={setSearchValue}
           checkingUpdates={!isLoading && isLoadingUpdates}

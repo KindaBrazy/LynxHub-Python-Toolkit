@@ -1,19 +1,31 @@
-import {useEffect} from 'react';
+import {useCallback, useEffect, useState} from 'react';
 
+import {useCardData} from '../../src/App/Components/Cards/CardsDataManager';
 import {DropDownSectionType} from '../../src/App/Utils/Types';
+import RequirementsBtn from './Menu/Requirements/Requirements_Btn';
 import {Python_Icon} from './SvgIcons';
+import PackageManagerModal from './ToolsPage/PackagePython/PackageManagerModal';
 
 type Props = {
   addMenu: (sections: DropDownSectionType[], index?: number) => void;
 };
 
 export default function ToolkitMenu({addMenu}: Props) {
+  const [isOpen, setIsOpen] = useState<boolean>(false);
+  const {setMenuIsOpen, title} = useCardData();
+
+  const onPress = useCallback(() => {
+    setIsOpen(true);
+    setMenuIsOpen(false);
+  }, []);
+
   useEffect(() => {
     const sections = [
       {
         key: 'python_toolkit',
         items: [
           {
+            onPress,
             className: 'cursor-default',
             key: 'python_deps',
             startContent: <Python_Icon className="size-3" />,
@@ -27,5 +39,14 @@ export default function ToolkitMenu({addMenu}: Props) {
     addMenu(sections, 0);
   }, []);
 
-  return <></>;
+  return (
+    <PackageManagerModal
+      size="3xl"
+      pythonPath=""
+      isOpen={isOpen}
+      setIsOpen={setIsOpen}
+      title={`${title} Dependencies`}
+      actionButtons={[<RequirementsBtn key="python_requirements" />]}
+    />
+  );
 }
