@@ -4,7 +4,6 @@ import {useCardData} from '../../src/App/Components/Cards/CardsDataManager';
 import {DropDownSectionType} from '../../src/App/Utils/Types';
 import {Python_Icon} from './SvgIcons';
 import PackageManagerModal from './ToolsPage/PackagePython/PackageManagerModal';
-import RequirementsBtn from './ToolsPage/PackagePython/Requirements/RequirementsModal_Btn';
 
 type Props = {
   addMenu: (sections: DropDownSectionType[], index?: number) => void;

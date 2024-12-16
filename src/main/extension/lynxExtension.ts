@@ -1,6 +1,6 @@
 import {ipcMain} from 'electron';
 
-import {pythonChannels, PythonVersion, VenvCreateOptions} from '../../cross/CrossExtensions';
+import {pythonChannels, PythonVersion, ReqData, VenvCreateOptions} from '../../cross/CrossExtensions';
 import {ExtensionMainApi, MainExtensionUtils} from '../Managements/Plugin/Extensions/ExtensionTypes_Main';
 import StorageManager from '../Managements/Storage/StorageManager';
 import {getAvailablePythonVersions} from './Utils/Available';
@@ -16,7 +16,7 @@ import {
   updateAllPythonPackages,
   updatePythonPackage,
 } from './Utils/PackageManager/PackageManager';
-import {readRequirements, saveRequirements} from './Utils/PythonRequirements';
+import {getReqPath, readRequirements, saveRequirements, setReqPath} from './Utils/PythonRequirements';
 import uninstallPython from './Utils/Uninstaller/Uninstaller';
 import createPythonVenv, {getVenvs, locateVenv} from './Utils/VirtualEnv/CreateVenv';
 
@@ -62,5 +62,8 @@ export async function initialExtension(lynxApi: ExtensionMainApi, utils: MainExt
 
     ipcMain.handle(pythonChannels.readReqs, (_, filePath: string) => readRequirements(filePath));
     ipcMain.handle(pythonChannels.saveReqs, (_, filePath: string, data) => saveRequirements(filePath, data));
+
+    ipcMain.on(pythonChannels.setReqPath, (_, data: ReqData) => setReqPath(data));
+    ipcMain.handle(pythonChannels.getReqPath, (_, id: string) => getReqPath(id));
   });
 }

@@ -2,9 +2,10 @@ import {Button, Modal, ModalContent, ModalFooter} from '@nextui-org/react';
 import {isEmpty} from 'lodash';
 import {Dispatch, ReactNode, SetStateAction, useEffect, useState} from 'react';
 
-import {PackageInfo, pythonChannels, SitePackages_Info} from '../../../../../cross/CrossExtensions';
+import {PackageInfo, SitePackages_Info} from '../../../../../cross/CrossExtensions';
 import {modalMotionProps} from '../../../../src/App/Utils/Constants';
 import {searchInStrings} from '../../../../src/App/Utils/UtilFunctions';
+import pIpc from '../../../PIpc';
 import PackageManagerBody from './PackageManager_Body';
 import PackageManagerHeader from './PackageManager_Header';
 
@@ -47,8 +48,8 @@ export default function PackageManagerModal({
     setIsLoading(true);
     setIsLoadingUpdates(true);
 
-    window.electron.ipcRenderer
-      .invoke(pythonChannels.getPackagesUpdateInfo, pythonPath)
+    pIpc
+      .getPackagesUpdateInfo(pythonPath)
       .then((result: SitePackages_Info[]) => {
         setPackagesUpdate(result);
         setPackages(prevState =>
@@ -62,8 +63,8 @@ export default function PackageManagerModal({
         setIsLoadingUpdates(false);
       });
 
-    window.electron.ipcRenderer
-      .invoke(pythonChannels.getPackagesInfo, pythonPath)
+    pIpc
+      .getPackagesInfo(pythonPath)
       .then(setPackages)
       .catch(console.log)
       .finally(() => {

@@ -50,6 +50,16 @@ export type PackageInfo = SitePackages_Info & {
 
 export type ReqData = {id: string; path: string};
 
+export type RequirementData = {
+  name: string;
+  versionOperator: string | null;
+  version: string | null;
+  originalLine: string;
+  autoFocus?: boolean;
+};
+
+export type DlProgressOfficial = {percentage: number; downloaded: number; total: number} | undefined;
+
 export const pythonChannels = {
   getAvailableConda: 'get-available-conda-pythons',
   downloadProgressConda: 'download-conda-python-progress',
@@ -79,5 +89,6 @@ export const pythonChannels = {
   saveReqs: 'save-requirements',
   readReqs: 'read-requirements',
 
-  changeReqPath: 'change-requirements-path',
+  setReqPath: 'set-requirements-path',
+  getReqPath: 'get-requirements-path',
 };

@@ -14,13 +14,14 @@ import {Card, Divider, Spin} from 'antd';
 import {isNil, startCase} from 'lodash';
 import {useMemo, useState} from 'react';
 
-import {pythonChannels, PythonInstallation} from '../../../../../cross/CrossExtensions';
+import {PythonInstallation} from '../../../../../cross/CrossExtensions';
 import {formatSizeMB} from '../../../../../cross/CrossUtils';
 import rendererIpc from '../../../../src/App/RendererIpc';
 import {MenuDots_Icon} from '../../../../src/assets/icons/SvgIcons/SvgIcons2';
 import {Trash_Icon} from '../../../../src/assets/icons/SvgIcons/SvgIcons3';
 import {OpenFolder_Icon, Refresh3_Icon} from '../../../../src/assets/icons/SvgIcons/SvgIcons4';
 import {HardDrive_Icon} from '../../../../src/assets/icons/SvgIcons/SvgIcons5';
+import pIpc from '../../../PIpc';
 import {DoubleCheck_Icon, Packages_Icon, Python_Icon} from '../../SvgIcons';
 import PackageManagerModal from '../PackagePython/PackageManagerModal';
 
@@ -40,8 +41,8 @@ export default function InstalledCard({python, diskUsage, maxDiskValue, updateDe
   const [isUninstalling, setIsUninstalling] = useState<boolean>(false);
 
   const makeDefault = () => {
-    window.electron.ipcRenderer
-      .invoke(pythonChannels.setDefaultPython, python.installFolder)
+    pIpc
+      .setDefaultPython(python.installFolder)
       .then(() => {
         updateDefault(python.installFolder);
       })
@@ -53,8 +54,8 @@ export default function InstalledCard({python, diskUsage, maxDiskValue, updateDe
   const uninstall = () => {
     setPopoverUninstaller(false);
     setIsUninstalling(true);
-    window.electron.ipcRenderer
-      .invoke(pythonChannels.uninstallPython, python.installPath)
+    pIpc
+      .uninstallPython(python.installPath)
       .catch(err => {
         console.error(err);
       })

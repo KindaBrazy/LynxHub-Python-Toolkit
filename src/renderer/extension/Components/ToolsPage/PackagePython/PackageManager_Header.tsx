@@ -13,8 +13,9 @@ import {message} from 'antd';
 import {isEmpty} from 'lodash';
 import {Dispatch, ReactNode, SetStateAction, useEffect, useState} from 'react';
 
-import {PackageInfo, pythonChannels, SitePackages_Info} from '../../../../../cross/CrossExtensions';
+import {PackageInfo, SitePackages_Info} from '../../../../../cross/CrossExtensions';
 import {Add_Icon, Circle_Icon, Download2_Icon} from '../../../../src/assets/icons/SvgIcons/SvgIcons1';
+import pIpc from '../../../PIpc';
 import RequirementsBtn from './Requirements/RequirementsModal_Btn';
 
 const WARNING_KEY = 'python-package-warning';
@@ -63,8 +64,8 @@ export default function PackageManagerHeader({
   const updateAll = () => {
     setIsUpdating(true);
     const updateList = packagesUpdate.map(item => item.name);
-    window.electron.ipcRenderer
-      .invoke(pythonChannels.updateAllPackages, pythonPath, updateList)
+    pIpc
+      .updateAllPackages(pythonPath, updateList)
       .then(() => {
         message.success(`All ${updateList.length} packages updated.`);
         allUpdated();
@@ -80,8 +81,8 @@ export default function PackageManagerHeader({
   const installPackage = () => {
     setInstallPopover(false);
     setInstalling(true);
-    window.electron.ipcRenderer
-      .invoke(pythonChannels.installPackage, pythonPath, installPackageName)
+    pIpc
+      .installPackage(pythonPath, installPackageName)
       .then(() => {
         message.success(`${installPackageName} installed successfully.`);
         setInstallPackageName('');

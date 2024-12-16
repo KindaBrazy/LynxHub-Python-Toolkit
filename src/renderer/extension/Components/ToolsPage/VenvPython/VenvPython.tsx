@@ -3,10 +3,11 @@ import {Empty, message} from 'antd';
 import {isEmpty} from 'lodash';
 import {useCallback, useEffect, useState} from 'react';
 
-import {pythonChannels, PythonInstallation, PythonVenvs, VenvInfo} from '../../../../../cross/CrossExtensions';
+import {PythonInstallation, PythonVenvs, VenvInfo} from '../../../../../cross/CrossExtensions';
 import {bytesToMegabytes} from '../../../../../cross/CrossUtils';
 import rendererIpc from '../../../../src/App/RendererIpc';
 import {OpenFolder_Icon} from '../../../../src/assets/icons/SvgIcons/SvgIcons4';
+import pIpc from '../../../PIpc';
 import PythonVenvCard from './PythonVenvCard';
 import VenvCreator from './VenvCreator';
 
@@ -26,7 +27,7 @@ export default function VenvPython({visible, installedPythons, isLoadingPythons}
 
   const getVenvs = useCallback(() => {
     setIsLoading(true);
-    window.electron.ipcRenderer.invoke(pythonChannels.getVenvs).then((result: VenvInfo[]) => {
+    pIpc.getVenvs().then((result: VenvInfo[]) => {
       setPythonVenvs(
         result.map(venv => {
           return {
@@ -60,7 +61,7 @@ export default function VenvPython({visible, installedPythons, isLoadingPythons}
 
   const locateVenv = () => {
     setIsLocating(true);
-    window.electron.ipcRenderer.invoke(pythonChannels.locateVenv).then((isLocated: boolean) => {
+    pIpc.locateVenv().then((isLocated: boolean) => {
       if (isLocated) {
         message.success('Environment validated successfully.');
         getVenvs();

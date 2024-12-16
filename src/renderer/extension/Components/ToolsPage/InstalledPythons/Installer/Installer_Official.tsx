@@ -4,13 +4,13 @@ import {isEmpty, isNil} from 'lodash';
 import {OverlayScrollbarsComponent} from 'overlayscrollbars-react';
 import {Dispatch, SetStateAction, useEffect, useState} from 'react';
 
-import {pythonChannels, PythonVersion} from '../../../../../../cross/CrossExtensions';
+import {DlProgressOfficial, PythonVersion} from '../../../../../../cross/CrossExtensions';
 import {formatSize} from '../../../../../../cross/CrossUtils';
 import {useAppState} from '../../../../../src/App/Redux/App/AppReducer';
 import {Circle_Icon} from '../../../../../src/assets/icons/SvgIcons/SvgIcons1';
 import {Refresh_Icon} from '../../../../../src/assets/icons/SvgIcons/SvgIcons2';
+import pIpc from '../../../../PIpc';
 
-type DownloadProg = {percentage: number; downloaded: number; total: number} | undefined;
 const CACHE_KEY = 'available-pythons-list';
 
 type Props = {
@@ -30,7 +30,7 @@ export default function InstallerOfficial({refresh, installed, closeModal, isOpe
   const [inputValue, setInputValue] = useState<string>('');
 
   const [installStage, setInstallStage] = useState<'installing' | 'downloading'>();
-  const [downloadProgress, setDownloadProgress] = useState<DownloadProg>(undefined);
+  const [downloadProgress, setDownloadProgress] = useState<DlProgressOfficial>(undefined);
 
   const [installingVersion, setInstallingVersion] = useState<PythonVersion | undefined>(undefined);
 
@@ -41,7 +41,7 @@ export default function InstallerOfficial({refresh, installed, closeModal, isOpe
       setVersions((JSON.parse(cachedList) as PythonVersion[]).filter(item => !installed.includes(item.version)));
       setLoadingList(false);
     } else {
-      window.electron.ipcRenderer.invoke(pythonChannels.getAvailableOfficial).then((result: PythonVersion[]) => {
+      pIpc.getAvailableOfficial().then((result: PythonVersion[]) => {
         localStorage.setItem(CACHE_KEY, JSON.stringify(result));
         const filteredVersions = result.filter(item => !installed.includes(item.version));
         setVersions(filteredVersions);
@@ -66,19 +66,16 @@ export default function InstallerOfficial({refresh, installed, closeModal, isOpe
     setInstallingVersion(version);
     setCloseDisabled(true);
 
-    window.electron.ipcRenderer.removeAllListeners(pythonChannels.downloadProgressOfficial);
-    window.electron.ipcRenderer.on(
-      pythonChannels.downloadProgressOfficial,
-      (_e, stage, progress: typeof downloadProgress) => {
-        setInstallStage(stage);
-        if (stage === 'downloading') {
-          setDownloadProgress(progress);
-        }
-      },
-    );
+    pIpc.off_DlProgressOfficial();
+    pIpc.on_DlProgressOfficial((_, stage, progress) => {
+      setInstallStage(stage);
+      if (stage === 'downloading') {
+        setDownloadProgress(progress);
+      }
+    });
 
-    window.electron.ipcRenderer
-      .invoke(pythonChannels.installOfficial, version)
+    pIpc
+      .installOfficial(version)
       .then(() => {
         refresh();
         closeModal();

@@ -1,11 +1,11 @@
 import {readFileSync, writeFileSync} from 'graceful-fs';
 
-import {ReqData} from '../../../cross/CrossExtensions';
+import {ReqData, RequirementData} from '../../../cross/CrossExtensions';
 import {storageManager} from '../lynxExtension';
 
 const REQ_STORE_ID = 'reqs_path';
 
-export async function readRequirements(filePath: string) {
+export async function readRequirements(filePath: string): Promise<RequirementData[]> {
   try {
     const data = readFileSync(filePath, 'utf-8');
     // noinspection UnnecessaryLocalVariableJS
@@ -32,7 +32,7 @@ export async function readRequirements(filePath: string) {
   }
 }
 
-export async function saveRequirements(filePath: string, requirements: any[]) {
+export async function saveRequirements(filePath: string, requirements: RequirementData[]) {
   try {
     const updatedContent = requirements
       .map(req => {

@@ -3,11 +3,12 @@ import {message} from 'antd';
 import {capitalize, isEmpty} from 'lodash';
 import {useCallback, useEffect, useMemo, useState} from 'react';
 
-import {pythonChannels, PythonInstallation, VenvCreateOptions} from '../../../../../cross/CrossExtensions';
+import {PythonInstallation, VenvCreateOptions} from '../../../../../cross/CrossExtensions';
 import rendererIpc from '../../../../src/App/RendererIpc';
 import {Add_Icon} from '../../../../src/assets/icons/SvgIcons/SvgIcons1';
 import {MenuDots_Icon} from '../../../../src/assets/icons/SvgIcons/SvgIcons2';
 import {OpenFolder_Icon} from '../../../../src/assets/icons/SvgIcons/SvgIcons4';
+import pIpc from '../../../PIpc';
 
 type Props = {refresh: () => void; installedPythons: PythonInstallation[]; isLoadingPythons: boolean};
 
@@ -54,7 +55,7 @@ export default function VenvCreator({installedPythons, refresh, isLoadingPythons
       venvName: envName,
       pythonPath,
     };
-    window.electron.ipcRenderer.invoke(pythonChannels.createVenv, options).then(result => {
+    pIpc.createVenv(options).then(result => {
       if (result) {
         refresh();
         setIsOpen(false);

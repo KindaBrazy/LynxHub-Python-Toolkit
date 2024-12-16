@@ -3,11 +3,12 @@ import {Empty} from 'antd';
 import {isEmpty} from 'lodash';
 import {Dispatch, SetStateAction, useEffect, useState} from 'react';
 
-import {pythonChannels, PythonInstallation} from '../../../../../cross/CrossExtensions';
+import {PythonInstallation} from '../../../../../cross/CrossExtensions';
 import {bytesToMegabytes} from '../../../../../cross/CrossUtils';
 import rendererIpc from '../../../../src/App/RendererIpc';
 import {Add_Icon} from '../../../../src/assets/icons/SvgIcons/SvgIcons1';
 import {Refresh_Icon} from '../../../../src/assets/icons/SvgIcons/SvgIcons2';
+import pIpc from '../../../PIpc';
 import InstalledCard from './InstalledCard';
 import InstallerModal from './Installer/InstallerModal';
 
@@ -43,7 +44,7 @@ export default function InstalledPythons({
 
   const getInstalledPythons = () => {
     setIsLoadingPythons(true);
-    window.electron.ipcRenderer.invoke(pythonChannels.getInstalledPythons).then((result: PythonInstallation[]) => {
+    pIpc.getInstalledPythons().then((result: PythonInstallation[]) => {
       console.log(result);
       setInstalledPythons(result);
       setIsLoadingPythons(false);

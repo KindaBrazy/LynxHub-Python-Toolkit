@@ -14,9 +14,9 @@ import {
 import {OverlayScrollbarsComponent, OverlayScrollbarsComponentRef} from 'overlayscrollbars-react';
 import {Dispatch, ReactNode, RefObject, SetStateAction, useEffect, useState} from 'react';
 
+import {RequirementData} from '../../../../../../cross/CrossExtensions';
 import {useAppState} from '../../../../../src/App/Redux/App/AppReducer';
 import {Trash_Icon} from '../../../../../src/assets/icons/SvgIcons/SvgIcons3';
-import {Requirement} from './RequirementsModal_Btn';
 
 type TableReq = {
   key: string;
@@ -27,8 +27,8 @@ type TableReq = {
 };
 
 type Props = {
-  requirements: Requirement[];
-  setRequirements: Dispatch<SetStateAction<Requirement[]>>;
+  requirements: RequirementData[];
+  setRequirements: Dispatch<SetStateAction<RequirementData[]>>;
   scrollRef: RefObject<OverlayScrollbarsComponentRef>;
 };
 
@@ -47,7 +47,7 @@ export default function RequirementsManager({requirements, setRequirements, scro
   const darkMode = useAppState('darkMode');
   const [tableReq, setTableReq] = useState<TableReq[]>([]);
 
-  const handleRequirementChange = (index: number, updatedRequirement: Requirement) => {
+  const handleRequirementChange = (index: number, updatedRequirement: RequirementData) => {
     setRequirements(prevState => prevState.map((req, i) => (i === index ? updatedRequirement : req)));
   };
 

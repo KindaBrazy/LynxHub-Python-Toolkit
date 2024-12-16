@@ -3,9 +3,10 @@ import {List, message} from 'antd';
 import {ReactNode, useCallback, useMemo, useState} from 'react';
 import semver from 'semver';
 
-import {PackageInfo, pythonChannels} from '../../../../../cross/CrossExtensions';
+import {PackageInfo} from '../../../../../cross/CrossExtensions';
 import {Download_Icon} from '../../../../src/assets/icons/SvgIcons/SvgIcons1';
 import {Trash_Icon} from '../../../../src/assets/icons/SvgIcons/SvgIcons3';
+import pIpc from '../../../PIpc';
 import {Warn_Icon} from '../../SvgIcons';
 
 function getUpdateType(currentVersion: string, updateVersion: string) {
@@ -50,8 +51,8 @@ export default function PackageItem({item, pythonPath, updated, removed}: Props)
 
   const update = useCallback(() => {
     setLoading(<Spinner size="sm" color="success" label="Updating..." />);
-    window.electron.ipcRenderer
-      .invoke(pythonChannels.updatePackage, pythonPath, item.name)
+    pIpc
+      .updatePackage(pythonPath, item.name)
       .then(() => {
         updated(item.name, item.updateVersion!);
         message.success(`${item.name} updated successfully`);
@@ -67,8 +68,8 @@ export default function PackageItem({item, pythonPath, updated, removed}: Props)
   const uninstall = useCallback(() => {
     setIsOpenPopover(false);
     setLoading(<Spinner size="sm" color="danger" label="Uninstalling..." />);
-    window.electron.ipcRenderer
-      .invoke(pythonChannels.uninstallPackage, pythonPath, item.name)
+    pIpc
+      .uninstallPackage(pythonPath, item.name)
       .then(() => {
         removed(item.name);
         message.success(`${item.name} removed successfully`);

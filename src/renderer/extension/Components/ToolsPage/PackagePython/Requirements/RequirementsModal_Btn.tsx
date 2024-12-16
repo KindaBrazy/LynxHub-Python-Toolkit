@@ -4,30 +4,23 @@ import {isEmpty} from 'lodash';
 import {OverlayScrollbarsComponentRef} from 'overlayscrollbars-react';
 import {useEffect, useRef, useState} from 'react';
 
-import {pythonChannels} from '../../../../../../cross/CrossExtensions';
+import {RequirementData} from '../../../../../../cross/CrossExtensions';
 import rendererIpc from '../../../../../src/App/RendererIpc';
 import {modalMotionProps} from '../../../../../src/App/Utils/Constants';
 import {searchInStrings} from '../../../../../src/App/Utils/UtilFunctions';
 import {Add_Icon, Circle_Icon, File_Icon} from '../../../../../src/assets/icons/SvgIcons/SvgIcons1';
+import pIpc from '../../../../PIpc';
 import {Checklist_Icon, Save_Icon} from '../../../SvgIcons';
 import RequirementsManager from './RequirementsManager';
 
-export type Requirement = {
-  name: string;
-  versionOperator: string | null;
-  version: string | null;
-  originalLine: string;
-  autoFocus?: boolean;
-};
-
 export default function RequirementsBtn() {
   const [isOpen, setIsOpen] = useState<boolean>(false);
-  const [requirements, setRequirements] = useState<Requirement[]>([]);
+  const [requirements, setRequirements] = useState<RequirementData[]>([]);
   const [filePath, setFilePath] = useState<string>('');
   const [isSaving, setIsSaving] = useState<boolean>(false);
   const [searchValue, setSearchValue] = useState<string>('');
 
-  const [searchReqs, setSearchReqs] = useState<Requirement[]>([]);
+  const [searchReqs, setSearchReqs] = useState<RequirementData[]>([]);
 
   useEffect(() => {
     setSearchReqs(requirements.filter(item => searchInStrings(searchValue, [item.name])));
@@ -47,7 +40,7 @@ export default function RequirementsBtn() {
   };
 
   useEffect(() => {
-    window.electron.ipcRenderer.invoke(pythonChannels.readReqs, filePath).then(result => {
+    pIpc.readReqs(filePath).then(result => {
       setRequirements(result);
     });
   }, [filePath]);
@@ -63,7 +56,7 @@ export default function RequirementsBtn() {
   const handleSaveRequirements = () => {
     if (filePath) {
       setIsSaving(true);
-      window.electron.ipcRenderer.invoke(pythonChannels.saveReqs, filePath, requirements).then(success => {
+      pIpc.saveReqs(filePath, requirements).then(success => {
         if (success) {
           message.success('Requirements saved successfully!');
         } else {

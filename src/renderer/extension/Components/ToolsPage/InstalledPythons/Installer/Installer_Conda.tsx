@@ -14,10 +14,10 @@ import {isEmpty, isNil} from 'lodash';
 import {OverlayScrollbarsComponent} from 'overlayscrollbars-react';
 import {Dispatch, SetStateAction, useEffect, useState} from 'react';
 
-import {pythonChannels} from '../../../../../../cross/CrossExtensions';
 import {useAppState} from '../../../../../src/App/Redux/App/AppReducer';
 import {Circle_Icon} from '../../../../../src/assets/icons/SvgIcons/SvgIcons1';
 import {Refresh_Icon} from '../../../../../src/assets/icons/SvgIcons/SvgIcons2';
+import pIpc from '../../../../PIpc';
 
 const CACHE_KEY = 'available-conda-pythons-list';
 
@@ -43,7 +43,7 @@ export default function InstallerConda({refresh, installed, closeModal, isOpen, 
   const [isCondaInstalled, setIsCondaInstalled] = useState<boolean | undefined>(undefined);
 
   useEffect(() => {
-    window.electron.ipcRenderer.invoke(pythonChannels.isCondaInstalled).then(result => {
+    pIpc.isCondaInstalled().then(result => {
       setIsCondaInstalled(result);
     });
   }, []);
@@ -67,7 +67,7 @@ export default function InstallerConda({refresh, installed, closeModal, isOpen, 
       setVersions((JSON.parse(cachedList) as string[]).filter(item => !installed.includes(item)));
       setLoadingList(false);
     } else {
-      window.electron.ipcRenderer.invoke(pythonChannels.getAvailableConda).then((result: string[]) => {
+      pIpc.getAvailableConda().then((result: string[]) => {
         localStorage.setItem(CACHE_KEY, JSON.stringify(result));
         const filteredVersions = result.filter(item => !installed.includes(item));
         setVersions(filteredVersions);
@@ -80,14 +80,13 @@ export default function InstallerConda({refresh, installed, closeModal, isOpen, 
     setInstallingVersion(version);
     setCloseDisabled(true);
 
-    window.electron.ipcRenderer.removeAllListeners(pythonChannels.downloadProgressConda);
-    window.electron.ipcRenderer.on(pythonChannels.downloadProgressConda, (_e, progress: number) => {
-      console.log(progress);
+    pIpc.off_DlProgressConda();
+    pIpc.on_DlProgressConda((_, progress) => {
       setPercentage(progress);
     });
 
-    window.electron.ipcRenderer
-      .invoke(pythonChannels.installConda, envName, version)
+    pIpc
+      .installConda(envName, version)
       .then(() => {
         refresh();
         closeModal();
