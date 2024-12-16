@@ -16,6 +16,7 @@ import {
   updateAllPythonPackages,
   updatePythonPackage,
 } from './Utils/PackageManager/PackageManager';
+import {readRequirements, saveRequirements} from './Utils/PythonRequirements';
 import uninstallPython from './Utils/Uninstaller/Uninstaller';
 import createPythonVenv, {getVenvs, locateVenv} from './Utils/VirtualEnv/CreateVenv';
 
@@ -58,5 +59,8 @@ export async function initialExtension(lynxApi: ExtensionMainApi, utils: MainExt
     ipcMain.handle(pythonChannels.updateAllPackages, (_, pythonPath: string, packages: string[]) =>
       updateAllPythonPackages(pythonPath, packages),
     );
+
+    ipcMain.handle('read-requirements', (_, filePath: string) => readRequirements(filePath));
+    ipcMain.handle('save-requirements', (_, filePath: string, data) => saveRequirements(filePath, data));
   });
 }
