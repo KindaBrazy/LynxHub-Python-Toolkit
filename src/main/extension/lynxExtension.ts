@@ -60,7 +60,7 @@ export async function initialExtension(lynxApi: ExtensionMainApi, utils: MainExt
       updateAllPythonPackages(pythonPath, packages),
     );
 
-    ipcMain.handle('read-requirements', (_, filePath: string) => readRequirements(filePath));
-    ipcMain.handle('save-requirements', (_, filePath: string, data) => saveRequirements(filePath, data));
+    ipcMain.handle(pythonChannels.readReqs, (_, filePath: string) => readRequirements(filePath));
+    ipcMain.handle(pythonChannels.saveReqs, (_, filePath: string, data) => saveRequirements(filePath, data));
   });
 }

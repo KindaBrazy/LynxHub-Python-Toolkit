@@ -15,6 +15,7 @@ import {Dispatch, ReactNode, SetStateAction, useEffect, useState} from 'react';
 
 import {PackageInfo, pythonChannels, SitePackages_Info} from '../../../../../cross/CrossExtensions';
 import {Add_Icon, Circle_Icon, Download2_Icon} from '../../../../src/assets/icons/SvgIcons/SvgIcons1';
+import RequirementsBtn from './Requirements/RequirementsModal_Btn';
 
 const WARNING_KEY = 'python-package-warning';
 
@@ -150,6 +151,7 @@ export default function PackageManagerHeader({
             </PopoverContent>
           </Popover>
 
+          <RequirementsBtn />
           {actionButtons?.map(ActionButton => ActionButton)}
         </div>
       </div>

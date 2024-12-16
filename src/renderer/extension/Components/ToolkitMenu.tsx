@@ -2,9 +2,9 @@ import {useCallback, useEffect, useState} from 'react';
 
 import {useCardData} from '../../src/App/Components/Cards/CardsDataManager';
 import {DropDownSectionType} from '../../src/App/Utils/Types';
-import RequirementsBtn from './Menu/Requirements/Requirements_Btn';
 import {Python_Icon} from './SvgIcons';
 import PackageManagerModal from './ToolsPage/PackagePython/PackageManagerModal';
+import RequirementsBtn from './ToolsPage/PackagePython/Requirements/RequirementsModal_Btn';
 
 type Props = {
   addMenu: (sections: DropDownSectionType[], index?: number) => void;
@@ -46,7 +46,6 @@ export default function ToolkitMenu({addMenu}: Props) {
       isOpen={isOpen}
       setIsOpen={setIsOpen}
       title={`${title} Dependencies`}
-      actionButtons={[<RequirementsBtn key="python_requirements" />]}
     />
   );
 }

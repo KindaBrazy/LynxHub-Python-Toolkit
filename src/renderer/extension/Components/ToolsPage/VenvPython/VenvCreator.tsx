@@ -33,7 +33,7 @@ export default function VenvCreator({installedPythons, refresh, isLoadingPythons
   }, [targetFolder, envName, selectedVersion]);
 
   const selectFolder = useCallback(() => {
-    rendererIpc.file.openDlg('openDirectory').then(folder => {
+    rendererIpc.file.openDlg({properties: ['openDirectory']}).then(folder => {
       setTargetFolder(folder || '');
     });
   }, []);

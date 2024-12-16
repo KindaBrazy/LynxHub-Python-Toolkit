@@ -1,8 +1,14 @@
 import {readFileSync, writeFileSync} from 'graceful-fs';
 
+import {ReqData} from '../../../cross/CrossExtensions';
+import {storageManager} from '../lynxExtension';
+
+const REQ_STORE_ID = 'reqs_path';
+
 export async function readRequirements(filePath: string) {
   try {
     const data = readFileSync(filePath, 'utf-8');
+    // noinspection UnnecessaryLocalVariableJS
     const requirements = data
       .split('\n')
       .filter(line => line.trim() !== '' && !line.startsWith('#'))
@@ -43,4 +49,24 @@ export async function saveRequirements(filePath: string, requirements: any[]) {
     console.error('Error saving requirements file:', error);
     return false;
   }
+}
+
+export function setReqPath(data: ReqData) {
+  const existData = storageManager?.getCustomData(REQ_STORE_ID) as ReqData[] | undefined;
+
+  let result: ReqData[] = [];
+  if (existData) {
+    result = existData.map(item => {
+      return item.id === data.id ? data : item;
+    });
+  } else {
+    result.push(data);
+  }
+
+  storageManager?.setCustomData(REQ_STORE_ID, result);
+}
+
+export function getReqPath(id: string) {
+  const data = storageManager?.getCustomData(REQ_STORE_ID) as ReqData[] | undefined;
+  return data?.find(item => item.id === id)?.path;
 }

@@ -48,6 +48,8 @@ export type PackageInfo = SitePackages_Info & {
   updateVersion?: string;
 };
 
+export type ReqData = {id: string; path: string};
+
 export const pythonChannels = {
   getAvailableConda: 'get-available-conda-pythons',
   downloadProgressConda: 'download-conda-python-progress',
@@ -73,4 +75,9 @@ export const pythonChannels = {
   getPackagesUpdateInfo: 'get-packages-update-info',
   updatePackage: 'update-package',
   updateAllPackages: 'update-all-packages',
+
+  saveReqs: 'save-requirements',
+  readReqs: 'read-requirements',
+
+  changeReqPath: 'change-requirements-path',
 };

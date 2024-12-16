@@ -52,7 +52,7 @@ export async function getVenvs() {
 
 export async function locateVenv() {
   try {
-    const selectedFolder = await openDialog('openDirectory');
+    const selectedFolder = await openDialog({properties: ['openDirectory']});
 
     if (!selectedFolder) {
       return false;

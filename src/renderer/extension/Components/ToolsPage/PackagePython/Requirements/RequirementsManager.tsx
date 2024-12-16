@@ -14,9 +14,9 @@ import {
 import {OverlayScrollbarsComponent, OverlayScrollbarsComponentRef} from 'overlayscrollbars-react';
 import {Dispatch, ReactNode, RefObject, SetStateAction, useEffect, useState} from 'react';
 
-import {useAppState} from '../../../../src/App/Redux/App/AppReducer';
-import {Trash_Icon} from '../../../../src/assets/icons/SvgIcons/SvgIcons3';
-import {Requirement} from './Requirements_Btn';
+import {useAppState} from '../../../../../src/App/Redux/App/AppReducer';
+import {Trash_Icon} from '../../../../../src/assets/icons/SvgIcons/SvgIcons3';
+import {Requirement} from './RequirementsModal_Btn';
 
 type TableReq = {
   key: string;
