@@ -17,6 +17,9 @@ type Props = {
   title?: string;
   actionButtons?: ReactNode[];
   size?: '2xl' | '3xl' | '4xl';
+
+  locateVenv?: () => void;
+  isLocating?: boolean;
 };
 
 export default function PackageManagerModal({
@@ -26,15 +29,27 @@ export default function PackageManagerModal({
   isOpen,
   setIsOpen,
   pythonPath,
+  locateVenv,
+  isLocating,
 }: Props) {
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [isLoadingUpdates, setIsLoadingUpdates] = useState<boolean>(false);
+
+  useEffect(() => {
+    console.log('isl: ', isLoading);
+  }, [isLoading]);
 
   const [packages, setPackages] = useState<PackageInfo[]>([]);
   const [packagesUpdate, setPackagesUpdate] = useState<SitePackages_Info[]>([]);
 
   const [searchValue, setSearchValue] = useState<string>('');
   const [searchData, setSearchData] = useState<PackageInfo[]>([]);
+
+  const [isValidPython, setIsValidPython] = useState<boolean>(true);
+
+  useEffect(() => {
+    if (isEmpty(pythonPath)) setIsValidPython(false);
+  }, [pythonPath]);
 
   useEffect(() => {
     setSearchData(packages.filter(item => searchInStrings(searchValue, [item.name])));
@@ -44,8 +59,7 @@ export default function PackageManagerModal({
     setIsOpen(false);
   };
 
-  const getPackageList = () => {
-    setIsLoading(true);
+  const checkForUpdates = () => {
     setIsLoadingUpdates(true);
 
     pIpc
@@ -62,18 +76,29 @@ export default function PackageManagerModal({
       .finally(() => {
         setIsLoadingUpdates(false);
       });
+  };
 
+  const getPackageList = () => {
+    setIsLoading(true);
+
+    console.log('getting: ', pythonPath);
     pIpc
       .getPackagesInfo(pythonPath)
-      .then(setPackages)
-      .catch(console.log)
+      .then(result => {
+        setPackages(result);
+        setIsValidPython(true);
+      })
+      .catch(err => {
+        setIsValidPython(false);
+        console.warn(err);
+      })
       .finally(() => {
         setIsLoading(false);
       });
   };
 
   useEffect(() => {
-    if (isOpen && isEmpty(packages)) getPackageList();
+    if (isOpen && !isEmpty(pythonPath)) getPackageList();
   }, [pythonPath, isOpen]);
 
   const updated = (name: string, newVersion: string) => {
@@ -116,17 +141,22 @@ export default function PackageManagerModal({
           pythonPath={pythonPath}
           refresh={getPackageList}
           searchValue={searchValue}
+          isValidPython={isValidPython}
           actionButtons={actionButtons}
           packagesUpdate={packagesUpdate}
           setSearchValue={setSearchValue}
+          checkForUpdates={checkForUpdates}
           checkingUpdates={!isLoading && isLoadingUpdates}
         />
         <PackageManagerBody
           removed={removed}
           updated={updated}
           isLoading={isLoading}
-          pythonPath={pythonPath}
+          locateVenv={locateVenv}
+          isLocating={isLocating}
           searchData={searchData}
+          pythonPath={pythonPath}
+          isValidPython={isValidPython}
         />
         <ModalFooter className="bg-foreground-200 dark:bg-LynxRaisinBlack">
           <Button size="sm" color="warning" variant="faded" onPress={closePackageManager} fullWidth>

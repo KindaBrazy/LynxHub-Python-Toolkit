@@ -1,5 +1,5 @@
-import {ModalBody, Spinner} from '@nextui-org/react';
-import {Empty, List} from 'antd';
+import {Button, ModalBody, Spinner} from '@nextui-org/react';
+import {Empty, List, Result} from 'antd';
 import {OverlayScrollbarsComponent} from 'overlayscrollbars-react';
 
 import {PackageInfo} from '../../../../../cross/CrossExtensions';
@@ -12,9 +12,21 @@ type Props = {
   pythonPath: string;
   updated: (name: string, newVersion: string) => void;
   removed: (name: string) => void;
+  isValidPython: boolean;
+  locateVenv?: () => void;
+  isLocating?: boolean;
 };
 
-export default function PackageManagerBody({searchData, isLoading, pythonPath, updated, removed}: Props) {
+export default function PackageManagerBody({
+  searchData,
+  isLoading,
+  pythonPath,
+  updated,
+  removed,
+  isValidPython,
+  isLocating,
+  locateVenv,
+}: Props) {
   const isDarkMode = useAppState('darkMode');
 
   return (
@@ -38,7 +50,7 @@ export default function PackageManagerBody({searchData, isLoading, pythonPath, u
               label="Loading packages data, please wait..."
               classNames={{circle2: 'border-b-[#ffe66e]', circle1: 'border-b-[#ffe66e] '}}
             />
-          ) : (
+          ) : isValidPython ? (
             <List
               locale={{
                 emptyText: <Empty description="No packages found." image={Empty.PRESENTED_IMAGE_SIMPLE} />,
@@ -49,6 +61,16 @@ export default function PackageManagerBody({searchData, isLoading, pythonPath, u
               dataSource={searchData}
               className="w-full overflow-hidden"
               bordered
+            />
+          ) : (
+            <Result
+              extra={
+                <Button color="primary" key="locate_venv" onPress={locateVenv} isLoading={isLocating}>
+                  {!isLocating && 'Locate Venv'}
+                </Button>
+              }
+              subTitle="Also you can create virtual environment with Python Toolkit in tools page"
+              title={`Could not find any venv for selected AI, Please locate a folder if you changed the venv folder.`}
             />
           )}
         </div>

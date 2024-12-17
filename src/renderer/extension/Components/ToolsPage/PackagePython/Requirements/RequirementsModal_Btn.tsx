@@ -97,31 +97,37 @@ export default function RequirementsBtn() {
               <span>Requirements</span>
               {!isEmpty(filePath) && (
                 <div className="flex gap-x-2">
-                  <Button size="sm" variant="faded" startContent={<Add_Icon />} onPress={handleAddRequirement}>
-                    Add
-                  </Button>
-                  <Button
-                    size="sm"
-                    variant="faded"
-                    color="success"
-                    isLoading={isSaving}
-                    onPress={handleSaveRequirements}
-                    startContent={!isSaving && <Save_Icon className="size-3.5" />}>
-                    {!isSaving && 'Save'}
-                  </Button>
+                  <div>
+                    <Button size="sm" variant="faded" startContent={<Add_Icon />} onPress={handleAddRequirement}>
+                      Add
+                    </Button>
+                  </div>
+                  <div>
+                    <Button
+                      size="sm"
+                      variant="faded"
+                      color="success"
+                      isLoading={isSaving}
+                      onPress={handleSaveRequirements}
+                      startContent={!isSaving && <Save_Icon className="size-3.5" />}>
+                      {!isSaving && 'Save'}
+                    </Button>
+                  </div>
                 </div>
               )}
             </div>
-            <Button
-              size="sm"
-              variant="faded"
-              endContent={<div />}
-              onPress={openFilePath}
-              startContent={<File_Icon />}
-              className="shrink-0 text-[10pt] justify-between"
-              fullWidth>
-              {filePath || 'Select or Create file...'}
-            </Button>
+            <div>
+              <Button
+                size="sm"
+                variant="faded"
+                endContent={<div />}
+                onPress={openFilePath}
+                startContent={<File_Icon />}
+                className="shrink-0 text-[10pt] justify-between"
+                fullWidth>
+                {filePath || 'Select or Create file...'}
+              </Button>
+            </div>
             {!isEmpty(requirements) && (
               <Input
                 size="sm"
@@ -138,7 +144,7 @@ export default function RequirementsBtn() {
               <div className="size-full text-center mb-2">
                 <Result
                   extra={
-                    <Button key="create_req_file" onPress={openFilePath}>
+                    <Button color="primary" key="create_req_file" onPress={openFilePath}>
                       Select or Create file
                     </Button>
                   }

@@ -1,6 +1,6 @@
 import {ipcMain} from 'electron';
 
-import {pythonChannels, PythonVersion, ReqData, VenvCreateOptions} from '../../cross/CrossExtensions';
+import {IdPathType, pythonChannels, PythonVersion, VenvCreateOptions} from '../../cross/CrossExtensions';
 import {ExtensionMainApi, MainExtensionUtils} from '../Managements/Plugin/Extensions/ExtensionTypes_Main';
 import StorageManager from '../Managements/Storage/StorageManager';
 import {getAvailablePythonVersions} from './Utils/Available';
@@ -9,9 +9,12 @@ import detectPythonInstallations from './Utils/Detector';
 import {createCondaEnv, isCondaInstalled, listAvailablePythons} from './Utils/Installer/Installer_Conda';
 import downloadPython from './Utils/Installer/Installer_Official';
 import {
+  findAIVenv,
+  getAIVenv,
   getSitePackagesInfo,
   getSitePackagesUpdates,
   installPythonPackage,
+  locateAIVenv,
   uninstallPythonPackage,
   updateAllPythonPackages,
   updatePythonPackage,
@@ -63,7 +66,11 @@ export async function initialExtension(lynxApi: ExtensionMainApi, utils: MainExt
     ipcMain.handle(pythonChannels.readReqs, (_, filePath: string) => readRequirements(filePath));
     ipcMain.handle(pythonChannels.saveReqs, (_, filePath: string, data) => saveRequirements(filePath, data));
 
-    ipcMain.on(pythonChannels.setReqPath, (_, data: ReqData) => setReqPath(data));
+    ipcMain.on(pythonChannels.setReqPath, (_, data: IdPathType) => setReqPath(data));
     ipcMain.handle(pythonChannels.getReqPath, (_, id: string) => getReqPath(id));
+
+    ipcMain.handle(pythonChannels.locateAIVenv, (_, id: string) => locateAIVenv(id));
+    ipcMain.handle(pythonChannels.getAIVenv, (_, id: string) => getAIVenv(id));
+    ipcMain.handle(pythonChannels.findAIVenv, (_, id: string, folder: string | undefined) => findAIVenv(id, folder));
   });
 }

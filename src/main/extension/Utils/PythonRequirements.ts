@@ -1,6 +1,6 @@
 import {readFileSync, writeFileSync} from 'graceful-fs';
 
-import {ReqData, RequirementData} from '../../../cross/CrossExtensions';
+import {IdPathType, RequirementData} from '../../../cross/CrossExtensions';
 import {storageManager} from '../lynxExtension';
 
 const REQ_STORE_ID = 'reqs_path';
@@ -51,12 +51,12 @@ export async function saveRequirements(filePath: string, requirements: Requireme
   }
 }
 
-export function setReqPath(data: ReqData) {
-  const existData = storageManager?.getCustomData(REQ_STORE_ID) as ReqData[] | undefined;
+export function setReqPath(data: IdPathType) {
+  const existingData = storageManager?.getCustomData(REQ_STORE_ID) as IdPathType[] | undefined;
 
-  let result: ReqData[] = [];
-  if (existData) {
-    result = existData.map(item => {
+  let result: IdPathType[] = [];
+  if (existingData) {
+    result = existingData.map(item => {
       return item.id === data.id ? data : item;
     });
   } else {
@@ -67,6 +67,6 @@ export function setReqPath(data: ReqData) {
 }
 
 export function getReqPath(id: string) {
-  const data = storageManager?.getCustomData(REQ_STORE_ID) as ReqData[] | undefined;
+  const data = storageManager?.getCustomData(REQ_STORE_ID) as IdPathType[] | undefined;
   return data?.find(item => item.id === id)?.path;
 }

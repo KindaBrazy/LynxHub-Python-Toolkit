@@ -56,6 +56,11 @@ const pIpc = {
   installConda: (envName: string, version: string): Promise<void> =>
     ipc.invoke(pythonChannels.installConda, envName, version),
   isCondaInstalled: (): Promise<boolean> => ipc.invoke(pythonChannels.isCondaInstalled),
+
+  locateAIVenv: (id: string): Promise<string> => ipc.invoke(pythonChannels.locateAIVenv, id),
+  getAIVenv: (id: string): Promise<string | undefined> => ipc.invoke(pythonChannels.getAIVenv, id),
+  findAIVenv: (id: string, folder: string | undefined): Promise<string> =>
+    ipc.invoke(pythonChannels.findAIVenv, id, folder),
 };
 
 export default pIpc;

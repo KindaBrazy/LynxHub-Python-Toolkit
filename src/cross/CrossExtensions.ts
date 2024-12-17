@@ -48,7 +48,7 @@ export type PackageInfo = SitePackages_Info & {
   updateVersion?: string;
 };
 
-export type ReqData = {id: string; path: string};
+export type IdPathType = {id: string; path: string};
 
 export type RequirementData = {
   name: string;
@@ -91,4 +91,8 @@ export const pythonChannels = {
 
   setReqPath: 'set-requirements-path',
   getReqPath: 'get-requirements-path',
+
+  locateAIVenv: 'locate-ai-venv',
+  getAIVenv: 'get-ai-venv',
+  findAIVenv: 'find-ai-venv',
 };
