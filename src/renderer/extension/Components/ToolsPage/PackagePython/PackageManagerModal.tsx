@@ -20,6 +20,9 @@ type Props = {
 
   locateVenv?: () => void;
   isLocating?: boolean;
+
+  id: string;
+  projectPath?: string;
 };
 
 export default function PackageManagerModal({
@@ -30,14 +33,12 @@ export default function PackageManagerModal({
   setIsOpen,
   pythonPath,
   locateVenv,
+  id,
   isLocating,
+  projectPath,
 }: Props) {
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [isLoadingUpdates, setIsLoadingUpdates] = useState<boolean>(false);
-
-  useEffect(() => {
-    console.log('isl: ', isLoading);
-  }, [isLoading]);
 
   const [packages, setPackages] = useState<PackageInfo[]>([]);
   const [packagesUpdate, setPackagesUpdate] = useState<SitePackages_Info[]>([]);
@@ -81,7 +82,6 @@ export default function PackageManagerModal({
   const getPackageList = () => {
     setIsLoading(true);
 
-    console.log('getting: ', pythonPath);
     pIpc
       .getPackagesInfo(pythonPath)
       .then(result => {
@@ -135,11 +135,13 @@ export default function PackageManagerModal({
       hideCloseButton>
       <ModalContent className="overflow-hidden">
         <PackageManagerHeader
+          id={id}
           title={title}
           packages={packages}
           allUpdated={allUpdated}
           pythonPath={pythonPath}
           refresh={getPackageList}
+          projectPath={projectPath}
           searchValue={searchValue}
           isValidPython={isValidPython}
           actionButtons={actionButtons}

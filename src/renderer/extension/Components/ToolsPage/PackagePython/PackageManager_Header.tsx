@@ -34,6 +34,9 @@ type Props = {
   refresh: () => void;
   isValidPython: boolean;
   checkForUpdates: () => void;
+
+  id: string;
+  projectPath?: string;
 };
 
 export default function PackageManagerHeader({
@@ -49,6 +52,8 @@ export default function PackageManagerHeader({
   actionButtons,
   isValidPython,
   checkForUpdates,
+  id,
+  projectPath,
 }: Props) {
   const [showWarning, setShowWarning] = useState<boolean>(true);
   const [isUpdating, setIsUpdating] = useState<boolean>(false);
@@ -126,25 +131,26 @@ export default function PackageManagerHeader({
       )}
       <div className="gap-x-2 flex items-center w-full mt-2">
         <ButtonGroup size="sm" fullWidth>
-          {isEmpty(packagesUpdate) ? (
-            <Button
-              variant="flat"
-              onPress={checkForUpdates}
-              isLoading={checkingUpdates}
-              startContent={!checkingUpdates && <Magnifier_Icon />}>
-              {checkingUpdates ? 'Checking...' : 'Check For Updates'}
-            </Button>
-          ) : (
-            <Button
-              radius="sm"
-              variant="flat"
-              color="success"
-              onPress={updateAll}
-              isLoading={isUpdating}
-              startContent={!isUpdating && <Download2_Icon />}>
-              {isUpdating ? <span>Updating...</span> : <span>Update All ({packagesUpdate.length})</span>}
-            </Button>
-          )}
+          {isValidPython &&
+            (isEmpty(packagesUpdate) ? (
+              <Button
+                variant="flat"
+                onPress={checkForUpdates}
+                isLoading={checkingUpdates}
+                startContent={!checkingUpdates && <Magnifier_Icon />}>
+                {checkingUpdates ? 'Checking...' : 'Check For Updates'}
+              </Button>
+            ) : (
+              <Button
+                radius="sm"
+                variant="flat"
+                color="success"
+                onPress={updateAll}
+                isLoading={isUpdating}
+                startContent={!isUpdating && <Download2_Icon />}>
+                {isUpdating ? <span>Updating...</span> : <span>Update All ({packagesUpdate.length})</span>}
+              </Button>
+            ))}
           {isValidPython && (
             <>
               <Popover
@@ -176,7 +182,7 @@ export default function PackageManagerHeader({
                 </PopoverContent>
               </Popover>
 
-              <RequirementsBtn />
+              <RequirementsBtn id={id} projectPath={projectPath} />
             </>
           )}
           {actionButtons?.map(ActionButton => ActionButton)}

@@ -2,6 +2,7 @@ import {IpcRendererEvent} from 'electron';
 
 import {
   DlProgressOfficial,
+  IdPathType,
   pythonChannels,
   PythonInstallation,
   PythonVersion,
@@ -29,9 +30,14 @@ const pIpc = {
     ipc.invoke(pythonChannels.updatePackage, pythonPath, packageName),
   uninstallPackage: (pythonPath: string, packageName: string): Promise<string> =>
     ipc.invoke(pythonChannels.uninstallPackage, pythonPath, packageName),
+
   readReqs: (filePath: string): Promise<RequirementData[]> => ipc.invoke(pythonChannels.readReqs, filePath),
   saveReqs: (filePath: string, data: RequirementData[]): Promise<RequirementData[]> =>
     ipc.invoke(pythonChannels.saveReqs, filePath, data),
+  findReq: (dirPath: string): Promise<string | undefined> => ipc.invoke(pythonChannels.findReq, dirPath),
+  setReqPath: (data: IdPathType): void => ipc.send(pythonChannels.setReqPath, data),
+  getReqPath: (id: string): Promise<string | undefined> => ipc.invoke(pythonChannels.getReqPath, id),
+
   getInstalledPythons: (): Promise<PythonInstallation[]> => ipc.invoke(pythonChannels.getInstalledPythons),
   setDefaultPython: (pythonPath: string): Promise<void> => ipc.invoke(pythonChannels.setDefaultPython, pythonPath),
   uninstallPython: (

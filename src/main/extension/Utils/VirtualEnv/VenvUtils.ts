@@ -71,11 +71,7 @@ export function isVenvDirectory(dirPath: string): boolean {
     }
 
     const libPath = join(dirPath, 'Lib');
-    if (!existsSync(libPath)) {
-      return false; // Must have a Lib directory
-    }
-
-    return true;
+    return existsSync(libPath);
   } catch (err) {
     console.error(`Error checking if directory is a venv: ${err}`);
     return false; // Assume not a venv on error

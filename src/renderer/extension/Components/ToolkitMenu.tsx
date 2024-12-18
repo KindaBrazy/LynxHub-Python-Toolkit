@@ -30,12 +30,10 @@ export default function ToolkitMenu({addMenu}: Props) {
   useEffect(() => {
     if (isOpen) {
       pIpc.getAIVenv(id).then(folder => {
-        console.log('getAIVenv', folder);
         if (isNil(folder)) {
           pIpc
             .findAIVenv(id, webUI?.dir)
             .then(result => {
-              console.log('findAIVenv', result);
               setPythonPath(result);
             })
             .catch(console.log);
@@ -97,11 +95,13 @@ export default function ToolkitMenu({addMenu}: Props) {
 
   return (
     <PackageManagerModal
+      id={id}
       size="4xl"
       isOpen={isOpen}
       setIsOpen={setIsOpen}
       pythonPath={pythonPath}
       locateVenv={locateVenv}
+      projectPath={webUI?.dir}
       isLocating={isLocatingVenv}
       actionButtons={actionButtons}
       title={`${title} Dependencies`}

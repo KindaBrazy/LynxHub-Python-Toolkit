@@ -13,7 +13,9 @@ import pIpc from '../../../../PIpc';
 import {Checklist_Icon, Save_Icon} from '../../../SvgIcons';
 import RequirementsManager from './RequirementsManager';
 
-export default function RequirementsBtn() {
+type Props = {id: string; projectPath?: string};
+
+export default function RequirementsBtn({id, projectPath}: Props) {
   const [isOpen, setIsOpen] = useState<boolean>(false);
   const [requirements, setRequirements] = useState<RequirementData[]>([]);
   const [filePath, setFilePath] = useState<string>('');
@@ -21,6 +23,38 @@ export default function RequirementsBtn() {
   const [searchValue, setSearchValue] = useState<string>('');
 
   const [searchReqs, setSearchReqs] = useState<RequirementData[]>([]);
+
+  useEffect(() => {
+    const findReqs = () => {
+      console.log('findReqs');
+      console.log(projectPath);
+
+      if (projectPath) {
+        pIpc.findReq(projectPath).then(reqPath => {
+          console.log(reqPath);
+          if (reqPath) {
+            pIpc.setReqPath({id, path: reqPath});
+            setFilePath(reqPath);
+          }
+        });
+      }
+    };
+
+    pIpc
+      .getReqPath(id)
+      .then(reqPath => {
+        console.log('reqPath', reqPath);
+        if (reqPath) {
+          setFilePath(reqPath);
+        } else {
+          findReqs();
+        }
+      })
+      .catch(e => {
+        console.log(e);
+        findReqs();
+      });
+  }, [projectPath, id]);
 
   useEffect(() => {
     setSearchReqs(requirements.filter(item => searchInStrings(searchValue, [item.name])));

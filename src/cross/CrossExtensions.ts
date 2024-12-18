@@ -91,6 +91,7 @@ export const pythonChannels = {
 
   setReqPath: 'set-requirements-path',
   getReqPath: 'get-requirements-path',
+  findReq: 'find-req-file',
 
   locateAIVenv: 'locate-ai-venv',
   getAIVenv: 'get-ai-venv',

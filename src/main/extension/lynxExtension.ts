@@ -19,7 +19,13 @@ import {
   updateAllPythonPackages,
   updatePythonPackage,
 } from './Utils/PackageManager/PackageManager';
-import {getReqPath, readRequirements, saveRequirements, setReqPath} from './Utils/PythonRequirements';
+import {
+  findValidRequirementsFiles,
+  getReqPath,
+  readRequirements,
+  saveRequirements,
+  setReqPath,
+} from './Utils/Requirements/PythonRequirements';
 import uninstallPython from './Utils/Uninstaller/Uninstaller';
 import createPythonVenv, {getVenvs, locateVenv} from './Utils/VirtualEnv/CreateVenv';
 
@@ -65,6 +71,7 @@ export async function initialExtension(lynxApi: ExtensionMainApi, utils: MainExt
 
     ipcMain.handle(pythonChannels.readReqs, (_, filePath: string) => readRequirements(filePath));
     ipcMain.handle(pythonChannels.saveReqs, (_, filePath: string, data) => saveRequirements(filePath, data));
+    ipcMain.handle(pythonChannels.findReq, (_, dirPath: string) => findValidRequirementsFiles(dirPath));
 
     ipcMain.on(pythonChannels.setReqPath, (_, data: IdPathType) => setReqPath(data));
     ipcMain.handle(pythonChannels.getReqPath, (_, id: string) => getReqPath(id));
