@@ -1,6 +1,8 @@
 import {exec} from 'node:child_process';
 import {promisify} from 'node:util';
 
+import {satisfies} from 'semver';
+
 import {SitePackages_Info} from '../../../../cross/CrossExtensions';
 import {readRequirements} from '../Requirements/PythonRequirements';
 
@@ -64,7 +66,30 @@ export async function checkPackageUpdates(
 
     if (!latestVersion || !currentPackages) continue;
 
-    if (latestVersion !== currentVersion) result.push({name: req.name, version: latestVersion});
+    let canUpdate: boolean = false;
+
+    switch (req.versionOperator) {
+      case '>=':
+      case '>':
+      case '!=':
+        canUpdate = satisfies(latestVersion, `${req.versionOperator}${req.version}`);
+        break;
+      case '~=': {
+        if (!req.version) break;
+        const latestParts = latestVersion.split('.');
+        const reqParts = req.version.split('.');
+        canUpdate = latestParts[0] === reqParts[0] && satisfies(latestVersion, `>${req.version}`);
+        break;
+      }
+      case undefined:
+        canUpdate = true; // treat not defined operator as any version, so package can be updated
+        break;
+      default:
+        console.warn(`Unsupported operator: ${req.versionOperator}`);
+      // Handle unsupported operators as needed (e.g., log a warning, skip, etc.)
+    }
+
+    if (canUpdate && latestVersion !== currentVersion) result.push({name: req.name, version: latestVersion});
   }
 
   return result;
