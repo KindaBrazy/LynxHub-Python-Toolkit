@@ -85,6 +85,7 @@ export default function ToolkitMenu({addMenu}: Props) {
             variant="flat"
             key="reloacte_venv"
             onPress={locateVenv}
+            className="!min-w-32"
             isLoading={isLocatingVenv}
             startContent={!isLocatingVenv && <Refresh3_Icon />}>
             {!isLocatingVenv && 'Relocate'}
