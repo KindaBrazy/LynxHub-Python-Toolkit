@@ -107,6 +107,7 @@ export default function RequirementsBtn({id, projectPath}: Props) {
       .then(file => {
         if (file) {
           setFilePath(file);
+          pIpc.setReqPath({id, path: file});
         }
       });
   };
