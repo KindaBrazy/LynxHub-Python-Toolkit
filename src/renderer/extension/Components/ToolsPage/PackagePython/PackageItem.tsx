@@ -113,7 +113,7 @@ export default function PackageItem({item, pythonPath, updated, removed}: Props)
         <Button
           radius="sm"
           key="update"
-          variant="light"
+          variant="flat"
           color="success"
           onPress={update}
           startContent={<Download_Icon />}

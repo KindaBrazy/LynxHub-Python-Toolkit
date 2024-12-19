@@ -63,20 +63,33 @@ export default function PackageManagerModal({
   const checkForUpdates = () => {
     setIsLoadingUpdates(true);
 
-    pIpc
-      .getPackagesUpdateInfo(pythonPath)
-      .then((result: SitePackages_Info[]) => {
-        setPackagesUpdate(result);
-        setPackages(prevState =>
-          prevState.map(item => {
-            const updateVersion = result.find(update => update.name === item.name)?.version;
-            return updateVersion ? {...item, updateVersion} : item;
-          }),
-        );
-      })
-      .finally(() => {
-        setIsLoadingUpdates(false);
-      });
+    const updateData = (result: SitePackages_Info[]) => {
+      setPackagesUpdate(result);
+      setPackages(prevState =>
+        prevState.map(item => {
+          const updateVersion = result.find(update => update.name === item.name)?.version;
+          return updateVersion ? {...item, updateVersion} : item;
+        }),
+      );
+    };
+
+    pIpc.getReqPath(id).then(reqPath => {
+      if (reqPath) {
+        pIpc
+          .getUpdatesReq(pythonPath, reqPath, packages)
+          .then(updateData)
+          .finally(() => {
+            setIsLoadingUpdates(false);
+          });
+      } else {
+        pIpc
+          .getPackagesUpdateInfo(pythonPath)
+          .then(updateData)
+          .finally(() => {
+            setIsLoadingUpdates(false);
+          });
+      }
+    });
   };
 
   const getPackageList = () => {

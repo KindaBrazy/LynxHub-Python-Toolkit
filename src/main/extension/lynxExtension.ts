@@ -1,6 +1,12 @@
 import {ipcMain} from 'electron';
 
-import {IdPathType, pythonChannels, PythonVersion, VenvCreateOptions} from '../../cross/CrossExtensions';
+import {
+  IdPathType,
+  pythonChannels,
+  PythonVersion,
+  SitePackages_Info,
+  VenvCreateOptions,
+} from '../../cross/CrossExtensions';
 import {ExtensionMainApi, MainExtensionUtils} from '../Managements/Plugin/Extensions/ExtensionTypes_Main';
 import StorageManager from '../Managements/Storage/StorageManager';
 import {getAvailablePythonVersions} from './Utils/Available';
@@ -19,6 +25,7 @@ import {
   updateAllPythonPackages,
   updatePythonPackage,
 } from './Utils/PackageManager/PackageManager';
+import {checkPackageUpdates} from './Utils/PackageManager/PipToolsManager';
 import {
   findValidRequirementsFiles,
   getReqPath,
@@ -79,5 +86,11 @@ export async function initialExtension(lynxApi: ExtensionMainApi, utils: MainExt
     ipcMain.handle(pythonChannels.locateAIVenv, (_, id: string) => locateAIVenv(id));
     ipcMain.handle(pythonChannels.getAIVenv, (_, id: string) => getAIVenv(id));
     ipcMain.handle(pythonChannels.findAIVenv, (_, id: string, folder: string | undefined) => findAIVenv(id, folder));
+
+    ipcMain.handle(
+      pythonChannels.getUpdatesReq,
+      (_, pythonPath: string, reqFile: string, currentPackages: SitePackages_Info[]) =>
+        checkPackageUpdates(pythonPath, reqFile, currentPackages),
+    );
   });
 }

@@ -26,12 +26,10 @@ export default function RequirementsBtn({id, projectPath}: Props) {
 
   useEffect(() => {
     const findReqs = () => {
-      console.log('findReqs');
       console.log(projectPath);
 
       if (projectPath) {
         pIpc.findReq(projectPath).then(reqPath => {
-          console.log(reqPath);
           if (reqPath) {
             pIpc.setReqPath({id, path: reqPath});
             setFilePath(reqPath);
@@ -43,15 +41,14 @@ export default function RequirementsBtn({id, projectPath}: Props) {
     pIpc
       .getReqPath(id)
       .then(reqPath => {
-        console.log('reqPath', reqPath);
         if (reqPath) {
           setFilePath(reqPath);
         } else {
           findReqs();
         }
       })
-      .catch(e => {
-        console.log(e);
+      .catch(err => {
+        console.log(err);
         findReqs();
       });
   }, [projectPath, id]);

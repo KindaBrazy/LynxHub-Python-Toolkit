@@ -67,6 +67,12 @@ const pIpc = {
   getAIVenv: (id: string): Promise<string | undefined> => ipc.invoke(pythonChannels.getAIVenv, id),
   findAIVenv: (id: string, folder: string | undefined): Promise<string> =>
     ipc.invoke(pythonChannels.findAIVenv, id, folder),
+
+  getUpdatesReq: (
+    pythonPath: string,
+    reqFile: string,
+    currentPackages: SitePackages_Info[],
+  ): Promise<SitePackages_Info[]> => ipc.invoke(pythonChannels.getUpdatesReq, pythonPath, reqFile, currentPackages),
 };
 
 export default pIpc;
