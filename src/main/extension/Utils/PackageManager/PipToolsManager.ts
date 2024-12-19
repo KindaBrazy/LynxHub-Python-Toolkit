@@ -82,11 +82,10 @@ export async function checkPackageUpdates(
         break;
       }
       case undefined:
-        canUpdate = true; // treat not defined operator as any version, so package can be updated
+        canUpdate = true;
         break;
       default:
         console.warn(`Unsupported operator: ${req.versionOperator}`);
-      // Handle unsupported operators as needed (e.g., log a warning, skip, etc.)
     }
 
     if (canUpdate && latestVersion !== currentVersion) result.push({name: req.name, version: latestVersion});
