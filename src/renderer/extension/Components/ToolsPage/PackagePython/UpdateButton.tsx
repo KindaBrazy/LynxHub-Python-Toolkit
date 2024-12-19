@@ -59,6 +59,7 @@ export default function UpdateButton({
       variant="flat"
       color="success"
       onPress={updateAll}
+      className="!min-w-40"
       isLoading={isUpdating}
       startContent={!isUpdating && <Download2_Icon />}>
       {isUpdating ? <span>Updating...</span> : <span>Update All ({packagesUpdate.length})</span>}
