@@ -83,45 +83,44 @@ export default function PackageItem({item, pythonPath, updated, removed}: Props)
   }, [item]);
 
   const actions = useMemo(() => {
-    const result = [
-      <Popover
-        size="sm"
-        color="danger"
-        key="uninstall"
-        placement="left"
-        isOpen={isOpenPopover}
-        className="max-w-[15rem]"
-        onOpenChange={setIsOpenPopover}
-        showArrow>
-        <PopoverTrigger>
-          <Button radius="sm" color="danger" variant="light" startContent={<Trash_Icon />} isIconOnly />
-        </PopoverTrigger>
-        <PopoverContent>
-          <div className="p-2 space-y-2">
-            <span>
-              Are you sure you want to <span className="font-bold"> remove {item.name}</span>?
-            </span>
-            <Button size="sm" onPress={uninstall} fullWidth>
-              Remove
-            </Button>
-          </div>
-        </PopoverContent>
-      </Popover>,
+    return [
+      <div key="actions" className="space-x-2">
+        {item.updateVersion && (
+          <Button
+            radius="sm"
+            key="update"
+            variant="flat"
+            color="success"
+            onPress={update}
+            startContent={<Download_Icon />}
+            isIconOnly
+          />
+        )}
+        <Popover
+          size="sm"
+          color="danger"
+          key="uninstall"
+          placement="left"
+          isOpen={isOpenPopover}
+          className="max-w-[15rem]"
+          onOpenChange={setIsOpenPopover}
+          showArrow>
+          <PopoverTrigger>
+            <Button radius="sm" color="danger" variant="light" startContent={<Trash_Icon />} isIconOnly />
+          </PopoverTrigger>
+          <PopoverContent>
+            <div className="p-2 space-y-2">
+              <span>
+                Are you sure you want to <span className="font-bold"> remove {item.name}</span>?
+              </span>
+              <Button size="sm" onPress={uninstall} fullWidth>
+                Remove
+              </Button>
+            </div>
+          </PopoverContent>
+        </Popover>
+      </div>,
     ];
-    if (item.updateVersion)
-      result.unshift(
-        <Button
-          radius="sm"
-          key="update"
-          variant="flat"
-          color="success"
-          onPress={update}
-          startContent={<Download_Icon />}
-          isIconOnly
-        />,
-      );
-
-    return result;
   }, [item, isOpenPopover]);
 
   return (
