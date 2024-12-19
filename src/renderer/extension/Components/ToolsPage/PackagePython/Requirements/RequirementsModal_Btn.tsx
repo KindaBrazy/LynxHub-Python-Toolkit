@@ -2,7 +2,7 @@ import {Button, Input, Modal, ModalBody, ModalContent, ModalFooter, ModalHeader}
 import {Empty, message, Result} from 'antd';
 import {isEmpty} from 'lodash';
 import {OverlayScrollbarsComponentRef} from 'overlayscrollbars-react';
-import {useEffect, useRef, useState} from 'react';
+import {Dispatch, SetStateAction, useEffect, useRef, useState} from 'react';
 
 import {RequirementData} from '../../../../../../cross/CrossExtensions';
 import rendererIpc from '../../../../../src/App/RendererIpc';
@@ -13,9 +13,13 @@ import pIpc from '../../../../PIpc';
 import {Checklist_Icon, Save_Icon} from '../../../SvgIcons';
 import RequirementsManager from './RequirementsManager';
 
-type Props = {id: string; projectPath?: string};
+type Props = {
+  id: string;
+  projectPath?: string;
+  setIsReqAvailable: Dispatch<SetStateAction<boolean>>;
+};
 
-export default function RequirementsBtn({id, projectPath}: Props) {
+export default function RequirementsBtn({id, projectPath, setIsReqAvailable}: Props) {
   const [isOpen, setIsOpen] = useState<boolean>(false);
   const [requirements, setRequirements] = useState<RequirementData[]>([]);
   const [filePath, setFilePath] = useState<string>('');
@@ -25,9 +29,11 @@ export default function RequirementsBtn({id, projectPath}: Props) {
   const [searchReqs, setSearchReqs] = useState<RequirementData[]>([]);
 
   useEffect(() => {
-    const findReqs = () => {
-      console.log(projectPath);
+    setIsReqAvailable(!!filePath);
+  }, [filePath]);
 
+  useEffect(() => {
+    const findReqs = () => {
       if (projectPath) {
         pIpc.findReq(projectPath).then(reqPath => {
           if (reqPath) {

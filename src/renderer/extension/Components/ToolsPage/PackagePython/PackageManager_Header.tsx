@@ -14,10 +14,11 @@ import {isEmpty} from 'lodash';
 import {Dispatch, ReactNode, SetStateAction, useEffect, useState} from 'react';
 
 import {PackageInfo, SitePackages_Info} from '../../../../../cross/CrossExtensions';
-import {Add_Icon, Circle_Icon, Download2_Icon} from '../../../../src/assets/icons/SvgIcons/SvgIcons1';
-import {Magnifier_Icon} from '../../../../src/assets/icons/SvgIcons/SvgIcons4';
+import {Add_Icon, Circle_Icon} from '../../../../src/assets/icons/SvgIcons/SvgIcons1';
 import pIpc from '../../../PIpc';
+import FilterButton from './FilterButton';
 import RequirementsBtn from './Requirements/RequirementsModal_Btn';
+import UpdateButton from './UpdateButton';
 
 const WARNING_KEY = 'python-package-warning';
 
@@ -33,7 +34,7 @@ type Props = {
   allUpdated: () => void;
   refresh: () => void;
   isValidPython: boolean;
-  checkForUpdates: () => void;
+  checkForUpdates: (type: 'req' | 'normal') => void;
 
   id: string;
   projectPath?: string;
@@ -61,6 +62,8 @@ export default function PackageManagerHeader({
 
   const [installPackageName, setInstallPackageName] = useState<string>('');
   const [installPopover, setInstallPopover] = useState<boolean>(false);
+
+  const [isReqAvailable, setIsReqAvailable] = useState<boolean>(false);
 
   useEffect(() => {
     setShowWarning(localStorage.getItem(WARNING_KEY) !== 'false');
@@ -117,6 +120,7 @@ export default function PackageManagerHeader({
         ) : (
           <span>{title}</span>
         )}
+        <FilterButton />
       </div>
       {!isEmpty(packages) && (
         <Input
@@ -130,27 +134,17 @@ export default function PackageManagerHeader({
         />
       )}
       <div className="gap-x-2 flex items-center w-full mt-2">
+        {isValidPython && (
+          <UpdateButton
+            updateAll={updateAll}
+            isUpdating={isUpdating}
+            isReqAvailable={isReqAvailable}
+            packagesUpdate={packagesUpdate}
+            checkForUpdates={checkForUpdates}
+            checkingUpdates={checkingUpdates}
+          />
+        )}
         <ButtonGroup size="sm" fullWidth>
-          {isValidPython &&
-            (isEmpty(packagesUpdate) ? (
-              <Button
-                variant="flat"
-                onPress={checkForUpdates}
-                isLoading={checkingUpdates}
-                startContent={!checkingUpdates && <Magnifier_Icon />}>
-                {checkingUpdates ? 'Checking...' : 'Check For Updates'}
-              </Button>
-            ) : (
-              <Button
-                radius="sm"
-                variant="flat"
-                color="success"
-                onPress={updateAll}
-                isLoading={isUpdating}
-                startContent={!isUpdating && <Download2_Icon />}>
-                {isUpdating ? <span>Updating...</span> : <span>Update All ({packagesUpdate.length})</span>}
-              </Button>
-            ))}
           {isValidPython && (
             <>
               <Popover
@@ -182,11 +176,12 @@ export default function PackageManagerHeader({
                 </PopoverContent>
               </Popover>
 
-              <RequirementsBtn id={id} projectPath={projectPath} />
+              <RequirementsBtn id={id} projectPath={projectPath} setIsReqAvailable={setIsReqAvailable} />
             </>
           )}
-          {actionButtons?.map(ActionButton => ActionButton)}
         </ButtonGroup>
+
+        {isValidPython && actionButtons?.map(ActionButton => ActionButton)}
       </div>
       <Alert
         color="warning"

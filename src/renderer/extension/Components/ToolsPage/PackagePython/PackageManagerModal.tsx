@@ -60,7 +60,7 @@ export default function PackageManagerModal({
     setIsOpen(false);
   };
 
-  const checkForUpdates = () => {
+  const checkForUpdates = (type: 'req' | 'normal') => {
     setIsLoadingUpdates(true);
 
     const updateData = (result: SitePackages_Info[]) => {
@@ -73,23 +73,31 @@ export default function PackageManagerModal({
       );
     };
 
-    pIpc.getReqPath(id).then(reqPath => {
-      if (reqPath) {
-        pIpc
-          .getUpdatesReq(pythonPath, reqPath, packages)
-          .then(updateData)
-          .finally(() => {
-            setIsLoadingUpdates(false);
-          });
-      } else {
-        pIpc
-          .getPackagesUpdateInfo(pythonPath)
-          .then(updateData)
-          .finally(() => {
-            setIsLoadingUpdates(false);
-          });
-      }
-    });
+    if (type === 'req') {
+      pIpc
+        .getReqPath(id)
+        .then(reqPath => {
+          if (reqPath) {
+            pIpc
+              .getUpdatesReq(pythonPath, reqPath, packages)
+              .then(updateData)
+              .finally(() => {
+                setIsLoadingUpdates(false);
+              });
+          }
+        })
+        .catch(err => {
+          console.log(err);
+          setIsLoadingUpdates(false);
+        });
+    } else {
+      pIpc
+        .getPackagesUpdateInfo(pythonPath)
+        .then(updateData)
+        .finally(() => {
+          setIsLoadingUpdates(false);
+        });
+    }
   };
 
   const getPackageList = () => {
