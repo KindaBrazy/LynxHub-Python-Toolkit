@@ -1,6 +1,6 @@
 import {Button, ButtonGroup, Dropdown, DropdownItem, DropdownMenu, DropdownTrigger} from '@nextui-org/react';
 import {isEmpty} from 'lodash';
-import {useMemo, useState} from 'react';
+import {useEffect, useMemo, useState} from 'react';
 
 import {SitePackages_Info} from '../../../../../cross/CrossExtensions';
 import {Download2_Icon} from '../../../../src/assets/icons/SvgIcons/SvgIcons1';
@@ -24,7 +24,11 @@ export default function UpdateButton({
   checkingUpdates,
   isReqAvailable,
 }: Props) {
-  const [selectedOption, setSelectedOption] = useState(new Set(['all']));
+  const [selectedOption, setSelectedOption] = useState(new Set([isReqAvailable ? 'req' : 'all']));
+
+  useEffect(() => {
+    setSelectedOption(new Set([isReqAvailable ? 'req' : 'all']));
+  }, [isReqAvailable]);
 
   const descriptionsMap = useMemo(() => {
     return {
@@ -35,8 +39,8 @@ export default function UpdateButton({
 
   const labelsMap = useMemo(() => {
     return {
-      all: isUpdating ? 'Updating...' : `Check for Updates (All)`,
-      req: isUpdating ? 'Updating...' : `Check for Updates (Requirements)`,
+      all: checkingUpdates ? 'Checking (All)...' : `Check for Updates (All)`,
+      req: checkingUpdates ? 'Checking (Requirements)...' : `Check for Updates (Requirements)`,
     };
   }, [isUpdating, packagesUpdate]);
 

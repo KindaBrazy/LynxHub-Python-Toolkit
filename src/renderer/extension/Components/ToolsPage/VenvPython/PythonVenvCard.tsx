@@ -100,7 +100,12 @@ export default function PythonVenvCard({
 
   return (
     <>
-      <PackageManagerModal pythonPath={pythonPath} isOpen={packageManagerOpen} setIsOpen={setPackageManagerOpen} />
+      <PackageManagerModal
+        id={pythonPath}
+        pythonPath={pythonPath}
+        isOpen={packageManagerOpen}
+        setIsOpen={setPackageManagerOpen}
+      />
       <Card
         className={
           `min-w-[27rem] grow transition-colors duration-300 shadow-small ` +
