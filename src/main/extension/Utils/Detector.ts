@@ -6,7 +6,7 @@ import {arch, homedir, platform} from 'os';
 import {promisify} from 'util';
 import which from 'which';
 
-import {PythonInstallation} from '../../../cross/Extension/CrossExtTypes';
+import {PythonInstallation} from '../../../cross/extension/CrossExtTypes';
 import {isDefaultPython} from './DefaultPython';
 import {detectInstallationType, getSitePackagesCount, parseVersion} from './PythonUtils';
 import {getCondaEnvName} from './Uninstaller/Uninstaller_Conda';

@@ -1,6 +1,6 @@
 import {platform} from 'node:os';
 
-import {PythonVersion} from '../../../cross/Extension/CrossExtTypes';
+import {PythonVersion} from '../../../cross/extension/CrossExtTypes';
 
 function removeDuplicateUrls(versions: PythonVersion[]): PythonVersion[] {
   const seenUrls = new Set();

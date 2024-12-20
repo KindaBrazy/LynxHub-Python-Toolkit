@@ -1,10 +1,10 @@
 import {Button, Divider, Modal, ModalBody, ModalContent, ModalFooter, ModalHeader, Tab, Tabs} from '@nextui-org/react';
 import {Dispatch, Key, SetStateAction, useState} from 'react';
 
-import {PythonInstallation} from '../../../../cross/Extension/CrossExtTypes';
+import {PythonInstallation} from '../../../../cross/extension/CrossExtTypes';
 import {modalMotionProps} from '../../../src/App/Utils/Constants';
 import InstalledPythons from './InstalledPythons/InstalledPythons';
-import VenvPython from './VenvPython/VenvPython';
+import Venv from './VirtualEnvironments/Venv';
 
 type ModalProps = {
   isOpen: boolean;
@@ -47,7 +47,7 @@ export default function PythonToolkitModal({isOpen, setIsOpen}: ModalProps) {
             setIsLoadingPythons={setIsLoadingPythons}
             setInstalledPythons={setInstalledPythons}
           />
-          <VenvPython
+          <Venv
             visible={currentTab === 'venv'}
             installedPythons={installedPythons}
             isLoadingPythons={isLoadingPythons}

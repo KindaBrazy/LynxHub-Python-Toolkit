@@ -7,14 +7,14 @@ import {DropDownSectionType} from '../../src/App/Utils/Types';
 import {useInstalledCard} from '../../src/App/Utils/UtilHooks';
 import {Refresh3_Icon} from '../../src/assets/icons/SvgIcons/SvgIcons4';
 import pIpc from '../PIpc';
+import PackageManagerModal from './Python/PackageManagement/PackageManager/PackageManagerModal';
 import {Python_Icon} from './SvgIcons';
-import PackageManagerModal from './ToolsPage/PackagePython/PackageManagerModal';
 
 type Props = {
   addMenu: (sections: DropDownSectionType[], index?: number) => void;
 };
 
-export default function ToolkitMenu({addMenu}: Props) {
+export default function CardMenu({addMenu}: Props) {
   const [isOpen, setIsOpen] = useState<boolean>(false);
   const {setMenuIsOpen, title, id} = useCardData();
   const webUI = useInstalledCard(id);

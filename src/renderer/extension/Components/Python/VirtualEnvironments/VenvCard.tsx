@@ -20,7 +20,7 @@ import {Trash_Icon} from '../../../../src/assets/icons/SvgIcons/SvgIcons3';
 import {OpenFolder_Icon} from '../../../../src/assets/icons/SvgIcons/SvgIcons4';
 import {HardDrive_Icon} from '../../../../src/assets/icons/SvgIcons/SvgIcons5';
 import {Env_Icon, Packages_Icon} from '../../SvgIcons';
-import PackageManagerModal from '../PackagePython/PackageManagerModal';
+import PackageManagerModal from '../PackageManagement/PackageManager/PackageManagerModal';
 
 const TITLE_STORE_KEY = 'title_change_key';
 type StorageItem = {title: string; path: string};
@@ -34,14 +34,7 @@ type Props = {
   diskUsage: {path: string; value: number | undefined}[];
 };
 
-export default function PythonVenvCard({
-  title,
-  installedPackages,
-  pythonVersion,
-  folder,
-  diskUsage,
-  pythonPath,
-}: Props) {
+export default function VenvCard({title, installedPackages, pythonVersion, folder, diskUsage, pythonPath}: Props) {
   const [popoverUninstaller, setPopoverUninstaller] = useState<boolean>(false);
   const [editedTitle, setEditedTitle] = useState<string>(title);
 

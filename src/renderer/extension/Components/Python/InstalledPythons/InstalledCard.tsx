@@ -15,7 +15,7 @@ import {isNil, startCase} from 'lodash';
 import {useMemo, useState} from 'react';
 
 import {formatSizeMB} from '../../../../../cross/CrossUtils';
-import {PythonInstallation} from '../../../../../cross/Extension/CrossExtTypes';
+import {PythonInstallation} from '../../../../../cross/extension/CrossExtTypes';
 import rendererIpc from '../../../../src/App/RendererIpc';
 import {MenuDots_Icon} from '../../../../src/assets/icons/SvgIcons/SvgIcons2';
 import {Trash_Icon} from '../../../../src/assets/icons/SvgIcons/SvgIcons3';
@@ -23,7 +23,7 @@ import {OpenFolder_Icon, Refresh3_Icon} from '../../../../src/assets/icons/SvgIc
 import {HardDrive_Icon} from '../../../../src/assets/icons/SvgIcons/SvgIcons5';
 import pIpc from '../../../PIpc';
 import {DoubleCheck_Icon, Packages_Icon, Python_Icon} from '../../SvgIcons';
-import PackageManagerModal from '../PackagePython/PackageManagerModal';
+import PackageManagerModal from '../PackageManagement/PackageManager/PackageManagerModal';
 
 type Props = {
   python: PythonInstallation;

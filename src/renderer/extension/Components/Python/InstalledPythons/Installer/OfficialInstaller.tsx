@@ -5,7 +5,7 @@ import {OverlayScrollbarsComponent} from 'overlayscrollbars-react';
 import {Dispatch, SetStateAction, useEffect, useState} from 'react';
 
 import {formatSize} from '../../../../../../cross/CrossUtils';
-import {DlProgressOfficial, PythonVersion} from '../../../../../../cross/Extension/CrossExtTypes';
+import {DlProgressOfficial, PythonVersion} from '../../../../../../cross/extension/CrossExtTypes';
 import {useAppState} from '../../../../../src/App/Redux/App/AppReducer';
 import {Circle_Icon} from '../../../../../src/assets/icons/SvgIcons/SvgIcons1';
 import {Refresh_Icon} from '../../../../../src/assets/icons/SvgIcons/SvgIcons2';

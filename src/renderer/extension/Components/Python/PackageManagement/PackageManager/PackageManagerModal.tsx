@@ -2,13 +2,13 @@ import {Button, Modal, ModalContent, ModalFooter} from '@nextui-org/react';
 import {isEmpty} from 'lodash';
 import {Dispatch, ReactNode, SetStateAction, useEffect, useState} from 'react';
 
-import {FilterKeys, PackageInfo, SitePackages_Info} from '../../../../../cross/Extension/CrossExtTypes';
-import {getUpdateType} from '../../../../../cross/Extension/CrossExtUtils';
-import {modalMotionProps} from '../../../../src/App/Utils/Constants';
-import {searchInStrings} from '../../../../src/App/Utils/UtilFunctions';
-import pIpc from '../../../PIpc';
-import PackageManagerBody from './PackageManager_Body';
-import PackageManagerHeader from './PackageManager_Header';
+import {FilterKeys, PackageInfo, SitePackages_Info} from '../../../../../../cross/extension/CrossExtTypes';
+import {getUpdateType} from '../../../../../../cross/extension/CrossExtUtils';
+import {modalMotionProps} from '../../../../../src/App/Utils/Constants';
+import {searchInStrings} from '../../../../../src/App/Utils/UtilFunctions';
+import pIpc from '../../../../PIpc';
+import PackageManagerBody from './Body';
+import PackageManagerHeader from './Header';
 
 type Props = {
   isOpen: boolean;

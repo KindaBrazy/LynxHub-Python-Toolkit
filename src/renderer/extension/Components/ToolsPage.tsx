@@ -3,8 +3,8 @@ import {ConfigProvider, theme} from 'antd';
 import {useMemo, useState} from 'react';
 
 import {useAppState} from '../../src/App/Redux/App/AppReducer';
+import PythonToolkitModal from './Python/PythonToolkitModal';
 import {Python_Color_Icon} from './SvgIcons';
-import PythonToolkitModal from './ToolsPage/PythonToolkitModal';
 
 export default function ToolsPage() {
   const [isOpen, setIsOpen] = useState(false);

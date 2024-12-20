@@ -13,12 +13,12 @@ import {message} from 'antd';
 import {isEmpty} from 'lodash';
 import {Dispatch, ReactNode, SetStateAction, useEffect, useState} from 'react';
 
-import {FilterKeys, PackageInfo, SitePackages_Info} from '../../../../../cross/Extension/CrossExtTypes';
-import {Add_Icon, Circle_Icon} from '../../../../src/assets/icons/SvgIcons/SvgIcons1';
-import pIpc from '../../../PIpc';
-import FilterButton from './FilterButton';
-import RequirementsBtn from './Requirements/RequirementsModal_Btn';
-import UpdateButton from './UpdateButton';
+import {FilterKeys, PackageInfo, SitePackages_Info} from '../../../../../../cross/extension/CrossExtTypes';
+import {Add_Icon, Circle_Icon} from '../../../../../src/assets/icons/SvgIcons/SvgIcons1';
+import pIpc from '../../../../PIpc';
+import FilterButton from '../FilterButton';
+import RequirementsBtn from '../Requirements/RequirementsModalButton';
+import UpdateButton from '../UpdateButton';
 
 const WARNING_KEY = 'python-package-warning';
 

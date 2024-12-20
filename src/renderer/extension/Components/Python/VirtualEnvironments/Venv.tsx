@@ -4,11 +4,11 @@ import {isEmpty} from 'lodash';
 import {useCallback, useEffect, useState} from 'react';
 
 import {bytesToMegabytes} from '../../../../../cross/CrossUtils';
-import {PythonInstallation, PythonVenvs, VenvInfo} from '../../../../../cross/Extension/CrossExtTypes';
+import {PythonInstallation, PythonVenvs, VenvInfo} from '../../../../../cross/extension/CrossExtTypes';
 import rendererIpc from '../../../../src/App/RendererIpc';
 import {OpenFolder_Icon} from '../../../../src/assets/icons/SvgIcons/SvgIcons4';
 import pIpc from '../../../PIpc';
-import PythonVenvCard from './PythonVenvCard';
+import VenvCard from './VenvCard';
 import VenvCreator from './VenvCreator';
 
 type Props = {
@@ -17,7 +17,7 @@ type Props = {
   isLoadingPythons: boolean;
 };
 
-export default function VenvPython({visible, installedPythons, isLoadingPythons}: Props) {
+export default function Venv({visible, installedPythons, isLoadingPythons}: Props) {
   const [pythonVenvs, setPythonVenvs] = useState<PythonVenvs[]>([]);
   const [isLoading, setIsLoading] = useState<boolean>(false);
 
@@ -105,7 +105,7 @@ export default function VenvPython({visible, installedPythons, isLoadingPythons}
         ) : (
           <>
             {pythonVenvs.map(venv => (
-              <PythonVenvCard
+              <VenvCard
                 title={venv.title}
                 folder={venv.folder}
                 diskUsage={diskUsage}

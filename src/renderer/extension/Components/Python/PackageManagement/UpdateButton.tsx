@@ -2,7 +2,7 @@ import {Button, ButtonGroup, Dropdown, DropdownItem, DropdownMenu, DropdownTrigg
 import {isEmpty} from 'lodash';
 import {useEffect, useMemo, useState} from 'react';
 
-import {SitePackages_Info} from '../../../../../cross/Extension/CrossExtTypes';
+import {SitePackages_Info} from '../../../../../cross/extension/CrossExtTypes';
 import {Download2_Icon} from '../../../../src/assets/icons/SvgIcons/SvgIcons1';
 import {Magnifier_Icon} from '../../../../src/assets/icons/SvgIcons/SvgIcons4';
 import {AltArrow_Icon} from '../../SvgIcons';

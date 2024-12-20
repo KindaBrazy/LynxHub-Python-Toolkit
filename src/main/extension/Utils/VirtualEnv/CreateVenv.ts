@@ -3,7 +3,7 @@ import {join} from 'node:path';
 
 import {compact, filter, isEmpty, isNil} from 'lodash';
 
-import {VenvCreateOptions, VenvInfo} from '../../../../cross/Extension/CrossExtTypes';
+import {VenvCreateOptions, VenvInfo} from '../../../../cross/extension/CrossExtTypes';
 import {openDialog} from '../../../Utilities/Utils';
 import {storageManager} from '../../lynxExtension';
 import {getVenvInfo, isVenvDirectory} from './VenvUtils';

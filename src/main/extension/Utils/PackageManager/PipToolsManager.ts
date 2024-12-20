@@ -3,7 +3,7 @@ import {promisify} from 'node:util';
 
 import {satisfies} from 'semver';
 
-import {SitePackages_Info} from '../../../../cross/Extension/CrossExtTypes';
+import {SitePackages_Info} from '../../../../cross/extension/CrossExtTypes';
 import {readRequirements} from '../Requirements/PythonRequirements';
 
 const execAsync = promisify(exec);
