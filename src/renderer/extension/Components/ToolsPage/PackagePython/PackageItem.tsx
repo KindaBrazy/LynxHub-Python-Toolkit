@@ -2,8 +2,8 @@ import {Button, Popover, PopoverContent, PopoverTrigger, Spinner} from '@nextui-
 import {List, message} from 'antd';
 import {ReactNode, useCallback, useMemo, useState} from 'react';
 
-import {PackageInfo} from '../../../../../cross/CrossExtensions';
-import {getUpdateVersionColor} from '../../../../../cross/CrossExtUtils';
+import {PackageInfo} from '../../../../../cross/Extension/CrossExtTypes';
+import {getUpdateVersionColor} from '../../../../../cross/Extension/CrossExtUtils';
 import {Download_Icon} from '../../../../src/assets/icons/SvgIcons/SvgIcons1';
 import {Trash_Icon} from '../../../../src/assets/icons/SvgIcons/SvgIcons3';
 import pIpc from '../../../PIpc';

@@ -2,7 +2,7 @@ import {exec, spawn} from 'node:child_process';
 
 import {BrowserWindow} from 'electron';
 
-import {pythonChannels} from '../../../../cross/CrossExtensions';
+import {pythonChannels} from '../../../../cross/Extension/CrossExtTypes';
 
 /**
  * List all available Python versions in Conda for Windows.

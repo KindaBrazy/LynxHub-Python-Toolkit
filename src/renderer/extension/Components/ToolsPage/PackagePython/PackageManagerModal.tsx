@@ -2,8 +2,8 @@ import {Button, Modal, ModalContent, ModalFooter} from '@nextui-org/react';
 import {isEmpty} from 'lodash';
 import {Dispatch, ReactNode, SetStateAction, useEffect, useState} from 'react';
 
-import {FilterKeys, PackageInfo, SitePackages_Info} from '../../../../../cross/CrossExtensions';
-import {getUpdateType} from '../../../../../cross/CrossExtUtils';
+import {FilterKeys, PackageInfo, SitePackages_Info} from '../../../../../cross/Extension/CrossExtTypes';
+import {getUpdateType} from '../../../../../cross/Extension/CrossExtUtils';
 import {modalMotionProps} from '../../../../src/App/Utils/Constants';
 import {searchInStrings} from '../../../../src/App/Utils/UtilFunctions';
 import pIpc from '../../../PIpc';

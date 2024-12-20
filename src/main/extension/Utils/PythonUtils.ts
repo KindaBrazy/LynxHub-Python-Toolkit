@@ -5,7 +5,7 @@ import {existsSync, promises, readdirSync, statSync} from 'graceful-fs';
 import {isNil} from 'lodash';
 import {promisify} from 'util';
 
-import {PythonInstallation} from '../../../cross/CrossExtensions';
+import {PythonInstallation} from '../../../cross/Extension/CrossExtTypes';
 
 const execAsync = promisify(exec);
 

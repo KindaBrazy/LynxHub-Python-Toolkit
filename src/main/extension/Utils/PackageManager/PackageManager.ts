@@ -3,7 +3,7 @@ import {join} from 'node:path';
 
 import {promises} from 'graceful-fs';
 
-import {IdPathType, SitePackages_Info} from '../../../../cross/CrossExtensions';
+import {IdPathType, SitePackages_Info} from '../../../../cross/Extension/CrossExtTypes';
 import {openDialog} from '../../../Utilities/Utils';
 import {storageManager} from '../../lynxExtension';
 import {isVenvDirectory} from '../VirtualEnv/VenvUtils';

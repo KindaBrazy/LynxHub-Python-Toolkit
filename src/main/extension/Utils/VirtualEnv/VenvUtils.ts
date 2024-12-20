@@ -3,7 +3,7 @@ import {basename, join} from 'node:path';
 
 import {existsSync} from 'graceful-fs';
 
-import {VenvInfo} from '../../../../cross/CrossExtensions';
+import {VenvInfo} from '../../../../cross/Extension/CrossExtTypes';
 import {getSitePackagesCount} from '../PythonUtils';
 
 async function getPythonVersion(venvPath: string): Promise<string> {

@@ -3,7 +3,7 @@ import {message} from 'antd';
 import {capitalize, isEmpty} from 'lodash';
 import {useCallback, useEffect, useMemo, useState} from 'react';
 
-import {PythonInstallation, VenvCreateOptions} from '../../../../../cross/CrossExtensions';
+import {PythonInstallation, VenvCreateOptions} from '../../../../../cross/Extension/CrossExtTypes';
 import rendererIpc from '../../../../src/App/RendererIpc';
 import {Add_Icon} from '../../../../src/assets/icons/SvgIcons/SvgIcons1';
 import {MenuDots_Icon} from '../../../../src/assets/icons/SvgIcons/SvgIcons2';

@@ -14,7 +14,7 @@ import {
 import {OverlayScrollbarsComponent, OverlayScrollbarsComponentRef} from 'overlayscrollbars-react';
 import {Dispatch, ReactNode, RefObject, SetStateAction, useEffect, useState} from 'react';
 
-import {RequirementData} from '../../../../../../cross/CrossExtensions';
+import {RequirementData} from '../../../../../../cross/Extension/CrossExtTypes';
 import {useAppState} from '../../../../../src/App/Redux/App/AppReducer';
 import {Trash_Icon} from '../../../../../src/assets/icons/SvgIcons/SvgIcons3';
 

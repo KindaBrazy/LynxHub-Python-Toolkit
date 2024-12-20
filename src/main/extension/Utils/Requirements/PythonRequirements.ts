@@ -1,7 +1,7 @@
 import {readdirSync, readFileSync, statSync, writeFileSync} from 'graceful-fs';
 import {join} from 'path';
 
-import {IdPathType, RequirementData} from '../../../../cross/CrossExtensions';
+import {IdPathType, RequirementData} from '../../../../cross/Extension/CrossExtTypes';
 import {storageManager} from '../../lynxExtension';
 
 const REQ_STORE_ID = 'reqs_path';

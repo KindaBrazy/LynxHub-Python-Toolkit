@@ -10,7 +10,7 @@ import {
   SitePackages_Info,
   VenvCreateOptions,
   VenvInfo,
-} from '../../cross/CrossExtensions';
+} from '../../cross/Extension/CrossExtTypes';
 
 const ipc = window.electron.ipcRenderer;
 

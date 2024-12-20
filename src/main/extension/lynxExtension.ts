@@ -6,7 +6,7 @@ import {
   PythonVersion,
   SitePackages_Info,
   VenvCreateOptions,
-} from '../../cross/CrossExtensions';
+} from '../../cross/Extension/CrossExtTypes';
 import {ExtensionMainApi, MainExtensionUtils} from '../Managements/Plugin/Extensions/ExtensionTypes_Main';
 import StorageManager from '../Managements/Storage/StorageManager';
 import {getAvailablePythonVersions} from './Utils/Available';

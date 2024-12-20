@@ -4,7 +4,7 @@ import {isEmpty} from 'lodash';
 import {OverlayScrollbarsComponentRef} from 'overlayscrollbars-react';
 import {Dispatch, SetStateAction, useEffect, useRef, useState} from 'react';
 
-import {RequirementData} from '../../../../../../cross/CrossExtensions';
+import {RequirementData} from '../../../../../../cross/Extension/CrossExtTypes';
 import rendererIpc from '../../../../../src/App/RendererIpc';
 import {modalMotionProps} from '../../../../../src/App/Utils/Constants';
 import {searchInStrings} from '../../../../../src/App/Utils/UtilFunctions';

@@ -13,7 +13,7 @@ import {message} from 'antd';
 import {isEmpty} from 'lodash';
 import {Dispatch, ReactNode, SetStateAction, useEffect, useState} from 'react';
 
-import {FilterKeys, PackageInfo, SitePackages_Info} from '../../../../../cross/CrossExtensions';
+import {FilterKeys, PackageInfo, SitePackages_Info} from '../../../../../cross/Extension/CrossExtTypes';
 import {Add_Icon, Circle_Icon} from '../../../../src/assets/icons/SvgIcons/SvgIcons1';
 import pIpc from '../../../PIpc';
 import FilterButton from './FilterButton';
