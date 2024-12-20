@@ -13,7 +13,7 @@ import {message} from 'antd';
 import {isEmpty} from 'lodash';
 import {Dispatch, ReactNode, SetStateAction, useEffect, useState} from 'react';
 
-import {PackageInfo, SitePackages_Info} from '../../../../../cross/CrossExtensions';
+import {FilterKeys, PackageInfo, SitePackages_Info} from '../../../../../cross/CrossExtensions';
 import {Add_Icon, Circle_Icon} from '../../../../src/assets/icons/SvgIcons/SvgIcons1';
 import pIpc from '../../../PIpc';
 import FilterButton from './FilterButton';
@@ -38,6 +38,7 @@ type Props = {
 
   id: string;
   projectPath?: string;
+  setSelectedFilter: Dispatch<SetStateAction<FilterKeys>>;
 };
 
 export default function PackageManagerHeader({
@@ -55,6 +56,7 @@ export default function PackageManagerHeader({
   checkForUpdates,
   id,
   projectPath,
+  setSelectedFilter,
 }: Props) {
   const [showWarning, setShowWarning] = useState<boolean>(true);
   const [isUpdating, setIsUpdating] = useState<boolean>(false);
@@ -120,7 +122,7 @@ export default function PackageManagerHeader({
         ) : (
           <span>{title}</span>
         )}
-        <FilterButton />
+        <FilterButton setSelectedFilter={setSelectedFilter} />
       </div>
       {!isEmpty(packages) && (
         <Input

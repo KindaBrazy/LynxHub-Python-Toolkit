@@ -2,7 +2,8 @@ import {Button, Modal, ModalContent, ModalFooter} from '@nextui-org/react';
 import {isEmpty} from 'lodash';
 import {Dispatch, ReactNode, SetStateAction, useEffect, useState} from 'react';
 
-import {PackageInfo, SitePackages_Info} from '../../../../../cross/CrossExtensions';
+import {FilterKeys, PackageInfo, SitePackages_Info} from '../../../../../cross/CrossExtensions';
+import {getUpdateType} from '../../../../../cross/CrossExtUtils';
 import {modalMotionProps} from '../../../../src/App/Utils/Constants';
 import {searchInStrings} from '../../../../src/App/Utils/UtilFunctions';
 import pIpc from '../../../PIpc';
@@ -41,20 +42,78 @@ export default function PackageManagerModal({
   const [isLoadingUpdates, setIsLoadingUpdates] = useState<boolean>(false);
 
   const [packages, setPackages] = useState<PackageInfo[]>([]);
+  const [filteredPackages, setFilteredPackages] = useState<PackageInfo[]>([]);
   const [packagesUpdate, setPackagesUpdate] = useState<SitePackages_Info[]>([]);
 
   const [searchValue, setSearchValue] = useState<string>('');
   const [searchData, setSearchData] = useState<PackageInfo[]>([]);
 
   const [isValidPython, setIsValidPython] = useState<boolean>(true);
+  const [selectedFilter, setSelectedFilter] = useState<FilterKeys>('all');
+
+  useEffect(() => {
+    switch (selectedFilter) {
+      case 'all':
+        setFilteredPackages(packages);
+        break;
+      case 'updates':
+        setFilteredPackages(packages.filter(item => packagesUpdate.some(update => item.name === update.name)));
+        break;
+      case 'prerelease':
+        setFilteredPackages(
+          packages.filter(item =>
+            packagesUpdate.some(
+              update => item.name === update.name && getUpdateType(item.version, update.version) === 'prerelease',
+            ),
+          ),
+        );
+        break;
+      case 'major':
+        setFilteredPackages(
+          packages.filter(item =>
+            packagesUpdate.some(
+              update => item.name === update.name && getUpdateType(item.version, update.version) === 'major',
+            ),
+          ),
+        );
+        break;
+      case 'minor':
+        setFilteredPackages(
+          packages.filter(item =>
+            packagesUpdate.some(
+              update => item.name === update.name && getUpdateType(item.version, update.version) === 'minor',
+            ),
+          ),
+        );
+        break;
+      case 'patch':
+        setFilteredPackages(
+          packages.filter(item =>
+            packagesUpdate.some(
+              update => item.name === update.name && getUpdateType(item.version, update.version) === 'patch',
+            ),
+          ),
+        );
+        break;
+      case 'others':
+        setFilteredPackages(
+          packages.filter(item =>
+            packagesUpdate.some(
+              update => item.name === update.name && getUpdateType(item.version, update.version) === null,
+            ),
+          ),
+        );
+        break;
+    }
+  }, [selectedFilter, packagesUpdate, packages]);
 
   useEffect(() => {
     if (isEmpty(pythonPath)) setIsValidPython(false);
   }, [pythonPath]);
 
   useEffect(() => {
-    setSearchData(packages.filter(item => searchInStrings(searchValue, [item.name])));
-  }, [searchValue, packages]);
+    setSearchData(filteredPackages.filter(item => searchInStrings(searchValue, [item.name])));
+  }, [searchValue, filteredPackages]);
 
   const closePackageManager = () => {
     setIsOpen(false);
@@ -169,6 +228,7 @@ export default function PackageManagerModal({
           packagesUpdate={packagesUpdate}
           setSearchValue={setSearchValue}
           checkForUpdates={checkForUpdates}
+          setSelectedFilter={setSelectedFilter}
           checkingUpdates={!isLoading && isLoadingUpdates}
         />
         <PackageManagerBody

@@ -60,6 +60,7 @@ export type RequirementData = {
 
 export type DlProgressOfficial = {percentage: number; downloaded: number; total: number} | undefined;
 
+export type FilterKeys = 'all' | 'updates' | 'prerelease' | 'major' | 'minor' | 'patch' | 'others';
 export const pythonChannels = {
   getAvailableConda: 'get-available-conda-pythons',
   downloadProgressConda: 'download-conda-python-progress',

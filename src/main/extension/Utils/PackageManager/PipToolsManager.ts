@@ -81,11 +81,9 @@ export async function checkPackageUpdates(
         canUpdate = latestParts[0] === reqParts[0] && satisfies(latestVersion, `>${req.version}`);
         break;
       }
-      case undefined:
-        canUpdate = true;
-        break;
       default:
-        console.warn(`Unsupported operator: ${req.versionOperator}`);
+        // console.warn(`Unsupported operator: ${req.versionOperator}`);
+        canUpdate = true;
     }
 
     if (canUpdate && latestVersion !== currentVersion) result.push({name: req.name, version: latestVersion});
