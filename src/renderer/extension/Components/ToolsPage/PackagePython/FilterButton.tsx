@@ -10,7 +10,7 @@ export default function FilterButton({setSelectedFilter}: Props) {
   const [selectedKeys, setSelectedKeys] = useState<Set<FilterKeys>>(new Set(['all']));
 
   useEffect(() => {
-    setSelectedFilter(Array.from(selectedKeys).join(', ').replace(/_/g, ''));
+    setSelectedFilter(Array.from(selectedKeys).join(', ').replace(/_/g, '') as FilterKeys);
   }, [selectedKeys]);
 
   return (
