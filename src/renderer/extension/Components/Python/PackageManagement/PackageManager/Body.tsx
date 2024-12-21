@@ -11,6 +11,7 @@ import {
   TableRow,
 } from '@nextui-org/react';
 import {Result} from 'antd';
+import {isEmpty} from 'lodash';
 import {OverlayScrollbarsComponent} from 'overlayscrollbars-react';
 import {Dispatch, SetStateAction, useMemo} from 'react';
 
@@ -49,6 +50,7 @@ export default function PackageManagerBody({
   const anyUpdateAvailable = useMemo(() => packagesUpdate.length !== 0, [packagesUpdate]);
 
   const disabledKeys = useMemo(() => {
+    if (isEmpty(packagesUpdate)) return [];
     return items.filter(item => !packagesUpdate.some(update => update.name === item.name)).map(item => item.name);
   }, [items, packagesUpdate]);
 
