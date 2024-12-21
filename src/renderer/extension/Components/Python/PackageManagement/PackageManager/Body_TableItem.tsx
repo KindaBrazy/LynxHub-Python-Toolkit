@@ -13,9 +13,10 @@ type Props = {
   updated: (name: string, newVersion: string) => void;
   removed: (name: string) => void;
   columnKey: string;
+  isSelected: boolean;
 };
 
-export default function Body_TableItem({item, pythonPath, updated, removed, columnKey}: Props) {
+export default function Body_TableItem({item, pythonPath, updated, removed, columnKey, isSelected}: Props) {
   const [loading, setLoading] = useState<ReactNode>(undefined);
   const [isOpenPopover, setIsOpenPopover] = useState<boolean>(false);
 
@@ -52,8 +53,8 @@ export default function Body_TableItem({item, pythonPath, updated, removed, colu
       });
   }, [item]);
 
-  if (columnKey === 'remove') {
-    return (
+  if (columnKey === 'actions') {
+    return isSelected ? null : (
       <Popover
         size="sm"
         color="danger"
@@ -81,13 +82,13 @@ export default function Body_TableItem({item, pythonPath, updated, removed, colu
       </Popover>
     );
   } else if (columnKey === 'update') {
-    return (
-      item.updateVersion && (
-        <Button size="sm" key="update" variant="flat" color="success" onPress={update}>
-          Update
-        </Button>
-      )
-    );
+    return isSelected
+      ? null
+      : item.updateVersion && (
+          <Button size="sm" key="update" variant="flat" color="success" onPress={update}>
+            Update
+          </Button>
+        );
   } else if (columnKey === 'name') {
     return (
       <>

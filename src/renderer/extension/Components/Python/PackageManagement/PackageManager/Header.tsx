@@ -8,6 +8,7 @@ import {
   Popover,
   PopoverContent,
   PopoverTrigger,
+  Selection,
 } from '@nextui-org/react';
 import {message} from 'antd';
 import {isEmpty} from 'lodash';
@@ -39,6 +40,7 @@ type Props = {
   id: string;
   projectPath?: string;
   setSelectedFilter: Dispatch<SetStateAction<FilterKeys>>;
+  selectedKeys: Selection;
 };
 
 export default function PackageManagerHeader({
@@ -57,6 +59,7 @@ export default function PackageManagerHeader({
   id,
   projectPath,
   setSelectedFilter,
+  selectedKeys,
 }: Props) {
   const [showWarning, setShowWarning] = useState<boolean>(true);
   const [isUpdating, setIsUpdating] = useState<boolean>(false);
@@ -76,7 +79,7 @@ export default function PackageManagerHeader({
     localStorage.setItem(WARNING_KEY, 'false');
   };
 
-  const updateAll = () => {
+  const update = () => {
     setIsUpdating(true);
     const updateList = packagesUpdate.map(item => item.name);
     pIpc
@@ -139,8 +142,9 @@ export default function PackageManagerHeader({
       <div className="gap-x-2 flex items-center w-full mt-2">
         {isValidPython && (
           <Header_UpdateButton
-            updateAll={updateAll}
+            update={update}
             isUpdating={isUpdating}
+            selectedKeys={selectedKeys}
             isReqAvailable={isReqAvailable}
             packagesUpdate={packagesUpdate}
             checkForUpdates={checkForUpdates}

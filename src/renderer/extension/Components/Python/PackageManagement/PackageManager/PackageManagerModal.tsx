@@ -1,4 +1,4 @@
-import {Button, Modal, ModalContent, ModalFooter} from '@nextui-org/react';
+import {Button, Modal, ModalContent, ModalFooter, Selection} from '@nextui-org/react';
 import {isEmpty} from 'lodash';
 import {Dispatch, ReactNode, SetStateAction, useEffect, useState} from 'react';
 
@@ -53,6 +53,7 @@ export default function PackageManagerModal({
   const [selectedFilter, setSelectedFilter] = useState<FilterKeys>('all');
 
   const [items, setItems] = useState<PackageInfo[]>(searchData);
+  const [selectedKeys, setSelectedKeys] = useState<Selection>(new Set([]));
 
   useEffect(() => {
     switch (selectedFilter) {
@@ -226,6 +227,7 @@ export default function PackageManagerModal({
           refresh={getPackageList}
           projectPath={projectPath}
           searchValue={searchValue}
+          selectedKeys={selectedKeys}
           isValidPython={isValidPython}
           actionButtons={actionButtons}
           packagesUpdate={packagesUpdate}
@@ -242,7 +244,9 @@ export default function PackageManagerModal({
           locateVenv={locateVenv}
           isLocating={isLocating}
           pythonPath={pythonPath}
+          selectedKeys={selectedKeys}
           isValidPython={isValidPython}
+          setSelectedKeys={setSelectedKeys}
           anyUpdateAvailable={packagesUpdate.length !== 0}
         />
         <ModalFooter className="bg-foreground-200 dark:bg-LynxRaisinBlack flex flex-col space-y-2">

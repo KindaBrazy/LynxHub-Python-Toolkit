@@ -12,7 +12,7 @@ import {
 } from '@nextui-org/react';
 import {Result} from 'antd';
 import {OverlayScrollbarsComponent} from 'overlayscrollbars-react';
-import {useMemo, useState} from 'react';
+import {Dispatch, SetStateAction, useMemo} from 'react';
 
 import {PackageInfo} from '../../../../../../cross/extension/CrossExtTypes';
 import {useAppState} from '../../../../../src/App/Redux/App/AppReducer';
@@ -28,6 +28,8 @@ type Props = {
   locateVenv?: () => void;
   isLocating?: boolean;
   anyUpdateAvailable: boolean;
+  selectedKeys: Selection;
+  setSelectedKeys: Dispatch<SetStateAction<Selection>>;
 };
 
 export default function PackageManagerBody({
@@ -40,15 +42,15 @@ export default function PackageManagerBody({
   isLocating,
   locateVenv,
   anyUpdateAvailable,
+  setSelectedKeys,
+  selectedKeys,
 }: Props) {
   const isDarkMode = useAppState('darkMode');
-
-  const [selectedKeys, setSelectedKeys] = useState<Selection>(new Set([]));
 
   const columns = useMemo(() => {
     const data = [
       {key: 'name', label: 'Name'},
-      {key: 'remove', label: 'Remove'},
+      {key: 'actions', label: 'Actions'},
     ];
 
     if (anyUpdateAvailable) data.splice(1, 0, {key: 'update', label: 'Update'});
@@ -100,6 +102,7 @@ export default function PackageManagerBody({
                             updated={updated}
                             pythonPath={pythonPath}
                             columnKey={columnKey as string}
+                            isSelected={selectedKeys === 'all' || selectedKeys.has(item.name)}
                           />
                         </TableCell>
                       )}

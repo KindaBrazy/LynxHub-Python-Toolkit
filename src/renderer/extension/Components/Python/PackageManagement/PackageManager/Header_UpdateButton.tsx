@@ -1,4 +1,4 @@
-import {Button, ButtonGroup, Dropdown, DropdownItem, DropdownMenu, DropdownTrigger} from '@nextui-org/react';
+import {Button, ButtonGroup, Dropdown, DropdownItem, DropdownMenu, DropdownTrigger, Selection} from '@nextui-org/react';
 import {isEmpty} from 'lodash';
 import {useEffect, useMemo, useState} from 'react';
 
@@ -9,20 +9,22 @@ import {AltArrow_Icon} from '../../../SvgIcons';
 
 type Props = {
   packagesUpdate: SitePackages_Info[];
-  updateAll: () => void;
+  update: () => void;
   isUpdating: boolean;
   checkForUpdates: (type: 'req' | 'normal') => void;
   checkingUpdates: boolean;
   isReqAvailable: boolean;
+  selectedKeys: Selection;
 };
 
 export default function Header_UpdateButton({
   packagesUpdate,
-  updateAll,
+  update,
   isUpdating,
   checkForUpdates,
   checkingUpdates,
   isReqAvailable,
+  selectedKeys,
 }: Props) {
   const [selectedOption, setSelectedOption] = useState(new Set([isReqAvailable ? 'req' : 'all']));
 
@@ -62,11 +64,22 @@ export default function Header_UpdateButton({
       radius="sm"
       variant="flat"
       color="success"
-      onPress={updateAll}
+      onPress={update}
       className="!min-w-40"
       isLoading={isUpdating}
       startContent={!isUpdating && <Download2_Icon />}>
-      {isUpdating ? <span>Updating...</span> : <span>Update All ({packagesUpdate.length})</span>}
+      {isUpdating ? (
+        <span>Updating...</span>
+      ) : (
+        <span>
+          Update{' '}
+          {selectedKeys === 'all' ? (
+            <span>All ({packagesUpdate.length})</span>
+          ) : (
+            <span>Selected ({selectedKeys.size})</span>
+          )}
+        </span>
+      )}
     </Button>
   ) : (
     <ButtonGroup size="sm" variant="solid">
