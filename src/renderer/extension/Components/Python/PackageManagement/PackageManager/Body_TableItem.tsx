@@ -82,13 +82,14 @@ export default function Body_TableItem({item, pythonPath, updated, removed, colu
       </Popover>
     );
   } else if (columnKey === 'update') {
-    return isSelected
-      ? null
-      : item.updateVersion && (
-          <Button size="sm" key="update" variant="flat" color="success" onPress={update}>
-            Update
-          </Button>
-        );
+    return (
+      !isSelected &&
+      item.updateVersion && (
+        <Button size="sm" key="update" variant="flat" color="success" onPress={update}>
+          Update
+        </Button>
+      )
+    );
   } else if (columnKey === 'name') {
     return (
       <>
