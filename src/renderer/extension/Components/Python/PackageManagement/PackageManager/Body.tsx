@@ -14,7 +14,7 @@ import {Result} from 'antd';
 import {OverlayScrollbarsComponent} from 'overlayscrollbars-react';
 import {Dispatch, SetStateAction, useMemo} from 'react';
 
-import {PackageInfo} from '../../../../../../cross/extension/CrossExtTypes';
+import {PackageInfo, SitePackages_Info} from '../../../../../../cross/extension/CrossExtTypes';
 import {useAppState} from '../../../../../src/App/Redux/App/AppReducer';
 import Body_TableItem from './Body_TableItem';
 
@@ -27,7 +27,7 @@ type Props = {
   isValidPython: boolean;
   locateVenv?: () => void;
   isLocating?: boolean;
-  anyUpdateAvailable: boolean;
+  packagesUpdate: SitePackages_Info[];
   selectedKeys: Selection;
   setSelectedKeys: Dispatch<SetStateAction<Selection>>;
 };
@@ -41,11 +41,16 @@ export default function PackageManagerBody({
   isValidPython,
   isLocating,
   locateVenv,
-  anyUpdateAvailable,
   setSelectedKeys,
+  packagesUpdate,
   selectedKeys,
 }: Props) {
   const isDarkMode = useAppState('darkMode');
+  const anyUpdateAvailable = useMemo(() => packagesUpdate.length !== 0, [packagesUpdate]);
+
+  const disabledKeys = useMemo(() => {
+    return items.filter(item => !packagesUpdate.some(update => update.name === item.name)).map(item => item.name);
+  }, [items, packagesUpdate]);
 
   const columns = useMemo(() => {
     const data = [
@@ -84,6 +89,7 @@ export default function PackageManagerBody({
               <Table
                 color="success"
                 aria-label="pacakges"
+                disabledKeys={disabledKeys}
                 selectedKeys={selectedKeys}
                 onSelectionChange={setSelectedKeys}
                 selectionMode={anyUpdateAvailable ? 'multiple' : 'none'}

@@ -246,8 +246,8 @@ export default function PackageManagerModal({
           pythonPath={pythonPath}
           selectedKeys={selectedKeys}
           isValidPython={isValidPython}
+          packagesUpdate={packagesUpdate}
           setSelectedKeys={setSelectedKeys}
-          anyUpdateAvailable={packagesUpdate.length !== 0}
         />
         <ModalFooter className="bg-foreground-200 dark:bg-LynxRaisinBlack flex flex-col space-y-2">
           <Footer_TablePage setItems={setItems} searchData={searchData} />
