@@ -8,6 +8,7 @@ import {modalMotionProps} from '../../../../../src/App/Utils/Constants';
 import {searchInStrings} from '../../../../../src/App/Utils/UtilFunctions';
 import pIpc from '../../../../PIpc';
 import PackageManagerBody from './Body';
+import Footer_TablePage from './Footer_TablePage';
 import PackageManagerHeader from './Header';
 
 type Props = {
@@ -50,6 +51,8 @@ export default function PackageManagerModal({
 
   const [isValidPython, setIsValidPython] = useState<boolean>(true);
   const [selectedFilter, setSelectedFilter] = useState<FilterKeys>('all');
+
+  const [items, setItems] = useState<PackageInfo[]>(searchData);
 
   useEffect(() => {
     switch (selectedFilter) {
@@ -232,16 +235,18 @@ export default function PackageManagerModal({
           checkingUpdates={!isLoading && isLoadingUpdates}
         />
         <PackageManagerBody
+          items={items}
           removed={removed}
           updated={updated}
           isLoading={isLoading}
           locateVenv={locateVenv}
           isLocating={isLocating}
-          searchData={searchData}
           pythonPath={pythonPath}
           isValidPython={isValidPython}
+          anyUpdateAvailable={packagesUpdate.length !== 0}
         />
-        <ModalFooter className="bg-foreground-200 dark:bg-LynxRaisinBlack">
+        <ModalFooter className="bg-foreground-200 dark:bg-LynxRaisinBlack flex flex-col space-y-2">
+          <Footer_TablePage setItems={setItems} searchData={searchData} />
           <Button size="sm" color="warning" variant="faded" onPress={closePackageManager} fullWidth>
             Close
           </Button>

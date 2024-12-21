@@ -1,13 +1,25 @@
-import {Button, ModalBody, Spinner} from '@nextui-org/react';
-import {Empty, List, Result} from 'antd';
+import {
+  Button,
+  ModalBody,
+  Selection,
+  Spinner,
+  Table,
+  TableBody,
+  TableCell,
+  TableColumn,
+  TableHeader,
+  TableRow,
+} from '@nextui-org/react';
+import {Result} from 'antd';
 import {OverlayScrollbarsComponent} from 'overlayscrollbars-react';
+import {useMemo, useState} from 'react';
 
 import {PackageInfo} from '../../../../../../cross/extension/CrossExtTypes';
 import {useAppState} from '../../../../../src/App/Redux/App/AppReducer';
-import PackageItem from '../PackageItem';
+import Body_TableItem from './Body_TableItem';
 
 type Props = {
-  searchData: PackageInfo[];
+  items: PackageInfo[];
   isLoading: boolean;
   pythonPath: string;
   updated: (name: string, newVersion: string) => void;
@@ -15,10 +27,11 @@ type Props = {
   isValidPython: boolean;
   locateVenv?: () => void;
   isLocating?: boolean;
+  anyUpdateAvailable: boolean;
 };
 
 export default function PackageManagerBody({
-  searchData,
+  items,
   isLoading,
   pythonPath,
   updated,
@@ -26,8 +39,22 @@ export default function PackageManagerBody({
   isValidPython,
   isLocating,
   locateVenv,
+  anyUpdateAvailable,
 }: Props) {
   const isDarkMode = useAppState('darkMode');
+
+  const [selectedKeys, setSelectedKeys] = useState<Selection>(new Set([]));
+
+  const columns = useMemo(() => {
+    const data = [
+      {key: 'name', label: 'Name'},
+      {key: 'remove', label: 'Remove'},
+    ];
+
+    if (anyUpdateAvailable) data.splice(1, 0, {key: 'update', label: 'Update'});
+
+    return data;
+  }, [anyUpdateAvailable]);
 
   return (
     <ModalBody
@@ -51,17 +78,36 @@ export default function PackageManagerBody({
               classNames={{circle2: 'border-b-[#ffe66e]', circle1: 'border-b-[#ffe66e] '}}
             />
           ) : isValidPython ? (
-            <List
-              locale={{
-                emptyText: <Empty description="No packages found." image={Empty.PRESENTED_IMAGE_SIMPLE} />,
-              }}
-              renderItem={item => (
-                <PackageItem item={item} removed={removed} updated={updated} pythonPath={pythonPath} />
-              )}
-              dataSource={searchData}
-              className="w-full overflow-hidden"
-              bordered
-            />
+            <>
+              <Table
+                color="success"
+                aria-label="pacakges"
+                selectedKeys={selectedKeys}
+                onSelectionChange={setSelectedKeys}
+                selectionMode={anyUpdateAvailable ? 'multiple' : 'none'}
+                classNames={{wrapper: 'bg-foreground-200 dark:bg-black/50'}}>
+                <TableHeader columns={columns}>
+                  {column => <TableColumn key={column.key}>{column.label}</TableColumn>}
+                </TableHeader>
+                <TableBody items={items}>
+                  {item => (
+                    <TableRow key={item.name}>
+                      {columnKey => (
+                        <TableCell>
+                          <Body_TableItem
+                            item={item}
+                            removed={removed}
+                            updated={updated}
+                            pythonPath={pythonPath}
+                            columnKey={columnKey as string}
+                          />
+                        </TableCell>
+                      )}
+                    </TableRow>
+                  )}
+                </TableBody>
+              </Table>
+            </>
           ) : (
             <Result
               extra={

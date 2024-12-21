@@ -1,12 +1,12 @@
 import {Button, Dropdown, DropdownItem, DropdownMenu, DropdownSection, DropdownTrigger} from '@nextui-org/react';
 import {Dispatch, SetStateAction, useEffect, useState} from 'react';
 
-import {FilterKeys} from '../../../../../cross/extension/CrossExtTypes';
-import {Filter_Icon} from '../../../../src/assets/icons/SvgIcons/SvgIcons1';
+import {FilterKeys} from '../../../../../../cross/extension/CrossExtTypes';
+import {Filter_Icon} from '../../../../../src/assets/icons/SvgIcons/SvgIcons1';
 
 type Props = {setSelectedFilter: Dispatch<SetStateAction<FilterKeys>>};
 
-export default function FilterButton({setSelectedFilter}: Props) {
+export default function Header_FilterButton({setSelectedFilter}: Props) {
   const [selectedKeys, setSelectedKeys] = useState<Set<FilterKeys>>(new Set(['all']));
 
   useEffect(() => {

@@ -16,7 +16,6 @@ import {Dispatch, ReactNode, RefObject, SetStateAction, useEffect, useState} fro
 
 import {RequirementData} from '../../../../../../cross/extension/CrossExtTypes';
 import {useAppState} from '../../../../../src/App/Redux/App/AppReducer';
-import {Trash_Icon} from '../../../../../src/assets/icons/SvgIcons/SvgIcons3';
 
 type TableReq = {
   key: string;

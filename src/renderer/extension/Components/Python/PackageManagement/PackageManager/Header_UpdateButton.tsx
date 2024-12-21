@@ -2,10 +2,10 @@ import {Button, ButtonGroup, Dropdown, DropdownItem, DropdownMenu, DropdownTrigg
 import {isEmpty} from 'lodash';
 import {useEffect, useMemo, useState} from 'react';
 
-import {SitePackages_Info} from '../../../../../cross/extension/CrossExtTypes';
-import {Download2_Icon} from '../../../../src/assets/icons/SvgIcons/SvgIcons1';
-import {Magnifier_Icon} from '../../../../src/assets/icons/SvgIcons/SvgIcons4';
-import {AltArrow_Icon} from '../../SvgIcons';
+import {SitePackages_Info} from '../../../../../../cross/extension/CrossExtTypes';
+import {Download2_Icon} from '../../../../../src/assets/icons/SvgIcons/SvgIcons1';
+import {Magnifier_Icon} from '../../../../../src/assets/icons/SvgIcons/SvgIcons4';
+import {AltArrow_Icon} from '../../../SvgIcons';
 
 type Props = {
   packagesUpdate: SitePackages_Info[];
@@ -16,7 +16,7 @@ type Props = {
   isReqAvailable: boolean;
 };
 
-export default function UpdateButton({
+export default function Header_UpdateButton({
   packagesUpdate,
   updateAll,
   isUpdating,

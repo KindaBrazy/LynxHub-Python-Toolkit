@@ -16,9 +16,9 @@ import {Dispatch, ReactNode, SetStateAction, useEffect, useState} from 'react';
 import {FilterKeys, PackageInfo, SitePackages_Info} from '../../../../../../cross/extension/CrossExtTypes';
 import {Add_Icon, Circle_Icon} from '../../../../../src/assets/icons/SvgIcons/SvgIcons1';
 import pIpc from '../../../../PIpc';
-import FilterButton from '../FilterButton';
 import RequirementsBtn from '../Requirements/RequirementsModalButton';
-import UpdateButton from '../UpdateButton';
+import Header_FilterButton from './Header_FilterButton';
+import Header_UpdateButton from './Header_UpdateButton';
 
 const WARNING_KEY = 'python-package-warning';
 
@@ -122,7 +122,7 @@ export default function PackageManagerHeader({
         ) : (
           <span>{title}</span>
         )}
-        <FilterButton setSelectedFilter={setSelectedFilter} />
+        <Header_FilterButton setSelectedFilter={setSelectedFilter} />
       </div>
       {!isEmpty(packages) && (
         <Input
@@ -138,7 +138,7 @@ export default function PackageManagerHeader({
       )}
       <div className="gap-x-2 flex items-center w-full mt-2">
         {isValidPython && (
-          <UpdateButton
+          <Header_UpdateButton
             updateAll={updateAll}
             isUpdating={isUpdating}
             isReqAvailable={isReqAvailable}
