@@ -98,14 +98,9 @@ export default function RequirementsManager({requirements, setRequirements, scro
             </Select>
           ),
           actions: (
-            <Button
-              size="sm"
-              color="danger"
-              variant="flat"
-              startContent={<Trash_Icon />}
-              onPress={() => handleDeleteRequirement(req.name)}
-              isIconOnly
-            />
+            <Button size="sm" color="danger" variant="flat" onPress={() => handleDeleteRequirement(req.name)}>
+              Remove
+            </Button>
           ),
         };
       }),
