@@ -54,7 +54,7 @@ export default function Body_TableItem({item, pythonPath, updated, removed, colu
   }, [item]);
 
   if (columnKey === 'actions') {
-    return isSelected ? null : (
+    return (
       <Popover
         size="sm"
         color="danger"

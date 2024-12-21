@@ -11,7 +11,7 @@ import {
   TableRow,
 } from '@nextui-org/react';
 import {Result} from 'antd';
-import {isEmpty} from 'lodash';
+import {cloneDeep, isEmpty} from 'lodash';
 import {OverlayScrollbarsComponent} from 'overlayscrollbars-react';
 import {Dispatch, SetStateAction, useMemo} from 'react';
 
@@ -65,6 +65,8 @@ export default function PackageManagerBody({
     return data;
   }, [anyUpdateAvailable]);
 
+  const refreshedItems = useMemo(() => cloneDeep(items), [items, selectedKeys]);
+
   return (
     <ModalBody
       options={{
@@ -99,7 +101,7 @@ export default function PackageManagerBody({
                 <TableHeader columns={columns}>
                   {column => <TableColumn key={column.key}>{column.label}</TableColumn>}
                 </TableHeader>
-                <TableBody items={items}>
+                <TableBody items={refreshedItems}>
                   {item => (
                     <TableRow key={item.name}>
                       {columnKey => (
