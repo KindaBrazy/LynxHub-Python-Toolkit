@@ -1,4 +1,5 @@
 import {Pagination} from '@nextui-org/react';
+import {isEmpty} from 'lodash';
 import {Dispatch, SetStateAction, useEffect, useMemo, useState} from 'react';
 
 import {PackageInfo} from '../../../../../../cross/extension/CrossExtTypes';
@@ -9,14 +10,10 @@ type Props = {
 };
 
 export default function Footer_TablePage({searchData, setItems}: Props) {
-  const [page, setPage] = useState<number>(0);
+  const [page, setPage] = useState<number>(1);
   const [rowsPerPage] = useState(50);
 
   const pages = useMemo(() => Math.ceil(searchData.length / rowsPerPage), [searchData, rowsPerPage]);
-
-  useEffect(() => {
-    setPage(1);
-  }, [pages]);
 
   useEffect(() => {
     const start = (page - 1) * rowsPerPage;
@@ -27,7 +24,9 @@ export default function Footer_TablePage({searchData, setItems}: Props) {
 
   return (
     <div className="flex w-full justify-center">
-      <Pagination size="lg" page={page} total={pages} color="secondary" onChange={setPage} isCompact showControls />
+      {!isEmpty(searchData) && (
+        <Pagination size="lg" page={page} total={pages} color="secondary" onChange={setPage} isCompact showControls />
+      )}
     </div>
   );
 }
