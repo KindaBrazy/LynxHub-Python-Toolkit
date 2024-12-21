@@ -128,6 +128,7 @@ export default function PackageManagerHeader({
         <Input
           size="sm"
           radius="sm"
+          type="search"
           className="pt-1"
           value={searchValue}
           startContent={<Circle_Icon />}

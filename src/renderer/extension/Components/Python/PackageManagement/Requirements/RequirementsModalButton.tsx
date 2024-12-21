@@ -169,6 +169,7 @@ export default function RequirementsBtn({id, projectPath, setIsReqAvailable}: Pr
             {!isEmpty(requirements) && (
               <Input
                 size="sm"
+                type="search"
                 variant="faded"
                 value={searchValue}
                 onValueChange={setSearchValue}
