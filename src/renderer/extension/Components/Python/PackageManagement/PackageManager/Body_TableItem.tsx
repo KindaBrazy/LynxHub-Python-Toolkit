@@ -56,35 +56,37 @@ export default function Body_TableItem({item, pythonPath, updated, removed, colu
 
   if (columnKey === 'actions') {
     return (
-      <Popover
-        size="sm"
-        color="danger"
-        key="uninstall"
-        placement="left"
-        isOpen={isOpenPopover}
-        className="max-w-[15rem]"
-        onOpenChange={setIsOpenPopover}
-        showArrow>
-        <PopoverTrigger>
-          <Button size="sm" color="danger" variant="flat" isLoading={isUninstalling}>
-            {isUninstalling ? 'Removing...' : 'Remove'}
-          </Button>
-        </PopoverTrigger>
-        <PopoverContent>
-          <div className="p-2 space-y-2">
-            <span>
-              Are you sure you want to <span className="font-bold"> remove {item.name}</span>?
-            </span>
-            <Button size="sm" onPress={remove} fullWidth>
-              Remove
+      !isUpdating && (
+        <Popover
+          size="sm"
+          color="danger"
+          key="uninstall"
+          placement="left"
+          isOpen={isOpenPopover}
+          className="max-w-[15rem]"
+          onOpenChange={setIsOpenPopover}
+          showArrow>
+          <PopoverTrigger>
+            <Button size="sm" color="danger" variant="flat" isLoading={isUninstalling}>
+              {isUninstalling ? 'Removing...' : 'Remove'}
             </Button>
-          </div>
-        </PopoverContent>
-      </Popover>
+          </PopoverTrigger>
+          <PopoverContent>
+            <div className="p-2 space-y-2">
+              <span>
+                Are you sure you want to <span className="font-bold"> remove {item.name}</span>?
+              </span>
+              <Button size="sm" onPress={remove} fullWidth>
+                Remove
+              </Button>
+            </div>
+          </PopoverContent>
+        </Popover>
+      )
     );
   } else if (columnKey === 'update') {
     return (
-      !isSelected &&
+      (!isSelected || !isUninstalling) &&
       item.updateVersion && (
         <Button size="sm" key="update" variant="flat" color="success" onPress={update} isLoading={isUpdating}>
           {isUpdating ? 'Updating...' : 'Update'}
