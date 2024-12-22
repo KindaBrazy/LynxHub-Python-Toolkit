@@ -44,7 +44,7 @@ export default function Header_UpdateButton({
       all: checkingUpdates ? 'Checking (All)...' : `Check for Updates (All)`,
       req: checkingUpdates ? 'Checking (Requirements)...' : `Check for Updates (Requirements)`,
     };
-  }, [isUpdating, packagesUpdate]);
+  }, [checkingUpdates]);
 
   const selectedOptionValue = useMemo(() => {
     return Array.from(selectedOption)[0];
