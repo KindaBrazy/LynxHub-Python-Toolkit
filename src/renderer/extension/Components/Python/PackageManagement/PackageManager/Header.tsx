@@ -1,5 +1,4 @@
 import {
-  Alert,
   Button,
   ButtonGroup,
   Divider,
@@ -12,16 +11,16 @@ import {
 } from '@nextui-org/react';
 import {message} from 'antd';
 import {isEmpty} from 'lodash';
-import {Dispatch, ReactNode, SetStateAction, useEffect, useState} from 'react';
+import {Dispatch, ReactNode, SetStateAction, useState} from 'react';
 
 import {FilterKeys, PackageInfo, SitePackages_Info} from '../../../../../../cross/extension/CrossExtTypes';
+import rendererIpc from '../../../../../src/App/RendererIpc';
 import {Add_Icon, Circle_Icon} from '../../../../../src/assets/icons/SvgIcons/SvgIcons1';
 import pIpc from '../../../../PIpc';
+import {Checklist_Icon} from '../../../SvgIcons';
 import RequirementsBtn from '../Requirements/RequirementsModalButton';
 import Header_FilterButton from './Header_FilterButton';
 import Header_UpdateButton from './Header_UpdateButton';
-
-const WARNING_KEY = 'python-package-warning';
 
 type Props = {
   title: string;
@@ -61,7 +60,6 @@ export default function PackageManagerHeader({
   setSelectedFilter,
   selectedKeys,
 }: Props) {
-  const [showWarning, setShowWarning] = useState<boolean>(true);
   const [isUpdating, setIsUpdating] = useState<boolean>(false);
   const [installing, setInstalling] = useState<boolean>(false);
 
@@ -69,15 +67,6 @@ export default function PackageManagerHeader({
   const [installPopover, setInstallPopover] = useState<boolean>(false);
 
   const [isReqAvailable, setIsReqAvailable] = useState<boolean>(false);
-
-  useEffect(() => {
-    setShowWarning(localStorage.getItem(WARNING_KEY) !== 'false');
-  }, []);
-
-  const onWarningClose = () => {
-    setShowWarning(false);
-    localStorage.setItem(WARNING_KEY, 'false');
-  };
 
   const update = () => {
     setIsUpdating(true);
@@ -115,6 +104,8 @@ export default function PackageManagerHeader({
         setInstalling(false);
       });
   };
+
+  const installReq = () => {};
 
   return (
     <ModalHeader className="bg-foreground-200 dark:bg-LynxRaisinBlack items-center flex-col gap-y-2">
@@ -155,12 +146,7 @@ export default function PackageManagerHeader({
         <ButtonGroup size="sm" fullWidth>
           {isValidPython && (
             <>
-              <Popover
-                size="sm"
-                radius="sm"
-                placement="bottom"
-                isOpen={installPopover}
-                onOpenChange={setInstallPopover}>
+              <Popover radius="sm" placement="bottom" isOpen={installPopover} onOpenChange={setInstallPopover}>
                 <PopoverTrigger>
                   <Button radius="sm" variant="solid" isLoading={installing} startContent={!installing && <Add_Icon />}>
                     {installing ? <span>Installing {installPackageName}...</span> : <span>Install Package</span>}
@@ -170,7 +156,7 @@ export default function PackageManagerHeader({
                   <span className="font-bold text-[11pt]">Install Python Package</span>
                   <Divider />
                   <Input
-                    size="sm"
+                    className="min-w-64"
                     label="Package Name:"
                     value={installPackageName}
                     placeholder="Enter package name..."
@@ -179,6 +165,15 @@ export default function PackageManagerHeader({
                   <div className="w-full">
                     <Button size="sm" onPress={installPackage} fullWidth>
                       Install
+                    </Button>
+                  </div>
+                  <Divider />
+                  <div className="w-full">
+                    <Button
+                      className="w-full"
+                      onPress={installReq}
+                      startContent={<Checklist_Icon className="size-3.5" />}>
+                      Install Requirements File
                     </Button>
                   </div>
                 </PopoverContent>
@@ -191,15 +186,6 @@ export default function PackageManagerHeader({
 
         {isValidPython && actionButtons?.map(ActionButton => ActionButton)}
       </div>
-      <Alert
-        color="warning"
-        className="w-full"
-        title="Update Warning"
-        isVisible={showWarning}
-        onClose={onWarningClose}
-        description="Be carfull updating packagin may break usage, for WebUI's use card menu to manage packages."
-        showIcon
-      />
     </ModalHeader>
   );
 }
