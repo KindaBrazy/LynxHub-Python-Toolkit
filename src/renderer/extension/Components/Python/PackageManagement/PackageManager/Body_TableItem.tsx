@@ -1,6 +1,6 @@
-import {Button, Popover, PopoverContent, PopoverTrigger, Spinner} from '@nextui-org/react';
+import {Button, Popover, PopoverContent, PopoverTrigger} from '@nextui-org/react';
 import {message} from 'antd';
-import {ReactNode, useCallback, useState} from 'react';
+import {useCallback, useState} from 'react';
 
 import {PackageInfo} from '../../../../../../cross/extension/CrossExtTypes';
 import {getUpdateVersionColor} from '../../../../../../cross/extension/CrossExtUtils';
@@ -17,11 +17,12 @@ type Props = {
 };
 
 export default function Body_TableItem({item, pythonPath, updated, removed, columnKey, isSelected}: Props) {
-  const [loading, setLoading] = useState<ReactNode>(undefined);
+  const [isUpdating, setIsUpdating] = useState<boolean>(false);
+  const [isUninstalling, setIsUninstalling] = useState<boolean>(false);
   const [isOpenPopover, setIsOpenPopover] = useState<boolean>(false);
 
   const update = useCallback(() => {
-    setLoading(<Spinner size="sm" color="success" label="Updating..." />);
+    setIsUpdating(true);
     pIpc
       .updatePackage(pythonPath, item.name)
       .then(() => {
@@ -32,13 +33,13 @@ export default function Body_TableItem({item, pythonPath, updated, removed, colu
         message.error(`Something goes wrong when updating ${item.name}`);
       })
       .finally(() => {
-        setLoading(undefined);
+        setIsUpdating(false);
       });
   }, [item]);
 
-  const uninstall = useCallback(() => {
+  const remove = useCallback(() => {
     setIsOpenPopover(false);
-    setLoading(<Spinner size="sm" color="danger" label="Uninstalling..." />);
+    setIsUninstalling(true);
     pIpc
       .uninstallPackage(pythonPath, item.name)
       .then(() => {
@@ -49,7 +50,7 @@ export default function Body_TableItem({item, pythonPath, updated, removed, colu
         message.error(`Something goes wrong when removing ${item.name}`);
       })
       .finally(() => {
-        setLoading(undefined);
+        setIsUninstalling(false);
       });
   }, [item]);
 
@@ -65,8 +66,8 @@ export default function Body_TableItem({item, pythonPath, updated, removed, colu
         onOpenChange={setIsOpenPopover}
         showArrow>
         <PopoverTrigger>
-          <Button size="sm" color="danger" variant="flat">
-            Remove
+          <Button size="sm" color="danger" variant="flat" isLoading={isUninstalling}>
+            {isUninstalling ? 'Removing...' : 'Remove'}
           </Button>
         </PopoverTrigger>
         <PopoverContent>
@@ -74,7 +75,7 @@ export default function Body_TableItem({item, pythonPath, updated, removed, colu
             <span>
               Are you sure you want to <span className="font-bold"> remove {item.name}</span>?
             </span>
-            <Button size="sm" onPress={uninstall} fullWidth>
+            <Button size="sm" onPress={remove} fullWidth>
               Remove
             </Button>
           </div>
@@ -85,15 +86,14 @@ export default function Body_TableItem({item, pythonPath, updated, removed, colu
     return (
       !isSelected &&
       item.updateVersion && (
-        <Button size="sm" key="update" variant="flat" color="success" onPress={update}>
-          Update
+        <Button size="sm" key="update" variant="flat" color="success" onPress={update} isLoading={isUpdating}>
+          {isUpdating ? 'Updating...' : 'Update'}
         </Button>
       )
     );
   } else if (columnKey === 'name') {
     return (
       <>
-        {loading && <div className="inset-0 bg-black/50 z-10 absolute flex justify-center items-center">{loading}</div>}
         <div className="flex flex-col">
           <div className="text-bold text-sm capitalize">
             <div className="flex flex-row items-center gap-x-1 text-medium font-semibold">
