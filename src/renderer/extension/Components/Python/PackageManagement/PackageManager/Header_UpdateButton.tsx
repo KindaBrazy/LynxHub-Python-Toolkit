@@ -67,7 +67,8 @@ export default function Header_UpdateButton({
       onPress={update}
       className="!min-w-40"
       isLoading={isUpdating}
-      startContent={!isUpdating && <Download2_Icon />}>
+      startContent={!isUpdating && <Download2_Icon />}
+      isDisabled={selectedKeys !== 'all' && selectedKeys.size === 0}>
       {isUpdating ? (
         <span>Updating...</span>
       ) : (

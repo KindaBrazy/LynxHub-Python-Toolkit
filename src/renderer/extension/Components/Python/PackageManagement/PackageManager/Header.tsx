@@ -125,7 +125,7 @@ export default function PackageManagerHeader({
         ) : (
           <span>{title}</span>
         )}
-        <Header_FilterButton setSelectedFilter={setSelectedFilter} />
+        <Header_FilterButton setSelectedFilter={setSelectedFilter} updateAvailable={!isEmpty(packagesUpdate)} />
       </div>
       {!isEmpty(packages) && (
         <Input
