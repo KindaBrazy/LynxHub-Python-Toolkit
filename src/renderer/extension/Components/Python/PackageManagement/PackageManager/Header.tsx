@@ -81,7 +81,8 @@ export default function PackageManagerHeader({
 
   const update = () => {
     setIsUpdating(true);
-    const updateList = packagesUpdate.map(item => item.name);
+    const updateList =
+      selectedKeys === 'all' ? packagesUpdate.map(item => item.name) : (Array.from(selectedKeys) as string[]);
     pIpc
       .updateAllPackages(pythonPath, updateList)
       .then(() => {
