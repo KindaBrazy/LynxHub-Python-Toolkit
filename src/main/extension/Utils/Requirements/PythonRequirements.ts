@@ -14,6 +14,7 @@ export async function readRequirements(filePath: string): Promise<RequirementDat
   try {
     const data = readFileSync(filePath, 'utf-8');
 
+    // noinspection UnnecessaryLocalVariableJS
     const requirements = data
       .split('\n')
       .filter(line => line.trim() !== '' && !line.startsWith('#'))
