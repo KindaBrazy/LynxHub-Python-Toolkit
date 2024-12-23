@@ -4,8 +4,8 @@ import {join} from 'node:path';
 import {compact, filter, isEmpty, isNil} from 'lodash';
 
 import {VenvCreateOptions, VenvInfo} from '../../../../cross/extension/CrossExtTypes';
-import {openDialog} from '../../../Utilities/Utils';
 import {storageManager} from '../../lynxExtension';
+import {openDialogExt} from '../PythonUtils';
 import {getVenvInfo, isVenvDirectory} from './VenvUtils';
 
 const STORE_VENVS_ID = 'python-venvs-locations';
@@ -52,7 +52,7 @@ export async function getVenvs() {
 
 export async function locateVenv() {
   try {
-    const selectedFolder = await openDialog({properties: ['openDirectory']});
+    const selectedFolder = await openDialogExt({properties: ['openDirectory']});
 
     if (!selectedFolder) {
       return false;

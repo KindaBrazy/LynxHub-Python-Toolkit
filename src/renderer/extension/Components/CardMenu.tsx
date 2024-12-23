@@ -1,5 +1,6 @@
 import {Button} from '@nextui-org/react';
 import {isNil} from 'lodash';
+import {observer} from 'mobx-react-lite';
 import {useCallback, useEffect, useMemo, useState} from 'react';
 
 import {useCardData} from '../../src/App/Components/Cards/CardsDataManager';
@@ -14,7 +15,7 @@ type Props = {
   addMenu: (sections: DropDownSectionType[], index?: number) => void;
 };
 
-export default function CardMenu({addMenu}: Props) {
+const CardMenu = observer(({addMenu}: Props) => {
   const [isOpen, setIsOpen] = useState<boolean>(false);
   const {setMenuIsOpen, title, id} = useCardData();
   const webUI = useInstalledCard(id);
@@ -108,4 +109,6 @@ export default function CardMenu({addMenu}: Props) {
       title={`${title} Dependencies`}
     />
   );
-}
+});
+
+export default CardMenu;

@@ -5,8 +5,8 @@ import {readdirSync, readFileSync, statSync, writeFileSync} from 'graceful-fs';
 import {join} from 'path';
 
 import {IdPathType, RequirementData} from '../../../../cross/extension/CrossExtTypes';
-import {openDialog} from '../../../Utilities/Utils';
 import {storageManager} from '../../lynxExtension';
+import {openDialogExt} from '../PythonUtils';
 
 const REQ_STORE_ID = 'reqs_path';
 
@@ -154,7 +154,7 @@ export function getReqPath(id: string) {
 
 export async function installPythonPackages(pythonPath: string): Promise<void> {
   return new Promise((resolve, reject) => {
-    openDialog({properties: ['openFile']}).then(reqPath => {
+    openDialogExt({properties: ['openFile']}).then(reqPath => {
       if (reqPath && isValidRequirementsFile(reqPath)) {
         const installCommand = `${pythonPath} -m pip install -r "${reqPath}"`;
 

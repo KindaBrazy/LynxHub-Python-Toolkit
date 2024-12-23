@@ -4,8 +4,8 @@ import {join} from 'node:path';
 import {promises} from 'graceful-fs';
 
 import {IdPathType, SitePackages_Info} from '../../../../cross/extension/CrossExtTypes';
-import {openDialog} from '../../../Utilities/Utils';
 import {storageManager} from '../../lynxExtension';
+import {openDialogExt} from '../PythonUtils';
 import {isVenvDirectory} from '../VirtualEnv/VenvUtils';
 
 const AI_VENV_STORE_KEYS = 'ai_venvs';
@@ -135,7 +135,7 @@ export async function uninstallPythonPackage(pythonExePath: string, packageName:
 
 export async function locateAIVenv(id: string) {
   try {
-    const selectedFolder = await openDialog({properties: ['openDirectory']});
+    const selectedFolder = await openDialogExt({properties: ['openDirectory']});
 
     if (!selectedFolder) {
       throw 'Folder not selected.';

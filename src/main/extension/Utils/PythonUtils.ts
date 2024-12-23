@@ -1,6 +1,7 @@
 import {join, resolve} from 'node:path';
 
 import {exec} from 'child_process';
+import {BrowserWindow, dialog, OpenDialogOptions, OpenDialogReturnValue} from 'electron';
 import {existsSync, promises, readdirSync, statSync} from 'graceful-fs';
 import {isNil} from 'lodash';
 import {promisify} from 'util';
@@ -111,4 +112,18 @@ export async function getSitePackagesCount(pythonPath: string): Promise<number> 
       }
     });
   });
+}
+
+export async function openDialogExt(options: OpenDialogOptions): Promise<string | undefined> {
+  try {
+    const mainWindow = BrowserWindow.getFocusedWindow()!;
+    const result: OpenDialogReturnValue = await (mainWindow
+      ? dialog.showOpenDialog(mainWindow, options)
+      : dialog.showOpenDialog(options));
+    if (result.filePaths) return result.filePaths[0];
+    return undefined;
+  } catch (error) {
+    console.log('util:openDialog -> No valid directory or file selected');
+    throw error;
+  }
 }
