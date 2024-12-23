@@ -154,7 +154,7 @@ export function getReqPath(id: string) {
 export async function installPythonPackages(pythonPath: string): Promise<void> {
   return new Promise((resolve, reject) => {
     openDialog({properties: ['openFile']}).then(reqPath => {
-      if (reqPath) {
+      if (reqPath && isValidRequirementsFile(reqPath)) {
         const installCommand = `${pythonPath} -m pip install -r "${reqPath}"`;
 
         console.log(`Executing command: ${installCommand}`);
