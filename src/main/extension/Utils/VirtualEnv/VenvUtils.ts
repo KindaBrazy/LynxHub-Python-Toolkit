@@ -16,7 +16,6 @@ async function getPythonVersion(venvPath: string): Promise<string> {
         return;
       }
       if (stderr) {
-        // Python version might be printed to stderr (e.g., Python 2)
         const versionMatch = stderr.match(/Python (\d+\.\d+(\.\d+)?)/);
         if (versionMatch) {
           resolve(versionMatch[1]);
@@ -36,14 +35,11 @@ async function getPythonVersion(venvPath: string): Promise<string> {
 
 export async function getVenvInfo(venvPath: string): Promise<VenvInfo | null> {
   try {
-    // 1. Get Python Version
     const pythonVersion = await getPythonVersion(venvPath);
 
-    // 2. Get Number of Site Packages
-    const pythonExecutable = join(venvPath, 'Scripts', 'python.exe'); // For Windows
+    const pythonExecutable = join(venvPath, 'Scripts', 'python.exe');
     const sitePackagesCount = await getSitePackagesCount(pythonExecutable);
 
-    // 3. Get Folder Name
     const folderName = basename(venvPath);
 
     return {
@@ -67,13 +63,13 @@ export function isVenvDirectory(dirPath: string): boolean {
 
     const pythonExePath = join(dirPath, 'Scripts', 'python.exe');
     if (!existsSync(pythonExePath)) {
-      return false; // Must have python.exe
+      return false;
     }
 
     const libPath = join(dirPath, 'Lib');
     return existsSync(libPath);
   } catch (err) {
     console.error(`Error checking if directory is a venv: ${err}`);
-    return false; // Assume not a venv on error
+    return false;
   }
 }

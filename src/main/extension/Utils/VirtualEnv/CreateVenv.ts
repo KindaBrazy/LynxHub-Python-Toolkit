@@ -74,7 +74,7 @@ export default function createPythonVenv(options: VenvCreateOptions): boolean {
   const venvPath = join(destinationFolder, venvName);
 
   const result = spawnSync(pythonPath, ['-m', 'venv', venvPath], {
-    stdio: 'inherit', // Show output in the console
+    stdio: 'inherit',
   });
 
   if (result.error) {

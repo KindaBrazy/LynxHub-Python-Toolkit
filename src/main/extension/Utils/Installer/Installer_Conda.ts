@@ -4,10 +4,6 @@ import {BrowserWindow} from 'electron';
 
 import {pythonChannels} from '../../../../cross/extension/CrossExtTypes';
 
-/**
- * List all available Python versions in Conda for Windows.
- * @returns Promise<string[]> - A promise that resolves with an array of available Python versions.
- */
 export async function listAvailablePythons(): Promise<string[]> {
   return new Promise((resolve, reject) => {
     exec('conda search python --info', (error, stdout, stderr) => {
@@ -29,19 +25,11 @@ export async function listAvailablePythons(): Promise<string[]> {
         }
       }
 
-      // Remove duplicates and resolve
       resolve([...new Set(versions)]);
     });
   });
 }
 
-/**
- * Create a new Conda environment with the specified name and install the specified Python version,
- * logging progress by percentage.
- * @param envName - The name of the new Conda environment.
- * @param pythonVersion - The Python version to install in the new environment (e.g., "3.9.7").
- * @returns Promise<void> - Resolves when the environment is created and Python is installed.
- */
 export const createCondaEnv = async (envName: string, pythonVersion: string): Promise<void> => {
   return new Promise((resolve, reject) => {
     const window = BrowserWindow.getFocusedWindow()!;
@@ -50,9 +38,8 @@ export const createCondaEnv = async (envName: string, pythonVersion: string): Pr
 
     process.stdout.on('data', data => {
       const output = data.toString();
-      console.log(output); // Optional: log raw output for debugging
+      console.log(output);
 
-      // Extract progress percentage from the output using regex
       const progressMatch = output.match(/\|\s+\d{1,3}%/);
       if (progressMatch) {
         const progress = progressMatch[0].match(/\d{1,3}/);

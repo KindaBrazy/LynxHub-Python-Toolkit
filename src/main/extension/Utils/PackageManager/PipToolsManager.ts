@@ -12,7 +12,6 @@ async function getLatestVersion(pythonPath: string, name: string) {
   let latestVersion: string;
 
   try {
-    // Get the latest version
     const latestVersionResult = await execAsync(
       `${pythonPath} -m pip install ${name}==random --disable-pip-version-check`,
       {

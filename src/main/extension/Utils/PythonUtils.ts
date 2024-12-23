@@ -105,7 +105,7 @@ export async function getSitePackagesCount(pythonPath: string): Promise<number> 
 
       try {
         const packages = JSON.parse(stdout);
-        resolve(packages.length); // Number of packages
+        resolve(packages.length);
       } catch (parseError) {
         reject(new Error(`Could not parse pip list output: ${parseError}`));
       }
