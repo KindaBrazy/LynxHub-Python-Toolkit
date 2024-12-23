@@ -81,6 +81,7 @@ export const pythonChannels = {
 
   getPackagesInfo: 'get-packages-info',
   installPackage: 'install-package',
+  installPackageReq: 'install-package-req',
   uninstallPackage: 'uninstall-package',
 
   getPackagesUpdateInfo: 'get-packages-update-info',

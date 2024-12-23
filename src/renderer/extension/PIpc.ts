@@ -26,6 +26,7 @@ const pIpc = {
     ipc.invoke(pythonChannels.updateAllPackages, pythonPath, packages),
   installPackage: (pythonPath: string, packageName: string): Promise<string> =>
     ipc.invoke(pythonChannels.installPackage, pythonPath, packageName),
+  installPackageReq: (pythonPath: string): Promise<void> => ipc.invoke(pythonChannels.installPackageReq, pythonPath),
   updatePackage: (pythonPath: string, packageName: string): Promise<string> =>
     ipc.invoke(pythonChannels.updatePackage, pythonPath, packageName),
   uninstallPackage: (pythonPath: string, packageName: string): Promise<string> =>

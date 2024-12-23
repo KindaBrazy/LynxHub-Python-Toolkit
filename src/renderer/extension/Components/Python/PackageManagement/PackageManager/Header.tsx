@@ -14,7 +14,6 @@ import {isEmpty} from 'lodash';
 import {Dispatch, ReactNode, SetStateAction, useState} from 'react';
 
 import {FilterKeys, PackageInfo, SitePackages_Info} from '../../../../../../cross/extension/CrossExtTypes';
-import rendererIpc from '../../../../../src/App/RendererIpc';
 import {Add_Icon, Circle_Icon} from '../../../../../src/assets/icons/SvgIcons/SvgIcons1';
 import pIpc from '../../../../PIpc';
 import {Checklist_Icon} from '../../../SvgIcons';
@@ -105,7 +104,23 @@ export default function PackageManagerHeader({
       });
   };
 
-  const installReq = () => {};
+  const installReq = () => {
+    setInstallPopover(false);
+    setInstalling(true);
+    pIpc
+      .installPackageReq(pythonPath)
+      .then(() => {
+        message.success(`Requirements packages installed successfully.`);
+        refresh();
+      })
+      .catch(e => {
+        console.error(e);
+        message.error(`Something goes wrong when installing requirements packages.`);
+      })
+      .finally(() => {
+        setInstalling(false);
+      });
+  };
 
   return (
     <ModalHeader className="bg-foreground-200 dark:bg-LynxRaisinBlack items-center flex-col gap-y-2">

@@ -29,6 +29,7 @@ import {checkPackageUpdates} from './Utils/PackageManager/PipToolsManager';
 import {
   findValidRequirementsFiles,
   getReqPath,
+  installPythonPackages,
   readRequirements,
   saveRequirements,
   setReqPath,
@@ -92,5 +93,7 @@ export async function initialExtension(lynxApi: ExtensionMainApi, utils: MainExt
       (_, pythonPath: string, reqFile: string, currentPackages: SitePackages_Info[]) =>
         checkPackageUpdates(pythonPath, reqFile, currentPackages),
     );
+
+    ipcMain.handle(pythonChannels.installPackageReq, (_, pythonPath: string) => installPythonPackages(pythonPath));
   });
 }
