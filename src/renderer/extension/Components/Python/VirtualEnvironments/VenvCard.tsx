@@ -94,6 +94,7 @@ export default function VenvCard({title, installedPackages, pythonVersion, folde
   return (
     <>
       <PackageManagerModal
+        size="3xl"
         id={pythonPath}
         pythonPath={pythonPath}
         isOpen={packageManagerOpen}

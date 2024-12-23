@@ -91,6 +91,7 @@ export default function InstalledCard({python, diskUsage, maxDiskValue, updateDe
   return (
     <div className="grow relative">
       <PackageManagerModal
+        size="3xl"
         id={python.installPath}
         isOpen={packageManagerOpen}
         pythonPath={python.installPath}
