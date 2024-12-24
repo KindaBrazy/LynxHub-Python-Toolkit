@@ -1,9 +1,8 @@
 import {Button} from '@nextui-org/react';
 import {isNil} from 'lodash';
-import {observer} from 'mobx-react-lite';
 import {useCallback, useEffect, useMemo, useState} from 'react';
 
-import {CardsDataManager, useCardData} from '../../src/App/Components/Cards/CardsDataManager';
+import {CardsDataManager} from '../../src/App/Components/Cards/CardsDataManager';
 import {DropDownSectionType} from '../../src/App/Utils/Types';
 import {useInstalledCard} from '../../src/App/Utils/UtilHooks';
 import {Refresh3_Icon} from '../../src/assets/icons/SvgIcons/SvgIcons4';
@@ -14,27 +13,27 @@ import UIProvider from './UIProvider';
 
 type Props = {
   addMenu: (sections: DropDownSectionType[], index?: number) => void;
+  context: CardsDataManager;
 };
 
-const CardMenu = observer(({addMenu}: Props) => {
+const CardMenu = ({addMenu, context}: Props) => {
   const [isOpen, setIsOpen] = useState<boolean>(false);
-  const cardData = useCardData() as CardsDataManager | null;
-  const webUI = useInstalledCard(cardData?.id || '');
+  const webUI = useInstalledCard(context.id);
 
   const [pythonPath, setPythonPath] = useState<string>('');
   const [isLocatingVenv, setIsLocatingVenv] = useState<boolean>(false);
 
   const onPress = useCallback(() => {
     setIsOpen(true);
-    if (cardData) cardData.setMenuIsOpen(false);
-  }, [cardData]);
+    context.setMenuIsOpen(false);
+  }, []);
 
   useEffect(() => {
-    if (isOpen && cardData) {
-      pIpc.getAIVenv(cardData.id).then(folder => {
+    if (isOpen) {
+      pIpc.getAIVenv(context.id).then(folder => {
         if (isNil(folder)) {
           pIpc
-            .findAIVenv(cardData.id, webUI?.dir)
+            .findAIVenv(context.id, webUI?.dir)
             .then(result => {
               setPythonPath(result);
             })
@@ -44,7 +43,7 @@ const CardMenu = observer(({addMenu}: Props) => {
         }
       });
     }
-  }, [isOpen, webUI, cardData]);
+  }, [isOpen, webUI]);
 
   useEffect(() => {
     const sections = [
@@ -67,10 +66,10 @@ const CardMenu = observer(({addMenu}: Props) => {
   }, []);
 
   const locateVenv = () => {
-    if (cardData) {
+    if (context) {
       setIsLocatingVenv(true);
       pIpc
-        .locateAIVenv(cardData.id)
+        .locateAIVenv(context.id)
         .then(result => {
           setPythonPath(result);
         })
@@ -100,20 +99,20 @@ const CardMenu = observer(({addMenu}: Props) => {
 
   return (
     <UIProvider>
-    <PackageManagerModal
-      size="4xl"
-      isOpen={isOpen}
-      setIsOpen={setIsOpen}
-      id={cardData?.id || ''}
-      pythonPath={pythonPath}
-      locateVenv={locateVenv}
-      projectPath={webUI?.dir}
-      isLocating={isLocatingVenv}
-      actionButtons={actionButtons}
-      title={`${cardData?.title} Dependencies`}
-    />
+      <PackageManagerModal
+        size="4xl"
+        isOpen={isOpen}
+        id={context.id}
+        setIsOpen={setIsOpen}
+        pythonPath={pythonPath}
+        locateVenv={locateVenv}
+        projectPath={webUI?.dir}
+        isLocating={isLocatingVenv}
+        actionButtons={actionButtons}
+        title={`${context.title} Dependencies`}
+      />
     </UIProvider>
   );
-});
+};
 
 export default CardMenu;
