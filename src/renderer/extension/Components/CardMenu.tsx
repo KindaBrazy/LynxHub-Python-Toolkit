@@ -10,6 +10,7 @@ import {Refresh3_Icon} from '../../src/assets/icons/SvgIcons/SvgIcons4';
 import pIpc from '../PIpc';
 import PackageManagerModal from './Python/PackageManagement/PackageManager/PackageManagerModal';
 import {Python_Icon} from './SvgIcons';
+import UIProvider from './UIProvider';
 
 type Props = {
   addMenu: (sections: DropDownSectionType[], index?: number) => void;
@@ -98,6 +99,7 @@ const CardMenu = observer(({addMenu}: Props) => {
   }, [pythonPath, isLocatingVenv]);
 
   return (
+    <UIProvider>
     <PackageManagerModal
       size="4xl"
       isOpen={isOpen}
@@ -110,6 +112,7 @@ const CardMenu = observer(({addMenu}: Props) => {
       actionButtons={actionButtons}
       title={`${cardData?.title} Dependencies`}
     />
+    </UIProvider>
   );
 });
 
