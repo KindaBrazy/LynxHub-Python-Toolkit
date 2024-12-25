@@ -86,7 +86,8 @@ export default function Body_TableItem({item, pythonPath, updated, removed, colu
     );
   } else if (columnKey === 'update') {
     return (
-      (!isSelected || !isUninstalling) &&
+      !isSelected &&
+      !isUninstalling &&
       item.updateVersion && (
         <Button size="sm" key="update" variant="flat" color="success" onPress={update} isLoading={isUpdating}>
           {isUpdating ? 'Updating...' : 'Update'}
