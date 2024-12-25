@@ -1,6 +1,6 @@
-import {ReactElement} from 'react';
+import {ReactElement, SVGProps} from 'react';
 
-import {SvgProps} from '../../src/assets/icons/SvgIconsContainer';
+type SvgProps = SVGProps<SVGSVGElement>;
 
 export function Python_Color_Icon(props: SvgProps): ReactElement {
   return (
