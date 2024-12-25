@@ -222,6 +222,7 @@ export default function PackageManagerModal({
           id={id}
           title={title}
           packages={packages}
+          visibleItems={items}
           allUpdated={allUpdated}
           pythonPath={pythonPath}
           refresh={getPackageList}
@@ -230,6 +231,7 @@ export default function PackageManagerModal({
           selectedKeys={selectedKeys}
           isValidPython={isValidPython}
           actionButtons={actionButtons}
+          selectedFilter={selectedFilter}
           packagesUpdate={packagesUpdate}
           setSearchValue={setSearchValue}
           checkForUpdates={checkForUpdates}

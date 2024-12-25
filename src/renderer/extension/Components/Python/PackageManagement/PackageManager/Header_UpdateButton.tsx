@@ -2,7 +2,7 @@ import {Button, ButtonGroup, Dropdown, DropdownItem, DropdownMenu, DropdownTrigg
 import {isEmpty} from 'lodash';
 import {useEffect, useMemo, useState} from 'react';
 
-import {SitePackages_Info} from '../../../../../../cross/extension/CrossExtTypes';
+import {FilterKeys, PackageInfo, SitePackages_Info} from '../../../../../../cross/extension/CrossExtTypes';
 import {Download2_Icon} from '../../../../../src/assets/icons/SvgIcons/SvgIcons1';
 import {Magnifier_Icon} from '../../../../../src/assets/icons/SvgIcons/SvgIcons4';
 import {AltArrow_Icon} from '../../../SvgIcons';
@@ -15,6 +15,8 @@ type Props = {
   checkingUpdates: boolean;
   isReqAvailable: boolean;
   selectedKeys: Selection;
+  visibleItems: PackageInfo[];
+  selectedFilter: FilterKeys;
 };
 
 export default function Header_UpdateButton({
@@ -25,6 +27,8 @@ export default function Header_UpdateButton({
   checkingUpdates,
   isReqAvailable,
   selectedKeys,
+  visibleItems,
+  selectedFilter,
 }: Props) {
   const [selectedOption, setSelectedOption] = useState(new Set([isReqAvailable ? 'req' : 'all']));
 
@@ -75,7 +79,7 @@ export default function Header_UpdateButton({
         <span>
           Update{' '}
           {selectedKeys === 'all' ? (
-            <span>All ({packagesUpdate.length})</span>
+            <span>All ({selectedFilter === 'all' ? packagesUpdate.length : visibleItems.length})</span>
           ) : (
             <span>Selected ({selectedKeys.size})</span>
           )}

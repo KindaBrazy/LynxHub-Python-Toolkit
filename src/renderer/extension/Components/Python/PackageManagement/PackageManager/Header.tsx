@@ -38,7 +38,9 @@ type Props = {
   id: string;
   projectPath?: string;
   setSelectedFilter: Dispatch<SetStateAction<FilterKeys>>;
+  selectedFilter: FilterKeys;
   selectedKeys: Selection;
+  visibleItems: PackageInfo[];
 };
 
 export default function PackageManagerHeader({
@@ -57,7 +59,9 @@ export default function PackageManagerHeader({
   id,
   projectPath,
   setSelectedFilter,
+  selectedFilter,
   selectedKeys,
+  visibleItems,
 }: Props) {
   const [isUpdating, setIsUpdating] = useState<boolean>(false);
   const [installing, setInstalling] = useState<boolean>(false);
@@ -69,8 +73,13 @@ export default function PackageManagerHeader({
 
   const update = () => {
     setIsUpdating(true);
-    const updateList =
-      selectedKeys === 'all' ? packagesUpdate.map(item => item.name) : (Array.from(selectedKeys) as string[]);
+    let updateList: string[];
+    if (selectedKeys === 'all') {
+      updateList =
+        selectedFilter === 'all' ? packagesUpdate.map(item => item.name) : visibleItems.map(item => item.name);
+    } else {
+      updateList = Array.from(selectedKeys) as string[];
+    }
     pIpc
       .updateAllPackages(pythonPath, updateList)
       .then(() => {
@@ -151,7 +160,9 @@ export default function PackageManagerHeader({
           <Header_UpdateButton
             update={update}
             isUpdating={isUpdating}
+            visibleItems={visibleItems}
             selectedKeys={selectedKeys}
+            selectedFilter={selectedFilter}
             isReqAvailable={isReqAvailable}
             packagesUpdate={packagesUpdate}
             checkForUpdates={checkForUpdates}
