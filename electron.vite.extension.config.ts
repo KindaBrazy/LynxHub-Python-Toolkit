@@ -7,7 +7,11 @@ import {resolve} from 'path';
 
 export default defineConfig({
   main: {
-    plugins: [externalizeDepsPlugin({exclude: ['which', 'graceful-fs', 'electron-dl']})],
+    plugins: [
+      externalizeDepsPlugin({
+        exclude: ['which', 'graceful-fs', 'electron-dl', 'semver'],
+      }),
+    ],
     build: {
       rollupOptions: {
         input: resolve('src/main/extension/lynxExtension.ts'),
@@ -24,7 +28,16 @@ export default defineConfig({
         exposes: {
           Extension: 'src/renderer/extension/Extension.tsx',
         },
-        shared: ['react', 'react-dom', 'react-redux', 'react-router'],
+        shared: {
+          antd: {generate: false},
+          react: {generate: false},
+          lodash: {generate: false},
+          'react-dom': {generate: false},
+          'react-redux': {generate: false},
+          'react-router': {generate: false},
+          'mobx-react-lite': {generate: false},
+          '@nextui-org/react': {generate: false},
+        },
       }),
     ],
     build: {
