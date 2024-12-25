@@ -1,5 +1,6 @@
 import {Button} from '@nextui-org/react';
 import {isNil} from 'lodash';
+import {observer} from 'mobx-react-lite';
 import {useCallback, useEffect, useMemo, useState} from 'react';
 
 import {CardsDataManager} from '../../src/App/Components/Cards/CardsDataManager';
@@ -16,7 +17,7 @@ type Props = {
   context: CardsDataManager;
 };
 
-const CardMenu = ({addMenu, context}: Props) => {
+const CardMenu = observer(({addMenu, context}: Props) => {
   const [isOpen, setIsOpen] = useState<boolean>(false);
   const webUI = useInstalledCard(context.id);
 
@@ -113,6 +114,6 @@ const CardMenu = ({addMenu, context}: Props) => {
       />
     </UIProvider>
   );
-};
+});
 
 export default CardMenu;
