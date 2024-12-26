@@ -94,7 +94,7 @@ export async function removeDir(dir: string): Promise<void> {
 
 export async function getSitePackagesCount(pythonPath: string): Promise<number> {
   return new Promise((resolve, reject) => {
-    exec(`"${pythonPath}" -m pip list --format=json`, (error, stdout, stderr) => {
+    exec(`"${pythonPath}" -m pip list --format=json --disable-pip-version-check`, (error, stdout, stderr) => {
       if (error) {
         reject(error);
         return;
