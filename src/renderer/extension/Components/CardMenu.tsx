@@ -92,7 +92,7 @@ const CardMenu = observer(({addMenu, context}: Props) => {
             className="!min-w-32"
             isLoading={isLocatingVenv}
             startContent={!isLocatingVenv && <Refresh3_Icon />}>
-            {!isLocatingVenv && 'Relocate'}
+            {!isLocatingVenv && 'Change Venv'}
           </Button>,
         ]
       : [];
