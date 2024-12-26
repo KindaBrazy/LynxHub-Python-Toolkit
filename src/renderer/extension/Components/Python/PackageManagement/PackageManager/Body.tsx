@@ -85,7 +85,7 @@ export default function PackageManagerBody({
             <Spinner
               size="lg"
               className="mb-4"
-              label="Loading packages data, please wait..."
+              label="Please wait, loading package data..."
               classNames={{circle2: 'border-b-[#ffe66e]', circle1: 'border-b-[#ffe66e] '}}
             />
           ) : isValidPython ? (
@@ -125,11 +125,11 @@ export default function PackageManagerBody({
             <Result
               extra={
                 <Button color="primary" key="locate_venv" onPress={locateVenv} isLoading={isLocating}>
-                  {!isLocating && 'Locate Venv'}
+                  {!isLocating && 'Locate Environment'}
                 </Button>
               }
-              subTitle="Also you can create virtual environment with Python Toolkit in tools page"
-              title={`Could not find any venv for selected AI, Please locate a folder if you changed the venv folder.`}
+              subTitle="You can create a virtual environment using the Python Toolkit on the Tools page."
+              title="Could not find a virtual environment. Please locate the venv folder if it was moved or renamed."
             />
           )}
         </div>

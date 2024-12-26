@@ -41,14 +41,14 @@ export default function InstallerModal({isOpen, closeModal, refresh, installed}:
         hideCloseButton>
         <ModalContent className="overflow-hidden">
           <ModalHeader className="bg-foreground-100 justify-center items-center flex-col gap-y-2">
-            <span>Python Installer</span>
+            <span>Install a New Python Version</span>
             <Tabs
               variant="underlined"
               onSelectionChange={setCurrentTab}
               selectedKey={currentTab.toString()}
               classNames={{cursor: '!bg-[#ffe66e]'}}>
-              <Tab key="official" title="Official" />
-              <Tab key="conda" title="Conda" />
+              <Tab key="official" title="Official Python Releases" />
+              <Tab key="conda" title="Conda Environments" />
             </Tabs>
           </ModalHeader>
           <ModalBody className="pt-4 pb-0 px-0 scrollbar-hide">

@@ -97,7 +97,7 @@ export default function RequirementsBtn({id, projectPath, setIsReqAvailable}: Pr
         if (success) {
           message.success('Requirements saved successfully!');
         } else {
-          message.error('Error saving requirements.');
+          message.error('Failed to save requirements.');
         }
         setIsSaving(false);
       });
@@ -132,7 +132,7 @@ export default function RequirementsBtn({id, projectPath, setIsReqAvailable}: Pr
         <ModalContent className="overflow-hidden">
           <ModalHeader className="bg-foreground-200 dark:bg-LynxRaisinBlack flex flex-col gap-y-2">
             <div className="flex flex-row justify-between">
-              <span>Requirements</span>
+              <span>Manage Requirements</span>
               {!isEmpty(filePath) && (
                 <div className="flex gap-x-2">
                   <div>
@@ -163,7 +163,7 @@ export default function RequirementsBtn({id, projectPath, setIsReqAvailable}: Pr
                 startContent={<File_Icon />}
                 className="shrink-0 text-[10pt] justify-between"
                 fullWidth>
-                {filePath || 'Select or Create file...'}
+                {filePath || 'Choose or Create requirements file...'}
               </Button>
             </div>
             {!isEmpty(requirements) && (
@@ -173,7 +173,7 @@ export default function RequirementsBtn({id, projectPath, setIsReqAvailable}: Pr
                 variant="faded"
                 value={searchValue}
                 onValueChange={setSearchValue}
-                placeholder="Search for packages..."
+                placeholder="Search requirements..."
                 startContent={<Circle_Icon className="size-4" />}
               />
             )}
@@ -184,10 +184,10 @@ export default function RequirementsBtn({id, projectPath, setIsReqAvailable}: Pr
                 <Result
                   extra={
                     <Button color="primary" key="create_req_file" onPress={openFilePath}>
-                      Select or Create file
+                      Choose or Create requirements file
                     </Button>
                   }
-                  title="Please select or create a Requirements file to get started."
+                  title="Select or create a requirements file to continue."
                 />
               </div>
             ) : isEmpty(requirements) ? (
@@ -195,8 +195,8 @@ export default function RequirementsBtn({id, projectPath, setIsReqAvailable}: Pr
                 <Empty
                   description={
                     <span>
-                      The <span className="font-bold">{filePath.split('\\').pop()}</span> file is empty, Please click on
-                      `Add` button above to add new condition.
+                      The file &#34;{filePath.split('\\').pop()}&#34; is empty. Add requirements using the &#34;Add&#34;
+                      button.
                     </span>
                   }
                 />
@@ -218,7 +218,7 @@ export default function RequirementsBtn({id, projectPath, setIsReqAvailable}: Pr
         variant="solid"
         onPress={() => setIsOpen(true)}
         startContent={<Checklist_Icon className="size-3.5" />}>
-        Requirements
+        Manage Requirements
       </Button>
     </>
   );

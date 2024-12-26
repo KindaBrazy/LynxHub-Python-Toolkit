@@ -59,9 +59,9 @@ export default function VenvCreator({installedPythons, refresh, isLoadingPythons
       if (result) {
         refresh();
         setIsOpen(false);
-        message.success('Environment Created successfully');
+        message.success(`Python environment "${envName}" created successfully.`);
       } else {
-        message.warning('Something goes wrong to create environment');
+        message.error('Failed to create Python environment. Please try again.');
       }
 
       setIsCreating(false);
@@ -77,14 +77,14 @@ export default function VenvCreator({installedPythons, refresh, isLoadingPythons
           isLoading={isLoadingPythons}
           isDisabled={isEmpty(installedPythons)}
           startContent={!isLoadingPythons && <Add_Icon />}>
-          {isLoadingPythons ? 'Loading Pythons...' : 'Create Environments'}
+          {isLoadingPythons ? 'Loading Pythons...' : 'New Environment'}
         </Button>
       </PopoverTrigger>
       <PopoverContent>
         {titleProps => (
           <div className="pt-4 pb-2 px-2">
             <p className="font-bold" {...titleProps}>
-              Virtual Environment Creation
+              Create New Virtual Environment
             </p>
             <div className="flex flex-col gap-y-4 py-2">
               <Divider />
@@ -94,7 +94,7 @@ export default function VenvCreator({installedPythons, refresh, isLoadingPythons
                 spellCheck={false}
                 label="Environment Name"
                 onValueChange={setEnvName}
-                placeholder="Enter env name..."
+                placeholder="e.g., my_env"
               />
               <Select
                 size="sm"
@@ -103,9 +103,9 @@ export default function VenvCreator({installedPythons, refresh, isLoadingPythons
                 selectionMode="single"
                 items={installedPythons}
                 selectedKeys={selectedVersion}
+                placeholder="Choose a version..."
                 // @ts-ignore-next-line
-                onSelectionChange={setSelectedVersion}
-                placeholder="Select python version...">
+                onSelectionChange={setSelectedVersion}>
                 {item => (
                   <SelectItem key={item.version}>
                     {`${item.version} | ${capitalize(item.installationType)}` +
@@ -120,7 +120,7 @@ export default function VenvCreator({installedPythons, refresh, isLoadingPythons
                 className="justify-between"
                 endContent={<MenuDots_Icon />}
                 startContent={<OpenFolder_Icon />}>
-                {targetFolder || 'Select destination folder'}
+                {targetFolder || 'Choose Destination Folder'}
               </Button>
               <Divider />
               <Button
@@ -130,7 +130,7 @@ export default function VenvCreator({installedPythons, refresh, isLoadingPythons
                 onPress={createEnv}
                 isLoading={isCreating}
                 isDisabled={disabledCreate}>
-                Create
+                Create Environment
               </Button>
             </div>
           </div>

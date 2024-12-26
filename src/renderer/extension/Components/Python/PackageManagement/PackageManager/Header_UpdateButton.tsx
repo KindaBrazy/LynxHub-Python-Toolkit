@@ -38,8 +38,8 @@ export default function Header_UpdateButton({
 
   const descriptionsMap = useMemo(() => {
     return {
-      all: 'Check for all packages updates.',
-      req: 'Check for packages updates based on Requirements.',
+      all: 'Check all installed packages for updates.',
+      req: `Check for updates based on your project's requirements file.`,
     };
   }, []);
 

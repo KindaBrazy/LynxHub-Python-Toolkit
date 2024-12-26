@@ -102,13 +102,7 @@ export default function InstallerConda({refresh, installed, closeModal, isOpen, 
   };
 
   if (isCondaInstalled === undefined) {
-    return (
-      <CircularProgress
-        size="lg"
-        className="mb-4 self-center"
-        label="Please wait. Checking for Conda installation before proceeding..."
-      />
-    );
+    return <CircularProgress size="lg" className="mb-4 self-center" label="Checking for Conda installation..." />;
   } else if (!isCondaInstalled) {
     return (
       <Result
@@ -120,13 +114,13 @@ export default function InstallerConda({refresh, installed, closeModal, isOpen, 
             onPress={() => window.open('https://docs.conda.io/projects/conda/en/latest/user-guide/install/index.html')}
             isExternal
             showAnchorIcon>
-            Official Website
+            Conda Official Website
           </Link>
         }
         status="warning"
         className="text-center"
-        title="Conda is Not Installed"
-        subTitle="Conda is required. Please install it from the official website."
+        title="Conda Installation Not Found"
+        subTitle="To proceed, please install Conda from the official website."
       />
     );
   }
@@ -141,7 +135,7 @@ export default function InstallerConda({refresh, installed, closeModal, isOpen, 
             value={inputValue}
             onValueChange={setInputValue}
             startContent={<Circle_Icon />}
-            placeholder="Search for python version..."
+            placeholder="Refresh available Conda Python versions"
           />
           <Tooltip title="Refresh from server">
             <Button
@@ -168,15 +162,15 @@ export default function InstallerConda({refresh, installed, closeModal, isOpen, 
           <Progress
             value={percentage}
             className="my-4 px-2"
-            label={`Installing Python v${installingVersion}...`}
             isIndeterminate={percentage === 0 || percentage === 100}
+            label={`Installing Conda Python v${installingVersion}...`}
             showValueLabel
           />
         ) : loadingList ? (
           <Spinner
             size="lg"
             className="justify-self-center my-4"
-            label="Loading available conda pythons..."
+            label="Loading available Conda Python versions..."
             classNames={{circle2: 'border-b-[#ffe66e]', circle1: 'border-b-[#ffe66e] '}}
           />
         ) : (
@@ -193,7 +187,7 @@ export default function InstallerConda({refresh, installed, closeModal, isOpen, 
                     <PopoverContent>
                       <div className="px-2 py-1 space-y-2 text-center">
                         <Input
-                          onKeyUp={event => {
+                          onKeyUp={(event: any) => {
                             if (event.key === 'Enter') {
                               installPython(item);
                             }
@@ -201,7 +195,7 @@ export default function InstallerConda({refresh, installed, closeModal, isOpen, 
                           size="sm"
                           value={envName}
                           onValueChange={setEnvName}
-                          placeholder="Environment name..."
+                          placeholder="Enter Conda environment name..."
                         />
                         <Button size="sm" onPress={() => installPython(item)} fullWidth>
                           Install v{item}

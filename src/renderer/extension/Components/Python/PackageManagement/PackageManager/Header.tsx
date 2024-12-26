@@ -16,7 +16,6 @@ import {Dispatch, ReactNode, SetStateAction, useState} from 'react';
 import {FilterKeys, PackageInfo, SitePackages_Info} from '../../../../../../cross/extension/CrossExtTypes';
 import {Add_Icon, Circle_Icon} from '../../../../../src/assets/icons/SvgIcons/SvgIcons1';
 import pIpc from '../../../../PIpc';
-import {Checklist_Icon} from '../../../SvgIcons';
 import RequirementsBtn from '../Requirements/RequirementsModalButton';
 import Header_FilterButton from './Header_FilterButton';
 import Header_UpdateButton from './Header_UpdateButton';
@@ -83,11 +82,11 @@ export default function PackageManagerHeader({
     pIpc
       .updateAllPackages(pythonPath, updateList)
       .then(() => {
-        message.success(`All ${updateList.length} packages updated.`);
+        message.success(`Successfully updated all selected packages (${updateList.length} total).`);
         allUpdated();
       })
       .catch(() => {
-        message.error(`Something goes wrong when updating.`);
+        message.error(`Failed to update packages.`);
       })
       .finally(() => {
         setIsUpdating(false);
@@ -100,13 +99,13 @@ export default function PackageManagerHeader({
     pIpc
       .installPackage(pythonPath, installPackageName)
       .then(() => {
-        message.success(`${installPackageName} installed successfully.`);
+        message.success(`Package "${installPackageName}" installed successfully.`);
         setInstallPackageName('');
         refresh();
       })
       .catch(e => {
         console.error(e);
-        message.error(`Something goes wrong when installing ${installPackageName}.`);
+        message.error(`Failed to install package "${installPackageName}".`);
       })
       .finally(() => {
         setInstalling(false);
@@ -119,12 +118,12 @@ export default function PackageManagerHeader({
     pIpc
       .installPackageReq(pythonPath)
       .then(() => {
-        message.success(`Requirements packages installed successfully.`);
+        message.success(`Packages from requirements file installed successfully.`);
         refresh();
       })
       .catch(e => {
         console.error(e);
-        message.error(`Something goes wrong when installing requirements packages.`);
+        message.error(`Failed to install packages from requirements file.`);
       })
       .finally(() => {
         setInstalling(false);
@@ -183,10 +182,10 @@ export default function PackageManagerHeader({
                   <Divider />
                   <Input
                     className="min-w-64"
-                    label="Package Name:"
                     value={installPackageName}
-                    placeholder="Enter package name..."
+                    label="Enter Package Name:"
                     onValueChange={setInstallPackageName}
+                    placeholder="e.g., requests or e.g., pandas"
                   />
                   <div className="w-full">
                     <Button size="sm" onPress={installPackage} fullWidth>
@@ -195,11 +194,8 @@ export default function PackageManagerHeader({
                   </div>
                   <Divider />
                   <div className="w-full">
-                    <Button
-                      className="w-full"
-                      onPress={installReq}
-                      startContent={<Checklist_Icon className="size-3.5" />}>
-                      Install Requirements File
+                    <Button className="w-full" onPress={installReq}>
+                      Install from Requirements
                     </Button>
                   </div>
                 </PopoverContent>

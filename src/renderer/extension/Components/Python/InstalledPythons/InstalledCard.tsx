@@ -101,7 +101,7 @@ export default function InstalledCard({python, diskUsage, maxDiskValue, updateDe
         <div className="absolute size-full dark:bg-black/50 bg-white/50 z-10 flex justify-center items-center">
           <div className=" dark:bg-black/80 bg-white/80 p-4 rounded-lg flex flex-col space-y-2">
             <Spin />
-            <span>Uninstalling, please wait...</span>
+            <span>Uninstalling... Please wait.</span>
           </div>
         </div>
       )}
@@ -127,7 +127,7 @@ export default function InstalledCard({python, diskUsage, maxDiskValue, updateDe
                     variant="light"
                     color="secondary"
                     classNames={{content: '!font-semibold'}}>
-                    Default
+                    System Default
                   </Chip>
                 )}
               </div>
@@ -162,7 +162,7 @@ export default function InstalledCard({python, diskUsage, maxDiskValue, updateDe
                     key="package-manager"
                     onPress={packageManager}
                     startContent={<Packages_Icon className="size-4" />}>
-                    Package Manager
+                    Manage Packages
                   </DropdownItem>
                 </DropdownMenu>
               </Dropdown>
@@ -183,9 +183,15 @@ export default function InstalledCard({python, diskUsage, maxDiskValue, updateDe
                 <PopoverContent>
                   <div className="p-2 space-y-2">
                     {python.installationType === 'conda' ? (
-                      <span>Delete entire selected Conda environment and all packages? This cannot be undone.</span>
+                      <span>
+                        {`Confirm deletion of the entire Conda environment "${python.condaName}" and` +
+                          ` all associated packages. This action is irreversible.`}
+                      </span>
                     ) : (
-                      <span>Uninstall Python and delete all packages? This action is permanent.</span>
+                      <span>
+                        {`Confirm uninstallation of Python version ${python.version} and deletion of all` +
+                          ` associated packages. This action is irreversible.`}
+                      </span>
                     )}
                     <Button size="sm" onPress={uninstall} fullWidth>
                       Uninstall
@@ -205,9 +211,9 @@ export default function InstalledCard({python, diskUsage, maxDiskValue, updateDe
           <div className="w-full justify-between flex flex-row">
             <div className="flex flex-row gap-x-1 items-center">
               <Packages_Icon className="size-3" />
-              <span>Packages:</span>
+              <span>Installed Packages:</span>
             </div>
-            <span>{python.packages} Installed</span>
+            <span>{python.packages}</span>
           </div>
           <Progress
             label={

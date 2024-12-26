@@ -100,9 +100,9 @@ export default function InstallerOfficial({refresh, installed, closeModal, isOpe
             value={inputValue}
             onValueChange={setInputValue}
             startContent={<Circle_Icon />}
-            placeholder="Search for python version..."
+            placeholder="Search for Python version to install..."
           />
-          <Tooltip title="Refresh from server">
+          <Tooltip title="Refresh available Python versions">
             <Button
               size="sm"
               variant="flat"
@@ -127,7 +127,7 @@ export default function InstallerOfficial({refresh, installed, closeModal, isOpe
           installStage === 'installing' ? (
             <Progress
               className="my-4 px-2"
-              label={`Installing Python v${installingVersion?.version}, Please wait...`}
+              label={`Installing Python v${installingVersion?.version} ...`}
               isIndeterminate
             />
           ) : (
@@ -135,8 +135,8 @@ export default function InstallerOfficial({refresh, installed, closeModal, isOpe
               className="my-4 px-2"
               value={(downloadProgress?.percentage || 0.1) * 100}
               classNames={{label: '!text-small', value: '!text-small'}}
-              label={`Downloading ${installingVersion?.url.split('/').pop()}, Please wait...`}
-              valueLabel={`${formatSize(downloadProgress?.downloaded)} of ${formatSize(downloadProgress?.total)}`}
+              label={`Downloading ${installingVersion?.url.split('/').pop()} ...`}
+              valueLabel={`${formatSize(downloadProgress?.downloaded)} / ${formatSize(downloadProgress?.total)}`}
               showValueLabel
             />
           )
@@ -144,7 +144,7 @@ export default function InstallerOfficial({refresh, installed, closeModal, isOpe
           <CircularProgress
             size="lg"
             className="justify-self-center my-4"
-            label="Loading available pythons..."
+            label="Loading available Python versions..."
             classNames={{indicator: 'stroke-[#ffe66e]'}}
           />
         ) : (

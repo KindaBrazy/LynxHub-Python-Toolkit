@@ -27,10 +27,10 @@ export default function Body_TableItem({item, pythonPath, updated, removed, colu
       .updatePackage(pythonPath, item.name)
       .then(() => {
         updated(item.name, item.updateVersion!);
-        message.success(`${item.name} updated successfully`);
+        message.success(`Package "${item.name}" updated successfully.`);
       })
       .catch(() => {
-        message.error(`Something goes wrong when updating ${item.name}`);
+        message.error(`Failed to update package "${item.name}".`);
       })
       .finally(() => {
         setIsUpdating(false);
@@ -44,10 +44,10 @@ export default function Body_TableItem({item, pythonPath, updated, removed, colu
       .uninstallPackage(pythonPath, item.name)
       .then(() => {
         removed(item.name);
-        message.success(`${item.name} removed successfully`);
+        message.success(`Package "${item.name}" removed successfully.`);
       })
       .catch(() => {
-        message.error(`Something goes wrong when removing ${item.name}`);
+        message.error(`Failed to remove package "${item.name}".`);
       })
       .finally(() => {
         setIsUninstalling(false);
@@ -73,9 +73,7 @@ export default function Body_TableItem({item, pythonPath, updated, removed, colu
           </PopoverTrigger>
           <PopoverContent>
             <div className="p-2 space-y-2">
-              <span>
-                Are you sure you want to <span className="font-bold"> remove {item.name}</span>?
-              </span>
+              <span>Are you sure you want to remove the package &#34;{item.name}&#34;?</span>
               <Button size="sm" onPress={remove} fullWidth>
                 Remove
               </Button>

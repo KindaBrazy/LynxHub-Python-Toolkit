@@ -66,7 +66,7 @@ export default function Venv({visible, installedPythons, isLoadingPythons}: Prop
         message.success('Environment validated successfully.');
         getVenvs();
       } else {
-        message.error('Somethings goes wrong when validating.');
+        message.error('Failed to validate environment.');
       }
       setIsLocating(false);
     });
@@ -99,8 +99,8 @@ export default function Venv({visible, installedPythons, isLoadingPythons}: Prop
             classNames={{circle2: 'border-b-[#ffe66e]', circle1: 'border-b-[#ffe66e] '}}
           />
         ) : isEmpty(pythonVenvs) ? (
-          <Empty className="my-2" description="No Environments">
-            To get started, create a new virtual environment or locate an existing one using the buttons above.
+          <Empty className="my-2" description="No Environments Yet">
+            Create a new environment or locate an existing one to get started.
           </Empty>
         ) : (
           <>

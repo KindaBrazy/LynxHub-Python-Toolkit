@@ -57,10 +57,11 @@ export default function VenvCard({title, installedPackages, pythonVersion, folde
     rendererIpc.file
       .trashDir(folder)
       .then(() => {
-        message.error(`${title} removed successfully`);
+        message.success(`Environment "${title}" removed successfully.`);
       })
-      .catch(() => {
-        message.error(`Failed to remove ${title}`);
+      .catch(error => {
+        console.error(error);
+        message.error(`Failed to remove environment "${title}".`);
       })
       .finally(() => {
         setIsRemoving(false);
@@ -153,12 +154,9 @@ export default function VenvCard({title, installedPackages, pythonVersion, folde
                 </PopoverTrigger>
                 <PopoverContent>
                   <div className="p-2 space-y-2">
-                    <span>
-                      This will permanently delete the <span className="font-bold">{title}</span> folder and all its
-                      contents. Are you sure you want to proceed?
-                    </span>
+                    <span>{`Permanently delete '${title}' and all its contents? This action cannot be undone.`}</span>
                     <Button size="sm" onPress={remove} fullWidth>
-                      Remove
+                      Yes, Delete
                     </Button>
                   </div>
                 </PopoverContent>
@@ -174,9 +172,9 @@ export default function VenvCard({title, installedPackages, pythonVersion, folde
           <div className="w-full justify-between flex flex-row">
             <div className="flex flex-row gap-x-1 items-center">
               <Packages_Icon className="size-3" />
-              <span>Packages:</span>
+              <span>Installed Packages:</span>
             </div>
-            <span>{installedPackages} Installed</span>
+            <span>{installedPackages}</span>
           </div>
           <div className="w-full justify-between flex flex-row">
             <div className="flex flex-row gap-x-1 items-center">

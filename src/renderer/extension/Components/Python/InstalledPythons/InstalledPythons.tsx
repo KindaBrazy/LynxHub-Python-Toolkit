@@ -111,10 +111,10 @@ export default function InstalledPythons({
         <span className="font-bold">Installed Versions</span>
         <div className="justify-center items-center flex gap-x-2">
           <Button radius="sm" variant="solid" onPress={openInstallModal} startContent={<Add_Icon />}>
-            Install New Version
+            Install Version
           </Button>
           <Button variant="faded" onPress={getInstalledPythons} startContent={<Refresh_Icon />}>
-            Refresh
+            Refresh List
           </Button>
         </div>
       </div>
@@ -125,11 +125,11 @@ export default function InstalledPythons({
         {isLoadingPythons ? (
           <Spinner
             size="lg"
-            label="Searching for installed pythons..."
+            label="Loading Python installations..."
             classNames={{circle2: 'border-b-[#ffe66e]', circle1: 'border-b-[#ffe66e] '}}
           />
         ) : isEmpty(installedPythons) ? (
-          <Empty description="No Python installation detected." />
+          <Empty description={`No Python installations found. Use the "Install Version" button to add one.`} />
         ) : (
           installedPythons.map(python => (
             <InstalledCard
