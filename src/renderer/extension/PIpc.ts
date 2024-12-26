@@ -66,6 +66,7 @@ const pIpc = {
 
   locateAIVenv: (id: string): Promise<string> => ipc.invoke(pythonChannels.locateAIVenv, id),
   getAIVenv: (id: string): Promise<string | undefined> => ipc.invoke(pythonChannels.getAIVenv, id),
+  getAIVenvs: (): Promise<IdPathType[] | undefined> => ipc.invoke(pythonChannels.getAIVenvs),
   findAIVenv: (id: string, folder: string | undefined): Promise<string> =>
     ipc.invoke(pythonChannels.findAIVenv, id, folder),
 

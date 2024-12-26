@@ -17,6 +17,7 @@ import downloadPython from './Utils/Installer/Installer_Official';
 import {
   findAIVenv,
   getAIVenv,
+  getAIVenvs,
   getSitePackagesInfo,
   getSitePackagesUpdates,
   installPythonPackage,
@@ -86,6 +87,7 @@ export async function initialExtension(lynxApi: ExtensionMainApi, utils: MainExt
 
     ipcMain.handle(pythonChannels.locateAIVenv, (_, id: string) => locateAIVenv(id));
     ipcMain.handle(pythonChannels.getAIVenv, (_, id: string) => getAIVenv(id));
+    ipcMain.handle(pythonChannels.getAIVenvs, () => getAIVenvs());
     ipcMain.handle(pythonChannels.findAIVenv, (_, id: string, folder: string | undefined) => findAIVenv(id, folder));
 
     ipcMain.handle(

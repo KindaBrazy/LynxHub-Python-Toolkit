@@ -227,3 +227,7 @@ export function getAIVenv(id: string) {
   const data = storageManager?.getCustomData(AI_VENV_STORE_KEYS) as IdPathType[] | undefined;
   return data?.find(item => item.id === id)?.path;
 }
+
+export function getAIVenvs() {
+  return storageManager?.getCustomData(AI_VENV_STORE_KEYS) as IdPathType[] | undefined;
+}

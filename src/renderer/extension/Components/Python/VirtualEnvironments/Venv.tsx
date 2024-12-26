@@ -104,14 +104,14 @@ export default function Venv({visible, installedPythons, isLoadingPythons}: Prop
           </Empty>
         ) : (
           <>
-            {pythonVenvs.map(venv => (
+            {pythonVenvs.map((venv, index) => (
               <VenvCard
                 title={venv.title}
                 folder={venv.folder}
                 diskUsage={diskUsage}
-                key={`${venv.title}_card`}
                 pythonPath={venv.pythonPath}
                 pythonVersion={venv.pythonVersion}
+                key={`${venv.title}_${index}_card`}
                 installedPackages={venv.installedPackages}
               />
             ))}
