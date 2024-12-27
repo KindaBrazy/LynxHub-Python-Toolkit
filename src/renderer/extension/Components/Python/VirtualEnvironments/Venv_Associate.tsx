@@ -73,12 +73,19 @@ export default function Venv_Associate({pythonPath}: Props) {
       <div className="flex flex-row justify-between w-full">
         <div className="w-full flex flex-row gap-x-1 gap-y-2 items-center flex-wrap">
           {isEmpty(associated) ? (
-            <Chip size="sm" radius="sm" variant="dot" color="default">
+            <Chip size="sm" radius="sm" variant="dot" color="default" className="animate-appearance-in">
               Not Associated
             </Chip>
           ) : (
             associated.map(item => (
-              <Chip size="sm" radius="sm" key={item.id} variant="dot" color="success" onClose={() => remove(item.id)}>
+              <Chip
+                size="sm"
+                radius="sm"
+                key={item.id}
+                variant="dot"
+                color="success"
+                onClose={() => remove(item.id)}
+                className="animate-appearance-in">
                 {item.title}
               </Chip>
             ))
