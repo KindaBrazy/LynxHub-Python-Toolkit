@@ -121,6 +121,7 @@ export default function PackageManagerModal({
 
   const closePackageManager = () => {
     setIsOpen(false);
+    setPackagesUpdate([]);
   };
 
   const checkForUpdates = (type: 'req' | 'normal') => {
