@@ -15,6 +15,7 @@ import detectPythonInstallations from './Utils/Detector';
 import {createCondaEnv, isCondaInstalled, listAvailablePythons} from './Utils/Installer/Installer_Conda';
 import downloadPython from './Utils/Installer/Installer_Official';
 import {
+  addAIVenv,
   findAIVenv,
   getAIVenv,
   getAIVenvs,
@@ -22,6 +23,7 @@ import {
   getSitePackagesUpdates,
   installPythonPackage,
   locateAIVenv,
+  removeAIVenv,
   uninstallPythonPackage,
   updateAllPythonPackages,
   updatePythonPackage,
@@ -87,6 +89,8 @@ export async function initialExtension(lynxApi: ExtensionMainApi, utils: MainExt
 
     ipcMain.handle(pythonChannels.locateAIVenv, (_, id: string) => locateAIVenv(id));
     ipcMain.handle(pythonChannels.getAIVenv, (_, id: string) => getAIVenv(id));
+    ipcMain.on(pythonChannels.addAIVenv, (_, id: string, pythonPath: string) => addAIVenv(id, pythonPath));
+    ipcMain.on(pythonChannels.removeAIVenv, (_, id: string) => removeAIVenv(id));
     ipcMain.handle(pythonChannels.getAIVenvs, () => getAIVenvs());
     ipcMain.handle(pythonChannels.findAIVenv, (_, id: string, folder: string | undefined) => findAIVenv(id, folder));
 

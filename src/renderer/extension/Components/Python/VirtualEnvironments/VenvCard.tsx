@@ -1,6 +1,5 @@
 import {
   Button,
-  Chip,
   Dropdown,
   DropdownItem,
   DropdownMenu,
@@ -9,9 +8,9 @@ import {
   PopoverContent,
   PopoverTrigger,
 } from '@nextui-org/react';
-import {Card, Divider, message, Spin} from 'antd';
+import {Card, message, Spin} from 'antd';
 import {SHA256} from 'crypto-js';
-import {compact, isEmpty, isNil} from 'lodash';
+import {isNil} from 'lodash';
 import {FormEvent, useEffect, useMemo, useState} from 'react';
 
 import {formatSizeMB} from '../../../../../cross/CrossUtils';
@@ -20,10 +19,9 @@ import {MenuDots_Icon} from '../../../../src/assets/icons/SvgIcons/SvgIcons2';
 import {Trash_Icon} from '../../../../src/assets/icons/SvgIcons/SvgIcons3';
 import {OpenFolder_Icon} from '../../../../src/assets/icons/SvgIcons/SvgIcons4';
 import {HardDrive_Icon} from '../../../../src/assets/icons/SvgIcons/SvgIcons5';
-import {allCardsExt} from '../../../DataHolder';
-import pIpc from '../../../PIpc';
 import {Env_Icon, Packages_Icon} from '../../SvgIcons';
 import PackageManagerModal from '../PackageManagement/PackageManager/PackageManagerModal';
+import Venv_Associate from './Venv_Associate';
 
 const TITLE_STORE_KEY = 'title_change_key';
 type StorageItem = {title: string; path: string};
@@ -40,17 +38,6 @@ type Props = {
 export default function VenvCard({title, installedPackages, pythonVersion, folder, diskUsage, pythonPath}: Props) {
   const [popoverUninstaller, setPopoverUninstaller] = useState<boolean>(false);
   const [editedTitle, setEditedTitle] = useState<string>(title);
-
-  const [activeFor, setActiveFor] = useState<string[]>([]);
-
-  useEffect(() => {
-    pIpc.getAIVenvs().then(data => {
-      if (data) {
-        const actives = data.map(item => (item.path === pythonPath ? item.id : null));
-        setActiveFor(compact(actives.map(item => allCardsExt.find(card => card.id === item)?.title)));
-      }
-    });
-  }, [pythonPath]);
 
   useEffect(() => {
     const storedItems: StorageItem[] = JSON.parse(localStorage.getItem(TITLE_STORE_KEY) || '[]');
@@ -197,22 +184,8 @@ export default function VenvCard({title, installedPackages, pythonVersion, folde
             </div>
             {isNil(size) ? <Spin size="small" /> : <span>{formatSizeMB(size || 0)}</span>}
           </div>
-          {!isEmpty(activeFor) && (
-            <>
-              <Divider variant="dashed" className="!my-0">
-                <div className="flex flex-row items-center gap-x-2">
-                  <span>Associated AI</span>
-                </div>
-              </Divider>
-              <div className="w-full flex flex-row gap-x-1 gap-y-2 items-center flex-wrap">
-                {activeFor.map(id => (
-                  <Chip key={id} size="sm" radius="sm" variant="dot" color="success">
-                    {id}
-                  </Chip>
-                ))}
-              </div>
-            </>
-          )}
+
+          <Venv_Associate pythonPath={pythonPath} />
         </div>
       </Card>
     </>

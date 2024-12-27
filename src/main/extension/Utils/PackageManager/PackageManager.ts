@@ -195,12 +195,9 @@ async function findVenvFolder(dirPath: string): Promise<string | null> {
 function updateAIVenvStorage(data: IdPathType) {
   const existingData = storageManager?.getCustomData(AI_VENV_STORE_KEYS) as IdPathType[] | undefined;
 
-  let result: IdPathType[] = [];
-  if (existingData) {
-    result = existingData.map(item => {
-      return item.id === data.id ? data : item;
-    });
-  } else {
+  const result = existingData ? existingData.map(item => (item.id === data.id ? data : item)) : [];
+
+  if (!existingData || !existingData.some(item => item.id === data.id)) {
     result.push(data);
   }
 
@@ -230,4 +227,19 @@ export function getAIVenv(id: string) {
 
 export function getAIVenvs() {
   return storageManager?.getCustomData(AI_VENV_STORE_KEYS) as IdPathType[] | undefined;
+}
+
+export function addAIVenv(id: string, pythonPath: string) {
+  updateAIVenvStorage({id, path: pythonPath});
+}
+
+export function removeAIVenv(id: string) {
+  const existingData = storageManager?.getCustomData(AI_VENV_STORE_KEYS) as IdPathType[] | undefined;
+
+  if (existingData) {
+    storageManager?.setCustomData(
+      AI_VENV_STORE_KEYS,
+      existingData.filter(item => item.id !== id),
+    );
+  }
 }

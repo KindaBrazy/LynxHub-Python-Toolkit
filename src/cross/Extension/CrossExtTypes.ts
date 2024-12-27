@@ -98,6 +98,8 @@ export const pythonChannels = {
 
   locateAIVenv: 'locate-ai-venv',
   getAIVenv: 'get-ai-venv',
+  addAIVenv: 'add-ai-venv',
+  removeAIVenv: 'remove-ai-venv',
   getAIVenvs: 'get-ai-venvs',
   findAIVenv: 'find-ai-venv',
 };
