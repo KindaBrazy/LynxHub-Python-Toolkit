@@ -32,8 +32,13 @@ export default function PythonToolkitModal({isOpen, setIsOpen}: ModalProps) {
       classNames={{backdrop: '!top-10', wrapper: '!top-10 pb-8'}}
       hideCloseButton>
       <ModalContent className="overflow-hidden">
-        <ModalHeader>
-          <Tabs color="primary" onSelectionChange={setCurrentTab} selectedKey={currentTab.toString()} fullWidth>
+        <ModalHeader className="bg-foreground-100">
+          <Tabs
+            color="primary"
+            onSelectionChange={setCurrentTab}
+            selectedKey={currentTab.toString()}
+            classNames={{tabList: 'bg-foreground-200'}}
+            fullWidth>
             <Tab key="installation" title="Installations" />
             <Tab key="venv" title="Virtual Environments" />
           </Tabs>
@@ -54,8 +59,8 @@ export default function PythonToolkitModal({isOpen, setIsOpen}: ModalProps) {
           />
         </ModalBody>
         <Divider />
-        <ModalFooter>
-          <Button color="warning" variant="faded" onPress={onClose} fullWidth>
+        <ModalFooter className="bg-foreground-100">
+          <Button size="sm" variant="flat" color="warning" onPress={onClose} fullWidth>
             Close
           </Button>
         </ModalFooter>
