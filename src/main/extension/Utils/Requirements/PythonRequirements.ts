@@ -1,12 +1,8 @@
-import {spawn} from 'node:child_process';
-import {dirname} from 'node:path';
-
 import {readdirSync, readFileSync, statSync, writeFileSync} from 'graceful-fs';
 import {join} from 'path';
 
 import {IdPathType, RequirementData} from '../../../../cross/extension/CrossExtTypes';
 import {storageManager} from '../../lynxExtension';
-import {openDialogExt} from '../PythonUtils';
 
 const REQ_STORE_ID = 'reqs_path';
 
@@ -150,43 +146,4 @@ export function setReqPath(data: IdPathType) {
 export function getReqPath(id: string) {
   const data = storageManager?.getCustomData(REQ_STORE_ID) as IdPathType[] | undefined;
   return data?.find(item => item.id === id)?.path;
-}
-
-export async function installPythonPackages(pythonPath: string): Promise<void> {
-  return new Promise((resolve, reject) => {
-    openDialogExt({properties: ['openFile']}).then(reqPath => {
-      if (reqPath && isValidRequirementsFile(reqPath)) {
-        const installCommand = `${pythonPath} -m pip install -r "${reqPath}"`;
-
-        console.log(`Executing command: ${installCommand}`);
-
-        const installProcess = spawn(installCommand, {
-          shell: true,
-          stdio: 'inherit',
-          env: {
-            ...process.env,
-            PYTHONPATH: dirname(pythonPath),
-          },
-        });
-
-        installProcess.on('close', code => {
-          if (code === 0) {
-            console.log('Python packages installed successfully.');
-            resolve();
-          } else {
-            const errorMessage = `Failed to install Python packages. Exit code: ${code}`;
-            console.error(errorMessage);
-            reject(new Error(errorMessage));
-          }
-        });
-
-        installProcess.on('error', err => {
-          console.error('Error during Python package installation:', err);
-          reject(err);
-        });
-      } else {
-        reject('No req file selected.');
-      }
-    });
-  });
 }

@@ -24,9 +24,8 @@ const pIpc = {
     ipc.invoke(pythonChannels.getPackagesUpdateInfo, pythonPath),
   updateAllPackages: (pythonPath: string, packages: string[]): Promise<string> =>
     ipc.invoke(pythonChannels.updateAllPackages, pythonPath, packages),
-  installPackage: (pythonPath: string, packageName: string): Promise<string> =>
-    ipc.invoke(pythonChannels.installPackage, pythonPath, packageName),
-  installPackageReq: (pythonPath: string): Promise<void> => ipc.invoke(pythonChannels.installPackageReq, pythonPath),
+  installPackage: (pythonPath: string, command: string): Promise<string> =>
+    ipc.invoke(pythonChannels.installPackage, pythonPath, command),
   updatePackage: (pythonPath: string, packageName: string): Promise<string> =>
     ipc.invoke(pythonChannels.updatePackage, pythonPath, packageName),
   uninstallPackage: (pythonPath: string, packageName: string): Promise<string> =>
@@ -77,6 +76,8 @@ const pIpc = {
     reqFile: string,
     currentPackages: SitePackages_Info[],
   ): Promise<SitePackages_Info[]> => ipc.invoke(pythonChannels.getUpdatesReq, pythonPath, reqFile, currentPackages),
+
+  readFile: (): Promise<string> => ipc.invoke(pythonChannels.readFile),
 };
 
 export default pIpc;

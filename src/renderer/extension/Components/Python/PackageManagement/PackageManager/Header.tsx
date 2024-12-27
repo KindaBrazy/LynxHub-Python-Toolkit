@@ -1,23 +1,14 @@
-import {
-  Button,
-  ButtonGroup,
-  Divider,
-  Input,
-  ModalHeader,
-  Popover,
-  PopoverContent,
-  PopoverTrigger,
-  Selection,
-} from '@nextui-org/react';
+import {ButtonGroup, Input, ModalHeader, Selection} from '@nextui-org/react';
 import {message} from 'antd';
 import {isEmpty} from 'lodash';
 import {Dispatch, ReactNode, SetStateAction, useState} from 'react';
 
 import {FilterKeys, PackageInfo, SitePackages_Info} from '../../../../../../cross/extension/CrossExtTypes';
-import {Add_Icon, Circle_Icon} from '../../../../../src/assets/icons/SvgIcons/SvgIcons1';
+import {Circle_Icon} from '../../../../../src/assets/icons/SvgIcons/SvgIcons1';
 import pIpc from '../../../../PIpc';
 import RequirementsBtn from '../Requirements/RequirementsModalButton';
 import Header_FilterButton from './Header_FilterButton';
+import Header_InstallerModal from './Header_InstallerModal';
 import Header_UpdateButton from './Header_UpdateButton';
 
 type Props = {
@@ -63,10 +54,6 @@ export default function PackageManagerHeader({
   visibleItems,
 }: Props) {
   const [isUpdating, setIsUpdating] = useState<boolean>(false);
-  const [installing, setInstalling] = useState<boolean>(false);
-
-  const [installPackageName, setInstallPackageName] = useState<string>('');
-  const [installPopover, setInstallPopover] = useState<boolean>(false);
 
   const [isReqAvailable, setIsReqAvailable] = useState<boolean>(false);
 
@@ -90,43 +77,6 @@ export default function PackageManagerHeader({
       })
       .finally(() => {
         setIsUpdating(false);
-      });
-  };
-
-  const installPackage = () => {
-    setInstallPopover(false);
-    setInstalling(true);
-    pIpc
-      .installPackage(pythonPath, installPackageName)
-      .then(() => {
-        message.success(`Package "${installPackageName}" installed successfully.`);
-        setInstallPackageName('');
-        refresh();
-      })
-      .catch(e => {
-        console.error(e);
-        message.error(`Failed to install package "${installPackageName}".`);
-      })
-      .finally(() => {
-        setInstalling(false);
-      });
-  };
-
-  const installReq = () => {
-    setInstallPopover(false);
-    setInstalling(true);
-    pIpc
-      .installPackageReq(pythonPath)
-      .then(() => {
-        message.success(`Packages from requirements file installed successfully.`);
-        refresh();
-      })
-      .catch(e => {
-        console.error(e);
-        message.error(`Failed to install packages from requirements file.`);
-      })
-      .finally(() => {
-        setInstalling(false);
       });
   };
 
@@ -171,35 +121,7 @@ export default function PackageManagerHeader({
         <ButtonGroup size="sm" fullWidth>
           {isValidPython && (
             <>
-              <Popover radius="sm" placement="bottom" isOpen={installPopover} onOpenChange={setInstallPopover}>
-                <PopoverTrigger>
-                  <Button radius="sm" variant="solid" isLoading={installing} startContent={!installing && <Add_Icon />}>
-                    {installing ? <span>Installing {installPackageName}...</span> : <span>Install Package</span>}
-                  </Button>
-                </PopoverTrigger>
-                <PopoverContent className="py-4 gap-y-2">
-                  <span className="font-bold text-[11pt]">Install Python Package</span>
-                  <Divider />
-                  <Input
-                    className="min-w-64"
-                    value={installPackageName}
-                    label="Enter Package Name:"
-                    onValueChange={setInstallPackageName}
-                    placeholder="e.g., requests or e.g., pandas"
-                  />
-                  <div className="w-full">
-                    <Button size="sm" onPress={installPackage} fullWidth>
-                      Install
-                    </Button>
-                  </div>
-                  <Divider />
-                  <div className="w-full">
-                    <Button className="w-full" onPress={installReq}>
-                      Install from Requirements
-                    </Button>
-                  </div>
-                </PopoverContent>
-              </Popover>
+              <Header_InstallerModal refresh={refresh} pythonPath={pythonPath} />
 
               <RequirementsBtn id={id} projectPath={projectPath} setIsReqAvailable={setIsReqAvailable} />
             </>

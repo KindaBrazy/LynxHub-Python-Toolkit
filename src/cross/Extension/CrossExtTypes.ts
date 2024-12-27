@@ -81,7 +81,6 @@ export const pythonChannels = {
 
   getPackagesInfo: 'get-packages-info',
   installPackage: 'install-package',
-  installPackageReq: 'install-package-req',
   uninstallPackage: 'uninstall-package',
 
   getPackagesUpdateInfo: 'get-packages-update-info',
@@ -102,4 +101,6 @@ export const pythonChannels = {
   removeAIVenv: 'remove-ai-venv',
   getAIVenvs: 'get-ai-venvs',
   findAIVenv: 'find-ai-venv',
+
+  readFile: 'read-file',
 };
