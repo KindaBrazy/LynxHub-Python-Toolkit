@@ -1,7 +1,7 @@
 import {Button, Chip, Dropdown, DropdownItem, DropdownMenu, DropdownTrigger} from '@nextui-org/react';
 import {Divider} from 'antd';
-import {compact, isEmpty} from 'lodash';
-import {useCallback, useEffect, useMemo, useState} from 'react';
+import {isEmpty} from 'lodash';
+import {useCallback, useEffect, useState} from 'react';
 
 import {useCardsState} from '../../../../src/App/Redux/AI/CardsReducer';
 import {Add_Icon} from '../../../../src/assets/icons/SvgIcons/SvgIcons1';
@@ -16,40 +16,45 @@ type Item = {id: string; title: string};
 
 export default function Venv_Associate({pythonPath}: Props) {
   const [associated, setAssociated] = useState<Item[]>([]);
+  const [itemsToAdd, setItemsToAdd] = useState<Item[]>([]);
 
-  const getAssociated = useCallback(() => {
-    pIpc.getAIVenvs().then(data => {
-      if (data) {
-        const actives = compact(data.map(item => (item.path === pythonPath ? item.id : null)));
-        setAssociated(
-          compact(
-            actives.map(item => {
-              const card = allCardsExt.find(card => card.id === item);
-              return card ? {title: card.title, id: card.id} : null;
-            }),
-          ),
-        );
-      }
-    });
-  }, [pythonPath]);
+  const installedCards = useCardsState('installedCards');
 
   useEffect(() => {
     if (pythonPath) getAssociated();
   }, [pythonPath]);
 
-  const installedCards = useCardsState('installedCards');
+  const getAssociated = useCallback(() => {
+    pIpc.getAIVenvs().then(aiVenvs => {
+      if (!aiVenvs) return;
 
-  const titles: Item[] = useMemo(() => {
-    return compact(
-      installedCards.map(card => {
-        const title = allCardsExt.find(item => item.id === card.id)?.title;
-        return title ? {title, id: card.id} : null;
-      }),
-    ).filter(item => !associated.some(card => card.id === item.id));
-  }, [installedCards, associated]);
+      const cardTitleMap = new Map(allCardsExt.map(card => [card.id, card.title]));
+
+      const installedCardsWithTitles: Item[] = installedCards
+        .filter(card => cardTitleMap.has(card.id))
+        .map(card => ({
+          title: cardTitleMap.get(card.id)!,
+          id: card.id,
+        }));
+
+      const aiVenvIds = new Set(aiVenvs.map(aiVenv => aiVenv.id));
+
+      const newItemsToAdd = installedCardsWithTitles.filter(card => !aiVenvIds.has(card.id));
+
+      setItemsToAdd(newItemsToAdd);
+
+      const activeAiVenvsWithTitles = aiVenvs
+        .filter(aiVenv => aiVenv.path === pythonPath)
+        .map(aiVenv => ({
+          title: cardTitleMap.get(aiVenv.id)!,
+          id: aiVenv.id,
+        }));
+
+      setAssociated(activeAiVenvsWithTitles);
+    });
+  }, [pythonPath, installedCards, allCardsExt]);
 
   const add = (id: string) => {
-    console.log('adding', id);
     pIpc.addAIVenv(id, pythonPath);
     getAssociated();
   };
@@ -62,7 +67,7 @@ export default function Venv_Associate({pythonPath}: Props) {
     <>
       <Divider variant="dashed" className="!my-0">
         <div className="flex flex-row items-center gap-x-2">
-          <span>Associated AI</span>
+          <span className="text-small font-bold">Associated AI</span>
         </div>
       </Divider>
       <div className="flex flex-row justify-between w-full">
@@ -85,7 +90,7 @@ export default function Venv_Associate({pythonPath}: Props) {
               <Add_Icon />
             </Button>
           </DropdownTrigger>
-          <DropdownMenu items={titles} variant="faded">
+          <DropdownMenu variant="faded" items={itemsToAdd}>
             {item => (
               <DropdownItem key={item.id} onPress={() => add(item.id)}>
                 {item.title}
