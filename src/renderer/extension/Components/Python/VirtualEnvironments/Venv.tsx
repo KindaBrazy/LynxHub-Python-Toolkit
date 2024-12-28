@@ -19,7 +19,7 @@ type Props = {
 
 export default function Venv({visible, installedPythons, isLoadingPythons}: Props) {
   const [pythonVenvs, setPythonVenvs] = useState<PythonVenvs[]>([]);
-  const [isLoading, setIsLoading] = useState<boolean>(false);
+  const [isLoading, setIsLoading] = useState<boolean>(true);
 
   const [isLocating, setIsLocating] = useState<boolean>(false);
 
