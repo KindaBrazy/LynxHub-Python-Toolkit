@@ -47,61 +47,51 @@ export async function checkAIVenvsEnabled() {
   if (isNil(venvs) || isEmpty(venvs)) {
     return;
   }
+
+  const updatePromises: Promise<void>[] = [];
+  const preCommandUpdates: (() => void)[] = [];
+
   for (const venv of venvs) {
     switch (venv.id) {
       case 'LSHQQYTIGER_SD':
-        await updateArguments(venv.id, venv.path);
-        break;
       case 'LSHQQYTIGER_Forge_SD':
-        await updateArguments(venv.id, venv.path);
-        break;
       case 'Automatic1111_SD':
-        await updateArguments(venv.id, venv.path);
+      case 'VLADMANDIC_SD':
+      case 'Lllyasviel_SD':
+      case 'Anapnoe_SD':
+        updatePromises.push(updateArguments(venv.id, venv.path));
         break;
       case 'ComfyUI_SD':
-        updatePreCommand(venv.id, venv.path);
-        break;
       case 'ComfyUI_Zluda_ID':
-        updatePreCommand(venv.id, venv.path);
-        break;
-      case 'VLADMANDIC_SD':
-        await updateArguments(venv.id, venv.path);
-        break;
-      case 'McMonkeyProjects_SD':
-        // Not Supported
-        break;
-      case 'Lllyasviel_SD':
-        await updateArguments(venv.id, venv.path);
+      case 'Nerogar_SD':
+      case 'Erew123_SD':
+      case 'Oobabooga_TG':
+      case 'Gitmylo_AG':
+        preCommandUpdates.push(() => updatePreCommand(venv.id, venv.path));
         break;
       case 'Bmaltais_SD':
         // TODO -> https://github.com/bmaltais/kohya_ss/blob/master/gui.bat
-        break;
-      case 'Nerogar_SD':
-        updatePreCommand(venv.id, venv.path);
-        break;
-      case 'Anapnoe_SD':
-        await updateArguments(venv.id, venv.path);
-        break;
-      case 'InvokeAI_SD':
-        // Not Supported
-        break;
-      case 'Erew123_SD':
-        updatePreCommand(venv.id, venv.path);
-        break;
-      case 'Oobabooga_TG':
-        updatePreCommand(venv.id, venv.path);
-        break;
-      case 'SillyTavern_TG':
-        // Not Supported
+        console.warn(`Venv ${venv.id} is not yet supported.`);
         break;
       case 'Rsxdalv_AG':
         // TODO -> https://github.com/rsxdalv/tts-generation-webui/blob/main/installer_scripts/root.ps1
+        console.warn(`Venv ${venv.id} is not yet supported.`);
         break;
-      case 'Gitmylo_AG':
-        updatePreCommand(venv.id, venv.path);
+      case 'McMonkeyProjects_SD':
+      case 'InvokeAI_SD':
+      case 'SillyTavern_TG':
+        // Not Supported
+        console.info(`Venv ${venv.id} is not supported.`);
         break;
       default:
-        return;
+        console.warn(`Unknown venv ID: ${venv.id}`);
+        return; // Returning early is likely a bug, so we warn instead
     }
+  }
+
+  await Promise.all(updatePromises);
+
+  for (const updateFunc of preCommandUpdates) {
+    updateFunc();
   }
 }
