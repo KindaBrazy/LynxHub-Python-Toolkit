@@ -63,7 +63,7 @@ const CardMenu = observer(({addMenu, context}: Props) => {
       },
     ];
 
-    addMenu(sections, 0);
+    addMenu(sections, 1);
   }, []);
 
   const locateVenv = () => {
