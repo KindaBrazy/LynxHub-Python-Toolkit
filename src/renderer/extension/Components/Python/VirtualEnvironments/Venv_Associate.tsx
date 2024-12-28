@@ -3,6 +3,7 @@ import {Divider} from 'antd';
 import {isEmpty} from 'lodash';
 import {useCallback, useEffect, useState} from 'react';
 
+import {PYTHON_SUPPORTED_AI} from '../../../../../cross/extension/CrossExtConstants';
 import {useCardsState} from '../../../../src/App/Redux/AI/CardsReducer';
 import {Add_Icon} from '../../../../src/assets/icons/SvgIcons/SvgIcons1';
 import {allCardsExt} from '../../../DataHolder';
@@ -39,7 +40,9 @@ export default function Venv_Associate({pythonPath}: Props) {
 
       const aiVenvIds = new Set(aiVenvs.map(aiVenv => aiVenv.id));
 
-      const newItemsToAdd = installedCardsWithTitles.filter(card => !aiVenvIds.has(card.id));
+      const newItemsToAdd = installedCardsWithTitles.filter(
+        card => !aiVenvIds.has(card.id) && PYTHON_SUPPORTED_AI.includes(card.id),
+      );
 
       setItemsToAdd(newItemsToAdd);
 
