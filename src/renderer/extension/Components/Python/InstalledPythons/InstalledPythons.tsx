@@ -45,7 +45,6 @@ export default function InstalledPythons({
   const getInstalledPythons = () => {
     setIsLoadingPythons(true);
     pIpc.getInstalledPythons().then((result: PythonInstallation[]) => {
-      console.log(result);
       setInstalledPythons(result);
       setIsLoadingPythons(false);
 

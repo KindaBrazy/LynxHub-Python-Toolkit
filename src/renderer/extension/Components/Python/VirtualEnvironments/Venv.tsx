@@ -27,9 +27,22 @@ export default function Venv({visible, installedPythons, isLoadingPythons}: Prop
 
   const getVenvs = useCallback(() => {
     setIsLoading(true);
-    pIpc.getVenvs().then((result: VenvInfo[]) => {
+    const condaVenvs = installedPythons.filter(pt => pt.installationType === 'conda');
+    pIpc.getVenvs().then((venvs: VenvInfo[]) => {
+      const resultVenvs: VenvInfo[] = [
+        ...venvs,
+        ...condaVenvs.map(venv => {
+          return {
+            pythonVersion: venv.version,
+            pythonPath: venv.installPath,
+            folder: venv.installFolder,
+            sitePackagesCount: venv.packages,
+            name: venv.condaName,
+          };
+        }),
+      ];
       setPythonVenvs(
-        result.map(venv => {
+        resultVenvs.map(venv => {
           return {
             pythonVersion: venv.pythonVersion,
             pythonPath: venv.pythonPath,
@@ -39,7 +52,7 @@ export default function Venv({visible, installedPythons, isLoadingPythons}: Prop
           };
         }),
       );
-      for (const venv of result) {
+      for (const venv of resultVenvs) {
         rendererIpc.file.calcFolderSize(venv.folder).then(value => {
           if (value)
             setDiskUsage(prevState => [
@@ -53,11 +66,11 @@ export default function Venv({visible, installedPythons, isLoadingPythons}: Prop
       }
       setIsLoading(false);
     });
-  }, []);
+  }, [installedPythons]);
 
   useEffect(() => {
-    getVenvs();
-  }, []);
+    if (!isEmpty(installedPythons)) getVenvs();
+  }, [installedPythons]);
 
   const locateVenv = () => {
     setIsLocating(true);
