@@ -3,6 +3,7 @@ import {isNil} from 'lodash';
 import {observer} from 'mobx-react-lite';
 import {useCallback, useEffect, useMemo, useState} from 'react';
 
+import {PYTHON_SUPPORTED_AI} from '../../../cross/extension/CrossExtConstants';
 import {CardsDataManager} from '../../src/App/Components/Cards/CardsDataManager';
 import {DropDownSectionType} from '../../src/App/Utils/Types';
 import {useInstalledCard} from '../../src/App/Utils/UtilHooks';
@@ -18,6 +19,8 @@ type Props = {
 };
 
 const CardMenu = observer(({addMenu, context}: Props) => {
+  if (!PYTHON_SUPPORTED_AI.includes(context.id)) return null;
+
   const [isOpen, setIsOpen] = useState<boolean>(false);
   const webUI = useInstalledCard(context.id);
 
