@@ -5,8 +5,8 @@ import {isEmpty, isNil} from 'lodash';
 import {storageManager} from '../lynxExtension';
 import {getAIVenvs} from './PackageManager/PackageManager';
 
-function updatePreCommand(id: string, pythonExe: string) {
-  const command: string = `"${dirname(pythonExe)}\\activate.ps1"`;
+function checkPreCommand(id: string, pythonPath: string) {
+  const command: string = `"${dirname(pythonPath)}\\activate.ps1"`;
 
   const existingCommands = storageManager?.getPreCommandById(id);
   if (existingCommands && existingCommands.data.includes(command)) return;
@@ -14,7 +14,19 @@ function updatePreCommand(id: string, pythonExe: string) {
   storageManager?.addPreCommand(id, command);
 }
 
-async function updateArguments(id: string, pythonExe: string) {
+function removePreCommand(id: string, pythonPath: string) {
+  const command: string = `"${dirname(pythonPath)}\\activate.ps1"`;
+
+  const existingCommands = storageManager?.getPreCommandById(id);
+  if (existingCommands) {
+    const index = existingCommands.data.findIndex(item => item === command);
+    if (index !== -1) {
+      storageManager?.removePreCommand(id, index);
+    }
+  }
+}
+
+async function checkArguments(id: string, pythonExe: string) {
   const venvPath = dirname(dirname(pythonExe));
 
   const existingArgs = await storageManager?.getCardArgumentsById(id);
@@ -42,6 +54,33 @@ async function updateArguments(id: string, pythonExe: string) {
   storageManager?.setCardArguments(id, existingArgs);
 }
 
+async function removeArguments(id: string, pythonExe: string) {
+  const venvPath = dirname(dirname(pythonExe));
+
+  const existingArgs = await storageManager?.getCardArgumentsById(id);
+
+  if (!existingArgs) return;
+
+  const activePreset = existingArgs.activePreset;
+  const dataIndex = existingArgs.data.findIndex(item => item.preset === activePreset);
+
+  if (dataIndex === -1) return;
+
+  const data = existingArgs.data[dataIndex];
+
+  function removeArgumentIfPathMatches(name: string, pathToRemove: string) {
+    const argumentIndex = data.arguments.findIndex(arg => arg.name === name);
+    if (argumentIndex !== -1 && data.arguments[argumentIndex].value === pathToRemove) {
+      data.arguments.splice(argumentIndex, 1);
+    }
+  }
+
+  removeArgumentIfPathMatches('PYTHON', pythonExe);
+  removeArgumentIfPathMatches('VENV_DIR', venvPath);
+
+  storageManager?.setCardArguments(id, existingArgs);
+}
+
 export async function checkAIVenvsEnabled() {
   const venvs = getAIVenvs();
   if (isNil(venvs) || isEmpty(venvs)) {
@@ -59,7 +98,7 @@ export async function checkAIVenvsEnabled() {
       case 'VLADMANDIC_SD':
       case 'Lllyasviel_SD':
       case 'Anapnoe_SD':
-        updatePromises.push(updateArguments(venv.id, venv.path));
+        updatePromises.push(checkArguments(venv.id, venv.path));
         break;
       case 'ComfyUI_SD':
       case 'ComfyUI_Zluda_ID':
@@ -67,7 +106,7 @@ export async function checkAIVenvsEnabled() {
       case 'Erew123_SD':
       case 'Oobabooga_TG':
       case 'Gitmylo_AG':
-        preCommandUpdates.push(() => updatePreCommand(venv.id, venv.path));
+        preCommandUpdates.push(() => checkPreCommand(venv.id, venv.path));
         break;
       case 'Bmaltais_SD':
         // TODO -> https://github.com/bmaltais/kohya_ss/blob/master/gui.bat
@@ -92,6 +131,39 @@ export async function checkAIVenvsEnabled() {
   await Promise.all(updatePromises);
 
   for (const updateFunc of preCommandUpdates) {
+    updateFunc();
+  }
+}
+
+export async function removeAIVenvsEnabled(id: string, pythonPath: string) {
+  const argumentsPromises: Promise<void>[] = [];
+  const preCommands: (() => void)[] = [];
+
+  switch (id) {
+    case 'LSHQQYTIGER_SD':
+    case 'LSHQQYTIGER_Forge_SD':
+    case 'Automatic1111_SD':
+    case 'VLADMANDIC_SD':
+    case 'Lllyasviel_SD':
+    case 'Anapnoe_SD':
+      argumentsPromises.push(removeArguments(id, pythonPath));
+      break;
+    case 'ComfyUI_SD':
+    case 'ComfyUI_Zluda_ID':
+    case 'Nerogar_SD':
+    case 'Erew123_SD':
+    case 'Oobabooga_TG':
+    case 'Gitmylo_AG':
+      preCommands.push(() => removePreCommand(id, pythonPath));
+      break;
+    default:
+      console.warn(`Unknown venv ID: ${id}`);
+      return;
+  }
+
+  await Promise.all(argumentsPromises);
+
+  for (const updateFunc of preCommands) {
     updateFunc();
   }
 }

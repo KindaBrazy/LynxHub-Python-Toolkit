@@ -5,6 +5,7 @@ import {promises} from 'graceful-fs';
 
 import {IdPathType, SitePackages_Info} from '../../../../cross/extension/CrossExtTypes';
 import {storageManager} from '../../lynxExtension';
+import {checkAIVenvsEnabled, removeAIVenvsEnabled} from '../AIVenvs';
 import {openDialogExt} from '../PythonUtils';
 import {isVenvDirectory} from '../VirtualEnv/VenvUtils';
 
@@ -231,12 +232,15 @@ export function getAIVenvs() {
 
 export function addAIVenv(id: string, pythonPath: string) {
   updateAIVenvStorage({id, path: pythonPath});
+  checkAIVenvsEnabled();
 }
 
 export function removeAIVenv(id: string) {
   const existingData = storageManager?.getCustomData(AI_VENV_STORE_KEYS) as IdPathType[] | undefined;
 
   if (existingData) {
+    const pythonPath = existingData.find(item => item.id === id)?.path;
+    if (pythonPath) removeAIVenvsEnabled(id, pythonPath);
     storageManager?.setCustomData(
       AI_VENV_STORE_KEYS,
       existingData.filter(item => item.id !== id),
@@ -248,9 +252,11 @@ export function removeAIVenvPath(pythonPath: string) {
   const existingData = storageManager?.getCustomData(AI_VENV_STORE_KEYS) as IdPathType[] | undefined;
 
   if (existingData) {
+    const id = existingData.find(item => item.path === pythonPath)?.id;
+    if (id) removeAIVenvsEnabled(id, pythonPath);
     storageManager?.setCustomData(
       AI_VENV_STORE_KEYS,
-      existingData.filter(item => item.path !== pythonPath),
+      existingData.filter(item => item.path !== id),
     );
   }
 }
