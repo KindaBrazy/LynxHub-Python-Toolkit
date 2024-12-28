@@ -243,3 +243,14 @@ export function removeAIVenv(id: string) {
     );
   }
 }
+
+export function removeAIVenvPath(pythonPath: string) {
+  const existingData = storageManager?.getCustomData(AI_VENV_STORE_KEYS) as IdPathType[] | undefined;
+
+  if (existingData) {
+    storageManager?.setCustomData(
+      AI_VENV_STORE_KEYS,
+      existingData.filter(item => item.path !== pythonPath),
+    );
+  }
+}

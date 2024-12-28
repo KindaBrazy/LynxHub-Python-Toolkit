@@ -99,6 +99,7 @@ export const pythonChannels = {
   getAIVenv: 'get-ai-venv',
   addAIVenv: 'add-ai-venv',
   removeAIVenv: 'remove-ai-venv',
+  removeAIVenvPath: 'remove-ai-venv-path',
   getAIVenvs: 'get-ai-venvs',
   findAIVenv: 'find-ai-venv',
   checkAIVenvEnabled: 'check-ai-venv-enable',

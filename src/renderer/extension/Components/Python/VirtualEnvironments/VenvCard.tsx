@@ -19,6 +19,7 @@ import {MenuDots_Icon} from '../../../../src/assets/icons/SvgIcons/SvgIcons2';
 import {Trash_Icon} from '../../../../src/assets/icons/SvgIcons/SvgIcons3';
 import {OpenFolder_Icon} from '../../../../src/assets/icons/SvgIcons/SvgIcons4';
 import {HardDrive_Icon} from '../../../../src/assets/icons/SvgIcons/SvgIcons5';
+import pIpc from '../../../PIpc';
 import {Env_Icon, Packages_Icon} from '../../SvgIcons';
 import PackageManagerModal from '../PackageManagement/PackageManager/PackageManagerModal';
 import Venv_Associate from './Venv_Associate';
@@ -59,6 +60,7 @@ export default function VenvCard({title, installedPackages, pythonVersion, folde
       .trashDir(folder)
       .then(() => {
         message.success(`Environment "${title}" removed successfully.`);
+        pIpc.removeAIVenvPath(pythonPath);
       })
       .catch(error => {
         console.error(error);
@@ -68,6 +70,7 @@ export default function VenvCard({title, installedPackages, pythonVersion, folde
         setIsRemoving(false);
       });
   };
+
   const openPath = () => {
     rendererIpc.file.openPath(folder);
   };

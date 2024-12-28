@@ -25,6 +25,7 @@ import {
   installPythonPackage,
   locateAIVenv,
   removeAIVenv,
+  removeAIVenvPath,
   uninstallPythonPackage,
   updateAllPythonPackages,
   updatePythonPackage,
@@ -91,6 +92,7 @@ export async function initialExtension(lynxApi: ExtensionMainApi, utils: MainExt
     ipcMain.handle(pythonChannels.getAIVenv, (_, id: string) => getAIVenv(id));
     ipcMain.on(pythonChannels.addAIVenv, (_, id: string, pythonPath: string) => addAIVenv(id, pythonPath));
     ipcMain.on(pythonChannels.removeAIVenv, (_, id: string) => removeAIVenv(id));
+    ipcMain.on(pythonChannels.removeAIVenvPath, (_, path: string) => removeAIVenvPath(path));
     ipcMain.handle(pythonChannels.getAIVenvs, () => getAIVenvs());
     ipcMain.handle(pythonChannels.findAIVenv, (_, id: string, folder: string | undefined) => findAIVenv(id, folder));
     ipcMain.on(pythonChannels.checkAIVenvEnabled, () => checkAIVenvsEnabled());
