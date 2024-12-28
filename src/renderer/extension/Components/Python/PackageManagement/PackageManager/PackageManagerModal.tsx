@@ -254,7 +254,7 @@ export default function PackageManagerModal({
         />
         <ModalFooter className="bg-foreground-200 dark:bg-LynxRaisinBlack flex flex-col space-y-2">
           <Footer_TablePage setItems={setItems} searchData={searchData} />
-          <Button size="sm" color="warning" variant="faded" onPress={closePackageManager} fullWidth>
+          <Button size="sm" variant="flat" color="warning" onPress={closePackageManager} fullWidth>
             Close
           </Button>
         </ModalFooter>
