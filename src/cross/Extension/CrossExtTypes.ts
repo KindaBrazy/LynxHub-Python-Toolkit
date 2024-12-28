@@ -101,6 +101,7 @@ export const pythonChannels = {
   removeAIVenv: 'remove-ai-venv',
   getAIVenvs: 'get-ai-venvs',
   findAIVenv: 'find-ai-venv',
+  checkAIVenvEnabled: 'check-ai-venv-enable',
 
   readFile: 'read-file',
 };

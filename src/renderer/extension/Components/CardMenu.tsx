@@ -36,11 +36,13 @@ const CardMenu = observer(({addMenu, context}: Props) => {
           pIpc
             .findAIVenv(context.id, webUI?.dir)
             .then(result => {
+              pIpc.checkAIVenvEnabled();
               setPythonPath(result);
             })
             .catch(console.log);
         } else {
           setPythonPath(folder);
+          pIpc.checkAIVenvEnabled();
         }
       });
     }
@@ -72,6 +74,7 @@ const CardMenu = observer(({addMenu, context}: Props) => {
       pIpc
         .locateAIVenv(context.id)
         .then(result => {
+          pIpc.checkAIVenvEnabled();
           setPythonPath(result);
         })
         .catch(console.error)

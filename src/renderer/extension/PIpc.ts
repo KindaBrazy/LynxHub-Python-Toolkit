@@ -70,6 +70,7 @@ const pIpc = {
   getAIVenvs: (): Promise<IdPathType[] | undefined> => ipc.invoke(pythonChannels.getAIVenvs),
   findAIVenv: (id: string, folder: string | undefined): Promise<string> =>
     ipc.invoke(pythonChannels.findAIVenv, id, folder),
+  checkAIVenvEnabled: (): void => ipc.send(pythonChannels.checkAIVenvEnabled),
 
   getUpdatesReq: (
     pythonPath: string,

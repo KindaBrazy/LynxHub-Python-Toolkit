@@ -9,6 +9,7 @@ import {
 } from '../../cross/extension/CrossExtTypes';
 import {ExtensionMainApi, MainExtensionUtils} from '../Managements/Plugin/Extensions/ExtensionTypes_Main';
 import StorageManager from '../Managements/Storage/StorageManager';
+import {checkAIVenvsEnabled} from './Utils/AIVenvs';
 import {getAvailablePythonVersions} from './Utils/Available';
 import {setDefaultPython} from './Utils/DefaultPython';
 import detectPythonInstallations from './Utils/Detector';
@@ -92,6 +93,7 @@ export async function initialExtension(lynxApi: ExtensionMainApi, utils: MainExt
     ipcMain.on(pythonChannels.removeAIVenv, (_, id: string) => removeAIVenv(id));
     ipcMain.handle(pythonChannels.getAIVenvs, () => getAIVenvs());
     ipcMain.handle(pythonChannels.findAIVenv, (_, id: string, folder: string | undefined) => findAIVenv(id, folder));
+    ipcMain.on(pythonChannels.checkAIVenvEnabled, () => checkAIVenvsEnabled());
 
     ipcMain.handle(
       pythonChannels.getUpdatesReq,

@@ -57,10 +57,12 @@ export default function Venv_Associate({pythonPath}: Props) {
   const add = (id: string) => {
     pIpc.addAIVenv(id, pythonPath);
     getAssociated();
+    pIpc.checkAIVenvEnabled();
   };
   const remove = (id: string) => {
     pIpc.removeAIVenv(id);
     getAssociated();
+    pIpc.checkAIVenvEnabled();
   };
 
   return (

@@ -26,7 +26,7 @@ function validateVenvs() {
   return validEnvs;
 }
 
-function updateStorage(newVenvPath: string) {
+function updateVenvStorage(newVenvPath: string) {
   const existVenvs = storageManager?.getCustomData(STORE_VENVS_ID) as string[];
 
   if (isEmpty(existVenvs)) {
@@ -59,7 +59,7 @@ export async function locateVenv() {
     }
     const isVenv = isVenvDirectory(selectedFolder);
 
-    if (isVenv) updateStorage(selectedFolder);
+    if (isVenv) updateVenvStorage(selectedFolder);
 
     return isVenv;
   } catch (e) {
@@ -88,6 +88,6 @@ export default function createPythonVenv(options: VenvCreateOptions): boolean {
   }
 
   console.log(`Virtual environment created successfully at: ${venvPath}`);
-  updateStorage(venvPath);
+  updateVenvStorage(venvPath);
   return true;
 }
