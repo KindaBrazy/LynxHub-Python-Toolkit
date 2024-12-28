@@ -72,7 +72,7 @@ export default function InstallerModal({isOpen, closeModal, refresh, installed}:
             )}
           </ModalBody>
           <ModalFooter className="bg-foreground-100">
-            <Button size="sm" color="warning" variant="faded" onPress={closeModal} isDisabled={closeDisabled} fullWidth>
+            <Button size="sm" variant="flat" color="warning" onPress={closeModal} isDisabled={closeDisabled} fullWidth>
               Close
             </Button>
           </ModalFooter>
