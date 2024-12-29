@@ -66,7 +66,7 @@ export default function VenvCreator({installedPythons, refresh, isLoadingPythons
 
       setIsCreating(false);
     });
-  }, [targetFolder, envName, selectedVersion]);
+  }, [targetFolder, envName, selectedVersion, installedPythons]);
 
   return (
     <Popover size="lg" isOpen={isOpen} placement="bottom" onOpenChange={setIsOpen} showArrow>
