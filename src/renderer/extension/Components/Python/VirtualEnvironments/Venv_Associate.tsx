@@ -47,7 +47,7 @@ export default function Venv_Associate({pythonPath}: Props) {
       setItemsToAdd(newItemsToAdd);
 
       const activeAiVenvsWithTitles = aiVenvs
-        .filter(aiVenv => aiVenv.path === pythonPath)
+        .filter(aiVenv => aiVenv.path === pythonPath && installedCards.some(card => card.id === aiVenv.id))
         .map(aiVenv => ({
           title: cardTitleMap.get(aiVenv.id)!,
           id: aiVenv.id,
@@ -55,7 +55,7 @@ export default function Venv_Associate({pythonPath}: Props) {
 
       setAssociated(activeAiVenvsWithTitles);
     });
-  }, [pythonPath, installedCards, allCardsExt]);
+  }, [pythonPath, installedCards]);
 
   const add = (id: string) => {
     pIpc.addAIVenv(id, pythonPath);
