@@ -17,8 +17,8 @@ export default function ToolsPage() {
     <UIProvider>
       <Card
         className={
-          `w-[230px] h-fit cursor-default shadow-md !transition ` +
-          ` border-1 border-foreground/10 duration-300 hover:shadow-xl dark:bg-[#3d3d3d]`
+          `w-[230px] h-fit cursor-default shadow-md !transition  border-1 ` +
+          `border-foreground/10 duration-300 hover:shadow-xl dark:bg-[#3d3d3d]`
         }>
         <CardHeader>
           <Python_Color_Icon className="w-full h-32" />
