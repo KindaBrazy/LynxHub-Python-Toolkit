@@ -1,3 +1,5 @@
+<div align="center">
+
 # [LynxHub](https://github.com/KindaBrazy/LynxHub) Python Toolkit Extension
 
 **Python Toolkit Extension** is a powerful tool designed to streamline Python environment management within the
@@ -5,8 +7,13 @@
 installations, virtual environments, and
 packages.
 
+</div>
+
+<br/>
+
 ## 📚 Table of Contents
 
+- [🗺️ Roadmap](#-roadmap)
 - [🚀 Features](#-features)
     - [🐍 Python Management](#-python-management)
     - [🌐 Virtual Environment](#-virtual-environment)
@@ -16,9 +23,24 @@ packages.
     - [🛠️ Tools Page Integration](#-tools-page-integration)
 - [📸 Screenshots](#-screenshots)
 - [⬇️ Installation](#-installation)
-- [🗺️ Roadmap](#-roadmap)
 - [🤝 Contribution](#-contribution)
 - [📄 License](#-license)
+
+## 🗺️ Roadmap
+
+1. [ ] Use`conda activate`for Conda environments.
+2. [ ] **Linux** and **macOS** support.
+3. [ ] Merge`requirements.txt`files and manage conflicts.
+4. [ ] Improve package installation:
+    - Show`pip`output, progress bar, and download size (MB).
+5. [ ] Optimize disk usage calculations and caching.
+6. [ ] Refresh only Python/venv on changes, no full reload.
+7. [ ] Expand tools page to full screen.
+8. [ ] Activate Python/venv during AI installation.
+9. [ ] Check for Python version updates and auto-update on startup.
+10. [ ] Show detailed errors for installations/updates.
+11. [ ] Add settings to disable auto venv assignment for AIs.
+12. [ ] Set a default venv for all AIs.
 
 ## 🚀 Features
 
@@ -88,34 +110,6 @@ packages.
 1. **[Install LynxHub](https://github.com/KindaBrazy/LynxHub):** Ensure that you have LynxHub installed on your system.
 2. **Install Extension:** Install the Python Toolkit Extension from the LynxHub extension page.
 
-## 🗺️ Roadmap
-
-- **Use `conda activate` for Conda Environments:**
-    - Activate Conda environments using `conda activate`.
-- **Linux and macOS Support:**
-    - Extend support to Linux and macOS platforms.
-- **Requirements Merge:**
-    - Combine multiple requirements files and manage conflicts.
-- **Package Installation Information:**
-    - Display terminal output during package installation.
-    - Implement progress bars and download size indicators.
-- **Optimize Disk Usage Calculation:**
-    - Improve performance by optimizing disk usage calculations and caching.
-- **Selective Refresh:**
-    - Refresh only affected Python or virtual environment data without full refresh.
-- **Full-Page Tools Modal:**
-    - Convert the tools page card into a full-page modal for better usability.
-- **Environment and Python Selection on AI Installation:**
-    - Allow users to set a specific environment or Python version when installing AI tools.
-- **Check for Python Version Updates:**
-    - Automatically check and prompt for updates for installed Python versions.
-- **Error Reporting:**
-    - Display all errors related to Python installation, package installation, and updates.
-- **Extension Settings:**
-    - Provide overall settings for the extension, such as disabling auto-set environments for AIs.
-- **Set Venv for All:**
-    - Option to set a single virtual environment for anything.
-
 ## 🤝 Contribution
 
 Contributions are welcome! If you'd like to contribute to the project, please follow these steps:
@@ -125,7 +119,7 @@ Contributions are welcome! If you'd like to contribute to the project, please fo
 3. Make your changes and commit them.
 4. Submit a pull request.
 
-> [!NOTE] 
+> [!NOTE]
 > The source code for this extension is available in the `source` branch.
 
 ---
