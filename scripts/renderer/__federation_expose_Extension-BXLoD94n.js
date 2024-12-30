@@ -7208,6 +7208,15 @@ function MenuDots_Icon(props) {
     }
   ) });
 }
+function Play_Icon(props) {
+  return /* @__PURE__ */ jsxRuntimeExports.jsx("svg", { ...props, width: "1em", height: "1em", viewBox: "0 0 24 24", xmlns: "http://www.w3.org/2000/svg", children: /* @__PURE__ */ jsxRuntimeExports.jsx(
+    "path",
+    {
+      d: "M21.409 9.353a2.998 2.998 0 0 1 0 5.294L8.597 21.614C6.534 22.737 4 21.277 4 18.968V5.033c0-2.31 2.534-3.769 4.597-2.648z",
+      fill: "currentColor"
+    }
+  ) });
+}
 function Refresh_Icon(props) {
   return /* @__PURE__ */ jsxRuntimeExports.jsx("svg", { ...props, width: "1em", height: "1em", viewBox: "0 0 24 24", xmlns: "http://www.w3.org/2000/svg", children: /* @__PURE__ */ jsxRuntimeExports.jsxs("g", { fill: "none", children: [
     /* @__PURE__ */ jsxRuntimeExports.jsx(
@@ -8664,7 +8673,7 @@ function PackageManagerModal({
         ),
         /* @__PURE__ */ jsxRuntimeExports.jsxs(ModalFooter$2, { className: "bg-foreground-200 dark:bg-LynxRaisinBlack flex flex-col space-y-2", children: [
           /* @__PURE__ */ jsxRuntimeExports.jsx(Footer_TablePage, { setItems, searchData }),
-          /* @__PURE__ */ jsxRuntimeExports.jsx(Button$c, { size: "sm", color: "warning", variant: "faded", onPress: closePackageManager, fullWidth: true, children: "Close" })
+          /* @__PURE__ */ jsxRuntimeExports.jsx(Button$c, { size: "sm", variant: "flat", color: "warning", onPress: closePackageManager, fullWidth: true, children: "Close" })
         ] })
       ] })
     }
@@ -8802,7 +8811,7 @@ function HardDrive_Icon(props) {
 
 const {Button: Button$a,Chip: Chip$1,Dropdown: Dropdown$2,DropdownItem: DropdownItem$2,DropdownMenu: DropdownMenu$2,DropdownTrigger: DropdownTrigger$2,Popover: Popover$3,PopoverContent: PopoverContent$3,PopoverTrigger: PopoverTrigger$3,Progress: Progress$2} = await importShared('@nextui-org/react');
 
-const {Card: Card$1,Divider: Divider$3,Spin: Spin$1} = await importShared('antd');
+const {Card: Card$2,Divider: Divider$3,Spin: Spin$1} = await importShared('antd');
 
 const {isNil: isNil$3,startCase} = await importShared('lodash');
 
@@ -8863,7 +8872,7 @@ function InstalledCard({ python, diskUsage, maxDiskValue, updateDefault, refresh
       /* @__PURE__ */ jsxRuntimeExports.jsx("span", { children: "Uninstalling... Please wait." })
     ] }) }),
     /* @__PURE__ */ jsxRuntimeExports.jsx(
-      Card$1,
+      Card$2,
       {
         className: `min-w-[27rem] transition-colors duration-300 shadow-small ${python.isDefault ? "border-secondary border-opacity-60 hover:border-opacity-100" : "dark:hover:border-white/20 hover:border-black/20 "}`,
         title: /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "flex flex-row justify-between items-center", children: [
@@ -9377,7 +9386,7 @@ function InstallerModal({ isOpen, closeModal, refresh, installed }) {
             }
           )
         ] }),
-        /* @__PURE__ */ jsxRuntimeExports.jsx(ModalFooter$1, { className: "bg-foreground-100", children: /* @__PURE__ */ jsxRuntimeExports.jsx(Button$7, { size: "sm", color: "warning", variant: "faded", onPress: closeModal, isDisabled: closeDisabled, fullWidth: true, children: "Close" }) })
+        /* @__PURE__ */ jsxRuntimeExports.jsx(ModalFooter$1, { className: "bg-foreground-100", children: /* @__PURE__ */ jsxRuntimeExports.jsx(Button$7, { size: "sm", variant: "flat", color: "warning", onPress: closeModal, isDisabled: closeDisabled, fullWidth: true, children: "Close" }) })
       ] })
     }
   ) });
@@ -17046,15 +17055,17 @@ function Venv_Associate({ pythonPath }) {
         id: card.id
       }));
       const aiVenvIds = new Set(aiVenvs.map((aiVenv) => aiVenv.id));
-      const newItemsToAdd = installedCardsWithTitles.filter((card) => !aiVenvIds.has(card.id));
+      const newItemsToAdd = installedCardsWithTitles.filter(
+        (card) => !aiVenvIds.has(card.id) && PYTHON_SUPPORTED_AI.includes(card.id)
+      );
       setItemsToAdd(newItemsToAdd);
-      const activeAiVenvsWithTitles = aiVenvs.filter((aiVenv) => aiVenv.path === pythonPath).map((aiVenv) => ({
+      const activeAiVenvsWithTitles = aiVenvs.filter((aiVenv) => aiVenv.path === pythonPath && installedCards.some((card) => card.id === aiVenv.id)).map((aiVenv) => ({
         title: cardTitleMap.get(aiVenv.id),
         id: aiVenv.id
       }));
       setAssociated(activeAiVenvsWithTitles);
     });
-  }, [pythonPath, installedCards, allCardsExt]);
+  }, [pythonPath, installedCards]);
   const add = (id) => {
     pIpc.addAIVenv(id, pythonPath);
     getAssociated();
@@ -17089,7 +17100,7 @@ function Venv_Associate({ pythonPath }) {
 
 const {Button: Button$4,Dropdown,DropdownItem,DropdownMenu,DropdownTrigger,Popover: Popover$1,PopoverContent: PopoverContent$1,PopoverTrigger: PopoverTrigger$1} = await importShared('@nextui-org/react');
 
-const {Card,message: message$2,Spin} = await importShared('antd');
+const {Card: Card$1,message: message$2,Spin} = await importShared('antd');
 const {isNil} = await importShared('lodash');
 
 const {useEffect: useEffect$2,useMemo: useMemo$1,useState: useState$4} = await importShared('react');
@@ -17149,7 +17160,7 @@ function VenvCard({ title, installedPackages, pythonVersion, folder, diskUsage, 
       }
     ),
     /* @__PURE__ */ jsxRuntimeExports.jsx(
-      Card,
+      Card$1,
       {
         className: `min-w-[27rem] grow transition-colors duration-300 shadow-small dark:hover:border-white/20 hover:border-black/20`,
         title: /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "flex flex-row justify-between items-center", children: [
@@ -17285,7 +17296,7 @@ function VenvCreator({ installedPythons, refresh, isLoadingPythons }) {
       }
       setIsCreating(false);
     });
-  }, [targetFolder, envName, selectedVersion]);
+  }, [targetFolder, envName, selectedVersion, installedPythons]);
   return /* @__PURE__ */ jsxRuntimeExports.jsxs(Popover, { size: "lg", isOpen, placement: "bottom", onOpenChange: setIsOpen, showArrow: true, children: [
     /* @__PURE__ */ jsxRuntimeExports.jsx(PopoverTrigger, { children: /* @__PURE__ */ jsxRuntimeExports.jsx(
       Button$3,
@@ -17366,7 +17377,7 @@ const {isEmpty} = await importShared('lodash');
 const {useCallback,useEffect,useState: useState$2} = await importShared('react');
 function Venv({ visible, installedPythons, isLoadingPythons }) {
   const [pythonVenvs, setPythonVenvs] = useState$2([]);
-  const [isLoading, setIsLoading] = useState$2(false);
+  const [isLoading, setIsLoading] = useState$2(true);
   const [isLocating, setIsLocating] = useState$2(false);
   const [diskUsage, setDiskUsage] = useState$2([]);
   const getVenvs = useCallback(() => {
@@ -17532,7 +17543,7 @@ function PythonToolkitModal({ isOpen, setIsOpen }) {
   );
 }
 
-const {Button} = await importShared('@nextui-org/react');
+const {Button,Card,CardBody,CardHeader} = await importShared('@nextui-org/react');
 
 const {useState} = await importShared('react');
 function ToolsPage() {
@@ -17541,16 +17552,15 @@ function ToolsPage() {
     setIsOpen(true);
   };
   return /* @__PURE__ */ jsxRuntimeExports.jsxs(UIProvider, { children: [
-    /* @__PURE__ */ jsxRuntimeExports.jsx(
-      Button,
+    /* @__PURE__ */ jsxRuntimeExports.jsxs(
+      Card,
       {
-        variant: "faded",
-        onPress: openModal,
-        className: "w-60 h-auto py-4 shadow-small hover:shadow-medium transition-shadow duration-300",
-        children: /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "space-y-4 size-full", children: [
-          /* @__PURE__ */ jsxRuntimeExports.jsx("span", { className: "justify-center flex font-semibold text-[13pt]", children: "Python Toolkit" }),
-          /* @__PURE__ */ jsxRuntimeExports.jsx(Python_Color_Icon, { className: "size-full p-5" })
-        ] })
+        className: `w-[230px] h-fit cursor-default shadow-md !transition  border-1 border-foreground/10 duration-300 hover:shadow-xl dark:bg-[#3d3d3d]`,
+        children: [
+          /* @__PURE__ */ jsxRuntimeExports.jsx(CardHeader, { children: /* @__PURE__ */ jsxRuntimeExports.jsx(Python_Color_Icon, { className: "w-full h-32" }) }),
+          /* @__PURE__ */ jsxRuntimeExports.jsx(CardBody, { className: "text-center text-lg font-bold", children: "Python Toolkit" }),
+          /* @__PURE__ */ jsxRuntimeExports.jsx(CardBody, { children: /* @__PURE__ */ jsxRuntimeExports.jsx(Button, { color: "primary", onPress: openModal, fullWidth: true, children: /* @__PURE__ */ jsxRuntimeExports.jsx(Play_Icon, { className: "size-4" }) }) })
+        ]
       }
     ),
     /* @__PURE__ */ jsxRuntimeExports.jsx(PythonToolkitModal, { isOpen, setIsOpen })

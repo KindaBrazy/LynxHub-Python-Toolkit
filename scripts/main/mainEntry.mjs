@@ -6752,11 +6752,11 @@ async function checkAIVenvsEnabled() {
       case "Automatic1111_SD":
       case "VLADMANDIC_SD":
       case "Lllyasviel_SD":
+      case "ComfyUI_Zluda_ID":
       case "Anapnoe_SD":
         updatePromises.push(checkArguments(venv.id, venv.path));
         break;
       case "ComfyUI_SD":
-      case "ComfyUI_Zluda_ID":
       case "Nerogar_SD":
       case "Erew123_SD":
       case "Oobabooga_TG":
@@ -6793,11 +6793,11 @@ async function removeAIVenvsEnabled(id, pythonPath) {
     case "Automatic1111_SD":
     case "VLADMANDIC_SD":
     case "Lllyasviel_SD":
+    case "ComfyUI_Zluda_ID":
     case "Anapnoe_SD":
       argumentsPromises.push(removeArguments(id, pythonPath));
       break;
     case "ComfyUI_SD":
-    case "ComfyUI_Zluda_ID":
     case "Nerogar_SD":
     case "Erew123_SD":
     case "Oobabooga_TG":
