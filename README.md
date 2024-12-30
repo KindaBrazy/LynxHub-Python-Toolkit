@@ -5,25 +5,24 @@
 installations, virtual environments, and
 packages.
 
-## Table of Contents
+## 📚 Table of Contents
 
-- [Features](#features)
-    - [Python Management](#python-management)
-    - [Virtual Environment](#virtual-environment)
-    - [Package Manager](#package-manager)
-    - [Requirements Manager](#requirements-manager)
-    - [AI Integration](#ai-integration)
-    - [Tools Page Integration](#tools-page-integration)
-- [Screenshots](#screenshots)
-- [Installation](#installation)
-- [Roadmap](#roadmap)
-- [Contribution](#contribution)
-- [License](#license)
-- [Contact](#contact)
+- [🚀 Features](#-features)
+    - [🐍 Python Management](#-python-management)
+    - [🌐 Virtual Environment](#-virtual-environment)
+    - [📦 Package Manager](#-package-manager)
+    - [📝 Requirements Manager](#-requirements-manager)
+    - [🤖 AI Integration](#-ai-integration)
+    - [🛠️ Tools Page Integration](#-tools-page-integration)
+- [📸 Screenshots](#-screenshots)
+- [⬇️ Installation](#-installation)
+- [🗺️ Roadmap](#-roadmap)
+- [🤝 Contribution](#-contribution)
+- [📄 License](#-license)
 
-## Features
+## 🚀 Features
 
-### Python Management
+### 🐍 Python Management
 
 - **Auto-Detect Installed Pythons:** Automatically detects all installed Python versions, including those installed via
   Conda.
@@ -33,7 +32,7 @@ packages.
 - **View Python Details:** View detailed information about installed Pythons, including version, install path, installed
   packages count, and disk usage.
 
-### Virtual Environment
+### 🌐 Virtual Environment
 
 - **Locate Existing Venvs:** Locate and list existing virtual environments.
 - **Create New Venv:** Create new virtual environments with selected Python versions (official or Conda).
@@ -43,7 +42,7 @@ packages.
   installed packages count, disk usage, and associated AIs.
 - **Manage Venv Packages:** Manage packages installed in virtual environments.
 
-### Package Manager
+### 📦 Package Manager
 
 - **Check for Updates:**
     - Check for updates for all installed packages.
@@ -59,21 +58,21 @@ packages.
 - **Manage Requirements:**
     - Manage requirements files and their associated packages.
 
-### Requirements Manager
+### 📝 Requirements Manager
 
 - **Select and Change Requirements File:** Easily switch between different requirements files.
 - **Add, Remove, and Change Requirements:** Modify requirements in a user-friendly interface.
 
-### AI Integration
+### 🤖 AI Integration
 
 - **New Menu Item for Package and Requirement Management:** Direct access to package and requirement management from the
   AI menu.
 
-### Tools Page Integration
+### 🛠️ Tools Page Integration
 
 - **New Card for Individual Toolkit:** Open and manage individual pythons from a dedicated card on the tools page.
 
-## Screenshots
+## 📸 Screenshots
 
 - **Python Management:**
     - ![Python Management Screenshot](./resources/python.png)
@@ -84,12 +83,12 @@ packages.
 - **Requirements Manager:**
     - ![Requirements Manager Screenshot](./resources/requirements.png)
 
-## Installation
+## ⬇️ Installation
 
 1. **[Install LynxHub](https://github.com/KindaBrazy/LynxHub):** Ensure that you have LynxHub installed on your system.
 2. **Install Extension:** Install the Python Toolkit Extension from the LynxHub extension page.
 
-## Roadmap
+## 🗺️ Roadmap
 
 - **Use `conda activate` for Conda Environments:**
     - Activate Conda environments using `conda activate`.
@@ -117,7 +116,7 @@ packages.
 - **Set Venv for All:**
     - Option to set a single virtual environment for anything.
 
-## Contribution
+## 🤝 Contribution
 
 Contributions are welcome! If you'd like to contribute to the project, please follow these steps:
 
@@ -126,8 +125,11 @@ Contributions are welcome! If you'd like to contribute to the project, please fo
 3. Make your changes and commit them.
 4. Submit a pull request.
 
+> [!NOTE] 
+> The source code for this extension is available in the `source` branch.
+
 ---
 
-## License
+## 📄 License
 
 This project is licensed under the **MIT License**.
