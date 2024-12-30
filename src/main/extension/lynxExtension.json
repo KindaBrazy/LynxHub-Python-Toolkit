@@ -1,11 +1,121 @@
 {
   "id": "python_toolkit",
   "title": "Python Toolkit",
-  "description": "",
-  "publishDate": "",
+  "description": "Effortlessly manage your Python environments and dependencies.",
+  "version": "0.8.0",
+  "publishDate": "2025-01-01",
+  "updateDate": "2025-01-01",
   "repoUrl": "https://github.com/KindaBrazy/LynxHub-Python-Toolkit",
-  "version": "0.0.0",
-  "updateDate": "",
-  "changeLog": [],
-  "avatarUrl": ""
+  "changeLog": [
+    {
+      "title": "Initial Release - Python Management Suite",
+      "items": [
+        {
+          "label": "Python Environment Management",
+          "subitems": [
+            {
+              "label": "Auto-detect and install Python versions (including Conda)."
+            },
+            {
+              "label": "Set system default Python."
+            },
+            {
+              "label": "View detailed Python information (path, packages, etc.)."
+            }
+          ]
+        },
+        {
+          "label": "Virtual Environment Management",
+          "subitems": [
+            {
+              "label": "Locate and create virtual environments."
+            },
+            {
+              "label": "Associate AI tools with specific virtual environments."
+            },
+            {
+              "label": "View virtual environment details (Python version, packages, etc.)."
+            }
+          ]
+        },
+        {
+          "label": "Package Management",
+          "subitems": [
+            {
+              "label": "Check for and update packages (all or from requirements)."
+            },
+            {
+              "label": "Install multiple packages with version control."
+            },
+            {
+              "label": "Manage and modify requirements files easily."
+            }
+          ]
+        },
+        {
+          "label": "AI & Tools Integration",
+          "subitems": [
+            {
+              "label": "Direct access to package/requirement management from the AI menu."
+            },
+            {
+              "label": "Dedicated tools page card for managing individual Pythons."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "title": "🗺️ Roadmap",
+      "items": [
+        {
+          "label": "Use conda activate for Conda environments."
+        },
+        {
+          "label": "Linux and macOS support."
+        },
+        {
+          "label": "Merge requirements.txt files and manage conflicts."
+        },
+        {
+          "label": "Improve package installation:"
+        },
+        {
+          "label": "Show pip output, progress bar, and download size (MB)."
+        },
+        {
+          "label": "Optimize disk usage calculations and caching."
+        },
+        {
+          "label": "Refresh only Python/venv on changes, no full reload."
+        },
+        {
+          "label": "Expand tools page to full screen."
+        },
+        {
+          "label": "Activate Python/venv during AI installation."
+        },
+        {
+          "label": "Check for Python version updates and auto-update on startup."
+        },
+        {
+          "label": "Show detailed errors for installations/updates."
+        },
+        {
+          "label": "Add settings to disable auto venv assignment for AIs."
+        },
+        {
+          "label": "Set a default venv for all AIs."
+        },
+        {
+          "label": "Prompt and warn user to modify pre-command of arguments to set venv for AI."
+        }
+      ]
+    }
+  ],
+  "avatarUrl": "https://raw.githubusercontent.com/KindaBrazy/LynxHub-Python-Toolkit/refs/heads/compiled/icon.png",
+  "tag": "tools",
+  "platforms": [
+    "win32"
+  ]
 }
