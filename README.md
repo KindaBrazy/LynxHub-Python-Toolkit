@@ -2,6 +2,8 @@
 
 # [LynxHub](https://github.com/KindaBrazy/LynxHub) Python Toolkit Extension
 
+![Python Management Screenshot](./resources/python.png)
+
 **Python Toolkit Extension** is a powerful tool designed to streamline Python environment management within the
 [**LynxHub**](https://github.com/KindaBrazy/LynxHub) platform. It offers comprehensive features for managing Python
 installations, virtual environments, and packages.
