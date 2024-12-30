@@ -4,8 +4,7 @@
 
 **Python Toolkit Extension** is a powerful tool designed to streamline Python environment management within the
 [**LynxHub**](https://github.com/KindaBrazy/LynxHub) platform. It offers comprehensive features for managing Python
-installations, virtual environments, and
-packages.
+installations, virtual environments, and packages.
 
 </div>
 
@@ -41,6 +40,7 @@ packages.
 10. [ ] Show detailed errors for installations/updates.
 11. [ ] Add settings to disable auto venv assignment for AIs.
 12. [ ] Set a default venv for all AIs.
+13. [ ] Prompt and warn user to modify pre-command of arguments to set venv for AI.
 
 ## 🚀 Features
 
