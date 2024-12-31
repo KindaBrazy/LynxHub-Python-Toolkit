@@ -1,125 +1,35 @@
-import {Button} from '@nextui-org/react';
-import {isNil} from 'lodash';
-import {observer} from 'mobx-react-lite';
-import {useCallback, useEffect, useMemo, useState} from 'react';
+import {DropdownItem, DropdownSection} from '@nextui-org/react';
+import {useCallback} from 'react';
+import {useDispatch} from 'react-redux';
 
 import {PYTHON_SUPPORTED_AI} from '../../../cross/extension/CrossExtConstants';
 import {CardsDataManager} from '../../src/App/Components/Cards/CardsDataManager';
-import {DropDownSectionType} from '../../src/App/Utils/Types';
-import {useInstalledCard} from '../../src/App/Utils/UtilHooks';
-import {Refresh3_Icon} from '../../src/assets/icons/SvgIcons/SvgIcons4';
-import pIpc from '../PIpc';
-import PackageManagerModal from './Python/PackageManagement/PackageManager/PackageManagerModal';
+import {PythonToolkitActions} from '../reducer';
 import {Python_Icon} from './SvgIcons';
-import UIProvider from './UIProvider';
 
 type Props = {
-  addMenu: (sections: DropDownSectionType[], index?: number) => void;
   context: CardsDataManager;
 };
 
-const CardMenu = observer(({addMenu, context}: Props) => {
-  if (!PYTHON_SUPPORTED_AI.includes(context.id)) return null;
-
-  const [isOpen, setIsOpen] = useState<boolean>(false);
-  const webUI = useInstalledCard(context.id);
-
-  const [pythonPath, setPythonPath] = useState<string>('');
-  const [isLocatingVenv, setIsLocatingVenv] = useState<boolean>(false);
+export default function CardMenu({context}: Props) {
+  const dispatch = useDispatch();
 
   const onPress = useCallback(() => {
-    setIsOpen(true);
-    context.setMenuIsOpen(false);
-  }, []);
+    dispatch(PythonToolkitActions.openMenuModal({title: context.title, id: context.id}));
+    context?.setMenuIsOpen(false);
+  }, [context]);
 
-  useEffect(() => {
-    if (isOpen) {
-      pIpc.getAIVenv(context.id).then(folder => {
-        if (isNil(folder)) {
-          pIpc
-            .findAIVenv(context.id, webUI?.dir)
-            .then(result => {
-              pIpc.checkAIVenvEnabled();
-              setPythonPath(result);
-            })
-            .catch(console.log);
-        } else {
-          setPythonPath(folder);
-          pIpc.checkAIVenvEnabled();
-        }
-      });
-    }
-  }, [isOpen, webUI]);
-
-  useEffect(() => {
-    const sections = [
-      {
-        key: 'python_toolkit',
-        items: [
-          {
-            onPress,
-            className: 'cursor-default',
-            key: 'python_deps',
-            startContent: <Python_Icon className="size-3" />,
-            title: 'Dependencies',
-          },
-        ],
-        showDivider: true,
-      },
-    ];
-
-    addMenu(sections, 1);
-  }, []);
-
-  const locateVenv = () => {
-    if (context) {
-      setIsLocatingVenv(true);
-      pIpc
-        .locateAIVenv(context.id)
-        .then(result => {
-          pIpc.checkAIVenvEnabled();
-          setPythonPath(result);
-        })
-        .catch(console.error)
-        .finally(() => {
-          setIsLocatingVenv(false);
-        });
-    }
-  };
-
-  const actionButtons = useMemo(() => {
-    return pythonPath
-      ? [
-          <Button
-            size="sm"
-            variant="flat"
-            key="reloacte_venv"
-            onPress={locateVenv}
-            className="!min-w-32"
-            isLoading={isLocatingVenv}
-            startContent={!isLocatingVenv && <Refresh3_Icon />}>
-            {!isLocatingVenv && 'Change Venv'}
-          </Button>,
-        ]
-      : [];
-  }, [pythonPath, isLocatingVenv]);
+  if (!PYTHON_SUPPORTED_AI.includes(context.id)) return null;
 
   return (
-    <UIProvider>
-      <PackageManagerModal
-        size="4xl"
-        isOpen={isOpen}
-        id={context.id}
-        setIsOpen={setIsOpen}
-        pythonPath={pythonPath}
-        locateVenv={locateVenv}
-        projectPath={webUI?.dir}
-        isLocating={isLocatingVenv}
-        actionButtons={actionButtons}
-        title={`${context.title} Dependencies`}
+    <DropdownSection key="python_toolkit" showDivider>
+      <DropdownItem
+        onPress={onPress}
+        key="python_deps"
+        title="Dependencies"
+        className="cursor-default"
+        startContent={<Python_Icon className="size-3" />}
       />
-    </UIProvider>
+    </DropdownSection>
   );
-});
-
-export default CardMenu;
+}

@@ -1,6 +1,6 @@
 import {Button, Modal, ModalContent, ModalFooter, Selection} from '@nextui-org/react';
 import {isEmpty} from 'lodash';
-import {Dispatch, ReactNode, SetStateAction, useEffect, useState} from 'react';
+import {ReactNode, useEffect, useState} from 'react';
 
 import {FilterKeys, PackageInfo, SitePackages_Info} from '../../../../../../cross/extension/CrossExtTypes';
 import {getUpdateType} from '../../../../../../cross/extension/CrossExtUtils';
@@ -13,7 +13,7 @@ import PackageManagerHeader from './Header';
 
 type Props = {
   isOpen: boolean;
-  setIsOpen: Dispatch<SetStateAction<boolean>>;
+  setIsOpen: (value: boolean) => void;
   pythonPath: string;
 
   title?: string;
