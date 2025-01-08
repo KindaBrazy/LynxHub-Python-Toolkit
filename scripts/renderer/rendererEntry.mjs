@@ -3,7 +3,7 @@ const currentImports = {};
       let moduleMap = {
 "Extension":()=>{
       dynamicLoadingCss(["style-BlgtOgLi.css"], false, 'Extension');
-      return __federation_import('./__federation_expose_Extension-DzujJV0L.js').then(module =>Object.keys(module).every(item => exportSet.has(item)) ? () => module.default : () => module)},};
+      return __federation_import('./__federation_expose_Extension-DcOMviUC.js').then(module =>Object.keys(module).every(item => exportSet.has(item)) ? () => module.default : () => module)},};
     const seen = {};
     const dynamicLoadingCss = (cssFilePaths, dontAppendStylesToHead, exposeItemName) => {
       const metaUrl = import.meta.url;

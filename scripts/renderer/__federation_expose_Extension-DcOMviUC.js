@@ -1,6 +1,6 @@
 /* empty css               */
 import { importShared } from './__federation_fn_import-Bh9j8VYr.js';
-import { j as jsxRuntimeExports, a as TRANSITION_EASINGS } from './chunk-736YWA4T-CvOIEcKN.js';
+import { j as jsxRuntimeExports, a as TRANSITION_EASINGS } from './chunk-736YWA4T-CpJxSm98.js';
 import { g as getDefaultExportFromCjs, c as commonjsGlobal, a as getAugmentedNamespace } from './_commonjsHelpers-E-ZsRS8r.js';
 
 const PYTHON_SUPPORTED_AI = [
@@ -1663,7 +1663,7 @@ createSlice({
 });
 const useCardsState = (name) => useSelector$1((state) => state.cards[name]);
 
-const {useEffect: useEffect$e,useMemo: useMemo$9,useRef: useRef$1} = await importShared('react');
+const {useMemo: useMemo$9} = await importShared('react');
 function useInstalledCard(cardId) {
   const installedCards = useCardsState("installedCards");
   return useMemo$9(() => installedCards.find((card) => card.id === cardId), [installedCards, cardId]);
@@ -4468,6 +4468,20 @@ function getUpdateVersionColor(currentVersion, updateVersion) {
     default:
       return "text-gray-500";
   }
+}
+function formatSizeMB(mb) {
+  if (mb > 1024) {
+    return (mb / 1024).toFixed(2) + " GB";
+  } else {
+    return mb + " MB";
+  }
+}
+function bytesToMegabytes(bytes) {
+  if (bytes < 0) {
+    throw new Error("Bytes value cannot be negative");
+  }
+  const megabytes = bytes / (1024 * 1024);
+  return parseFloat(megabytes.toFixed(2));
 }
 
 const modalMotionProps = {
@@ -7421,56 +7435,6 @@ function formatSize(size) {
     return `${(size / (1024 * 1024 * 1024)).toFixed(2)} GB`;
   }
 }
-function formatSizeMB(mb) {
-  if (mb > 1024) {
-    return (mb / 1024).toFixed(2) + " GB";
-  } else {
-    return mb + " MB";
-  }
-}
-function bytesToMegabytes(bytes) {
-  if (bytes < 0) {
-    throw new Error("Bytes value cannot be negative");
-  }
-  const megabytes = bytes / (1024 * 1024);
-  return parseFloat(megabytes.toFixed(2));
-}
-
-function MenuDots_Icon(props) {
-  return /* @__PURE__ */ jsxRuntimeExports.jsx("svg", { ...props, width: "1em", height: "1em", viewBox: "0 0 24 24", xmlns: "http://www.w3.org/2000/svg", children: /* @__PURE__ */ jsxRuntimeExports.jsx(
-    "path",
-    {
-      fill: "currentColor",
-      d: "M7 12a2 2 0 1 1-4 0a2 2 0 0 1 4 0m7 0a2 2 0 1 1-4 0a2 2 0 0 1 4 0m7 0a2 2 0 1 1-4 0a2 2 0 0 1 4 0"
-    }
-  ) });
-}
-function Play_Icon(props) {
-  return /* @__PURE__ */ jsxRuntimeExports.jsx("svg", { ...props, width: "1em", height: "1em", viewBox: "0 0 24 24", xmlns: "http://www.w3.org/2000/svg", children: /* @__PURE__ */ jsxRuntimeExports.jsx(
-    "path",
-    {
-      d: "M21.409 9.353a2.998 2.998 0 0 1 0 5.294L8.597 21.614C6.534 22.737 4 21.277 4 18.968V5.033c0-2.31 2.534-3.769 4.597-2.648z",
-      fill: "currentColor"
-    }
-  ) });
-}
-function Refresh_Icon(props) {
-  return /* @__PURE__ */ jsxRuntimeExports.jsx("svg", { ...props, width: "1em", height: "1em", viewBox: "0 0 24 24", xmlns: "http://www.w3.org/2000/svg", children: /* @__PURE__ */ jsxRuntimeExports.jsxs("g", { fill: "none", children: [
-    /* @__PURE__ */ jsxRuntimeExports.jsx(
-      "path",
-      {
-        d: "M24 0v24H0V0zM12.594 23.258l-.012.002l-.071.035l-.02.004l-.014-.004l-.071-.036c-.01-.003-.019 0-.024.006l-.004.01l-.017.428l.005.02l.01.013l.104.074l.015.004l.012-.004l.104-.074l.012-.016l.004-.017l-.017-.427c-.002-.01-.009-.017-.016-.018m.264-.113l-.014.002l-.184.093l-.01.01l-.003.011l.018.43l.005.012l.008.008l.201.092c.012.004.023 0 .029-.008l.004-.014l-.034-.614c-.003-.012-.01-.02-.02-.022m-.715.002a.023.023 0 0 0-.027.006l-.006.014l-.034.614c0 .012.007.02.017.024l.015-.002l.201-.093l.01-.008l.003-.011l.018-.43l-.003-.012l-.01-.01z"
-      }
-    ),
-    /* @__PURE__ */ jsxRuntimeExports.jsx(
-      "path",
-      {
-        d: "M4 9.5A1.5 1.5 0 0 1 5.5 11a5.5 5.5 0 0 0 5.279 5.496L11 16.5h2.382a1.5 1.5 0 0 1 2.065-2.164l.114.103l2.5 2.5a1.494 1.494 0 0 1 .43.89l.009.157v.028a1.49 1.49 0 0 1-.348.947l-.097.105l-2.494 2.495a1.5 1.5 0 0 1-2.272-1.947l.093-.114H11A8.5 8.5 0 0 1 2.5 11A1.5 1.5 0 0 1 4 9.5m4.44-7.06a1.5 1.5 0 0 1 2.27 1.946l-.092.114H13a8.5 8.5 0 0 1 8.5 8.5a1.5 1.5 0 1 1-3 0a5.5 5.5 0 0 0-5.279-5.496L13 7.5h-2.382a1.5 1.5 0 0 1-2.065 2.164L8.44 9.56l-2.5-2.5a1.5 1.5 0 0 1-.103-2.008l.103-.114l2.5-2.5Z",
-        fill: "currentColor"
-      }
-    )
-  ] }) });
-}
 
 function Add_Icon(props) {
   return /* @__PURE__ */ jsxRuntimeExports.jsx("svg", { ...props, width: "1em", height: "1em", viewBox: "0 0 24 24", xmlns: "http://www.w3.org/2000/svg", children: /* @__PURE__ */ jsxRuntimeExports.jsxs("g", { fill: "none", children: [
@@ -7560,6 +7524,42 @@ function Filter_Icon(props) {
       fill: "currentColor"
     }
   ) });
+}
+
+function MenuDots_Icon(props) {
+  return /* @__PURE__ */ jsxRuntimeExports.jsx("svg", { ...props, width: "1em", height: "1em", viewBox: "0 0 24 24", xmlns: "http://www.w3.org/2000/svg", children: /* @__PURE__ */ jsxRuntimeExports.jsx(
+    "path",
+    {
+      fill: "currentColor",
+      d: "M7 12a2 2 0 1 1-4 0a2 2 0 0 1 4 0m7 0a2 2 0 1 1-4 0a2 2 0 0 1 4 0m7 0a2 2 0 1 1-4 0a2 2 0 0 1 4 0"
+    }
+  ) });
+}
+function Play_Icon(props) {
+  return /* @__PURE__ */ jsxRuntimeExports.jsx("svg", { ...props, width: "1em", height: "1em", viewBox: "0 0 24 24", xmlns: "http://www.w3.org/2000/svg", children: /* @__PURE__ */ jsxRuntimeExports.jsx(
+    "path",
+    {
+      d: "M21.409 9.353a2.998 2.998 0 0 1 0 5.294L8.597 21.614C6.534 22.737 4 21.277 4 18.968V5.033c0-2.31 2.534-3.769 4.597-2.648z",
+      fill: "currentColor"
+    }
+  ) });
+}
+function Refresh_Icon(props) {
+  return /* @__PURE__ */ jsxRuntimeExports.jsx("svg", { ...props, width: "1em", height: "1em", viewBox: "0 0 24 24", xmlns: "http://www.w3.org/2000/svg", children: /* @__PURE__ */ jsxRuntimeExports.jsxs("g", { fill: "none", children: [
+    /* @__PURE__ */ jsxRuntimeExports.jsx(
+      "path",
+      {
+        d: "M24 0v24H0V0zM12.594 23.258l-.012.002l-.071.035l-.02.004l-.014-.004l-.071-.036c-.01-.003-.019 0-.024.006l-.004.01l-.017.428l.005.02l.01.013l.104.074l.015.004l.012-.004l.104-.074l.012-.016l.004-.017l-.017-.427c-.002-.01-.009-.017-.016-.018m.264-.113l-.014.002l-.184.093l-.01.01l-.003.011l.018.43l.005.012l.008.008l.201.092c.012.004.023 0 .029-.008l.004-.014l-.034-.614c-.003-.012-.01-.02-.02-.022m-.715.002a.023.023 0 0 0-.027.006l-.006.014l-.034.614c0 .012.007.02.017.024l.015-.002l.201-.093l.01-.008l.003-.011l.018-.43l-.003-.012l-.01-.01z"
+      }
+    ),
+    /* @__PURE__ */ jsxRuntimeExports.jsx(
+      "path",
+      {
+        d: "M4 9.5A1.5 1.5 0 0 1 5.5 11a5.5 5.5 0 0 0 5.279 5.496L11 16.5h2.382a1.5 1.5 0 0 1 2.065-2.164l.114.103l2.5 2.5a1.494 1.494 0 0 1 .43.89l.009.157v.028a1.49 1.49 0 0 1-.348.947l-.097.105l-2.494 2.495a1.5 1.5 0 0 1-2.272-1.947l.093-.114H11A8.5 8.5 0 0 1 2.5 11A1.5 1.5 0 0 1 4 9.5m4.44-7.06a1.5 1.5 0 0 1 2.27 1.946l-.092.114H13a8.5 8.5 0 0 1 8.5 8.5a1.5 1.5 0 1 1-3 0a5.5 5.5 0 0 0-5.279-5.496L13 7.5h-2.382a1.5 1.5 0 0 1-2.065 2.164L8.44 9.56l-2.5-2.5a1.5 1.5 0 0 1-.103-2.008l.103-.114l2.5-2.5Z",
+        fill: "currentColor"
+      }
+    )
+  ] }) });
 }
 
 function Trash_Icon(props) {
