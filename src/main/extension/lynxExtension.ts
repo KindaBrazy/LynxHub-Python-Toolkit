@@ -104,3 +104,7 @@ export async function initialExtension(lynxApi: ExtensionMainApi, utils: MainExt
     );
   });
 }
+
+/** TODO:
+ * 1. Downgrade a package
+ * */
