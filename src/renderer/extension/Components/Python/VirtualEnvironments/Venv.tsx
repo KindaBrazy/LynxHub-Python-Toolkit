@@ -3,8 +3,8 @@ import {Empty, message} from 'antd';
 import {isEmpty} from 'lodash';
 import {useCallback, useEffect, useState} from 'react';
 
-import {bytesToMegabytes} from '../../../../../cross/CrossUtils';
 import {PythonInstallation, PythonVenvs, VenvInfo} from '../../../../../cross/extension/CrossExtTypes';
+import {bytesToMegabytes} from '../../../../../cross/extension/CrossExtUtils';
 import rendererIpc from '../../../../src/App/RendererIpc';
 import {OpenFolder_Icon} from '../../../../src/assets/icons/SvgIcons/SvgIcons4';
 import pIpc from '../../../PIpc';

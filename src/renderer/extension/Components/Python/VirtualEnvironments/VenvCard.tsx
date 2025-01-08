@@ -13,7 +13,7 @@ import {SHA256} from 'crypto-js';
 import {isNil} from 'lodash';
 import {FormEvent, useEffect, useMemo, useState} from 'react';
 
-import {formatSizeMB} from '../../../../../cross/CrossUtils';
+import {formatSizeMB} from '../../../../../cross/extension/CrossExtUtils';
 import rendererIpc from '../../../../src/App/RendererIpc';
 import {MenuDots_Icon} from '../../../../src/assets/icons/SvgIcons/SvgIcons2';
 import {Trash_Icon} from '../../../../src/assets/icons/SvgIcons/SvgIcons3';

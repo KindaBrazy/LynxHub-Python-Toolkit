@@ -14,8 +14,8 @@ import {Card, Divider, Spin} from 'antd';
 import {isNil, startCase} from 'lodash';
 import {useMemo, useState} from 'react';
 
-import {formatSizeMB} from '../../../../../cross/CrossUtils';
 import {PythonInstallation} from '../../../../../cross/extension/CrossExtTypes';
+import {formatSizeMB} from '../../../../../cross/extension/CrossExtUtils';
 import rendererIpc from '../../../../src/App/RendererIpc';
 import {MenuDots_Icon} from '../../../../src/assets/icons/SvgIcons/SvgIcons2';
 import {Trash_Icon} from '../../../../src/assets/icons/SvgIcons/SvgIcons3';
