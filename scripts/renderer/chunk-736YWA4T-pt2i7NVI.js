@@ -21,8 +21,8 @@ function requireReactJsxRuntime_production () {
 	  REACT_FRAGMENT_TYPE = Symbol.for("react.fragment");
 	function jsxProd(type, config, maybeKey) {
 	  var key = null;
-	  void 0 !== maybeKey && (key = "" + maybeKey);
-	  void 0 !== config.key && (key = "" + config.key);
+	  undefined !== maybeKey && (key = "" + maybeKey);
+	  undefined !== config.key && (key = "" + config.key);
 	  if ("key" in config) {
 	    maybeKey = {};
 	    for (var propName in config)
@@ -33,7 +33,7 @@ function requireReactJsxRuntime_production () {
 	    $$typeof: REACT_ELEMENT_TYPE,
 	    type: type,
 	    key: key,
-	    ref: void 0 !== config ? config : null,
+	    ref: undefined !== config ? config : null,
 	    props: maybeKey
 	  };
 	}

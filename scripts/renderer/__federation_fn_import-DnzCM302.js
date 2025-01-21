@@ -217,13 +217,13 @@ function compareAtom(rangeAtom, versionAtom) {
 function comparePreRelease(rangeAtom, versionAtom) {
   const { preRelease: rangePreRelease } = rangeAtom;
   const { preRelease: versionPreRelease } = versionAtom;
-  if (rangePreRelease === void 0 && !!versionPreRelease) {
+  if (rangePreRelease === undefined && !!versionPreRelease) {
     return 1;
   }
-  if (!!rangePreRelease && versionPreRelease === void 0) {
+  if (!!rangePreRelease && versionPreRelease === undefined) {
     return -1;
   }
-  if (rangePreRelease === void 0 && versionPreRelease === void 0) {
+  if (rangePreRelease === undefined && versionPreRelease === undefined) {
     return 0;
   }
   for (let i = 0, n = rangePreRelease.length; i <= n; i++) {
@@ -232,7 +232,7 @@ function comparePreRelease(rangeAtom, versionAtom) {
     if (rangeElement === versionElement) {
       continue;
     }
-    if (rangeElement === void 0 && versionElement === void 0) {
+    if (rangeElement === undefined && versionElement === undefined) {
       return 0;
     }
     if (!rangeElement) {
@@ -264,7 +264,7 @@ function compare(rangeAtom, versionAtom) {
       return compareVersion(rangeAtom, versionAtom) > 0;
     case "<=":
       return eq(rangeAtom, versionAtom) || compareVersion(rangeAtom, versionAtom) > 0;
-    case void 0: {
+    case undefined: {
       return true;
     }
     default:
@@ -318,7 +318,7 @@ function satisfy(version, range) {
     major: versionMajor,
     minor: versionMinor,
     patch: versionPatch,
-    preRelease: versionPreRelease == null ? void 0 : versionPreRelease.split(".")
+    preRelease: versionPreRelease == null ? undefined : versionPreRelease.split(".")
   };
   for (const comparator2 of comparators) {
     const extractedComparator = extractComparator(comparator2);
@@ -345,7 +345,7 @@ function satisfy(version, range) {
       major: rangeMajor,
       minor: rangeMinor,
       patch: rangePatch,
-      preRelease: rangePreRelease == null ? void 0 : rangePreRelease.split(".")
+      preRelease: rangePreRelease == null ? undefined : rangePreRelease.split(".")
     };
     if (!compare(rangeAtom, versionAtom)) {
       return false;
