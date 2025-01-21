@@ -1,4 +1,4 @@
-import {Button, Divider, Modal, ModalBody, ModalContent, ModalFooter, ModalHeader, Tab, Tabs} from '@nextui-org/react';
+import {Button, Divider, Modal, ModalBody, ModalContent, ModalFooter, ModalHeader, Tab, Tabs} from '@heroui/react';
 import {Dispatch, Key, SetStateAction, useState} from 'react';
 
 import {PythonInstallation} from '../../../../cross/extension/CrossExtTypes';

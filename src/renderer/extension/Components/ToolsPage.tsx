@@ -1,4 +1,4 @@
-import {Button, Card, CardBody, CardHeader} from '@nextui-org/react';
+import {Button, Card, CardBody, CardHeader} from '@heroui/react';
 import {useState} from 'react';
 
 import {Play_Icon} from '../../src/assets/icons/SvgIcons/SvgIcons2';

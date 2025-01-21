@@ -1,4 +1,4 @@
-import {Alert, Button, Code, Input} from '@nextui-org/react';
+import {Alert, Button, Code, Input} from '@heroui/react';
 import {Divider, message} from 'antd';
 import {compact, isEmpty} from 'lodash';
 import {KeyboardEvent, useState} from 'react';

@@ -8,7 +8,7 @@ import {
   PopoverTrigger,
   Progress,
   Spinner,
-} from '@nextui-org/react';
+} from '@heroui/react';
 import {List, Result, Tooltip} from 'antd';
 import {isEmpty, isNil} from 'lodash';
 import {OverlayScrollbarsComponent} from 'overlayscrollbars-react';

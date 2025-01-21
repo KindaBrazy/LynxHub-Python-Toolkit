@@ -1,4 +1,4 @@
-import {ButtonGroup, Input, ModalHeader, Selection} from '@nextui-org/react';
+import {ButtonGroup, Input, ModalHeader, Selection} from '@heroui/react';
 import {message} from 'antd';
 import {isEmpty} from 'lodash';
 import {Dispatch, ReactNode, SetStateAction, useState} from 'react';

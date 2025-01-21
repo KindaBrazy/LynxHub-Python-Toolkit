@@ -1,4 +1,4 @@
-import {Button, Dropdown, DropdownItem, DropdownMenu, DropdownSection, DropdownTrigger} from '@nextui-org/react';
+import {Button, Dropdown, DropdownItem, DropdownMenu, DropdownSection, DropdownTrigger} from '@heroui/react';
 import {Dispatch, SetStateAction, useEffect, useState} from 'react';
 
 import {FilterKeys} from '../../../../../../cross/extension/CrossExtTypes';

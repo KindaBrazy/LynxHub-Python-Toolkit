@@ -1,4 +1,4 @@
-import {Button, CircularProgress, Input, Link, Progress} from '@nextui-org/react';
+import {Button, CircularProgress, Input, Link, Progress} from '@heroui/react';
 import {List, Tooltip} from 'antd';
 import {isEmpty, isNil} from 'lodash';
 import {OverlayScrollbarsComponent} from 'overlayscrollbars-react';

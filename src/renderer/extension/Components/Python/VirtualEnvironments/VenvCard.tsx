@@ -7,7 +7,7 @@ import {
   Popover,
   PopoverContent,
   PopoverTrigger,
-} from '@nextui-org/react';
+} from '@heroui/react';
 import {Card, message, Spin} from 'antd';
 import {SHA256} from 'crypto-js';
 import {isNil} from 'lodash';

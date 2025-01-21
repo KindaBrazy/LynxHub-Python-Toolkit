@@ -1,4 +1,4 @@
-import {Button, Divider, Input, Popover, PopoverContent, PopoverTrigger, Select, SelectItem} from '@nextui-org/react';
+import {Button, Divider, Input, Popover, PopoverContent, PopoverTrigger, Select, SelectItem} from '@heroui/react';
 import {message} from 'antd';
 import {capitalize, isEmpty} from 'lodash';
 import {useCallback, useEffect, useMemo, useState} from 'react';

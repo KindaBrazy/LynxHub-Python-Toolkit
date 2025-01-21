@@ -1,4 +1,4 @@
-import {Button, Spinner} from '@nextui-org/react';
+import {Button, Spinner} from '@heroui/react';
 import {Empty, message} from 'antd';
 import {isEmpty} from 'lodash';
 import {useCallback, useEffect, useState} from 'react';

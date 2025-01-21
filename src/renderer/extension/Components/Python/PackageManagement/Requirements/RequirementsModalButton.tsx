@@ -1,4 +1,4 @@
-import {Button, Input, Modal, ModalBody, ModalContent, ModalFooter, ModalHeader} from '@nextui-org/react';
+import {Button, Input, Modal, ModalBody, ModalContent, ModalFooter, ModalHeader} from '@heroui/react';
 import {Empty, message, Result} from 'antd';
 import {isEmpty} from 'lodash';
 import {OverlayScrollbarsComponentRef} from 'overlayscrollbars-react';

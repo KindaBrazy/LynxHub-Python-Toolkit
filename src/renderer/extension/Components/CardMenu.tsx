@@ -1,4 +1,4 @@
-import {DropdownItem, DropdownSection} from '@nextui-org/react';
+import {DropdownItem, DropdownSection} from '@heroui/react';
 import {useCallback} from 'react';
 import {useDispatch} from 'react-redux';
 

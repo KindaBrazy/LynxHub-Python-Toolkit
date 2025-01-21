@@ -9,7 +9,7 @@ import {
   PopoverContent,
   PopoverTrigger,
   Progress,
-} from '@nextui-org/react';
+} from '@heroui/react';
 import {Card, Divider, Spin} from 'antd';
 import {isNil, startCase} from 'lodash';
 import {useMemo, useState} from 'react';

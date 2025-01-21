@@ -1,4 +1,4 @@
-import {Button, Modal, ModalContent, ModalFooter, Selection} from '@nextui-org/react';
+import {Button, Modal, ModalContent, ModalFooter, Selection} from '@heroui/react';
 import {isEmpty} from 'lodash';
 import {ReactNode, useEffect, useState} from 'react';
 
