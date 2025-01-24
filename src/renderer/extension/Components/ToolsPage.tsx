@@ -17,16 +17,16 @@ export default function ToolsPage() {
     <UIProvider>
       <Card
         className={
-          `w-[230px] h-fit cursor-default shadow-md !transition  border-1 ` +
-          `border-foreground/10 duration-300 hover:shadow-xl dark:bg-[#3d3d3d]`
+          `w-[230px] h-fit cursor-default shadow-md !transition border-1 ` +
+          `border-foreground/5 duration-300 hover:shadow-xl dark:bg-[#3d3d3d]`
         }>
         <CardHeader>
-          <Python_Color_Icon className="w-full h-32" />
+          <Python_Color_Icon className="w-full h-36 my-1" />
         </CardHeader>
-        <CardBody className="text-center text-lg font-bold">Python Toolkit</CardBody>
+        <CardBody className="text-center text-lg font-semibold bg-foreground-100">Python Toolkit</CardBody>
         <CardBody>
           <Button color="primary" onPress={openModal} fullWidth>
-            <Play_Icon className="size-4" />
+            <Play_Icon className="size-[1.1rem]" />
           </Button>
         </CardBody>
       </Card>
