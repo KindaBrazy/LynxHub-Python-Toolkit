@@ -46,7 +46,8 @@ export default function InstallerModal({isOpen, closeModal, refresh, installed}:
               variant="underlined"
               onSelectionChange={setCurrentTab}
               selectedKey={currentTab.toString()}
-              classNames={{cursor: '!bg-[#ffe66e]'}}>
+              classNames={{cursor: '!bg-[#ffe66e]'}}
+              disableAnimation>
               <Tab key="official" title="Official Python Releases" />
               <Tab key="conda" title="Conda Environments" />
             </Tabs>
