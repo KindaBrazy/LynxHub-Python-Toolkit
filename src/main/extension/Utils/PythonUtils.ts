@@ -53,9 +53,7 @@ export async function parseVersion(pythonPath: string): Promise<{major: number; 
 
     pythonProcess.on('close', code => {
       if (code === 0) {
-        // Python 3.x outputs version to stdout, Python 2.7 outputs to stderr
         const versionOutput = stdout.trim() || stderr.trim();
-        console.log(`Version output for ${pythonPath}:`, versionOutput);
 
         const versionMatch = versionOutput.match(/Python (\d+)\.(\d+)(?:\.(\d+))?/i);
 

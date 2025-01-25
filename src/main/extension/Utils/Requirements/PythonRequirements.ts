@@ -133,9 +133,14 @@ export function setReqPath(data: IdPathType) {
 
   let result: IdPathType[] = [];
   if (existingData) {
-    result = existingData.map(item => {
-      return item.id === data.id ? data : item;
-    });
+    const found = existingData.some(item => item.id === data.id);
+    if (found) {
+      result = existingData.map(item => {
+        return item.id === data.id ? data : item;
+      });
+    } else {
+      result.push(data);
+    }
   } else {
     result.push(data);
   }
