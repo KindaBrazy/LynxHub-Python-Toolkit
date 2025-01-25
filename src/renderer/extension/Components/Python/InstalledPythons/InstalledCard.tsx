@@ -30,7 +30,7 @@ type Props = {
   diskUsage: {path: string; value: number | undefined}[];
   maxDiskValue: number;
   updateDefault: (installFolder: string) => void;
-  refresh: () => void;
+  refresh: (research: boolean) => void;
 };
 
 export default function InstalledCard({python, diskUsage, maxDiskValue, updateDefault, refresh}: Props) {
@@ -60,7 +60,8 @@ export default function InstalledCard({python, diskUsage, maxDiskValue, updateDe
         console.error(err);
       })
       .finally(() => {
-        refresh();
+        pIpc.removeSavedPython(python.installPath);
+        refresh(false);
         setIsUninstalling(false);
       });
   };

@@ -12,7 +12,7 @@ import StorageManager from '../Managements/Storage/StorageManager';
 import {checkAIVenvsEnabled} from './Utils/AIVenvs';
 import {getAvailablePythonVersions} from './Utils/Available';
 import {setDefaultPython} from './Utils/DefaultPython';
-import detectPythonInstallations from './Utils/Detector';
+import detectPythonInstallations, {addSavedPython, removeSavedPython} from './Utils/Detector';
 import {createCondaEnv, isCondaInstalled, listAvailablePythons} from './Utils/Installer/Installer_Conda';
 import downloadPython from './Utils/Installer/Installer_Official';
 import {
@@ -48,7 +48,10 @@ export async function initialExtension(lynxApi: ExtensionMainApi, utils: MainExt
     storageManager = storeManager;
   });
   lynxApi.listenForChannels(() => {
-    ipcMain.handle(pythonChannels.getInstalledPythons, () => detectPythonInstallations());
+    ipcMain.on(pythonChannels.removeSavedPython, (_, pPath: string) => removeSavedPython(pPath));
+    ipcMain.on(pythonChannels.addSavedPython, (_, pPath: string) => addSavedPython(pPath));
+
+    ipcMain.handle(pythonChannels.getInstalledPythons, (_, refresh: boolean) => detectPythonInstallations(refresh));
     ipcMain.handle(pythonChannels.uninstallPython, (_, path: string) => uninstallPython(path));
     ipcMain.handle(pythonChannels.setDefaultPython, (_, pythonPath: string) => setDefaultPython(pythonPath));
 

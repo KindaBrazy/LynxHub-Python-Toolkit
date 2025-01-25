@@ -1,3 +1,4 @@
+import {spawn} from 'node:child_process';
 import {join, resolve} from 'node:path';
 
 import {exec} from 'child_process';
@@ -38,25 +39,40 @@ export async function detectInstallationType(pythonPath: string): Promise<Python
   }
 }
 
+// 20ms
 export async function parseVersion(pythonPath: string): Promise<{major: number; minor: number; patch: number}> {
-  return new Promise(async (resolve, reject) => {
-    try {
-      const {stdout} = await execAsync(`"${pythonPath}" --version 2>&1`);
-      const versionMatch = stdout.trim().match(/Python (\d+)\.(\d+)(?:\.(\d+))?/i);
+  return new Promise((resolve, reject) => {
+    const pythonProcess = spawn(pythonPath, ['--version']);
 
-      if (isNil(versionMatch)) {
-        reject(new Error('Unable to parse version string'));
+    let stdout = '';
+    let stderr = '';
+
+    pythonProcess.stdout.on('data', data => {
+      stdout += data.toString();
+    });
+
+    pythonProcess.stderr.on('data', data => {
+      stderr += data.toString();
+    });
+
+    pythonProcess.on('close', code => {
+      if (code === 0) {
+        const versionMatch = stdout.trim().match(/Python (\d+)\.(\d+)(?:\.(\d+))?/i);
+
+        if (isNil(versionMatch)) {
+          reject(new Error('Unable to parse version string'));
+        } else {
+          const [, major, minor, patch] = versionMatch;
+          resolve({
+            major: Number(major),
+            minor: Number(minor),
+            patch: patch ? Number(patch) : 0,
+          });
+        }
+      } else {
+        reject(new Error(`Python process exited with code ${code}: ${stderr}`));
       }
-
-      const [, major, minor, patch] = versionMatch!;
-      resolve({
-        major: Number(major),
-        minor: Number(minor),
-        patch: patch ? Number(patch) : 0,
-      });
-    } catch (error) {
-      reject(new Error(`Failed to parse Python version: ${error}`));
-    }
+    });
   });
 }
 

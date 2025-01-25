@@ -16,7 +16,7 @@ const CACHE_KEY = 'available-pythons-list';
 type Props = {
   isOpen: boolean;
   closeModal: () => void;
-  refresh: () => void;
+  refresh: (research: boolean) => void;
   installed: string[];
   setCloseDisabled: Dispatch<SetStateAction<boolean>>;
 };
@@ -77,7 +77,7 @@ export default function InstallerOfficial({refresh, installed, closeModal, isOpe
     pIpc
       .installOfficial(version)
       .then(() => {
-        refresh();
+        refresh(true);
         closeModal();
         console.log('installed', version);
       })

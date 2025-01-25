@@ -42,9 +42,9 @@ export default function InstalledPythons({
     });
   }, [diskUsage]);
 
-  const getInstalledPythons = () => {
+  const getInstalledPythons = (refresh: boolean) => {
     setIsLoadingPythons(true);
-    pIpc.getInstalledPythons().then((result: PythonInstallation[]) => {
+    pIpc.getInstalledPythons(refresh).then((result: PythonInstallation[]) => {
       setInstalledPythons(result);
       setIsLoadingPythons(false);
 
@@ -64,7 +64,7 @@ export default function InstalledPythons({
   };
 
   useEffect(() => {
-    getInstalledPythons();
+    getInstalledPythons(false);
   }, []);
 
   const [installModalOpen, setInstallModalOpen] = useState<boolean>(false);
@@ -112,7 +112,7 @@ export default function InstalledPythons({
           <Button radius="sm" variant="solid" onPress={openInstallModal} startContent={<Add_Icon />}>
             Install Version
           </Button>
-          <Button variant="faded" onPress={getInstalledPythons} startContent={<Refresh_Icon />}>
+          <Button variant="faded" startContent={<Refresh_Icon />} onPress={() => getInstalledPythons(true)}>
             Refresh List
           </Button>
         </div>

@@ -24,7 +24,7 @@ const CACHE_KEY = 'available-conda-pythons-list';
 type Props = {
   isOpen: boolean;
   closeModal: () => void;
-  refresh: () => void;
+  refresh: (research: boolean) => void;
   installed: string[];
   setCloseDisabled: Dispatch<SetStateAction<boolean>>;
 };
@@ -88,7 +88,7 @@ export default function InstallerConda({refresh, installed, closeModal, isOpen, 
     pIpc
       .installConda(envName, version)
       .then(() => {
-        refresh();
+        refresh(true);
         closeModal();
         console.log('installed', version);
       })

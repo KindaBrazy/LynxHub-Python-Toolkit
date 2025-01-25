@@ -8,7 +8,7 @@ import InstallerOfficial from './OfficialInstaller';
 type Props = {
   isOpen: boolean;
   closeModal: () => void;
-  refresh: () => void;
+  refresh: (research: boolean) => void;
   installed: {
     version: string;
     installationType: 'official' | 'conda' | 'other';

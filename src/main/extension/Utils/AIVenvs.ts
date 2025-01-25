@@ -124,7 +124,7 @@ export async function checkAIVenvsEnabled() {
         break;
       default:
         console.warn(`Unknown venv ID: ${venv.id}`);
-        return; // Returning early is likely a bug, so we warn instead
+        return; // Returning early is likely a bug, so i warn instead
     }
   }
 

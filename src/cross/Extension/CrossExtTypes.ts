@@ -62,6 +62,9 @@ export type DlProgressOfficial = {percentage: number; downloaded: number; total:
 
 export type FilterKeys = 'all' | 'updates' | 'prerelease' | 'major' | 'minor' | 'patch' | 'others';
 export const pythonChannels = {
+  removeSavedPython: 'remove-saved-python',
+  addSavedPython: 'add-saved-python',
+
   getAvailableConda: 'get-available-conda-pythons',
   downloadProgressConda: 'download-conda-python-progress',
   installConda: 'install-conda-python',

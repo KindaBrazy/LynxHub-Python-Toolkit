@@ -15,6 +15,9 @@ import {
 const ipc = window.electron.ipcRenderer;
 
 const pIpc = {
+  removeSavedPython: (pPath: string) => ipc.send(pythonChannels.removeSavedPython, pPath),
+  addSavedPython: (pPath: string) => ipc.send(pythonChannels.addSavedPython, pPath),
+
   getVenvs: (): Promise<VenvInfo[]> => ipc.invoke(pythonChannels.getVenvs),
   locateVenv: (): Promise<boolean> => ipc.invoke(pythonChannels.locateVenv),
   createVenv: (options: VenvCreateOptions): Promise<boolean> => ipc.invoke(pythonChannels.createVenv, options),
@@ -38,7 +41,8 @@ const pIpc = {
   setReqPath: (data: IdPathType): void => ipc.send(pythonChannels.setReqPath, data),
   getReqPath: (id: string): Promise<string | undefined> => ipc.invoke(pythonChannels.getReqPath, id),
 
-  getInstalledPythons: (): Promise<PythonInstallation[]> => ipc.invoke(pythonChannels.getInstalledPythons),
+  getInstalledPythons: (refresh: boolean): Promise<PythonInstallation[]> =>
+    ipc.invoke(pythonChannels.getInstalledPythons, refresh),
   setDefaultPython: (pythonPath: string): Promise<void> => ipc.invoke(pythonChannels.setDefaultPython, pythonPath),
   uninstallPython: (
     path: string,

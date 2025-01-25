@@ -2,11 +2,13 @@ import {basename, dirname, join} from 'node:path';
 
 import {exec} from 'child_process';
 import {existsSync, promises} from 'graceful-fs';
+import {compact, isEmpty, isNil} from 'lodash';
 import {arch, homedir, platform} from 'os';
 import {promisify} from 'util';
 import which from 'which';
 
 import {PythonInstallation} from '../../../cross/extension/CrossExtTypes';
+import {storageManager} from '../lynxExtension';
 import {isDefaultPython} from './DefaultPython';
 import {detectInstallationType, getSitePackagesCount, parseVersion} from './PythonUtils';
 import {getCondaEnvName} from './Uninstaller/Uninstaller_Conda';
@@ -154,39 +156,89 @@ async function getSitePackagesPath(pythonPath: string): Promise<string> {
   }
 }
 
-export default async function detectPythonInstallations(): Promise<PythonInstallation[]> {
-  const installations: PythonInstallation[] = [];
+const STORAGE_INSTALLED_KEY = 'installed_pythons';
+
+export function removeSavedPython(pPath: string) {
+  const savedInstallations: string[] | undefined = storageManager?.getCustomData(STORAGE_INSTALLED_KEY);
+
+  if (!isNil(savedInstallations)) {
+    storageManager?.setCustomRun(
+      STORAGE_INSTALLED_KEY,
+      savedInstallations.filter(p => p !== pPath),
+    );
+  }
+}
+
+export function addSavedPython(pPath: string) {
+  const savedInstallations: string[] | undefined = storageManager?.getCustomData(STORAGE_INSTALLED_KEY);
   const paths = new Set<string>();
 
-  const pathSources = await Promise.all([findPythonInPath(), findInCommonLocations()]);
+  if (!isNil(savedInstallations)) {
+    savedInstallations.forEach(path => paths.add(path));
+  }
+  paths.add(pPath);
 
-  pathSources.flat().forEach(path => paths.add(path));
+  storageManager?.setCustomRun(STORAGE_INSTALLED_KEY, Array.from(paths));
+}
 
-  for (const pythonPath of paths) {
+export default async function detectPythonInstallations(refresh: boolean): Promise<PythonInstallation[]> {
+  const savedInstallations: string[] | undefined = storageManager?.getCustomData(STORAGE_INSTALLED_KEY);
+  const paths = new Set<string>();
+
+  if (!refresh && !isNil(savedInstallations) && !isEmpty(savedInstallations)) {
+    savedInstallations.forEach(path => paths.add(path));
+  } else {
+    const pathSources = await Promise.all([await findPythonInPath(), await findInCommonLocations()]);
+
+    pathSources.flat().forEach(path => paths.add(path));
+
+    storageManager?.setCustomData(STORAGE_INSTALLED_KEY, Array.from(paths));
+  }
+
+  const installationPromises = Array.from(paths).map(async pythonPath => {
     try {
-      const version = await parseVersion(pythonPath);
-      const isDefault = await isDefaultPython(pythonPath);
-      const installationType = await detectInstallationType(pythonPath);
-      const condaName = await getCondaEnvName(pythonPath);
-      const packages = await getSitePackagesCount(pythonPath);
+      const [
+        version,
+        isDefault,
+        installationType,
+        condaName,
+        packages,
+        architecture,
+        pipPath,
+        venvPaths,
+        sitePackagesPath,
+      ] = await Promise.all([
+        (async () => await parseVersion(pythonPath))(),
+        (async () => await isDefaultPython(pythonPath))(),
+        (async () => await detectInstallationType(pythonPath))(),
+        (async () => await getCondaEnvName(pythonPath))(),
+        (async () => await getSitePackagesCount(pythonPath))(),
+        (async () => await detectArchitecture(pythonPath))(),
+        (async () => await getPipPath(pythonPath))(),
+        (async () => await getVenvPaths(pythonPath))(),
+        (async () => await getSitePackagesPath(pythonPath))(),
+      ]);
+
       const installation: PythonInstallation = {
         version: `${version.major}.${version.minor}.${version.patch}`,
         packages,
         installationType,
         condaName,
-        architecture: await detectArchitecture(pythonPath),
+        architecture,
         installPath: pythonPath,
         installFolder: dirname(pythonPath),
-        pipPath: await getPipPath(pythonPath),
-        venvPaths: await getVenvPaths(pythonPath),
-        sitePackagesPath: await getSitePackagesPath(pythonPath),
+        pipPath,
+        venvPaths,
+        sitePackagesPath,
         isDefault,
       };
-      installations.push(installation);
+
+      return installation;
     } catch (error) {
       console.error(`Error analyzing Python installation at ${pythonPath}:`, error);
+      return null;
     }
-  }
+  });
 
-  return installations;
+  return compact(await Promise.all(installationPromises));
 }
