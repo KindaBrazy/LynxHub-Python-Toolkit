@@ -6,7 +6,7 @@ function removeDuplicateUrls(versions: PythonVersion[]): PythonVersion[] {
   const seenUrls = new Set();
   return versions
     .filter(version => {
-      if (seenUrls.has(version.url)) {
+      if (seenUrls.has(version.url) || version.version.startsWith('2')) {
         return false;
       } else {
         seenUrls.add(version.url);
