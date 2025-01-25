@@ -3,6 +3,7 @@ import {IpcRendererEvent} from 'electron';
 import {
   DlProgressOfficial,
   IdPathType,
+  PackageInfo,
   pythonChannels,
   PythonInstallation,
   PythonVersion,
@@ -23,8 +24,8 @@ const pIpc = {
   createVenv: (options: VenvCreateOptions): Promise<boolean> => ipc.invoke(pythonChannels.createVenv, options),
   getPackagesInfo: (pythonPath: string): Promise<SitePackages_Info[]> =>
     ipc.invoke(pythonChannels.getPackagesInfo, pythonPath),
-  getPackagesUpdateInfo: (pythonPath: string): Promise<SitePackages_Info[]> =>
-    ipc.invoke(pythonChannels.getPackagesUpdateInfo, pythonPath),
+  getPackagesUpdateInfo: (packages: PackageInfo[]): Promise<SitePackages_Info[]> =>
+    ipc.invoke(pythonChannels.getPackagesUpdateInfo, packages),
   updateAllPackages: (pythonPath: string, packages: string[]): Promise<string> =>
     ipc.invoke(pythonChannels.updateAllPackages, pythonPath, packages),
   installPackage: (pythonPath: string, command: string): Promise<string> =>
@@ -77,11 +78,8 @@ const pIpc = {
     ipc.invoke(pythonChannels.findAIVenv, id, folder),
   checkAIVenvEnabled: (): void => ipc.send(pythonChannels.checkAIVenvEnabled),
 
-  getUpdatesReq: (
-    pythonPath: string,
-    reqFile: string,
-    currentPackages: SitePackages_Info[],
-  ): Promise<SitePackages_Info[]> => ipc.invoke(pythonChannels.getUpdatesReq, pythonPath, reqFile, currentPackages),
+  getUpdatesReq: (reqFile: string, currentPackages: SitePackages_Info[]): Promise<SitePackages_Info[]> =>
+    ipc.invoke(pythonChannels.getUpdatesReq, reqFile, currentPackages),
 
   readFile: (): Promise<string> => ipc.invoke(pythonChannels.readFile),
 };

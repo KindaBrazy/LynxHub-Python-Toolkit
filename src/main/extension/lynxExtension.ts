@@ -2,6 +2,7 @@ import {ipcMain} from 'electron';
 
 import {
   IdPathType,
+  PackageInfo,
   pythonChannels,
   PythonVersion,
   SitePackages_Info,
@@ -76,7 +77,10 @@ export async function initialExtension(lynxApi: ExtensionMainApi, utils: MainExt
       installPythonPackage(pythonPath, command),
     );
 
-    ipcMain.handle(pythonChannels.getPackagesUpdateInfo, (_, pythonPath: string) => getSitePackagesUpdates(pythonPath));
+    ipcMain.handle(pythonChannels.getPackagesUpdateInfo, (_, packages: PackageInfo[]) =>
+      getSitePackagesUpdates(packages),
+    );
+
     ipcMain.handle(pythonChannels.updatePackage, (_, pythonPath: string, packageName: string) =>
       updatePythonPackage(pythonPath, packageName),
     );
@@ -100,10 +104,8 @@ export async function initialExtension(lynxApi: ExtensionMainApi, utils: MainExt
     ipcMain.handle(pythonChannels.findAIVenv, (_, id: string, folder: string | undefined) => findAIVenv(id, folder));
     ipcMain.on(pythonChannels.checkAIVenvEnabled, () => checkAIVenvsEnabled());
 
-    ipcMain.handle(
-      pythonChannels.getUpdatesReq,
-      (_, pythonPath: string, reqFile: string, currentPackages: SitePackages_Info[]) =>
-        checkPackageUpdates(pythonPath, reqFile, currentPackages),
+    ipcMain.handle(pythonChannels.getUpdatesReq, (_, reqFile: string, currentPackages: SitePackages_Info[]) =>
+      checkPackageUpdates(reqFile, currentPackages),
     );
   });
 }

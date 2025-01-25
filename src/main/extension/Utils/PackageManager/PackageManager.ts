@@ -2,12 +2,15 @@ import {exec} from 'node:child_process';
 import {join} from 'node:path';
 
 import {promises} from 'graceful-fs';
+import {compact} from 'lodash';
+import {compare} from 'semver';
 
-import {IdPathType, SitePackages_Info} from '../../../../cross/extension/CrossExtTypes';
+import {IdPathType, PackageInfo, SitePackages_Info} from '../../../../cross/extension/CrossExtTypes';
 import {storageManager} from '../../lynxExtension';
 import {checkAIVenvsEnabled, removeAIVenvsEnabled} from '../AIVenvs';
 import {openDialogExt} from '../PythonUtils';
 import {isVenvDirectory} from '../VirtualEnv/VenvUtils';
+import {getLatestPipPackageVersion} from './PipToolsManager';
 
 const AI_VENV_STORE_KEYS = 'ai_venvs';
 
@@ -38,31 +41,25 @@ export async function getSitePackagesInfo(pythonExePath: string): Promise<SitePa
   });
 }
 
-export async function getSitePackagesUpdates(pythonExePath: string): Promise<SitePackages_Info[]> {
-  return new Promise((resolve, reject) => {
-    const command = `"${pythonExePath}" -m pip list --format json --outdated`;
-
-    exec(command, (error, stdout, stderr) => {
-      if (error) {
-        reject(`Error getting site packages: ${error.message}`);
-        return;
-      }
-      if (stderr) {
-        console.warn(`stderr when getting site packages: ${stderr}`);
-      }
-
+export async function getSitePackagesUpdates(packages: PackageInfo[]): Promise<SitePackages_Info[]> {
+  try {
+    const getLatest = packages.map(async pkg => {
       try {
-        const packages: {name: string; version: string; latest_version: string}[] = JSON.parse(stdout);
-        const packagePromises: SitePackages_Info[] = packages.map(pkg => {
-          return {name: pkg.name, version: pkg.latest_version};
-        });
+        const latestVersion = await getLatestPipPackageVersion(pkg.name);
 
-        resolve(packagePromises);
-      } catch (parseError) {
-        reject(`Error parsing pip output: ${parseError}`);
+        if (!latestVersion || compare(pkg.version, latestVersion) !== -1) return null;
+
+        return {name: pkg.name, version: latestVersion};
+      } catch (e) {
+        return null;
       }
     });
-  });
+
+    return compact(await Promise.all(getLatest));
+  } catch (e) {
+    console.error(e);
+    return [];
+  }
 }
 
 export async function installPythonPackage(pythonExePath: string, commands: string): Promise<string> {

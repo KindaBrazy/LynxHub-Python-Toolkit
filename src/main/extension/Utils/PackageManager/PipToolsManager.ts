@@ -1,69 +1,60 @@
-import {exec} from 'node:child_process';
-import {promisify} from 'node:util';
-
+import axios from 'axios';
+import {compact} from 'lodash';
 import {satisfies} from 'semver';
 
 import {SitePackages_Info} from '../../../../cross/extension/CrossExtTypes';
 import {readRequirements} from '../Requirements/PythonRequirements';
 
-const execAsync = promisify(exec);
+/** @todo Add settings menu for retry option */
+export async function getLatestPipPackageVersion(packageName: string): Promise<string | null> {
+  const url = `https://pypi.org/pypi/${packageName}/json`;
+  const maxRetries = 2;
+  let attempt = 0;
 
-async function getLatestVersion(pythonPath: string, name: string) {
-  let latestVersion: string;
-
-  try {
-    const latestVersionResult = await execAsync(
-      `${pythonPath} -m pip install ${name}==random --disable-pip-version-check`,
-      {
-        encoding: 'utf-8',
-      },
-    );
-
-    latestVersion = latestVersionResult.stderr;
-    const startOfVersion = latestVersion.indexOf('(from versions:');
-    if (startOfVersion === -1) {
-      throw new Error(`Could not parse latest version output: ${latestVersion}`);
-    }
-    latestVersion = latestVersion.substring(startOfVersion + 15);
-    latestVersion = latestVersion.substring(0, latestVersion.indexOf(')'));
-    latestVersion = latestVersion.replace(/\s/g, '').split(',').pop() || '';
-
-    return latestVersion;
-  } catch (error) {
-    if (error instanceof Error && error.message.includes('Could not find a version')) {
-      const errorOutput = error.message;
-      const startOfVersion = errorOutput.indexOf('(from versions:');
-      if (startOfVersion === -1) {
-        console.error(`Error parsing latest version from error message:`, error);
-        return false;
+  while (attempt <= maxRetries) {
+    try {
+      const response = await axios.get(url);
+      const data = response.data;
+      if (data && data.info && data.info.version) {
+        return data.info.version;
+      } else {
+        console.error(`Could not find version information for ${packageName} in the response.`);
+        return null;
       }
-      latestVersion = errorOutput.substring(startOfVersion + 15);
-      latestVersion = latestVersion.substring(0, latestVersion.indexOf(')'));
-      latestVersion = latestVersion.replace(/\s/g, '').split(',').pop() || '';
-
-      return latestVersion;
-    } else {
-      console.error(`Unexpected error getting latest version for ${name}:`, error);
-      return false;
+    } catch (error: any) {
+      attempt++;
+      if (attempt > maxRetries) {
+        if (axios.isAxiosError(error)) {
+          if (error.response?.status === 404) {
+            console.error(`Package ${packageName} not found on PyPI.`);
+          } else {
+            console.error(`Error fetching package information for ${packageName}:`, error.message);
+          }
+        } else {
+          console.error(`An unexpected error occurred while fetching package information:`, error);
+        }
+        return null;
+      }
     }
   }
+
+  return null; // This line is technically unreachable, but TypeScript requires it.
 }
 
 export async function checkPackageUpdates(
-  pythonPath: string,
   reqPath: string,
-  currentPackages: SitePackages_Info[],
+  packages: SitePackages_Info[],
 ): Promise<SitePackages_Info[]> {
-  const result: SitePackages_Info[] = [];
+  console.time('checkPackageUpdates');
   const reqData = await readRequirements(reqPath);
 
-  for (const req of reqData) {
-    if (req.versionOperator === '==' || req.versionOperator?.includes('<')) continue;
+  const result = reqData.map(async req => {
+    if (req.versionOperator === '==' || req.versionOperator?.includes('<')) return null;
 
-    const latestVersion = await getLatestVersion(pythonPath, req.name);
-    const currentVersion = currentPackages.find(item => item.name === req.name)?.version;
+    const latestVersion = await getLatestPipPackageVersion(req.name);
+    const currentVersion = packages.find(item => item.name === req.name)?.version;
 
-    if (!latestVersion || !currentPackages) continue;
+    if (!latestVersion || !packages) return null;
 
     let canUpdate: boolean = false;
 
@@ -85,8 +76,14 @@ export async function checkPackageUpdates(
         canUpdate = true;
     }
 
-    if (canUpdate && latestVersion !== currentVersion) result.push({name: req.name, version: latestVersion});
-  }
+    if (canUpdate && latestVersion !== currentVersion) return {name: req.name, version: latestVersion};
 
-  return result;
+    return null;
+  });
+
+  const j = compact(await Promise.all(result));
+
+  console.timeEnd('checkPackageUpdates');
+
+  return j;
 }

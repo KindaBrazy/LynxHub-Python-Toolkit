@@ -143,7 +143,7 @@ export default function PackageManagerModal({
         .then(reqPath => {
           if (reqPath) {
             pIpc
-              .getUpdatesReq(pythonPath, reqPath, packages)
+              .getUpdatesReq(reqPath, packages)
               .then(updateData)
               .finally(() => {
                 setIsLoadingUpdates(false);
@@ -156,7 +156,7 @@ export default function PackageManagerModal({
         });
     } else {
       pIpc
-        .getPackagesUpdateInfo(pythonPath)
+        .getPackagesUpdateInfo(packages)
         .then(updateData)
         .finally(() => {
           setIsLoadingUpdates(false);
