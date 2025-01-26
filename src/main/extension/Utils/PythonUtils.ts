@@ -107,7 +107,6 @@ export async function removeDir(dir: string): Promise<void> {
 }
 
 export async function getSitePackagesCount(pythonPath: string): Promise<number> {
-  console.time(`getSitePackagesCount ${pythonPath}`);
   const version = await parseVersion(pythonPath);
   return new Promise((resolve, reject) => {
     const supportImportLib = compare(`${version.major}.${version.minor}.${version.patch}`, '3.8.0') === 1;

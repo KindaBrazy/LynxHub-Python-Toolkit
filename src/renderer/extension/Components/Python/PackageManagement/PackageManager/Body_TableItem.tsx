@@ -1,4 +1,4 @@
-import {Button, Popover, PopoverContent, PopoverTrigger} from '@heroui/react';
+import {Button} from '@heroui/react';
 import {message} from 'antd';
 import {useCallback, useState} from 'react';
 
@@ -6,6 +6,7 @@ import {PackageInfo} from '../../../../../../cross/extension/CrossExtTypes';
 import {getUpdateVersionColor} from '../../../../../../cross/extension/CrossExtUtils';
 import pIpc from '../../../../PIpc';
 import {Warn_Icon} from '../../../SvgIcons';
+import ActionButtons from './ActionButtons';
 
 type Props = {
   item: PackageInfo;
@@ -19,7 +20,6 @@ type Props = {
 export default function Body_TableItem({item, pythonPath, updated, removed, columnKey, isSelected}: Props) {
   const [isUpdating, setIsUpdating] = useState<boolean>(false);
   const [isUninstalling, setIsUninstalling] = useState<boolean>(false);
-  const [isOpenPopover, setIsOpenPopover] = useState<boolean>(false);
 
   const update = useCallback(() => {
     setIsUpdating(true);
@@ -37,49 +37,17 @@ export default function Body_TableItem({item, pythonPath, updated, removed, colu
       });
   }, [item]);
 
-  const remove = useCallback(() => {
-    setIsOpenPopover(false);
-    setIsUninstalling(true);
-    pIpc
-      .uninstallPackage(pythonPath, item.name)
-      .then(() => {
-        removed(item.name);
-        message.success(`Package "${item.name}" removed successfully.`);
-      })
-      .catch(() => {
-        message.error(`Failed to remove package "${item.name}".`);
-      })
-      .finally(() => {
-        setIsUninstalling(false);
-      });
-  }, [item]);
-
   if (columnKey === 'actions') {
     return (
       !isUpdating && (
-        <Popover
-          size="sm"
-          color="danger"
-          key="uninstall"
-          placement="left"
-          isOpen={isOpenPopover}
-          className="max-w-[15rem]"
-          onOpenChange={setIsOpenPopover}
-          showArrow>
-          <PopoverTrigger>
-            <Button size="sm" color="danger" variant="flat" isLoading={isUninstalling}>
-              {isUninstalling ? 'Removing...' : 'Remove'}
-            </Button>
-          </PopoverTrigger>
-          <PopoverContent>
-            <div className="p-2 space-y-2">
-              <span>Are you sure you want to remove the package &#34;{item.name}&#34;?</span>
-              <Button size="sm" onPress={remove} fullWidth>
-                Remove
-              </Button>
-            </div>
-          </PopoverContent>
-        </Popover>
+        <ActionButtons
+          item={item}
+          updated={updated}
+          removed={removed}
+          pythonPath={pythonPath}
+          isUninstalling={isUninstalling}
+          setIsUninstalling={setIsUninstalling}
+        />
       )
     );
   } else if (columnKey === 'update') {

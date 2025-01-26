@@ -31,6 +31,7 @@ import {
   updateAllPythonPackages,
   updatePythonPackage,
 } from './Utils/PackageManager/PackageManager';
+import {changePythonPackageVersion} from './Utils/PackageManager/PackageManagerUtil';
 import {checkPackageUpdates} from './Utils/PackageManager/PipToolsManager';
 import {
   findValidRequirementsFiles,
@@ -51,6 +52,12 @@ export async function initialExtension(lynxApi: ExtensionMainApi, utils: MainExt
   lynxApi.listenForChannels(() => {
     ipcMain.on(pythonChannels.removeSavedPython, (_, pPath: string) => removeSavedPython(pPath));
     ipcMain.on(pythonChannels.addSavedPython, (_, pPath: string) => addSavedPython(pPath));
+
+    ipcMain.handle(
+      pythonChannels.changePythonVersion,
+      (_, pythonPath: string, packageName: string, currentVersion: string, targetVersion: string) =>
+        changePythonPackageVersion(pythonPath, packageName, currentVersion, targetVersion),
+    );
 
     ipcMain.handle(pythonChannels.getInstalledPythons, (_, refresh: boolean) => detectPythonInstallations(refresh));
     ipcMain.handle(pythonChannels.uninstallPython, (_, path: string) => uninstallPython(path));

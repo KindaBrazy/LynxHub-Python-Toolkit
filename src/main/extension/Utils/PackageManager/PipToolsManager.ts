@@ -45,7 +45,6 @@ export async function checkPackageUpdates(
   reqPath: string,
   packages: SitePackages_Info[],
 ): Promise<SitePackages_Info[]> {
-  console.time('checkPackageUpdates');
   const reqData = await readRequirements(reqPath);
 
   const result = reqData.map(async req => {
@@ -82,8 +81,6 @@ export async function checkPackageUpdates(
   });
 
   const j = compact(await Promise.all(result));
-
-  console.timeEnd('checkPackageUpdates');
 
   return j;
 }

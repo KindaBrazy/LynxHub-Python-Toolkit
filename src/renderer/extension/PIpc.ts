@@ -19,6 +19,9 @@ const pIpc = {
   removeSavedPython: (pPath: string) => ipc.send(pythonChannels.removeSavedPython, pPath),
   addSavedPython: (pPath: string) => ipc.send(pythonChannels.addSavedPython, pPath),
 
+  changePackageVersion: (pythonPath: string, packageName: string, currentVersion: string, targetVersion: string) =>
+    ipc.invoke(pythonChannels.changePythonVersion, pythonPath, packageName, currentVersion, targetVersion),
+
   getVenvs: (): Promise<VenvInfo[]> => ipc.invoke(pythonChannels.getVenvs),
   locateVenv: (): Promise<boolean> => ipc.invoke(pythonChannels.locateVenv),
   createVenv: (options: VenvCreateOptions): Promise<boolean> => ipc.invoke(pythonChannels.createVenv, options),

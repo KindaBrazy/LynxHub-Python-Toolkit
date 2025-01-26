@@ -65,6 +65,8 @@ export const pythonChannels = {
   removeSavedPython: 'remove-saved-python',
   addSavedPython: 'add-saved-python',
 
+  changePythonVersion: 'change-python-version',
+
   getAvailableConda: 'get-available-conda-pythons',
   downloadProgressConda: 'download-conda-python-progress',
   installConda: 'install-conda-python',
