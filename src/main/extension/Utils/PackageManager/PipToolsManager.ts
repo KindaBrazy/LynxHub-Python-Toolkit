@@ -1,6 +1,6 @@
 import axios from 'axios';
 import {compact} from 'lodash';
-import {satisfies} from 'semver';
+import semver, {satisfies} from 'semver';
 
 import {SitePackages_Info} from '../../../../cross/extension/CrossExtTypes';
 import {readRequirements} from '../Requirements/PythonRequirements';
@@ -16,7 +16,7 @@ export async function getLatestPipPackageVersion(packageName: string): Promise<s
       const response = await axios.get(url);
       const data = response.data;
       if (data && data.info && data.info.version) {
-        return data.info.version;
+        return semver.coerce(data.info.version)?.version || null;
       } else {
         console.error(`Could not find version information for ${packageName} in the response.`);
         return null;
@@ -51,9 +51,10 @@ export async function checkPackageUpdates(
     if (req.versionOperator === '==' || req.versionOperator?.includes('<')) return null;
 
     const latestVersion = await getLatestPipPackageVersion(req.name);
-    const currentVersion = packages.find(item => item.name === req.name)?.version;
+    const reqVersion = packages.find(item => item.name === req.name)?.version;
+    const currentVersion = semver.coerce(reqVersion)?.version;
 
-    if (!latestVersion || !packages) return null;
+    if (!latestVersion || !packages || !currentVersion) return null;
 
     let canUpdate: boolean = false;
 

@@ -3,7 +3,7 @@ import {join} from 'node:path';
 
 import {promises} from 'graceful-fs';
 import {compact} from 'lodash';
-import {compare} from 'semver';
+import semver, {compare} from 'semver';
 
 import {IdPathType, PackageInfo, SitePackages_Info} from '../../../../cross/extension/CrossExtTypes';
 import {storageManager} from '../../lynxExtension';
@@ -46,8 +46,9 @@ export async function getSitePackagesUpdates(packages: PackageInfo[]): Promise<S
     const getLatest = packages.map(async pkg => {
       try {
         const latestVersion = await getLatestPipPackageVersion(pkg.name);
+        const currentVersion = semver.coerce(pkg.version)?.version;
 
-        if (!latestVersion || compare(pkg.version, latestVersion) !== -1) return null;
+        if (!latestVersion || !currentVersion || compare(currentVersion, latestVersion) !== -1) return null;
 
         return {name: pkg.name, version: latestVersion};
       } catch (e) {
