@@ -1,6 +1,6 @@
-import {spawnSync} from 'node:child_process';
 import {join} from 'node:path';
 
+import {exec} from 'child_process';
 import {compact, filter, isEmpty, isNil} from 'lodash';
 
 import {VenvCreateOptions, VenvInfo} from '../../../../cross/extension/CrossExtTypes';
@@ -68,26 +68,39 @@ export async function locateVenv() {
   }
 }
 
-export default function createPythonVenv(options: VenvCreateOptions): boolean {
+export default async function createPythonVenv(options: VenvCreateOptions): Promise<boolean> {
   const {pythonPath, destinationFolder, venvName} = options;
 
   const venvPath = join(destinationFolder, venvName);
+  const command = `${pythonPath} -m venv ${venvPath}`;
 
-  const result = spawnSync(pythonPath, ['-m', 'venv', venvPath], {
-    stdio: 'inherit',
+  return new Promise(resolve => {
+    exec(command, (error, stdout, stderr) => {
+      if (error) {
+        console.error(`Error creating virtual environment: ${error.message}`);
+
+        if (stderr) {
+          console.error(stderr);
+        }
+
+        resolve(false);
+        return;
+      }
+
+      if (stderr) {
+        if (stderr.includes('Error:')) {
+          console.error(`Error creating virtual environment: ${stderr}`);
+          resolve(false);
+          return;
+        } else {
+          console.warn(stderr);
+        }
+      }
+
+      console.log(stdout);
+      console.log(`Virtual environment created successfully at: ${venvPath}`);
+      updateVenvStorage(venvPath);
+      resolve(true);
+    });
   });
-
-  if (result.error) {
-    console.error(`Error creating virtual environment: ${result.error.message}`);
-    return false;
-  }
-
-  if (result.status !== 0) {
-    console.error(`Error creating virtual environment. Process exited with code ${result.status}`);
-    return false;
-  }
-
-  console.log(`Virtual environment created successfully at: ${venvPath}`);
-  updateVenvStorage(venvPath);
-  return true;
 }
