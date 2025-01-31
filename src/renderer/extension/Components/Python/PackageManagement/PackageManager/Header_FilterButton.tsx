@@ -17,7 +17,16 @@ export default function Header_FilterButton({setSelectedFilter, updateAvailable}
   }, [selectedKeys]);
 
   useEffect(() => {
-    if (updateAvailable) setSelectedKeys(new Set(['updates']));
+    if (updateAvailable) {
+      setSelectedKeys(new Set(['updates']));
+    } else {
+      setSelectedKeys(prevState => {
+        if (prevState.values().next().value === 'updates') {
+          return new Set(['all']);
+        }
+        return prevState;
+      });
+    }
   }, [updateAvailable]);
 
   return (
