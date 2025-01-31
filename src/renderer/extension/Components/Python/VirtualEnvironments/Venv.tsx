@@ -119,6 +119,7 @@ export default function Venv({visible, installedPythons, isLoadingPythons}: Prop
           <>
             {pythonVenvs.map((venv, index) => (
               <VenvCard
+                refresh={getVenvs}
                 title={venv.title}
                 folder={venv.folder}
                 diskUsage={diskUsage}

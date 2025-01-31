@@ -34,9 +34,18 @@ type Props = {
   folder: string;
   pythonPath: string;
   diskUsage: {path: string; value: number | undefined}[];
+  refresh: () => void;
 };
 
-export default function VenvCard({title, installedPackages, pythonVersion, folder, diskUsage, pythonPath}: Props) {
+export default function VenvCard({
+  title,
+  installedPackages,
+  pythonVersion,
+  folder,
+  diskUsage,
+  pythonPath,
+  refresh,
+}: Props) {
   const [popoverUninstaller, setPopoverUninstaller] = useState<boolean>(false);
   const [editedTitle, setEditedTitle] = useState<string>(title);
 
@@ -61,6 +70,7 @@ export default function VenvCard({title, installedPackages, pythonVersion, folde
       .then(() => {
         message.success(`Environment "${title}" removed successfully.`);
         pIpc.removeAIVenvPath(pythonPath);
+        refresh();
       })
       .catch(error => {
         console.error(error);
