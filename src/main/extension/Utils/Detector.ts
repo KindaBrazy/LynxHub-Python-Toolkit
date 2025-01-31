@@ -1,6 +1,7 @@
 import {basename, dirname, join} from 'node:path';
 
 import {exec} from 'child_process';
+import {constants} from 'fs';
 import {existsSync, promises} from 'graceful-fs';
 import {compact, isEmpty, isNil} from 'lodash';
 import {arch, homedir, platform} from 'os';
@@ -27,6 +28,18 @@ const commonPaths: {[key: string]: string[]} = {
     '%USERPROFILE%\\Miniconda3',
     '%USERPROFILE%\\Miniconda3\\envs*',
   ],
+  linux: [
+    '/usr/bin/python*',
+    '/usr/local/bin/python*',
+    '~/.pyenv/versions/*',
+    '~/anaconda3',
+    '~/anaconda3/envs/*',
+    '~/miniconda3',
+    '~/miniconda3/envs/*',
+    '/opt/python/*',
+    '/opt/conda/*',
+    '/snap/bin/python*',
+  ],
 };
 
 function matchPattern(file: string, pattern: string) {
@@ -44,6 +57,31 @@ async function fileExists(filePath: string): Promise<boolean> {
   }
 }
 
+async function isExecutable(filePath: string): Promise<boolean> {
+  try {
+    await promises.access(filePath, constants.X_OK);
+    return true;
+  } catch {
+    return false;
+  }
+}
+
+async function isPythonPathValid(pythonPath: string): Promise<boolean> {
+  return new Promise(resolve => {
+    exec(`${pythonPath} --version`, (error, stdout, stderr) => {
+      if (error) {
+        resolve(false);
+      } else {
+        if (stdout.includes('Python') || stderr.includes('Python')) {
+          resolve(true);
+        } else {
+          resolve(false);
+        }
+      }
+    });
+  });
+}
+
 async function findPythonInPath(): Promise<string[]> {
   try {
     const paths: string[] = [];
@@ -52,7 +90,7 @@ async function findPythonInPath(): Promise<string[]> {
     for (const cmd of pythonCommands) {
       try {
         const path = await which(cmd);
-        if (path) paths.push(path.replace('.EXE', '.exe'));
+        if (path) paths.push(platform() === 'win32' ? path.replace('.EXE', '.exe') : path);
       } catch (error) {
         // Command wasn't found, continue
       }
@@ -84,28 +122,52 @@ async function findInCommonLocations(): Promise<string[]> {
         if (matchPattern(file, pattern)) {
           const fullPath = join(basePath, file);
           const stats = await promises.stat(fullPath);
+
           if (stats.isDirectory()) {
-            const pythonExecutable = join(fullPath, 'python.exe');
-            if (await fileExists(pythonExecutable)) {
+            const pythonExecutable = os === 'win32' ? join(fullPath, 'python.exe') : join(fullPath, 'bin', 'python');
+
+            const shouldAdd =
+              os === 'win32'
+                ? await fileExists(pythonExecutable)
+                : (await fileExists(pythonExecutable)) &&
+                  (await isExecutable(pythonExecutable)) &&
+                  (await isPythonPathValid(pythonExecutable));
+
+            if (shouldAdd) {
               expandedPaths.push(pythonExecutable);
             } else {
+              // Check subdirectories (like envs/*)
               const subFiles = await promises.readdir(fullPath);
               for (const subFile of subFiles) {
                 const subPath = join(fullPath, subFile);
                 const subStats = await promises.stat(subPath);
                 if (subStats.isDirectory()) {
-                  const subPythonExecutable = join(subPath, 'python.exe');
-                  if (await fileExists(subPythonExecutable)) {
+                  const subPythonExecutable =
+                    os === 'win32' ? join(subPath, 'python.exe') : join(subPath, 'bin', 'python');
+
+                  const subShouldAdd =
+                    os === 'win32'
+                      ? await fileExists(subPythonExecutable)
+                      : (await fileExists(subPythonExecutable)) &&
+                        (await isExecutable(subPythonExecutable)) &&
+                        (await isPythonPathValid(pythonExecutable));
+
+                  if (subShouldAdd) {
                     expandedPaths.push(subPythonExecutable);
                   }
                 }
               }
             }
+          } else if (os === 'linux') {
+            // Check if file is executable
+            if ((await isExecutable(fullPath)) && (await isPythonPathValid(fullPath))) {
+              expandedPaths.push(fullPath);
+            }
           }
         }
       }
     } catch (error) {
-      console.error(`Error reading directory ${basePath}:`, error);
+      // console.error(`Error reading directory ${basePath}:`, error);
     }
   }
 
@@ -149,8 +211,15 @@ async function getVenvPaths(pythonPath: string): Promise<string[]> {
 
 async function getSitePackagesPath(pythonPath: string): Promise<string> {
   try {
-    const {stdout} = await execAsync(`"${pythonPath}" -c "import site; print(site.getsitepackages()[1])"`);
-    return stdout.trim();
+    const {stdout} = await execAsync(`"${pythonPath}" -c "import site; print('\\n'.join(site.getsitepackages()))"`);
+    const sitePackages = stdout.trim().split('\n');
+
+    if (sitePackages.length === 0) {
+      throw new Error('No site-packages directory found.');
+    }
+
+    // Return the first site-packages directory if there's only one
+    return sitePackages.length > 1 ? sitePackages[1] : sitePackages[0];
   } catch (error) {
     throw new Error(`Failed to get site-packages location: ${error}`);
   }
@@ -181,6 +250,21 @@ export function addSavedPython(pPath: string) {
   storageManager?.setCustomRun(STORAGE_INSTALLED_KEY, Array.from(paths));
 }
 
+function removeDuplicateInstallations(installations: PythonInstallation[]): PythonInstallation[] {
+  const seenInstallations = new Set<string>();
+  const uniqueInstallations: PythonInstallation[] = [];
+
+  for (const installation of installations) {
+    const key = `${installation.installFolder}-${installation.version}`; // Create a unique key
+    if (!seenInstallations.has(key)) {
+      seenInstallations.add(key);
+      uniqueInstallations.push(installation);
+    }
+  }
+
+  return uniqueInstallations;
+}
+
 export default async function detectPythonInstallations(refresh: boolean): Promise<PythonInstallation[]> {
   const savedInstallations: string[] | undefined = storageManager?.getCustomData(STORAGE_INSTALLED_KEY);
   const paths = new Set<string>();
@@ -197,6 +281,9 @@ export default async function detectPythonInstallations(refresh: boolean): Promi
 
   const installationPromises = Array.from(paths).map(async pythonPath => {
     try {
+      const isValid = await isPythonPathValid(pythonPath);
+      if (!isValid) return null;
+
       const [
         version,
         isDefault,
@@ -240,5 +327,5 @@ export default async function detectPythonInstallations(refresh: boolean): Promi
     }
   });
 
-  return compact(await Promise.all(installationPromises));
+  return removeDuplicateInstallations(compact(await Promise.all(installationPromises)));
 }
