@@ -1,46 +1,50 @@
-import {exec, spawn} from 'node:child_process';
-
 import {BrowserWindow} from 'electron';
+import {IPty} from 'node-pty';
 
 import {pythonChannels} from '../../../../cross/extension/CrossExtTypes';
+import {COMMAND_LINE_ENDING, determineShell} from '../ExtMainUtils';
 
-export async function listAvailablePythons(): Promise<string[]> {
+export async function listAvailablePythons(pty: any): Promise<string[]> {
   return new Promise((resolve, reject) => {
-    exec('conda search python --info', (error, stdout, stderr) => {
-      if (error) {
-        reject(`Error executing command: ${error.message}`);
-        return;
-      }
-      if (stderr) {
-        reject(`Error output: ${stderr}`);
-        return;
-      }
+    const ptyProcess: IPty = pty.spawn(determineShell(), [], {});
+    ptyProcess.write(`conda search python --info${COMMAND_LINE_ENDING}`);
+    ptyProcess.write(`exit${COMMAND_LINE_ENDING}`);
+    let output: string = '';
 
-      const versions: string[] = [];
-      const lines = stdout.split('\n');
-      for (const line of lines) {
-        if (line.toLowerCase().startsWith('version')) {
-          const result = line.split(':')[1];
-          if (result) versions.unshift(result.trim());
+    ptyProcess.onData(data => {
+      output += data;
+    });
+
+    ptyProcess.onExit(({exitCode}) => {
+      if (exitCode === 0) {
+        const versions: string[] = [];
+        const lines = output.split('\n');
+        for (const line of lines) {
+          if (line.toLowerCase().startsWith('version')) {
+            const result = line.split(':')[1];
+            if (result) versions.unshift(result.trim());
+          }
         }
-      }
 
-      resolve([...new Set(versions)]);
+        resolve([...new Set(versions)]);
+      } else {
+        reject(new Error('Unable to list available python versions.'));
+      }
     });
   });
 }
 
-export const createCondaEnv = async (envName: string, pythonVersion: string): Promise<void> => {
+export const createCondaEnv = async (envName: string, pythonVersion: string, pty): Promise<void> => {
   return new Promise((resolve, reject) => {
     const window = BrowserWindow.getFocusedWindow()!;
     const command = `conda create --name ${envName} python=${pythonVersion} -y`;
-    const process = spawn(command, {shell: true});
+    const ptyProcess: IPty = pty.spawn(determineShell(), [], {});
 
-    process.stdout.on('data', data => {
-      const output = data.toString();
-      console.log(output);
+    ptyProcess.write(`${command}${COMMAND_LINE_ENDING}`);
+    ptyProcess.write(`exit${COMMAND_LINE_ENDING}`);
 
-      const progressMatch = output.match(/\|\s+\d{1,3}%/);
+    ptyProcess.onData(data => {
+      const progressMatch = data.match(/\|\s+\d{1,3}%/);
       if (progressMatch) {
         const progress = progressMatch[0].match(/\d{1,3}/);
         if (progress) {
@@ -50,28 +54,34 @@ export const createCondaEnv = async (envName: string, pythonVersion: string): Pr
       }
     });
 
-    process.stderr.on('data', data => {
-      console.error(`Error output: ${data.toString()}`);
-    });
-
-    process.on('close', code => {
-      if (code === 0) {
+    ptyProcess.onExit(({exitCode}) => {
+      if (exitCode === 0) {
         console.log('Environment creation completed successfully!');
         resolve();
       } else {
-        reject(`Environment creation failed with exit code ${code}`);
+        reject(`Environment creation failed with exit code ${exitCode}`);
       }
     });
   });
 };
 
-export function isCondaInstalled(): Promise<boolean> {
+export function isCondaInstalled(pty): Promise<boolean> {
   return new Promise(resolve => {
-    exec('conda --version', (error, _stdout, stderr) => {
-      if (error || stderr) {
-        resolve(false);
-      } else {
+    const ptyProcess: IPty = pty.spawn('bash', [], {});
+    ptyProcess.write(`conda --version${COMMAND_LINE_ENDING}`);
+    ptyProcess.write(`exit${COMMAND_LINE_ENDING}`);
+
+    let output = '';
+
+    ptyProcess.onData((data: string) => {
+      output += data;
+    });
+
+    ptyProcess.onExit(({exitCode}) => {
+      if (exitCode === 0) {
         resolve(true);
+      } else {
+        resolve(false);
       }
     });
   });

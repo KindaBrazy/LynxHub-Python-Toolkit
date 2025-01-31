@@ -66,11 +66,11 @@ export async function initialExtension(lynxApi: ExtensionMainApi, utils: MainExt
     ipcMain.handle(pythonChannels.getAvailableOfficial, () => getAvailablePythonVersions());
     ipcMain.handle(pythonChannels.installOfficial, (_, version: PythonVersion) => downloadPython(version));
 
-    ipcMain.handle(pythonChannels.getAvailableConda, () => listAvailablePythons());
+    ipcMain.handle(pythonChannels.getAvailableConda, () => listAvailablePythons(utils.nodePty));
     ipcMain.handle(pythonChannels.installConda, (_, envName: string, version: string) =>
-      createCondaEnv(envName, version),
+      createCondaEnv(envName, version, utils.nodePty),
     );
-    ipcMain.handle(pythonChannels.isCondaInstalled, () => isCondaInstalled());
+    ipcMain.handle(pythonChannels.isCondaInstalled, () => isCondaInstalled(utils.nodePty));
 
     ipcMain.handle(pythonChannels.createVenv, (_, options: VenvCreateOptions) => createPythonVenv(options));
     ipcMain.handle(pythonChannels.getVenvs, () => getVenvs());
