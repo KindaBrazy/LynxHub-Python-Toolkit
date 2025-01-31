@@ -134,10 +134,10 @@ export default function InstalledPythons({
             <InstalledCard
               python={python}
               diskUsage={diskUsage}
-              key={python.installFolder}
               maxDiskValue={maxDiskValue}
               refresh={getInstalledPythons}
               updateDefault={updateDefault}
+              key={`${python.installationType}-${python.version}`}
             />
           ))
         )}
