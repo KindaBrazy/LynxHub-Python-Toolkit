@@ -67,7 +67,7 @@ export const createCondaEnv = async (envName: string, pythonVersion: string, pty
 
 export function isCondaInstalled(pty): Promise<boolean> {
   return new Promise(resolve => {
-    const ptyProcess: IPty = pty.spawn('bash', [], {});
+    const ptyProcess: IPty = pty.spawn(determineShell(), [], {});
     ptyProcess.write(`conda --version${COMMAND_LINE_ENDING}`);
     ptyProcess.write(`exit${COMMAND_LINE_ENDING}`);
 
