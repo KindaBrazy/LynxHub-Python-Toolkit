@@ -9,7 +9,7 @@ export default defineConfig({
   main: {
     plugins: [
       externalizeDepsPlugin({
-        exclude: ['which', 'graceful-fs', 'electron-dl', 'semver'],
+        exclude: ['which', 'graceful-fs', 'electron-dl', 'semver', 'axios'],
       }),
     ],
     build: {
