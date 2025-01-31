@@ -9,7 +9,7 @@ import {IdPathType, PackageInfo, SitePackages_Info} from '../../../../cross/exte
 import {storageManager} from '../../lynxExtension';
 import {checkAIVenvsEnabled, removeAIVenvsEnabled} from '../AIVenvs';
 import {openDialogExt} from '../PythonUtils';
-import {isVenvDirectory} from '../VirtualEnv/VenvUtils';
+import {getVenvPythonPath, isVenvDirectory} from '../VirtualEnv/VenvUtils';
 import {getLatestPipPackageVersion} from './PipToolsManager';
 
 const AI_VENV_STORE_KEYS = 'ai_venvs';
@@ -142,7 +142,7 @@ export async function locateAIVenv(id: string) {
     const isVenv = isVenvDirectory(selectedFolder);
 
     if (isVenv) {
-      const pythonExecutable = join(selectedFolder, 'Scripts', 'python.exe');
+      const pythonExecutable = getVenvPythonPath(selectedFolder);
       updateAIVenvStorage({id, path: pythonExecutable});
       return pythonExecutable;
     }
@@ -208,7 +208,7 @@ export async function findAIVenv(id: string, folder: string | undefined) {
     if (!folder) throw 'Provided folder is not correct.';
     const venvFolder = await findVenvFolder(folder);
     if (venvFolder) {
-      const pythonExecutable = join(venvFolder, 'Scripts', 'python.exe');
+      const pythonExecutable = getVenvPythonPath(venvFolder);
       updateAIVenvStorage({id, path: pythonExecutable});
       return pythonExecutable;
     }

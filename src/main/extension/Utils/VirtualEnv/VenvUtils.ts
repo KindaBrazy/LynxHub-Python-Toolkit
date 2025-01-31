@@ -1,4 +1,5 @@
 import {exec} from 'node:child_process';
+import {platform} from 'node:os';
 import {basename, join} from 'node:path';
 
 import {existsSync} from 'graceful-fs';
@@ -8,7 +9,7 @@ import {getSitePackagesCount} from '../PythonUtils';
 
 async function getPythonVersion(venvPath: string): Promise<string> {
   return new Promise((resolve, reject) => {
-    const pythonExecutable = join(venvPath, 'Scripts', 'python.exe');
+    const pythonExecutable = getVenvPythonPath(venvPath);
 
     exec(`"${pythonExecutable}" --version`, (error, stdout, stderr) => {
       if (error) {
@@ -37,7 +38,7 @@ export async function getVenvInfo(venvPath: string): Promise<VenvInfo | null> {
   try {
     const pythonVersion = await getPythonVersion(venvPath);
 
-    const pythonExecutable = join(venvPath, 'Scripts', 'python.exe');
+    const pythonExecutable = getVenvPythonPath(venvPath);
     const sitePackagesCount = await getSitePackagesCount(pythonExecutable);
 
     const folderName = basename(venvPath);
@@ -55,18 +56,22 @@ export async function getVenvInfo(venvPath: string): Promise<VenvInfo | null> {
   }
 }
 
+export function getVenvPythonPath(venvPath: string): string {
+  return platform() === 'win32' ? join(venvPath, 'Scripts', 'python.exe') : join(venvPath, 'bin', 'python');
+}
+
 export function isVenvDirectory(dirPath: string): boolean {
   try {
     if (!existsSync(dirPath)) {
       return false;
     }
 
-    const pythonExePath = join(dirPath, 'Scripts', 'python.exe');
+    const pythonExePath = getVenvPythonPath(dirPath);
     if (!existsSync(pythonExePath)) {
       return false;
     }
 
-    const libPath = join(dirPath, 'Lib');
+    const libPath = join(dirPath, 'lib');
     return existsSync(libPath);
   } catch (err) {
     console.error(`Error checking if directory is a venv: ${err}`);
