@@ -157,7 +157,7 @@ export default function InstallerConda({refresh, installed, closeModal, isOpen, 
             theme: isDarkMode ? 'os-theme-light' : 'os-theme-dark',
           },
         }}
-        className={`pr-3 mr-1 pl-4 pb-4`}>
+        className={`pr-3 mr-1 pl-4 pb-4 text-center`}>
         {!isEmpty(installingVersion) ? (
           <Progress
             value={percentage}
