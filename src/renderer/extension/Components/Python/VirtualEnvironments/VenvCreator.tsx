@@ -13,7 +13,7 @@ import pIpc from '../../../PIpc';
 type Props = {refresh: () => void; installedPythons: PythonInstallation[]; isLoadingPythons: boolean};
 
 export default function VenvCreator({installedPythons, refresh, isLoadingPythons}: Props) {
-  const [selectedVersion, setSelectedVersion] = useState<string[]>([]);
+  const [selectedVersion, setSelectedVersion] = useState<Set<string>>(new Set(['']));
 
   const [targetFolder, setTargetFolder] = useState<string>('');
   const [envName, setEnvName] = useState<string>('');
@@ -40,12 +40,14 @@ export default function VenvCreator({installedPythons, refresh, isLoadingPythons
   }, []);
 
   useEffect(() => {
-    if (!isEmpty(installedPythons)) setSelectedVersion([installedPythons[0].version]);
+    if (!isEmpty(installedPythons)) setSelectedVersion(new Set([installedPythons[0].version]));
   }, [installedPythons]);
 
   const createEnv = useCallback(() => {
     setIsCreating(true);
-    const pythonPath = installedPythons.find(item => item.version === selectedVersion[0])?.installPath;
+    const pythonPath = installedPythons.find(
+      item => item.version === selectedVersion.values().next().value,
+    )?.installPath;
     if (!pythonPath) {
       setIsCreating(false);
       return;
