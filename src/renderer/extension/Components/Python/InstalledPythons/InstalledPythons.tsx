@@ -49,7 +49,7 @@ export default function InstalledPythons({
       setIsLoadingPythons(false);
 
       for (const python of result) {
-        rendererIpc.file.calcFolderSize(python.installFolder).then(value => {
+        rendererIpc.file.calcFolderSize(python.sitePackagesPath).then(value => {
           if (value)
             setDiskUsage(prevState => [
               ...prevState,
