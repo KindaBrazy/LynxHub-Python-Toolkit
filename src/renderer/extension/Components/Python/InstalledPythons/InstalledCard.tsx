@@ -152,13 +152,17 @@ export default function InstalledCard({python, diskUsage, maxDiskValue, updateDe
                   </Button>
                 </DropdownTrigger>
                 <DropdownMenu>
-                  <DropdownItem
-                    key="system-default"
-                    onPress={makeDefault}
-                    textValue="Set as System Default"
-                    startContent={python.isDefault ? <Refresh3_Icon className="size-4" /> : <DoubleCheck_Icon />}>
-                    Set as <span className="font-bold">System Default</span>
-                  </DropdownItem>
+                  {window.osPlatform === 'win32' ? (
+                    <DropdownItem
+                      key="system-default"
+                      onPress={makeDefault}
+                      textValue="Set as System Default"
+                      startContent={python.isDefault ? <Refresh3_Icon className="size-4" /> : <DoubleCheck_Icon />}>
+                      Set as <span className="font-bold">System Default</span>
+                    </DropdownItem>
+                  ) : (
+                    <DropdownItem className="hidden" key="system-default" textValue="system_default" />
+                  )}
                   <DropdownItem
                     key="package-manager"
                     onPress={packageManager}
