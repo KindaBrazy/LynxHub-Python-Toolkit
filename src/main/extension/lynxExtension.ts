@@ -60,7 +60,7 @@ export async function initialExtension(lynxApi: ExtensionMainApi, utils: MainExt
     );
 
     ipcMain.handle(pythonChannels.getInstalledPythons, (_, refresh: boolean) => detectPythonInstallations(refresh));
-    ipcMain.handle(pythonChannels.uninstallPython, (_, path: string) => uninstallPython(path));
+    ipcMain.handle(pythonChannels.uninstallPython, (_, path: string) => uninstallPython(path, utils.nodePty));
     ipcMain.handle(pythonChannels.setDefaultPython, (_, pythonPath: string) => setDefaultPython(pythonPath));
 
     ipcMain.handle(pythonChannels.getAvailableOfficial, () => getAvailablePythonVersions());

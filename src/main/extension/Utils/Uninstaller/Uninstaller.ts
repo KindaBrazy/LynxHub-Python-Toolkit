@@ -4,7 +4,7 @@ import {detectInstallationType} from '../PythonUtils';
 import {uninstallCondaPython} from './Uninstaller_Conda';
 import {uninstallOfficialPython} from './Uninstaller_Official';
 
-export default async function uninstallPython(pythonPath: string): Promise<{success: boolean; message: string}> {
+export default async function uninstallPython(pythonPath: string, pty): Promise<{success: boolean; message: string}> {
   try {
     const installType = await detectInstallationType(pythonPath);
 
@@ -17,7 +17,7 @@ export default async function uninstallPython(pythonPath: string): Promise<{succ
 
     switch (installType) {
       case 'conda':
-        return await uninstallCondaPython(pythonPath);
+        return await uninstallCondaPython(pythonPath, pty);
       case 'official':
       case 'other':
         return await uninstallOfficialPython(pythonPath);
