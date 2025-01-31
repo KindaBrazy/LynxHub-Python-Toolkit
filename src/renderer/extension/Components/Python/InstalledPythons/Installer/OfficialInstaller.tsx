@@ -80,9 +80,11 @@ export default function InstallerOfficial({refresh, installed, closeModal, isOpe
         refresh(true);
         closeModal();
         console.log('installed', version);
+        message.success(`Python${version.version} installed successfully.`);
       })
       .catch(err => {
         console.log(err);
+        message.error(`Failed to install python${version.version}!`);
       })
       .finally(() => {
         setInstallingVersion(undefined);
