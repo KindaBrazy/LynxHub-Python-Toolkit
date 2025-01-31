@@ -1,5 +1,5 @@
 import {Button, CircularProgress, Input, Link, Progress} from '@heroui/react';
-import {List, Tooltip} from 'antd';
+import {List, message, Tooltip} from 'antd';
 import {isEmpty, isNil} from 'lodash';
 import {OverlayScrollbarsComponent} from 'overlayscrollbars-react';
 import {Dispatch, SetStateAction, useEffect, useState} from 'react';
@@ -66,13 +66,22 @@ export default function InstallerOfficial({refresh, installed, closeModal, isOpe
     setInstallingVersion(version);
     setCloseDisabled(true);
 
-    pIpc.off_DlProgressOfficial();
-    pIpc.on_DlProgressOfficial((_, stage, progress) => {
-      setInstallStage(stage);
-      if (stage === 'downloading') {
-        setDownloadProgress(progress);
-      }
-    });
+    const osPlatform = window.osPlatform;
+
+    switch (osPlatform) {
+      case 'win32':
+        pIpc.off_DlProgressOfficial();
+        pIpc.on_DlProgressOfficial((_, stage, progress) => {
+          setInstallStage(stage);
+          if (stage === 'downloading') {
+            setDownloadProgress(progress);
+          }
+        });
+        break;
+      case 'linux':
+        setInstallStage('installing');
+        break;
+    }
 
     pIpc
       .installOfficial(version)
