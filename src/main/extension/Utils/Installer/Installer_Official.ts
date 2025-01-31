@@ -17,6 +17,9 @@ async function installPython(filePath: string, version: PythonVersion): Promise<
       case 'win32':
         await installOnWindows(filePath);
         break;
+      case 'linux':
+        await installOnLinux(version.version);
+        break;
       case 'darwin':
       default:
         break;
@@ -86,5 +89,28 @@ async function installOnWindows(installerPath: string): Promise<void> {
             reject(e);
           });
       });
+  });
+}
+
+async function installOnLinux(version: string): Promise<void> {
+  const pythonVersion = `python${version}`;
+  const packagesToInstall = `${pythonVersion} ${pythonVersion}-dev ${pythonVersion}-venv`;
+  const command = `pkexec apt install ${packagesToInstall} -y`;
+  return new Promise((resolve, reject) => {
+    try {
+      exec(command, (error, stdout, stderr) => {
+        if (error) {
+          console.error(`Error executing command: ${command}`);
+          console.error(stderr);
+          reject(error);
+        } else {
+          console.log(`Command executed successfully: ${command}`);
+          console.log(stdout);
+          resolve();
+        }
+      });
+    } catch (e) {
+      reject(e);
+    }
   });
 }
