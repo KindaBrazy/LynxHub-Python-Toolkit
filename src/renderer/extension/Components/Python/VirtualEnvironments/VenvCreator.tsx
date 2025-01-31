@@ -50,6 +50,7 @@ export default function VenvCreator({installedPythons, refresh, isLoadingPythons
     )?.installPath;
     if (!pythonPath) {
       setIsCreating(false);
+      message.error('Failed to find Python path. Please restart app and try again.');
       return;
     }
     const options: VenvCreateOptions = {
@@ -57,6 +58,7 @@ export default function VenvCreator({installedPythons, refresh, isLoadingPythons
       venvName: envName,
       pythonPath,
     };
+
     pIpc.createVenv(options).then(result => {
       if (result) {
         refresh();
