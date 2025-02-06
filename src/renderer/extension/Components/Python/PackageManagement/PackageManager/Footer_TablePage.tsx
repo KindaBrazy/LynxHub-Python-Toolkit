@@ -23,7 +23,7 @@ export default function Footer_TablePage({searchData, setItems}: Props) {
   }, [page, searchData]);
 
   return (
-    <div className="flex w-full justify-center">
+    <div className="flex w-full justify-center absolute left-1/2 -translate-x-1/2">
       {!isEmpty(searchData) && (
         <Pagination size="lg" page={page} total={pages} color="secondary" onChange={setPage} isCompact showControls />
       )}

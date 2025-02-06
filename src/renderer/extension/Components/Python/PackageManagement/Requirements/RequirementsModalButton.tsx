@@ -157,7 +157,7 @@ export default function RequirementsBtn({id, projectPath, setIsReqAvailable}: Pr
             <div>
               <Button
                 size="sm"
-                variant="faded"
+                variant="flat"
                 endContent={<div />}
                 onPress={openFilePath}
                 startContent={<File_Icon />}
@@ -183,7 +183,7 @@ export default function RequirementsBtn({id, projectPath, setIsReqAvailable}: Pr
               <div className="size-full text-center mb-2">
                 <Result
                   extra={
-                    <Button color="primary" key="create_req_file" onPress={openFilePath}>
+                    <Button variant="flat" color="primary" key="create_req_file" onPress={openFilePath}>
                       Choose or Create requirements file
                     </Button>
                   }
@@ -205,8 +205,13 @@ export default function RequirementsBtn({id, projectPath, setIsReqAvailable}: Pr
               <RequirementsManager scrollRef={scrollRef} requirements={searchReqs} setRequirements={setRequirements} />
             )}
           </ModalBody>
-          <ModalFooter className="bg-foreground-200 dark:bg-LynxRaisinBlack">
-            <Button size="sm" color="warning" variant="faded" onPress={() => setIsOpen(false)} fullWidth>
+          <ModalFooter className="py-3">
+            <Button
+              size="md"
+              color="warning"
+              variant="light"
+              className="w-fit cursor-default"
+              onPress={() => setIsOpen(false)}>
               Close
             </Button>
           </ModalFooter>

@@ -252,9 +252,9 @@ export default function PackageManagerModal({
           packagesUpdate={packagesUpdate}
           setSelectedKeys={setSelectedKeys}
         />
-        <ModalFooter className="bg-foreground-200 dark:bg-LynxRaisinBlack flex flex-col space-y-2">
+        <ModalFooter className="items-center py-3">
           <Footer_TablePage setItems={setItems} searchData={searchData} />
-          <Button size="sm" variant="flat" color="warning" onPress={closePackageManager} fullWidth>
+          <Button variant="light" color="warning" className="cursor-default" onPress={closePackageManager}>
             Close
           </Button>
         </ModalFooter>

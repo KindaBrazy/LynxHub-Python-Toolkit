@@ -43,10 +43,9 @@ export default function InstallerModal({isOpen, closeModal, refresh, installed}:
           <ModalHeader className="bg-foreground-100 justify-center items-center flex-col gap-y-2">
             <span>Install a New Python Version</span>
             <Tabs
-              variant="underlined"
+              variant="light"
               onSelectionChange={setCurrentTab}
               selectedKey={currentTab.toString()}
-              classNames={{cursor: '!bg-[#ffe66e]'}}
               disableAnimation>
               <Tab key="official" title="Official Python Releases" />
               <Tab key="conda" title="Conda Environments" />
@@ -72,8 +71,13 @@ export default function InstallerModal({isOpen, closeModal, refresh, installed}:
               />
             )}
           </ModalBody>
-          <ModalFooter className="bg-foreground-100">
-            <Button size="sm" variant="flat" color="warning" onPress={closeModal} isDisabled={closeDisabled} fullWidth>
+          <ModalFooter className="py-3">
+            <Button
+              variant="light"
+              color="warning"
+              onPress={closeModal}
+              className="cursor-default"
+              isDisabled={closeDisabled}>
               Close
             </Button>
           </ModalFooter>

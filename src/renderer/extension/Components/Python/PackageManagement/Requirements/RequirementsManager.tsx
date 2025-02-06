@@ -28,7 +28,7 @@ type TableReq = {
 type Props = {
   requirements: RequirementData[];
   setRequirements: Dispatch<SetStateAction<RequirementData[]>>;
-  scrollRef: RefObject<OverlayScrollbarsComponentRef>;
+  scrollRef: RefObject<OverlayScrollbarsComponentRef | null>;
 };
 
 const operators = [

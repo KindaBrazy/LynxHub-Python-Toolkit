@@ -1,4 +1,4 @@
-import {Button, Divider, Modal, ModalBody, ModalContent, ModalFooter, ModalHeader, Tab, Tabs} from '@heroui/react';
+import {Button, Modal, ModalBody, ModalContent, ModalFooter, ModalHeader, Tab, Tabs} from '@heroui/react';
 import {Dispatch, Key, SetStateAction, useState} from 'react';
 
 import {PythonInstallation} from '../../../../cross/extension/CrossExtTypes';
@@ -32,7 +32,7 @@ export default function PythonToolkitModal({isOpen, setIsOpen}: ModalProps) {
       classNames={{backdrop: '!top-10', wrapper: '!top-10 pb-8'}}
       hideCloseButton>
       <ModalContent className="overflow-hidden">
-        <ModalHeader className="bg-foreground-100">
+        <ModalHeader className="bg-foreground-100 shadow-sm">
           <Tabs
             color="primary"
             onSelectionChange={setCurrentTab}
@@ -44,8 +44,7 @@ export default function PythonToolkitModal({isOpen, setIsOpen}: ModalProps) {
             <Tab key="venv" title="Virtual Environments" />
           </Tabs>
         </ModalHeader>
-        <Divider />
-        <ModalBody className="scrollbar-hide my-4">
+        <ModalBody className="scrollbar-hide mb-0">
           <InstalledPythons
             installedPythons={installedPythons}
             isLoadingPythons={isLoadingPythons}
@@ -59,9 +58,8 @@ export default function PythonToolkitModal({isOpen, setIsOpen}: ModalProps) {
             isLoadingPythons={isLoadingPythons}
           />
         </ModalBody>
-        <Divider />
-        <ModalFooter className="bg-foreground-100">
-          <Button size="sm" variant="flat" color="warning" onPress={onClose} fullWidth>
+        <ModalFooter className="py-3">
+          <Button variant="light" color="warning" onPress={onClose} className="cursor-default">
             Close
           </Button>
         </ModalFooter>

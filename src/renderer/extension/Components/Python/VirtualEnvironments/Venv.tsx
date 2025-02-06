@@ -96,7 +96,7 @@ export default function Venv({visible, installedPythons, isLoadingPythons}: Prop
 
           <Button
             radius="sm"
-            variant="faded"
+            variant="flat"
             onPress={locateVenv}
             isLoading={isLocating}
             startContent={!isLocating && <OpenFolder_Icon />}>

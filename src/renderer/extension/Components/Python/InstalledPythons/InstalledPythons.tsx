@@ -112,7 +112,7 @@ export default function InstalledPythons({
           <Button radius="sm" variant="solid" onPress={openInstallModal} startContent={<Add_Icon />}>
             Install Version
           </Button>
-          <Button variant="faded" startContent={<Refresh_Icon />} onPress={() => getInstalledPythons(true)}>
+          <Button variant="flat" startContent={<Refresh_Icon />} onPress={() => getInstalledPythons(true)}>
             Refresh List
           </Button>
         </div>

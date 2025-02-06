@@ -163,7 +163,7 @@ export default function InstallerOfficial({refresh, installed, closeModal, isOpe
             renderItem={item => (
               <List.Item
                 actions={[
-                  <Button size="sm" variant="faded" key={'install_python'} onPress={() => installPython(item)}>
+                  <Button size="sm" variant="flat" key={'install_python'} onPress={() => installPython(item)}>
                     Install
                   </Button>,
                 ]}

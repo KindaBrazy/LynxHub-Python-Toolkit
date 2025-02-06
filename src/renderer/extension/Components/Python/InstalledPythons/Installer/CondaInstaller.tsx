@@ -180,7 +180,7 @@ export default function InstallerConda({refresh, installed, closeModal, isOpen, 
                 actions={[
                   <Popover key={'install_conda_python'}>
                     <PopoverTrigger>
-                      <Button size="sm" variant="faded">
+                      <Button size="sm" variant="flat">
                         Install
                       </Button>
                     </PopoverTrigger>
