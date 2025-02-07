@@ -29,13 +29,18 @@
               "label": "Improved tools page card style."
             },
             {
-              "label": "Improved Python detection speed and performance."
-            },
-            {
-              "label": "Improved site package count performance."
-            },
-            {
-              "label": "Improved packages update checking performance (3-10x faster)."
+              "label": "Improved performance and speed (3-10x faster)",
+              "subitems": [
+                {
+                  "label": "Improved Python detection speed and performance."
+                },
+                {
+                  "label": "Improved site package count performance."
+                },
+                {
+                  "label": "Improved packages update checking performance."
+                }
+              ]
             },
             {
               "label": "Switch filter to \"All\" when \"Updates\" list is empty during update."
@@ -165,6 +170,7 @@
   "avatarUrl": "https://raw.githubusercontent.com/KindaBrazy/LynxHub-Python-Toolkit/refs/heads/compiled/icon.png",
   "tag": "tools",
   "platforms": [
-    "win32"
+    "win32",
+    "linux"
   ]
 }
