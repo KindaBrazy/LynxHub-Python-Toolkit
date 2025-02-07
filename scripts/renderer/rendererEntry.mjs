@@ -2,8 +2,8 @@ const currentImports = {};
       const exportSet = new Set(['Module', '__esModule', 'default', '_export_sfc']);
       let moduleMap = {
 "Extension":()=>{
-      dynamicLoadingCss(["style-DCn69cBD.css"], false, 'Extension');
-      return __federation_import('./__federation_expose_Extension-DrBJwFwu.js').then(module =>Object.keys(module).every(item => exportSet.has(item)) ? () => module.default : () => module)},};
+      dynamicLoadingCss(["style-Cu-dN7gQ.css"], false, 'Extension');
+      return __federation_import('./__federation_expose_Extension-DiaSN9Ft.js').then(module =>Object.keys(module).every(item => exportSet.has(item)) ? () => module.default : () => module)},};
       const seen = {};
       const dynamicLoadingCss = (cssFilePaths, dontAppendStylesToHead, exposeItemName) => {
         const metaUrl = import.meta.url;
@@ -14,6 +14,7 @@ const currentImports = {};
 
         const curUrl = metaUrl.substring(0, metaUrl.lastIndexOf('rendererEntry.mjs'));
         const base = '/';
+        '';
 
         cssFilePaths.forEach(cssPath => {
          let href = '';
@@ -24,11 +25,11 @@ const currentImports = {};
              leading: (path) => (path.startsWith('/') ? path.slice(1) : path)
            };
            const isAbsoluteUrl = (url) => url.startsWith('http') || url.startsWith('//');
-
+           
            const cleanBaseUrl = trimmer.trailing(baseUrl);
            const cleanCssPath = trimmer.leading(cssPath);
            const cleanCurUrl = trimmer.trailing(curUrl);
-
+           
            if (isAbsoluteUrl(baseUrl)) {
              href = [cleanBaseUrl, cleanCssPath].filter(Boolean).join('/');
            } else {

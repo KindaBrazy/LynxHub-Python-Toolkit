@@ -32,7 +32,8 @@ const {createContext: createContext$6} = await importShared('react');
 /**
  * @public
  */
-const PresenceContext = createContext$6(null);
+const PresenceContext = 
+/* @__PURE__ */ createContext$6(null);
 
 const {createContext: createContext$5} = await importShared('react');
 
@@ -58,11 +59,14 @@ class PopChildMeasure extends React$c.Component {
     getSnapshotBeforeUpdate(prevProps) {
         const element = this.props.childRef.current;
         if (element && prevProps.isPresent && !this.props.isPresent) {
+            const parent = element.offsetParent;
+            const parentWidth = parent instanceof HTMLElement ? parent.offsetWidth || 0 : 0;
             const size = this.props.sizeRef.current;
             size.height = element.offsetHeight || 0;
             size.width = element.offsetWidth || 0;
             size.top = element.offsetTop;
             size.left = element.offsetLeft;
+            size.right = parentWidth - size.width - size.left;
         }
         return null;
     }
@@ -74,7 +78,7 @@ class PopChildMeasure extends React$c.Component {
         return this.props.children;
     }
 }
-function PopChild({ children, isPresent }) {
+function PopChild({ children, isPresent, anchorX }) {
     const id = useId$a();
     const ref = useRef$E(null);
     const size = useRef$E({
@@ -82,6 +86,7 @@ function PopChild({ children, isPresent }) {
         height: 0,
         top: 0,
         left: 0,
+        right: 0,
     });
     const { nonce } = useContext$a(MotionConfigContext);
     /**
@@ -94,9 +99,10 @@ function PopChild({ children, isPresent }) {
      * styles set via the style prop.
      */
     useInsertionEffect$1(() => {
-        const { width, height, top, left } = size.current;
+        const { width, height, top, left, right } = size.current;
         if (isPresent || !ref.current || !width || !height)
             return;
+        const x = anchorX === "left" ? `left: ${left}` : `right: ${right}`;
         ref.current.dataset.motionPopId = id;
         const style = document.createElement("style");
         if (nonce)
@@ -108,8 +114,8 @@ function PopChild({ children, isPresent }) {
             position: absolute !important;
             width: ${width}px !important;
             height: ${height}px !important;
+            ${x}px !important;
             top: ${top}px !important;
-            left: ${left}px !important;
           }
         `);
         }
@@ -124,7 +130,7 @@ const React$b = await importShared('react');
 
 const {useId: useId$9,useCallback: useCallback$U,useMemo: useMemo$1w} = await importShared('react');
 
-const PresenceChild = ({ children, initial, isPresent, onExitComplete, custom, presenceAffectsLayout, mode, }) => {
+const PresenceChild = ({ children, initial, isPresent, onExitComplete, custom, presenceAffectsLayout, mode, anchorX, }) => {
     const presenceChildren = useConstant(newChildrenMap);
     const id = useId$9();
     const memoizedOnExitComplete = useCallback$U((childId) => {
@@ -168,7 +174,7 @@ const PresenceChild = ({ children, initial, isPresent, onExitComplete, custom, p
             onExitComplete();
     }, [isPresent]);
     if (mode === "popLayout") {
-        children = jsxRuntimeExports.jsx(PopChild, { isPresent: isPresent, children: children });
+        children = (jsxRuntimeExports.jsx(PopChild, { isPresent: isPresent, anchorX: anchorX, children: children }));
     }
     return (jsxRuntimeExports.jsx(PresenceContext.Provider, { value: context, children: children }));
 };
@@ -238,7 +244,7 @@ const {useLayoutEffect: useLayoutEffect$3,useEffect: useEffect$m} = await import
 const useIsomorphicLayoutEffect$1 = isBrowser$1 ? useLayoutEffect$3 : useEffect$m;
 
 const {useMemo: useMemo$1v,useRef: useRef$D,useState: useState$h,useContext: useContext$8} = await importShared('react');
-const AnimatePresence = ({ children, custom, initial = true, onExitComplete, presenceAffectsLayout = true, mode = "sync", propagate = false }) => {
+const AnimatePresence = ({ children, custom, initial = true, onExitComplete, presenceAffectsLayout = true, mode = "sync", propagate = false, anchorX = "left" }) => {
   const [isParentPresent, safeToRemove] = usePresence(propagate);
   const presentChildren = useMemo$1v(() => onlyElements(children), [children]);
   const presentKeys = propagate && !isParentPresent ? [] : presentChildren.map(getChildKey);
@@ -277,7 +283,7 @@ const AnimatePresence = ({ children, custom, initial = true, onExitComplete, pre
     }
     setRenderedChildren(onlyElements(nextChildren));
     setDiffedChildren(presentChildren);
-    return;
+    return null;
   }
   const { forceRender } = useContext$8(LayoutGroupContext);
   return jsxRuntimeExports.jsx(jsxRuntimeExports.Fragment, { children: renderedChildren.map((child) => {
@@ -301,7 +307,7 @@ const AnimatePresence = ({ children, custom, initial = true, onExitComplete, pre
         onExitComplete && onExitComplete();
       }
     };
-    return jsxRuntimeExports.jsx(PresenceChild, { isPresent, initial: !isInitialRender.current || initial ? undefined : false, custom: isPresent ? undefined : custom, presenceAffectsLayout, mode, onExitComplete: isPresent ? undefined : onExit, children: child }, key);
+    return jsxRuntimeExports.jsx(PresenceChild, { isPresent, initial: !isInitialRender.current || initial ? undefined : false, custom, presenceAffectsLayout, mode, onExitComplete: isPresent ? undefined : onExit, anchorX, children: child }, key);
   }) });
 };
 
@@ -877,19 +883,19 @@ function createDOMMotionComponentProxy(componentFactory) {
 const {createContext: createContext$2} = await importShared('react');
 
 
-const MotionContext = createContext$2({});
+const MotionContext = /* @__PURE__ */ createContext$2({});
+
+function isAnimationControls(v) {
+    return (v !== null &&
+        typeof v === "object" &&
+        typeof v.start === "function");
+}
 
 /**
  * Decides if the supplied variable is variant label
  */
 function isVariantLabel(v) {
     return typeof v === "string" || Array.isArray(v);
-}
-
-function isAnimationControls(v) {
-    return (v !== null &&
-        typeof v === "object" &&
-        typeof v.start === "function");
 }
 
 const variantPriorityOrder = [
@@ -1165,204 +1171,28 @@ function getProjectionFunctionality(props) {
   };
 }
 
-/**
- * We keep these listed separately as we use the lowercase tag names as part
- * of the runtime bundle to detect SVG components
- */
-const lowercaseSVGElements = [
-    "animate",
-    "circle",
-    "defs",
-    "desc",
-    "ellipse",
-    "g",
-    "image",
-    "line",
-    "filter",
-    "marker",
-    "mask",
-    "metadata",
-    "path",
-    "pattern",
-    "polygon",
-    "polyline",
-    "rect",
-    "stop",
-    "switch",
-    "symbol",
-    "svg",
-    "text",
-    "tspan",
-    "use",
-    "view",
-];
-
-function isSVGComponent(Component) {
-    if (
-    /**
-     * If it's not a string, it's a custom React component. Currently we only support
-     * HTML custom React components.
-     */
-    typeof Component !== "string" ||
-        /**
-         * If it contains a dash, the element is a custom HTML webcomponent.
-         */
-        Component.includes("-")) {
+const checkStringStartsWith = (token) => (key) => typeof key === "string" && key.startsWith(token);
+const isCSSVariableName = 
+/*@__PURE__*/ checkStringStartsWith("--");
+const startsAsVariableToken = 
+/*@__PURE__*/ checkStringStartsWith("var(--");
+const isCSSVariableToken = (value) => {
+    const startsWithToken = startsAsVariableToken(value);
+    if (!startsWithToken)
         return false;
-    }
-    else if (
-    /**
-     * If it's in our list of lowercase SVG tags, it's an SVG component
-     */
-    lowercaseSVGElements.indexOf(Component) > -1 ||
-        /**
-         * If it contains a capital letter, it's an SVG component
-         */
-        /[A-Z]/u.test(Component)) {
-        return true;
-    }
-    return false;
-}
-
-function getValueState(visualElement) {
-    const state = [{}, {}];
-    visualElement === null || visualElement === undefined ? undefined : visualElement.values.forEach((value, key) => {
-        state[0][key] = value.get();
-        state[1][key] = value.getVelocity();
-    });
-    return state;
-}
-function resolveVariantFromProps(props, definition, custom, visualElement) {
-    /**
-     * If the variant definition is a function, resolve.
-     */
-    if (typeof definition === "function") {
-        const [current, velocity] = getValueState(visualElement);
-        definition = definition(custom !== undefined ? custom : props.custom, current, velocity);
-    }
-    /**
-     * If the variant definition is a variant label, or
-     * the function returned a variant label, resolve.
-     */
-    if (typeof definition === "string") {
-        definition = props.variants && props.variants[definition];
-    }
-    /**
-     * At this point we've resolved both functions and variant labels,
-     * but the resolved variant label might itself have been a function.
-     * If so, resolve. This can only have returned a valid target object.
-     */
-    if (typeof definition === "function") {
-        const [current, velocity] = getValueState(visualElement);
-        definition = definition(custom !== undefined ? custom : props.custom, current, velocity);
-    }
-    return definition;
-}
-
-const isKeyframesTarget = (v) => {
-    return Array.isArray(v);
+    // Ensure any comments are stripped from the value as this can harm performance of the regex.
+    return singleCssVariableRegex.test(value.split("/*")[0].trim());
 };
+const singleCssVariableRegex = /var\(--(?:[\w-]+\s*|[\w-]+\s*,(?:\s*[^)(\s]|\s*\((?:[^)(]|\([^)(]*\))*\))+\s*)\)$/iu;
 
-const isCustomValue = (v) => {
-    return Boolean(v && typeof v === "object" && v.mix && v.toValue);
-};
-const resolveFinalValueInKeyframes = (v) => {
-    // TODO maybe throw if v.length - 1 is placeholder token?
-    return isKeyframesTarget(v) ? v[v.length - 1] || 0 : v;
-};
-
-const isMotionValue = (value) => Boolean(value && value.getVelocity);
-
-/**
- * If the provided value is a MotionValue, this returns the actual value, otherwise just the value itself
- *
- * TODO: Remove and move to library
- */
-function resolveMotionValue(value) {
-    const unwrappedValue = isMotionValue(value) ? value.get() : value;
-    return isCustomValue(unwrappedValue)
-        ? unwrappedValue.toValue()
-        : unwrappedValue;
-}
-
-const {useContext: useContext$2} = await importShared('react');
-
-function makeState({ scrapeMotionValuesFromProps, createRenderState, onUpdate, }, props, context, presenceContext) {
-    const state = {
-        latestValues: makeLatestValues(props, context, presenceContext, scrapeMotionValuesFromProps),
-        renderState: createRenderState(),
-    };
-    if (onUpdate) {
-        /**
-         * onMount works without the VisualElement because it could be
-         * called before the VisualElement payload has been hydrated.
-         * (e.g. if someone is using m components <m.circle />)
-         */
-        state.onMount = (instance) => onUpdate({ props, current: instance, ...state });
-        state.onUpdate = (visualElement) => onUpdate(visualElement);
-    }
-    return state;
-}
-const makeUseVisualState = (config) => (props, isStatic) => {
-    const context = useContext$2(MotionContext);
-    const presenceContext = useContext$2(PresenceContext);
-    const make = () => makeState(config, props, context, presenceContext);
-    return isStatic ? make() : useConstant(make);
-};
-function makeLatestValues(props, context, presenceContext, scrapeMotionValues) {
-    const values = {};
-    const motionValues = scrapeMotionValues(props, {});
-    for (const key in motionValues) {
-        values[key] = resolveMotionValue(motionValues[key]);
-    }
-    let { initial, animate } = props;
-    const isControllingVariants$1 = isControllingVariants(props);
-    const isVariantNode$1 = isVariantNode(props);
-    if (context &&
-        isVariantNode$1 &&
-        !isControllingVariants$1 &&
-        props.inherit !== false) {
-        if (initial === undefined)
-            initial = context.initial;
-        if (animate === undefined)
-            animate = context.animate;
-    }
-    let isInitialAnimationBlocked = presenceContext
-        ? presenceContext.initial === false
-        : false;
-    isInitialAnimationBlocked = isInitialAnimationBlocked || initial === false;
-    const variantToSet = isInitialAnimationBlocked ? animate : initial;
-    if (variantToSet &&
-        typeof variantToSet !== "boolean" &&
-        !isAnimationControls(variantToSet)) {
-        const list = Array.isArray(variantToSet) ? variantToSet : [variantToSet];
-        for (let i = 0; i < list.length; i++) {
-            const resolved = resolveVariantFromProps(props, list[i]);
-            if (resolved) {
-                const { transitionEnd, transition, ...target } = resolved;
-                for (const key in target) {
-                    let valueTarget = target[key];
-                    if (Array.isArray(valueTarget)) {
-                        /**
-                         * Take final keyframe if the initial animation is blocked because
-                         * we want to initialise at the end of that blocked animation.
-                         */
-                        const index = isInitialAnimationBlocked
-                            ? valueTarget.length - 1
-                            : 0;
-                        valueTarget = valueTarget[index];
-                    }
-                    if (valueTarget !== null) {
-                        values[key] = valueTarget;
-                    }
-                }
-                for (const key in transitionEnd) {
-                    values[key] = transitionEnd[key];
-                }
-            }
+const scaleCorrectors = {};
+function addScaleCorrector(correctors) {
+    for (const key in correctors) {
+        scaleCorrectors[key] = correctors[key];
+        if (isCSSVariableName(key)) {
+            scaleCorrectors[key].isCSSVariable = true;
         }
     }
-    return values;
 }
 
 /**
@@ -1392,19 +1222,14 @@ const transformPropOrder = [
  */
 const transformProps = new Set(transformPropOrder);
 
-const checkStringStartsWith = (token) => (key) => typeof key === "string" && key.startsWith(token);
-const isCSSVariableName = 
-/*@__PURE__*/ checkStringStartsWith("--");
-const startsAsVariableToken = 
-/*@__PURE__*/ checkStringStartsWith("var(--");
-const isCSSVariableToken = (value) => {
-    const startsWithToken = startsAsVariableToken(value);
-    if (!startsWithToken)
-        return false;
-    // Ensure any comments are stripped from the value as this can harm performance of the regex.
-    return singleCssVariableRegex.test(value.split("/*")[0].trim());
-};
-const singleCssVariableRegex = /var\(--(?:[\w-]+\s*|[\w-]+\s*,(?:\s*[^)(\s]|\s*\((?:[^)(]|\([^)(]*\))*\))+\s*)\)$/iu;
+function isForcedMotionValue(key, { layout, layoutId }) {
+    return (transformProps.has(key) ||
+        key.startsWith("origin") ||
+        ((layout || layoutId !== undefined) &&
+            (!!scaleCorrectors[key] || key === "opacity")));
+}
+
+const isMotionValue = (value) => Boolean(value && value.getVelocity);
 
 /**
  * Provided a value and a ValueType, returns the value as that value type.
@@ -1649,6 +1474,124 @@ function buildHTMLStyles(state, latestValues, transformTemplate) {
     }
 }
 
+const createHtmlRenderState = () => ({
+    style: {},
+    transform: {},
+    transformOrigin: {},
+    vars: {},
+});
+
+const {useMemo: useMemo$1r} = await importShared('react');
+
+function copyRawValuesOnly(target, source, props) {
+    for (const key in source) {
+        if (!isMotionValue(source[key]) && !isForcedMotionValue(key, props)) {
+            target[key] = source[key];
+        }
+    }
+}
+function useInitialMotionValues({ transformTemplate }, visualState) {
+    return useMemo$1r(() => {
+        const state = createHtmlRenderState();
+        buildHTMLStyles(state, visualState, transformTemplate);
+        return Object.assign({}, state.vars, state.style);
+    }, [visualState]);
+}
+function useStyle(props, visualState) {
+    const styleProp = props.style || {};
+    const style = {};
+    /**
+     * Copy non-Motion Values straight into style
+     */
+    copyRawValuesOnly(style, styleProp, props);
+    Object.assign(style, useInitialMotionValues(props, visualState));
+    return style;
+}
+function useHTMLProps(props, visualState) {
+    // The `any` isn't ideal but it is the type of createElement props argument
+    const htmlProps = {};
+    const style = useStyle(props, visualState);
+    if (props.drag && props.dragListener !== false) {
+        // Disable the ghost element when a user drags
+        htmlProps.draggable = false;
+        // Disable text selection
+        style.userSelect =
+            style.WebkitUserSelect =
+                style.WebkitTouchCallout =
+                    "none";
+        // Disable scrolling on the draggable direction
+        style.touchAction =
+            props.drag === true
+                ? "none"
+                : `pan-${props.drag === "x" ? "y" : "x"}`;
+    }
+    if (props.tabIndex === undefined &&
+        (props.onTap || props.onTapStart || props.whileTap)) {
+        htmlProps.tabIndex = 0;
+    }
+    htmlProps.style = style;
+    return htmlProps;
+}
+
+/**
+ * We keep these listed separately as we use the lowercase tag names as part
+ * of the runtime bundle to detect SVG components
+ */
+const lowercaseSVGElements = [
+    "animate",
+    "circle",
+    "defs",
+    "desc",
+    "ellipse",
+    "g",
+    "image",
+    "line",
+    "filter",
+    "marker",
+    "mask",
+    "metadata",
+    "path",
+    "pattern",
+    "polygon",
+    "polyline",
+    "rect",
+    "stop",
+    "switch",
+    "symbol",
+    "svg",
+    "text",
+    "tspan",
+    "use",
+    "view",
+];
+
+function isSVGComponent(Component) {
+    if (
+    /**
+     * If it's not a string, it's a custom React component. Currently we only support
+     * HTML custom React components.
+     */
+    typeof Component !== "string" ||
+        /**
+         * If it contains a dash, the element is a custom HTML webcomponent.
+         */
+        Component.includes("-")) {
+        return false;
+    }
+    else if (
+    /**
+     * If it's in our list of lowercase SVG tags, it's an SVG component
+     */
+    lowercaseSVGElements.indexOf(Component) > -1 ||
+        /**
+         * If it contains a capital letter, it's an SVG component
+         */
+        /[A-Z]/u.test(Component)) {
+        return true;
+    }
+    return false;
+}
+
 const dashKeys = {
     offset: "stroke-dashoffset",
     array: "stroke-dasharray",
@@ -1740,227 +1683,12 @@ function buildSVGAttrs(state, { attrX, attrY, attrScale, originX, originY, pathL
     }
 }
 
-const createHtmlRenderState = () => ({
-    style: {},
-    transform: {},
-    transformOrigin: {},
-    vars: {},
-});
-
 const createSvgRenderState = () => ({
     ...createHtmlRenderState(),
     attrs: {},
 });
 
 const isSVGTag = (tag) => typeof tag === "string" && tag.toLowerCase() === "svg";
-
-function renderHTML(element, { style, vars }, styleProp, projection) {
-    Object.assign(element.style, style, projection && projection.getProjectionStyles(styleProp));
-    // Loop over any CSS variables and assign those.
-    for (const key in vars) {
-        element.style.setProperty(key, vars[key]);
-    }
-}
-
-/**
- * A set of attribute names that are always read/written as camel case.
- */
-const camelCaseAttributes = new Set([
-    "baseFrequency",
-    "diffuseConstant",
-    "kernelMatrix",
-    "kernelUnitLength",
-    "keySplines",
-    "keyTimes",
-    "limitingConeAngle",
-    "markerHeight",
-    "markerWidth",
-    "numOctaves",
-    "targetX",
-    "targetY",
-    "surfaceScale",
-    "specularConstant",
-    "specularExponent",
-    "stdDeviation",
-    "tableValues",
-    "viewBox",
-    "gradientTransform",
-    "pathLength",
-    "startOffset",
-    "textLength",
-    "lengthAdjust",
-]);
-
-function renderSVG(element, renderState, _styleProp, projection) {
-    renderHTML(element, renderState, undefined, projection);
-    for (const key in renderState.attrs) {
-        element.setAttribute(!camelCaseAttributes.has(key) ? camelToDash(key) : key, renderState.attrs[key]);
-    }
-}
-
-const scaleCorrectors = {};
-function addScaleCorrector(correctors) {
-    Object.assign(scaleCorrectors, correctors);
-}
-
-function isForcedMotionValue(key, { layout, layoutId }) {
-    return (transformProps.has(key) ||
-        key.startsWith("origin") ||
-        ((layout || layoutId !== undefined) &&
-            (!!scaleCorrectors[key] || key === "opacity")));
-}
-
-function scrapeMotionValuesFromProps$1(props, prevProps, visualElement) {
-    var _a;
-    const { style } = props;
-    const newValues = {};
-    for (const key in style) {
-        if (isMotionValue(style[key]) ||
-            (prevProps.style &&
-                isMotionValue(prevProps.style[key])) ||
-            isForcedMotionValue(key, props) ||
-            ((_a = visualElement === null || visualElement === undefined ? undefined : visualElement.getValue(key)) === null || _a === undefined ? undefined : _a.liveStyle) !== undefined) {
-            newValues[key] = style[key];
-        }
-    }
-    return newValues;
-}
-
-function scrapeMotionValuesFromProps(props, prevProps, visualElement) {
-    const newValues = scrapeMotionValuesFromProps$1(props, prevProps, visualElement);
-    for (const key in props) {
-        if (isMotionValue(props[key]) ||
-            isMotionValue(prevProps[key])) {
-            const targetKey = transformPropOrder.indexOf(key) !== -1
-                ? "attr" + key.charAt(0).toUpperCase() + key.substring(1)
-                : key;
-            newValues[targetKey] = props[key];
-        }
-    }
-    return newValues;
-}
-
-function updateSVGDimensions(instance, renderState) {
-    try {
-        renderState.dimensions =
-            typeof instance.getBBox === "function"
-                ? instance.getBBox()
-                : instance.getBoundingClientRect();
-    }
-    catch (e) {
-        // Most likely trying to measure an unrendered element under Firefox
-        renderState.dimensions = {
-            x: 0,
-            y: 0,
-            width: 0,
-            height: 0,
-        };
-    }
-}
-const layoutProps = ["x", "y", "width", "height", "cx", "cy", "r"];
-const svgMotionConfig = {
-    useVisualState: makeUseVisualState({
-        scrapeMotionValuesFromProps: scrapeMotionValuesFromProps,
-        createRenderState: createSvgRenderState,
-        onUpdate: ({ props, prevProps, current, renderState, latestValues, }) => {
-            if (!current)
-                return;
-            let hasTransform = !!props.drag;
-            if (!hasTransform) {
-                for (const key in latestValues) {
-                    if (transformProps.has(key)) {
-                        hasTransform = true;
-                        break;
-                    }
-                }
-            }
-            if (!hasTransform)
-                return;
-            let needsMeasure = !prevProps;
-            if (prevProps) {
-                /**
-                 * Check the layout props for changes, if any are found we need to
-                 * measure the element again.
-                 */
-                for (let i = 0; i < layoutProps.length; i++) {
-                    const key = layoutProps[i];
-                    if (props[key] !==
-                        prevProps[key]) {
-                        needsMeasure = true;
-                    }
-                }
-            }
-            if (!needsMeasure)
-                return;
-            frame.read(() => {
-                updateSVGDimensions(current, renderState);
-                frame.render(() => {
-                    buildSVGAttrs(renderState, latestValues, isSVGTag(current.tagName), props.transformTemplate);
-                    renderSVG(current, renderState);
-                });
-            });
-        },
-    }),
-};
-
-const htmlMotionConfig = {
-    useVisualState: makeUseVisualState({
-        scrapeMotionValuesFromProps: scrapeMotionValuesFromProps$1,
-        createRenderState: createHtmlRenderState,
-    }),
-};
-
-const {useMemo: useMemo$1r} = await importShared('react');
-
-function copyRawValuesOnly(target, source, props) {
-    for (const key in source) {
-        if (!isMotionValue(source[key]) && !isForcedMotionValue(key, props)) {
-            target[key] = source[key];
-        }
-    }
-}
-function useInitialMotionValues({ transformTemplate }, visualState) {
-    return useMemo$1r(() => {
-        const state = createHtmlRenderState();
-        buildHTMLStyles(state, visualState, transformTemplate);
-        return Object.assign({}, state.vars, state.style);
-    }, [visualState]);
-}
-function useStyle(props, visualState) {
-    const styleProp = props.style || {};
-    const style = {};
-    /**
-     * Copy non-Motion Values straight into style
-     */
-    copyRawValuesOnly(style, styleProp, props);
-    Object.assign(style, useInitialMotionValues(props, visualState));
-    return style;
-}
-function useHTMLProps(props, visualState) {
-    // The `any` isn't ideal but it is the type of createElement props argument
-    const htmlProps = {};
-    const style = useStyle(props, visualState);
-    if (props.drag && props.dragListener !== false) {
-        // Disable the ghost element when a user drags
-        htmlProps.draggable = false;
-        // Disable text selection
-        style.userSelect =
-            style.WebkitUserSelect =
-                style.WebkitTouchCallout =
-                    "none";
-        // Disable scrolling on the draggable direction
-        style.touchAction =
-            props.drag === true
-                ? "none"
-                : `pan-${props.drag === "x" ? "y" : "x"}`;
-    }
-    if (props.tabIndex === undefined &&
-        (props.onTap || props.onTapStart || props.whileTap)) {
-        htmlProps.tabIndex = 0;
-    }
-    htmlProps.style = style;
-    return htmlProps;
-}
 
 const {useMemo: useMemo$1q} = await importShared('react');
 
@@ -2008,6 +1736,290 @@ function createUseRender(forwardMotionProps = false) {
     return useRender;
 }
 
+function getValueState(visualElement) {
+    const state = [{}, {}];
+    visualElement === null || visualElement === undefined ? undefined : visualElement.values.forEach((value, key) => {
+        state[0][key] = value.get();
+        state[1][key] = value.getVelocity();
+    });
+    return state;
+}
+function resolveVariantFromProps(props, definition, custom, visualElement) {
+    /**
+     * If the variant definition is a function, resolve.
+     */
+    if (typeof definition === "function") {
+        const [current, velocity] = getValueState(visualElement);
+        definition = definition(custom !== undefined ? custom : props.custom, current, velocity);
+    }
+    /**
+     * If the variant definition is a variant label, or
+     * the function returned a variant label, resolve.
+     */
+    if (typeof definition === "string") {
+        definition = props.variants && props.variants[definition];
+    }
+    /**
+     * At this point we've resolved both functions and variant labels,
+     * but the resolved variant label might itself have been a function.
+     * If so, resolve. This can only have returned a valid target object.
+     */
+    if (typeof definition === "function") {
+        const [current, velocity] = getValueState(visualElement);
+        definition = definition(custom !== undefined ? custom : props.custom, current, velocity);
+    }
+    return definition;
+}
+
+const isKeyframesTarget = (v) => {
+    return Array.isArray(v);
+};
+
+const isCustomValue = (v) => {
+    return Boolean(v && typeof v === "object" && v.mix && v.toValue);
+};
+const resolveFinalValueInKeyframes = (v) => {
+    // TODO maybe throw if v.length - 1 is placeholder token?
+    return isKeyframesTarget(v) ? v[v.length - 1] || 0 : v;
+};
+
+/**
+ * If the provided value is a MotionValue, this returns the actual value, otherwise just the value itself
+ *
+ * TODO: Remove and move to library
+ */
+function resolveMotionValue(value) {
+    const unwrappedValue = isMotionValue(value) ? value.get() : value;
+    return isCustomValue(unwrappedValue)
+        ? unwrappedValue.toValue()
+        : unwrappedValue;
+}
+
+const {useContext: useContext$2} = await importShared('react');
+
+function makeState({ scrapeMotionValuesFromProps, createRenderState, onUpdate, }, props, context, presenceContext) {
+    const state = {
+        latestValues: makeLatestValues(props, context, presenceContext, scrapeMotionValuesFromProps),
+        renderState: createRenderState(),
+    };
+    if (onUpdate) {
+        /**
+         * onMount works without the VisualElement because it could be
+         * called before the VisualElement payload has been hydrated.
+         * (e.g. if someone is using m components <m.circle />)
+         */
+        state.onMount = (instance) => onUpdate({ props, current: instance, ...state });
+        state.onUpdate = (visualElement) => onUpdate(visualElement);
+    }
+    return state;
+}
+const makeUseVisualState = (config) => (props, isStatic) => {
+    const context = useContext$2(MotionContext);
+    const presenceContext = useContext$2(PresenceContext);
+    const make = () => makeState(config, props, context, presenceContext);
+    return isStatic ? make() : useConstant(make);
+};
+function makeLatestValues(props, context, presenceContext, scrapeMotionValues) {
+    const values = {};
+    const motionValues = scrapeMotionValues(props, {});
+    for (const key in motionValues) {
+        values[key] = resolveMotionValue(motionValues[key]);
+    }
+    let { initial, animate } = props;
+    const isControllingVariants$1 = isControllingVariants(props);
+    const isVariantNode$1 = isVariantNode(props);
+    if (context &&
+        isVariantNode$1 &&
+        !isControllingVariants$1 &&
+        props.inherit !== false) {
+        if (initial === undefined)
+            initial = context.initial;
+        if (animate === undefined)
+            animate = context.animate;
+    }
+    let isInitialAnimationBlocked = presenceContext
+        ? presenceContext.initial === false
+        : false;
+    isInitialAnimationBlocked = isInitialAnimationBlocked || initial === false;
+    const variantToSet = isInitialAnimationBlocked ? animate : initial;
+    if (variantToSet &&
+        typeof variantToSet !== "boolean" &&
+        !isAnimationControls(variantToSet)) {
+        const list = Array.isArray(variantToSet) ? variantToSet : [variantToSet];
+        for (let i = 0; i < list.length; i++) {
+            const resolved = resolveVariantFromProps(props, list[i]);
+            if (resolved) {
+                const { transitionEnd, transition, ...target } = resolved;
+                for (const key in target) {
+                    let valueTarget = target[key];
+                    if (Array.isArray(valueTarget)) {
+                        /**
+                         * Take final keyframe if the initial animation is blocked because
+                         * we want to initialise at the end of that blocked animation.
+                         */
+                        const index = isInitialAnimationBlocked
+                            ? valueTarget.length - 1
+                            : 0;
+                        valueTarget = valueTarget[index];
+                    }
+                    if (valueTarget !== null) {
+                        values[key] = valueTarget;
+                    }
+                }
+                for (const key in transitionEnd) {
+                    values[key] = transitionEnd[key];
+                }
+            }
+        }
+    }
+    return values;
+}
+
+function scrapeMotionValuesFromProps$1(props, prevProps, visualElement) {
+    var _a;
+    const { style } = props;
+    const newValues = {};
+    for (const key in style) {
+        if (isMotionValue(style[key]) ||
+            (prevProps.style &&
+                isMotionValue(prevProps.style[key])) ||
+            isForcedMotionValue(key, props) ||
+            ((_a = visualElement === null || visualElement === undefined ? undefined : visualElement.getValue(key)) === null || _a === undefined ? undefined : _a.liveStyle) !== undefined) {
+            newValues[key] = style[key];
+        }
+    }
+    return newValues;
+}
+
+const htmlMotionConfig = {
+    useVisualState: makeUseVisualState({
+        scrapeMotionValuesFromProps: scrapeMotionValuesFromProps$1,
+        createRenderState: createHtmlRenderState,
+    }),
+};
+
+function updateSVGDimensions(instance, renderState) {
+    try {
+        renderState.dimensions =
+            typeof instance.getBBox === "function"
+                ? instance.getBBox()
+                : instance.getBoundingClientRect();
+    }
+    catch (e) {
+        // Most likely trying to measure an unrendered element under Firefox
+        renderState.dimensions = {
+            x: 0,
+            y: 0,
+            width: 0,
+            height: 0,
+        };
+    }
+}
+
+function renderHTML(element, { style, vars }, styleProp, projection) {
+    Object.assign(element.style, style, projection && projection.getProjectionStyles(styleProp));
+    // Loop over any CSS variables and assign those.
+    for (const key in vars) {
+        element.style.setProperty(key, vars[key]);
+    }
+}
+
+/**
+ * A set of attribute names that are always read/written as camel case.
+ */
+const camelCaseAttributes = new Set([
+    "baseFrequency",
+    "diffuseConstant",
+    "kernelMatrix",
+    "kernelUnitLength",
+    "keySplines",
+    "keyTimes",
+    "limitingConeAngle",
+    "markerHeight",
+    "markerWidth",
+    "numOctaves",
+    "targetX",
+    "targetY",
+    "surfaceScale",
+    "specularConstant",
+    "specularExponent",
+    "stdDeviation",
+    "tableValues",
+    "viewBox",
+    "gradientTransform",
+    "pathLength",
+    "startOffset",
+    "textLength",
+    "lengthAdjust",
+]);
+
+function renderSVG(element, renderState, _styleProp, projection) {
+    renderHTML(element, renderState, undefined, projection);
+    for (const key in renderState.attrs) {
+        element.setAttribute(!camelCaseAttributes.has(key) ? camelToDash(key) : key, renderState.attrs[key]);
+    }
+}
+
+function scrapeMotionValuesFromProps(props, prevProps, visualElement) {
+    const newValues = scrapeMotionValuesFromProps$1(props, prevProps, visualElement);
+    for (const key in props) {
+        if (isMotionValue(props[key]) ||
+            isMotionValue(prevProps[key])) {
+            const targetKey = transformPropOrder.indexOf(key) !== -1
+                ? "attr" + key.charAt(0).toUpperCase() + key.substring(1)
+                : key;
+            newValues[targetKey] = props[key];
+        }
+    }
+    return newValues;
+}
+
+const layoutProps = ["x", "y", "width", "height", "cx", "cy", "r"];
+const svgMotionConfig = {
+    useVisualState: makeUseVisualState({
+        scrapeMotionValuesFromProps: scrapeMotionValuesFromProps,
+        createRenderState: createSvgRenderState,
+        onUpdate: ({ props, prevProps, current, renderState, latestValues, }) => {
+            if (!current)
+                return;
+            let hasTransform = !!props.drag;
+            if (!hasTransform) {
+                for (const key in latestValues) {
+                    if (transformProps.has(key)) {
+                        hasTransform = true;
+                        break;
+                    }
+                }
+            }
+            if (!hasTransform)
+                return;
+            let needsMeasure = !prevProps;
+            if (prevProps) {
+                /**
+                 * Check the layout props for changes, if any are found we need to
+                 * measure the element again.
+                 */
+                for (let i = 0; i < layoutProps.length; i++) {
+                    const key = layoutProps[i];
+                    if (props[key] !==
+                        prevProps[key]) {
+                        needsMeasure = true;
+                    }
+                }
+            }
+            if (!needsMeasure)
+                return;
+            frame.read(() => {
+                updateSVGDimensions(current, renderState);
+                frame.render(() => {
+                    buildSVGAttrs(renderState, latestValues, isSVGTag(current.tagName), props.transformTemplate);
+                    renderSVG(current, renderState);
+                });
+            });
+        },
+    }),
+};
+
 function createMotionComponentFactory(preloadedFeatures, createVisualElement) {
     return function createMotionComponent(Component, { forwardMotionProps } = { forwardMotionProps: false }) {
         const baseConfig = isSVGComponent(Component)
@@ -2028,19 +2040,6 @@ const createMinimalMotionComponent =
 /*@__PURE__*/ createMotionComponentFactory();
 
 const m = /*@__PURE__*/ createDOMMotionComponentProxy(createMinimalMotionComponent);
-
-function shallowCompare(next, prev) {
-    if (!Array.isArray(prev))
-        return false;
-    const prevLength = prev.length;
-    if (prevLength !== next.length)
-        return false;
-    for (let i = 0; i < prevLength; i++) {
-        if (prev[i] !== next[i])
-            return false;
-    }
-    return true;
-}
 
 function resolveVariant(visualElement, definition, custom) {
     const props = visualElement.getProps();
@@ -2599,7 +2598,7 @@ class MotionValue {
    * @internal
    */
   constructor(init, options = {}) {
-    this.version = "12.0.1";
+    this.version = "12.3.1";
     this.canTrackVelocity = null;
     this.events = {};
     this.updateAndNotify = (v, render = true) => {
@@ -5499,6 +5498,19 @@ function animateVisualElement(visualElement, definition, options = {}) {
     });
 }
 
+function shallowCompare(next, prev) {
+    if (!Array.isArray(prev))
+        return false;
+    const prevLength = prev.length;
+    if (prevLength !== next.length)
+        return false;
+    for (let i = 0; i < prevLength; i++) {
+        if (prev[i] !== next[i])
+            return false;
+    }
+    return true;
+}
+
 const numVariantProps = variantProps.length;
 function getVariantContext(visualElement) {
     if (!visualElement)
@@ -5905,11 +5917,16 @@ class ExitAnimationFeature extends Feature {
         }
         const exitAnimation = this.node.animationState.setActive("exit", !isPresent);
         if (onExitComplete && !isPresent) {
-            exitAnimation.then(() => onExitComplete(this.id));
+            exitAnimation.then(() => {
+                onExitComplete(this.id);
+            });
         }
     }
     mount() {
-        const { register } = this.node.presenceContext || {};
+        const { register, onExitComplete } = this.node.presenceContext || {};
+        if (onExitComplete) {
+            onExitComplete(this.id);
+        }
         if (register) {
             this.unmount = register(this.id);
         }
@@ -7894,7 +7911,7 @@ function createProjectionNode({ attachResizeListener, defaultParent, measureScro
                      */
                     const hasOnlyRelativeTargetChanged = !hasLayoutChanged && hasRelativeLayoutChanged;
                     if (this.options.layoutRoot ||
-                        (this.resumeFrom && this.resumeFrom.instance) ||
+                        this.resumeFrom ||
                         hasOnlyRelativeTargetChanged ||
                         (hasLayoutChanged &&
                             (hasTargetChanged || !this.currentAnimation))) {
@@ -8095,6 +8112,11 @@ function createProjectionNode({ attachResizeListener, defaultParent, measureScro
             if (this.snapshot || !this.instance)
                 return;
             this.snapshot = this.measure();
+            if (this.snapshot &&
+                !calcLength(this.snapshot.measuredBox.x) &&
+                !calcLength(this.snapshot.measuredBox.y)) {
+                this.snapshot = undefined;
+            }
         }
         updateLayout() {
             if (!this.instance)
@@ -8917,7 +8939,7 @@ function createProjectionNode({ attachResizeListener, defaultParent, measureScro
             for (const key in scaleCorrectors) {
                 if (valuesToRender[key] === undefined)
                     continue;
-                const { correct, applyTo } = scaleCorrectors[key];
+                const { correct, applyTo, isCSSVariable } = scaleCorrectors[key];
                 /**
                  * Only apply scale correction to the value if we have an
                  * active projection transform. Otherwise these values become
@@ -8934,7 +8956,15 @@ function createProjectionNode({ attachResizeListener, defaultParent, measureScro
                     }
                 }
                 else {
-                    styles[key] = corrected;
+                    // If this is a CSS variable, set it directly on the instance.
+                    // Replacing this function from creating styles to setting them
+                    // would be a good place to remove per frame object creation
+                    if (isCSSVariable) {
+                        this.options.visualElement.renderState.vars[key] = corrected;
+                    }
+                    else {
+                        styles[key] = corrected;
+                    }
                 }
             }
             /**
@@ -9594,7 +9624,6 @@ class VisualElement {
     this.update(this.props, this.presenceContext);
   }
   unmount() {
-    visualElementStore.delete(this.current);
     this.projection && this.projection.unmount();
     cancelFrame(this.notifyUpdate);
     cancelFrame(this.render);
@@ -9619,6 +9648,9 @@ class VisualElement {
       this.valueSubscriptions.get(key)();
     }
     const valueIsTransform = transformProps.has(key);
+    if (valueIsTransform && this.onBindTransform) {
+      this.onBindTransform();
+    }
     const removeOnChange = value.on("change", (latestValue) => {
       this.latestValues[key] = latestValue;
       this.props.onUpdate && frame.preRender(this.notifyUpdate);
@@ -9925,6 +9957,11 @@ class SVGVisualElement extends DOMVisualElement {
         this.type = "svg";
         this.isSVGTag = false;
         this.measureInstanceViewportBox = createBox;
+        this.updateDimensions = () => {
+            if (this.current && !this.renderState.dimensions) {
+                updateSVGDimensions(this.current, this.renderState);
+            }
+        };
     }
     getBaseTargetFromProps(props, key) {
         return props[key];
@@ -9939,6 +9976,11 @@ class SVGVisualElement extends DOMVisualElement {
     }
     scrapeMotionValuesFromProps(props, prevProps, visualElement) {
         return scrapeMotionValuesFromProps(props, prevProps, visualElement);
+    }
+    onBindTransform() {
+        if (this.current && !this.renderState.dimensions) {
+            frame.postRender(this.updateDimensions);
+        }
     }
     build(renderState, latestValues, props) {
         buildSVGAttrs(renderState, latestValues, this.isSVGTag, props.transformTemplate);
@@ -39805,7 +39847,7 @@ var ChevronRightIcon$1 = (props) => /* @__PURE__ */ jsxRuntimeExports.jsx(
 );
 
 const {useMemo: useMemo$1m} = await importShared('react');
-var domAnimation$8 = () => __vitePreload(() => import('./index-D9oC4r62.js'),true?[]:undefined,import.meta.url).then((res) => res.default);
+var domAnimation$8 = () => __vitePreload(() => import('./index-puEYfLdy.js'),true?[]:undefined,import.meta.url).then((res) => res.default);
 var AccordionItem = forwardRef$5((props, ref) => {
   const {
     Component,
@@ -41979,7 +42021,7 @@ function useAriaButton(props, ref) {
   };
 }
 
-var domAnimation$7 = () => __vitePreload(() => import('./index-D9oC4r62.js'),true?[]:undefined,import.meta.url).then((res) => res.default);
+var domAnimation$7 = () => __vitePreload(() => import('./index-puEYfLdy.js'),true?[]:undefined,import.meta.url).then((res) => res.default);
 var Ripple = (props) => {
   const { ripples = [], motionProps, color = "currentColor", style, onClear } = props;
   return /* @__PURE__ */ jsxRuntimeExports.jsx(jsxRuntimeExports.Fragment, { children: ripples.map((ripple) => {
@@ -47737,7 +47779,7 @@ function useTooltip(originalProps) {
 }
 
 const {Children: Children$3,cloneElement: cloneElement$a,isValidElement: isValidElement$4} = await importShared('react');
-var domAnimation$6 = () => __vitePreload(() => import('./index-D9oC4r62.js'),true?[]:undefined,import.meta.url).then((res) => res.default);
+var domAnimation$6 = () => __vitePreload(() => import('./index-puEYfLdy.js'),true?[]:undefined,import.meta.url).then((res) => res.default);
 var Tooltip = forwardRef$5((props, ref) => {
   const {
     Component,
@@ -49872,7 +49914,7 @@ function $40df3f8667284809$export$d55e7ee900f34e93(props, ref) {
 
 // src/free-solo-popover.tsx
 const React$2 = await importShared('react');
-var domAnimation$5 = () => __vitePreload(() => import('./index-D9oC4r62.js'),true?[]:undefined,import.meta.url).then((res) => res.default);
+var domAnimation$5 = () => __vitePreload(() => import('./index-puEYfLdy.js'),true?[]:undefined,import.meta.url).then((res) => res.default);
 var FreeSoloPopoverWrapper = forwardRef$5(
   ({
     children,
@@ -49985,7 +50027,7 @@ var [PopoverProvider, usePopoverContext] = createContext2({
 
 // src/popover-content.tsx
 const {useMemo: useMemo$O,useRef: useRef$l} = await importShared('react');
-var domAnimation$4 = () => __vitePreload(() => import('./index-D9oC4r62.js'),true?[]:undefined,import.meta.url).then((res) => res.default);
+var domAnimation$4 = () => __vitePreload(() => import('./index-puEYfLdy.js'),true?[]:undefined,import.meta.url).then((res) => res.default);
 var PopoverContent = (props) => {
   const { as, children, className, ...otherProps } = props;
   const {
@@ -51623,7 +51665,7 @@ var scaleInOut = {
 
 // src/modal-content.tsx
 const {cloneElement: cloneElement$5,isValidElement: isValidElement$3,useMemo: useMemo$G,useCallback: useCallback$j} = await importShared('react');
-var domAnimation$3 = () => __vitePreload(() => import('./index-D9oC4r62.js'),true?[]:undefined,import.meta.url).then((res) => res.default);
+var domAnimation$3 = () => __vitePreload(() => import('./index-puEYfLdy.js'),true?[]:undefined,import.meta.url).then((res) => res.default);
 var ModalContent = (props) => {
   const { as, children, role = "dialog", ...otherProps } = props;
   const {
@@ -52065,7 +52107,7 @@ var menuVariants = {
   }
 };
 
-var domAnimation$2 = () => __vitePreload(() => import('./index-D9oC4r62.js'),true?[]:undefined,import.meta.url).then((res) => res.default);
+var domAnimation$2 = () => __vitePreload(() => import('./index-puEYfLdy.js'),true?[]:undefined,import.meta.url).then((res) => res.default);
 var NavbarMenu = forwardRef$5((props, ref) => {
   var _a, _b;
   const { className, children, portalContainer, motionProps, style, ...otherProps } = props;
@@ -52306,7 +52348,7 @@ function useNavbar(originalProps) {
   };
 }
 
-var domAnimation$1 = () => __vitePreload(() => import('./index-D9oC4r62.js'),true?[]:undefined,import.meta.url).then((res) => res.default);
+var domAnimation$1 = () => __vitePreload(() => import('./index-puEYfLdy.js'),true?[]:undefined,import.meta.url).then((res) => res.default);
 var Navbar = forwardRef$5((props, ref) => {
   const { children, ...otherProps } = props;
   const context = useNavbar({ ...otherProps, ref });
@@ -69526,7 +69568,7 @@ function CalendarPicker(props) {
 const {Fragment,useState} = await importShared('react');
 const {createElement} = await importShared('react');
 
-var domAnimation = () => __vitePreload(() => import('./index-D9oC4r62.js'),true?[]:undefined,import.meta.url).then((res) => res.default);
+var domAnimation = () => __vitePreload(() => import('./index-puEYfLdy.js'),true?[]:undefined,import.meta.url).then((res) => res.default);
 function CalendarBase(props) {
   const {
     Component = "div",
