@@ -1959,7 +1959,7 @@ function requireLodash() {
             return symbolToString ? symbolToString.call(value) : "";
           }
           var result2 = value + "";
-          return result2 == "0" && 1 / value == -INFINITY ? "-0" : result2;
+          return result2 == "0" && 1 / value == -Infinity ? "-0" : result2;
         }
         function baseUniq(array, iteratee2, comparator2) {
           var index = -1, includes2 = arrayIncludes, length = array.length, isCommon = true, result2 = [], seen = result2;
@@ -2511,7 +2511,7 @@ function requireLodash() {
           bitmask |= isCurry ? WRAP_PARTIAL_FLAG : WRAP_PARTIAL_RIGHT_FLAG;
           bitmask &= ~(isCurry ? WRAP_PARTIAL_RIGHT_FLAG : WRAP_PARTIAL_FLAG);
           if (!(bitmask & WRAP_CURRY_BOUND_FLAG)) {
-            bitmask &= ~(WRAP_BIND_FLAG | WRAP_BIND_KEY_FLAG);
+            bitmask &= -4;
           }
           var newData = [
             func,
@@ -2567,7 +2567,7 @@ function requireLodash() {
           }
           var length = partials ? partials.length : 0;
           if (!length) {
-            bitmask &= ~(WRAP_PARTIAL_FLAG | WRAP_PARTIAL_RIGHT_FLAG);
+            bitmask &= -97;
             partials = holders = undefined$1;
           }
           ary2 = ary2 === undefined$1 ? ary2 : nativeMax(toInteger(ary2), 0);
@@ -2600,7 +2600,7 @@ function requireLodash() {
           holders = newData[4];
           arity = newData[9] = newData[9] === undefined$1 ? isBindKey ? 0 : func.length : nativeMax(newData[9] - length, 0);
           if (!arity && bitmask & (WRAP_CURRY_FLAG | WRAP_CURRY_RIGHT_FLAG)) {
-            bitmask &= ~(WRAP_CURRY_FLAG | WRAP_CURRY_RIGHT_FLAG);
+            bitmask &= -25;
           }
           if (!bitmask || bitmask == WRAP_BIND_FLAG) {
             var result2 = createBind(func, bitmask, thisArg);
@@ -3166,7 +3166,7 @@ function requireLodash() {
             return value;
           }
           var result2 = value + "";
-          return result2 == "0" && 1 / value == -INFINITY ? "-0" : result2;
+          return result2 == "0" && 1 / value == -Infinity ? "-0" : result2;
         }
         function toSource(func) {
           if (func != null) {
@@ -4230,7 +4230,7 @@ function requireLodash() {
         }
         var isRegExp = nodeIsRegExp ? baseUnary(nodeIsRegExp) : baseIsRegExp;
         function isSafeInteger(value) {
-          return isInteger(value) && value >= -MAX_SAFE_INTEGER && value <= MAX_SAFE_INTEGER;
+          return isInteger(value) && value >= -9007199254740991 && value <= MAX_SAFE_INTEGER;
         }
         var isSet = nodeIsSet ? baseUnary(nodeIsSet) : baseIsSet;
         function isString(value) {
@@ -4271,7 +4271,7 @@ function requireLodash() {
             return value === 0 ? value : 0;
           }
           value = toNumber(value);
-          if (value === INFINITY || value === -INFINITY) {
+          if (value === INFINITY || value === -Infinity) {
             var sign = value < 0 ? -1 : 1;
             return sign * MAX_INTEGER;
           }
@@ -4306,7 +4306,7 @@ function requireLodash() {
           return copyObject(value, keysIn(value));
         }
         function toSafeInteger(value) {
-          return value ? baseClamp(toInteger(value), -MAX_SAFE_INTEGER, MAX_SAFE_INTEGER) : value === 0 ? value : 0;
+          return value ? baseClamp(toInteger(value), -9007199254740991, MAX_SAFE_INTEGER) : value === 0 ? value : 0;
         }
         function toString(value) {
           return value == null ? "" : baseToString(value);
@@ -6989,7 +6989,7 @@ function requireCjs() {
   if (hasRequiredCjs) return cjs;
   hasRequiredCjs = 1;
   (function(exports) {
-    var __createBinding = cjs && cjs.__createBinding || (Object.create ? function(o, m, k, k2) {
+    var __createBinding = cjs.__createBinding || (Object.create ? function(o, m, k, k2) {
       if (k2 === void 0) k2 = k;
       var desc = Object.getOwnPropertyDescriptor(m, k);
       if (!desc || ("get" in desc ? !m.__esModule : desc.writable || desc.configurable)) {
@@ -7002,12 +7002,12 @@ function requireCjs() {
       if (k2 === void 0) k2 = k;
       o[k2] = m[k];
     });
-    var __setModuleDefault = cjs && cjs.__setModuleDefault || (Object.create ? function(o, v) {
+    var __setModuleDefault = cjs.__setModuleDefault || (Object.create ? function(o, v) {
       Object.defineProperty(o, "default", { enumerable: true, value: v });
     } : function(o, v) {
       o["default"] = v;
     });
-    var __importStar = cjs && cjs.__importStar || function(mod) {
+    var __importStar = cjs.__importStar || function(mod) {
       if (mod && mod.__esModule) return mod;
       var result = {};
       if (mod != null) {
@@ -7016,7 +7016,7 @@ function requireCjs() {
       __setModuleDefault(result, mod);
       return result;
     };
-    var __exportStar = cjs && cjs.__exportStar || function(m, exports2) {
+    var __exportStar = cjs.__exportStar || function(m, exports2) {
       for (var p in m) if (p !== "default" && !Object.prototype.hasOwnProperty.call(exports2, p)) __createBinding(exports2, m, p);
     };
     Object.defineProperty(exports, "__esModule", { value: true });
@@ -10357,6 +10357,7 @@ function requireRe() {
     const re2 = exports.re = [];
     const safeRe = exports.safeRe = [];
     const src = exports.src = [];
+    const safeSrc = exports.safeSrc = [];
     const t = exports.t = {};
     let R = 0;
     const LETTERDASHNUMBER = "[a-zA-Z0-9-]";
@@ -10377,6 +10378,7 @@ function requireRe() {
       debug(name, index, value);
       t[name] = index;
       src[index] = value;
+      safeSrc[index] = safe;
       re2[index] = new RegExp(value, isGlobal ? "g" : void 0);
       safeRe[index] = new RegExp(safe, isGlobal ? "g" : void 0);
     };
@@ -10477,7 +10479,7 @@ function requireSemver$1() {
   hasRequiredSemver$1 = 1;
   const debug = requireDebug();
   const { MAX_LENGTH, MAX_SAFE_INTEGER } = requireConstants();
-  const { safeRe: re2, t } = requireRe();
+  const { safeRe: re2, safeSrc: src, t } = requireRe();
   const parseOptions = requireParseOptions();
   const { compareIdentifiers } = requireIdentifiers();
   class SemVer {
@@ -10617,6 +10619,18 @@ function requireSemver$1() {
     // preminor will bump the version up to the next minor release, and immediately
     // down to pre-release. premajor and prepatch work the same way.
     inc(release, identifier, identifierBase) {
+      if (release.startsWith("pre")) {
+        if (!identifier && identifierBase === false) {
+          throw new Error("invalid increment argument: identifier is empty");
+        }
+        if (identifier) {
+          const r = new RegExp(`^${this.options.loose ? src[t.PRERELEASELOOSE] : src[t.PRERELEASE]}$`);
+          const match = `-${identifier}`.match(r);
+          if (!match || match[1] !== identifier) {
+            throw new Error(`invalid identifier: ${identifier}`);
+          }
+        }
+      }
       switch (release) {
         case "premajor":
           this.prerelease.length = 0;
@@ -10644,6 +10658,12 @@ function requireSemver$1() {
           }
           this.inc("pre", identifier, identifierBase);
           break;
+        case "release":
+          if (this.prerelease.length === 0) {
+            throw new Error(`version ${this.raw} is not a prerelease`);
+          }
+          this.prerelease.length = 0;
+          break;
         case "major":
           if (this.minor !== 0 || this.patch !== 0 || this.prerelease.length === 0) {
             this.major++;
@@ -10669,9 +10689,6 @@ function requireSemver$1() {
         // 1.0.0 'pre' would become 1.0.0-0 which is the wrong direction.
         case "pre": {
           const base = Number(identifierBase) ? 1 : 0;
-          if (!identifier && identifierBase === false) {
-            throw new Error("invalid increment argument: identifier is empty");
-          }
           if (this.prerelease.length === 0) {
             this.prerelease = [base];
           } else {
@@ -10811,13 +10828,12 @@ function requireDiff() {
       if (!lowVersion.patch && !lowVersion.minor) {
         return "major";
       }
-      if (highVersion.patch) {
+      if (lowVersion.compareMain(highVersion) === 0) {
+        if (lowVersion.minor && !lowVersion.patch) {
+          return "minor";
+        }
         return "patch";
       }
-      if (highVersion.minor) {
-        return "minor";
-      }
-      return "major";
     }
     const prefix = highHasPre ? "pre" : "";
     if (v1.major !== v2.major) {

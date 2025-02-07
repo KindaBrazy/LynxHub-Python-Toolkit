@@ -1,6 +1,6 @@
 /* empty css               */
-import { importShared } from './__federation_fn_import-Bh9j8VYr.js';
-import { j as jsxRuntimeExports, a as TRANSITION_EASINGS } from './chunk-736YWA4T-CpJxSm98.js';
+import { importShared } from './__federation_fn_import-DnzCM302.js';
+import { j as jsxRuntimeExports, a as TRANSITION_EASINGS } from './chunk-736YWA4T-pt2i7NVI.js';
 import { g as getDefaultExportFromCjs, c as commonjsGlobal, a as getAugmentedNamespace } from './_commonjsHelpers-E-ZsRS8r.js';
 
 const PYTHON_SUPPORTED_AI = [
@@ -213,7 +213,7 @@ function revokeDraft(draft) {
 function processResult(result, scope) {
   scope.unfinalizedDrafts_ = scope.drafts_.length;
   const baseDraft = scope.drafts_[0];
-  const isReplaced = result !== void 0 && result !== baseDraft;
+  const isReplaced = result !== undefined && result !== baseDraft;
   if (isReplaced) {
     if (baseDraft[DRAFT_STATE].modified_) {
       revokeScope(scope);
@@ -239,7 +239,7 @@ function processResult(result, scope) {
   if (scope.patches_) {
     scope.patchListener_(scope.patches_, scope.inversePatches_);
   }
-  return result !== NOTHING ? result : void 0;
+  return result !== NOTHING ? result : undefined;
 }
 function finalize(rootScope, value, path) {
   if (isFrozen(value))
@@ -288,7 +288,7 @@ function finalize(rootScope, value, path) {
 function finalizeProperty(rootScope, parentState, targetObject, prop, childValue, rootPath, targetIsSet) {
   if (isDraft(childValue)) {
     const path = rootPath && parentState && parentState.type_ !== 3 && // Set objects are atomic since they have no keys.
-    !has(parentState.assigned_, prop) ? rootPath.concat(prop) : void 0;
+    !has(parentState.assigned_, prop) ? rootPath.concat(prop) : undefined;
     const res = finalize(rootScope, childValue, path);
     set(targetObject, prop, res);
     if (isDraft(res)) {
@@ -386,13 +386,13 @@ var objectTraps = {
         state.assigned_[prop] = false;
         return true;
       }
-      if (is$1(value, current2) && (value !== void 0 || has(state.base_, prop)))
+      if (is$1(value, current2) && (value !== undefined || has(state.base_, prop)))
         return true;
       prepareCopy(state);
       markChanged(state);
     }
     if (state.copy_[prop] === value && // special case: handle new props with value 'undefined'
-    (value !== void 0 || prop in state.copy_) || // special case: NaN
+    (value !== undefined || prop in state.copy_) || // special case: NaN
     Number.isNaN(value) && Number.isNaN(state.copy_[prop]))
       return true;
     state.copy_[prop] = value;
@@ -400,7 +400,7 @@ var objectTraps = {
     return true;
   },
   deleteProperty(state, prop) {
-    if (peek(state.base_, prop) !== void 0 || prop in state.base_) {
+    if (peek(state.base_, prop) !== undefined || prop in state.base_) {
       state.assigned_[prop] = false;
       prepareCopy(state);
       markChanged(state);
@@ -444,7 +444,7 @@ each$1(objectTraps, (key, fn) => {
   };
 });
 arrayTraps.deleteProperty = function(state, prop) {
-  return arrayTraps.set.call(this, state, prop, void 0);
+  return arrayTraps.set.call(this, state, prop, undefined);
 };
 arrayTraps.set = function(state, prop, value) {
   return objectTraps.set.call(this, state[0], prop, value, state[0]);
@@ -460,11 +460,11 @@ function readPropFromProto(state, source, prop) {
     // This is a very special case, if the prop is a getter defined by the
     // prototype, we should invoke it with the draft as context!
     desc.get?.call(state.draft_)
-  ) : void 0;
+  ) : undefined;
 }
 function getDescriptorFromProto(source, prop) {
   if (!(prop in source))
-    return void 0;
+    return undefined;
   let proto = getPrototypeOf(source);
   while (proto) {
     const desc = Object.getOwnPropertyDescriptor(proto, prop);
@@ -472,7 +472,7 @@ function getDescriptorFromProto(source, prop) {
       return desc;
     proto = getPrototypeOf(proto);
   }
-  return void 0;
+  return undefined;
 }
 function markChanged(state) {
   if (!state.modified_) {
@@ -505,12 +505,12 @@ var Immer2 = class {
       }
       if (typeof recipe !== "function")
         die(6);
-      if (patchListener !== void 0 && typeof patchListener !== "function")
+      if (patchListener !== undefined && typeof patchListener !== "function")
         die(7);
       let result;
       if (isDraftable(base)) {
         const scope = enterScope(this);
-        const proxy = createProxy(base, void 0);
+        const proxy = createProxy(base, undefined);
         let hasError = true;
         try {
           result = recipe(proxy);
@@ -525,10 +525,10 @@ var Immer2 = class {
         return processResult(result, scope);
       } else if (!base || typeof base !== "object") {
         result = recipe(base);
-        if (result === void 0)
+        if (result === undefined)
           result = base;
         if (result === NOTHING)
-          result = void 0;
+          result = undefined;
         if (this.autoFreeze_)
           freeze(result, true);
         if (patchListener) {
@@ -563,7 +563,7 @@ var Immer2 = class {
     if (isDraft(base))
       base = current(base);
     const scope = enterScope(this);
-    const proxy = createProxy(base, void 0);
+    const proxy = createProxy(base, undefined);
     proxy[DRAFT_STATE].isManual_ = true;
     leaveScope(scope);
     return proxy;
@@ -574,7 +574,7 @@ var Immer2 = class {
       die(9);
     const { scope_: scope } = state;
     usePatchesInScope(scope, patchListener);
-    return processResult(void 0, scope);
+    return processResult(undefined, scope);
   }
   /**
    * Pass true to automatically freeze all copies created by Immer.
@@ -750,13 +750,13 @@ function createReducer(initialState, mapOrBuilderCallback) {
         if (isDraft(previousState)) {
           const draft = previousState;
           const result = caseReducer(draft, action);
-          if (result === void 0) {
+          if (result === undefined) {
             return previousState;
           }
           return result;
         } else if (!isDraftable(previousState)) {
           const result = caseReducer(previousState, action);
-          if (result === void 0) {
+          if (result === undefined) {
             if (previousState === null) {
               return previousState;
             }
@@ -790,11 +790,6 @@ function buildCreateSlice({
     } = options;
     if (!name) {
       throw new Error(formatProdErrorMessage(11) );
-    }
-    if (typeof process !== "undefined" && false) {
-      if (options.initialState === void 0) {
-        console.error("You must provide an `initialState` value that is not `undefined`. You may have misspelled `initialState`");
-      }
     }
     const reducers = (typeof options.reducers === "function" ? options.reducers(buildReducerCreators()) : options.reducers) || {};
     const reducerNames = Object.keys(reducers);
@@ -846,7 +841,7 @@ function buildCreateSlice({
       }
     });
     function buildReducer() {
-      const [extraReducers = {}, actionMatchers = [], defaultCaseReducer = void 0] = typeof options.extraReducers === "function" ? executeReducerBuilderCallback(options.extraReducers) : [options.extraReducers];
+      const [extraReducers = {}, actionMatchers = [], defaultCaseReducer = undefined] = typeof options.extraReducers === "function" ? executeReducerBuilderCallback(options.extraReducers) : [options.extraReducers];
       const finalCaseReducers = {
         ...extraReducers,
         ...context.sliceCaseReducersByType
@@ -1256,7 +1251,7 @@ function AltArrow_Icon(props) {
   ) });
 }
 
-const {DropdownItem: DropdownItem$5,DropdownSection: DropdownSection$1} = await importShared('@nextui-org/react');
+const {DropdownItem: DropdownItem$5,DropdownSection: DropdownSection$1} = await importShared('@heroui/react');
 
 const {useCallback: useCallback$5} = await importShared('react');
 
@@ -1303,22 +1298,22 @@ const fileChannels = {
   calcFolderSize: "app:calcFolderSize"
 };
 const gitChannels = {
-  abortClone: "git:abortClone",
-  cloneRepo: "git:clone-repo",
-  clonePromise: "git:clone-promise",
-  locate: "git:locate",
+  cloneShallow: "git:clone-shallow",
+  cloneShallowPromise: "git:clone-shallow-promise",
+  stashDrop: "git:stash-drop",
   validateGitDir: "git:validateGitDir",
+  getRepoInfo: "git:get-repo-info",
+  changeBranch: "git:changeBranch",
+  unShallow: "git:unShallow",
+  resetHard: "git:resetHard",
   pull: "git:pull",
-  updateAvailable: "git:updateAvailable",
   onProgress: "git:on-progress"
 };
 const utilsChannels = {
   cancelExtensionsData: "utils:cancel-extensions-data",
-  cardInfo: "utils:card-info",
   updateAllExtensions: "utils:update-all-extensions",
   onUpdateAllExtensions: "utils:on-update-all-extensions",
   extensionsDetails: "utils:extensions-details",
-  onCardInfo: "utils:on-card-info",
   updateStatus: "utils:extensions-update-status",
   downloadFile: "utils:download-file",
   cancelDownload: "utils:cancel-download",
@@ -1326,18 +1321,21 @@ const utilsChannels = {
   decompressFile: "utils:decompress-file"
 };
 const modulesChannels = {
+  cardUpdateAvailable: "modules:card-update-available",
   installModule: "modules:install-module",
   uninstallModule: "modules:uninstall-module",
   isUpdateAvailable: "modules:is-update-available",
-  anyUpdateAvailable: "modules:any-update-available",
+  updateAvailableList: "modules:update-available-list",
   updateModule: "modules:update-module",
   updateAllModules: "modules:update-all-modules",
+  checkEa: "modules:check-ea",
   checkCardsUpdateInterval: "modules:cards_update_interval",
   onCardsUpdateAvailable: "modules:on_cards_update_available",
   onReload: "modules:on-reload",
   onUpdatedModules: "modules:on-updated-modules",
   getModulesData: "modules:get-modules-data",
-  getInstalledModulesInfo: "modules:get-installed-modules-info"
+  getInstalledModulesInfo: "modules:get-installed-modules-info",
+  getSkipped: "modules:get-skipped"
 };
 const extensionsChannels = {
   installExtension: "extensions:install-extensions",
@@ -1346,10 +1344,12 @@ const extensionsChannels = {
   updateAvailableList: "extensions:any-update-available",
   updateExtension: "extensions:update-extensions",
   updateAllExtensions: "extensions:update-all-extensions",
+  checkEa: "extensions:check-ea",
   onReload: "extensions:on-reload",
   onUpdatedExtensions: "extensions:on-updated-extensions",
   getExtensionsData: "extensions:get-extensions-data",
-  getInstalledExtensionsInfo: "extensions:get-installed-extensions-info"
+  getInstalledExtensionsInfo: "extensions:get-installed-extensions-info",
+  getSkipped: "extensions:get-skipped"
 };
 const ptyChannels = {
   process: "pty-process",
@@ -1372,10 +1372,17 @@ const appDataChannels = {
 };
 const storageChannels = {
   get: "storage:getData",
+  getCustom: "storage:get-custom",
+  setCustom: "storage:set-custom",
   getAll: "storage:getAllData",
   update: "storage:updateData",
   updateNested: "storage:updateNested",
   clear: "storage:clearStorage"
+};
+const moduleApiChannels = {
+  getFolderCreationTime: "module_api_getFolderCreationTime",
+  getLastPulledDate: "module_api_getLastPulledDate",
+  getCurrentReleaseTag: "module_api_getCurrentReleaseTag"
 };
 const storageUtilsChannels = {
   setSystemStartup: "storageUtils:setSystemStartup",
@@ -1403,6 +1410,9 @@ const storageUtilsChannels = {
   getCardArguments: "storageUtils:get-card-arguments",
   setCardArguments: "storageUtils:set-card-arguments",
   updateZoomFactor: "storageUtils:update-zoom-factor"
+};
+const appWindowChannels = {
+  webViewAttached: "window:webview-attached"
 };
 
 const ipc$1 = window.electron.ipcRenderer;
@@ -1432,24 +1442,29 @@ const rendererIpc = {
   },
   /** Git operations */
   git: {
-    abortClone: () => ipc$1.send(gitChannels.abortClone),
-    bCardUpdateAvailable: (repoDir) => ipc$1.invoke(gitChannels.updateAvailable, repoDir),
-    cloneRepo: (url, dir) => ipc$1.send(gitChannels.cloneRepo, url, dir),
-    clonePromise: (url, dir) => ipc$1.invoke(gitChannels.clonePromise, url, dir),
-    locateCard: (url) => ipc$1.invoke(gitChannels.locate, url),
+    cloneShallow: (url, directory, singleBranch, depth, branch) => ipc$1.send(gitChannels.cloneShallow, url, directory, singleBranch, depth, branch),
+    cloneShallowPromise: (url, directory, singleBranch, depth, branch) => ipc$1.invoke(gitChannels.cloneShallowPromise, url, directory, singleBranch, depth, branch),
+    getRepoInfo: (dir) => ipc$1.invoke(gitChannels.getRepoInfo, dir),
+    changeBranch: (dir, branchName) => ipc$1.invoke(gitChannels.changeBranch, dir, branchName),
+    unShallow: (dir) => ipc$1.invoke(gitChannels.unShallow, dir),
+    resetHard: (dir) => ipc$1.invoke(gitChannels.resetHard, dir),
     validateGitDir: (dir, url) => ipc$1.invoke(gitChannels.validateGitDir, dir, url),
     onProgress: (callback) => ipc$1.on(gitChannels.onProgress, callback),
     offProgress: () => ipc$1.removeAllListeners(gitChannels.onProgress),
-    pull: (repoDir, id) => ipc$1.send(gitChannels.pull, repoDir, id)
+    pull: (repoDir, id) => ipc$1.send(gitChannels.pull, repoDir, id),
+    stashDrop: (dir) => ipc$1.invoke(gitChannels.stashDrop, dir)
   },
   /** Managing app modules */
   module: {
+    cardUpdateAvailable: (card, updateType) => ipc$1.invoke(modulesChannels.cardUpdateAvailable, card, updateType),
     getModulesData: () => ipc$1.invoke(modulesChannels.getModulesData),
     getInstalledModulesInfo: () => ipc$1.invoke(modulesChannels.getInstalledModulesInfo),
+    getSkipped: () => ipc$1.invoke(modulesChannels.getSkipped),
+    checkEa: (isEA) => ipc$1.invoke(modulesChannels.checkEa, isEA),
     installModule: (url) => ipc$1.invoke(modulesChannels.installModule, url),
     uninstallModule: (id) => ipc$1.invoke(modulesChannels.uninstallModule, id),
     isUpdateAvailable: (id) => ipc$1.invoke(modulesChannels.isUpdateAvailable, id),
-    anyUpdateAvailable: () => ipc$1.invoke(modulesChannels.anyUpdateAvailable),
+    updateAvailableList: () => ipc$1.invoke(modulesChannels.updateAvailableList),
     updateModule: (id) => ipc$1.invoke(modulesChannels.updateModule, id),
     updateAllModules: () => ipc$1.invoke(modulesChannels.updateAllModules),
     onReload: (result) => ipc$1.on(modulesChannels.onReload, result),
@@ -1457,15 +1472,22 @@ const rendererIpc = {
     checkCardsUpdateInterval: (updateType) => ipc$1.send(modulesChannels.checkCardsUpdateInterval, updateType),
     onCardsUpdateAvailable: (result) => ipc$1.on(modulesChannels.onCardsUpdateAvailable, result)
   },
+  moduleApi: {
+    getFolderCreationTime: (dir) => ipc$1.invoke(moduleApiChannels.getFolderCreationTime, dir),
+    getLastPulledDate: (dir) => ipc$1.invoke(moduleApiChannels.getLastPulledDate, dir),
+    getCurrentReleaseTag: (dir) => ipc$1.invoke(moduleApiChannels.getCurrentReleaseTag, dir)
+  },
   /** Managing app extensions */
   extension: {
     getExtensionsData: () => ipc$1.invoke(extensionsChannels.getExtensionsData),
     getInstalledExtensionsInfo: () => ipc$1.invoke(extensionsChannels.getInstalledExtensionsInfo),
+    getSkipped: () => ipc$1.invoke(extensionsChannels.getSkipped),
     installExtension: (url) => ipc$1.invoke(extensionsChannels.installExtension, url),
     uninstallExtension: (id) => ipc$1.invoke(extensionsChannels.uninstallExtension, id),
     isUpdateAvailable: (id) => ipc$1.invoke(extensionsChannels.isUpdateAvailable, id),
     updateAvailableList: () => ipc$1.invoke(extensionsChannels.updateAvailableList),
     updateExtension: (id) => ipc$1.invoke(extensionsChannels.updateExtension, id),
+    checkEa: (isEA) => ipc$1.invoke(extensionsChannels.checkEa, isEA),
     updateAllExtensions: () => ipc$1.invoke(extensionsChannels.updateAllExtensions),
     onReload: (result) => ipc$1.on(extensionsChannels.onReload, result),
     onUpdatedExtensions: (result) => ipc$1.on(extensionsChannels.onUpdatedExtensions, result)
@@ -1481,7 +1503,7 @@ const rendererIpc = {
     addAutoUpdateExtensions: (cardId) => ipc$1.send(storageUtilsChannels.addAutoUpdateExtensions, cardId),
     removeAutoUpdateExtensions: (cardId) => ipc$1.send(storageUtilsChannels.removeAutoUpdateExtensions, cardId),
     onAutoUpdateExtensions: (result) => ipc$1.on(storageUtilsChannels.onAutoUpdateExtensions, result),
-    pinnedCards: (opt, id) => ipc$1.invoke(storageUtilsChannels.pinnedCards, opt, id),
+    pinnedCards: (opt, id, pinnedCards) => ipc$1.invoke(storageUtilsChannels.pinnedCards, opt, id, pinnedCards),
     onPinnedCardsChange: (result) => ipc$1.on(storageUtilsChannels.onPinnedCardsChange, result),
     preCommands: (opt, data) => ipc$1.invoke(storageUtilsChannels.preCommands, opt, data),
     onPreCommands: (result) => ipc$1.on(storageUtilsChannels.onPreCommands, result),
@@ -1502,9 +1524,6 @@ const rendererIpc = {
   },
   /** Utilities methods */
   utils: {
-    getCardInfo: (id, repoDir, extensionsDir) => ipc$1.send(utilsChannels.cardInfo, id, repoDir, extensionsDir),
-    onCardInfo: (result) => ipc$1.on(utilsChannels.onCardInfo, result),
-    offCardInfo: () => ipc$1.removeAllListeners(utilsChannels.onCardInfo),
     updateAllExtensions: (data) => ipc$1.send(utilsChannels.updateAllExtensions, data),
     onUpdateAllExtensions: (result) => ipc$1.on(utilsChannels.onUpdateAllExtensions, result),
     getExtensionsDetails: (dir) => ipc$1.invoke(utilsChannels.extensionsDetails, dir),
@@ -1541,10 +1560,15 @@ const rendererIpc = {
   },
   /** Managing app storage data */
   storage: {
+    getCustom: (key) => ipc$1.invoke(storageChannels.getCustom, key),
+    setCustom: (key, data) => ipc$1.send(storageChannels.setCustom, key, data),
     get: (key) => ipc$1.invoke(storageChannels.get, key),
     getAll: () => ipc$1.invoke(storageChannels.getAll),
     update: (key, updateData) => ipc$1.invoke(storageChannels.update, key, updateData),
     clear: () => ipc$1.invoke(storageChannels.clear)
+  },
+  appWindow: {
+    webViewAttached: (id) => ipc$1.send(appWindowChannels.webViewAttached, id)
   }
 };
 
@@ -1567,8 +1591,9 @@ const initialState$1 = {
   recentlyUsedCards: [],
   homeCategory: [],
   autoUpdateExtensions: [],
-  updatingExtensions: void 0,
-  webViewZoomFactor: []
+  updatingExtensions: undefined,
+  webViewZoomFactor: [],
+  duplicates: []
 };
 createSlice({
   initialState: initialState$1,
@@ -1633,6 +1658,9 @@ createSlice({
     setRecentlyUsedCards: (state, action) => {
       state.recentlyUsedCards = action.payload;
     },
+    setDuplicates: (state, action) => {
+      state.duplicates = action.payload;
+    },
     //#region Running Card (AI)
     startRunningCard: (state, action) => {
       state.runningCard.isRunning = true;
@@ -1663,7 +1691,9 @@ createSlice({
 });
 const useCardsState = (name) => useSelector$1((state) => state.cards[name]);
 
-const {useMemo: useMemo$9} = await importShared('react');
+await importShared('lodash');
+
+const {Fragment,useMemo: useMemo$9,useState: useState$m} = await importShared('react');
 function useInstalledCard(cardId) {
   const installedCards = useCardsState("installedCards");
   return useMemo$9(() => installedCards.find((card) => card.id === cardId), [installedCards, cardId]);
@@ -1882,6 +1912,7 @@ function requireRe () {
 		const re = exports.re = [];
 		const safeRe = exports.safeRe = [];
 		const src = exports.src = [];
+		const safeSrc = exports.safeSrc = [];
 		const t = exports.t = {};
 		let R = 0;
 
@@ -1914,6 +1945,7 @@ function requireRe () {
 		  debug(name, index, value);
 		  t[name] = index;
 		  src[index] = value;
+		  safeSrc[index] = safe;
 		  re[index] = new RegExp(value, isGlobal ? 'g' : undefined);
 		  safeRe[index] = new RegExp(safe, isGlobal ? 'g' : undefined);
 		};
@@ -2155,7 +2187,7 @@ function requireSemver$1 () {
 	hasRequiredSemver$1 = 1;
 	const debug = /*@__PURE__*/ requireDebug();
 	const { MAX_LENGTH, MAX_SAFE_INTEGER } = /*@__PURE__*/ requireConstants();
-	const { safeRe: re, t } = /*@__PURE__*/ requireRe();
+	const { safeRe: re, safeSrc: src, t } = /*@__PURE__*/ requireRe();
 
 	const parseOptions = /*@__PURE__*/ requireParseOptions();
 	const { compareIdentifiers } = /*@__PURE__*/ requireIdentifiers();
@@ -2165,7 +2197,7 @@ function requireSemver$1 () {
 
 	    if (version instanceof SemVer) {
 	      if (version.loose === !!options.loose &&
-	          version.includePrerelease === !!options.includePrerelease) {
+	        version.includePrerelease === !!options.includePrerelease) {
 	        return version
 	      } else {
 	        version = version.version;
@@ -2331,6 +2363,20 @@ function requireSemver$1 () {
 	  // preminor will bump the version up to the next minor release, and immediately
 	  // down to pre-release. premajor and prepatch work the same way.
 	  inc (release, identifier, identifierBase) {
+	    if (release.startsWith('pre')) {
+	      if (!identifier && identifierBase === false) {
+	        throw new Error('invalid increment argument: identifier is empty')
+	      }
+	      // Avoid an invalid semver results
+	      if (identifier) {
+	        const r = new RegExp(`^${this.options.loose ? src[t.PRERELEASELOOSE] : src[t.PRERELEASE]}$`);
+	        const match = `-${identifier}`.match(r);
+	        if (!match || match[1] !== identifier) {
+	          throw new Error(`invalid identifier: ${identifier}`)
+	        }
+	      }
+	    }
+
 	    switch (release) {
 	      case 'premajor':
 	        this.prerelease.length = 0;
@@ -2360,6 +2406,12 @@ function requireSemver$1 () {
 	          this.inc('patch', identifier, identifierBase);
 	        }
 	        this.inc('pre', identifier, identifierBase);
+	        break
+	      case 'release':
+	        if (this.prerelease.length === 0) {
+	          throw new Error(`version ${this.raw} is not a prerelease`)
+	        }
+	        this.prerelease.length = 0;
 	        break
 
 	      case 'major':
@@ -2403,10 +2455,6 @@ function requireSemver$1 () {
 	      // 1.0.0 'pre' would become 1.0.0-0 which is the wrong direction.
 	      case 'pre': {
 	        const base = Number(identifierBase) ? 1 : 0;
-
-	        if (!identifier && identifierBase === false) {
-	          throw new Error('invalid increment argument: identifier is empty')
-	        }
 
 	        if (this.prerelease.length === 0) {
 	          this.prerelease = [base];
@@ -2576,20 +2624,13 @@ function requireDiff () {
 	      return 'major'
 	    }
 
-	    // Otherwise it can be determined by checking the high version
-
-	    if (highVersion.patch) {
-	      // anything higher than a patch bump would result in the wrong version
+	    // If the main part has no difference
+	    if (lowVersion.compareMain(highVersion) === 0) {
+	      if (lowVersion.minor && !lowVersion.patch) {
+	        return 'minor'
+	      }
 	      return 'patch'
 	    }
-
-	    if (highVersion.minor) {
-	      // anything higher than a minor bump would result in the wrong version
-	      return 'minor'
-	    }
-
-	    // bumping major/minor/patch all have same result
-	    return 'major'
 	  }
 
 	  // add the `pre` prefix if we are going to a prerelease version
@@ -4509,7 +4550,7 @@ const modalMotionProps = {
     exit: {
       opacity: 0,
       scale: 1.1,
-      // NextUI default 1.03
+      // HeroUI default 1.03
       transition: {
         duration: 0.3,
         ease: TRANSITION_EASINGS.ease
@@ -4577,7 +4618,7 @@ const a = n.setTimeout;
 
 const u = n.clearTimeout;
 
-const getApi = t => typeof n[t] !== "undefined" ? n[t] : void 0;
+const getApi = t => typeof n[t] !== "undefined" ? n[t] : undefined;
 
 const _ = getApi("MutationObserver");
 
@@ -4587,7 +4628,7 @@ const f = getApi("ResizeObserver");
 
 const p$1 = getApi("ScrollTimeline");
 
-const isUndefined = t => t === void 0;
+const isUndefined = t => t === undefined;
 
 const isNull = t => t === null;
 
@@ -4651,7 +4692,7 @@ const isEmptyArray = t => !!t && !t.length;
 const deduplicateArray = t => from(new Set(t));
 
 const runEachAndClear = (t, n, o) => {
-  const runFn = t => t ? t.apply(void 0, n || []) : true;
+  const runFn = t => t ? t.apply(undefined, n || []) : true;
   each(t, runFn);
   !o && (t.length = 0);
 };
@@ -4734,7 +4775,7 @@ const debounce = (t, n) => {
   const v = function invokeFunctionToDebounce(n) {
     p();
     u(r);
-    f = r = _ = void 0;
+    f = r = _ = undefined;
     p = noop;
     t.apply(this, n);
   };
@@ -4761,7 +4802,7 @@ const debounce = (t, n) => {
       if (e && !f) {
         y();
         f = true;
-        S = h((() => f = void 0), n);
+        S = h((() => f = undefined), n);
       } else {
         S = h(y, n);
         if (c && !r) {
@@ -4812,7 +4853,7 @@ const assignDeep = (t, n, o, s, e, c, r) => {
 };
 
 const removeUndefinedProperties = (t, n) => each(assignDeep({}, t), ((t, n, o) => {
-  if (t === void 0) {
+  if (t === undefined) {
     delete o[n];
   } else if (t && isPlainObject(t)) {
     o[n] = removeUndefinedProperties(t);
@@ -5350,7 +5391,7 @@ const opsStringify = t => JSON.stringify(t, ((t, n) => {
   return n;
 }));
 
-const getPropByPath = (t, n) => t ? `${n}`.split(".").reduce(((t, n) => t && hasOwnProperty(t, n) ? t[n] : void 0), t) : void 0;
+const getPropByPath = (t, n) => t ? `${n}`.split(".").reduce(((t, n) => t && hasOwnProperty(t, n) ? t[n] : undefined), t) : undefined;
 
 const zt = {
   paddingAbsolute: false,
@@ -5405,7 +5446,7 @@ const getOptionsDiff = (t, n) => {
   return o;
 };
 
-const createOptionCheck = (t, n, o) => s => [ getPropByPath(t, s), o || getPropByPath(n, s) !== void 0 ];
+const createOptionCheck = (t, n, o) => s => [ getPropByPath(t, s), o || getPropByPath(n, s) !== undefined ];
 
 let It;
 
@@ -6704,7 +6745,6 @@ const createOverflowUpdateSegment = (t, s) => {
     const [F, j] = n("overflow");
     const Y = overflowIsVisible(F.x);
     const W = overflowIsVisible(F.y);
-    const X = true;
     let J = O(a);
     let K = C(a);
     let Z = I(a);
@@ -6742,13 +6782,12 @@ const createOverflowUpdateSegment = (t, s) => {
       y: st.h > 0
     });
     const _t = Y && W && (at.x || at.y) || Y && at.x && !at.y || W && at.y && !at.x;
-    const dt = u || b || y || it || rt || ot || et || j || B || X;
     const ft = createViewportOverflowState(at, F);
     const [pt, vt] = R(ft.k);
     const [ht, gt] = V(a);
     const bt = b || w || gt || ut || a;
     const [wt, yt] = bt ? L(getMeasuredScrollCoordinates(ht), a) : U();
-    if (dt) {
+    {
       vt && setViewportOverflowStyle(ft.k);
       if (E && x) {
         setStyles(l, E(ft, i, x(ft, ct, lt)));
@@ -7111,15 +7150,15 @@ const S = () => {
     s
   ];
 }, F = (l) => {
-  const { options: o, events: t, defer: c } = l || {}, [a, i] = C(S, []), r = d(null), u = d(c), s = d(o), n = d(t);
+  const { options: o, events: t, defer: c } = l, [a, i] = C(S, []), r = d(null), u = d(c), s = d(o), n = d(t);
   return p(() => {
     u.current = c;
   }, [c]), p(() => {
     const { current: e } = r;
-    s.current = o, OverlayScrollbars.valid(e) && e.options(o || {}, !0);
+    s.current = o, OverlayScrollbars.valid(e) && e.options(o || {}, true);
   }, [o]), p(() => {
     const { current: e } = r;
-    n.current = t, OverlayScrollbars.valid(e) && e.on(t || {}, !0);
+    n.current = t, OverlayScrollbars.valid(e) && e.on(t || {}, true);
   }, [t]), p(
     () => () => {
       var e;
@@ -7161,7 +7200,7 @@ const S = () => {
       }
     ), () => {
       var R;
-      return (R = f()) == null ? void 0 : R.destroy();
+      return (R = f()) == null ? undefined : R.destroy();
     };
   }, [v, t]), O(
     o,
@@ -7572,7 +7611,17 @@ function Trash_Icon(props) {
   ) });
 }
 
-await importShared('@nextui-org/react');
+function HardDrive_Icon(props) {
+  return /* @__PURE__ */ jsxRuntimeExports.jsx("svg", { ...props, width: "1em", height: "1em", viewBox: "0 0 16 16", xmlns: "http://www.w3.org/2000/svg", children: /* @__PURE__ */ jsxRuntimeExports.jsx(
+    "path",
+    {
+      d: "M12.5 8A1.5 1.5 0 0 1 14 9.5v1.002A1.5 1.5 0 0 1 12.5 12h-9A1.5 1.5 0 0 1 2 10.5v-1A1.5 1.5 0 0 1 3.5 8zm1.058-.766l-1.673-3.507V3.72A1.23 1.23 0 0 0 10.75 3h-5.5a1.23 1.23 0 0 0-1.134.72v.007L2.442 7.234A2.5 2.5 0 0 1 3.5 7h9c.378 0 .737.084 1.058.234M12 10.5a.5.5 0 1 0 0-1a.5.5 0 0 0 0 1",
+      fill: "currentColor"
+    }
+  ) });
+}
+
+await importShared('@heroui/react');
 await importShared('lodash');
 
 await importShared('react');
@@ -7605,7 +7654,7 @@ createSlice({
 });
 const useAppState = (key) => useSelector((state) => state.app[key]);
 
-const {Button: Button$k,Popover: Popover$4,PopoverContent: PopoverContent$4,PopoverTrigger: PopoverTrigger$4} = await importShared('@nextui-org/react');
+const {Button: Button$k,Popover: Popover$4,PopoverContent: PopoverContent$4,PopoverTrigger: PopoverTrigger$4} = await importShared('@heroui/react');
 
 const {message: message$6} = await importShared('antd');
 
@@ -7683,7 +7732,7 @@ function Body_TableItem({ item, pythonPath, updated, removed, columnKey, isSelec
   return null;
 }
 
-const {Button: Button$j,ModalBody: ModalBody$4,Spinner: Spinner$3,Table: Table$1,TableBody: TableBody$1,TableCell: TableCell$1,TableColumn: TableColumn$1,TableHeader: TableHeader$1,TableRow: TableRow$1} = await importShared('@nextui-org/react');
+const {Button: Button$j,ModalBody: ModalBody$4,Spinner: Spinner$3,Table: Table$1,TableBody: TableBody$1,TableCell: TableCell$1,TableColumn: TableColumn$1,TableHeader: TableHeader$1,TableRow: TableRow$1} = await importShared('@heroui/react');
 
 const {Result: Result$2} = await importShared('antd');
 
@@ -7775,7 +7824,7 @@ function PackageManagerBody({
   );
 }
 
-const {Pagination} = await importShared('@nextui-org/react');
+const {Pagination} = await importShared('@heroui/react');
 
 const {isEmpty: isEmpty$b} = await importShared('lodash');
 
@@ -7794,7 +7843,7 @@ function Footer_TablePage({ searchData, setItems }) {
   return /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "flex w-full justify-center", children: !isEmpty$b(searchData) && /* @__PURE__ */ jsxRuntimeExports.jsx(Pagination, { size: "lg", page, total: pages, color: "secondary", onChange: setPage, isCompact: true, showControls: true }) });
 }
 
-const {Button: Button$i,getKeyValue,Input: Input$6,Select: Select$1,SelectItem: SelectItem$1,Table,TableBody,TableCell,TableColumn,TableHeader,TableRow} = await importShared('@nextui-org/react');
+const {Button: Button$i,getKeyValue,Input: Input$6,Select: Select$1,SelectItem: SelectItem$1,Table,TableBody,TableCell,TableColumn,TableHeader,TableRow} = await importShared('@heroui/react');
 const {useEffect: useEffect$c,useState: useState$j} = await importShared('react');
 const operators = [
   { key: "all", label: "Any" },
@@ -7890,7 +7939,7 @@ function RequirementsManager({ requirements, setRequirements, scrollRef }) {
   );
 }
 
-const {Button: Button$h,Input: Input$5,Modal: Modal$4,ModalBody: ModalBody$3,ModalContent: ModalContent$4,ModalFooter: ModalFooter$3,ModalHeader: ModalHeader$4} = await importShared('@nextui-org/react');
+const {Button: Button$h,Input: Input$5,Modal: Modal$4,ModalBody: ModalBody$3,ModalContent: ModalContent$4,ModalFooter: ModalFooter$3,ModalHeader: ModalHeader$4} = await importShared('@heroui/react');
 
 const {Empty: Empty$2,message: message$5,Result: Result$1} = await importShared('antd');
 
@@ -8071,7 +8120,7 @@ function RequirementsBtn({ id, projectPath, setIsReqAvailable }) {
   ] });
 }
 
-const {Button: Button$g,Dropdown: Dropdown$4,DropdownItem: DropdownItem$4,DropdownMenu: DropdownMenu$4,DropdownSection,DropdownTrigger: DropdownTrigger$4} = await importShared('@nextui-org/react');
+const {Button: Button$g,Dropdown: Dropdown$4,DropdownItem: DropdownItem$4,DropdownMenu: DropdownMenu$4,DropdownSection,DropdownTrigger: DropdownTrigger$4} = await importShared('@heroui/react');
 
 const {useEffect: useEffect$a,useState: useState$h} = await importShared('react');
 function Header_FilterButton({ setSelectedFilter, updateAvailable }) {
@@ -8092,7 +8141,7 @@ function Header_FilterButton({ setSelectedFilter, updateAvailable }) {
         selectedKeys,
         "aria-label": "Filter packages",
         onSelectionChange: setSelectedKeys,
-        disabledKeys: !updateAvailable ? ["updates"] : void 0,
+        disabledKeys: !updateAvailable ? ["updates"] : undefined,
         disallowEmptySelection: true,
         children: [
           /* @__PURE__ */ jsxRuntimeExports.jsxs(DropdownSection, { showDivider: updateAvailable, children: [
@@ -8112,7 +8161,7 @@ function Header_FilterButton({ setSelectedFilter, updateAvailable }) {
   ] });
 }
 
-const {Alert,Button: Button$f,Code,Input: Input$4} = await importShared('@nextui-org/react');
+const {Alert,Button: Button$f,Code,Input: Input$4} = await importShared('@heroui/react');
 
 const {Divider: Divider$4,message: message$4} = await importShared('antd');
 
@@ -8286,7 +8335,7 @@ function Header_Installer({ pythonPath, refresh, close }) {
   ] });
 }
 
-const {Button: Button$e,Modal: Modal$3,ModalBody: ModalBody$2,ModalContent: ModalContent$3,ModalHeader: ModalHeader$3} = await importShared('@nextui-org/react');
+const {Button: Button$e,Modal: Modal$3,ModalBody: ModalBody$2,ModalContent: ModalContent$3,ModalHeader: ModalHeader$3} = await importShared('@heroui/react');
 const {useCallback: useCallback$3,useState: useState$f} = await importShared('react');
 function Header_InstallerModal({ refresh, pythonPath }) {
   const [isOpen, setIsOpen] = useState$f(false);
@@ -8327,7 +8376,7 @@ function Header_InstallerModal({ refresh, pythonPath }) {
   ] });
 }
 
-const {Button: Button$d,ButtonGroup: ButtonGroup$1,Dropdown: Dropdown$3,DropdownItem: DropdownItem$3,DropdownMenu: DropdownMenu$3,DropdownTrigger: DropdownTrigger$3} = await importShared('@nextui-org/react');
+const {Button: Button$d,ButtonGroup: ButtonGroup$1,Dropdown: Dropdown$3,DropdownItem: DropdownItem$3,DropdownMenu: DropdownMenu$3,DropdownTrigger: DropdownTrigger$3} = await importShared('@heroui/react');
 
 const {isEmpty: isEmpty$8} = await importShared('lodash');
 
@@ -8425,7 +8474,7 @@ function Header_UpdateButton({
   ] });
 }
 
-const {ButtonGroup,Input: Input$3,ModalHeader: ModalHeader$2} = await importShared('@nextui-org/react');
+const {ButtonGroup,Input: Input$3,ModalHeader: ModalHeader$2} = await importShared('@heroui/react');
 
 const {message: message$3} = await importShared('antd');
 
@@ -8518,7 +8567,7 @@ function PackageManagerHeader({
   ] });
 }
 
-const {Button: Button$c,Modal: Modal$2,ModalContent: ModalContent$2,ModalFooter: ModalFooter$2} = await importShared('@nextui-org/react');
+const {Button: Button$c,Modal: Modal$2,ModalContent: ModalContent$2,ModalFooter: ModalFooter$2} = await importShared('@heroui/react');
 
 const {isEmpty: isEmpty$6} = await importShared('lodash');
 
@@ -8657,7 +8706,7 @@ function PackageManagerModal({
   const updated = (name, newVersion) => {
     setPackagesUpdate((prevState) => prevState.filter((item) => item.name !== name));
     setPackages(
-      (prevState) => prevState.map((item) => item.name === name ? { name, updateVersion: void 0, version: newVersion } : item)
+      (prevState) => prevState.map((item) => item.name === name ? { name, updateVersion: undefined, version: newVersion } : item)
     );
   };
   const removed = (name) => {
@@ -8668,7 +8717,7 @@ function PackageManagerModal({
     setPackages(
       (prevState) => prevState.map((item) => {
         const newVersion = packagesUpdate.find((update) => update.name === item.name)?.version;
-        return newVersion ? { name: item.name, updateVersion: void 0, version: newVersion } : item;
+        return newVersion ? { name: item.name, updateVersion: undefined, version: newVersion } : item;
       })
     );
     setPackagesUpdate([]);
@@ -8757,7 +8806,7 @@ function UIProvider({ children }) {
   );
 }
 
-const {Button: Button$b} = await importShared('@nextui-org/react');
+const {Button: Button$b} = await importShared('@heroui/react');
 
 const {isNil: isNil$4} = await importShared('lodash');
 
@@ -8833,17 +8882,7 @@ function CardMenuModal() {
   ) });
 }
 
-function HardDrive_Icon(props) {
-  return /* @__PURE__ */ jsxRuntimeExports.jsx("svg", { ...props, width: "1em", height: "1em", viewBox: "0 0 16 16", xmlns: "http://www.w3.org/2000/svg", children: /* @__PURE__ */ jsxRuntimeExports.jsx(
-    "path",
-    {
-      d: "M12.5 8A1.5 1.5 0 0 1 14 9.5v1.002A1.5 1.5 0 0 1 12.5 12h-9A1.5 1.5 0 0 1 2 10.5v-1A1.5 1.5 0 0 1 3.5 8zm1.058-.766l-1.673-3.507V3.72A1.23 1.23 0 0 0 10.75 3h-5.5a1.23 1.23 0 0 0-1.134.72v.007L2.442 7.234A2.5 2.5 0 0 1 3.5 7h9c.378 0 .737.084 1.058.234M12 10.5a.5.5 0 1 0 0-1a.5.5 0 0 0 0 1",
-      fill: "currentColor"
-    }
-  ) });
-}
-
-const {Button: Button$a,Chip: Chip$1,Dropdown: Dropdown$2,DropdownItem: DropdownItem$2,DropdownMenu: DropdownMenu$2,DropdownTrigger: DropdownTrigger$2,Popover: Popover$3,PopoverContent: PopoverContent$3,PopoverTrigger: PopoverTrigger$3,Progress: Progress$2} = await importShared('@nextui-org/react');
+const {Button: Button$a,Chip: Chip$1,Dropdown: Dropdown$2,DropdownItem: DropdownItem$2,DropdownMenu: DropdownMenu$2,DropdownTrigger: DropdownTrigger$2,Popover: Popover$3,PopoverContent: PopoverContent$3,PopoverTrigger: PopoverTrigger$3,Progress: Progress$2} = await importShared('@heroui/react');
 
 const {Card: Card$2,Divider: Divider$3,Spin: Spin$1} = await importShared('antd');
 
@@ -9022,7 +9061,7 @@ function InstalledCard({ python, diskUsage, maxDiskValue, updateDefault, refresh
   ] });
 }
 
-const {Button: Button$9,CircularProgress: CircularProgress$1,Input: Input$2,Link: Link$1,Popover: Popover$2,PopoverContent: PopoverContent$2,PopoverTrigger: PopoverTrigger$2,Progress: Progress$1,Spinner: Spinner$2} = await importShared('@nextui-org/react');
+const {Button: Button$9,CircularProgress: CircularProgress$1,Input: Input$2,Link: Link$1,Popover: Popover$2,PopoverContent: PopoverContent$2,PopoverTrigger: PopoverTrigger$2,Progress: Progress$1,Spinner: Spinner$2} = await importShared('@heroui/react');
 
 const {List: List$1,Result,Tooltip: Tooltip$1} = await importShared('antd');
 
@@ -9038,7 +9077,7 @@ function InstallerConda({ refresh, installed, closeModal, isOpen, setCloseDisabl
   const [installingVersion, setInstallingVersion] = useState$9("");
   const [percentage, setPercentage] = useState$9(0);
   const [envName, setEnvName] = useState$9("");
-  const [isCondaInstalled, setIsCondaInstalled] = useState$9(void 0);
+  const [isCondaInstalled, setIsCondaInstalled] = useState$9(undefined);
   useEffect$6(() => {
     pIpc.isCondaInstalled().then((result) => {
       setIsCondaInstalled(result);
@@ -9087,7 +9126,7 @@ function InstallerConda({ refresh, installed, closeModal, isOpen, setCloseDisabl
       setCloseDisabled(false);
     });
   };
-  if (isCondaInstalled === void 0) {
+  if (isCondaInstalled === undefined) {
     return /* @__PURE__ */ jsxRuntimeExports.jsx(CircularProgress$1, { size: "lg", className: "mb-4 self-center", label: "Checking for Conda installation..." });
   } else if (!isCondaInstalled) {
     return /* @__PURE__ */ jsxRuntimeExports.jsx(
@@ -9210,7 +9249,7 @@ function InstallerConda({ refresh, installed, closeModal, isOpen, setCloseDisabl
   ] });
 }
 
-const {Button: Button$8,CircularProgress,Input: Input$1,Link,Progress} = await importShared('@nextui-org/react');
+const {Button: Button$8,CircularProgress,Input: Input$1,Link,Progress} = await importShared('@heroui/react');
 
 const {List,Tooltip} = await importShared('antd');
 
@@ -9224,8 +9263,8 @@ function InstallerOfficial({ refresh, installed, closeModal, isOpen, setCloseDis
   const [loadingList, setLoadingList] = useState$8(false);
   const [inputValue, setInputValue] = useState$8("");
   const [installStage, setInstallStage] = useState$8();
-  const [downloadProgress, setDownloadProgress] = useState$8(void 0);
-  const [installingVersion, setInstallingVersion] = useState$8(void 0);
+  const [downloadProgress, setDownloadProgress] = useState$8(undefined);
+  const [installingVersion, setInstallingVersion] = useState$8(undefined);
   const fetchPythonList = (refresh2) => {
     setLoadingList(true);
     const cachedList = localStorage.getItem(CACHE_KEY);
@@ -9268,7 +9307,7 @@ function InstallerOfficial({ refresh, installed, closeModal, isOpen, setCloseDis
     }).catch((err) => {
       console.log(err);
     }).finally(() => {
-      setInstallingVersion(void 0);
+      setInstallingVersion(undefined);
       setCloseDisabled(false);
     });
   };
@@ -9356,7 +9395,7 @@ function InstallerOfficial({ refresh, installed, closeModal, isOpen, setCloseDis
   ] });
 }
 
-const {Button: Button$7,Modal: Modal$1,ModalBody: ModalBody$1,ModalContent: ModalContent$1,ModalFooter: ModalFooter$1,ModalHeader: ModalHeader$1,Tab: Tab$1,Tabs: Tabs$1} = await importShared('@nextui-org/react');
+const {Button: Button$7,Modal: Modal$1,ModalBody: ModalBody$1,ModalContent: ModalContent$1,ModalFooter: ModalFooter$1,ModalHeader: ModalHeader$1,Tab: Tab$1,Tabs: Tabs$1} = await importShared('@heroui/react');
 
 const {useMemo: useMemo$2,useState: useState$7} = await importShared('react');
 function InstallerModal({ isOpen, closeModal, refresh, installed }) {
@@ -9426,7 +9465,7 @@ function InstallerModal({ isOpen, closeModal, refresh, installed }) {
   ) });
 }
 
-const {Button: Button$6,Spinner: Spinner$1} = await importShared('@nextui-org/react');
+const {Button: Button$6,Spinner: Spinner$1} = await importShared('@heroui/react');
 
 const {Empty: Empty$1} = await importShared('antd');
 
@@ -13626,7 +13665,7 @@ function requireCipherCore () {
 			    C_lib.StreamCipher = Cipher.extend({
 			        _doFinalize: function () {
 			            // Process partial blocks
-			            var finalProcessedBlocks = this._process(!!'flush');
+			            var finalProcessedBlocks = this._process(true);
 
 			            return finalProcessedBlocks;
 			        },
@@ -13907,10 +13946,10 @@ function requireCipherCore () {
 			                padding.pad(this._data, this.blockSize);
 
 			                // Process final blocks
-			                finalProcessedBlocks = this._process(!!'flush');
+			                finalProcessedBlocks = this._process(true);
 			            } else /* if (this._xformMode == this._DEC_XFORM_MODE) */ {
 			                // Process final blocks
-			                finalProcessedBlocks = this._process(!!'flush');
+			                finalProcessedBlocks = this._process(true);
 
 			                // Unpad data
 			                padding.unpad(finalProcessedBlocks);
@@ -17066,7 +17105,7 @@ const setCards = (cards) => {
   allCardsExt = cards;
 };
 
-const {Button: Button$5,Chip,Dropdown: Dropdown$1,DropdownItem: DropdownItem$1,DropdownMenu: DropdownMenu$1,DropdownTrigger: DropdownTrigger$1} = await importShared('@nextui-org/react');
+const {Button: Button$5,Chip,Dropdown: Dropdown$1,DropdownItem: DropdownItem$1,DropdownMenu: DropdownMenu$1,DropdownTrigger: DropdownTrigger$1} = await importShared('@heroui/react');
 
 const {Divider: Divider$2} = await importShared('antd');
 
@@ -17132,7 +17171,7 @@ function Venv_Associate({ pythonPath }) {
   ] });
 }
 
-const {Button: Button$4,Dropdown,DropdownItem,DropdownMenu,DropdownTrigger,Popover: Popover$1,PopoverContent: PopoverContent$1,PopoverTrigger: PopoverTrigger$1} = await importShared('@nextui-org/react');
+const {Button: Button$4,Dropdown,DropdownItem,DropdownMenu,DropdownTrigger,Popover: Popover$1,PopoverContent: PopoverContent$1,PopoverTrigger: PopoverTrigger$1} = await importShared('@heroui/react');
 
 const {Card: Card$1,message: message$2,Spin} = await importShared('antd');
 const {isNil} = await importShared('lodash');
@@ -17278,7 +17317,7 @@ function VenvCard({ title, installedPackages, pythonVersion, folder, diskUsage, 
   ] });
 }
 
-const {Button: Button$3,Divider: Divider$1,Input,Popover,PopoverContent,PopoverTrigger,Select,SelectItem} = await importShared('@nextui-org/react');
+const {Button: Button$3,Divider: Divider$1,Input,Popover,PopoverContent,PopoverTrigger,Select,SelectItem} = await importShared('@heroui/react');
 
 const {message: message$1} = await importShared('antd');
 
@@ -17402,7 +17441,7 @@ function VenvCreator({ installedPythons, refresh, isLoadingPythons }) {
   ] });
 }
 
-const {Button: Button$2,Spinner} = await importShared('@nextui-org/react');
+const {Button: Button$2,Spinner} = await importShared('@heroui/react');
 
 const {Empty,message} = await importShared('antd');
 
@@ -17512,7 +17551,7 @@ function Venv({ visible, installedPythons, isLoadingPythons }) {
   ] });
 }
 
-const {Button: Button$1,Divider,Modal,ModalBody,ModalContent,ModalFooter,ModalHeader,Tab,Tabs} = await importShared('@nextui-org/react');
+const {Button: Button$1,Divider,Modal,ModalBody,ModalContent,ModalFooter,ModalHeader,Tab,Tabs} = await importShared('@heroui/react');
 
 const {useState: useState$1} = await importShared('react');
 function PythonToolkitModal({ isOpen, setIsOpen }) {
@@ -17577,7 +17616,7 @@ function PythonToolkitModal({ isOpen, setIsOpen }) {
   );
 }
 
-const {Button,Card,CardBody,CardHeader} = await importShared('@nextui-org/react');
+const {Button,Card,CardBody,CardHeader} = await importShared('@heroui/react');
 
 const {useState} = await importShared('react');
 function ToolsPage() {
