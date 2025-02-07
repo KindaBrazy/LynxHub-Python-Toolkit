@@ -170,6 +170,7 @@
   "avatarUrl": "https://raw.githubusercontent.com/KindaBrazy/LynxHub-Python-Toolkit/refs/heads/compiled/icon.png",
   "tag": "tools",
   "platforms": [
-    "win32"
+    "win32",
+    "linux"
   ]
 }
