@@ -9430,6 +9430,7 @@ function InstallerModal({ isOpen, closeModal, refresh, installed }) {
               onSelectionChange: setCurrentTab,
               selectedKey: currentTab.toString(),
               classNames: { cursor: "!bg-[#ffe66e]" },
+              disableAnimation: true,
               children: [
                 /* @__PURE__ */ jsxRuntimeExports.jsx(Tab$1, { title: "Official Python Releases" }, "official"),
                 /* @__PURE__ */ jsxRuntimeExports.jsx(Tab$1, { title: "Conda Environments" }, "conda")
@@ -17582,6 +17583,7 @@ function PythonToolkitModal({ isOpen, setIsOpen }) {
             selectedKey: currentTab.toString(),
             classNames: { tabList: "bg-foreground-200" },
             fullWidth: true,
+            disableAnimation: true,
             children: [
               /* @__PURE__ */ jsxRuntimeExports.jsx(Tab, { title: "Installations" }, "installation"),
               /* @__PURE__ */ jsxRuntimeExports.jsx(Tab, { title: "Virtual Environments" }, "venv")
