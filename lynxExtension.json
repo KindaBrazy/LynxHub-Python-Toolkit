@@ -2,22 +2,114 @@
   "id": "python_toolkit",
   "title": "Python Toolkit",
   "description": "Effortlessly manage your Python environments and dependencies.",
-  "version": "0.8.1",
+  "version": "0.9.0",
   "publishDate": "2025-01-01",
-  "updateDate": "2025-01-21",
-  "requireAppBuild": 16,
+  "updateDate": "2025-02-06",
+  "requireAppBuild": 18,
   "repoUrl": "https://github.com/KindaBrazy/LynxHub-Python-Toolkit",
   "changeLog": [
     {
-      "title": "V0.8.1",
+      "title": "🚀 V0.9.0",
       "items": [
         {
-          "label": "Support for LynxHub v2.2.0."
+          "label": "✨ New Features",
+          "subitems": [
+            {
+              "label": "Added Linux Support."
+            },
+            {
+              "label": "Added ability to change package version (upgrade/downgrade). KindaBrazy/LynxHub#20"
+            }
+          ]
+        },
+        {
+          "label": "⚡ Improvements",
+          "subitems": [
+            {
+              "label": "Improved tools page card style."
+            },
+            {
+              "label": "Improved performance and speed (3-10x faster)",
+              "subitems": [
+                {
+                  "label": "Improved Python detection speed and performance."
+                },
+                {
+                  "label": "Improved site package count performance."
+                },
+                {
+                  "label": "Improved packages update checking performance."
+                }
+              ]
+            },
+            {
+              "label": "Switch filter to \"All\" when \"Updates\" list is empty during update."
+            },
+            {
+              "label": "Refresh venv list after removal."
+            },
+            {
+              "label": "Updated modal footer backgrounds and use minimal buttons."
+            }
+          ]
+        },
+        {
+          "label": "🪲 Bug Fixes",
+          "subitems": [
+            {
+              "label": "Prevented modal overlay persistence when closing modals with tabs."
+            },
+            {
+              "label": "Ensured requirements file selection is saved correctly."
+            },
+            {
+              "label": "Corrected package update comparison logic."
+            },
+            {
+              "label": "Fixed create button not working in creating venvs."
+            },
+            {
+              "label": "Fixed small freeze on venv creation."
+            }
+          ]
+        },
+        {
+          "label": "\uD83D\uDCCC Minor Changes",
+          "subitems": [
+            {
+              "label": "Removed Python versions below 3 from installer list."
+            },
+            {
+              "label": "Centered conda installer content (loading indicator)."
+            },
+            {
+              "label": "Calculate disk usage by site packages folder."
+            },
+            {
+              "label": "Display status message on official Python installation result."
+            },
+            {
+              "label": "Display error message when Python install path not found."
+            }
+          ]
         }
       ]
     },
     {
-      "title": "Initial Release - Python Management Suite",
+      "title": "🚀 V0.8.1",
+      "items": [
+        {
+          "label": "\uD83D\uDCCC Minor Changes",
+          "subitems": [
+            {
+              "label": "Support for LynxHub v2.2.0."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "title": "🌟 Initial Release - Python Management Suite",
       "items": [
         {
           "label": "Python Environment Management",
@@ -73,58 +165,12 @@
           ]
         }
       ]
-    },
-    {
-      "title": "🗺️ Roadmap",
-      "items": [
-        {
-          "label": "Use conda activate for Conda environments."
-        },
-        {
-          "label": "Linux and macOS support."
-        },
-        {
-          "label": "Merge requirements.txt files and manage conflicts."
-        },
-        {
-          "label": "Improve package installation:"
-        },
-        {
-          "label": "Show pip output, progress bar, and download size (MB)."
-        },
-        {
-          "label": "Optimize disk usage calculations and caching."
-        },
-        {
-          "label": "Refresh only Python/venv on changes, no full reload."
-        },
-        {
-          "label": "Expand tools page to full screen."
-        },
-        {
-          "label": "Activate Python/venv during AI installation."
-        },
-        {
-          "label": "Check for Python version updates and auto-update on startup."
-        },
-        {
-          "label": "Show detailed errors for installations/updates."
-        },
-        {
-          "label": "Add settings to disable auto venv assignment for AIs."
-        },
-        {
-          "label": "Set a default venv for all AIs."
-        },
-        {
-          "label": "Prompt and warn user to modify pre-command of arguments to set venv for AI."
-        }
-      ]
     }
   ],
   "avatarUrl": "https://raw.githubusercontent.com/KindaBrazy/LynxHub-Python-Toolkit/refs/heads/compiled/icon.png",
   "tag": "tools",
   "platforms": [
-    "win32"
+    "win32",
+    "linux"
   ]
 }
