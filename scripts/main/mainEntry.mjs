@@ -10,7 +10,7 @@ import require$$5 from "assert";
 import require$$1$3 from "fs/promises";
 import require$$1$1, { join as join$1 } from "path";
 import require$$0$5, { platform as platform$3, homedir, arch } from "os";
-import { spawn, exec as exec$1, execSync, execFile } from "node:child_process";
+import { execSync, spawn, exec as exec$1, execFile } from "node:child_process";
 import { promisify as promisify$1 } from "node:util";
 import process$1 from "node:process";
 import fs from "node:fs";
@@ -5555,6 +5555,45 @@ function requireLodash() {
   return lodash$1.exports;
 }
 var lodashExports = requireLodash();
+const COMMAND_LINE_ENDING = platform$2() === "win32" ? "\r" : "\n";
+function getPowerShellVersion() {
+  const command = "$PSVersionTable.PSVersion.Major";
+  try {
+    const pwshVersion = parseInt(
+      execSync(`pwsh.exe -NoProfile -Command "${command}"`, {
+        encoding: "utf8",
+        stdio: ["pipe", "pipe", "ignore"]
+      }).trim(),
+      10
+    );
+    if (pwshVersion >= 7) return pwshVersion;
+    const psVersion = parseInt(
+      execSync(`powershell.exe -NoProfile -Command "${command}"`, {
+        encoding: "utf8",
+        stdio: ["pipe", "pipe", "ignore"]
+      }).trim(),
+      10
+    );
+    return psVersion >= 5 ? psVersion : 0;
+  } catch (err) {
+    console.error("Error determining PowerShell version:", err);
+    return 0;
+  }
+}
+function determineShell() {
+  switch (platform$2()) {
+    case "darwin":
+      return "zsh";
+    case "linux":
+      return "bash";
+    case "win32":
+    default:
+      return getPowerShellVersion() >= 5 ? "pwsh.exe" : "powershell.exe";
+  }
+}
+function isWin() {
+  return platform$2() === "win32";
+}
 var polyfills;
 var hasRequiredPolyfills;
 function requirePolyfills() {
@@ -16501,14 +16540,18 @@ function removeAIVenvPath(pythonPath) {
     );
   }
 }
+function getActivatePath(pythonPath) {
+  return resolve(isWin() ? `${dirname(pythonPath)}\\activate.ps1` : `${dirname(pythonPath)}/activate`);
+}
 function checkPreCommand(id, pythonPath) {
-  const command = `"${dirname(pythonPath)}\\activate.ps1"`;
+  const activatePath = getActivatePath(pythonPath);
+  const command = `${isWin() ? "&" : "."} "${activatePath}"`;
   const existingCommands = storageManager?.getPreCommandById(id);
   if (existingCommands && existingCommands.data.includes(command)) return;
   storageManager?.addPreCommand(id, command);
 }
 function removePreCommand(id, pythonPath) {
-  const command = `"${dirname(pythonPath)}\\activate.ps1"`;
+  const command = getActivatePath(pythonPath);
   const existingCommands = storageManager?.getPreCommandById(id);
   if (existingCommands) {
     const index = existingCommands.data.findIndex((item) => item === command);
@@ -17035,42 +17078,6 @@ async function setDefaultPythonWindows(pythonPath) {
       reject(new Error(`Failed to update Python path: ${errorMessage}`));
     }
   });
-}
-const COMMAND_LINE_ENDING = platform$2() === "win32" ? "\r" : "\n";
-function getPowerShellVersion() {
-  const command = "$PSVersionTable.PSVersion.Major";
-  try {
-    const pwshVersion = parseInt(
-      execSync(`pwsh.exe -NoProfile -Command "${command}"`, {
-        encoding: "utf8",
-        stdio: ["pipe", "pipe", "ignore"]
-      }).trim(),
-      10
-    );
-    if (pwshVersion >= 7) return pwshVersion;
-    const psVersion = parseInt(
-      execSync(`powershell.exe -NoProfile -Command "${command}"`, {
-        encoding: "utf8",
-        stdio: ["pipe", "pipe", "ignore"]
-      }).trim(),
-      10
-    );
-    return psVersion >= 5 ? psVersion : 0;
-  } catch (err) {
-    console.error("Error determining PowerShell version:", err);
-    return 0;
-  }
-}
-function determineShell() {
-  switch (platform$2()) {
-    case "darwin":
-      return "zsh";
-    case "linux":
-      return "bash";
-    case "win32":
-    default:
-      return getPowerShellVersion() >= 5 ? "pwsh.exe" : "powershell.exe";
-  }
 }
 const execAsync$4 = promisify$1(exec$1);
 async function uninstallCondaPython(pythonPath, pty) {
