@@ -41,3 +41,7 @@ export function determineShell(): string {
       return getPowerShellVersion() >= 5 ? 'pwsh.exe' : 'powershell.exe';
   }
 }
+
+export function isWin() {
+  return platform() === 'win32';
+}

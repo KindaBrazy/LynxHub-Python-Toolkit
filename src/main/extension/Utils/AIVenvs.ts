@@ -1,19 +1,18 @@
-import {platform} from 'node:os';
 import {dirname, resolve} from 'node:path';
 
 import {isEmpty, isNil} from 'lodash';
 
 import {storageManager} from '../lynxExtension';
+import {isWin} from './ExtMainUtils';
 import {getAIVenvs} from './PackageManager/PackageManager';
 
 function getActivatePath(pythonPath: string) {
-  const isWin = platform() === 'win32';
-  return resolve(isWin ? `${dirname(pythonPath)}\\activate.ps1` : `${dirname(pythonPath)}/activate`);
+  return resolve(isWin() ? `${dirname(pythonPath)}\\activate.ps1` : `${dirname(pythonPath)}/activate`);
 }
 
 function checkPreCommand(id: string, pythonPath: string) {
   const activatePath: string = getActivatePath(pythonPath);
-  const command: string = platform() === 'win32' ? `& "${activatePath}"` : `. "${activatePath}"`;
+  const command: string = `${isWin() ? '&' : '.'} "${activatePath}"`;
 
   const existingCommands = storageManager?.getPreCommandById(id);
   if (existingCommands && existingCommands.data.includes(command)) return;
