@@ -14,8 +14,8 @@ installations, virtual environments, and packages.
 
 | Channel      | Version                                                                            | Date       |
 |--------------|------------------------------------------------------------------------------------|------------|
-| Early Access | [V0.9.1](https://github.com/KindaBrazy/LynxHub-Python-Toolkit/releases/tag/V0.9.1) | 2025-03-04 |
-| Release      | [V0.9.1](https://github.com/KindaBrazy/LynxHub-Python-Toolkit/releases/tag/V0.9.1) | 2025-03-04 |
+| Early Access | [V0.9.2](https://github.com/KindaBrazy/LynxHub-Python-Toolkit/releases/tag/V0.9.1) | 2025-03-23 |
+| Release      | [V0.9.2](https://github.com/KindaBrazy/LynxHub-Python-Toolkit/releases/tag/V0.9.1) | 2025-03-23 |
 
 </div>
 
