@@ -3,6 +3,7 @@ import path, { join, resolve, basename, dirname } from "node:path";
 import { platform as platform$2, homedir as homedir$1 } from "node:os";
 import { exec } from "child_process";
 import require$$1, { promisify } from "util";
+import { execSync, spawn, exec as exec$1, execFile } from "node:child_process";
 import require$$0$3, { constants as constants$1 } from "fs";
 import require$$0$2 from "constants";
 import stream, { Readable } from "stream";
@@ -10,7 +11,6 @@ import require$$5 from "assert";
 import require$$1$3 from "fs/promises";
 import require$$1$1, { join as join$1 } from "path";
 import require$$0$5, { platform as platform$3, homedir, arch } from "os";
-import { execSync, spawn, exec as exec$1, execFile } from "node:child_process";
 import { promisify as promisify$1 } from "node:util";
 import process$1 from "node:process";
 import fs from "node:fs";
@@ -16672,7 +16672,7 @@ async function removeAIVenvsEnabled(id, pythonPath) {
     updateFunc();
   }
 }
-const execAsync$6 = promisify(exec);
+const execAsync$5 = promisify(exec);
 function removeDuplicateUrls(versions) {
   const seenUrls = /* @__PURE__ */ new Set();
   return versions.filter((version) => {
@@ -16697,11 +16697,11 @@ function removeDuplicateUrls(versions) {
 }
 async function ensureSoftwarePropertiesCommon() {
   try {
-    const { stdout } = await execAsync$6("apt-cache policy software-properties-common");
+    const { stdout } = await execAsync$5("apt-cache policy software-properties-common");
     if (!stdout.includes("Installed: (none)")) {
       return;
     }
-    const { stderr } = await execAsync$6("pkexec apt install -y software-properties-common");
+    const { stderr } = await execAsync$5("pkexec apt install -y software-properties-common");
     if (stderr) {
       throw new Error(`Failed to install software-properties-common: ${stderr}`);
     }
@@ -16711,12 +16711,12 @@ async function ensureSoftwarePropertiesCommon() {
 }
 async function ensureDeadsnakesPPA() {
   try {
-    const { stdout } = await execAsync$6("apt-cache policy | grep deadsnakes");
+    const { stdout } = await execAsync$5("apt-cache policy | grep deadsnakes");
     if (stdout.includes("deadsnakes")) {
       return;
     }
-    await execAsync$6("pkexec add-apt-repository -y ppa:deadsnakes/ppa");
-    await execAsync$6("pkexec apt update");
+    await execAsync$5("pkexec add-apt-repository -y ppa:deadsnakes/ppa");
+    await execAsync$5("pkexec apt update");
   } catch (err) {
     throw new Error(`Error ensuring Deadsnakes PPA is added: ${err.message}`);
   }
@@ -16746,7 +16746,7 @@ async function getAvailablePythonVersions() {
     } else if (platform$2() === "linux") {
       await ensureSoftwarePropertiesCommon();
       await ensureDeadsnakesPPA();
-      const { stdout } = await execAsync$6("apt-cache search ^python3\\.[0-9]+$");
+      const { stdout } = await execAsync$5("apt-cache search ^python3\\.[0-9]+$");
       const versions = stdout.split("\n").filter((line) => line.startsWith("python3")).map((line) => line.split(" ")[0].replace("python", "")).map((version) => ({ version, url: getPythonDownloadUrl(version) }));
       return removeDuplicateUrls(versions);
     } else {
@@ -17021,7 +17021,6 @@ function requireLib() {
 }
 var libExports = requireLib();
 const which = /* @__PURE__ */ getDefaultExportFromCjs(libExports);
-const execAsync$5 = promisify(exec);
 async function validatePath(path2) {
   try {
     await gracefulFsExports.promises.access(path2);
@@ -17058,25 +17057,49 @@ async function isDefaultPython(pythonPath) {
   }
 }
 async function setDefaultPythonWindows(pythonPath) {
-  return new Promise(async (resolve2, reject) => {
-    try {
-      const { stdout: currentPath } = await execAsync$5('reg query "HKEY_CURRENT_USER\\Environment" /v Path');
-      const match = currentPath.match(/REG_\w+\s+(.+)/);
+  return new Promise((resolve2, reject) => {
+    const regQuery = spawn("reg", ["query", "HKEY_CURRENT_USER\\Environment", "/v", "Path"]);
+    let queryOutput = "";
+    regQuery.stdout.on("data", (data) => {
+      queryOutput += data.toString();
+    });
+    regQuery.stderr.on("data", (data) => {
+      reject(new Error(`Registry query error: ${data.toString()}`));
+    });
+    regQuery.on("close", (code) => {
+      if (code !== 0) {
+        reject(new Error("Failed to query registry"));
+        return;
+      }
+      const match = queryOutput.match(/REG_\w+\s+(.+)/);
       if (!match) {
         reject(new Error("Failed to retrieve current PATH"));
+        return;
       }
-      const paths = match ? match[1].split(";").filter(Boolean) : [];
+      const paths = match[1].split(";").filter(Boolean);
       const nonPythonPaths = paths.filter((path2) => !path2.toLowerCase().includes("python"));
       const newPaths = [pythonPath, join(pythonPath, "Scripts"), ...nonPythonPaths];
       const newPathValue = newPaths.join(";");
-      const regCommand = `REG ADD "HKEY_CURRENT_USER\\Environment" /v Path /t REG_EXPAND_SZ /d "${newPathValue}" /f`;
-      await execAsync$5(regCommand);
-      process.env.PATH = newPathValue;
-      resolve2();
-    } catch (error) {
-      const errorMessage = error instanceof Error ? error.message : String(error);
-      reject(new Error(`Failed to update Python path: ${errorMessage}`));
-    }
+      const regAdd = spawn(
+        "reg",
+        ["add", "HKEY_CURRENT_USER\\Environment", "/v", "Path", "/t", "REG_EXPAND_SZ", "/d", newPathValue, "/f"],
+        {
+          timeout: 3e3
+        }
+      );
+      let addError = "";
+      regAdd.stderr.on("data", (data) => {
+        addError += data.toString();
+      });
+      regAdd.on("close", (code2) => {
+        if (code2 !== 0) {
+          reject(new Error(`Failed to update PATH: ${addError}`));
+          return;
+        }
+        process.env.PATH = newPathValue;
+        resolve2();
+      });
+    });
   });
 }
 const execAsync$4 = promisify$1(exec$1);

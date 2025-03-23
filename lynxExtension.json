@@ -2,12 +2,25 @@
   "id": "python_toolkit",
   "title": "Python Toolkit",
   "description": "Effortlessly manage your Python environments and dependencies.",
-  "version": "0.9.1",
+  "version": "0.9.2",
   "publishDate": "2025-01-01",
-  "updateDate": "2025-03-04",
+  "updateDate": "2025-03-23",
   "requireAppBuild": 18,
   "repoUrl": "https://github.com/KindaBrazy/LynxHub-Python-Toolkit",
   "changeLog": [
+    {
+      "title": "🚀 V0.9.2",
+      "items": [
+        {
+          "label": "🪲 Bug Fixes",
+          "subitems": [
+            {
+              "label": "Fixed \"Set as System Default\" on windows might not work in some situations."
+            }
+          ]
+        }
+      ]
+    },
     {
       "title": "🚀 V0.9.1",
       "items": [
