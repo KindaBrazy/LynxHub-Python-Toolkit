@@ -187,6 +187,7 @@ export default function PackageManagerModal({
       getPackageList();
     } else {
       setSearchData([]);
+      setPackages([]);
     }
   }, [pythonPath, isOpen]);
 
