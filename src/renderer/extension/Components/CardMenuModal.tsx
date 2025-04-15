@@ -39,6 +39,8 @@ export default function CardMenuModal() {
           pIpc.checkAIVenvEnabled();
         }
       });
+    } else {
+      setPythonPath('');
     }
   }, [isOpen, webUI, context]);
 
