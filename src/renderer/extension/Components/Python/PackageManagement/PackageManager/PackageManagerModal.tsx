@@ -183,7 +183,11 @@ export default function PackageManagerModal({
   };
 
   useEffect(() => {
-    if (isOpen && !isEmpty(pythonPath)) getPackageList();
+    if (isOpen && !isEmpty(pythonPath)) {
+      getPackageList();
+    } else {
+      setSearchData([]);
+    }
   }, [pythonPath, isOpen]);
 
   const updated = (name: string, newVersion: string) => {
