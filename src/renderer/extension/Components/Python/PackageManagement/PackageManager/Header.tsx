@@ -84,13 +84,15 @@ export default function PackageManagerHeader({
     <ModalHeader className="bg-foreground-200 dark:bg-LynxRaisinBlack items-center flex-col gap-y-2">
       <div className="flex flex-row justify-between w-full">
         {isValidPython ? (
-          <span>
-            {title} ({packages.length})
-          </span>
+          <>
+            <span>
+              {title} ({packages.length})
+            </span>
+            <Header_FilterButton setSelectedFilter={setSelectedFilter} updateAvailable={!isEmpty(packagesUpdate)} />
+          </>
         ) : (
           <span>{title}</span>
         )}
-        <Header_FilterButton setSelectedFilter={setSelectedFilter} updateAvailable={!isEmpty(packagesUpdate)} />
       </div>
       {!isEmpty(packages) && (
         <Input
