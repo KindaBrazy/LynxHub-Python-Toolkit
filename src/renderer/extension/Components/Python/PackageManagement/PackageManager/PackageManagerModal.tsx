@@ -219,6 +219,7 @@ export default function PackageManagerModal({
     <Modal
       size={size}
       isOpen={isOpen}
+      placement="center"
       isDismissable={false}
       scrollBehavior="inside"
       onClose={closePackageManager}

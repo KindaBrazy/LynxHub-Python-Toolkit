@@ -25,6 +25,7 @@ export default function PythonToolkitModal({isOpen, setIsOpen}: ModalProps) {
       isOpen={isOpen}
       backdrop="blur"
       onClose={onClose}
+      placement="center"
       isDismissable={false}
       scrollBehavior="inside"
       className="max-w-[90%]"
