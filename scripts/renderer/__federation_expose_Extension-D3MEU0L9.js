@@ -15,7 +15,8 @@ const PYTHON_SUPPORTED_AI = [
   "Anapnoe_SD",
   "Erew123_SD",
   "Oobabooga_TG",
-  "Gitmylo_AG"
+  "Gitmylo_AG",
+  "OpenWebUI_TG"
 ];
 
 function isPlainObject$2(obj) {
@@ -1278,7 +1279,7 @@ function SolarBoxMinimalisticBoldDuotone(props) {
   ] });
 }
 
-const {DropdownItem: DropdownItem$5,DropdownSection: DropdownSection$1} = await importShared('@heroui/react');
+const {DropdownItem: DropdownItem$6,DropdownSection: DropdownSection$1} = await importShared('@heroui/react');
 
 const {useCallback: useCallback$6} = await importShared('react');
 
@@ -1291,7 +1292,7 @@ function CardMenu({ context }) {
   }, [context]);
   if (!PYTHON_SUPPORTED_AI.includes(context.id)) return null;
   return /* @__PURE__ */ jsxRuntimeExports.jsx(DropdownSection$1, { showDivider: true, children: /* @__PURE__ */ jsxRuntimeExports.jsx(
-    DropdownItem$5,
+    DropdownItem$6,
     {
       onPress,
       title: "Dependencies",
@@ -1722,69 +1723,10 @@ const useCardsState = (name) => useSelector$1((state) => state.cards[name]);
 
 await importShared('lodash');
 
-const {Fragment,useMemo: useMemo$a,useState: useState$o} = await importShared('react');
+const {Fragment,useMemo: useMemo$a,useState: useState$p} = await importShared('react');
 function useInstalledCard(cardId) {
   const installedCards = useCardsState("installedCards");
   return useMemo$a(() => installedCards.find((card) => card.id === cardId), [installedCards, cardId]);
-}
-
-function OpenFolder_Icon(props) {
-  return /* @__PURE__ */ jsxRuntimeExports.jsxs("svg", { ...props, width: "1em", height: "1em", viewBox: "0 0 24 24", xmlns: "http://www.w3.org/2000/svg", children: [
-    /* @__PURE__ */ jsxRuntimeExports.jsx(
-      "path",
-      {
-        d: "M16.07 9.952c1.329 0 2.462 0 3.366.102c.154.017.306.038.458.064c.532.09 1.05.235 1.53.488v-.85c0-.91 0-1.663-.085-2.264c-.09-.635-.286-1.197-.756-1.66a3.082 3.082 0 0 0-.241-.214c-.512-.408-1.126-.575-1.82-.652c-.67-.074-1.512-.074-2.545-.074h-.353c-.982 0-1.335-.006-1.653-.087a2.717 2.717 0 0 1-.536-.196c-.285-.14-.532-.351-1.228-.968l-.474-.42a6.91 6.91 0 0 0-.48-.403a4.289 4.289 0 0 0-2.182-.803A8.075 8.075 0 0 0 8.413 2h-.116c-.641 0-1.064 0-1.431.061c-1.605.268-2.903 1.39-3.219 2.875c-.072.337-.071.724-.071 1.283v4.387c.48-.253.998-.399 1.53-.488c.151-.026.304-.047.458-.064c.904-.102 2.037-.102 3.367-.102z",
-        fill: "currentColor"
-      }
-    ),
-    /* @__PURE__ */ jsxRuntimeExports.jsx(
-      "path",
-      {
-        d: "M3.358 12.779c-.61.941-.358 2.25.145 4.868c.363 1.885.544 2.827 1.172 3.452c.163.163.346.306.544.429C5.982 22 6.995 22 9.022 22h6.956c2.027 0 3.04 0 3.803-.472c.199-.123.38-.266.544-.429c.628-.625.81-1.567 1.172-3.452c.503-2.618.755-3.927.145-4.868a2.937 2.937 0 0 0-.57-.646c-.87-.735-2.279-.735-5.094-.735H9.022c-2.815 0-4.223 0-5.094.735a2.936 2.936 0 0 0-.57.646m6.337 4.402c0-.4.343-.723.765-.723h4.08c.422 0 .765.324.765.723c0 .399-.343.723-.765.723h-4.08c-.422 0-.765-.324-.765-.723",
-        fillRule: "evenodd",
-        clipRule: "evenodd",
-        fill: "currentColor"
-      }
-    )
-  ] });
-}
-function Magnifier_Icon(props) {
-  return /* @__PURE__ */ jsxRuntimeExports.jsxs("svg", { ...props, width: "1em", height: "1em", viewBox: "0 0 24 24", xmlns: "http://www.w3.org/2000/svg", children: [
-    /* @__PURE__ */ jsxRuntimeExports.jsx(
-      "path",
-      {
-        opacity: "0.5",
-        fill: "currentColor",
-        d: "M20.313 11.157a9.157 9.157 0 1 1-18.313 0a9.157 9.157 0 0 1 18.313 0"
-      }
-    ),
-    /* @__PURE__ */ jsxRuntimeExports.jsx(
-      "path",
-      {
-        fill: "currentColor",
-        d: "m17.1 18.122l3.666 3.666a.723.723 0 0 0 1.023-1.022L18.122 17.1a9 9 0 0 1-1.022 1.022"
-      }
-    )
-  ] });
-}
-function Refresh3_Icon(props) {
-  return /* @__PURE__ */ jsxRuntimeExports.jsxs("svg", { ...props, width: "1em", height: "1em", viewBox: "0 0 24 24", xmlns: "http://www.w3.org/2000/svg", children: [
-    /* @__PURE__ */ jsxRuntimeExports.jsx(
-      "path",
-      {
-        d: "M12.079 2.25c-4.794 0-8.734 3.663-9.118 8.333H2a.75.75 0 0 0-.528 1.283l1.68 1.666a.75.75 0 0 0 1.056 0l1.68-1.666a.75.75 0 0 0-.528-1.283h-.893c.38-3.831 3.638-6.833 7.612-6.833a7.66 7.66 0 0 1 6.537 3.643a.75.75 0 1 0 1.277-.786A9.16 9.16 0 0 0 12.08 2.25",
-        fill: "currentColor"
-      }
-    ),
-    /* @__PURE__ */ jsxRuntimeExports.jsx(
-      "path",
-      {
-        d: "M20.841 10.467a.75.75 0 0 0-1.054 0L18.1 12.133a.75.75 0 0 0 .527 1.284h.899c-.381 3.83-3.651 6.833-7.644 6.833a7.7 7.7 0 0 1-6.565-3.644a.75.75 0 1 0-1.276.788a9.2 9.2 0 0 0 7.84 4.356c4.809 0 8.766-3.66 9.151-8.333H22a.75.75 0 0 0 .527-1.284z",
-        opacity: "0.5",
-        fill: "currentColor"
-      }
-    )
-  ] });
 }
 
 const pythonChannels = {
@@ -7810,6 +7752,65 @@ function Trash_Icon(props) {
   ) });
 }
 
+function OpenFolder_Icon(props) {
+  return /* @__PURE__ */ jsxRuntimeExports.jsxs("svg", { ...props, width: "1em", height: "1em", viewBox: "0 0 24 24", xmlns: "http://www.w3.org/2000/svg", children: [
+    /* @__PURE__ */ jsxRuntimeExports.jsx(
+      "path",
+      {
+        d: "M16.07 9.952c1.329 0 2.462 0 3.366.102c.154.017.306.038.458.064c.532.09 1.05.235 1.53.488v-.85c0-.91 0-1.663-.085-2.264c-.09-.635-.286-1.197-.756-1.66a3.082 3.082 0 0 0-.241-.214c-.512-.408-1.126-.575-1.82-.652c-.67-.074-1.512-.074-2.545-.074h-.353c-.982 0-1.335-.006-1.653-.087a2.717 2.717 0 0 1-.536-.196c-.285-.14-.532-.351-1.228-.968l-.474-.42a6.91 6.91 0 0 0-.48-.403a4.289 4.289 0 0 0-2.182-.803A8.075 8.075 0 0 0 8.413 2h-.116c-.641 0-1.064 0-1.431.061c-1.605.268-2.903 1.39-3.219 2.875c-.072.337-.071.724-.071 1.283v4.387c.48-.253.998-.399 1.53-.488c.151-.026.304-.047.458-.064c.904-.102 2.037-.102 3.367-.102z",
+        fill: "currentColor"
+      }
+    ),
+    /* @__PURE__ */ jsxRuntimeExports.jsx(
+      "path",
+      {
+        d: "M3.358 12.779c-.61.941-.358 2.25.145 4.868c.363 1.885.544 2.827 1.172 3.452c.163.163.346.306.544.429C5.982 22 6.995 22 9.022 22h6.956c2.027 0 3.04 0 3.803-.472c.199-.123.38-.266.544-.429c.628-.625.81-1.567 1.172-3.452c.503-2.618.755-3.927.145-4.868a2.937 2.937 0 0 0-.57-.646c-.87-.735-2.279-.735-5.094-.735H9.022c-2.815 0-4.223 0-5.094.735a2.936 2.936 0 0 0-.57.646m6.337 4.402c0-.4.343-.723.765-.723h4.08c.422 0 .765.324.765.723c0 .399-.343.723-.765.723h-4.08c-.422 0-.765-.324-.765-.723",
+        fillRule: "evenodd",
+        clipRule: "evenodd",
+        fill: "currentColor"
+      }
+    )
+  ] });
+}
+function Magnifier_Icon(props) {
+  return /* @__PURE__ */ jsxRuntimeExports.jsxs("svg", { ...props, width: "1em", height: "1em", viewBox: "0 0 24 24", xmlns: "http://www.w3.org/2000/svg", children: [
+    /* @__PURE__ */ jsxRuntimeExports.jsx(
+      "path",
+      {
+        opacity: "0.5",
+        fill: "currentColor",
+        d: "M20.313 11.157a9.157 9.157 0 1 1-18.313 0a9.157 9.157 0 0 1 18.313 0"
+      }
+    ),
+    /* @__PURE__ */ jsxRuntimeExports.jsx(
+      "path",
+      {
+        fill: "currentColor",
+        d: "m17.1 18.122l3.666 3.666a.723.723 0 0 0 1.023-1.022L18.122 17.1a9 9 0 0 1-1.022 1.022"
+      }
+    )
+  ] });
+}
+function Refresh3_Icon(props) {
+  return /* @__PURE__ */ jsxRuntimeExports.jsxs("svg", { ...props, width: "1em", height: "1em", viewBox: "0 0 24 24", xmlns: "http://www.w3.org/2000/svg", children: [
+    /* @__PURE__ */ jsxRuntimeExports.jsx(
+      "path",
+      {
+        d: "M12.079 2.25c-4.794 0-8.734 3.663-9.118 8.333H2a.75.75 0 0 0-.528 1.283l1.68 1.666a.75.75 0 0 0 1.056 0l1.68-1.666a.75.75 0 0 0-.528-1.283h-.893c.38-3.831 3.638-6.833 7.612-6.833a7.66 7.66 0 0 1 6.537 3.643a.75.75 0 1 0 1.277-.786A9.16 9.16 0 0 0 12.08 2.25",
+        fill: "currentColor"
+      }
+    ),
+    /* @__PURE__ */ jsxRuntimeExports.jsx(
+      "path",
+      {
+        d: "M20.841 10.467a.75.75 0 0 0-1.054 0L18.1 12.133a.75.75 0 0 0 .527 1.284h.899c-.381 3.83-3.651 6.833-7.644 6.833a7.7 7.7 0 0 1-6.565-3.644a.75.75 0 1 0-1.276.788a9.2 9.2 0 0 0 7.84 4.356c4.809 0 8.766-3.66 9.151-8.333H22a.75.75 0 0 0 .527-1.284z",
+        opacity: "0.5",
+        fill: "currentColor"
+      }
+    )
+  ] });
+}
+
 function HardDrive_Icon(props) {
   return /* @__PURE__ */ jsxRuntimeExports.jsx("svg", { ...props, width: "1em", height: "1em", viewBox: "0 0 16 16", xmlns: "http://www.w3.org/2000/svg", children: /* @__PURE__ */ jsxRuntimeExports.jsx(
     "path",
@@ -7856,6 +7857,40 @@ createSlice({
   }
 });
 const useAppState = (key) => useSelector((state) => state.app[key]);
+
+const {Button: Button$m,Dropdown: Dropdown$5,DropdownItem: DropdownItem$5,DropdownMenu: DropdownMenu$5,DropdownTrigger: DropdownTrigger$5} = await importShared('@heroui/react');
+
+const {capitalize: capitalize$1} = await importShared('lodash');
+
+const {useEffect: useEffect$g,useState: useState$o} = await importShared('react');
+function Body_SelectPythonV({ id, setPythonPath }) {
+  const [installedPythons, setInstalledPythons] = useState$o([]);
+  const handleSelectVersion = (python) => {
+    pIpc.addAIVenv(id, python.installPath);
+    setPythonPath?.(python.installPath);
+  };
+  useEffect$g(() => {
+    pIpc.getInstalledPythons(false).then((result) => {
+      setInstalledPythons(result);
+    });
+  }, []);
+  return /* @__PURE__ */ jsxRuntimeExports.jsxs(Dropdown$5, { size: "sm", showArrow: true, children: [
+    /* @__PURE__ */ jsxRuntimeExports.jsx(DropdownTrigger$5, { children: /* @__PURE__ */ jsxRuntimeExports.jsx(Button$m, { color: "secondary", children: "Select Python Version" }, "select_python_version") }),
+    /* @__PURE__ */ jsxRuntimeExports.jsx(DropdownMenu$5, { children: installedPythons.map((p) => /* @__PURE__ */ jsxRuntimeExports.jsx(
+      DropdownItem$5,
+      {
+        onPress: () => handleSelectVersion(p),
+        color: p.isDefault ? "secondary" : "default",
+        children: /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "flex flex-row gap-x-1 items-end", children: [
+          /* @__PURE__ */ jsxRuntimeExports.jsx("span", { className: "font-bold", children: p.version }),
+          /* @__PURE__ */ jsxRuntimeExports.jsx("span", { className: "text-foreground-500 font-semibold text-xs", children: capitalize$1(p.installationType) }),
+          p.isDefault && /* @__PURE__ */ jsxRuntimeExports.jsx("span", { className: "text-xs font-bold text-secondary", children: "System Default" })
+        ] })
+      },
+      p.version
+    )) })
+  ] });
+}
 
 const {Button: Button$l,Input: Input$7,Popover: Popover$4,PopoverContent: PopoverContent$4,PopoverTrigger: PopoverTrigger$4} = await importShared('@heroui/react');
 
@@ -8033,6 +8068,7 @@ const {Result: Result$2} = await importShared('antd');
 const {cloneDeep,isEmpty: isEmpty$d} = await importShared('lodash');
 const {useMemo: useMemo$8} = await importShared('react');
 function PackageManagerBody({
+  id,
   items,
   isLoading,
   pythonPath,
@@ -8043,7 +8079,8 @@ function PackageManagerBody({
   locateVenv,
   setSelectedKeys,
   packagesUpdate,
-  selectedKeys
+  selectedKeys,
+  setPythonPath
 }) {
   const isDarkMode = useAppState("darkMode");
   const anyUpdateAvailable = useMemo$8(() => packagesUpdate.length !== 0, [packagesUpdate]);
@@ -8109,9 +8146,20 @@ function PackageManagerBody({
       ) }) : /* @__PURE__ */ jsxRuntimeExports.jsx(
         Result$2,
         {
-          extra: /* @__PURE__ */ jsxRuntimeExports.jsx(Button$j, { color: "primary", onPress: locateVenv, isLoading: isLocating, children: !isLocating && "Locate Environment" }, "locate_venv"),
-          subTitle: "You can create a virtual environment using the Python Toolkit on the Tools page.",
-          title: "Could not find a virtual environment. Please locate the venv folder if it was moved or renamed."
+          subTitle: /* @__PURE__ */ jsxRuntimeExports.jsxs("span", { children: [
+            "Please ",
+            /* @__PURE__ */ jsxRuntimeExports.jsx("span", { className: "text-foreground", children: "locate venv" }),
+            " folder or",
+            " ",
+            /* @__PURE__ */ jsxRuntimeExports.jsx("span", { className: "text-foreground", children: "select python version" }),
+            "."
+          ] }),
+          extra: /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "flex flex-row gap-x-2 justify-center", children: [
+            /* @__PURE__ */ jsxRuntimeExports.jsx(Button$j, { color: "primary", onPress: locateVenv, isLoading: isLocating, children: !isLocating && "Locate VENV" }, "locate_venv"),
+            /* @__PURE__ */ jsxRuntimeExports.jsx(Body_SelectPythonV, { id, setPythonPath })
+          ] }),
+          status: "404",
+          title: "Could not find a virtual environment."
         }
       ) }) })
     }
@@ -8834,15 +8882,15 @@ function PackageManagerHeader({
     });
   };
   return /* @__PURE__ */ jsxRuntimeExports.jsxs(ModalHeader$2, { className: "bg-foreground-200 dark:bg-LynxRaisinBlack items-center flex-col gap-y-2", children: [
-    /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "flex flex-row justify-between w-full", children: [
-      isValidPython ? /* @__PURE__ */ jsxRuntimeExports.jsxs("span", { children: [
+    /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "flex flex-row justify-between w-full", children: isValidPython ? /* @__PURE__ */ jsxRuntimeExports.jsxs(jsxRuntimeExports.Fragment, { children: [
+      /* @__PURE__ */ jsxRuntimeExports.jsxs("span", { children: [
         title,
         " (",
         packages.length,
         ")"
-      ] }) : /* @__PURE__ */ jsxRuntimeExports.jsx("span", { children: title }),
+      ] }),
       /* @__PURE__ */ jsxRuntimeExports.jsx(Header_FilterButton, { setSelectedFilter, updateAvailable: !isEmpty$8(packagesUpdate) })
-    ] }),
+    ] }) : /* @__PURE__ */ jsxRuntimeExports.jsx("span", { children: title }) }),
     !isEmpty$8(packages) && /* @__PURE__ */ jsxRuntimeExports.jsx(
       Input$3,
       {
@@ -8895,7 +8943,8 @@ function PackageManagerModal({
   locateVenv,
   id,
   isLocating,
-  projectPath
+  projectPath,
+  setPythonPath
 }) {
   const [isLoading, setIsLoading] = useState$d(false);
   const [isLoadingUpdates, setIsLoadingUpdates] = useState$d(false);
@@ -9014,7 +9063,12 @@ function PackageManagerModal({
     });
   };
   useEffect$9(() => {
-    if (isOpen && !isEmpty$7(pythonPath)) getPackageList();
+    if (isOpen && !isEmpty$7(pythonPath)) {
+      getPackageList();
+    } else {
+      setSearchData([]);
+      setPackages([]);
+    }
   }, [pythonPath, isOpen]);
   const updated = (name, newVersion) => {
     setPackagesUpdate((prevState) => prevState.filter((item) => item.name !== name));
@@ -9040,6 +9094,7 @@ function PackageManagerModal({
     {
       size,
       isOpen,
+      placement: "center",
       isDismissable: false,
       scrollBehavior: "inside",
       onClose: closePackageManager,
@@ -9073,6 +9128,7 @@ function PackageManagerModal({
         /* @__PURE__ */ jsxRuntimeExports.jsx(
           PackageManagerBody,
           {
+            id,
             items,
             removed,
             updated,
@@ -9081,6 +9137,7 @@ function PackageManagerModal({
             isLocating,
             pythonPath,
             selectedKeys,
+            setPythonPath,
             isValidPython,
             packagesUpdate,
             setSelectedKeys
@@ -9148,6 +9205,8 @@ function CardMenuModal() {
           pIpc.checkAIVenvEnabled();
         }
       });
+    } else {
+      setPythonPath("");
     }
   }, [isOpen, webUI, context]);
   const locateVenv = () => {
@@ -9161,6 +9220,10 @@ function CardMenuModal() {
       });
     }
   };
+  const handleDeselect = () => {
+    pIpc.removeAIVenv(context.id);
+    setPythonPath("");
+  };
   const actionButtons = useMemo$4(() => {
     return pythonPath ? [
       /* @__PURE__ */ jsxRuntimeExports.jsx(
@@ -9168,11 +9231,10 @@ function CardMenuModal() {
         {
           size: "sm",
           variant: "flat",
-          onPress: locateVenv,
+          color: "danger",
           className: "!min-w-32",
-          isLoading: isLocatingVenv,
-          startContent: !isLocatingVenv && /* @__PURE__ */ jsxRuntimeExports.jsx(Refresh3_Icon, {}),
-          children: !isLocatingVenv && "Change Venv"
+          onPress: handleDeselect,
+          children: "Deselect"
         },
         "reloacte_venv"
       )
@@ -9189,6 +9251,7 @@ function CardMenuModal() {
       setIsOpen: onOpenChange,
       projectPath: webUI?.dir,
       isLocating: isLocatingVenv,
+      setPythonPath,
       actionButtons,
       title: `${context.title} Dependencies`
     }
@@ -17942,6 +18005,7 @@ function PythonToolkitModal({ isOpen, setIsOpen }) {
       isOpen,
       backdrop: "blur",
       onClose,
+      placement: "center",
       isDismissable: false,
       scrollBehavior: "inside",
       className: "max-w-[90%]",

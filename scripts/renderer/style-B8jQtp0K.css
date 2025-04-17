@@ -219,6 +219,9 @@
 .flex-wrap {
     flex-wrap: wrap;
 }
+.items-end {
+    align-items: flex-end;
+}
 .items-center {
     align-items: center;
 }
@@ -469,6 +472,10 @@
     font-size: 1.25rem;
     line-height: 1.75rem;
 }
+.text-xs {
+    font-size: 0.75rem;
+    line-height: 1rem;
+}
 .\!font-semibold {
     font-weight: 600 !important;
 }
@@ -509,6 +516,10 @@
     --tw-text-opacity: 1;
     color: hsl(var(--heroui-default-400) / var(--heroui-default-400-opacity, var(--tw-text-opacity)));
 }
+.text-foreground {
+    --tw-text-opacity: 1;
+    color: hsl(var(--heroui-foreground) / var(--heroui-foreground-opacity, var(--tw-text-opacity)));
+}
 .text-foreground-400 {
     --tw-text-opacity: 1;
     color: hsl(var(--heroui-foreground-400) / var(--heroui-foreground-400-opacity, var(--tw-text-opacity)));
@@ -528,6 +539,10 @@
 .text-red-500 {
     --tw-text-opacity: 1;
     color: rgb(239 68 68 / var(--tw-text-opacity, 1));
+}
+.text-secondary {
+    --tw-text-opacity: 1;
+    color: hsl(var(--heroui-secondary) / var(--heroui-secondary-opacity, var(--tw-text-opacity)));
 }
 .text-yellow-500 {
     --tw-text-opacity: 1;
