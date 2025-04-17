@@ -11,4 +11,5 @@ export const PYTHON_SUPPORTED_AI = [
   'Erew123_SD',
   'Oobabooga_TG',
   'Gitmylo_AG',
+  'OpenWebUI_TG',
 ];
