@@ -88,6 +88,7 @@ export default function CardMenuModal() {
         setIsOpen={onOpenChange}
         projectPath={webUI?.dir}
         isLocating={isLocatingVenv}
+        setPythonPath={setPythonPath}
         actionButtons={actionButtons}
         title={`${context.title} Dependencies`}
       />

@@ -17,9 +17,11 @@ import {Dispatch, SetStateAction, useMemo} from 'react';
 
 import {PackageInfo, SitePackages_Info} from '../../../../../../cross/extension/CrossExtTypes';
 import {useAppState} from '../../../../../src/App/Redux/App/AppReducer';
+import Body_SelectPythonV from './Body_SelectPythonV';
 import Body_TableItem from './Body_TableItem';
 
 type Props = {
+  id: string;
   items: PackageInfo[];
   isLoading: boolean;
   pythonPath: string;
@@ -31,9 +33,11 @@ type Props = {
   packagesUpdate: SitePackages_Info[];
   selectedKeys: Selection;
   setSelectedKeys: Dispatch<SetStateAction<Selection>>;
+  setPythonPath?: Dispatch<SetStateAction<string>>;
 };
 
 export default function PackageManagerBody({
+  id,
   items,
   isLoading,
   pythonPath,
@@ -45,6 +49,7 @@ export default function PackageManagerBody({
   setSelectedKeys,
   packagesUpdate,
   selectedKeys,
+  setPythonPath,
 }: Props) {
   const isDarkMode = useAppState('darkMode');
   const anyUpdateAvailable = useMemo(() => packagesUpdate.length !== 0, [packagesUpdate]);
@@ -123,13 +128,22 @@ export default function PackageManagerBody({
             </>
           ) : (
             <Result
-              extra={
-                <Button color="primary" key="locate_venv" onPress={locateVenv} isLoading={isLocating}>
-                  {!isLocating && 'Locate Environment'}
-                </Button>
+              subTitle={
+                <span>
+                  Please <span className="text-foreground">locate venv</span> folder or{' '}
+                  <span className="text-foreground">select python version</span>.
+                </span>
               }
-              subTitle="You can create a virtual environment using the Python Toolkit on the Tools page."
-              title="Could not find a virtual environment. Please locate the venv folder if it was moved or renamed."
+              extra={
+                <div className="flex flex-row gap-x-2 justify-center">
+                  <Button color="primary" key="locate_venv" onPress={locateVenv} isLoading={isLocating}>
+                    {!isLocating && 'Locate VENV'}
+                  </Button>
+                  <Body_SelectPythonV id={id} setPythonPath={setPythonPath} />
+                </div>
+              }
+              status="404"
+              title="Could not find a virtual environment."
             />
           )}
         </div>

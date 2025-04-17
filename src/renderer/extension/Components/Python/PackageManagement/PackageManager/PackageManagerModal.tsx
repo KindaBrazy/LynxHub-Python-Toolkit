@@ -1,6 +1,6 @@
 import {Button, Modal, ModalContent, ModalFooter, Selection} from '@heroui/react';
 import {isEmpty} from 'lodash';
-import {ReactNode, useEffect, useState} from 'react';
+import {Dispatch, ReactNode, SetStateAction, useEffect, useState} from 'react';
 
 import {FilterKeys, PackageInfo, SitePackages_Info} from '../../../../../../cross/extension/CrossExtTypes';
 import {getUpdateType} from '../../../../../../cross/extension/CrossExtUtils';
@@ -25,6 +25,7 @@ type Props = {
 
   id: string;
   projectPath?: string;
+  setPythonPath?: Dispatch<SetStateAction<string>>;
 };
 
 export default function PackageManagerModal({
@@ -38,6 +39,7 @@ export default function PackageManagerModal({
   id,
   isLocating,
   projectPath,
+  setPythonPath,
 }: Props) {
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [isLoadingUpdates, setIsLoadingUpdates] = useState<boolean>(false);
@@ -245,6 +247,7 @@ export default function PackageManagerModal({
           checkingUpdates={!isLoading && isLoadingUpdates}
         />
         <PackageManagerBody
+          id={id}
           items={items}
           removed={removed}
           updated={updated}
@@ -253,6 +256,7 @@ export default function PackageManagerModal({
           isLocating={isLocating}
           pythonPath={pythonPath}
           selectedKeys={selectedKeys}
+          setPythonPath={setPythonPath}
           isValidPython={isValidPython}
           packagesUpdate={packagesUpdate}
           setSelectedKeys={setSelectedKeys}
