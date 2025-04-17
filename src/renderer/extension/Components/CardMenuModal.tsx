@@ -4,7 +4,6 @@ import {useEffect, useMemo, useState} from 'react';
 import {useDispatch} from 'react-redux';
 
 import {useInstalledCard} from '../../src/App/Utils/UtilHooks';
-import {Refresh3_Icon} from '../../src/assets/icons/SvgIcons/SvgIcons4';
 import pIpc from '../PIpc';
 import {PythonToolkitActions, usePythonToolkitState} from '../reducer';
 import PackageManagerModal from './Python/PackageManagement/PackageManager/PackageManagerModal';
@@ -60,18 +59,22 @@ export default function CardMenuModal() {
     }
   };
 
+  const handleDeselect = () => {
+    pIpc.removeAIVenv(context.id);
+    setPythonPath('');
+  };
+
   const actionButtons = useMemo(() => {
     return pythonPath
       ? [
           <Button
             size="sm"
             variant="flat"
+            color="danger"
             key="reloacte_venv"
-            onPress={locateVenv}
             className="!min-w-32"
-            isLoading={isLocatingVenv}
-            startContent={!isLocatingVenv && <Refresh3_Icon />}>
-            {!isLocatingVenv && 'Change Venv'}
+            onPress={handleDeselect}>
+            Deselect
           </Button>,
         ]
       : [];
