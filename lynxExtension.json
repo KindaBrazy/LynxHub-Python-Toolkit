@@ -2,12 +2,36 @@
   "id": "python_toolkit",
   "title": "Python Toolkit",
   "description": "Effortlessly manage your Python environments and dependencies.",
-  "version": "0.9.2",
+  "version": "0.10.0",
   "publishDate": "2025-01-01",
-  "updateDate": "2025-03-23",
+  "updateDate": "2025-04-17",
   "requireAppBuild": 18,
   "repoUrl": "https://github.com/KindaBrazy/LynxHub-Python-Toolkit",
   "changeLog": [
+    {
+      "title": "🚀 V0.10.0",
+      "items": [
+        {
+          "label": "✨ New Features",
+          "subitems": [
+            {
+              "label": "Allow selecting installed Python versions for AI dependencies management."
+            },
+            {
+              "label": "Add Open WebUI to supported AI dependencies"
+            }
+          ]
+        },
+        {
+          "label": "🪲 Bug Fixes",
+          "subitems": [
+            {
+              "label": "Fixed issues with closing and reopening AI Dependencies window"
+            }
+          ]
+        }
+      ]
+    },
     {
       "title": "🚀 V0.9.2",
       "items": [
