@@ -48,6 +48,7 @@ export default function PythonToolkitModal({isOpen, setIsOpen, show}: ModalProps
         </ModalHeader>
         <ModalBody className="scrollbar-hide mb-0">
           <InstalledPythons
+            show={show}
             installedPythons={installedPythons}
             isLoadingPythons={isLoadingPythons}
             visible={currentTab === 'installation'}
@@ -55,6 +56,7 @@ export default function PythonToolkitModal({isOpen, setIsOpen, show}: ModalProps
             setInstalledPythons={setInstalledPythons}
           />
           <Venv
+            show={show}
             visible={currentTab === 'venv'}
             installedPythons={installedPythons}
             isLoadingPythons={isLoadingPythons}

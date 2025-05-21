@@ -33,9 +33,10 @@ type Props = {
   maxDiskValue: number;
   updateDefault: (installFolder: string) => void;
   refresh: (research: boolean) => void;
+  show: string;
 };
 
-export default function InstalledCard({python, diskUsage, maxDiskValue, updateDefault, refresh}: Props) {
+export default function InstalledCard({python, diskUsage, maxDiskValue, updateDefault, refresh, show}: Props) {
   const size = useMemo(() => {
     return diskUsage.find(usage => usage.path === python.installFolder)?.value;
   }, [diskUsage]);
@@ -95,6 +96,7 @@ export default function InstalledCard({python, diskUsage, maxDiskValue, updateDe
     <div className="grow relative">
       <PackageManagerModal
         size="3xl"
+        show={show}
         id={python.installPath}
         isOpen={packageManagerOpen}
         pythonPath={python.installPath}

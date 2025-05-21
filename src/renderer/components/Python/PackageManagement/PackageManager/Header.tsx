@@ -31,6 +31,8 @@ type Props = {
   selectedFilter: FilterKeys;
   selectedKeys: Selection;
   visibleItems: PackageInfo[];
+
+  show: string;
 };
 
 export default function PackageManagerHeader({
@@ -52,6 +54,7 @@ export default function PackageManagerHeader({
   selectedFilter,
   selectedKeys,
   visibleItems,
+  show,
 }: Props) {
   const [isUpdating, setIsUpdating] = useState<boolean>(false);
 
@@ -123,9 +126,9 @@ export default function PackageManagerHeader({
         <ButtonGroup size="sm" fullWidth>
           {isValidPython && (
             <>
-              <Header_InstallerModal refresh={refresh} pythonPath={pythonPath} />
+              <Header_InstallerModal show={show} refresh={refresh} pythonPath={pythonPath} />
 
-              <RequirementsBtn id={id} projectPath={projectPath} setIsReqAvailable={setIsReqAvailable} />
+              <RequirementsBtn id={id} show={show} projectPath={projectPath} setIsReqAvailable={setIsReqAvailable} />
             </>
           )}
         </ButtonGroup>

@@ -1,13 +1,17 @@
 import {createSlice, PayloadAction} from '@reduxjs/toolkit';
 import {useSelector} from 'react-redux';
 
-type ContextType = {id: string; title: string};
+export type ContextType = {
+  id: string;
+  title: string;
+  tabID: string;
+};
 
 type PythonToolkitState = {
   menuModal: {
     isOpen: boolean;
     context: ContextType;
-  };
+  }[];
 };
 
 type PythonToolkitStateTypes = {
@@ -15,13 +19,7 @@ type PythonToolkitStateTypes = {
 };
 
 const initialState: PythonToolkitState = {
-  menuModal: {
-    isOpen: false,
-    context: {
-      id: '',
-      title: '',
-    },
-  },
+  menuModal: [],
 };
 
 const pythonToolkitReducer = createSlice({
@@ -29,12 +27,10 @@ const pythonToolkitReducer = createSlice({
   name: 'pythonToolkit',
   reducers: {
     openMenuModal: (state: PythonToolkitState, action: PayloadAction<ContextType>) => {
-      state.menuModal.isOpen = true;
-      state.menuModal.context = action.payload;
+      state.menuModal.push({isOpen: true, context: action.payload});
     },
-    closeMenuModal: (state: PythonToolkitState) => {
-      state.menuModal.isOpen = false;
-      state.menuModal.context = {id: '', title: ''};
+    closeMenuModal: (state: PythonToolkitState, action: PayloadAction<{tabID: string}>) => {
+      state.menuModal = state.menuModal.filter(item => item.context.tabID !== action.payload.tabID);
     },
   },
 });

@@ -15,9 +15,10 @@ type Props = {
   visible: boolean;
   installedPythons: PythonInstallation[];
   isLoadingPythons: boolean;
+  show: string;
 };
 
-export default function Venv({visible, installedPythons, isLoadingPythons}: Props) {
+export default function Venv({visible, installedPythons, isLoadingPythons, show}: Props) {
   const [pythonVenvs, setPythonVenvs] = useState<PythonVenvs[]>([]);
   const [isLoading, setIsLoading] = useState<boolean>(true);
 
@@ -119,6 +120,7 @@ export default function Venv({visible, installedPythons, isLoadingPythons}: Prop
           <>
             {pythonVenvs.map((venv, index) => (
               <VenvCard
+                show={show}
                 refresh={getVenvs}
                 title={venv.title}
                 folder={venv.folder}

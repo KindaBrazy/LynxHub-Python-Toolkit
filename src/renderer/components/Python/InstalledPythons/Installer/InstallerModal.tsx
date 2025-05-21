@@ -13,9 +13,10 @@ type Props = {
     version: string;
     installationType: 'official' | 'conda' | 'other';
   }[];
+  show: string;
 };
 
-export default function InstallerModal({isOpen, closeModal, refresh, installed}: Props) {
+export default function InstallerModal({isOpen, closeModal, refresh, installed, show}: Props) {
   const [closeDisabled, setCloseDisabled] = useState<boolean>(false);
   const [currentTab, setCurrentTab] = useState<Key>('official');
 
@@ -33,11 +34,12 @@ export default function InstallerModal({isOpen, closeModal, refresh, installed}:
       <Modal
         size="xl"
         isOpen={isOpen}
+        placement="center"
         onClose={closeModal}
         isDismissable={false}
         scrollBehavior="inside"
         motionProps={modalMotionProps}
-        classNames={{backdrop: '!top-10', wrapper: '!top-10 pb-8'}}
+        classNames={{backdrop: `!top-10 ${show}`, wrapper: `!top-10 pb-8 ${show}`}}
         hideCloseButton>
         <ModalContent className="overflow-hidden">
           <ModalHeader className="bg-foreground-100 justify-center items-center flex-col gap-y-2">

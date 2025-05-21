@@ -26,6 +26,7 @@ type Props = {
   id: string;
   projectPath?: string;
   setPythonPath?: Dispatch<SetStateAction<string>>;
+  show: string;
 };
 
 export default function PackageManagerModal({
@@ -40,6 +41,7 @@ export default function PackageManagerModal({
   isLocating,
   projectPath,
   setPythonPath,
+  show,
 }: Props) {
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [isLoadingUpdates, setIsLoadingUpdates] = useState<boolean>(false);
@@ -224,11 +226,12 @@ export default function PackageManagerModal({
       scrollBehavior="inside"
       onClose={closePackageManager}
       motionProps={modalMotionProps}
-      classNames={{backdrop: '!top-10', wrapper: '!top-10 pb-8'}}
+      classNames={{backdrop: `!top-10 ${show}`, wrapper: `!top-10 pb-8 ${show}`}}
       hideCloseButton>
       <ModalContent className="overflow-hidden">
         <PackageManagerHeader
           id={id}
+          show={show}
           title={title}
           packages={packages}
           visibleItems={items}

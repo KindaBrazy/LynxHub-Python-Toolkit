@@ -17,9 +17,10 @@ type Props = {
   id: string;
   projectPath?: string;
   setIsReqAvailable: Dispatch<SetStateAction<boolean>>;
+  show: string;
 };
 
-export default function RequirementsBtn({id, projectPath, setIsReqAvailable}: Props) {
+export default function RequirementsBtn({id, projectPath, setIsReqAvailable, show}: Props) {
   const [isOpen, setIsOpen] = useState<boolean>(false);
   const [requirements, setRequirements] = useState<RequirementData[]>([]);
   const [filePath, setFilePath] = useState<string>('');
@@ -127,7 +128,7 @@ export default function RequirementsBtn({id, projectPath, setIsReqAvailable}: Pr
         scrollBehavior="inside"
         motionProps={modalMotionProps}
         onClose={() => setIsOpen(false)}
-        classNames={{backdrop: '!top-10', wrapper: '!top-10 pb-8'}}
+        classNames={{backdrop: `!top-10 ${show}`, wrapper: `!top-10 pb-8 ${show}`}}
         hideCloseButton>
         <ModalContent className="overflow-hidden">
           <ModalHeader className="bg-foreground-200 dark:bg-LynxRaisinBlack flex flex-col gap-y-2">

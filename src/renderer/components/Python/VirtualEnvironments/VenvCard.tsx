@@ -36,6 +36,7 @@ type Props = {
   pythonPath: string;
   diskUsage: {path: string; value: number | undefined}[];
   refresh: () => void;
+  show: string;
 };
 
 export default function VenvCard({
@@ -46,6 +47,7 @@ export default function VenvCard({
   diskUsage,
   pythonPath,
   refresh,
+  show,
 }: Props) {
   const [popoverUninstaller, setPopoverUninstaller] = useState<boolean>(false);
   const [editedTitle, setEditedTitle] = useState<string>(title);
@@ -111,6 +113,7 @@ export default function VenvCard({
     <>
       <PackageManagerModal
         size="3xl"
+        show={show}
         id={pythonPath}
         pythonPath={pythonPath}
         isOpen={packageManagerOpen}

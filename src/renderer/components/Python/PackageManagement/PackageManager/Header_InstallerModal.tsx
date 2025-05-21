@@ -9,9 +9,10 @@ import Header_Installer from './Header_Installer';
 type Props = {
   pythonPath: string;
   refresh: () => void;
+  show: string;
 };
 
-export default function Header_InstallerModal({refresh, pythonPath}: Props) {
+export default function Header_InstallerModal({refresh, pythonPath, show}: Props) {
   const [isOpen, setIsOpen] = useState<boolean>(false);
 
   const isDarkMode = useAppState('darkMode');
@@ -31,7 +32,7 @@ export default function Header_InstallerModal({refresh, pythonPath}: Props) {
         onClose={close}
         isDismissable={false}
         scrollBehavior="inside"
-        classNames={{backdrop: '!top-10', wrapper: '!top-10 pb-8'}}>
+        classNames={{backdrop: `!top-10 ${show}`, wrapper: `!top-10 pb-8 ${show}`}}>
         <ModalContent>
           <ModalHeader className="pb-1 justify-center">Python Package Installer</ModalHeader>
           <ModalBody className="scrollbar-hide px-0 pt-0">

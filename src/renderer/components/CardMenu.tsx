@@ -3,6 +3,7 @@ import {useCallback} from 'react';
 import {useDispatch} from 'react-redux';
 
 import {CardsDataManager} from '../../../../src/renderer/src/App/Components/Cards/CardsDataManager';
+import {useTabsState} from '../../../../src/renderer/src/App/Redux/Reducer/TabsReducer';
 import {PYTHON_SUPPORTED_AI} from '../../cross/CrossExtConstants';
 import {PythonToolkitActions} from '../reducer';
 import {Python_Icon} from './SvgIcons';
@@ -12,12 +13,13 @@ type Props = {
 };
 
 export default function CardMenu({context}: Props) {
+  const activeTab = useTabsState('activeTab');
   const dispatch = useDispatch();
 
   const onPress = useCallback(() => {
-    dispatch(PythonToolkitActions.openMenuModal({title: context.title, id: context.id}));
+    dispatch(PythonToolkitActions.openMenuModal({title: context.title, id: context.id, tabID: activeTab}));
     context?.setMenuIsOpen(false);
-  }, [context]);
+  }, [context, activeTab]);
 
   if (!PYTHON_SUPPORTED_AI.includes(context.id)) return null;
 
