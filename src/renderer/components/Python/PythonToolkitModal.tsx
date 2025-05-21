@@ -9,9 +9,10 @@ import Venv from './VirtualEnvironments/Venv';
 type ModalProps = {
   isOpen: boolean;
   setIsOpen: Dispatch<SetStateAction<boolean>>;
+  show: string;
 };
 
-export default function PythonToolkitModal({isOpen, setIsOpen}: ModalProps) {
+export default function PythonToolkitModal({isOpen, setIsOpen, show}: ModalProps) {
   const [installedPythons, setInstalledPythons] = useState<PythonInstallation[]>([]);
   const [isLoadingPythons, setIsLoadingPythons] = useState<boolean>(false);
 
@@ -30,7 +31,7 @@ export default function PythonToolkitModal({isOpen, setIsOpen}: ModalProps) {
       scrollBehavior="inside"
       className="max-w-[90%]"
       motionProps={modalMotionProps}
-      classNames={{backdrop: '!top-10', wrapper: '!top-10 pb-8'}}
+      classNames={{backdrop: `!top-10 ${show}`, wrapper: `!top-10 pb-8 ${show}`}}
       hideCloseButton>
       <ModalContent className="overflow-hidden">
         <ModalHeader className="bg-foreground-100 shadow-sm">
