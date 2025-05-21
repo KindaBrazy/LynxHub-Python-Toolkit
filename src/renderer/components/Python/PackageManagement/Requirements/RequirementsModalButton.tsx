@@ -124,6 +124,7 @@ export default function RequirementsBtn({id, projectPath, setIsReqAvailable, sho
       <Modal
         size="2xl"
         isOpen={isOpen}
+        placement="center"
         isDismissable={false}
         scrollBehavior="inside"
         motionProps={modalMotionProps}

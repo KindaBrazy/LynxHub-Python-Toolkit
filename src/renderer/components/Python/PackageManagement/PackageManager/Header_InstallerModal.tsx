@@ -30,6 +30,7 @@ export default function Header_InstallerModal({refresh, pythonPath, show}: Props
         size="xl"
         isOpen={isOpen}
         onClose={close}
+        placement="center"
         isDismissable={false}
         scrollBehavior="inside"
         classNames={{backdrop: `!top-10 ${show}`, wrapper: `!top-10 pb-8 ${show}`}}>
