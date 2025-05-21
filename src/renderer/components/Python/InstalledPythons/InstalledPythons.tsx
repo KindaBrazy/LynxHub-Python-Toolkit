@@ -4,8 +4,7 @@ import {isEmpty} from 'lodash';
 import {Dispatch, SetStateAction, useEffect, useState} from 'react';
 
 import rendererIpc from '../../../../../../src/renderer/src/App/RendererIpc';
-import {Add_Icon} from '../../../../../../src/renderer/src/assets/icons/SvgIcons/SvgIcons1';
-import {Refresh_Icon} from '../../../../../../src/renderer/src/assets/icons/SvgIcons/SvgIcons2';
+import {Add_Icon, Refresh_Icon} from '../../../../../../src/renderer/src/assets/icons/SvgIcons/SvgIcons';
 import {PythonInstallation} from '../../../../cross/CrossExtTypes';
 import {bytesToMegabytes} from '../../../../cross/CrossExtUtils';
 import pIpc from '../../../PIpc';

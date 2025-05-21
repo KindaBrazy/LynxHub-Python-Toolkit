@@ -14,13 +14,14 @@ import {isNil} from 'lodash';
 import {FormEvent, useEffect, useMemo, useState} from 'react';
 
 import rendererIpc from '../../../../../../src/renderer/src/App/RendererIpc';
-import {MenuDots_Icon} from '../../../../../../src/renderer/src/assets/icons/SvgIcons/SvgIcons2';
-import {Trash_Icon} from '../../../../../../src/renderer/src/assets/icons/SvgIcons/SvgIcons3';
-import {OpenFolder_Icon} from '../../../../../../src/renderer/src/assets/icons/SvgIcons/SvgIcons4';
-import {HardDrive_Icon} from '../../../../../../src/renderer/src/assets/icons/SvgIcons/SvgIcons5';
+import {
+  MenuDots_Icon,
+  OpenFolder_Icon,
+  Trash_Icon,
+} from '../../../../../../src/renderer/src/assets/icons/SvgIcons/SvgIcons';
 import {formatSizeMB} from '../../../../cross/CrossExtUtils';
 import pIpc from '../../../PIpc';
-import {Env_Icon, Packages_Icon} from '../../SvgIcons';
+import {Env_Icon, HardDrive_Icon, Packages_Icon} from '../../SvgIcons';
 import PackageManagerModal from '../PackageManagement/PackageManager/PackageManagerModal';
 import Venv_Associate from './Venv_Associate';
 

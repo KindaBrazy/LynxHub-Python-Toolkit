@@ -1,7 +1,7 @@
 import {Button, Dropdown, DropdownItem, DropdownMenu, DropdownSection, DropdownTrigger} from '@heroui/react';
 import {Dispatch, SetStateAction, useEffect, useState} from 'react';
 
-import {Filter_Icon} from '../../../../../../../src/renderer/src/assets/icons/SvgIcons/SvgIcons1';
+import {Filter_Icon} from '../../../../../../../src/renderer/src/assets/icons/SvgIcons/SvgIcons';
 import {FilterKeys} from '../../../../../cross/CrossExtTypes';
 
 type Props = {

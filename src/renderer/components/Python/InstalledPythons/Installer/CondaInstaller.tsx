@@ -15,8 +15,7 @@ import {OverlayScrollbarsComponent} from 'overlayscrollbars-react';
 import {Dispatch, SetStateAction, useEffect, useState} from 'react';
 
 import {useAppState} from '../../../../../../../src/renderer/src/App/Redux/Reducer/AppReducer';
-import {Circle_Icon} from '../../../../../../../src/renderer/src/assets/icons/SvgIcons/SvgIcons1';
-import {Refresh_Icon} from '../../../../../../../src/renderer/src/assets/icons/SvgIcons/SvgIcons2';
+import {Circle_Icon, Refresh_Icon} from '../../../../../../../src/renderer/src/assets/icons/SvgIcons/SvgIcons';
 import pIpc from '../../../../PIpc';
 
 const CACHE_KEY = 'available-conda-pythons-list';

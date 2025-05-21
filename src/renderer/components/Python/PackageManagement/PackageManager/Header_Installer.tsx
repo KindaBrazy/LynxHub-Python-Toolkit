@@ -4,8 +4,7 @@ import {compact, isEmpty} from 'lodash';
 import {KeyboardEvent, useState} from 'react';
 
 import rendererIpc from '../../../../../../../src/renderer/src/App/RendererIpc';
-import {Close_Icon} from '../../../../../../../src/renderer/src/assets/icons/SvgIcons/SvgIcons1';
-import {Trash_Icon} from '../../../../../../../src/renderer/src/assets/icons/SvgIcons/SvgIcons3';
+import {Close_Icon, Trash_Icon} from '../../../../../../../src/renderer/src/assets/icons/SvgIcons/SvgIcons';
 import pIpc from '../../../../PIpc';
 import {Checklist_Icon} from '../../../SvgIcons';
 

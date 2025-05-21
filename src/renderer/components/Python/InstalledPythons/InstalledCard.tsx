@@ -15,14 +15,16 @@ import {isNil, startCase} from 'lodash';
 import {useMemo, useState} from 'react';
 
 import rendererIpc from '../../../../../../src/renderer/src/App/RendererIpc';
-import {MenuDots_Icon} from '../../../../../../src/renderer/src/assets/icons/SvgIcons/SvgIcons2';
-import {Trash_Icon} from '../../../../../../src/renderer/src/assets/icons/SvgIcons/SvgIcons3';
-import {OpenFolder_Icon, Refresh3_Icon} from '../../../../../../src/renderer/src/assets/icons/SvgIcons/SvgIcons4';
-import {HardDrive_Icon} from '../../../../../../src/renderer/src/assets/icons/SvgIcons/SvgIcons5';
+import {
+  MenuDots_Icon,
+  OpenFolder_Icon,
+  Refresh3_Icon,
+  Trash_Icon,
+} from '../../../../../../src/renderer/src/assets/icons/SvgIcons/SvgIcons';
 import {PythonInstallation} from '../../../../cross/CrossExtTypes';
 import {formatSizeMB} from '../../../../cross/CrossExtUtils';
 import pIpc from '../../../PIpc';
-import {DoubleCheck_Icon, Packages_Icon, Python_Icon} from '../../SvgIcons';
+import {DoubleCheck_Icon, HardDrive_Icon, Packages_Icon, Python_Icon} from '../../SvgIcons';
 import PackageManagerModal from '../PackageManagement/PackageManager/PackageManagerModal';
 
 type Props = {

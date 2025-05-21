@@ -4,9 +4,11 @@ import {capitalize, isEmpty} from 'lodash';
 import {useCallback, useEffect, useMemo, useState} from 'react';
 
 import rendererIpc from '../../../../../../src/renderer/src/App/RendererIpc';
-import {Add_Icon} from '../../../../../../src/renderer/src/assets/icons/SvgIcons/SvgIcons1';
-import {MenuDots_Icon} from '../../../../../../src/renderer/src/assets/icons/SvgIcons/SvgIcons2';
-import {OpenFolder_Icon} from '../../../../../../src/renderer/src/assets/icons/SvgIcons/SvgIcons4';
+import {
+  Add_Icon,
+  MenuDots_Icon,
+  OpenFolder_Icon,
+} from '../../../../../../src/renderer/src/assets/icons/SvgIcons/SvgIcons';
 import {PythonInstallation, VenvCreateOptions} from '../../../../cross/CrossExtTypes';
 import pIpc from '../../../PIpc';
 

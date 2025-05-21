@@ -4,7 +4,7 @@ import {isEmpty} from 'lodash';
 import {Dispatch, SetStateAction, useCallback, useEffect, useMemo, useState} from 'react';
 import semver, {compare, valid} from 'semver';
 
-import {Trash_Icon} from '../../../../../../../src/renderer/src/assets/icons/SvgIcons/SvgIcons3';
+import {Trash_Icon} from '../../../../../../../src/renderer/src/assets/icons/SvgIcons/SvgIcons';
 import {PackageInfo} from '../../../../../cross/CrossExtTypes';
 import pIpc from '../../../../PIpc';
 import {SolarBoxMinimalisticBoldDuotone} from '../../../SvgIcons';

@@ -3,7 +3,7 @@ import {OverlayScrollbarsComponent} from 'overlayscrollbars-react';
 import {useCallback, useState} from 'react';
 
 import {useAppState} from '../../../../../../../src/renderer/src/App/Redux/Reducer/AppReducer';
-import {Add_Icon} from '../../../../../../../src/renderer/src/assets/icons/SvgIcons/SvgIcons1';
+import {Add_Icon} from '../../../../../../../src/renderer/src/assets/icons/SvgIcons/SvgIcons';
 import Header_Installer from './Header_Installer';
 
 type Props = {
