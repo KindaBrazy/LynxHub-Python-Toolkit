@@ -1,4 +1,5 @@
 {
+  "$schema": "./lynxExtension.schema.json",
   "id": "python_toolkit",
   "title": "Python Toolkit",
   "description": "Effortlessly manage your Python environments and dependencies.",
