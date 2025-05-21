@@ -44,11 +44,7 @@ export default function InstallerModal({isOpen, closeModal, refresh, installed, 
         <ModalContent className="overflow-hidden">
           <ModalHeader className="bg-foreground-100 justify-center items-center flex-col gap-y-2">
             <span>Install a New Python Version</span>
-            <Tabs
-              variant="light"
-              onSelectionChange={setCurrentTab}
-              selectedKey={currentTab.toString()}
-              disableAnimation>
+            <Tabs variant="light" onSelectionChange={setCurrentTab} selectedKey={currentTab.toString()}>
               <Tab key="official" title="Official Python Releases" />
               <Tab key="conda" title="Conda Environments" />
             </Tabs>

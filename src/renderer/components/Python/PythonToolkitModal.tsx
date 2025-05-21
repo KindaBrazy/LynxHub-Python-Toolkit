@@ -40,8 +40,7 @@ export default function PythonToolkitModal({isOpen, setIsOpen, show}: ModalProps
             onSelectionChange={setCurrentTab}
             selectedKey={currentTab.toString()}
             classNames={{tabList: 'bg-foreground-200'}}
-            fullWidth
-            disableAnimation>
+            fullWidth>
             <Tab key="installation" title="Installations" />
             <Tab key="venv" title="Virtual Environments" />
           </Tabs>
