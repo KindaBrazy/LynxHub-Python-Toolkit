@@ -13,6 +13,7 @@ import UIProvider from './UIProvider';
 type Props = {isOpen: boolean; context: ContextType; show: string};
 
 export default function CardMenu_Modals({isOpen, context, show}: Props) {
+  const activeTab = useTabsState('activeTab');
   const webUI = useInstalledCard(context.id);
 
   const dispatch = useDispatch();
@@ -27,6 +28,11 @@ export default function CardMenu_Modals({isOpen, context, show}: Props) {
     setPrevTabTitle(tabs.find(tab => tab.id === context.tabID)?.title);
     dispatch(tabsActions.setTabTitle({tabID: context.tabID, title: `${context.title} Dependencies`}));
   }, []);
+
+  useEffect(() => {
+    if (isOpen && context.tabID === activeTab)
+      dispatch(tabsActions.setTabTitle({tabID: context.tabID, title: `${context.title} Dependencies`}));
+  }, [activeTab, context.tabID, isOpen]);
 
   const [pythonPath, setPythonPath] = useState<string>('');
   const [isLocatingVenv, setIsLocatingVenv] = useState<boolean>(false);
