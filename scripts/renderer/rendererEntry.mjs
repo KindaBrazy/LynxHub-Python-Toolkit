@@ -2,8 +2,8 @@ const currentImports = {};
       const exportSet = new Set(['Module', '__esModule', 'default', '_export_sfc']);
       let moduleMap = {
 "Extension":()=>{
-      dynamicLoadingCss(["style-B8jQtp0K.css"], false, 'Extension');
-      return __federation_import('./__federation_expose_Extension-D3MEU0L9.js').then(module =>Object.keys(module).every(item => exportSet.has(item)) ? () => module.default : () => module)},};
+      dynamicLoadingCss(["style-qrfsQt8U.css"], false, 'Extension');
+      return __federation_import('./__federation_expose_Extension-CnPdYJop.js').then(module =>Object.keys(module).every(item => exportSet.has(item)) ? () => module.default : () => module)},};
       const seen = {};
       const dynamicLoadingCss = (cssFilePaths, dontAppendStylesToHead, exposeItemName) => {
         const metaUrl = import.meta.url;
@@ -25,34 +25,38 @@ const currentImports = {};
              leading: (path) => (path.startsWith('/') ? path.slice(1) : path)
            };
            const isAbsoluteUrl = (url) => url.startsWith('http') || url.startsWith('//');
-           
+
            const cleanBaseUrl = trimmer.trailing(baseUrl);
            const cleanCssPath = trimmer.leading(cssPath);
            const cleanCurUrl = trimmer.trailing(curUrl);
-           
+
            if (isAbsoluteUrl(baseUrl)) {
              href = [cleanBaseUrl, cleanCssPath].filter(Boolean).join('/');
            } else {
-             href = [cleanCurUrl + cleanBaseUrl, cleanCssPath].filter(Boolean).join('/');
+            if (cleanCurUrl.includes(cleanBaseUrl)) {
+              href = [cleanCurUrl, cleanCssPath].filter(Boolean).join('/');
+            } else {
+              href = [cleanCurUrl + cleanBaseUrl, cleanCssPath].filter(Boolean).join('/');
+            }
            }
          } else {
            href = cssPath;
          }
+         
+          if (dontAppendStylesToHead) {
+            const key = 'css__extension__' + exposeItemName;
+            window[key] = window[key] || [];
+            window[key].push(href);
+            return;
+          }
 
           if (href in seen) return;
           seen[href] = true;
 
-          if (!dontAppendStylesToHead) {
-            const element = document.createElement('link');
-            element.rel = 'stylesheet';
-            element.href = href;
-            document.head.appendChild(element);
-            return;
-          }
-
-          const key = 'css__' + options.name + '__' + exposeItemName;
-          window[key] = window[key] || [];
-          window[key].push(href);
+          const element = document.createElement('link');
+          element.rel = 'stylesheet';
+          element.href = href;
+          document.head.appendChild(element);
         });
       };
       async function __federation_import(name) {
@@ -65,12 +69,12 @@ const currentImports = {};
       const init =(shareScope) => {
         globalThis.__federation_shared__= globalThis.__federation_shared__|| {};
         Object.entries(shareScope).forEach(([key, value]) => {
-          const versionKey = Object.keys(value)[0];
-          const versionValue = Object.values(value)[0];
-          const scope = versionValue.scope || 'default';
-          globalThis.__federation_shared__[scope] = globalThis.__federation_shared__[scope] || {};
-          const shared= globalThis.__federation_shared__[scope];
-          (shared[key] = shared[key]||{})[versionKey] = versionValue;
+          for (const [versionKey, versionValue] of Object.entries(value)) {
+            const scope = versionValue.scope || 'default';
+            globalThis.__federation_shared__[scope] = globalThis.__federation_shared__[scope] || {};
+            const shared= globalThis.__federation_shared__[scope];
+            (shared[key] = shared[key]||{})[versionKey] = versionValue;
+          }
         });
       };
 

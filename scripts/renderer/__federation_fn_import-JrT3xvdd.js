@@ -217,13 +217,13 @@ function compareAtom(rangeAtom, versionAtom) {
 function comparePreRelease(rangeAtom, versionAtom) {
   const { preRelease: rangePreRelease } = rangeAtom;
   const { preRelease: versionPreRelease } = versionAtom;
-  if (rangePreRelease === undefined && !!versionPreRelease) {
+  if (rangePreRelease === void 0 && !!versionPreRelease) {
     return 1;
   }
-  if (!!rangePreRelease && versionPreRelease === undefined) {
+  if (!!rangePreRelease && versionPreRelease === void 0) {
     return -1;
   }
-  if (rangePreRelease === undefined && versionPreRelease === undefined) {
+  if (rangePreRelease === void 0 && versionPreRelease === void 0) {
     return 0;
   }
   for (let i = 0, n = rangePreRelease.length; i <= n; i++) {
@@ -232,7 +232,7 @@ function comparePreRelease(rangeAtom, versionAtom) {
     if (rangeElement === versionElement) {
       continue;
     }
-    if (rangeElement === undefined && versionElement === undefined) {
+    if (rangeElement === void 0 && versionElement === void 0) {
       return 0;
     }
     if (!rangeElement) {
@@ -264,7 +264,7 @@ function compare(rangeAtom, versionAtom) {
       return compareVersion(rangeAtom, versionAtom) > 0;
     case "<=":
       return eq(rangeAtom, versionAtom) || compareVersion(rangeAtom, versionAtom) > 0;
-    case undefined: {
+    case void 0: {
       return true;
     }
     default:
@@ -308,7 +308,6 @@ function satisfy(version, range) {
     versionPreRelease
   ] = extractedVersion;
   const versionAtom = {
-    operator: versionOperator,
     version: combineVersion(
       versionMajor,
       versionMinor,
@@ -318,7 +317,7 @@ function satisfy(version, range) {
     major: versionMajor,
     minor: versionMinor,
     patch: versionPatch,
-    preRelease: versionPreRelease == null ? undefined : versionPreRelease.split(".")
+    preRelease: versionPreRelease == null ? void 0 : versionPreRelease.split(".")
   };
   for (const comparator2 of comparators) {
     const extractedComparator = extractComparator(comparator2);
@@ -345,7 +344,7 @@ function satisfy(version, range) {
       major: rangeMajor,
       minor: rangeMinor,
       patch: rangePatch,
-      preRelease: rangePreRelease == null ? undefined : rangePreRelease.split(".")
+      preRelease: rangePreRelease == null ? void 0 : rangePreRelease.split(".")
     };
     if (!compare(rangeAtom, versionAtom)) {
       return false;
@@ -366,11 +365,14 @@ async function getSharedFromRuntime(name, shareScope) {
   let module = null;
   if (globalThis?.__federation_shared__?.[shareScope]?.[name]) {
     const versionObj = globalThis.__federation_shared__[shareScope][name];
-    const versionKey = Object.keys(versionObj)[0];
-    const versionValue = Object.values(versionObj)[0];
-    if (moduleMap[name]?.requiredVersion) {
-      // judge version satisfy
-      if (satisfy(versionKey, moduleMap[name].requiredVersion)) {
+    const requiredVersion = moduleMap[name]?.requiredVersion;
+    const hasRequiredVersion = !!requiredVersion;
+    if (hasRequiredVersion) {
+      const versionKey = Object.keys(versionObj).find((version) =>
+        satisfy(version, requiredVersion)
+      );
+      if (versionKey) {
+        const versionValue = versionObj[versionKey];
         module = await (await versionValue.get())();
       } else {
         console.log(
@@ -378,6 +380,8 @@ async function getSharedFromRuntime(name, shareScope) {
         );
       }
     } else {
+      const versionKey = Object.keys(versionObj)[0];
+      const versionValue = versionObj[versionKey];
       module = await (await versionValue.get())();
     }
   }

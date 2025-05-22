@@ -1,4 +1,4 @@
-import { r as requireReact } from './index-tjJaYZ-y.js';
+import { r as requireReact } from './index-W0s-nQFs.js';
 
 var shim = {exports: {}};
 
@@ -73,7 +73,7 @@ function requireUseSyncExternalStoreShim_production () {
 	    ? useSyncExternalStore$1
 	    : useSyncExternalStore$2;
 	useSyncExternalStoreShim_production.useSyncExternalStore =
-	  undefined !== React.useSyncExternalStore ? React.useSyncExternalStore : shim;
+	  void 0 !== React.useSyncExternalStore ? React.useSyncExternalStore : shim;
 	return useSyncExternalStoreShim_production;
 }
 

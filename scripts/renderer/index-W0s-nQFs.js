@@ -80,7 +80,7 @@ function requireReact_production () {
 	assign(pureComponentPrototype, Component.prototype);
 	pureComponentPrototype.isPureReactComponent = true;
 	var isArrayImpl = Array.isArray,
-	  ReactSharedInternals = { H: null, A: null, T: null, S: null },
+	  ReactSharedInternals = { H: null, A: null, T: null, S: null, V: null },
 	  hasOwnProperty = Object.prototype.hasOwnProperty;
 	function ReactElement(type, key, self, source, owner, props) {
 	  self = props.ref;
@@ -88,7 +88,7 @@ function requireReact_production () {
 	    $$typeof: REACT_ELEMENT_TYPE,
 	    type: type,
 	    key: key,
-	    ref: undefined !== self ? self : null,
+	    ref: void 0 !== self ? self : null,
 	    props: props
 	  };
 	}
@@ -96,9 +96,9 @@ function requireReact_production () {
 	  return ReactElement(
 	    oldElement.type,
 	    newKey,
-	    undefined,
-	    undefined,
-	    undefined,
+	    void 0,
+	    void 0,
+	    void 0,
 	    oldElement.props
 	  );
 	}
@@ -365,8 +365,11 @@ function requireReact_production () {
 	react_production.Suspense = REACT_SUSPENSE_TYPE;
 	react_production.__CLIENT_INTERNALS_DO_NOT_USE_OR_WARN_USERS_THEY_CANNOT_UPGRADE =
 	  ReactSharedInternals;
-	react_production.act = function () {
-	  throw Error("act(...) is not supported in production builds of React.");
+	react_production.__COMPILER_RUNTIME = {
+	  __proto__: null,
+	  c: function (size) {
+	    return ReactSharedInternals.H.useMemoCache(size);
+	  }
 	};
 	react_production.cache = function (fn) {
 	  return function () {
@@ -374,22 +377,22 @@ function requireReact_production () {
 	  };
 	};
 	react_production.cloneElement = function (element, config, children) {
-	  if (null === element || undefined === element)
+	  if (null === element || void 0 === element)
 	    throw Error(
 	      "The argument must be a React element, but you passed " + element + "."
 	    );
 	  var props = assign({}, element.props),
 	    key = element.key,
-	    owner = undefined;
+	    owner = void 0;
 	  if (null != config)
-	    for (propName in (undefined !== config.ref && (owner = undefined),
-	    undefined !== config.key && (key = "" + config.key),
+	    for (propName in (void 0 !== config.ref && (owner = void 0),
+	    void 0 !== config.key && (key = "" + config.key),
 	    config))
 	      !hasOwnProperty.call(config, propName) ||
 	        "key" === propName ||
 	        "__self" === propName ||
 	        "__source" === propName ||
-	        ("ref" === propName && undefined === config.ref) ||
+	        ("ref" === propName && void 0 === config.ref) ||
 	        (props[propName] = config[propName]);
 	  var propName = arguments.length - 2;
 	  if (1 === propName) props.children = children;
@@ -398,7 +401,7 @@ function requireReact_production () {
 	      childArray[i] = arguments[i + 2];
 	    props.children = childArray;
 	  }
-	  return ReactElement(element.type, key, undefined, undefined, owner, props);
+	  return ReactElement(element.type, key, void 0, void 0, owner, props);
 	};
 	react_production.createContext = function (defaultValue) {
 	  defaultValue = {
@@ -421,7 +424,7 @@ function requireReact_production () {
 	    props = {},
 	    key = null;
 	  if (null != config)
-	    for (propName in (undefined !== config.key && (key = "" + config.key), config))
+	    for (propName in (void 0 !== config.key && (key = "" + config.key), config))
 	      hasOwnProperty.call(config, propName) &&
 	        "key" !== propName &&
 	        "__self" !== propName &&
@@ -436,9 +439,9 @@ function requireReact_production () {
 	  }
 	  if (type && type.defaultProps)
 	    for (propName in ((childrenLength = type.defaultProps), childrenLength))
-	      undefined === props[propName] &&
+	      void 0 === props[propName] &&
 	        (props[propName] = childrenLength[propName]);
-	  return ReactElement(type, key, undefined, undefined, null, props);
+	  return ReactElement(type, key, void 0, void 0, null, props);
 	};
 	react_production.createRef = function () {
 	  return { current: null };
@@ -458,7 +461,7 @@ function requireReact_production () {
 	  return {
 	    $$typeof: REACT_MEMO_TYPE,
 	    type: type,
-	    compare: undefined === compare ? null : compare
+	    compare: void 0 === compare ? null : compare
 	  };
 	};
 	react_production.startTransition = function (scope) {
@@ -499,8 +502,13 @@ function requireReact_production () {
 	react_production.useDeferredValue = function (value, initialValue) {
 	  return ReactSharedInternals.H.useDeferredValue(value, initialValue);
 	};
-	react_production.useEffect = function (create, deps) {
-	  return ReactSharedInternals.H.useEffect(create, deps);
+	react_production.useEffect = function (create, createDeps, update) {
+	  var dispatcher = ReactSharedInternals.H;
+	  if ("function" === typeof update)
+	    throw Error(
+	      "useEffect CRUD overload is not enabled in this build of React."
+	    );
+	  return dispatcher.useEffect(create, createDeps);
 	};
 	react_production.useId = function () {
 	  return ReactSharedInternals.H.useId();
@@ -543,7 +551,7 @@ function requireReact_production () {
 	react_production.useTransition = function () {
 	  return ReactSharedInternals.H.useTransition();
 	};
-	react_production.version = "19.0.0";
+	react_production.version = "19.1.0";
 	return react_production;
 }
 

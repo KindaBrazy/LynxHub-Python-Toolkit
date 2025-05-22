@@ -17,6 +17,7 @@ import fs from "node:fs";
 import require$$3 from "http";
 import require$$4 from "https";
 import require$$0$4 from "url";
+import crypto from "crypto";
 import require$$1$2 from "tty";
 import zlib from "zlib";
 import { EventEmitter } from "events";
@@ -680,9 +681,9 @@ function requireLodash() {
       function hasUnicodeWord(string) {
         return reHasUnicodeWord.test(string);
       }
-      function iteratorToArray(iterator) {
+      function iteratorToArray(iterator2) {
         var data, result = [];
-        while (!(data = iterator.next()).done) {
+        while (!(data = iterator2.next()).done) {
           result.push(data.value);
         }
         return result;
@@ -797,10 +798,10 @@ function requireLodash() {
         }();
         var ctxClearTimeout = context.clearTimeout !== root.clearTimeout && context.clearTimeout, ctxNow = Date2 && Date2.now !== root.Date.now && Date2.now, ctxSetTimeout = context.setTimeout !== root.setTimeout && context.setTimeout;
         var nativeCeil = Math2.ceil, nativeFloor = Math2.floor, nativeGetSymbols = Object2.getOwnPropertySymbols, nativeIsBuffer = Buffer2 ? Buffer2.isBuffer : undefined$1, nativeIsFinite = context.isFinite, nativeJoin = arrayProto.join, nativeKeys = overArg(Object2.keys, Object2), nativeMax = Math2.max, nativeMin = Math2.min, nativeNow = Date2.now, nativeParseInt = context.parseInt, nativeRandom = Math2.random, nativeReverse = arrayProto.reverse;
-        var DataView = getNative(context, "DataView"), Map2 = getNative(context, "Map"), Promise2 = getNative(context, "Promise"), Set2 = getNative(context, "Set"), WeakMap = getNative(context, "WeakMap"), nativeCreate = getNative(Object2, "create");
-        var metaMap = WeakMap && new WeakMap();
+        var DataView2 = getNative(context, "DataView"), Map2 = getNative(context, "Map"), Promise2 = getNative(context, "Promise"), Set2 = getNative(context, "Set"), WeakMap2 = getNative(context, "WeakMap"), nativeCreate = getNative(Object2, "create");
+        var metaMap = WeakMap2 && new WeakMap2();
         var realNames = {};
-        var dataViewCtorString = toSource(DataView), mapCtorString = toSource(Map2), promiseCtorString = toSource(Promise2), setCtorString = toSource(Set2), weakMapCtorString = toSource(WeakMap);
+        var dataViewCtorString = toSource(DataView2), mapCtorString = toSource(Map2), promiseCtorString = toSource(Promise2), setCtorString = toSource(Set2), weakMapCtorString = toSource(WeakMap2);
         var symbolProto = Symbol2 ? Symbol2.prototype : undefined$1, symbolValueOf = symbolProto ? symbolProto.valueOf : undefined$1, symbolToString = symbolProto ? symbolProto.toString : undefined$1;
         function lodash2(value) {
           if (isObjectLike(value) && !isArray2(value) && !(value instanceof LazyWrapper)) {
@@ -928,11 +929,11 @@ function requireLodash() {
               index += dir;
               var iterIndex = -1, value = array[index];
               while (++iterIndex < iterLength) {
-                var data = iteratees[iterIndex], iteratee2 = data.iteratee, type = data.type, computed = iteratee2(value);
-                if (type == LAZY_MAP_FLAG) {
+                var data = iteratees[iterIndex], iteratee2 = data.iteratee, type2 = data.type, computed = iteratee2(value);
+                if (type2 == LAZY_MAP_FLAG) {
                   value = computed;
                 } else if (!computed) {
-                  if (type == LAZY_FILTER_FLAG) {
+                  if (type2 == LAZY_FILTER_FLAG) {
                     continue outer;
                   } else {
                     break outer;
@@ -1196,7 +1197,7 @@ function requireLodash() {
         function baseAt(object, paths) {
           var index = -1, length = paths.length, result2 = Array2(length), skip = object == null;
           while (++index < length) {
-            result2[index] = skip ? undefined$1 : get(object, paths[index]);
+            result2[index] = skip ? undefined$1 : get2(object, paths[index]);
           }
           return result2;
         }
@@ -1641,7 +1642,7 @@ function requireLodash() {
             return matchesStrictComparable(toKey(path2), srcValue);
           }
           return function(object) {
-            var objValue = get(object, path2);
+            var objValue = get2(object, path2);
             return objValue === undefined$1 && objValue === srcValue ? hasIn(object, path2) : baseIsEqual(srcValue, objValue, COMPARE_PARTIAL_FLAG | COMPARE_UNORDERED_FLAG);
           };
         }
@@ -2854,7 +2855,7 @@ function requireLodash() {
           return result2;
         };
         var getTag = baseGetTag;
-        if (DataView && getTag(new DataView(new ArrayBuffer(1))) != dataViewTag || Map2 && getTag(new Map2()) != mapTag || Promise2 && getTag(Promise2.resolve()) != promiseTag || Set2 && getTag(new Set2()) != setTag || WeakMap && getTag(new WeakMap()) != weakMapTag) {
+        if (DataView2 && getTag(new DataView2(new ArrayBuffer(1))) != dataViewTag || Map2 && getTag(new Map2()) != mapTag || Promise2 && getTag(Promise2.resolve()) != promiseTag || Set2 && getTag(new Set2()) != setTag || WeakMap2 && getTag(new WeakMap2()) != weakMapTag) {
           getTag = function(value) {
             var result2 = baseGetTag(value), Ctor = result2 == objectTag ? value.constructor : undefined$1, ctorString = Ctor ? toSource(Ctor) : "";
             if (ctorString) {
@@ -2973,16 +2974,16 @@ function requireLodash() {
           return isArray2(value) || isArguments(value) || !!(spreadableSymbol && value && value[spreadableSymbol]);
         }
         function isIndex(value, length) {
-          var type = typeof value;
+          var type2 = typeof value;
           length = length == null ? MAX_SAFE_INTEGER : length;
-          return !!length && (type == "number" || type != "symbol" && reIsUint.test(value)) && (value > -1 && value % 1 == 0 && value < length);
+          return !!length && (type2 == "number" || type2 != "symbol" && reIsUint.test(value)) && (value > -1 && value % 1 == 0 && value < length);
         }
         function isIterateeCall(value, index, object) {
           if (!isObject2(object)) {
             return false;
           }
-          var type = typeof index;
-          if (type == "number" ? isArrayLike(object) && isIndex(index, object.length) : type == "string" && index in object) {
+          var type2 = typeof index;
+          if (type2 == "number" ? isArrayLike(object) && isIndex(index, object.length) : type2 == "string" && index in object) {
             return eq(object[index], value);
           }
           return false;
@@ -2991,15 +2992,15 @@ function requireLodash() {
           if (isArray2(value)) {
             return false;
           }
-          var type = typeof value;
-          if (type == "number" || type == "symbol" || type == "boolean" || value == null || isSymbol(value)) {
+          var type2 = typeof value;
+          if (type2 == "number" || type2 == "symbol" || type2 == "boolean" || value == null || isSymbol(value)) {
             return true;
           }
           return reIsPlainProp.test(value) || !reIsDeepProp.test(value) || object != null && value in Object2(object);
         }
         function isKeyable(value) {
-          var type = typeof value;
-          return type == "string" || type == "number" || type == "symbol" || type == "boolean" ? value !== "__proto__" : value === null;
+          var type2 = typeof value;
+          return type2 == "string" || type2 == "number" || type2 == "symbol" || type2 == "boolean" ? value !== "__proto__" : value === null;
         }
         function isLaziable(func) {
           var funcName = getFuncName(func), other = lodash2[funcName];
@@ -4194,8 +4195,8 @@ function requireLodash() {
           return typeof value == "number" && value > -1 && value % 1 == 0 && value <= MAX_SAFE_INTEGER;
         }
         function isObject2(value) {
-          var type = typeof value;
-          return value != null && (type == "object" || type == "function");
+          var type2 = typeof value;
+          return value != null && (type2 == "object" || type2 == "function");
         }
         function isObjectLike(value) {
           return value != null && typeof value == "object";
@@ -4281,8 +4282,8 @@ function requireLodash() {
           }
           value = toNumber(value);
           if (value === INFINITY || value === -Infinity) {
-            var sign = value < 0 ? -1 : 1;
-            return sign * MAX_INTEGER;
+            var sign2 = value < 0 ? -1 : 1;
+            return sign2 * MAX_INTEGER;
           }
           return value === value ? value : 0;
         }
@@ -4396,7 +4397,7 @@ function requireLodash() {
         function functionsIn(object) {
           return object == null ? [] : baseFunctions(object, keysIn(object));
         }
-        function get(object, path2, defaultValue) {
+        function get2(object, path2, defaultValue) {
           var result2 = object == null ? undefined$1 : baseGet(object, path2);
           return result2 === undefined$1 ? defaultValue : result2;
         }
@@ -5036,8 +5037,8 @@ function requireLodash() {
         var divide = createMathOperation(function(dividend, divisor) {
           return dividend / divisor;
         }, 1);
-        var floor = createRound("floor");
-        function max(array) {
+        var floor2 = createRound("floor");
+        function max2(array) {
           return array && array.length ? baseExtremum(array, identity, baseGt) : undefined$1;
         }
         function maxBy(array, iteratee2) {
@@ -5049,7 +5050,7 @@ function requireLodash() {
         function meanBy(array, iteratee2) {
           return baseMean(array, getIteratee(iteratee2, 2));
         }
-        function min(array) {
+        function min2(array) {
           return array && array.length ? baseExtremum(array, identity, baseLt) : undefined$1;
         }
         function minBy(array, iteratee2) {
@@ -5058,7 +5059,7 @@ function requireLodash() {
         var multiply = createMathOperation(function(multiplier, multiplicand) {
           return multiplier * multiplicand;
         }, 1);
-        var round = createRound("round");
+        var round2 = createRound("round");
         var subtract = createMathOperation(function(minuend, subtrahend) {
           return minuend - subtrahend;
         }, 0);
@@ -5247,14 +5248,14 @@ function requireLodash() {
         lodash2.findLast = findLast;
         lodash2.findLastIndex = findLastIndex;
         lodash2.findLastKey = findLastKey;
-        lodash2.floor = floor;
+        lodash2.floor = floor2;
         lodash2.forEach = forEach2;
         lodash2.forEachRight = forEachRight;
         lodash2.forIn = forIn;
         lodash2.forInRight = forInRight;
         lodash2.forOwn = forOwn;
         lodash2.forOwnRight = forOwnRight;
-        lodash2.get = get;
+        lodash2.get = get2;
         lodash2.gt = gt;
         lodash2.gte = gte;
         lodash2.has = has;
@@ -5310,11 +5311,11 @@ function requireLodash() {
         lodash2.lowerFirst = lowerFirst;
         lodash2.lt = lt;
         lodash2.lte = lte;
-        lodash2.max = max;
+        lodash2.max = max2;
         lodash2.maxBy = maxBy;
         lodash2.mean = mean;
         lodash2.meanBy = meanBy;
-        lodash2.min = min;
+        lodash2.min = min2;
         lodash2.minBy = minBy;
         lodash2.stubArray = stubArray;
         lodash2.stubFalse = stubFalse;
@@ -5336,7 +5337,7 @@ function requireLodash() {
         lodash2.repeat = repeat;
         lodash2.replace = replace;
         lodash2.result = result;
-        lodash2.round = round;
+        lodash2.round = round2;
         lodash2.runInContext = runInContext2;
         lodash2.sample = sample;
         lodash2.size = size;
@@ -5406,12 +5407,12 @@ function requireLodash() {
           };
         });
         arrayEach(["filter", "map", "takeWhile"], function(methodName, index) {
-          var type = index + 1, isFilter = type == LAZY_FILTER_FLAG || type == LAZY_WHILE_FLAG;
+          var type2 = index + 1, isFilter = type2 == LAZY_FILTER_FLAG || type2 == LAZY_WHILE_FLAG;
           LazyWrapper.prototype[methodName] = function(iteratee2) {
             var result2 = this.clone();
             result2.__iteratees__.push({
               "iteratee": getIteratee(iteratee2, 3),
-              "type": type
+              "type": type2
             });
             result2.__filtered__ = result2.__filtered__ || isFilter;
             return result2;
@@ -6441,8 +6442,8 @@ function requireRe() {
       [LETTERDASHNUMBER, MAX_SAFE_BUILD_LENGTH]
     ];
     const makeSafeRegex = (value) => {
-      for (const [token, max] of safeRegexReplacements) {
-        value = value.split(`${token}*`).join(`${token}{0,${max}}`).split(`${token}+`).join(`${token}{1,${max}}`);
+      for (const [token, max2] of safeRegexReplacements) {
+        value = value.split(`${token}*`).join(`${token}{0,${max2}}`).split(`${token}+`).join(`${token}{1,${max2}}`);
       }
       return value;
     };
@@ -7225,11 +7226,11 @@ function requireLrucache() {
   lrucache = LRUCache;
   return lrucache;
 }
-var range;
-var hasRequiredRange;
-function requireRange() {
-  if (hasRequiredRange) return range;
-  hasRequiredRange = 1;
+var range$1;
+var hasRequiredRange$1;
+function requireRange$1() {
+  if (hasRequiredRange$1) return range$1;
+  hasRequiredRange$1 = 1;
   const SPACE_CHARACTERS = /\s+/g;
   class Range {
     constructor(range2, options2) {
@@ -7369,7 +7370,7 @@ function requireRange() {
       return false;
     }
   }
-  range = Range;
+  range$1 = Range;
   const LRU = requireLrucache();
   const cache = new LRU();
   const parseOptions = requireParseOptions();
@@ -7599,7 +7600,7 @@ function requireRange() {
     }
     return true;
   };
-  return range;
+  return range$1;
 }
 var comparator;
 var hasRequiredComparator;
@@ -7711,7 +7712,7 @@ function requireComparator() {
   const cmp = requireCmp();
   const debug = requireDebug$1();
   const SemVer = requireSemver$1();
-  const Range = requireRange();
+  const Range = requireRange$1();
   return comparator;
 }
 var satisfies_1;
@@ -7719,7 +7720,7 @@ var hasRequiredSatisfies;
 function requireSatisfies() {
   if (hasRequiredSatisfies) return satisfies_1;
   hasRequiredSatisfies = 1;
-  const Range = requireRange();
+  const Range = requireRange$1();
   const satisfies = (version, range2, options2) => {
     try {
       range2 = new Range(range2, options2);
@@ -7736,7 +7737,7 @@ var hasRequiredToComparators;
 function requireToComparators() {
   if (hasRequiredToComparators) return toComparators_1;
   hasRequiredToComparators = 1;
-  const Range = requireRange();
+  const Range = requireRange$1();
   const toComparators = (range2, options2) => new Range(range2, options2).set.map((comp) => comp.map((c) => c.value).join(" ").trim().split(" "));
   toComparators_1 = toComparators;
   return toComparators_1;
@@ -7747,9 +7748,9 @@ function requireMaxSatisfying() {
   if (hasRequiredMaxSatisfying) return maxSatisfying_1;
   hasRequiredMaxSatisfying = 1;
   const SemVer = requireSemver$1();
-  const Range = requireRange();
+  const Range = requireRange$1();
   const maxSatisfying = (versions, range2, options2) => {
-    let max = null;
+    let max2 = null;
     let maxSV = null;
     let rangeObj = null;
     try {
@@ -7759,13 +7760,13 @@ function requireMaxSatisfying() {
     }
     versions.forEach((v) => {
       if (rangeObj.test(v)) {
-        if (!max || maxSV.compare(v) === -1) {
-          max = v;
-          maxSV = new SemVer(max, options2);
+        if (!max2 || maxSV.compare(v) === -1) {
+          max2 = v;
+          maxSV = new SemVer(max2, options2);
         }
       }
     });
-    return max;
+    return max2;
   };
   maxSatisfying_1 = maxSatisfying;
   return maxSatisfying_1;
@@ -7776,9 +7777,9 @@ function requireMinSatisfying() {
   if (hasRequiredMinSatisfying) return minSatisfying_1;
   hasRequiredMinSatisfying = 1;
   const SemVer = requireSemver$1();
-  const Range = requireRange();
+  const Range = requireRange$1();
   const minSatisfying = (versions, range2, options2) => {
-    let min = null;
+    let min2 = null;
     let minSV = null;
     let rangeObj = null;
     try {
@@ -7788,13 +7789,13 @@ function requireMinSatisfying() {
     }
     versions.forEach((v) => {
       if (rangeObj.test(v)) {
-        if (!min || minSV.compare(v) === 1) {
-          min = v;
-          minSV = new SemVer(min, options2);
+        if (!min2 || minSV.compare(v) === 1) {
+          min2 = v;
+          minSV = new SemVer(min2, options2);
         }
       }
     });
-    return min;
+    return min2;
   };
   minSatisfying_1 = minSatisfying;
   return minSatisfying_1;
@@ -7805,7 +7806,7 @@ function requireMinVersion() {
   if (hasRequiredMinVersion) return minVersion_1;
   hasRequiredMinVersion = 1;
   const SemVer = requireSemver$1();
-  const Range = requireRange();
+  const Range = requireRange$1();
   const gt = requireGt();
   const minVersion = (range2, loose) => {
     range2 = new Range(range2, loose);
@@ -7863,7 +7864,7 @@ var hasRequiredValid;
 function requireValid() {
   if (hasRequiredValid) return valid;
   hasRequiredValid = 1;
-  const Range = requireRange();
+  const Range = requireRange$1();
   const validRange = (range2, options2) => {
     try {
       return new Range(range2, options2).range || "*";
@@ -7882,7 +7883,7 @@ function requireOutside() {
   const SemVer = requireSemver$1();
   const Comparator = requireComparator();
   const { ANY } = Comparator;
-  const Range = requireRange();
+  const Range = requireRange$1();
   const satisfies = requireSatisfies();
   const gt = requireGt();
   const lt = requireLt();
@@ -7968,7 +7969,7 @@ var hasRequiredIntersects;
 function requireIntersects() {
   if (hasRequiredIntersects) return intersects_1;
   hasRequiredIntersects = 1;
-  const Range = requireRange();
+  const Range = requireRange$1();
   const intersects = (r1, r2, options2) => {
     r1 = new Range(r1, options2);
     r2 = new Range(r2, options2);
@@ -8008,17 +8009,17 @@ function requireSimplify() {
       set.push([first, null]);
     }
     const ranges = [];
-    for (const [min, max] of set) {
-      if (min === max) {
-        ranges.push(min);
-      } else if (!max && min === v[0]) {
+    for (const [min2, max2] of set) {
+      if (min2 === max2) {
+        ranges.push(min2);
+      } else if (!max2 && min2 === v[0]) {
         ranges.push("*");
-      } else if (!max) {
-        ranges.push(`>=${min}`);
-      } else if (min === v[0]) {
-        ranges.push(`<=${max}`);
+      } else if (!max2) {
+        ranges.push(`>=${min2}`);
+      } else if (min2 === v[0]) {
+        ranges.push(`<=${max2}`);
       } else {
-        ranges.push(`${min} - ${max}`);
+        ranges.push(`${min2} - ${max2}`);
       }
     }
     const simplified = ranges.join(" || ");
@@ -8032,7 +8033,7 @@ var hasRequiredSubset;
 function requireSubset() {
   if (hasRequiredSubset) return subset_1;
   hasRequiredSubset = 1;
-  const Range = requireRange();
+  const Range = requireRange$1();
   const Comparator = requireComparator();
   const { ANY } = Comparator;
   const satisfies = requireSatisfies();
@@ -8222,7 +8223,7 @@ function requireSemver() {
   const cmp = requireCmp();
   const coerce = requireCoerce();
   const Comparator = requireComparator();
-  const Range = requireRange();
+  const Range = requireRange$1();
   const satisfies = requireSatisfies();
   const toComparators = requireToComparators();
   const maxSatisfying = requireMaxSatisfying();
@@ -8494,15 +8495,16 @@ function bind(fn, thisArg) {
 }
 const { toString } = Object.prototype;
 const { getPrototypeOf } = Object;
+const { iterator, toStringTag } = Symbol;
 const kindOf = /* @__PURE__ */ ((cache) => (thing) => {
   const str = toString.call(thing);
   return cache[str] || (cache[str] = str.slice(8, -1).toLowerCase());
 })(/* @__PURE__ */ Object.create(null));
-const kindOfTest = (type) => {
-  type = type.toLowerCase();
-  return (thing) => kindOf(thing) === type;
+const kindOfTest = (type2) => {
+  type2 = type2.toLowerCase();
+  return (thing) => kindOf(thing) === type2;
 };
-const typeOfTest = (type) => (thing) => typeof thing === type;
+const typeOfTest = (type2) => (thing) => typeof thing === type2;
 const { isArray } = Array;
 const isUndefined = typeOfTest("undefined");
 function isBuffer(val) {
@@ -8528,7 +8530,7 @@ const isPlainObject = (val) => {
     return false;
   }
   const prototype2 = getPrototypeOf(val);
-  return (prototype2 === null || prototype2 === Object.prototype || Object.getPrototypeOf(prototype2) === null) && !(Symbol.toStringTag in val) && !(Symbol.iterator in val);
+  return (prototype2 === null || prototype2 === Object.prototype || Object.getPrototypeOf(prototype2) === null) && !(toStringTag in val) && !(iterator in val);
 };
 const isDate = kindOfTest("Date");
 const isFile = kindOfTest("File");
@@ -8675,10 +8677,10 @@ const isTypedArray = /* @__PURE__ */ ((TypedArray) => {
   };
 })(typeof Uint8Array !== "undefined" && getPrototypeOf(Uint8Array));
 const forEachEntry = (obj, fn) => {
-  const generator = obj && obj[Symbol.iterator];
-  const iterator = generator.call(obj);
+  const generator = obj && obj[iterator];
+  const _iterator = generator.call(obj);
   let result;
-  while ((result = iterator.next()) && !result.done) {
+  while ((result = _iterator.next()) && !result.done) {
     const pair = result.value;
     fn.call(obj, pair[0], pair[1]);
   }
@@ -8747,23 +8749,8 @@ const noop = () => {
 const toFiniteNumber = (value, defaultValue) => {
   return value != null && Number.isFinite(value = +value) ? value : defaultValue;
 };
-const ALPHA = "abcdefghijklmnopqrstuvwxyz";
-const DIGIT = "0123456789";
-const ALPHABET = {
-  DIGIT,
-  ALPHA,
-  ALPHA_DIGIT: ALPHA + ALPHA.toUpperCase() + DIGIT
-};
-const generateString = (size = 16, alphabet = ALPHABET.ALPHA_DIGIT) => {
-  let str = "";
-  const { length } = alphabet;
-  while (size--) {
-    str += alphabet[Math.random() * length | 0];
-  }
-  return str;
-};
 function isSpecCompliantForm(thing) {
-  return !!(thing && isFunction(thing.append) && thing[Symbol.toStringTag] === "FormData" && thing[Symbol.iterator]);
+  return !!(thing && isFunction(thing.append) && thing[toStringTag] === "FormData" && thing[iterator]);
 }
 const toJSONObject = (obj) => {
   const stack = new Array(10);
@@ -8809,6 +8796,7 @@ const _setImmediate = ((setImmediateSupported, postMessageSupported) => {
   isFunction(_global.postMessage)
 );
 const asap = typeof queueMicrotask !== "undefined" ? queueMicrotask.bind(_global) : typeof process !== "undefined" && process.nextTick || _setImmediate;
+const isIterable = (thing) => thing != null && isFunction(thing[iterator]);
 const utils$1 = {
   isArray,
   isArrayBuffer,
@@ -8860,16 +8848,15 @@ const utils$1 = {
   findKey,
   global: _global,
   isContextDefined,
-  ALPHABET,
-  generateString,
   isSpecCompliantForm,
   toJSONObject,
   isAsyncFn,
   isThenable,
   setImmediate: _setImmediate,
-  asap
+  asap,
+  isIterable
 };
-function AxiosError(message, code, config, request, response) {
+function AxiosError$1(message, code, config, request, response) {
   Error.call(this);
   if (Error.captureStackTrace) {
     Error.captureStackTrace(this, this.constructor);
@@ -8886,7 +8873,7 @@ function AxiosError(message, code, config, request, response) {
     this.status = response.status ? response.status : null;
   }
 }
-utils$1.inherits(AxiosError, Error, {
+utils$1.inherits(AxiosError$1, Error, {
   toJSON: function toJSON() {
     return {
       // Standard
@@ -8907,7 +8894,7 @@ utils$1.inherits(AxiosError, Error, {
     };
   }
 });
-const prototype$1 = AxiosError.prototype;
+const prototype$1 = AxiosError$1.prototype;
 const descriptors = {};
 [
   "ERR_BAD_OPTION_VALUE",
@@ -8926,16 +8913,16 @@ const descriptors = {};
 ].forEach((code) => {
   descriptors[code] = { value: code };
 });
-Object.defineProperties(AxiosError, descriptors);
+Object.defineProperties(AxiosError$1, descriptors);
 Object.defineProperty(prototype$1, "isAxiosError", { value: true });
-AxiosError.from = (error, code, config, request, response, customProps) => {
+AxiosError$1.from = (error, code, config, request, response, customProps) => {
   const axiosError = Object.create(prototype$1);
   utils$1.toFlatObject(error, axiosError, function filter2(obj) {
     return obj !== Error.prototype;
   }, (prop) => {
     return prop !== "isAxiosError";
   });
-  AxiosError.call(axiosError, error.message, code, config, request, response);
+  AxiosError$1.call(axiosError, error.message, code, config, request, response);
   axiosError.cause = error;
   axiosError.name = error.name;
   customProps && Object.assign(axiosError, customProps);
@@ -11522,11 +11509,11 @@ function requireMimeTypes() {
     exports.lookup = lookup;
     exports.types = /* @__PURE__ */ Object.create(null);
     populateMaps(exports.extensions, exports.types);
-    function charset(type) {
-      if (!type || typeof type !== "string") {
+    function charset(type2) {
+      if (!type2 || typeof type2 !== "string") {
         return false;
       }
-      var match = EXTRACT_TYPE_REGEXP.exec(type);
+      var match = EXTRACT_TYPE_REGEXP.exec(type2);
       var mime = match && db[match[1].toLowerCase()];
       if (mime && mime.charset) {
         return mime.charset;
@@ -11550,11 +11537,11 @@ function requireMimeTypes() {
       }
       return mime;
     }
-    function extension(type) {
-      if (!type || typeof type !== "string") {
+    function extension(type2) {
+      if (!type2 || typeof type2 !== "string") {
         return false;
       }
-      var match = EXTRACT_TYPE_REGEXP.exec(type);
+      var match = EXTRACT_TYPE_REGEXP.exec(type2);
       var exts = match && exports.extensions[match[1].toLowerCase()];
       if (!exts || !exts.length) {
         return false;
@@ -11573,13 +11560,13 @@ function requireMimeTypes() {
     }
     function populateMaps(extensions, types) {
       var preference = ["nginx", "apache", void 0, "iana"];
-      Object.keys(db).forEach(function forEachMimeType(type) {
-        var mime = db[type];
+      Object.keys(db).forEach(function forEachMimeType(type2) {
+        var mime = db[type2];
         var exts = mime.extensions;
         if (!exts || !exts.length) {
           return;
         }
-        extensions[type] = exts;
+        extensions[type2] = exts;
         for (var i = 0; i < exts.length; i++) {
           var extension2 = exts[i];
           if (types[extension2]) {
@@ -11589,7 +11576,7 @@ function requireMimeTypes() {
               continue;
             }
           }
-          types[extension2] = type;
+          types[extension2] = type2;
         }
       });
     }
@@ -11660,9 +11647,9 @@ function requireIterate() {
   hasRequiredIterate = 1;
   var async = requireAsync(), abort = requireAbort();
   iterate_1 = iterate;
-  function iterate(list, iterator, state, callback) {
+  function iterate(list, iterator2, state, callback) {
     var key = state["keyedList"] ? state["keyedList"][state.index] : state.index;
-    state.jobs[key] = runJob(iterator, key, list[key], function(error, output) {
+    state.jobs[key] = runJob(iterator2, key, list[key], function(error, output) {
       if (!(key in state.jobs)) {
         return;
       }
@@ -11675,12 +11662,12 @@ function requireIterate() {
       callback(error, state.results);
     });
   }
-  function runJob(iterator, key, item, callback) {
+  function runJob(iterator2, key, item, callback) {
     var aborter;
-    if (iterator.length == 2) {
-      aborter = iterator(item, async(callback));
+    if (iterator2.length == 2) {
+      aborter = iterator2(item, async(callback));
     } else {
-      aborter = iterator(item, key, async(callback));
+      aborter = iterator2(item, key, async(callback));
     }
     return aborter;
   }
@@ -11733,10 +11720,10 @@ function requireParallel() {
   hasRequiredParallel = 1;
   var iterate = requireIterate(), initState = requireState(), terminator = requireTerminator();
   parallel_1 = parallel;
-  function parallel(list, iterator, callback) {
+  function parallel(list, iterator2, callback) {
     var state = initState(list);
     while (state.index < (state["keyedList"] || list).length) {
-      iterate(list, iterator, state, function(error, result) {
+      iterate(list, iterator2, state, function(error, result) {
         if (error) {
           callback(error, result);
           return;
@@ -11761,16 +11748,16 @@ function requireSerialOrdered() {
   serialOrdered.exports = serialOrdered$1;
   serialOrdered.exports.ascending = ascending;
   serialOrdered.exports.descending = descending;
-  function serialOrdered$1(list, iterator, sortMethod, callback) {
+  function serialOrdered$1(list, iterator2, sortMethod, callback) {
     var state = initState(list, sortMethod);
-    iterate(list, iterator, state, function iteratorHandler(error, result) {
+    iterate(list, iterator2, state, function iteratorHandler(error, result) {
       if (error) {
         callback(error, result);
         return;
       }
       state.index++;
       if (state.index < (state["keyedList"] || list).length) {
-        iterate(list, iterator, state, iteratorHandler);
+        iterate(list, iterator2, state, iteratorHandler);
         return;
       }
       callback(null, state.results);
@@ -11792,8 +11779,8 @@ function requireSerial() {
   hasRequiredSerial = 1;
   var serialOrdered2 = requireSerialOrdered();
   serial_1 = serial;
-  function serial(list, iterator, callback) {
-    return serialOrdered2(list, iterator, null, callback);
+  function serial(list, iterator2, callback) {
+    return serialOrdered2(list, iterator2, null, callback);
   }
   return serial_1;
 }
@@ -11808,6 +11795,851 @@ function requireAsynckit() {
     serialOrdered: requireSerialOrdered()
   };
   return asynckit;
+}
+var esObjectAtoms;
+var hasRequiredEsObjectAtoms;
+function requireEsObjectAtoms() {
+  if (hasRequiredEsObjectAtoms) return esObjectAtoms;
+  hasRequiredEsObjectAtoms = 1;
+  esObjectAtoms = Object;
+  return esObjectAtoms;
+}
+var esErrors;
+var hasRequiredEsErrors;
+function requireEsErrors() {
+  if (hasRequiredEsErrors) return esErrors;
+  hasRequiredEsErrors = 1;
+  esErrors = Error;
+  return esErrors;
+}
+var _eval;
+var hasRequired_eval;
+function require_eval() {
+  if (hasRequired_eval) return _eval;
+  hasRequired_eval = 1;
+  _eval = EvalError;
+  return _eval;
+}
+var range;
+var hasRequiredRange;
+function requireRange() {
+  if (hasRequiredRange) return range;
+  hasRequiredRange = 1;
+  range = RangeError;
+  return range;
+}
+var ref;
+var hasRequiredRef;
+function requireRef() {
+  if (hasRequiredRef) return ref;
+  hasRequiredRef = 1;
+  ref = ReferenceError;
+  return ref;
+}
+var syntax;
+var hasRequiredSyntax;
+function requireSyntax() {
+  if (hasRequiredSyntax) return syntax;
+  hasRequiredSyntax = 1;
+  syntax = SyntaxError;
+  return syntax;
+}
+var type;
+var hasRequiredType;
+function requireType() {
+  if (hasRequiredType) return type;
+  hasRequiredType = 1;
+  type = TypeError;
+  return type;
+}
+var uri;
+var hasRequiredUri;
+function requireUri() {
+  if (hasRequiredUri) return uri;
+  hasRequiredUri = 1;
+  uri = URIError;
+  return uri;
+}
+var abs;
+var hasRequiredAbs;
+function requireAbs() {
+  if (hasRequiredAbs) return abs;
+  hasRequiredAbs = 1;
+  abs = Math.abs;
+  return abs;
+}
+var floor;
+var hasRequiredFloor;
+function requireFloor() {
+  if (hasRequiredFloor) return floor;
+  hasRequiredFloor = 1;
+  floor = Math.floor;
+  return floor;
+}
+var max;
+var hasRequiredMax;
+function requireMax() {
+  if (hasRequiredMax) return max;
+  hasRequiredMax = 1;
+  max = Math.max;
+  return max;
+}
+var min;
+var hasRequiredMin;
+function requireMin() {
+  if (hasRequiredMin) return min;
+  hasRequiredMin = 1;
+  min = Math.min;
+  return min;
+}
+var pow;
+var hasRequiredPow;
+function requirePow() {
+  if (hasRequiredPow) return pow;
+  hasRequiredPow = 1;
+  pow = Math.pow;
+  return pow;
+}
+var round;
+var hasRequiredRound;
+function requireRound() {
+  if (hasRequiredRound) return round;
+  hasRequiredRound = 1;
+  round = Math.round;
+  return round;
+}
+var _isNaN;
+var hasRequired_isNaN;
+function require_isNaN() {
+  if (hasRequired_isNaN) return _isNaN;
+  hasRequired_isNaN = 1;
+  _isNaN = Number.isNaN || function isNaN2(a) {
+    return a !== a;
+  };
+  return _isNaN;
+}
+var sign;
+var hasRequiredSign;
+function requireSign() {
+  if (hasRequiredSign) return sign;
+  hasRequiredSign = 1;
+  var $isNaN = /* @__PURE__ */ require_isNaN();
+  sign = function sign2(number) {
+    if ($isNaN(number) || number === 0) {
+      return number;
+    }
+    return number < 0 ? -1 : 1;
+  };
+  return sign;
+}
+var gOPD;
+var hasRequiredGOPD;
+function requireGOPD() {
+  if (hasRequiredGOPD) return gOPD;
+  hasRequiredGOPD = 1;
+  gOPD = Object.getOwnPropertyDescriptor;
+  return gOPD;
+}
+var gopd;
+var hasRequiredGopd;
+function requireGopd() {
+  if (hasRequiredGopd) return gopd;
+  hasRequiredGopd = 1;
+  var $gOPD = /* @__PURE__ */ requireGOPD();
+  if ($gOPD) {
+    try {
+      $gOPD([], "length");
+    } catch (e) {
+      $gOPD = null;
+    }
+  }
+  gopd = $gOPD;
+  return gopd;
+}
+var esDefineProperty;
+var hasRequiredEsDefineProperty;
+function requireEsDefineProperty() {
+  if (hasRequiredEsDefineProperty) return esDefineProperty;
+  hasRequiredEsDefineProperty = 1;
+  var $defineProperty = Object.defineProperty || false;
+  if ($defineProperty) {
+    try {
+      $defineProperty({}, "a", { value: 1 });
+    } catch (e) {
+      $defineProperty = false;
+    }
+  }
+  esDefineProperty = $defineProperty;
+  return esDefineProperty;
+}
+var shams$1;
+var hasRequiredShams$1;
+function requireShams$1() {
+  if (hasRequiredShams$1) return shams$1;
+  hasRequiredShams$1 = 1;
+  shams$1 = function hasSymbols2() {
+    if (typeof Symbol !== "function" || typeof Object.getOwnPropertySymbols !== "function") {
+      return false;
+    }
+    if (typeof Symbol.iterator === "symbol") {
+      return true;
+    }
+    var obj = {};
+    var sym = Symbol("test");
+    var symObj = Object(sym);
+    if (typeof sym === "string") {
+      return false;
+    }
+    if (Object.prototype.toString.call(sym) !== "[object Symbol]") {
+      return false;
+    }
+    if (Object.prototype.toString.call(symObj) !== "[object Symbol]") {
+      return false;
+    }
+    var symVal = 42;
+    obj[sym] = symVal;
+    for (var _ in obj) {
+      return false;
+    }
+    if (typeof Object.keys === "function" && Object.keys(obj).length !== 0) {
+      return false;
+    }
+    if (typeof Object.getOwnPropertyNames === "function" && Object.getOwnPropertyNames(obj).length !== 0) {
+      return false;
+    }
+    var syms = Object.getOwnPropertySymbols(obj);
+    if (syms.length !== 1 || syms[0] !== sym) {
+      return false;
+    }
+    if (!Object.prototype.propertyIsEnumerable.call(obj, sym)) {
+      return false;
+    }
+    if (typeof Object.getOwnPropertyDescriptor === "function") {
+      var descriptor = (
+        /** @type {PropertyDescriptor} */
+        Object.getOwnPropertyDescriptor(obj, sym)
+      );
+      if (descriptor.value !== symVal || descriptor.enumerable !== true) {
+        return false;
+      }
+    }
+    return true;
+  };
+  return shams$1;
+}
+var hasSymbols;
+var hasRequiredHasSymbols;
+function requireHasSymbols() {
+  if (hasRequiredHasSymbols) return hasSymbols;
+  hasRequiredHasSymbols = 1;
+  var origSymbol = typeof Symbol !== "undefined" && Symbol;
+  var hasSymbolSham = requireShams$1();
+  hasSymbols = function hasNativeSymbols() {
+    if (typeof origSymbol !== "function") {
+      return false;
+    }
+    if (typeof Symbol !== "function") {
+      return false;
+    }
+    if (typeof origSymbol("foo") !== "symbol") {
+      return false;
+    }
+    if (typeof Symbol("bar") !== "symbol") {
+      return false;
+    }
+    return hasSymbolSham();
+  };
+  return hasSymbols;
+}
+var Reflect_getPrototypeOf;
+var hasRequiredReflect_getPrototypeOf;
+function requireReflect_getPrototypeOf() {
+  if (hasRequiredReflect_getPrototypeOf) return Reflect_getPrototypeOf;
+  hasRequiredReflect_getPrototypeOf = 1;
+  Reflect_getPrototypeOf = typeof Reflect !== "undefined" && Reflect.getPrototypeOf || null;
+  return Reflect_getPrototypeOf;
+}
+var Object_getPrototypeOf;
+var hasRequiredObject_getPrototypeOf;
+function requireObject_getPrototypeOf() {
+  if (hasRequiredObject_getPrototypeOf) return Object_getPrototypeOf;
+  hasRequiredObject_getPrototypeOf = 1;
+  var $Object = /* @__PURE__ */ requireEsObjectAtoms();
+  Object_getPrototypeOf = $Object.getPrototypeOf || null;
+  return Object_getPrototypeOf;
+}
+var implementation;
+var hasRequiredImplementation;
+function requireImplementation() {
+  if (hasRequiredImplementation) return implementation;
+  hasRequiredImplementation = 1;
+  var ERROR_MESSAGE = "Function.prototype.bind called on incompatible ";
+  var toStr = Object.prototype.toString;
+  var max2 = Math.max;
+  var funcType = "[object Function]";
+  var concatty = function concatty2(a, b) {
+    var arr = [];
+    for (var i = 0; i < a.length; i += 1) {
+      arr[i] = a[i];
+    }
+    for (var j = 0; j < b.length; j += 1) {
+      arr[j + a.length] = b[j];
+    }
+    return arr;
+  };
+  var slicy = function slicy2(arrLike, offset) {
+    var arr = [];
+    for (var i = offset, j = 0; i < arrLike.length; i += 1, j += 1) {
+      arr[j] = arrLike[i];
+    }
+    return arr;
+  };
+  var joiny = function(arr, joiner) {
+    var str = "";
+    for (var i = 0; i < arr.length; i += 1) {
+      str += arr[i];
+      if (i + 1 < arr.length) {
+        str += joiner;
+      }
+    }
+    return str;
+  };
+  implementation = function bind2(that) {
+    var target = this;
+    if (typeof target !== "function" || toStr.apply(target) !== funcType) {
+      throw new TypeError(ERROR_MESSAGE + target);
+    }
+    var args = slicy(arguments, 1);
+    var bound;
+    var binder = function() {
+      if (this instanceof bound) {
+        var result = target.apply(
+          this,
+          concatty(args, arguments)
+        );
+        if (Object(result) === result) {
+          return result;
+        }
+        return this;
+      }
+      return target.apply(
+        that,
+        concatty(args, arguments)
+      );
+    };
+    var boundLength = max2(0, target.length - args.length);
+    var boundArgs = [];
+    for (var i = 0; i < boundLength; i++) {
+      boundArgs[i] = "$" + i;
+    }
+    bound = Function("binder", "return function (" + joiny(boundArgs, ",") + "){ return binder.apply(this,arguments); }")(binder);
+    if (target.prototype) {
+      var Empty = function Empty2() {
+      };
+      Empty.prototype = target.prototype;
+      bound.prototype = new Empty();
+      Empty.prototype = null;
+    }
+    return bound;
+  };
+  return implementation;
+}
+var functionBind;
+var hasRequiredFunctionBind;
+function requireFunctionBind() {
+  if (hasRequiredFunctionBind) return functionBind;
+  hasRequiredFunctionBind = 1;
+  var implementation2 = requireImplementation();
+  functionBind = Function.prototype.bind || implementation2;
+  return functionBind;
+}
+var functionCall;
+var hasRequiredFunctionCall;
+function requireFunctionCall() {
+  if (hasRequiredFunctionCall) return functionCall;
+  hasRequiredFunctionCall = 1;
+  functionCall = Function.prototype.call;
+  return functionCall;
+}
+var functionApply;
+var hasRequiredFunctionApply;
+function requireFunctionApply() {
+  if (hasRequiredFunctionApply) return functionApply;
+  hasRequiredFunctionApply = 1;
+  functionApply = Function.prototype.apply;
+  return functionApply;
+}
+var reflectApply;
+var hasRequiredReflectApply;
+function requireReflectApply() {
+  if (hasRequiredReflectApply) return reflectApply;
+  hasRequiredReflectApply = 1;
+  reflectApply = typeof Reflect !== "undefined" && Reflect && Reflect.apply;
+  return reflectApply;
+}
+var actualApply;
+var hasRequiredActualApply;
+function requireActualApply() {
+  if (hasRequiredActualApply) return actualApply;
+  hasRequiredActualApply = 1;
+  var bind2 = requireFunctionBind();
+  var $apply = requireFunctionApply();
+  var $call = requireFunctionCall();
+  var $reflectApply = requireReflectApply();
+  actualApply = $reflectApply || bind2.call($call, $apply);
+  return actualApply;
+}
+var callBindApplyHelpers;
+var hasRequiredCallBindApplyHelpers;
+function requireCallBindApplyHelpers() {
+  if (hasRequiredCallBindApplyHelpers) return callBindApplyHelpers;
+  hasRequiredCallBindApplyHelpers = 1;
+  var bind2 = requireFunctionBind();
+  var $TypeError = /* @__PURE__ */ requireType();
+  var $call = requireFunctionCall();
+  var $actualApply = requireActualApply();
+  callBindApplyHelpers = function callBindBasic(args) {
+    if (args.length < 1 || typeof args[0] !== "function") {
+      throw new $TypeError("a function is required");
+    }
+    return $actualApply(bind2, $call, args);
+  };
+  return callBindApplyHelpers;
+}
+var get;
+var hasRequiredGet;
+function requireGet() {
+  if (hasRequiredGet) return get;
+  hasRequiredGet = 1;
+  var callBind = requireCallBindApplyHelpers();
+  var gOPD2 = /* @__PURE__ */ requireGopd();
+  var hasProtoAccessor;
+  try {
+    hasProtoAccessor = /** @type {{ __proto__?: typeof Array.prototype }} */
+    [].__proto__ === Array.prototype;
+  } catch (e) {
+    if (!e || typeof e !== "object" || !("code" in e) || e.code !== "ERR_PROTO_ACCESS") {
+      throw e;
+    }
+  }
+  var desc = !!hasProtoAccessor && gOPD2 && gOPD2(
+    Object.prototype,
+    /** @type {keyof typeof Object.prototype} */
+    "__proto__"
+  );
+  var $Object = Object;
+  var $getPrototypeOf = $Object.getPrototypeOf;
+  get = desc && typeof desc.get === "function" ? callBind([desc.get]) : typeof $getPrototypeOf === "function" ? (
+    /** @type {import('./get')} */
+    function getDunder(value) {
+      return $getPrototypeOf(value == null ? value : $Object(value));
+    }
+  ) : false;
+  return get;
+}
+var getProto;
+var hasRequiredGetProto;
+function requireGetProto() {
+  if (hasRequiredGetProto) return getProto;
+  hasRequiredGetProto = 1;
+  var reflectGetProto = requireReflect_getPrototypeOf();
+  var originalGetProto = requireObject_getPrototypeOf();
+  var getDunderProto = /* @__PURE__ */ requireGet();
+  getProto = reflectGetProto ? function getProto2(O) {
+    return reflectGetProto(O);
+  } : originalGetProto ? function getProto2(O) {
+    if (!O || typeof O !== "object" && typeof O !== "function") {
+      throw new TypeError("getProto: not an object");
+    }
+    return originalGetProto(O);
+  } : getDunderProto ? function getProto2(O) {
+    return getDunderProto(O);
+  } : null;
+  return getProto;
+}
+var hasown;
+var hasRequiredHasown;
+function requireHasown() {
+  if (hasRequiredHasown) return hasown;
+  hasRequiredHasown = 1;
+  var call = Function.prototype.call;
+  var $hasOwn = Object.prototype.hasOwnProperty;
+  var bind2 = requireFunctionBind();
+  hasown = bind2.call(call, $hasOwn);
+  return hasown;
+}
+var getIntrinsic;
+var hasRequiredGetIntrinsic;
+function requireGetIntrinsic() {
+  if (hasRequiredGetIntrinsic) return getIntrinsic;
+  hasRequiredGetIntrinsic = 1;
+  var undefined$1;
+  var $Object = /* @__PURE__ */ requireEsObjectAtoms();
+  var $Error = /* @__PURE__ */ requireEsErrors();
+  var $EvalError = /* @__PURE__ */ require_eval();
+  var $RangeError = /* @__PURE__ */ requireRange();
+  var $ReferenceError = /* @__PURE__ */ requireRef();
+  var $SyntaxError = /* @__PURE__ */ requireSyntax();
+  var $TypeError = /* @__PURE__ */ requireType();
+  var $URIError = /* @__PURE__ */ requireUri();
+  var abs2 = /* @__PURE__ */ requireAbs();
+  var floor2 = /* @__PURE__ */ requireFloor();
+  var max2 = /* @__PURE__ */ requireMax();
+  var min2 = /* @__PURE__ */ requireMin();
+  var pow2 = /* @__PURE__ */ requirePow();
+  var round2 = /* @__PURE__ */ requireRound();
+  var sign2 = /* @__PURE__ */ requireSign();
+  var $Function = Function;
+  var getEvalledConstructor = function(expressionSyntax) {
+    try {
+      return $Function('"use strict"; return (' + expressionSyntax + ").constructor;")();
+    } catch (e) {
+    }
+  };
+  var $gOPD = /* @__PURE__ */ requireGopd();
+  var $defineProperty = /* @__PURE__ */ requireEsDefineProperty();
+  var throwTypeError = function() {
+    throw new $TypeError();
+  };
+  var ThrowTypeError = $gOPD ? function() {
+    try {
+      arguments.callee;
+      return throwTypeError;
+    } catch (calleeThrows) {
+      try {
+        return $gOPD(arguments, "callee").get;
+      } catch (gOPDthrows) {
+        return throwTypeError;
+      }
+    }
+  }() : throwTypeError;
+  var hasSymbols2 = requireHasSymbols()();
+  var getProto2 = requireGetProto();
+  var $ObjectGPO = requireObject_getPrototypeOf();
+  var $ReflectGPO = requireReflect_getPrototypeOf();
+  var $apply = requireFunctionApply();
+  var $call = requireFunctionCall();
+  var needsEval = {};
+  var TypedArray = typeof Uint8Array === "undefined" || !getProto2 ? undefined$1 : getProto2(Uint8Array);
+  var INTRINSICS = {
+    __proto__: null,
+    "%AggregateError%": typeof AggregateError === "undefined" ? undefined$1 : AggregateError,
+    "%Array%": Array,
+    "%ArrayBuffer%": typeof ArrayBuffer === "undefined" ? undefined$1 : ArrayBuffer,
+    "%ArrayIteratorPrototype%": hasSymbols2 && getProto2 ? getProto2([][Symbol.iterator]()) : undefined$1,
+    "%AsyncFromSyncIteratorPrototype%": undefined$1,
+    "%AsyncFunction%": needsEval,
+    "%AsyncGenerator%": needsEval,
+    "%AsyncGeneratorFunction%": needsEval,
+    "%AsyncIteratorPrototype%": needsEval,
+    "%Atomics%": typeof Atomics === "undefined" ? undefined$1 : Atomics,
+    "%BigInt%": typeof BigInt === "undefined" ? undefined$1 : BigInt,
+    "%BigInt64Array%": typeof BigInt64Array === "undefined" ? undefined$1 : BigInt64Array,
+    "%BigUint64Array%": typeof BigUint64Array === "undefined" ? undefined$1 : BigUint64Array,
+    "%Boolean%": Boolean,
+    "%DataView%": typeof DataView === "undefined" ? undefined$1 : DataView,
+    "%Date%": Date,
+    "%decodeURI%": decodeURI,
+    "%decodeURIComponent%": decodeURIComponent,
+    "%encodeURI%": encodeURI,
+    "%encodeURIComponent%": encodeURIComponent,
+    "%Error%": $Error,
+    "%eval%": eval,
+    // eslint-disable-line no-eval
+    "%EvalError%": $EvalError,
+    "%Float16Array%": typeof Float16Array === "undefined" ? undefined$1 : Float16Array,
+    "%Float32Array%": typeof Float32Array === "undefined" ? undefined$1 : Float32Array,
+    "%Float64Array%": typeof Float64Array === "undefined" ? undefined$1 : Float64Array,
+    "%FinalizationRegistry%": typeof FinalizationRegistry === "undefined" ? undefined$1 : FinalizationRegistry,
+    "%Function%": $Function,
+    "%GeneratorFunction%": needsEval,
+    "%Int8Array%": typeof Int8Array === "undefined" ? undefined$1 : Int8Array,
+    "%Int16Array%": typeof Int16Array === "undefined" ? undefined$1 : Int16Array,
+    "%Int32Array%": typeof Int32Array === "undefined" ? undefined$1 : Int32Array,
+    "%isFinite%": isFinite,
+    "%isNaN%": isNaN,
+    "%IteratorPrototype%": hasSymbols2 && getProto2 ? getProto2(getProto2([][Symbol.iterator]())) : undefined$1,
+    "%JSON%": typeof JSON === "object" ? JSON : undefined$1,
+    "%Map%": typeof Map === "undefined" ? undefined$1 : Map,
+    "%MapIteratorPrototype%": typeof Map === "undefined" || !hasSymbols2 || !getProto2 ? undefined$1 : getProto2((/* @__PURE__ */ new Map())[Symbol.iterator]()),
+    "%Math%": Math,
+    "%Number%": Number,
+    "%Object%": $Object,
+    "%Object.getOwnPropertyDescriptor%": $gOPD,
+    "%parseFloat%": parseFloat,
+    "%parseInt%": parseInt,
+    "%Promise%": typeof Promise === "undefined" ? undefined$1 : Promise,
+    "%Proxy%": typeof Proxy === "undefined" ? undefined$1 : Proxy,
+    "%RangeError%": $RangeError,
+    "%ReferenceError%": $ReferenceError,
+    "%Reflect%": typeof Reflect === "undefined" ? undefined$1 : Reflect,
+    "%RegExp%": RegExp,
+    "%Set%": typeof Set === "undefined" ? undefined$1 : Set,
+    "%SetIteratorPrototype%": typeof Set === "undefined" || !hasSymbols2 || !getProto2 ? undefined$1 : getProto2((/* @__PURE__ */ new Set())[Symbol.iterator]()),
+    "%SharedArrayBuffer%": typeof SharedArrayBuffer === "undefined" ? undefined$1 : SharedArrayBuffer,
+    "%String%": String,
+    "%StringIteratorPrototype%": hasSymbols2 && getProto2 ? getProto2(""[Symbol.iterator]()) : undefined$1,
+    "%Symbol%": hasSymbols2 ? Symbol : undefined$1,
+    "%SyntaxError%": $SyntaxError,
+    "%ThrowTypeError%": ThrowTypeError,
+    "%TypedArray%": TypedArray,
+    "%TypeError%": $TypeError,
+    "%Uint8Array%": typeof Uint8Array === "undefined" ? undefined$1 : Uint8Array,
+    "%Uint8ClampedArray%": typeof Uint8ClampedArray === "undefined" ? undefined$1 : Uint8ClampedArray,
+    "%Uint16Array%": typeof Uint16Array === "undefined" ? undefined$1 : Uint16Array,
+    "%Uint32Array%": typeof Uint32Array === "undefined" ? undefined$1 : Uint32Array,
+    "%URIError%": $URIError,
+    "%WeakMap%": typeof WeakMap === "undefined" ? undefined$1 : WeakMap,
+    "%WeakRef%": typeof WeakRef === "undefined" ? undefined$1 : WeakRef,
+    "%WeakSet%": typeof WeakSet === "undefined" ? undefined$1 : WeakSet,
+    "%Function.prototype.call%": $call,
+    "%Function.prototype.apply%": $apply,
+    "%Object.defineProperty%": $defineProperty,
+    "%Object.getPrototypeOf%": $ObjectGPO,
+    "%Math.abs%": abs2,
+    "%Math.floor%": floor2,
+    "%Math.max%": max2,
+    "%Math.min%": min2,
+    "%Math.pow%": pow2,
+    "%Math.round%": round2,
+    "%Math.sign%": sign2,
+    "%Reflect.getPrototypeOf%": $ReflectGPO
+  };
+  if (getProto2) {
+    try {
+      null.error;
+    } catch (e) {
+      var errorProto = getProto2(getProto2(e));
+      INTRINSICS["%Error.prototype%"] = errorProto;
+    }
+  }
+  var doEval = function doEval2(name) {
+    var value;
+    if (name === "%AsyncFunction%") {
+      value = getEvalledConstructor("async function () {}");
+    } else if (name === "%GeneratorFunction%") {
+      value = getEvalledConstructor("function* () {}");
+    } else if (name === "%AsyncGeneratorFunction%") {
+      value = getEvalledConstructor("async function* () {}");
+    } else if (name === "%AsyncGenerator%") {
+      var fn = doEval2("%AsyncGeneratorFunction%");
+      if (fn) {
+        value = fn.prototype;
+      }
+    } else if (name === "%AsyncIteratorPrototype%") {
+      var gen = doEval2("%AsyncGenerator%");
+      if (gen && getProto2) {
+        value = getProto2(gen.prototype);
+      }
+    }
+    INTRINSICS[name] = value;
+    return value;
+  };
+  var LEGACY_ALIASES = {
+    __proto__: null,
+    "%ArrayBufferPrototype%": ["ArrayBuffer", "prototype"],
+    "%ArrayPrototype%": ["Array", "prototype"],
+    "%ArrayProto_entries%": ["Array", "prototype", "entries"],
+    "%ArrayProto_forEach%": ["Array", "prototype", "forEach"],
+    "%ArrayProto_keys%": ["Array", "prototype", "keys"],
+    "%ArrayProto_values%": ["Array", "prototype", "values"],
+    "%AsyncFunctionPrototype%": ["AsyncFunction", "prototype"],
+    "%AsyncGenerator%": ["AsyncGeneratorFunction", "prototype"],
+    "%AsyncGeneratorPrototype%": ["AsyncGeneratorFunction", "prototype", "prototype"],
+    "%BooleanPrototype%": ["Boolean", "prototype"],
+    "%DataViewPrototype%": ["DataView", "prototype"],
+    "%DatePrototype%": ["Date", "prototype"],
+    "%ErrorPrototype%": ["Error", "prototype"],
+    "%EvalErrorPrototype%": ["EvalError", "prototype"],
+    "%Float32ArrayPrototype%": ["Float32Array", "prototype"],
+    "%Float64ArrayPrototype%": ["Float64Array", "prototype"],
+    "%FunctionPrototype%": ["Function", "prototype"],
+    "%Generator%": ["GeneratorFunction", "prototype"],
+    "%GeneratorPrototype%": ["GeneratorFunction", "prototype", "prototype"],
+    "%Int8ArrayPrototype%": ["Int8Array", "prototype"],
+    "%Int16ArrayPrototype%": ["Int16Array", "prototype"],
+    "%Int32ArrayPrototype%": ["Int32Array", "prototype"],
+    "%JSONParse%": ["JSON", "parse"],
+    "%JSONStringify%": ["JSON", "stringify"],
+    "%MapPrototype%": ["Map", "prototype"],
+    "%NumberPrototype%": ["Number", "prototype"],
+    "%ObjectPrototype%": ["Object", "prototype"],
+    "%ObjProto_toString%": ["Object", "prototype", "toString"],
+    "%ObjProto_valueOf%": ["Object", "prototype", "valueOf"],
+    "%PromisePrototype%": ["Promise", "prototype"],
+    "%PromiseProto_then%": ["Promise", "prototype", "then"],
+    "%Promise_all%": ["Promise", "all"],
+    "%Promise_reject%": ["Promise", "reject"],
+    "%Promise_resolve%": ["Promise", "resolve"],
+    "%RangeErrorPrototype%": ["RangeError", "prototype"],
+    "%ReferenceErrorPrototype%": ["ReferenceError", "prototype"],
+    "%RegExpPrototype%": ["RegExp", "prototype"],
+    "%SetPrototype%": ["Set", "prototype"],
+    "%SharedArrayBufferPrototype%": ["SharedArrayBuffer", "prototype"],
+    "%StringPrototype%": ["String", "prototype"],
+    "%SymbolPrototype%": ["Symbol", "prototype"],
+    "%SyntaxErrorPrototype%": ["SyntaxError", "prototype"],
+    "%TypedArrayPrototype%": ["TypedArray", "prototype"],
+    "%TypeErrorPrototype%": ["TypeError", "prototype"],
+    "%Uint8ArrayPrototype%": ["Uint8Array", "prototype"],
+    "%Uint8ClampedArrayPrototype%": ["Uint8ClampedArray", "prototype"],
+    "%Uint16ArrayPrototype%": ["Uint16Array", "prototype"],
+    "%Uint32ArrayPrototype%": ["Uint32Array", "prototype"],
+    "%URIErrorPrototype%": ["URIError", "prototype"],
+    "%WeakMapPrototype%": ["WeakMap", "prototype"],
+    "%WeakSetPrototype%": ["WeakSet", "prototype"]
+  };
+  var bind2 = requireFunctionBind();
+  var hasOwn = /* @__PURE__ */ requireHasown();
+  var $concat = bind2.call($call, Array.prototype.concat);
+  var $spliceApply = bind2.call($apply, Array.prototype.splice);
+  var $replace = bind2.call($call, String.prototype.replace);
+  var $strSlice = bind2.call($call, String.prototype.slice);
+  var $exec = bind2.call($call, RegExp.prototype.exec);
+  var rePropName = /[^%.[\]]+|\[(?:(-?\d+(?:\.\d+)?)|(["'])((?:(?!\2)[^\\]|\\.)*?)\2)\]|(?=(?:\.|\[\])(?:\.|\[\]|%$))/g;
+  var reEscapeChar = /\\(\\)?/g;
+  var stringToPath = function stringToPath2(string) {
+    var first = $strSlice(string, 0, 1);
+    var last = $strSlice(string, -1);
+    if (first === "%" && last !== "%") {
+      throw new $SyntaxError("invalid intrinsic syntax, expected closing `%`");
+    } else if (last === "%" && first !== "%") {
+      throw new $SyntaxError("invalid intrinsic syntax, expected opening `%`");
+    }
+    var result = [];
+    $replace(string, rePropName, function(match, number, quote, subString) {
+      result[result.length] = quote ? $replace(subString, reEscapeChar, "$1") : number || match;
+    });
+    return result;
+  };
+  var getBaseIntrinsic = function getBaseIntrinsic2(name, allowMissing) {
+    var intrinsicName = name;
+    var alias;
+    if (hasOwn(LEGACY_ALIASES, intrinsicName)) {
+      alias = LEGACY_ALIASES[intrinsicName];
+      intrinsicName = "%" + alias[0] + "%";
+    }
+    if (hasOwn(INTRINSICS, intrinsicName)) {
+      var value = INTRINSICS[intrinsicName];
+      if (value === needsEval) {
+        value = doEval(intrinsicName);
+      }
+      if (typeof value === "undefined" && !allowMissing) {
+        throw new $TypeError("intrinsic " + name + " exists, but is not available. Please file an issue!");
+      }
+      return {
+        alias,
+        name: intrinsicName,
+        value
+      };
+    }
+    throw new $SyntaxError("intrinsic " + name + " does not exist!");
+  };
+  getIntrinsic = function GetIntrinsic(name, allowMissing) {
+    if (typeof name !== "string" || name.length === 0) {
+      throw new $TypeError("intrinsic name must be a non-empty string");
+    }
+    if (arguments.length > 1 && typeof allowMissing !== "boolean") {
+      throw new $TypeError('"allowMissing" argument must be a boolean');
+    }
+    if ($exec(/^%?[^%]*%?$/, name) === null) {
+      throw new $SyntaxError("`%` may not be present anywhere but at the beginning and end of the intrinsic name");
+    }
+    var parts = stringToPath(name);
+    var intrinsicBaseName = parts.length > 0 ? parts[0] : "";
+    var intrinsic = getBaseIntrinsic("%" + intrinsicBaseName + "%", allowMissing);
+    var intrinsicRealName = intrinsic.name;
+    var value = intrinsic.value;
+    var skipFurtherCaching = false;
+    var alias = intrinsic.alias;
+    if (alias) {
+      intrinsicBaseName = alias[0];
+      $spliceApply(parts, $concat([0, 1], alias));
+    }
+    for (var i = 1, isOwn = true; i < parts.length; i += 1) {
+      var part = parts[i];
+      var first = $strSlice(part, 0, 1);
+      var last = $strSlice(part, -1);
+      if ((first === '"' || first === "'" || first === "`" || (last === '"' || last === "'" || last === "`")) && first !== last) {
+        throw new $SyntaxError("property names with quotes must have matching quotes");
+      }
+      if (part === "constructor" || !isOwn) {
+        skipFurtherCaching = true;
+      }
+      intrinsicBaseName += "." + part;
+      intrinsicRealName = "%" + intrinsicBaseName + "%";
+      if (hasOwn(INTRINSICS, intrinsicRealName)) {
+        value = INTRINSICS[intrinsicRealName];
+      } else if (value != null) {
+        if (!(part in value)) {
+          if (!allowMissing) {
+            throw new $TypeError("base intrinsic for " + name + " exists, but the property is not available.");
+          }
+          return void 0;
+        }
+        if ($gOPD && i + 1 >= parts.length) {
+          var desc = $gOPD(value, part);
+          isOwn = !!desc;
+          if (isOwn && "get" in desc && !("originalValue" in desc.get)) {
+            value = desc.get;
+          } else {
+            value = value[part];
+          }
+        } else {
+          isOwn = hasOwn(value, part);
+          value = value[part];
+        }
+        if (isOwn && !skipFurtherCaching) {
+          INTRINSICS[intrinsicRealName] = value;
+        }
+      }
+    }
+    return value;
+  };
+  return getIntrinsic;
+}
+var shams;
+var hasRequiredShams;
+function requireShams() {
+  if (hasRequiredShams) return shams;
+  hasRequiredShams = 1;
+  var hasSymbols2 = requireShams$1();
+  shams = function hasToStringTagShams() {
+    return hasSymbols2() && !!Symbol.toStringTag;
+  };
+  return shams;
+}
+var esSetTostringtag;
+var hasRequiredEsSetTostringtag;
+function requireEsSetTostringtag() {
+  if (hasRequiredEsSetTostringtag) return esSetTostringtag;
+  hasRequiredEsSetTostringtag = 1;
+  var GetIntrinsic = /* @__PURE__ */ requireGetIntrinsic();
+  var $defineProperty = GetIntrinsic("%Object.defineProperty%", true);
+  var hasToStringTag = requireShams()();
+  var hasOwn = /* @__PURE__ */ requireHasown();
+  var $TypeError = /* @__PURE__ */ requireType();
+  var toStringTag2 = hasToStringTag ? Symbol.toStringTag : null;
+  esSetTostringtag = function setToStringTag(object, value) {
+    var overrideIfSet = arguments.length > 2 && !!arguments[2] && arguments[2].force;
+    var nonConfigurable = arguments.length > 2 && !!arguments[2] && arguments[2].nonConfigurable;
+    if (typeof overrideIfSet !== "undefined" && typeof overrideIfSet !== "boolean" || typeof nonConfigurable !== "undefined" && typeof nonConfigurable !== "boolean") {
+      throw new $TypeError("if provided, the `overrideIfSet` and `nonConfigurable` options must be booleans");
+    }
+    if (toStringTag2 && (overrideIfSet || !hasOwn(object, toStringTag2))) {
+      if ($defineProperty) {
+        $defineProperty(object, toStringTag2, {
+          configurable: !nonConfigurable,
+          enumerable: false,
+          value,
+          writable: false
+        });
+      } else {
+        object[toStringTag2] = value;
+      }
+    }
+  };
+  return esSetTostringtag;
 }
 var populate;
 var hasRequiredPopulate;
@@ -11837,6 +12669,7 @@ function requireForm_data() {
   var Stream = stream.Stream;
   var mime = requireMimeTypes();
   var asynckit2 = requireAsynckit();
+  var setToStringTag = /* @__PURE__ */ requireEsSetTostringtag();
   var populate2 = requirePopulate();
   form_data = FormData2;
   util.inherits(FormData2, CombinedStream);
@@ -11886,7 +12719,7 @@ function requireForm_data() {
     }
     this._valueLength += valueLength;
     this._overheadLength += Buffer.byteLength(header) + FormData2.LINE_BREAK.length;
-    if (!value || !value.path && !(value.readable && value.hasOwnProperty("httpVersion")) && !(value instanceof Stream)) {
+    if (!value || !value.path && !(value.readable && Object.prototype.hasOwnProperty.call(value, "httpVersion")) && !(value instanceof Stream)) {
       return;
     }
     if (!options2.knownLength) {
@@ -11894,7 +12727,7 @@ function requireForm_data() {
     }
   };
   FormData2.prototype._lengthRetriever = function(value, callback) {
-    if (value.hasOwnProperty("fd")) {
+    if (Object.prototype.hasOwnProperty.call(value, "fd")) {
       if (value.end != void 0 && value.end != Infinity && value.start != void 0) {
         callback(null, value.end + 1 - (value.start ? value.start : 0));
       } else {
@@ -11908,9 +12741,9 @@ function requireForm_data() {
           callback(null, fileSize);
         });
       }
-    } else if (value.hasOwnProperty("httpVersion")) {
+    } else if (Object.prototype.hasOwnProperty.call(value, "httpVersion")) {
       callback(null, +value.headers["content-length"]);
-    } else if (value.hasOwnProperty("httpModule")) {
+    } else if (Object.prototype.hasOwnProperty.call(value, "httpModule")) {
       value.on("response", function(response) {
         value.pause();
         callback(null, +response.headers["content-length"]);
@@ -11938,16 +12771,17 @@ function requireForm_data() {
     }
     var header;
     for (var prop in headers) {
-      if (!headers.hasOwnProperty(prop)) continue;
-      header = headers[prop];
-      if (header == null) {
-        continue;
-      }
-      if (!Array.isArray(header)) {
-        header = [header];
-      }
-      if (header.length) {
-        contents += prop + ": " + header.join("; ") + FormData2.LINE_BREAK;
+      if (Object.prototype.hasOwnProperty.call(headers, prop)) {
+        header = headers[prop];
+        if (header == null) {
+          continue;
+        }
+        if (!Array.isArray(header)) {
+          header = [header];
+        }
+        if (header.length) {
+          contents += prop + ": " + header.join("; ") + FormData2.LINE_BREAK;
+        }
       }
     }
     return "--" + this.getBoundary() + FormData2.LINE_BREAK + contents + FormData2.LINE_BREAK;
@@ -11958,7 +12792,7 @@ function requireForm_data() {
       filename = path2.normalize(options2.filepath).replace(/\\/g, "/");
     } else if (options2.filename || value.name || value.path) {
       filename = path2.basename(options2.filename || value.name || value.path);
-    } else if (value.readable && value.hasOwnProperty("httpVersion")) {
+    } else if (value.readable && Object.prototype.hasOwnProperty.call(value, "httpVersion")) {
       filename = path2.basename(value.client._httpMessage.path || "");
     }
     if (filename) {
@@ -11974,7 +12808,7 @@ function requireForm_data() {
     if (!contentType && value.path) {
       contentType = mime.lookup(value.path);
     }
-    if (!contentType && value.readable && value.hasOwnProperty("httpVersion")) {
+    if (!contentType && value.readable && Object.prototype.hasOwnProperty.call(value, "httpVersion")) {
       contentType = value.headers["content-type"];
     }
     if (!contentType && (options2.filepath || options2.filename)) {
@@ -12004,7 +12838,7 @@ function requireForm_data() {
       "content-type": "multipart/form-data; boundary=" + this.getBoundary()
     };
     for (header in userHeaders) {
-      if (userHeaders.hasOwnProperty(header)) {
+      if (Object.prototype.hasOwnProperty.call(userHeaders, header)) {
         formHeaders[header.toLowerCase()] = userHeaders[header];
       }
     }
@@ -12135,6 +12969,7 @@ function requireForm_data() {
   FormData2.prototype.toString = function() {
     return "[object FormData]";
   };
+  setToStringTag(FormData2, "FormData");
   return form_data;
 }
 var form_dataExports = requireForm_data();
@@ -12158,7 +12993,7 @@ function isFlatArray(arr) {
 const predicates = utils$1.toFlatObject(utils$1, {}, null, function filter(prop) {
   return /^is[A-Z]/.test(prop);
 });
-function toFormData(obj, formData, options2) {
+function toFormData$1(obj, formData, options2) {
   if (!utils$1.isObject(obj)) {
     throw new TypeError("target must be an object");
   }
@@ -12185,7 +13020,7 @@ function toFormData(obj, formData, options2) {
       return value.toISOString();
     }
     if (!useBlob && utils$1.isBlob(value)) {
-      throw new AxiosError("Blob is not supported. Use a Buffer instead.");
+      throw new AxiosError$1("Blob is not supported. Use a Buffer instead.");
     }
     if (utils$1.isArrayBuffer(value) || utils$1.isTypedArray(value)) {
       return useBlob && typeof Blob === "function" ? new Blob([value]) : Buffer.from(value);
@@ -12264,7 +13099,7 @@ function encode$1(str) {
 }
 function AxiosURLSearchParams(params, options2) {
   this._pairs = [];
-  params && toFormData(params, this, options2);
+  params && toFormData$1(params, this, options2);
 }
 const prototype = AxiosURLSearchParams.prototype;
 prototype.append = function append(name, value) {
@@ -12374,6 +13209,23 @@ const transitionalDefaults = {
   clarifyTimeoutError: false
 };
 const URLSearchParams = require$$0$4.URLSearchParams;
+const ALPHA = "abcdefghijklmnopqrstuvwxyz";
+const DIGIT = "0123456789";
+const ALPHABET = {
+  DIGIT,
+  ALPHA,
+  ALPHA_DIGIT: ALPHA + ALPHA.toUpperCase() + DIGIT
+};
+const generateString = (size = 16, alphabet = ALPHABET.ALPHA_DIGIT) => {
+  let str = "";
+  const { length } = alphabet;
+  const randomValues = new Uint32Array(size);
+  crypto.randomFillSync(randomValues);
+  for (let i = 0; i < size; i++) {
+    str += alphabet[randomValues[i] % length];
+  }
+  return str;
+};
 const platform$1 = {
   isNode: true,
   classes: {
@@ -12381,6 +13233,8 @@ const platform$1 = {
     FormData: FormData$1,
     Blob: typeof Blob !== "undefined" && Blob || null
   },
+  ALPHABET,
+  generateString,
   protocols: ["http", "https", "file", "data"]
 };
 const hasBrowserEnv = typeof window !== "undefined" && typeof document !== "undefined";
@@ -12404,7 +13258,7 @@ const platform = {
   ...platform$1
 };
 function toURLEncodedForm(data, options2) {
-  return toFormData(data, new platform.classes.URLSearchParams(), Object.assign({
+  return toFormData$1(data, new platform.classes.URLSearchParams(), Object.assign({
     visitor: function(value, key, path2, helpers) {
       if (platform.isNode && utils$1.isBuffer(value)) {
         this.append(key, value.toString("base64"));
@@ -12475,7 +13329,7 @@ function stringifySafely(rawValue, parser, encoder) {
       }
     }
   }
-  return (0, JSON.stringify)(rawValue);
+  return (encoder || JSON.stringify)(rawValue);
 }
 const defaults = {
   transitional: transitionalDefaults,
@@ -12508,7 +13362,7 @@ const defaults = {
       }
       if ((isFileList2 = utils$1.isFileList(data)) || contentType.indexOf("multipart/form-data") > -1) {
         const _FormData = this.env && this.env.FormData;
-        return toFormData(
+        return toFormData$1(
           isFileList2 ? { "files[]": data } : data,
           _FormData && new _FormData(),
           this.formSerializer
@@ -12536,7 +13390,7 @@ const defaults = {
       } catch (e) {
         if (strictJSONParsing) {
           if (e.name === "SyntaxError") {
-            throw AxiosError.from(e, AxiosError.ERR_BAD_RESPONSE, this, null, this.response);
+            throw AxiosError$1.from(e, AxiosError$1.ERR_BAD_RESPONSE, this, null, this.response);
           }
           throw e;
         }
@@ -12664,7 +13518,7 @@ function buildAccessors(obj, header) {
     });
   });
 }
-class AxiosHeaders {
+let AxiosHeaders$1 = class AxiosHeaders {
   constructor(headers) {
     headers && this.set(headers);
   }
@@ -12685,10 +13539,15 @@ class AxiosHeaders {
       setHeaders(header, valueOrRewrite);
     } else if (utils$1.isString(header) && (header = header.trim()) && !isValidHeaderName(header)) {
       setHeaders(parseHeaders(header), valueOrRewrite);
-    } else if (utils$1.isHeaders(header)) {
-      for (const [key, value] of header.entries()) {
-        setHeader(value, key, rewrite);
+    } else if (utils$1.isObject(header) && utils$1.isIterable(header)) {
+      let obj = {}, dest, key;
+      for (const entry of header) {
+        if (!utils$1.isArray(entry)) {
+          throw TypeError("Object iterator must return a key-value pair");
+        }
+        obj[key = entry[0]] = (dest = obj[key]) ? utils$1.isArray(dest) ? [...dest, entry[1]] : [dest, entry[1]] : entry[1];
       }
+      setHeaders(obj, valueOrRewrite);
     } else {
       header != null && setHeader(valueOrRewrite, header, rewrite);
     }
@@ -12792,6 +13651,9 @@ class AxiosHeaders {
   toString() {
     return Object.entries(this.toJSON()).map(([header, value]) => header + ": " + value).join("\n");
   }
+  getSetCookie() {
+    return this.get("set-cookie") || [];
+  }
   get [Symbol.toStringTag]() {
     return "AxiosHeaders";
   }
@@ -12819,9 +13681,9 @@ class AxiosHeaders {
     utils$1.isArray(header) ? header.forEach(defineAccessor) : defineAccessor(header);
     return this;
   }
-}
-AxiosHeaders.accessor(["Content-Type", "Content-Length", "Accept", "Accept-Encoding", "User-Agent", "Authorization"]);
-utils$1.reduceDescriptors(AxiosHeaders.prototype, ({ value }, key) => {
+};
+AxiosHeaders$1.accessor(["Content-Type", "Content-Length", "Accept", "Accept-Encoding", "User-Agent", "Authorization"]);
+utils$1.reduceDescriptors(AxiosHeaders$1.prototype, ({ value }, key) => {
   let mapped = key[0].toUpperCase() + key.slice(1);
   return {
     get: () => value,
@@ -12830,11 +13692,11 @@ utils$1.reduceDescriptors(AxiosHeaders.prototype, ({ value }, key) => {
     }
   };
 });
-utils$1.freezeMethods(AxiosHeaders);
+utils$1.freezeMethods(AxiosHeaders$1);
 function transformData(fns, response) {
   const config = this || defaults;
   const context = response || config;
-  const headers = AxiosHeaders.from(context.headers);
+  const headers = AxiosHeaders$1.from(context.headers);
   let data = context.data;
   utils$1.forEach(fns, function transform(fn) {
     data = fn.call(config, data, headers.normalize(), response ? response.status : void 0);
@@ -12842,14 +13704,14 @@ function transformData(fns, response) {
   headers.normalize();
   return data;
 }
-function isCancel(value) {
+function isCancel$1(value) {
   return !!(value && value.__CANCEL__);
 }
-function CanceledError(message, config, request) {
-  AxiosError.call(this, message == null ? "canceled" : message, AxiosError.ERR_CANCELED, config, request);
+function CanceledError$1(message, config, request) {
+  AxiosError$1.call(this, message == null ? "canceled" : message, AxiosError$1.ERR_CANCELED, config, request);
   this.name = "CanceledError";
 }
-utils$1.inherits(CanceledError, AxiosError, {
+utils$1.inherits(CanceledError$1, AxiosError$1, {
   __CANCEL__: true
 });
 function settle(resolve2, reject, response) {
@@ -12857,9 +13719,9 @@ function settle(resolve2, reject, response) {
   if (!response.status || !validateStatus2 || validateStatus2(response.status)) {
     resolve2(response);
   } else {
-    reject(new AxiosError(
+    reject(new AxiosError$1(
       "Request failed with status code " + response.status,
-      [AxiosError.ERR_BAD_REQUEST, AxiosError.ERR_BAD_RESPONSE][Math.floor(response.status / 100) - 4],
+      [AxiosError$1.ERR_BAD_REQUEST, AxiosError$1.ERR_BAD_RESPONSE][Math.floor(response.status / 100) - 4],
       response.config,
       response.request,
       response
@@ -12872,8 +13734,9 @@ function isAbsoluteURL(url) {
 function combineURLs(baseURL, relativeURL) {
   return relativeURL ? baseURL.replace(/\/?\/$/, "") + "/" + relativeURL.replace(/^\/+/, "") : baseURL;
 }
-function buildFullPath(baseURL, requestedURL) {
-  if (baseURL && !isAbsoluteURL(requestedURL)) {
+function buildFullPath(baseURL, requestedURL, allowAbsoluteUrls) {
+  let isRelativeUrl = !isAbsoluteURL(requestedURL);
+  if (baseURL && (isRelativeUrl || allowAbsoluteUrls == false)) {
     return combineURLs(baseURL, requestedURL);
   }
   return requestedURL;
@@ -12966,10 +13829,10 @@ function requireMs() {
   var y = d * 365.25;
   ms = function(val, options2) {
     options2 = options2 || {};
-    var type = typeof val;
-    if (type === "string" && val.length > 0) {
+    var type2 = typeof val;
+    if (type2 === "string" && val.length > 0) {
       return parse(val);
-    } else if (type === "number" && isFinite(val)) {
+    } else if (type2 === "number" && isFinite(val)) {
       return options2.long ? fmtLong(val) : fmtShort(val);
     }
     throw new Error(
@@ -12988,8 +13851,8 @@ function requireMs() {
       return;
     }
     var n = parseFloat(match[1]);
-    var type = (match[2] || "ms").toLowerCase();
-    switch (type) {
+    var type2 = (match[2] || "ms").toLowerCase();
+    switch (type2) {
       case "years":
       case "year":
       case "yrs":
@@ -13482,9 +14345,9 @@ function requireSupportsColor() {
     if (haveStream && !streamIsTTY && forceColor === void 0) {
       return 0;
     }
-    const min = forceColor || 0;
+    const min2 = forceColor || 0;
     if (env.TERM === "dumb") {
-      return min;
+      return min2;
     }
     if (process.platform === "win32") {
       const osRelease = os.release().split(".");
@@ -13494,10 +14357,10 @@ function requireSupportsColor() {
       return 1;
     }
     if ("CI" in env) {
-      if (["TRAVIS", "CIRCLECI", "APPVEYOR", "GITLAB_CI", "GITHUB_ACTIONS", "BUILDKITE"].some((sign) => sign in env) || env.CI_NAME === "codeship") {
+      if (["TRAVIS", "CIRCLECI", "APPVEYOR", "GITLAB_CI", "GITHUB_ACTIONS", "BUILDKITE"].some((sign2) => sign2 in env) || env.CI_NAME === "codeship") {
         return 1;
       }
-      return min;
+      return min2;
     }
     if ("TEAMCITY_VERSION" in env) {
       return /^(9\.(0*[1-9]\d*)\.|\d{2,}\.)/.test(env.TEAMCITY_VERSION) ? 1 : 0;
@@ -13523,7 +14386,7 @@ function requireSupportsColor() {
     if ("COLORTERM" in env) {
       return 1;
     }
-    return min;
+    return min2;
   }
   function getSupportLevel(stream2) {
     const level = supportsColor(stream2, stream2 && stream2.isTTY);
@@ -14128,14 +14991,14 @@ function requireFollowRedirects() {
         debug("options", options2);
         return new RedirectableRequest(options2, callback);
       }
-      function get(input, options2, callback) {
+      function get2(input, options2, callback) {
         var wrappedRequest = wrappedProtocol.request(input, options2, callback);
         wrappedRequest.end();
         return wrappedRequest;
       }
       Object.defineProperties(wrappedProtocol, {
         request: { value: request, configurable: true, enumerable: true, writable: true },
-        get: { value: get, configurable: true, enumerable: true, writable: true }
+        get: { value: get2, configurable: true, enumerable: true, writable: true }
       });
     });
     return exports;
@@ -14242,23 +15105,23 @@ function requireFollowRedirects() {
 }
 var followRedirectsExports = requireFollowRedirects();
 const followRedirects = /* @__PURE__ */ getDefaultExportFromCjs(followRedirectsExports);
-const VERSION = "1.7.9";
+const VERSION$1 = "1.9.0";
 function parseProtocol(url) {
   const match = /^([-+\w]{1,25})(:?\/\/|:)/.exec(url);
   return match && match[1] || "";
 }
 const DATA_URL_PATTERN = /^(?:([^;]+);)?(?:[^;]+;)?(base64|),([\s\S]*)$/;
-function fromDataURI(uri, asBlob, options2) {
-  const _Blob = options2.Blob || platform.classes.Blob;
-  const protocol = parseProtocol(uri);
+function fromDataURI(uri2, asBlob, options2) {
+  const _Blob = options2 && options2.Blob || platform.classes.Blob;
+  const protocol = parseProtocol(uri2);
   if (asBlob === void 0 && _Blob) {
     asBlob = true;
   }
   if (protocol === "data") {
-    uri = protocol.length ? uri.slice(protocol.length + 1) : uri;
-    const match = DATA_URL_PATTERN.exec(uri);
+    uri2 = protocol.length ? uri2.slice(protocol.length + 1) : uri2;
+    const match = DATA_URL_PATTERN.exec(uri2);
     if (!match) {
-      throw new AxiosError("Invalid URL", AxiosError.ERR_INVALID_URL);
+      throw new AxiosError$1("Invalid URL", AxiosError$1.ERR_INVALID_URL);
     }
     const mime = match[1];
     const isBase64 = match[2];
@@ -14266,13 +15129,13 @@ function fromDataURI(uri, asBlob, options2) {
     const buffer = Buffer.from(decodeURIComponent(body), isBase64 ? "base64" : "utf8");
     if (asBlob) {
       if (!_Blob) {
-        throw new AxiosError("Blob is not supported", AxiosError.ERR_NOT_SUPPORT);
+        throw new AxiosError$1("Blob is not supported", AxiosError$1.ERR_NOT_SUPPORT);
       }
       return new _Blob([buffer], { type: mime });
     }
     return buffer;
   }
-  throw new AxiosError("Unsupported protocol " + protocol, AxiosError.ERR_NOT_SUPPORT);
+  throw new AxiosError$1("Unsupported protocol " + protocol, AxiosError$1.ERR_NOT_SUPPORT);
 }
 const kInternals = Symbol("internals");
 class AxiosTransformStream extends stream.Transform {
@@ -14397,7 +15260,7 @@ const readBlob = async function* (blob) {
     yield blob;
   }
 };
-const BOUNDARY_ALPHABET = utils$1.ALPHABET.ALPHA_DIGIT + "-_";
+const BOUNDARY_ALPHABET = platform.ALPHABET.ALPHA_DIGIT + "-_";
 const textEncoder = typeof TextEncoder === "function" ? new TextEncoder() : new require$$1.TextEncoder();
 const CRLF = "\r\n";
 const CRLF_BYTES = textEncoder.encode(CRLF);
@@ -14440,8 +15303,8 @@ const formDataToStream = (form, headersHandler, options2) => {
   const {
     tag = "form-data-boundary",
     size = 25,
-    boundary = tag + "-" + utils$1.generateString(size, BOUNDARY_ALPHABET)
-  } = options2;
+    boundary = tag + "-" + platform.generateString(size, BOUNDARY_ALPHABET)
+  } = options2 || {};
   if (!utils$1.isFormData(form)) {
     throw TypeError("FormData instance required");
   }
@@ -14449,7 +15312,7 @@ const formDataToStream = (form, headersHandler, options2) => {
     throw Error("boundary must be 10-70 characters long");
   }
   const boundaryBytes = textEncoder.encode("--" + boundary + CRLF);
-  const footerBytes = textEncoder.encode("--" + boundary + "--" + CRLF + CRLF);
+  const footerBytes = textEncoder.encode("--" + boundary + "--" + CRLF);
   let contentLength = footerBytes.byteLength;
   const parts = Array.from(form.entries()).map(([name, value]) => {
     const part = new FormDataPart(name, value);
@@ -14464,7 +15327,7 @@ const formDataToStream = (form, headersHandler, options2) => {
   if (Number.isFinite(contentLength)) {
     computedHeaders["Content-Length"] = contentLength;
   }
-  headersHandler(computedHeaders);
+  headersHandler && headersHandler(computedHeaders);
   return Readable.from(async function* () {
     for (const part of parts) {
       yield boundaryBytes;
@@ -14503,14 +15366,14 @@ const callbackify = (fn, reducer) => {
     }, cb);
   } : fn;
 };
-function speedometer(samplesCount, min) {
+function speedometer(samplesCount, min2) {
   samplesCount = samplesCount || 10;
   const bytes = new Array(samplesCount);
   const timestamps = new Array(samplesCount);
   let head = 0;
   let tail = 0;
   let firstSampleTS;
-  min = min !== void 0 ? min : 1e3;
+  min2 = min2 !== void 0 ? min2 : 1e3;
   return function push(chunkLength) {
     const now = Date.now();
     const startedAt = timestamps[tail];
@@ -14529,7 +15392,7 @@ function speedometer(samplesCount, min) {
     if (head === tail) {
       tail = (tail + 1) % samplesCount;
     }
-    if (now - firstSampleTS < min) {
+    if (now - firstSampleTS < min2) {
       return;
     }
     const passed = startedAt && now - startedAt;
@@ -14729,7 +15592,7 @@ const httpAdapter = isHttpAdapterSupported && function httpAdapter2(config) {
       }
     });
     function abort(reason) {
-      emitter.emit("abort", !reason || reason.type ? new CanceledError(null, config, req) : reason);
+      emitter.emit("abort", !reason || reason.type ? new CanceledError$1(null, config, req) : reason);
     }
     emitter.once("abort", reject);
     if (config.cancelToken || config.signal) {
@@ -14738,7 +15601,7 @@ const httpAdapter = isHttpAdapterSupported && function httpAdapter2(config) {
         config.signal.aborted ? abort() : config.signal.addEventListener("abort", abort);
       }
     }
-    const fullPath = buildFullPath(config.baseURL, config.url);
+    const fullPath = buildFullPath(config.baseURL, config.url, config.allowAbsoluteUrls);
     const parsed = new URL(fullPath, platform.hasBrowserEnv ? platform.origin : void 0);
     const protocol = parsed.protocol || supportedProtocols[0];
     if (protocol === "data:") {
@@ -14756,7 +15619,7 @@ const httpAdapter = isHttpAdapterSupported && function httpAdapter2(config) {
           Blob: config.env && config.env.Blob
         });
       } catch (err) {
-        throw AxiosError.from(err, AxiosError.ERR_BAD_REQUEST, config);
+        throw AxiosError$1.from(err, AxiosError$1.ERR_BAD_REQUEST, config);
       }
       if (responseType === "text") {
         convertedData = convertedData.toString(responseEncoding);
@@ -14770,19 +15633,19 @@ const httpAdapter = isHttpAdapterSupported && function httpAdapter2(config) {
         data: convertedData,
         status: 200,
         statusText: "OK",
-        headers: new AxiosHeaders(),
+        headers: new AxiosHeaders$1(),
         config
       });
     }
     if (supportedProtocols.indexOf(protocol) === -1) {
-      return reject(new AxiosError(
+      return reject(new AxiosError$1(
         "Unsupported protocol " + protocol,
-        AxiosError.ERR_BAD_REQUEST,
+        AxiosError$1.ERR_BAD_REQUEST,
         config
       ));
     }
-    const headers = AxiosHeaders.from(config.headers).normalize();
-    headers.set("User-Agent", "axios/" + VERSION, false);
+    const headers = AxiosHeaders$1.from(config.headers).normalize();
+    headers.set("User-Agent", "axios/" + VERSION$1, false);
     const { onUploadProgress, onDownloadProgress } = config;
     const maxRate = config.maxRate;
     let maxUploadRate = void 0;
@@ -14792,7 +15655,7 @@ const httpAdapter = isHttpAdapterSupported && function httpAdapter2(config) {
       data = formDataToStream(data, (formHeaders) => {
         headers.set(formHeaders);
       }, {
-        tag: `axios-${VERSION}-boundary`,
+        tag: `axios-${VERSION$1}-boundary`,
         boundary: userBoundary && userBoundary[1] || void 0
       });
     } else if (utils$1.isFormData(data) && utils$1.isFunction(data.getHeaders)) {
@@ -14815,17 +15678,17 @@ const httpAdapter = isHttpAdapterSupported && function httpAdapter2(config) {
       } else if (utils$1.isString(data)) {
         data = Buffer.from(data, "utf-8");
       } else {
-        return reject(new AxiosError(
+        return reject(new AxiosError$1(
           "Data after transformation must be a string, an ArrayBuffer, a Buffer, or a Stream",
-          AxiosError.ERR_BAD_REQUEST,
+          AxiosError$1.ERR_BAD_REQUEST,
           config
         ));
       }
       headers.setContentLength(data.length, false);
       if (config.maxBodyLength > -1 && data.length > config.maxBodyLength) {
-        return reject(new AxiosError(
+        return reject(new AxiosError$1(
           "Request body larger than maxBodyLength limit",
-          AxiosError.ERR_BAD_REQUEST,
+          AxiosError$1.ERR_BAD_REQUEST,
           config
         ));
       }
@@ -14978,7 +15841,7 @@ const httpAdapter = isHttpAdapterSupported && function httpAdapter2(config) {
       const response = {
         status: res.statusCode,
         statusText: res.statusMessage,
-        headers: new AxiosHeaders(res.headers),
+        headers: new AxiosHeaders$1(res.headers),
         config,
         request: lastRequest
       };
@@ -14994,9 +15857,9 @@ const httpAdapter = isHttpAdapterSupported && function httpAdapter2(config) {
           if (config.maxContentLength > -1 && totalResponseBytes > config.maxContentLength) {
             rejected = true;
             responseStream.destroy();
-            reject(new AxiosError(
+            reject(new AxiosError$1(
               "maxContentLength size of " + config.maxContentLength + " exceeded",
-              AxiosError.ERR_BAD_RESPONSE,
+              AxiosError$1.ERR_BAD_RESPONSE,
               config,
               lastRequest
             ));
@@ -15006,9 +15869,9 @@ const httpAdapter = isHttpAdapterSupported && function httpAdapter2(config) {
           if (rejected) {
             return;
           }
-          const err = new AxiosError(
+          const err = new AxiosError$1(
             "stream has been aborted",
-            AxiosError.ERR_BAD_RESPONSE,
+            AxiosError$1.ERR_BAD_RESPONSE,
             config,
             lastRequest
           );
@@ -15017,7 +15880,7 @@ const httpAdapter = isHttpAdapterSupported && function httpAdapter2(config) {
         });
         responseStream.on("error", function handleStreamError(err) {
           if (req.destroyed) return;
-          reject(AxiosError.from(err, null, config, lastRequest));
+          reject(AxiosError$1.from(err, null, config, lastRequest));
         });
         responseStream.on("end", function handleStreamEnd() {
           try {
@@ -15030,7 +15893,7 @@ const httpAdapter = isHttpAdapterSupported && function httpAdapter2(config) {
             }
             response.data = responseData;
           } catch (err) {
-            return reject(AxiosError.from(err, null, config, response.request, response));
+            return reject(AxiosError$1.from(err, null, config, response.request, response));
           }
           settle(resolve2, reject, response);
         });
@@ -15047,7 +15910,7 @@ const httpAdapter = isHttpAdapterSupported && function httpAdapter2(config) {
       req.destroy(err);
     });
     req.on("error", function handleRequestError(err) {
-      reject(AxiosError.from(err, null, config, req));
+      reject(AxiosError$1.from(err, null, config, req));
     });
     req.on("socket", function handleRequestSocket(socket) {
       socket.setKeepAlive(true, 1e3 * 60);
@@ -15055,9 +15918,9 @@ const httpAdapter = isHttpAdapterSupported && function httpAdapter2(config) {
     if (config.timeout) {
       const timeout = parseInt(config.timeout, 10);
       if (Number.isNaN(timeout)) {
-        reject(new AxiosError(
+        reject(new AxiosError$1(
           "error trying to parse `config.timeout` to int",
-          AxiosError.ERR_BAD_OPTION_VALUE,
+          AxiosError$1.ERR_BAD_OPTION_VALUE,
           config,
           req
         ));
@@ -15070,9 +15933,9 @@ const httpAdapter = isHttpAdapterSupported && function httpAdapter2(config) {
         if (config.timeoutErrorMessage) {
           timeoutErrorMessage = config.timeoutErrorMessage;
         }
-        reject(new AxiosError(
+        reject(new AxiosError$1(
           timeoutErrorMessage,
-          transitional2.clarifyTimeoutError ? AxiosError.ETIMEDOUT : AxiosError.ECONNABORTED,
+          transitional2.clarifyTimeoutError ? AxiosError$1.ETIMEDOUT : AxiosError$1.ECONNABORTED,
           config,
           req
         ));
@@ -15091,7 +15954,7 @@ const httpAdapter = isHttpAdapterSupported && function httpAdapter2(config) {
       });
       data.on("close", () => {
         if (!ended && !errored) {
-          abort(new CanceledError("Request stream has been aborted", config, req));
+          abort(new CanceledError$1("Request stream has been aborted", config, req));
         }
       });
       data.pipe(req);
@@ -15138,8 +16001,8 @@ const cookies = platform.hasStandardBrowserEnv ? (
     }
   }
 );
-const headersToObject = (thing) => thing instanceof AxiosHeaders ? { ...thing } : thing;
-function mergeConfig(config1, config2) {
+const headersToObject = (thing) => thing instanceof AxiosHeaders$1 ? { ...thing } : thing;
+function mergeConfig$1(config1, config2) {
   config2 = config2 || {};
   const config = {};
   function getMergedValue(target, source, prop, caseless) {
@@ -15217,10 +16080,10 @@ function mergeConfig(config1, config2) {
   return config;
 }
 const resolveConfig = (config) => {
-  const newConfig = mergeConfig({}, config);
+  const newConfig = mergeConfig$1({}, config);
   let { data, withXSRFToken, xsrfHeaderName, xsrfCookieName, headers, auth } = newConfig;
-  newConfig.headers = headers = AxiosHeaders.from(headers);
-  newConfig.url = buildURL(buildFullPath(newConfig.baseURL, newConfig.url), config.params, config.paramsSerializer);
+  newConfig.headers = headers = AxiosHeaders$1.from(headers);
+  newConfig.url = buildURL(buildFullPath(newConfig.baseURL, newConfig.url, newConfig.allowAbsoluteUrls), config.params, config.paramsSerializer);
   if (auth) {
     headers.set(
       "Authorization",
@@ -15232,8 +16095,8 @@ const resolveConfig = (config) => {
     if (platform.hasStandardBrowserEnv || platform.hasStandardBrowserWebWorkerEnv) {
       headers.setContentType(void 0);
     } else if ((contentType = headers.getContentType()) !== false) {
-      const [type, ...tokens] = contentType ? contentType.split(";").map((token) => token.trim()).filter(Boolean) : [];
-      headers.setContentType([type || "multipart/form-data", ...tokens].join("; "));
+      const [type2, ...tokens] = contentType ? contentType.split(";").map((token) => token.trim()).filter(Boolean) : [];
+      headers.setContentType([type2 || "multipart/form-data", ...tokens].join("; "));
     }
   }
   if (platform.hasStandardBrowserEnv) {
@@ -15252,7 +16115,7 @@ const xhrAdapter = isXHRAdapterSupported && function(config) {
   return new Promise(function dispatchXhrRequest(resolve2, reject) {
     const _config = resolveConfig(config);
     let requestData = _config.data;
-    const requestHeaders = AxiosHeaders.from(_config.headers).normalize();
+    const requestHeaders = AxiosHeaders$1.from(_config.headers).normalize();
     let { responseType, onUploadProgress, onDownloadProgress } = _config;
     let onCanceled;
     let uploadThrottled, downloadThrottled;
@@ -15270,7 +16133,7 @@ const xhrAdapter = isXHRAdapterSupported && function(config) {
       if (!request) {
         return;
       }
-      const responseHeaders = AxiosHeaders.from(
+      const responseHeaders = AxiosHeaders$1.from(
         "getAllResponseHeaders" in request && request.getAllResponseHeaders()
       );
       const responseData = !responseType || responseType === "text" || responseType === "json" ? request.responseText : request.response;
@@ -15308,11 +16171,11 @@ const xhrAdapter = isXHRAdapterSupported && function(config) {
       if (!request) {
         return;
       }
-      reject(new AxiosError("Request aborted", AxiosError.ECONNABORTED, config, request));
+      reject(new AxiosError$1("Request aborted", AxiosError$1.ECONNABORTED, config, request));
       request = null;
     };
     request.onerror = function handleError() {
-      reject(new AxiosError("Network Error", AxiosError.ERR_NETWORK, config, request));
+      reject(new AxiosError$1("Network Error", AxiosError$1.ERR_NETWORK, config, request));
       request = null;
     };
     request.ontimeout = function handleTimeout() {
@@ -15321,9 +16184,9 @@ const xhrAdapter = isXHRAdapterSupported && function(config) {
       if (_config.timeoutErrorMessage) {
         timeoutErrorMessage = _config.timeoutErrorMessage;
       }
-      reject(new AxiosError(
+      reject(new AxiosError$1(
         timeoutErrorMessage,
-        transitional2.clarifyTimeoutError ? AxiosError.ETIMEDOUT : AxiosError.ECONNABORTED,
+        transitional2.clarifyTimeoutError ? AxiosError$1.ETIMEDOUT : AxiosError$1.ECONNABORTED,
         config,
         request
       ));
@@ -15355,7 +16218,7 @@ const xhrAdapter = isXHRAdapterSupported && function(config) {
         if (!request) {
           return;
         }
-        reject(!cancel || cancel.type ? new CanceledError(null, config, request) : cancel);
+        reject(!cancel || cancel.type ? new CanceledError$1(null, config, request) : cancel);
         request.abort();
         request = null;
       };
@@ -15366,7 +16229,7 @@ const xhrAdapter = isXHRAdapterSupported && function(config) {
     }
     const protocol = parseProtocol(_config.url);
     if (protocol && platform.protocols.indexOf(protocol) === -1) {
-      reject(new AxiosError("Unsupported protocol " + protocol + ":", AxiosError.ERR_BAD_REQUEST, config));
+      reject(new AxiosError$1("Unsupported protocol " + protocol + ":", AxiosError$1.ERR_BAD_REQUEST, config));
       return;
     }
     request.send(requestData || null);
@@ -15382,12 +16245,12 @@ const composeSignals = (signals, timeout) => {
         aborted = true;
         unsubscribe();
         const err = reason instanceof Error ? reason : this.reason;
-        controller.abort(err instanceof AxiosError ? err : new CanceledError(err instanceof Error ? err.message : err));
+        controller.abort(err instanceof AxiosError$1 ? err : new CanceledError$1(err instanceof Error ? err.message : err));
       }
     };
     let timer = timeout && setTimeout(() => {
       timer = null;
-      onabort(new AxiosError(`timeout ${timeout} of ms exceeded`, AxiosError.ETIMEDOUT));
+      onabort(new AxiosError$1(`timeout ${timeout} of ms exceeded`, AxiosError$1.ETIMEDOUT));
     }, timeout);
     const unsubscribe = () => {
       if (signals) {
@@ -15443,7 +16306,7 @@ const readStream = async function* (stream2) {
   }
 };
 const trackStream = (stream2, chunkSize, onProgress, onFinish) => {
-  const iterator = readBytes(stream2, chunkSize);
+  const iterator2 = readBytes(stream2, chunkSize);
   let bytes = 0;
   let done;
   let _onFinish = (e) => {
@@ -15455,7 +16318,7 @@ const trackStream = (stream2, chunkSize, onProgress, onFinish) => {
   return new ReadableStream({
     async pull(controller) {
       try {
-        const { done: done2, value } = await iterator.next();
+        const { done: done2, value } = await iterator2.next();
         if (done2) {
           _onFinish();
           controller.close();
@@ -15474,7 +16337,7 @@ const trackStream = (stream2, chunkSize, onProgress, onFinish) => {
     },
     cancel(reason) {
       _onFinish(reason);
-      return iterator.return();
+      return iterator2.return();
     }
   }, {
     highWaterMark: 2
@@ -15508,9 +16371,9 @@ const resolvers = {
   stream: supportsResponseStream && ((res) => res.body)
 };
 isFetchSupported && ((res) => {
-  ["text", "arrayBuffer", "blob", "formData", "stream"].forEach((type) => {
-    !resolvers[type] && (resolvers[type] = utils$1.isFunction(res[type]) ? (res2) => res2[type]() : (_, config) => {
-      throw new AxiosError(`Response type '${type}' is not supported`, AxiosError.ERR_NOT_SUPPORT, config);
+  ["text", "arrayBuffer", "blob", "formData", "stream"].forEach((type2) => {
+    !resolvers[type2] && (resolvers[type2] = utils$1.isFunction(res[type2]) ? (res2) => res2[type2]() : (_, config) => {
+      throw new AxiosError$1(`Response type '${type2}' is not supported`, AxiosError$1.ERR_NOT_SUPPORT, config);
     });
   });
 })(new Response());
@@ -15622,7 +16485,7 @@ const fetchAdapter = isFetchSupported && (async (config) => {
     return await new Promise((resolve2, reject) => {
       settle(resolve2, reject, {
         data: responseData,
-        headers: AxiosHeaders.from(response.headers),
+        headers: AxiosHeaders$1.from(response.headers),
         status: response.status,
         statusText: response.statusText,
         config,
@@ -15631,15 +16494,15 @@ const fetchAdapter = isFetchSupported && (async (config) => {
     });
   } catch (err) {
     unsubscribe && unsubscribe();
-    if (err && err.name === "TypeError" && /fetch/i.test(err.message)) {
+    if (err && err.name === "TypeError" && /Load failed|fetch/i.test(err.message)) {
       throw Object.assign(
-        new AxiosError("Network Error", AxiosError.ERR_NETWORK, config, request),
+        new AxiosError$1("Network Error", AxiosError$1.ERR_NETWORK, config, request),
         {
           cause: err.cause || err
         }
       );
     }
-    throw AxiosError.from(err, err && err.code, config, request);
+    throw AxiosError$1.from(err, err && err.code, config, request);
   }
 });
 const knownAdapters = {
@@ -15672,7 +16535,7 @@ const adapters = {
       if (!isResolvedHandle(nameOrAdapter)) {
         adapter = knownAdapters[(id = String(nameOrAdapter)).toLowerCase()];
         if (adapter === void 0) {
-          throw new AxiosError(`Unknown adapter '${id}'`);
+          throw new AxiosError$1(`Unknown adapter '${id}'`);
         }
       }
       if (adapter) {
@@ -15685,7 +16548,7 @@ const adapters = {
         ([id, state]) => `adapter ${id} ` + (state === false ? "is not supported by the environment" : "is not available in the build")
       );
       let s = length ? reasons.length > 1 ? "since :\n" + reasons.map(renderReason).join("\n") : " " + renderReason(reasons[0]) : "as no adapter specified";
-      throw new AxiosError(
+      throw new AxiosError$1(
         `There is no suitable adapter to dispatch the request ` + s,
         "ERR_NOT_SUPPORT"
       );
@@ -15699,12 +16562,12 @@ function throwIfCancellationRequested(config) {
     config.cancelToken.throwIfRequested();
   }
   if (config.signal && config.signal.aborted) {
-    throw new CanceledError(null, config);
+    throw new CanceledError$1(null, config);
   }
 }
 function dispatchRequest(config) {
   throwIfCancellationRequested(config);
-  config.headers = AxiosHeaders.from(config.headers);
+  config.headers = AxiosHeaders$1.from(config.headers);
   config.data = transformData.call(
     config,
     config.transformRequest
@@ -15720,10 +16583,10 @@ function dispatchRequest(config) {
       config.transformResponse,
       response
     );
-    response.headers = AxiosHeaders.from(response.headers);
+    response.headers = AxiosHeaders$1.from(response.headers);
     return response;
   }, function onAdapterRejection(reason) {
-    if (!isCancel(reason)) {
+    if (!isCancel$1(reason)) {
       throwIfCancellationRequested(config);
       if (reason && reason.response) {
         reason.response.data = transformData.call(
@@ -15731,28 +16594,28 @@ function dispatchRequest(config) {
           config.transformResponse,
           reason.response
         );
-        reason.response.headers = AxiosHeaders.from(reason.response.headers);
+        reason.response.headers = AxiosHeaders$1.from(reason.response.headers);
       }
     }
     return Promise.reject(reason);
   });
 }
 const validators$1 = {};
-["object", "boolean", "number", "function", "string", "symbol"].forEach((type, i) => {
-  validators$1[type] = function validator2(thing) {
-    return typeof thing === type || "a" + (i < 1 ? "n " : " ") + type;
+["object", "boolean", "number", "function", "string", "symbol"].forEach((type2, i) => {
+  validators$1[type2] = function validator2(thing) {
+    return typeof thing === type2 || "a" + (i < 1 ? "n " : " ") + type2;
   };
 });
 const deprecatedWarnings = {};
 validators$1.transitional = function transitional(validator2, version, message) {
   function formatMessage(opt, desc) {
-    return "[Axios v" + VERSION + "] Transitional option '" + opt + "'" + desc + (message ? ". " + message : "");
+    return "[Axios v" + VERSION$1 + "] Transitional option '" + opt + "'" + desc + (message ? ". " + message : "");
   }
   return (value, opt, opts) => {
     if (validator2 === false) {
-      throw new AxiosError(
+      throw new AxiosError$1(
         formatMessage(opt, " has been removed" + (version ? " in " + version : "")),
-        AxiosError.ERR_DEPRECATED
+        AxiosError$1.ERR_DEPRECATED
       );
     }
     if (version && !deprecatedWarnings[opt]) {
@@ -15775,7 +16638,7 @@ validators$1.spelling = function spelling(correctSpelling) {
 };
 function assertOptions(options2, schema, allowUnknown) {
   if (typeof options2 !== "object") {
-    throw new AxiosError("options must be an object", AxiosError.ERR_BAD_OPTION_VALUE);
+    throw new AxiosError$1("options must be an object", AxiosError$1.ERR_BAD_OPTION_VALUE);
   }
   const keys = Object.keys(options2);
   let i = keys.length;
@@ -15786,12 +16649,12 @@ function assertOptions(options2, schema, allowUnknown) {
       const value = options2[opt];
       const result = value === void 0 || validator2(value, opt, options2);
       if (result !== true) {
-        throw new AxiosError("option " + opt + " must be " + result, AxiosError.ERR_BAD_OPTION_VALUE);
+        throw new AxiosError$1("option " + opt + " must be " + result, AxiosError$1.ERR_BAD_OPTION_VALUE);
       }
       continue;
     }
     if (allowUnknown !== true) {
-      throw new AxiosError("Unknown option " + opt, AxiosError.ERR_BAD_OPTION);
+      throw new AxiosError$1("Unknown option " + opt, AxiosError$1.ERR_BAD_OPTION);
     }
   }
 }
@@ -15800,9 +16663,9 @@ const validator = {
   validators: validators$1
 };
 const validators = validator.validators;
-class Axios {
+let Axios$1 = class Axios {
   constructor(instanceConfig) {
-    this.defaults = instanceConfig;
+    this.defaults = instanceConfig || {};
     this.interceptors = {
       request: new InterceptorManager(),
       response: new InterceptorManager()
@@ -15843,7 +16706,7 @@ class Axios {
     } else {
       config = configOrUrl || {};
     }
-    config = mergeConfig(this.defaults, config);
+    config = mergeConfig$1(this.defaults, config);
     const { transitional: transitional2, paramsSerializer, headers } = config;
     if (transitional2 !== void 0) {
       validator.assertOptions(transitional2, {
@@ -15864,6 +16727,12 @@ class Axios {
         }, true);
       }
     }
+    if (config.allowAbsoluteUrls !== void 0) ;
+    else if (this.defaults.allowAbsoluteUrls !== void 0) {
+      config.allowAbsoluteUrls = this.defaults.allowAbsoluteUrls;
+    } else {
+      config.allowAbsoluteUrls = true;
+    }
     validator.assertOptions(config, {
       baseUrl: validators.spelling("baseURL"),
       withXsrfToken: validators.spelling("withXSRFToken")
@@ -15879,7 +16748,7 @@ class Axios {
         delete headers[method];
       }
     );
-    config.headers = AxiosHeaders.concat(contextHeaders, headers);
+    config.headers = AxiosHeaders$1.concat(contextHeaders, headers);
     const requestInterceptorChain = [];
     let synchronousRequestInterceptors = true;
     this.interceptors.request.forEach(function unshiftRequestInterceptors(interceptor) {
@@ -15933,14 +16802,14 @@ class Axios {
     return promise;
   }
   getUri(config) {
-    config = mergeConfig(this.defaults, config);
-    const fullPath = buildFullPath(config.baseURL, config.url);
+    config = mergeConfig$1(this.defaults, config);
+    const fullPath = buildFullPath(config.baseURL, config.url, config.allowAbsoluteUrls);
     return buildURL(fullPath, config.params, config.paramsSerializer);
   }
-}
+};
 utils$1.forEach(["delete", "get", "head", "options"], function forEachMethodNoData(method) {
-  Axios.prototype[method] = function(url, config) {
-    return this.request(mergeConfig(config || {}, {
+  Axios$1.prototype[method] = function(url, config) {
+    return this.request(mergeConfig$1(config || {}, {
       method,
       url,
       data: (config || {}).data
@@ -15950,7 +16819,7 @@ utils$1.forEach(["delete", "get", "head", "options"], function forEachMethodNoDa
 utils$1.forEach(["post", "put", "patch"], function forEachMethodWithData(method) {
   function generateHTTPMethod(isForm) {
     return function httpMethod(url, data, config) {
-      return this.request(mergeConfig(config || {}, {
+      return this.request(mergeConfig$1(config || {}, {
         method,
         headers: isForm ? {
           "Content-Type": "multipart/form-data"
@@ -15960,10 +16829,10 @@ utils$1.forEach(["post", "put", "patch"], function forEachMethodWithData(method)
       }));
     };
   }
-  Axios.prototype[method] = generateHTTPMethod();
-  Axios.prototype[method + "Form"] = generateHTTPMethod(true);
+  Axios$1.prototype[method] = generateHTTPMethod();
+  Axios$1.prototype[method + "Form"] = generateHTTPMethod(true);
 });
-class CancelToken {
+let CancelToken$1 = class CancelToken {
   constructor(executor) {
     if (typeof executor !== "function") {
       throw new TypeError("executor must be a function.");
@@ -15996,7 +16865,7 @@ class CancelToken {
       if (token.reason) {
         return;
       }
-      token.reason = new CanceledError(message, config, request);
+      token.reason = new CanceledError$1(message, config, request);
       resolvePromise(token.reason);
     });
   }
@@ -16057,16 +16926,16 @@ class CancelToken {
       cancel
     };
   }
-}
-function spread(callback) {
+};
+function spread$1(callback) {
   return function wrap(arr) {
     return callback.apply(null, arr);
   };
 }
-function isAxiosError(payload) {
+function isAxiosError$1(payload) {
   return utils$1.isObject(payload) && payload.isAxiosError === true;
 }
-const HttpStatusCode = {
+const HttpStatusCode$1 = {
   Continue: 100,
   SwitchingProtocols: 101,
   Processing: 102,
@@ -16131,39 +17000,57 @@ const HttpStatusCode = {
   NotExtended: 510,
   NetworkAuthenticationRequired: 511
 };
-Object.entries(HttpStatusCode).forEach(([key, value]) => {
-  HttpStatusCode[value] = key;
+Object.entries(HttpStatusCode$1).forEach(([key, value]) => {
+  HttpStatusCode$1[value] = key;
 });
 function createInstance(defaultConfig) {
-  const context = new Axios(defaultConfig);
-  const instance = bind(Axios.prototype.request, context);
-  utils$1.extend(instance, Axios.prototype, context, { allOwnKeys: true });
+  const context = new Axios$1(defaultConfig);
+  const instance = bind(Axios$1.prototype.request, context);
+  utils$1.extend(instance, Axios$1.prototype, context, { allOwnKeys: true });
   utils$1.extend(instance, context, null, { allOwnKeys: true });
   instance.create = function create(instanceConfig) {
-    return createInstance(mergeConfig(defaultConfig, instanceConfig));
+    return createInstance(mergeConfig$1(defaultConfig, instanceConfig));
   };
   return instance;
 }
 const axios = createInstance(defaults);
-axios.Axios = Axios;
-axios.CanceledError = CanceledError;
-axios.CancelToken = CancelToken;
-axios.isCancel = isCancel;
-axios.VERSION = VERSION;
-axios.toFormData = toFormData;
-axios.AxiosError = AxiosError;
+axios.Axios = Axios$1;
+axios.CanceledError = CanceledError$1;
+axios.CancelToken = CancelToken$1;
+axios.isCancel = isCancel$1;
+axios.VERSION = VERSION$1;
+axios.toFormData = toFormData$1;
+axios.AxiosError = AxiosError$1;
 axios.Cancel = axios.CanceledError;
 axios.all = function all(promises) {
   return Promise.all(promises);
 };
-axios.spread = spread;
-axios.isAxiosError = isAxiosError;
-axios.mergeConfig = mergeConfig;
-axios.AxiosHeaders = AxiosHeaders;
+axios.spread = spread$1;
+axios.isAxiosError = isAxiosError$1;
+axios.mergeConfig = mergeConfig$1;
+axios.AxiosHeaders = AxiosHeaders$1;
 axios.formToJSON = (thing) => formDataToJSON(utils$1.isHTMLForm(thing) ? new FormData(thing) : thing);
 axios.getAdapter = adapters.getAdapter;
-axios.HttpStatusCode = HttpStatusCode;
+axios.HttpStatusCode = HttpStatusCode$1;
 axios.default = axios;
+const {
+  Axios: Axios2,
+  AxiosError,
+  CanceledError,
+  isCancel,
+  CancelToken: CancelToken2,
+  VERSION,
+  all: all2,
+  Cancel,
+  isAxiosError,
+  spread,
+  toFormData,
+  AxiosHeaders: AxiosHeaders2,
+  HttpStatusCode,
+  formToJSON,
+  getAdapter,
+  mergeConfig
+} = axios;
 const REQ_STORE_ID = "reqs_path";
 async function readRequirements(filePath) {
   try {
@@ -16886,7 +17773,7 @@ function requireCjs() {
   if (hasRequiredCjs) return cjs;
   hasRequiredCjs = 1;
   (function(exports) {
-    var __createBinding = cjs.__createBinding || (Object.create ? function(o, m, k, k2) {
+    var __createBinding = cjs && cjs.__createBinding || (Object.create ? function(o, m, k, k2) {
       if (k2 === void 0) k2 = k;
       var desc = Object.getOwnPropertyDescriptor(m, k);
       if (!desc || ("get" in desc ? !m.__esModule : desc.writable || desc.configurable)) {
@@ -16899,12 +17786,12 @@ function requireCjs() {
       if (k2 === void 0) k2 = k;
       o[k2] = m[k];
     });
-    var __setModuleDefault = cjs.__setModuleDefault || (Object.create ? function(o, v) {
+    var __setModuleDefault = cjs && cjs.__setModuleDefault || (Object.create ? function(o, v) {
       Object.defineProperty(o, "default", { enumerable: true, value: v });
     } : function(o, v) {
       o["default"] = v;
     });
-    var __importStar = cjs.__importStar || function(mod) {
+    var __importStar = cjs && cjs.__importStar || function(mod) {
       if (mod && mod.__esModule) return mod;
       var result = {};
       if (mod != null) {
@@ -16913,7 +17800,7 @@ function requireCjs() {
       __setModuleDefault(result, mod);
       return result;
     };
-    var __exportStar = cjs.__exportStar || function(m, exports2) {
+    var __exportStar = cjs && cjs.__exportStar || function(m, exports2) {
       for (var p in m) if (p !== "default" && !Object.prototype.hasOwnProperty.call(exports2, p)) __createBinding(exports2, m, p);
     };
     Object.defineProperty(exports, "__esModule", { value: true });
@@ -17557,6 +18444,7 @@ const require$$0 = {
   "application/ace+cbor": { "source": "iana" },
   "application/ace+json": { "source": "iana", "compressible": true },
   "application/ace-groupcomm+cbor": { "source": "iana" },
+  "application/ace-trl+cbor": { "source": "iana" },
   "application/activemessage": { "source": "iana" },
   "application/activity+json": { "source": "iana", "compressible": true },
   "application/aif+cbor": { "source": "iana" },
@@ -17627,17 +18515,20 @@ const require$$0 = {
   "application/cdmi-object": { "source": "iana", "extensions": ["cdmio"] },
   "application/cdmi-queue": { "source": "iana", "extensions": ["cdmiq"] },
   "application/cdni": { "source": "iana" },
+  "application/ce+cbor": { "source": "iana" },
   "application/cea": { "source": "iana" },
   "application/cea-2018+xml": { "source": "iana", "compressible": true },
   "application/cellml+xml": { "source": "iana", "compressible": true },
   "application/cfw": { "source": "iana" },
   "application/cid-edhoc+cbor-seq": { "source": "iana" },
   "application/city+json": { "source": "iana", "compressible": true },
+  "application/city+json-seq": { "source": "iana" },
   "application/clr": { "source": "iana" },
   "application/clue+xml": { "source": "iana", "compressible": true },
   "application/clue_info+xml": { "source": "iana", "compressible": true },
   "application/cms": { "source": "iana" },
   "application/cnrp+xml": { "source": "iana", "compressible": true },
+  "application/coap-eap": { "source": "iana" },
   "application/coap-group+json": { "source": "iana", "compressible": true },
   "application/coap-payload": { "source": "iana" },
   "application/commonground": { "source": "iana" },
@@ -17667,7 +18558,7 @@ const require$$0 = {
   "application/dcd": { "source": "iana" },
   "application/dec-dx": { "source": "iana" },
   "application/dialog-info+xml": { "source": "iana", "compressible": true },
-  "application/dicom": { "source": "iana" },
+  "application/dicom": { "source": "iana", "extensions": ["dcm"] },
   "application/dicom+json": { "source": "iana", "compressible": true },
   "application/dicom+xml": { "source": "iana", "compressible": true },
   "application/dii": { "source": "iana" },
@@ -17682,6 +18573,12 @@ const require$$0 = {
   "application/dssc+der": { "source": "iana", "extensions": ["dssc"] },
   "application/dssc+xml": { "source": "iana", "compressible": true, "extensions": ["xdssc"] },
   "application/dvcs": { "source": "iana" },
+  "application/eat+cwt": { "source": "iana" },
+  "application/eat+jwt": { "source": "iana" },
+  "application/eat-bun+cbor": { "source": "iana" },
+  "application/eat-bun+json": { "source": "iana", "compressible": true },
+  "application/eat-ucs+cbor": { "source": "iana" },
+  "application/eat-ucs+json": { "source": "iana", "compressible": true },
   "application/ecmascript": { "source": "apache", "compressible": true, "extensions": ["ecma"] },
   "application/edhoc+cbor-seq": { "source": "iana" },
   "application/edi-consent": { "source": "iana" },
@@ -17703,6 +18600,7 @@ const require$$0 = {
   "application/emma+xml": { "source": "iana", "compressible": true, "extensions": ["emma"] },
   "application/emotionml+xml": { "source": "iana", "compressible": true, "extensions": ["emotionml"] },
   "application/encaprtp": { "source": "iana" },
+  "application/entity-statement+jwt": { "source": "iana" },
   "application/epp+xml": { "source": "iana", "compressible": true },
   "application/epub+zip": { "source": "iana", "compressible": false, "extensions": ["epub"] },
   "application/eshop": { "source": "iana" },
@@ -17725,6 +18623,7 @@ const require$$0 = {
   "application/geo+json": { "source": "iana", "compressible": true, "extensions": ["geojson"] },
   "application/geo+json-seq": { "source": "iana" },
   "application/geopackage+sqlite3": { "source": "iana" },
+  "application/geopose+json": { "source": "iana", "compressible": true },
   "application/geoxacml+json": { "source": "iana", "compressible": true },
   "application/geoxacml+xml": { "source": "iana", "compressible": true },
   "application/gltf-buffer": { "source": "iana" },
@@ -17777,6 +18676,7 @@ const require$$0 = {
   "application/jsonpath": { "source": "iana" },
   "application/jwk+json": { "source": "iana", "compressible": true },
   "application/jwk-set+json": { "source": "iana", "compressible": true },
+  "application/jwk-set+jwt": { "source": "iana" },
   "application/jwt": { "source": "iana" },
   "application/kpml-request+xml": { "source": "iana", "compressible": true },
   "application/kpml-response+xml": { "source": "iana", "compressible": true },
@@ -17860,7 +18760,7 @@ const require$$0 = {
   "application/oblivious-dns-message": { "source": "iana" },
   "application/ocsp-request": { "source": "iana" },
   "application/ocsp-response": { "source": "iana" },
-  "application/octet-stream": { "source": "iana", "compressible": false, "extensions": ["bin", "dms", "lrf", "mar", "so", "dist", "distz", "pkg", "bpk", "dump", "elc", "deploy", "exe", "dll", "deb", "dmg", "iso", "img", "msi", "msp", "msm", "buffer"] },
+  "application/octet-stream": { "source": "iana", "compressible": true, "extensions": ["bin", "dms", "lrf", "mar", "so", "dist", "distz", "pkg", "bpk", "dump", "elc", "deploy", "exe", "dll", "deb", "dmg", "iso", "img", "msi", "msp", "msm", "buffer"] },
   "application/oda": { "source": "iana", "extensions": ["oda"] },
   "application/odm+xml": { "source": "iana", "compressible": true },
   "application/odx": { "source": "iana" },
@@ -17868,7 +18768,7 @@ const require$$0 = {
   "application/ogg": { "source": "iana", "compressible": false, "extensions": ["ogx"] },
   "application/ohttp-keys": { "source": "iana" },
   "application/omdoc+xml": { "source": "apache", "compressible": true, "extensions": ["omdoc"] },
-  "application/onenote": { "source": "apache", "extensions": ["onetoc", "onetoc2", "onetmp", "onepkg"] },
+  "application/onenote": { "source": "apache", "extensions": ["onetoc", "onetoc2", "onetmp", "onepkg", "one", "onea"] },
   "application/opc-nodeset+xml": { "source": "iana", "compressible": true },
   "application/oscore": { "source": "iana" },
   "application/oxps": { "source": "iana", "extensions": ["oxps"] },
@@ -17908,6 +18808,7 @@ const require$$0 = {
   "application/problem+json": { "source": "iana", "compressible": true },
   "application/problem+xml": { "source": "iana", "compressible": true },
   "application/provenance+xml": { "source": "iana", "compressible": true, "extensions": ["provx"] },
+  "application/provided-claims+jwt": { "source": "iana" },
   "application/prs.alvestrand.titrax-sheet": { "source": "iana" },
   "application/prs.cww": { "source": "iana", "extensions": ["cww"] },
   "application/prs.cyn": { "source": "iana", "charset": "7-BIT" },
@@ -17918,6 +18819,7 @@ const require$$0 = {
   "application/prs.implied-object+json-seq": { "source": "iana" },
   "application/prs.implied-object+yaml": { "source": "iana" },
   "application/prs.implied-structure": { "source": "iana" },
+  "application/prs.mayfile": { "source": "iana" },
   "application/prs.nprend": { "source": "iana" },
   "application/prs.plucker": { "source": "iana" },
   "application/prs.rdf-xml-crypt": { "source": "iana" },
@@ -17934,6 +18836,7 @@ const require$$0 = {
   "application/relax-ng-compact-syntax": { "source": "iana", "extensions": ["rnc"] },
   "application/remote-printing": { "source": "apache" },
   "application/reputon+json": { "source": "iana", "compressible": true },
+  "application/resolve-response+jwt": { "source": "iana" },
   "application/resource-lists+xml": { "source": "iana", "compressible": true, "extensions": ["rl"] },
   "application/resource-lists-diff+xml": { "source": "iana", "compressible": true, "extensions": ["rld"] },
   "application/rfc+xml": { "source": "iana", "compressible": true },
@@ -18009,6 +18912,7 @@ const require$$0 = {
   "application/srgs+xml": { "source": "iana", "compressible": true, "extensions": ["grxml"] },
   "application/sru+xml": { "source": "iana", "compressible": true, "extensions": ["sru"] },
   "application/ssdl+xml": { "source": "apache", "compressible": true, "extensions": ["ssdl"] },
+  "application/sslkeylogfile": { "source": "iana" },
   "application/ssml+xml": { "source": "iana", "compressible": true, "extensions": ["ssml"] },
   "application/st2110-41": { "source": "iana" },
   "application/stix+json": { "source": "iana", "compressible": true },
@@ -18039,21 +18943,29 @@ const require$$0 = {
   "application/tlsrpt+json": { "source": "iana", "compressible": true },
   "application/tm+json": { "source": "iana", "compressible": true },
   "application/tnauthlist": { "source": "iana" },
+  "application/toc+cbor": { "source": "iana" },
   "application/token-introspection+jwt": { "source": "iana" },
-  "application/toml": { "compressible": true, "extensions": ["toml"] },
+  "application/toml": { "source": "iana", "compressible": true, "extensions": ["toml"] },
   "application/trickle-ice-sdpfrag": { "source": "iana" },
   "application/trig": { "source": "iana", "extensions": ["trig"] },
+  "application/trust-chain+json": { "source": "iana", "compressible": true },
+  "application/trust-mark+jwt": { "source": "iana" },
+  "application/trust-mark-delegation+jwt": { "source": "iana" },
   "application/ttml+xml": { "source": "iana", "compressible": true, "extensions": ["ttml"] },
   "application/tve-trigger": { "source": "iana" },
   "application/tzif": { "source": "iana" },
   "application/tzif-leap": { "source": "iana" },
   "application/ubjson": { "compressible": false, "extensions": ["ubj"] },
+  "application/uccs+cbor": { "source": "iana" },
+  "application/ujcs+json": { "source": "iana", "compressible": true },
   "application/ulpfec": { "source": "iana" },
   "application/urc-grpsheet+xml": { "source": "iana", "compressible": true },
   "application/urc-ressheet+xml": { "source": "iana", "compressible": true, "extensions": ["rsheet"] },
   "application/urc-targetdesc+xml": { "source": "iana", "compressible": true, "extensions": ["td"] },
   "application/urc-uisocketdesc+xml": { "source": "iana", "compressible": true },
   "application/vc": { "source": "iana" },
+  "application/vc+cose": { "source": "iana" },
+  "application/vc+jwt": { "source": "iana" },
   "application/vcard+json": { "source": "iana", "compressible": true },
   "application/vcard+xml": { "source": "iana", "compressible": true },
   "application/vemmi": { "source": "iana" },
@@ -18069,6 +18981,8 @@ const require$$0 = {
   "application/vnd.3gpp.5gnas": { "source": "iana" },
   "application/vnd.3gpp.5gsa2x": { "source": "iana" },
   "application/vnd.3gpp.5gsa2x-local-service-information": { "source": "iana" },
+  "application/vnd.3gpp.5gsv2x": { "source": "iana" },
+  "application/vnd.3gpp.5gsv2x-local-service-information": { "source": "iana" },
   "application/vnd.3gpp.access-transfer-events+xml": { "source": "iana", "compressible": true },
   "application/vnd.3gpp.bsf+xml": { "source": "iana", "compressible": true },
   "application/vnd.3gpp.crs+xml": { "source": "iana", "compressible": true },
@@ -18202,6 +19116,7 @@ const require$$0 = {
   "application/vnd.artsquare": { "source": "iana" },
   "application/vnd.astraea-software.iota": { "source": "iana", "extensions": ["iota"] },
   "application/vnd.audiograph": { "source": "iana", "extensions": ["aep"] },
+  "application/vnd.autodesk.fbx": { "extensions": ["fbx"] },
   "application/vnd.autopackage": { "source": "iana" },
   "application/vnd.avalon+json": { "source": "iana", "compressible": true },
   "application/vnd.avistar+xml": { "source": "iana", "compressible": true },
@@ -18298,6 +19213,7 @@ const require$$0 = {
   "application/vnd.datapackage+json": { "source": "iana", "compressible": true },
   "application/vnd.dataresource+json": { "source": "iana", "compressible": true },
   "application/vnd.dbf": { "source": "iana", "extensions": ["dbf"] },
+  "application/vnd.dcmp+xml": { "source": "iana", "compressible": true, "extensions": ["dcmp"] },
   "application/vnd.debian.binary-package": { "source": "iana" },
   "application/vnd.dece.data": { "source": "iana", "extensions": ["uvf", "uvvf", "uvd", "uvvd"] },
   "application/vnd.dece.ttml+xml": { "source": "iana", "compressible": true, "extensions": ["uvt", "uvvt"] },
@@ -18406,6 +19322,7 @@ const require$$0 = {
   "application/vnd.fdf": { "source": "apache", "extensions": ["fdf"] },
   "application/vnd.fdsn.mseed": { "source": "iana", "extensions": ["mseed"] },
   "application/vnd.fdsn.seed": { "source": "iana", "extensions": ["seed", "dataless"] },
+  "application/vnd.fdsn.stationxml+xml": { "source": "iana", "charset": "XML-BASED", "compressible": true },
   "application/vnd.ffsns": { "source": "iana" },
   "application/vnd.ficlab.flb+zip": { "source": "iana", "compressible": false },
   "application/vnd.filmit.zfc": { "source": "iana" },
@@ -18453,6 +19370,7 @@ const require$$0 = {
   "application/vnd.geo+json": { "source": "apache", "compressible": true },
   "application/vnd.geocube+xml": { "source": "apache", "compressible": true },
   "application/vnd.geogebra.file": { "source": "iana", "extensions": ["ggb"] },
+  "application/vnd.geogebra.pinboard": { "source": "iana" },
   "application/vnd.geogebra.slides": { "source": "iana", "extensions": ["ggs"] },
   "application/vnd.geogebra.tool": { "source": "iana", "extensions": ["ggt"] },
   "application/vnd.geometry-explorer": { "source": "iana", "extensions": ["gex", "gre"] },
@@ -18465,9 +19383,25 @@ const require$$0 = {
   "application/vnd.gmx": { "source": "iana", "extensions": ["gmx"] },
   "application/vnd.gnu.taler.exchange+json": { "source": "iana", "compressible": true },
   "application/vnd.gnu.taler.merchant+json": { "source": "iana", "compressible": true },
+  "application/vnd.google-apps.audio": {},
   "application/vnd.google-apps.document": { "compressible": false, "extensions": ["gdoc"] },
+  "application/vnd.google-apps.drawing": { "compressible": false, "extensions": ["gdraw"] },
+  "application/vnd.google-apps.drive-sdk": { "compressible": false },
+  "application/vnd.google-apps.file": {},
+  "application/vnd.google-apps.folder": { "compressible": false },
+  "application/vnd.google-apps.form": { "compressible": false, "extensions": ["gform"] },
+  "application/vnd.google-apps.fusiontable": {},
+  "application/vnd.google-apps.jam": { "compressible": false, "extensions": ["gjam"] },
+  "application/vnd.google-apps.mail-layout": {},
+  "application/vnd.google-apps.map": { "compressible": false, "extensions": ["gmap"] },
+  "application/vnd.google-apps.photo": {},
   "application/vnd.google-apps.presentation": { "compressible": false, "extensions": ["gslides"] },
+  "application/vnd.google-apps.script": { "compressible": false, "extensions": ["gscript"] },
+  "application/vnd.google-apps.shortcut": {},
+  "application/vnd.google-apps.site": { "compressible": false, "extensions": ["gsite"] },
   "application/vnd.google-apps.spreadsheet": { "compressible": false, "extensions": ["gsheet"] },
+  "application/vnd.google-apps.unknown": {},
+  "application/vnd.google-apps.video": {},
   "application/vnd.google-earth.kml+xml": { "source": "iana", "compressible": true, "extensions": ["kml"] },
   "application/vnd.google-earth.kmz": { "source": "iana", "compressible": false, "extensions": ["kmz"] },
   "application/vnd.gov.sk.e-form+xml": { "source": "apache", "compressible": true },
@@ -18578,7 +19512,10 @@ const require$$0 = {
   "application/vnd.kde.kpresenter": { "source": "iana", "extensions": ["kpr", "kpt"] },
   "application/vnd.kde.kspread": { "source": "iana", "extensions": ["ksp"] },
   "application/vnd.kde.kword": { "source": "iana", "extensions": ["kwd", "kwt"] },
+  "application/vnd.kdl": { "source": "iana" },
   "application/vnd.kenameaapp": { "source": "iana", "extensions": ["htke"] },
+  "application/vnd.keyman.kmp+zip": { "source": "iana", "compressible": false },
+  "application/vnd.keyman.kmx": { "source": "iana" },
   "application/vnd.kidspiration": { "source": "iana", "extensions": ["kia"] },
   "application/vnd.kinar": { "source": "iana", "extensions": ["kne", "knp"] },
   "application/vnd.koan": { "source": "iana", "extensions": ["skp", "skd", "skt", "skm"] },
@@ -18681,6 +19618,7 @@ const require$$0 = {
   "application/vnd.ms-printschematicket+xml": { "source": "iana", "compressible": true },
   "application/vnd.ms-project": { "source": "iana", "extensions": ["mpp", "mpt"] },
   "application/vnd.ms-tnef": { "source": "iana" },
+  "application/vnd.ms-visio.viewer": { "extensions": ["vdx"] },
   "application/vnd.ms-windows.devicepairing": { "source": "iana" },
   "application/vnd.ms-windows.nwprinting.oob": { "source": "iana" },
   "application/vnd.ms-windows.printerpairing": { "source": "iana" },
@@ -18840,6 +19778,7 @@ const require$$0 = {
   "application/vnd.openofficeorg.extension": { "source": "apache", "extensions": ["oxt"] },
   "application/vnd.openstreetmap.data+xml": { "source": "iana", "compressible": true, "extensions": ["osm"] },
   "application/vnd.opentimestamps.ots": { "source": "iana" },
+  "application/vnd.openvpi.dspx+json": { "source": "iana", "compressible": true },
   "application/vnd.openxmlformats-officedocument.custom-properties+xml": { "source": "iana", "compressible": true },
   "application/vnd.openxmlformats-officedocument.customxmlproperties+xml": { "source": "iana", "compressible": true },
   "application/vnd.openxmlformats-officedocument.drawing+xml": { "source": "iana", "compressible": true },
@@ -18946,6 +19885,9 @@ const require$$0 = {
   "application/vnd.powerbuilder75-s": { "source": "iana" },
   "application/vnd.preminet": { "source": "iana" },
   "application/vnd.previewsystems.box": { "source": "iana", "extensions": ["box"] },
+  "application/vnd.procrate.brushset": { "extensions": ["brushset"] },
+  "application/vnd.procreate.brush": { "extensions": ["brush"] },
+  "application/vnd.procreate.dream": { "extensions": ["drm"] },
   "application/vnd.proteus.magazine": { "source": "iana", "extensions": ["mgz"] },
   "application/vnd.psfs": { "source": "iana" },
   "application/vnd.pt.mundusmundi": { "source": "iana" },
@@ -19023,6 +19965,7 @@ const require$$0 = {
   "application/vnd.sigrok.session": { "source": "iana" },
   "application/vnd.simtech-mindmapper": { "source": "iana", "extensions": ["twd", "twds"] },
   "application/vnd.siren+json": { "source": "iana", "compressible": true },
+  "application/vnd.sketchometry": { "source": "iana" },
   "application/vnd.smaf": { "source": "iana", "extensions": ["mmf"] },
   "application/vnd.smart.notebook": { "source": "iana" },
   "application/vnd.smart.teacher": { "source": "iana", "extensions": ["teacher"] },
@@ -19087,6 +20030,7 @@ const require$$0 = {
   "application/vnd.truedoc": { "source": "iana" },
   "application/vnd.ubisoft.webplayer": { "source": "iana" },
   "application/vnd.ufdl": { "source": "iana", "extensions": ["ufd", "ufdl"] },
+  "application/vnd.uic.osdm+json": { "source": "iana", "compressible": true },
   "application/vnd.uiq.theme": { "source": "iana", "extensions": ["utz"] },
   "application/vnd.umajin": { "source": "iana", "extensions": ["umj"] },
   "application/vnd.unity": { "source": "iana", "extensions": ["unityweb"] },
@@ -19110,14 +20054,17 @@ const require$$0 = {
   "application/vnd.vd-study": { "source": "iana" },
   "application/vnd.vectorworks": { "source": "iana" },
   "application/vnd.vel+json": { "source": "iana", "compressible": true },
+  "application/vnd.veraison.tsm-report+cbor": { "source": "iana" },
+  "application/vnd.veraison.tsm-report+json": { "source": "iana", "compressible": true },
   "application/vnd.verimatrix.vcas": { "source": "iana" },
   "application/vnd.veritone.aion+json": { "source": "iana", "compressible": true },
   "application/vnd.veryant.thin": { "source": "iana" },
   "application/vnd.ves.encrypted": { "source": "iana" },
   "application/vnd.vidsoft.vidconference": { "source": "iana" },
-  "application/vnd.visio": { "source": "iana", "extensions": ["vsd", "vst", "vss", "vsw"] },
+  "application/vnd.visio": { "source": "iana", "extensions": ["vsd", "vst", "vss", "vsw", "vsdx", "vtx"] },
   "application/vnd.visionary": { "source": "iana", "extensions": ["vis"] },
   "application/vnd.vividence.scriptfile": { "source": "iana" },
+  "application/vnd.vocalshaper.vsp4": { "source": "iana" },
   "application/vnd.vsf": { "source": "iana", "extensions": ["vsf"] },
   "application/vnd.wap.sic": { "source": "iana" },
   "application/vnd.wap.slc": { "source": "iana" },
@@ -19145,6 +20092,7 @@ const require$$0 = {
   "application/vnd.wv.ssp+xml": { "source": "iana", "compressible": true },
   "application/vnd.xacml+json": { "source": "iana", "compressible": true },
   "application/vnd.xara": { "source": "iana", "extensions": ["xar"] },
+  "application/vnd.xarin.cpj": { "source": "iana" },
   "application/vnd.xecrets-encrypted": { "source": "iana" },
   "application/vnd.xfdl": { "source": "iana", "extensions": ["xfdl"] },
   "application/vnd.xfdl.webform": { "source": "iana" },
@@ -19170,7 +20118,10 @@ const require$$0 = {
   "application/vnd.zzazz.deck+xml": { "source": "iana", "compressible": true, "extensions": ["zaz"] },
   "application/voicexml+xml": { "source": "iana", "compressible": true, "extensions": ["vxml"] },
   "application/voucher-cms+json": { "source": "iana", "compressible": true },
+  "application/voucher-jws+json": { "source": "iana", "compressible": true },
   "application/vp": { "source": "iana" },
+  "application/vp+cose": { "source": "iana" },
+  "application/vp+jwt": { "source": "iana" },
   "application/vq-rtcpxr": { "source": "iana" },
   "application/wasm": { "source": "iana", "compressible": true, "extensions": ["wasm"] },
   "application/watcherinfo+xml": { "source": "iana", "compressible": true, "extensions": ["wif"] },
@@ -19195,6 +20146,7 @@ const require$$0 = {
   "application/x-bcpio": { "source": "apache", "extensions": ["bcpio"] },
   "application/x-bdoc": { "compressible": false, "extensions": ["bdoc"] },
   "application/x-bittorrent": { "source": "apache", "extensions": ["torrent"] },
+  "application/x-blender": { "extensions": ["blend"] },
   "application/x-blorb": { "source": "apache", "extensions": ["blb", "blorb"] },
   "application/x-bzip": { "source": "apache", "compressible": false, "extensions": ["bz"] },
   "application/x-bzip2": { "source": "apache", "compressible": false, "extensions": ["bz2", "boz"] },
@@ -19206,6 +20158,7 @@ const require$$0 = {
   "application/x-chrome-extension": { "extensions": ["crx"] },
   "application/x-cocoa": { "source": "nginx", "extensions": ["cco"] },
   "application/x-compress": { "source": "apache" },
+  "application/x-compressed": { "extensions": ["rar"] },
   "application/x-conference": { "source": "apache", "extensions": ["nsc"] },
   "application/x-cpio": { "source": "apache", "extensions": ["cpio"] },
   "application/x-csh": { "source": "apache", "extensions": ["csh"] },
@@ -19243,6 +20196,7 @@ const require$$0 = {
   "application/x-hdf": { "source": "apache", "extensions": ["hdf"] },
   "application/x-httpd-php": { "compressible": true, "extensions": ["php"] },
   "application/x-install-instructions": { "source": "apache", "extensions": ["install"] },
+  "application/x-ipynb+json": { "compressible": true, "extensions": ["ipynb"] },
   "application/x-iso9660-image": { "source": "apache", "extensions": ["iso"] },
   "application/x-iwork-keynote-sffkey": { "extensions": ["key"] },
   "application/x-iwork-numbers-sffnumbers": { "extensions": ["numbers"] },
@@ -19326,6 +20280,7 @@ const require$$0 = {
   "application/x-xliff+xml": { "source": "apache", "compressible": true, "extensions": ["xlf"] },
   "application/x-xpinstall": { "source": "apache", "compressible": false, "extensions": ["xpi"] },
   "application/x-xz": { "source": "apache", "extensions": ["xz"] },
+  "application/x-zip-compressed": { "extensions": ["zip"] },
   "application/x-zmachine": { "source": "apache", "extensions": ["z1", "z2", "z3", "z4", "z5", "z6", "z7", "z8"] },
   "application/x400-bp": { "source": "iana" },
   "application/xacml+xml": { "source": "iana", "compressible": true },
@@ -19363,6 +20318,7 @@ const require$$0 = {
   "application/yang-sid+json": { "source": "iana", "compressible": true },
   "application/yin+xml": { "source": "iana", "compressible": true, "extensions": ["yin"] },
   "application/zip": { "source": "iana", "compressible": false, "extensions": ["zip"] },
+  "application/zip+dotlottie": { "extensions": ["lottie"] },
   "application/zlib": { "source": "iana" },
   "application/zstd": { "source": "iana" },
   "audio/1d-interleaved-parityfec": { "source": "iana" },
@@ -19447,7 +20403,7 @@ const require$$0 = {
   "audio/midi-clip": { "source": "iana" },
   "audio/mobile-xmf": { "source": "iana", "extensions": ["mxmf"] },
   "audio/mp3": { "compressible": false, "extensions": ["mp3"] },
-  "audio/mp4": { "source": "iana", "compressible": false, "extensions": ["m4a", "mp4a"] },
+  "audio/mp4": { "source": "iana", "compressible": false, "extensions": ["m4a", "mp4a", "m4b"] },
   "audio/mp4a-latm": { "source": "iana" },
   "audio/mpa": { "source": "iana" },
   "audio/mpa-robust": { "source": "iana" },
@@ -19583,12 +20539,13 @@ const require$$0 = {
   "image/heif": { "source": "iana", "extensions": ["heif"] },
   "image/heif-sequence": { "source": "iana", "extensions": ["heifs"] },
   "image/hej2k": { "source": "iana", "extensions": ["hej2"] },
-  "image/hsj2": { "source": "iana", "extensions": ["hsj2"] },
   "image/ief": { "source": "iana", "extensions": ["ief"] },
   "image/j2c": { "source": "iana" },
+  "image/jaii": { "source": "iana", "extensions": ["jaii"] },
+  "image/jais": { "source": "iana", "extensions": ["jais"] },
   "image/jls": { "source": "iana", "extensions": ["jls"] },
   "image/jp2": { "source": "iana", "compressible": false, "extensions": ["jp2", "jpg2"] },
-  "image/jpeg": { "source": "iana", "compressible": false, "extensions": ["jpeg", "jpg", "jpe"] },
+  "image/jpeg": { "source": "iana", "compressible": false, "extensions": ["jpg", "jpeg", "jpe"] },
   "image/jph": { "source": "iana", "extensions": ["jph"] },
   "image/jphc": { "source": "iana", "extensions": ["jhc"] },
   "image/jpm": { "source": "iana", "compressible": false, "extensions": ["jpm", "jpgm"] },
@@ -19604,7 +20561,7 @@ const require$$0 = {
   "image/ktx": { "source": "iana", "extensions": ["ktx"] },
   "image/ktx2": { "source": "iana", "extensions": ["ktx2"] },
   "image/naplps": { "source": "iana" },
-  "image/pjpeg": { "compressible": false },
+  "image/pjpeg": { "compressible": false, "extensions": ["jfif"] },
   "image/png": { "source": "iana", "compressible": false, "extensions": ["png"] },
   "image/prs.btif": { "source": "iana", "extensions": ["btif", "btf"] },
   "image/prs.pti": { "source": "iana", "extensions": ["pti"] },
@@ -19616,6 +20573,7 @@ const require$$0 = {
   "image/tiff-fx": { "source": "iana", "extensions": ["tfx"] },
   "image/vnd.adobe.photoshop": { "source": "iana", "compressible": true, "extensions": ["psd"] },
   "image/vnd.airzip.accelerator.azv": { "source": "iana", "extensions": ["azv"] },
+  "image/vnd.clip": { "source": "iana" },
   "image/vnd.cns.inf2": { "source": "iana" },
   "image/vnd.dece.graphic": { "source": "iana", "extensions": ["uvi", "uvvi", "uvg", "uvvg"] },
   "image/vnd.djvu": { "source": "iana", "extensions": ["djvu", "djv"] },
@@ -19649,8 +20607,10 @@ const require$$0 = {
   "image/webp": { "source": "iana", "extensions": ["webp"] },
   "image/wmf": { "source": "iana", "extensions": ["wmf"] },
   "image/x-3ds": { "source": "apache", "extensions": ["3ds"] },
+  "image/x-adobe-dng": { "extensions": ["dng"] },
   "image/x-cmu-raster": { "source": "apache", "extensions": ["ras"] },
   "image/x-cmx": { "source": "apache", "extensions": ["cmx"] },
+  "image/x-emf": { "source": "iana" },
   "image/x-freehand": { "source": "apache", "extensions": ["fh", "fhc", "fh4", "fh5", "fh7"] },
   "image/x-icon": { "source": "apache", "compressible": true, "extensions": ["ico"] },
   "image/x-jng": { "source": "nginx", "extensions": ["jng"] },
@@ -19664,6 +20624,7 @@ const require$$0 = {
   "image/x-portable-pixmap": { "source": "apache", "extensions": ["ppm"] },
   "image/x-rgb": { "source": "apache", "extensions": ["rgb"] },
   "image/x-tga": { "source": "apache", "extensions": ["tga"] },
+  "image/x-wmf": { "source": "iana" },
   "image/x-xbitmap": { "source": "apache", "extensions": ["xbm"] },
   "image/x-xcf": { "compressible": false },
   "image/x-xpixmap": { "source": "apache", "extensions": ["xpm"] },
@@ -19685,7 +20646,7 @@ const require$$0 = {
   "message/ohttp-req": { "source": "iana" },
   "message/ohttp-res": { "source": "iana" },
   "message/partial": { "source": "iana", "compressible": false },
-  "message/rfc822": { "source": "iana", "compressible": true, "extensions": ["eml", "mime"] },
+  "message/rfc822": { "source": "iana", "compressible": true, "extensions": ["eml", "mime", "mht", "mhtml"] },
   "message/s-http": { "source": "apache" },
   "message/sip": { "source": "iana" },
   "message/sipfrag": { "source": "iana" },
@@ -19702,7 +20663,7 @@ const require$$0 = {
   "model/mtl": { "source": "iana", "extensions": ["mtl"] },
   "model/obj": { "source": "iana", "extensions": ["obj"] },
   "model/prc": { "source": "iana", "extensions": ["prc"] },
-  "model/step": { "source": "iana" },
+  "model/step": { "source": "iana", "extensions": ["step", "stp", "stpnc", "p21", "210"] },
   "model/step+xml": { "source": "iana", "compressible": true, "extensions": ["stpx"] },
   "model/step+zip": { "source": "iana", "compressible": false, "extensions": ["stpz"] },
   "model/step-xml+zip": { "source": "iana", "compressible": false, "extensions": ["stpxz"] },
@@ -19910,6 +20871,7 @@ const require$$0 = {
   "video/jpeg2000": { "source": "iana" },
   "video/jpm": { "source": "apache", "extensions": ["jpm", "jpgm"] },
   "video/jxsv": { "source": "iana" },
+  "video/lottie+json": { "source": "iana", "compressible": true },
   "video/matroska": { "source": "iana" },
   "video/matroska-3d": { "source": "iana" },
   "video/mj2": { "source": "iana", "extensions": ["mj2", "mjp2"] },
@@ -19964,6 +20926,7 @@ const require$$0 = {
   "video/vnd.nokia.mp4vr": { "source": "iana" },
   "video/vnd.nokia.videovoip": { "source": "iana" },
   "video/vnd.objectvideo": { "source": "iana" },
+  "video/vnd.planar": { "source": "iana" },
   "video/vnd.radgamettools.bink": { "source": "iana" },
   "video/vnd.radgamettools.smacker": { "source": "apache" },
   "video/vnd.sealed.mpeg1": { "source": "iana" },

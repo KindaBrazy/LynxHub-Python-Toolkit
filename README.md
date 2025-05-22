@@ -12,10 +12,10 @@ installations, virtual environments, and packages.
 
 ![Python Management Screenshot](./resources/python.png)
 
-| Channel      | Version                                                                            | Date       |
-|--------------|------------------------------------------------------------------------------------|------------|
-| Early Access | [V0.9.2](https://github.com/KindaBrazy/LynxHub-Python-Toolkit/releases/tag/V0.9.1) | 2025-03-23 |
-| Release      | [V0.9.2](https://github.com/KindaBrazy/LynxHub-Python-Toolkit/releases/tag/V0.9.1) | 2025-03-23 |
+| Channel      | Version                                                                             | Date       |
+|--------------|-------------------------------------------------------------------------------------|------------|
+| Early Access | [V0.10.1](https://github.com/KindaBrazy/LynxHub-Python-Toolkit/releases/tag/V0.9.1) | 2025-05-22 |
+| Release      | [V0.10.0](https://github.com/KindaBrazy/LynxHub-Python-Toolkit/releases/tag/V0.9.1) | 2025-04-17 |
 
 </div>
 

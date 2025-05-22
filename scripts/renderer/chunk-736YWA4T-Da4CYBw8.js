@@ -21,8 +21,8 @@ function requireReactJsxRuntime_production () {
 	  REACT_FRAGMENT_TYPE = Symbol.for("react.fragment");
 	function jsxProd(type, config, maybeKey) {
 	  var key = null;
-	  undefined !== maybeKey && (key = "" + maybeKey);
-	  undefined !== config.key && (key = "" + config.key);
+	  void 0 !== maybeKey && (key = "" + maybeKey);
+	  void 0 !== config.key && (key = "" + config.key);
 	  if ("key" in config) {
 	    maybeKey = {};
 	    for (var propName in config)
@@ -33,7 +33,7 @@ function requireReactJsxRuntime_production () {
 	    $$typeof: REACT_ELEMENT_TYPE,
 	    type: type,
 	    key: key,
-	    ref: undefined !== config ? config : null,
+	    ref: void 0 !== config ? config : null,
 	    props: maybeKey
 	  };
 	}
@@ -60,12 +60,7 @@ var jsxRuntimeExports = /*@__PURE__*/ requireJsxRuntime();
 var TRANSITION_EASINGS = {
   ease: [0.36, 0.66, 0.4, 1],
   easeIn: [0.4, 0, 1, 1],
-  easeOut: [0, 0, 0.2, 1],
-  easeInOut: [0.4, 0, 0.2, 1],
-  spring: [0.155, 1.105, 0.295, 1.12],
-  springOut: [0.57, -0.15, 0.62, 0.07],
-  softSpring: [0.16, 1.11, 0.3, 1.02]
-};
+  easeOut: [0, 0, 0.2, 1]};
 var TRANSITION_VARIANTS = {
   scaleSpring: {
     enter: {
@@ -107,46 +102,6 @@ var TRANSITION_VARIANTS = {
         type: "easeOut",
         bounce: 0,
         duration: 0.15
-      }
-    }
-  },
-  scale: {
-    enter: { scale: 1 },
-    exit: { scale: 0.95 }
-  },
-  scaleFadeIn: {
-    enter: {
-      transform: "scale(1)",
-      opacity: 1,
-      transition: {
-        duration: 0.25,
-        ease: TRANSITION_EASINGS.easeIn
-      }
-    },
-    exit: {
-      transform: "scale(0.95)",
-      opacity: 0,
-      transition: {
-        duration: 0.2,
-        ease: TRANSITION_EASINGS.easeOut
-      }
-    }
-  },
-  scaleInOut: {
-    enter: {
-      transform: "scale(1)",
-      opacity: 1,
-      transition: {
-        duration: 0.4,
-        ease: TRANSITION_EASINGS.ease
-      }
-    },
-    exit: {
-      transform: "scale(1.03)",
-      opacity: 0,
-      transition: {
-        duration: 0.3,
-        ease: TRANSITION_EASINGS.ease
       }
     }
   },

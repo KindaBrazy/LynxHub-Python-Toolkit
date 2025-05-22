@@ -1,4 +1,4 @@
-import { r as requireReact } from './index-tjJaYZ-y.js';
+import { r as requireReact } from './index-W0s-nQFs.js';
 
 var reactDom = {exports: {}};
 
@@ -56,7 +56,7 @@ function requireReactDom_production () {
 	  REACT_PORTAL_TYPE = Symbol.for("react.portal");
 	function createPortal$1(children, containerInfo, implementation) {
 	  var key =
-	    3 < arguments.length && undefined !== arguments[3] ? arguments[3] : null;
+	    3 < arguments.length && void 0 !== arguments[3] ? arguments[3] : null;
 	  return {
 	    $$typeof: REACT_PORTAL_TYPE,
 	    key: null == key ? null : "" + key,
@@ -76,7 +76,7 @@ function requireReactDom_production () {
 	  Internals;
 	reactDom_production.createPortal = function (children, container) {
 	  var key =
-	    2 < arguments.length && undefined !== arguments[2] ? arguments[2] : null;
+	    2 < arguments.length && void 0 !== arguments[2] ? arguments[2] : null;
 	  if (
 	    !container ||
 	    (1 !== container.nodeType &&
@@ -106,7 +106,7 @@ function requireReactDom_production () {
 	            ? "use-credentials" === options
 	              ? options
 	              : ""
-	            : undefined))
+	            : void 0))
 	      : (options = null),
 	    Internals.d.C(href, options));
 	};
@@ -118,15 +118,15 @@ function requireReactDom_production () {
 	    var as = options.as,
 	      crossOrigin = getCrossOriginStringAs(as, options.crossOrigin),
 	      integrity =
-	        "string" === typeof options.integrity ? options.integrity : undefined,
+	        "string" === typeof options.integrity ? options.integrity : void 0,
 	      fetchPriority =
 	        "string" === typeof options.fetchPriority
 	          ? options.fetchPriority
-	          : undefined;
+	          : void 0;
 	    "style" === as
 	      ? Internals.d.S(
 	          href,
-	          "string" === typeof options.precedence ? options.precedence : undefined,
+	          "string" === typeof options.precedence ? options.precedence : void 0,
 	          {
 	            crossOrigin: crossOrigin,
 	            integrity: integrity,
@@ -138,7 +138,7 @@ function requireReactDom_production () {
 	          crossOrigin: crossOrigin,
 	          integrity: integrity,
 	          fetchPriority: fetchPriority,
-	          nonce: "string" === typeof options.nonce ? options.nonce : undefined
+	          nonce: "string" === typeof options.nonce ? options.nonce : void 0
 	        });
 	  }
 	};
@@ -153,8 +153,8 @@ function requireReactDom_production () {
 	        Internals.d.M(href, {
 	          crossOrigin: crossOrigin,
 	          integrity:
-	            "string" === typeof options.integrity ? options.integrity : undefined,
-	          nonce: "string" === typeof options.nonce ? options.nonce : undefined
+	            "string" === typeof options.integrity ? options.integrity : void 0,
+	          nonce: "string" === typeof options.nonce ? options.nonce : void 0
 	        });
 	      }
 	    } else null == options && Internals.d.M(href);
@@ -171,22 +171,22 @@ function requireReactDom_production () {
 	    Internals.d.L(href, as, {
 	      crossOrigin: crossOrigin,
 	      integrity:
-	        "string" === typeof options.integrity ? options.integrity : undefined,
-	      nonce: "string" === typeof options.nonce ? options.nonce : undefined,
-	      type: "string" === typeof options.type ? options.type : undefined,
+	        "string" === typeof options.integrity ? options.integrity : void 0,
+	      nonce: "string" === typeof options.nonce ? options.nonce : void 0,
+	      type: "string" === typeof options.type ? options.type : void 0,
 	      fetchPriority:
 	        "string" === typeof options.fetchPriority
 	          ? options.fetchPriority
-	          : undefined,
+	          : void 0,
 	      referrerPolicy:
 	        "string" === typeof options.referrerPolicy
 	          ? options.referrerPolicy
-	          : undefined,
+	          : void 0,
 	      imageSrcSet:
-	        "string" === typeof options.imageSrcSet ? options.imageSrcSet : undefined,
+	        "string" === typeof options.imageSrcSet ? options.imageSrcSet : void 0,
 	      imageSizes:
-	        "string" === typeof options.imageSizes ? options.imageSizes : undefined,
-	      media: "string" === typeof options.media ? options.media : undefined
+	        "string" === typeof options.imageSizes ? options.imageSizes : void 0,
+	      media: "string" === typeof options.media ? options.media : void 0
 	    });
 	  }
 	};
@@ -198,10 +198,10 @@ function requireReactDom_production () {
 	        as:
 	          "string" === typeof options.as && "script" !== options.as
 	            ? options.as
-	            : undefined,
+	            : void 0,
 	        crossOrigin: crossOrigin,
 	        integrity:
-	          "string" === typeof options.integrity ? options.integrity : undefined
+	          "string" === typeof options.integrity ? options.integrity : void 0
 	      });
 	    } else Internals.d.m(href);
 	};
@@ -217,7 +217,7 @@ function requireReactDom_production () {
 	reactDom_production.useFormStatus = function () {
 	  return ReactSharedInternals.H.useHostTransitionStatus();
 	};
-	reactDom_production.version = "19.0.0";
+	reactDom_production.version = "19.1.0";
 	return reactDom_production;
 }
 
