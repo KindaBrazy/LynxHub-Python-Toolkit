@@ -1,11 +1,24 @@
+import {useEffect} from 'react';
+import {useDispatch} from 'react-redux';
+
 import {useTabsState} from '../../../../src/renderer/src/App/Redux/Reducer/TabsReducer';
-import {usePythonToolkitState} from '../reducer';
+import {AppDispatch} from '../../../../src/renderer/src/App/Redux/Store';
+import {PythonToolkitActions, usePythonToolkitState} from '../reducer';
 import CardMenu_Modals from './CardMenu_Modals';
 
 export default function CardMenuModal() {
+  const dispatch = useDispatch<AppDispatch>();
   const activeTab = useTabsState('activeTab');
+  const tabs = useTabsState('tabs');
 
   const cards = usePythonToolkitState('menuModal');
+
+  useEffect(() => {
+    cards.forEach(card => {
+      const exist = tabs.some(tab => tab.id === card.context.tabID);
+      if (!exist) dispatch(PythonToolkitActions.closeMenuModal({tabID: card.context.tabID}));
+    });
+  }, [tabs, cards, dispatch]);
 
   return (
     <>

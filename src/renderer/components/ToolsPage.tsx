@@ -31,6 +31,12 @@ export default function ToolsPage() {
   const bg = useCacheImage('python-toolkit-bg', bgUrl);
 
   useEffect(() => {
+    if (!tabs.find(tab => tab.id === activeTab)) {
+      setIsOpen(false);
+    }
+  }, [tabs, activeTab]);
+
+  useEffect(() => {
     if (!isOpen && prevTabTitle) dispatch(tabsActions.setActiveTabTitle(prevTabTitle));
   }, [isOpen]);
 
