@@ -1,8 +1,10 @@
 import {Button, Card, CardFooter, Image} from '@heroui/react';
 import {Typography} from 'antd';
-import {useMemo, useState} from 'react';
+import {useEffect, useMemo, useState} from 'react';
+import {useDispatch} from 'react-redux';
 
-import {useTabsState} from '../../../../src/renderer/src/App/Redux/Reducer/TabsReducer';
+import {tabsActions, useTabsState} from '../../../../src/renderer/src/App/Redux/Reducer/TabsReducer';
+import {AppDispatch} from '../../../../src/renderer/src/App/Redux/Store';
 import {Play_Icon} from '../../../../src/renderer/src/assets/icons/SvgIcons/SvgIcons';
 import {useCacheImage} from '../Hooks';
 import PythonToolkitModal from './Python/PythonToolkitModal';
@@ -16,16 +18,27 @@ const bgUrl: string =
   'width=300/00014-503501982.jpeg';
 
 export default function ToolsPage() {
+  const dispatch = useDispatch<AppDispatch>();
+
   const activeTab = useTabsState('activeTab');
+  const tabs = useTabsState('tabs');
+
+  const [prevTabTitle, setPrevTabTitle] = useState<string | undefined>(tabs.find(tab => tab.id === activeTab)?.title);
 
   const [isOpen, setIsOpen] = useState(false);
   const [tabID, setTabID] = useState<string>('');
 
   const bg = useCacheImage('python-toolkit-bg', bgUrl);
 
+  useEffect(() => {
+    if (!isOpen && prevTabTitle) dispatch(tabsActions.setActiveTabTitle(prevTabTitle));
+  }, [isOpen]);
+
   const openModal = () => {
     setIsOpen(true);
     setTabID(activeTab);
+    setPrevTabTitle(tabs.find(tab => tab.id === activeTab)?.title);
+    dispatch(tabsActions.setActiveTabTitle(title));
   };
 
   const show = useMemo(() => (activeTab === tabID ? 'flex' : 'hidden'), [activeTab, tabID]);
