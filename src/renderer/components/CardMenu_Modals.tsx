@@ -3,6 +3,7 @@ import {isNil} from 'lodash';
 import {useEffect, useMemo, useState} from 'react';
 import {useDispatch} from 'react-redux';
 
+import {tabsActions, useTabsState} from '../../../../src/renderer/src/App/Redux/Reducer/TabsReducer';
 import {useInstalledCard} from '../../../../src/renderer/src/App/Utils/UtilHooks';
 import pIpc from '../PIpc';
 import {ContextType, PythonToolkitActions} from '../reducer';
@@ -16,11 +17,25 @@ export default function CardMenu_Modals({isOpen, context, show}: Props) {
 
   const dispatch = useDispatch();
 
+  const tabs = useTabsState('tabs');
+
+  const [prevTabTitle, setPrevTabTitle] = useState<string | undefined>(
+    tabs.find(tab => tab.id === context.tabID)?.title,
+  );
+
+  useEffect(() => {
+    setPrevTabTitle(tabs.find(tab => tab.id === context.tabID)?.title);
+    dispatch(tabsActions.setTabTitle({tabID: context.tabID, title: `${context.title} Dependencies`}));
+  }, []);
+
   const [pythonPath, setPythonPath] = useState<string>('');
   const [isLocatingVenv, setIsLocatingVenv] = useState<boolean>(false);
 
   const onOpenChange = (value: boolean) => {
-    if (!value) dispatch(PythonToolkitActions.closeMenuModal({tabID: context.tabID}));
+    if (!value) {
+      dispatch(PythonToolkitActions.closeMenuModal({tabID: context.tabID}));
+      if (prevTabTitle) dispatch(tabsActions.setTabTitle({tabID: context.tabID, title: prevTabTitle}));
+    }
   };
 
   useEffect(() => {
