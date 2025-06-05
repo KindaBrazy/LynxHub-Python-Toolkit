@@ -1,5 +1,4 @@
-import {Button, Card, CardFooter, Image} from '@heroui/react';
-import {Typography} from 'antd';
+import {Button, Card, Image} from '@heroui/react';
 import {useEffect, useMemo, useState} from 'react';
 import {useDispatch} from 'react-redux';
 
@@ -8,14 +7,12 @@ import {AppDispatch} from '../../../../src/renderer/src/App/Redux/Store';
 import {Play_Icon} from '../../../../src/renderer/src/assets/icons/SvgIcons/SvgIcons';
 import {useCacheImage} from '../Hooks';
 import PythonToolkitModal from './Python/PythonToolkitModal';
-import {Python_Color_Icon} from './SvgIcons';
 import UIProvider from './UIProvider';
 
 const title: string = 'Python Toolkit';
 const desc: string = 'Manage Python versions, virtual environments, packages, requirements files, and more.';
-const bgUrl: string =
-  'https://image.civitai.com/xG1nkqKTMzGDvpLrqFT7WA/f5fb4d81-745e-45af-b85e-485cfd61263c/' +
-  'width=300/00014-503501982.jpeg';
+const iconUrl: string =
+  'https://raw.githubusercontent.com/KindaBrazy/LynxHub-Python-Toolkit/refs/heads/source_ea/Icon.png';
 
 export default function ToolsPage() {
   const dispatch = useDispatch<AppDispatch>();
@@ -28,7 +25,7 @@ export default function ToolsPage() {
   const [isOpen, setIsOpen] = useState(false);
   const [tabID, setTabID] = useState<string>('');
 
-  const bg = useCacheImage('python-toolkit-bg', bgUrl);
+  const iconSrc = useCacheImage('python-toolkit-icon', iconUrl);
 
   useEffect(() => {
     if (isOpen && tabID === activeTab) dispatch(tabsActions.setTabTitle({tabID, title}));
@@ -57,39 +54,45 @@ export default function ToolsPage() {
     <UIProvider>
       <Card
         className={
-          `w-[276px] h-[367px] cursor-default shadow-md !transition border-1 ` +
-          `border-foreground/5 duration-300 hover:shadow-xl dark:bg-[#3d3d3d] relative`
+          'w-[276px] h-[367px] relative group transform cursor-default border-1 border-foreground/10 ' +
+          'transition-all duration-300 hover:-translate-y-1 shadow-small hover:shadow-medium'
         }
-        radius="lg">
-        {bg && <Image src={bg} className="bottom-16 rounded-none" />}
-        <div className={'absolute top-4 left-1/2 -translate-x-1/2 z-10 backdrop-blur-md p-4 rounded-full'}>
-          <Python_Color_Icon className="size-[6.2rem] hover:scale-110 transition duration-300" />
+        as={'div'}
+        isPressable>
+        {/* Background with gradient overlay */}
+        <div className={'absolute inset-0 rounded-2xl bg-white dark:bg-stone-900'} />
+
+        {/* Content container */}
+        <div className="relative h-full flex flex-col justify-between p-6">
+          {/* Icon section */}
+          <div className="mt-2 flex justify-center">
+            {iconSrc && <Image radius="none" src={iconSrc} className="size-20" />}
+          </div>
+
+          {/* Title and Description */}
+          <div className="text-center space-y-3">
+            <h3 className="text-2xl font-bold tracking-tight">{title}</h3>
+            <p className="text-foreground/70 text-sm leading-relaxed">{desc}</p>
+          </div>
+
+          {/* Play button */}
+          <div className="flex justify-center">
+            <Button radius="full" color="primary" onPress={openModal} fullWidth>
+              <Play_Icon className="size-4" />
+            </Button>
+          </div>
         </div>
+
+        {/* Subtle border glow */}
+        <div className="absolute inset-0 rounded-2xl border border-white/20 pointer-events-none" />
+
+        {/* Hover glow effect */}
         <div
           className={
-            'absolute bottom-[4.4rem] z-10 left-1/2 -translate-x-1/2' +
-            ' inset-x-0 w-full text-center backdrop-blur-md bg-foreground-100/70 py-4' +
-            ' flex-col flex gap-y-2'
-          }>
-          <span className="font-bold text-xl hover:opacity-50 transition duration-300">{title}</span>
-          <Typography.Paragraph
-            ellipsis={{
-              rows: 2,
-              tooltip: {title: desc, mouseEnterDelay: 0.5},
-            }}
-            className={
-              'mx-6 !mb-0 text-center hover:dark:!text-foreground hover:!text-foreground' +
-              ' !text-foreground-600 dark:!text-foreground-500 font-semibold transition duration-300'
-            }
-            type="secondary">
-            {desc}
-          </Typography.Paragraph>
-        </div>
-        <CardFooter className="absolute z-10 bottom-0 py-4 bg-foreground-100">
-          <Button color="primary" onPress={openModal} className="hover:scale-105" fullWidth>
-            <Play_Icon className="size-[1.1rem]" />
-          </Button>
-        </CardFooter>
+            'absolute inset-0 rounded-2xl bg-gradient-to-br from-white/10 to-transparent opacity-0' +
+            ' group-hover:opacity-100 transition-opacity duration-300 pointer-events-none'
+          }
+        />
       </Card>
       <PythonToolkitModal show={show} isOpen={isOpen} setIsOpen={setIsOpen} />
     </UIProvider>
