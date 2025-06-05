@@ -30,6 +30,11 @@ const pythonToolkitReducer = createSlice({
       state.menuModal.push({isOpen: true, context: action.payload});
     },
     closeMenuModal: (state: PythonToolkitState, action: PayloadAction<{tabID: string}>) => {
+      state.menuModal = state.menuModal.map(modal =>
+        modal.context.tabID === action.payload.tabID ? {...modal, isOpen: false} : modal,
+      );
+    },
+    removeMenuModal: (state: PythonToolkitState, action: PayloadAction<{tabID: string}>) => {
       state.menuModal = state.menuModal.filter(item => item.context.tabID !== action.payload.tabID);
     },
   },

@@ -40,6 +40,9 @@ export default function CardMenu_Modals({isOpen, context, show}: Props) {
   const onOpenChange = (value: boolean) => {
     if (!value) {
       dispatch(PythonToolkitActions.closeMenuModal({tabID: context.tabID}));
+      setTimeout(() => {
+        dispatch(PythonToolkitActions.removeMenuModal({tabID: context.tabID}));
+      }, 500);
       if (prevTabTitle) dispatch(tabsActions.setTabTitle({tabID: context.tabID, title: prevTabTitle}));
     }
   };

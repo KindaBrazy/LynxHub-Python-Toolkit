@@ -16,7 +16,12 @@ export default function CardMenuModal() {
   useEffect(() => {
     cards.forEach(card => {
       const exist = tabs.some(tab => tab.id === card.context.tabID);
-      if (!exist) dispatch(PythonToolkitActions.closeMenuModal({tabID: card.context.tabID}));
+      if (!exist) {
+        dispatch(PythonToolkitActions.closeMenuModal({tabID: card.context.tabID}));
+        setTimeout(() => {
+          dispatch(PythonToolkitActions.removeMenuModal({tabID: card.context.tabID}));
+        }, 500);
+      }
     });
   }, [tabs, cards, dispatch]);
 
