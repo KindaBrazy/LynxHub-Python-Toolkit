@@ -1789,7 +1789,7 @@ function searchInStrings(searchText, targetTexts) {
 
 /*!
  * OverlayScrollbars
- * Version: 2.11.3
+ * Version: 2.11.4
  *
  * Copyright (c) Rene Haas | KingSora.
  * https://github.com/KingSora
@@ -2292,7 +2292,7 @@ const getTrasformTranslateValue = (t, n) => `translate${isObject(t) ? `(${t.x},$
 
 const elementHasDimensions = t => !!(t.offsetWidth || t.offsetHeight || t.getClientRects().length);
 
-const I = {
+const T = {
   w: 0,
   h: 0
 };
@@ -2300,11 +2300,11 @@ const I = {
 const getElmWidthHeightProperty = (t, n) => n ? {
   w: n[`${t}Width`],
   h: n[`${t}Height`]
-} : I;
+} : T;
 
 const getWindowSize = t => getElmWidthHeightProperty("inner", t || n);
 
-const T = bind(getElmWidthHeightProperty, "offset");
+const I = bind(getElmWidthHeightProperty, "offset");
 
 const A = bind(getElmWidthHeightProperty, "client");
 
@@ -2341,8 +2341,8 @@ const removeEventListener = (t, n, o, s) => {
 
 const addEventListener = (t, n, o, s) => {
   var e;
-  const c = (e = s && s.I) != null ? e : true;
-  const r = s && s.T || false;
+  const c = (e = s && s.T) != null ? e : true;
+  const r = s && s.I || false;
   const i = s && s.A || false;
   const l = {
     passive: c,
@@ -2645,7 +2645,7 @@ const opsStringify = t => JSON.stringify(t, ((t, n) => {
 
 const getPropByPath = (t, n) => t ? `${n}`.split(".").reduce(((t, n) => t && hasOwnProperty(t, n) ? t[n] : void 0), t) : void 0;
 
-const It = {
+const Tt = {
   paddingAbsolute: false,
   showNativeOverlaidScrollbars: false,
   update: {
@@ -2700,12 +2700,12 @@ const getOptionsDiff = (t, n) => {
 
 const createOptionCheck = (t, n, o) => s => [ getPropByPath(t, s), o || getPropByPath(n, s) !== void 0 ];
 
-let Tt;
+let It;
 
-const getNonce = () => Tt;
+const getNonce = () => It;
 
 const setNonce = t => {
-  Tt = t;
+  It = t;
 };
 
 let At;
@@ -2715,7 +2715,7 @@ const createEnvironment = () => {
     appendChildren(document.body, t);
     appendChildren(document.body, t);
     const s = A(t);
-    const e = T(t);
+    const e = I(t);
     const c = getFractionalSize(n);
     if (o) {
       removeElements(t);
@@ -2769,7 +2769,7 @@ const createEnvironment = () => {
       body: null
     }
   };
-  const g = assignDeep({}, It);
+  const g = assignDeep({}, Tt);
   const h = bind(assignDeep, {}, g);
   const b = bind(assignDeep, {}, v);
   const w = {
@@ -3041,7 +3041,7 @@ const createTrinsicObserver = (t, n) => {
       }));
     } else {
       const onSizeChanged = () => {
-        const t = T(s);
+        const t = I(s);
         triggerOnTrinsicChangedCallback(t);
       };
       push(n, createSizeObserver(s, onSizeChanged)());
@@ -3168,8 +3168,8 @@ const createObserversSetup = (t, n, o, s) => {
     }
     return s;
   };
-  const [z, I] = b ? createTrinsicObserver(v, onTrinsicChanged) : [];
-  const T = !w && createSizeObserver(v, onSizeChanged, {
+  const [z, T] = b ? createTrinsicObserver(v, onTrinsicChanged) : [];
+  const I = !w && createSizeObserver(v, onSizeChanged, {
     ft: true
   });
   const [A, M] = createDOMObserver(v, false, onHostMutation, {
@@ -3197,7 +3197,7 @@ const createObserversSetup = (t, n, o, s) => {
     if (k) {
       k.observe(v);
     }
-    const t = T && T();
+    const t = I && I();
     const n = z && z();
     const o = A();
     const s = C.G((t => {
@@ -3225,7 +3225,7 @@ const createObserversSetup = (t, n, o, s) => {
       o();
       s();
     };
-  }, ({zt: t, It: n, Tt: o}) => {
+  }, ({zt: t, Tt: n, It: o}) => {
     const s = {};
     const [l] = t("update.ignoreMutation");
     const [a, d] = t("update.attributes");
@@ -3271,7 +3271,7 @@ const createObserversSetup = (t, n, o, s) => {
     }
     if (m) {
       const t = M();
-      const n = I && I();
+      const n = T && T();
       const o = r && r();
       if (t) {
         assignDeep(s, onHostMutation(t[0], t[1], m));
@@ -3522,7 +3522,7 @@ const createScrollbarsSetupEvents = (t, n, o, s) => (r, i, l) => {
     const u = l ? "x" : "y";
     const createRelativeHandleMove = (t, n) => s => {
       const {Rt: e} = o;
-      const c = T(h)[a] - T(b)[a];
+      const c = I(h)[a] - I(b)[a];
       const r = n * s / c;
       const i = r * e[u];
       scrollElementTo(d, {
@@ -3545,15 +3545,15 @@ const createScrollbarsSetupEvents = (t, n, o, s) => (r, i, l) => {
         const g = bind(getBoundingClientRect, b);
         const y = bind(getBoundingClientRect, h);
         const getHandleOffset = (t, n) => (t || g())[i] - (n || y())[i];
-        const O = e(getBoundingClientRect(d)[r]) / T(d)[a] || 1;
+        const O = e(getBoundingClientRect(d)[r]) / I(d)[a] || 1;
         const $ = createRelativeHandleMove(getElementScroll(d)[u], 1 / O);
         const C = o[s];
         const x = g();
         const H = y();
         const E = x[r];
         const z = getHandleOffset(x, H) + E / 2;
-        const I = C - H[i];
-        const A = l ? 0 : I - z;
+        const T = C - H[i];
+        const A = l ? 0 : T - z;
         const releasePointerCapture = t => {
           runEachAndClear(k);
           _.releasePointerCapture(t.pointerId);
@@ -3561,7 +3561,7 @@ const createScrollbarsSetupEvents = (t, n, o, s) => (r, i, l) => {
         const D = l || t;
         const M = v();
         const k = [ addEventListener(p, n, releasePointerCapture), addEventListener(p, "selectstart", (t => preventDefault(t)), {
-          I: false
+          T: false
         }), addEventListener(h, n, releasePointerCapture), D && addEventListener(h, "pointermove", (t => $(A + (t[s] - C)))), D && (() => {
           const t = getElementScroll(d);
           M();
@@ -3623,13 +3623,26 @@ const createScrollbarsSetupEvents = (t, n, o, s) => (r, i, l) => {
     }));
     preventDefault(t);
   }), {
-    I: false,
-    T: true
-  }), addEventListener(g, "pointerdown", bind(addEventListener, p, "click", stopAndPrevent, {
-    A: true,
-    T: true,
-    I: false
+    T: false,
+    I: true
+  }), addEventListener(g, "pointerdown", (() => {
+    const t = addEventListener(p, "click", (t => {
+      n();
+      stopAndPrevent(t);
+    }), {
+      A: true,
+      I: true,
+      T: false
+    });
+    const n = addEventListener(p, "pointerup pointercancel", (() => {
+      n();
+      setTimeout(t, 150);
+    }), {
+      I: true,
+      T: true
+    });
   }), {
+    I: true,
     T: true
   }), createInteractiveScrollEvents(), y, m ]);
 };
@@ -3650,7 +3663,7 @@ const createScrollbarsSetup = (t, n, o, s, e, c) => {
   const [y, S] = selfClearTimeout((() => _));
   const [m, O] = createScrollbarsSetupElements(t, e, s, createScrollbarsSetupEvents(n, e, s, (t => isHoverablePointerType(t) && manageScrollbarsAutoHideInstantInteraction())));
   const {vt: $, Kt: C, bt: H} = e;
-  const {Ft: z, Pt: I, Nt: T, qt: A, Bt: D} = m;
+  const {Ft: z, Pt: T, Nt: I, qt: A, Bt: D} = m;
   const manageScrollbarsAutoHide = (t, n) => {
     S();
     if (t) {
@@ -3699,13 +3712,13 @@ const createScrollbarsSetup = (t, n, o, s, e, c) => {
     }
   })), addEventListener(C, "scroll", (t => {
     p((() => {
-      T();
+      I();
       manageScrollbarsAutoHideInstantInteraction();
     }));
     c(t);
     D();
   })) ];
-  return [ () => bind(runEachAndClear, push(M, O())), ({zt: t, Tt: n, Qt: e, Zt: c}) => {
+  return [ () => bind(runEachAndClear, push(M, O())), ({zt: t, It: n, Qt: e, Zt: c}) => {
     const {tn: r, nn: d, sn: p, en: v} = c || {};
     const {$t: g, ft: h} = e || {};
     const {B: w} = o;
@@ -3774,8 +3787,8 @@ const createScrollbarsSetup = (t, n, o, s, e, c) => {
       z(gt, !o);
     }
     if (K) {
-      T();
       I();
+      T();
       D();
       if (v) {
         A();
@@ -3807,7 +3820,7 @@ const createStructureSetupElements = t => {
   const $ = bind(w, S, i);
   const C = bind(y, S, l);
   const elementHasOverflow = t => {
-    const n = T(t);
+    const n = I(t);
     const o = D(t);
     const s = getStyles(t, m);
     const e = getStyles(t, O$1);
@@ -3817,11 +3830,11 @@ const createStructureSetupElements = t => {
   const H = x === v;
   const E = H && g;
   const z = !H && C(p);
-  const I = !H && x === z;
+  const T = !H && x === z;
   const A = E ? b : x;
   const M = E ? A : v;
   const k = !H && y(S, r, _);
-  const R = !I && z;
+  const R = !T && z;
   const V = [ R, A, k, M ].map((t => isHTMLElement(t) && !parent(t) && t));
   const elementIsGenerated = t => t && inArray(V, t);
   const L = !elementIsGenerated(A) && elementHasOverflow(A) ? A : v;
@@ -3864,8 +3877,8 @@ const createStructureSetupElements = t => {
       removeElements(t);
     };
     const prepareWrapUnwrapFocus = t => addEventListener(t, "focusin focusout focus blur", stopAndPrevent, {
-      T: true,
-      I: false
+      I: true,
+      T: false
     });
     const o = "tabindex";
     const s = getAttr(Q, o);
@@ -3924,7 +3937,7 @@ const createStructureSetupElements = t => {
   return [ X, appendElements, ct ];
 };
 
-const createTrinsicUpdateSegment = ({ht: t}) => ({Qt: n, un: o, Tt: s}) => {
+const createTrinsicUpdateSegment = ({ht: t}) => ({Qt: n, un: o, It: s}) => {
   const {Ct: e} = n || {};
   const {Ot: c} = o;
   const r = t && (e || s);
@@ -3940,7 +3953,7 @@ const createPaddingUpdateSegment = ({vt: t, rn: n, L: o, V: s}, e) => {
     i: equalTRBL,
     o: topRightBottomLeft()
   }, bind(topRightBottomLeft, t, "padding", ""));
-  return ({zt: t, Qt: i, un: l, Tt: a}) => {
+  return ({zt: t, Qt: i, un: l, It: a}) => {
     let [u, f] = r(a);
     const {U: _} = getEnvironment();
     const {_t: d, xt: p, $t: m} = i || {};
@@ -4037,7 +4050,7 @@ const createOverflowUpdateSegment = (t, s) => {
         stopPropagation(t);
       }
     }), {
-      T: true,
+      I: true,
       A: true
     });
     scrollElementTo(f, {
@@ -4106,8 +4119,8 @@ const createOverflowUpdateSegment = (t, s) => {
   };
   const [m, O] = createCache(y, bind(getFractionalSize, i));
   const [$, C] = createCache(y, bind(D, i));
-  const [z, I] = createCache(y);
-  const [T] = createCache(S);
+  const [z, T] = createCache(y);
+  const [I] = createCache(S);
   const [M, k] = createCache(y);
   const [R] = createCache(S);
   const [V] = createCache({
@@ -4123,7 +4136,7 @@ const createOverflowUpdateSegment = (t, s) => {
     const o = n ? X : Y;
     return `${o}${capitalizeFirstLetter(t)}`;
   };
-  return ({zt: n, Qt: o, un: l, Tt: a}, {_n: u}) => {
+  return ({zt: n, Qt: o, un: l, It: a}, {_n: u}) => {
     const {_t: f, Ht: _, xt: b, $t: w, ft: y, Et: S} = o || {};
     const x = P && P.R(t, s, l, e, n);
     const {X: H, Y: E, W: D} = x || {};
@@ -4134,7 +4147,7 @@ const createOverflowUpdateSegment = (t, s) => {
     const J = f || u || b || w || S || F;
     let G = O(a);
     let Q = C(a);
-    let tt = I(a);
+    let tt = T(a);
     let nt = k(a);
     if (F && v) {
       d(K, !q);
@@ -4166,7 +4179,7 @@ const createOverflowUpdateSegment = (t, s) => {
     const [et, ct] = tt;
     const [rt, it] = Q;
     const [lt, at] = G;
-    const [ut, ft] = T({
+    const [ut, ft] = I({
       x: et.w > 0,
       y: et.h > 0
     });
@@ -4284,20 +4297,20 @@ const createSetups = (t, n, o, s, e) => {
     if (o()) {
       return false;
     }
-    const {pn: r, Tt: i, It: a, vn: u} = t;
+    const {pn: r, It: i, Tt: a, vn: u} = t;
     const f = r || {};
     const _ = !!i || !c;
     const v = {
       zt: createOptionCheck(n, f, _),
       pn: f,
-      Tt: _
+      It: _
     };
     if (u) {
       g(v);
       return false;
     }
     const h = e || d(assignDeep({}, v, {
-      It: a
+      Tt: a
     }));
     const b = l(assignDeep({}, v, {
       un: p,
@@ -4369,7 +4382,7 @@ const OverlayScrollbars = (t, n, o) => {
       v(t, n);
       _(t, n);
     };
-    const [g, h, b, w, y] = createSetups(t, a, (() => r), (({pn: t, Tt: n}, {Qt: o, Zt: s}) => {
+    const [g, h, b, w, y] = createSetups(t, a, (() => r), (({pn: t, It: n}, {Qt: o, Zt: s}) => {
       const {_t: e, $t: c, Ct: r, xt: i, Ht: l, ft: a} = o;
       const {tn: u, nn: f, sn: _, en: d} = s;
       triggerEvent("updated", [ S, {
@@ -4473,8 +4486,8 @@ const OverlayScrollbars = (t, n, o) => {
         });
       },
       update: t => h({
-        Tt: t,
-        It: true
+        It: t,
+        Tt: true
       }),
       destroy: bind(destroy, false),
       plugin: t => l[keys(t)[0]]
@@ -4798,6 +4811,11 @@ const pythonToolkitReducer = createSlice({
       state.menuModal.push({ isOpen: true, context: action.payload });
     },
     closeMenuModal: (state, action) => {
+      state.menuModal = state.menuModal.map(
+        (modal) => modal.context.tabID === action.payload.tabID ? { ...modal, isOpen: false } : modal
+      );
+    },
+    removeMenuModal: (state, action) => {
       state.menuModal = state.menuModal.filter((item) => item.context.tabID !== action.payload.tabID);
     }
   }
@@ -4806,35 +4824,6 @@ const usePythonToolkitState = (name) => useSelector((state) => state.pythonToolk
 const PythonToolkitActions = pythonToolkitReducer.actions;
 const pythonToolkitReducer$1 = pythonToolkitReducer.reducer;
 
-function Python_Color_Icon(props) {
-  return /* @__PURE__ */ jsxRuntimeExports.jsxs("svg", { ...props, height: "1rem", viewBox: "0 0 256 255", xmlns: "http://www.w3.org/2000/svg", children: [
-    /* @__PURE__ */ jsxRuntimeExports.jsx("rect", { width: "256", fill: "none", height: "255" }),
-    /* @__PURE__ */ jsxRuntimeExports.jsxs("defs", { children: [
-      /* @__PURE__ */ jsxRuntimeExports.jsxs("linearGradient", { x1: "12.959%", x2: "79.639%", y1: "12.039%", y2: "78.201%", id: "logosPython0", children: [
-        /* @__PURE__ */ jsxRuntimeExports.jsx("stop", { offset: "0%", stopColor: "#387eb8" }),
-        /* @__PURE__ */ jsxRuntimeExports.jsx("stop", { offset: "100%", stopColor: "#366994" })
-      ] }),
-      /* @__PURE__ */ jsxRuntimeExports.jsxs("linearGradient", { x1: "19.128%", x2: "90.742%", y1: "20.579%", y2: "88.429%", id: "logosPython1", children: [
-        /* @__PURE__ */ jsxRuntimeExports.jsx("stop", { offset: "0%", stopColor: "#ffe052" }),
-        /* @__PURE__ */ jsxRuntimeExports.jsx("stop", { offset: "100%", stopColor: "#ffc331" })
-      ] })
-    ] }),
-    /* @__PURE__ */ jsxRuntimeExports.jsx(
-      "path",
-      {
-        fill: "url(#logosPython0)",
-        d: "M126.916.072c-64.832 0-60.784 28.115-60.784 28.115l.072 29.128h61.868v8.745H41.631S.145 61.355.145 126.77c0 65.417 36.21 63.097 36.21 63.097h21.61v-30.356s-1.165-36.21 35.632-36.21h61.362s34.475.557 34.475-33.319V33.97S194.67.072 126.916.072M92.802 19.66a11.12 11.12 0 0 1 11.13 11.13a11.12 11.12 0 0 1-11.13 11.13a11.12 11.12 0 0 1-11.13-11.13a11.12 11.12 0 0 1 11.13-11.13"
-      }
-    ),
-    /* @__PURE__ */ jsxRuntimeExports.jsx(
-      "path",
-      {
-        fill: "url(#logosPython1)",
-        d: "M128.757 254.126c64.832 0 60.784-28.115 60.784-28.115l-.072-29.127H127.6v-8.745h86.441s41.486 4.705 41.486-60.712c0-65.416-36.21-63.096-36.21-63.096h-21.61v30.355s1.165 36.21-35.632 36.21h-61.362s-34.475-.557-34.475 33.32v56.013s-5.235 33.897 62.518 33.897m34.114-19.586a11.12 11.12 0 0 1-11.13-11.13a11.12 11.12 0 0 1 11.13-11.131a11.12 11.12 0 0 1 11.13 11.13a11.12 11.12 0 0 1-11.13 11.13"
-      }
-    )
-  ] });
-}
 function Warn_Icon(props) {
   return /* @__PURE__ */ jsxRuntimeExports.jsxs("svg", { ...props, height: "1rem", viewBox: "0 0 24 24", xmlns: "http://www.w3.org/2000/svg", children: [
     /* @__PURE__ */ jsxRuntimeExports.jsx(
@@ -9165,6 +9154,9 @@ function CardMenu_Modals({ isOpen, context, show }) {
   const onOpenChange = (value) => {
     if (!value) {
       dispatch(PythonToolkitActions.closeMenuModal({ tabID: context.tabID }));
+      setTimeout(() => {
+        dispatch(PythonToolkitActions.removeMenuModal({ tabID: context.tabID }));
+      }, 500);
       if (prevTabTitle) dispatch(tabsActions.setTabTitle({ tabID: context.tabID, title: prevTabTitle }));
     }
   };
@@ -9246,7 +9238,12 @@ function CardMenuModal() {
   useEffect$9(() => {
     cards.forEach((card) => {
       const exist = tabs.some((tab) => tab.id === card.context.tabID);
-      if (!exist) dispatch(PythonToolkitActions.closeMenuModal({ tabID: card.context.tabID }));
+      if (!exist) {
+        dispatch(PythonToolkitActions.closeMenuModal({ tabID: card.context.tabID }));
+        setTimeout(() => {
+          dispatch(PythonToolkitActions.removeMenuModal({ tabID: card.context.tabID }));
+        }, 500);
+      }
     });
   }, [tabs, cards, dispatch]);
   return /* @__PURE__ */ jsxRuntimeExports.jsx(jsxRuntimeExports.Fragment, { children: cards.map((card) => /* @__PURE__ */ jsxRuntimeExports.jsx(
@@ -18056,16 +18053,14 @@ function PythonToolkitModal({ isOpen, setIsOpen, show }) {
   );
 }
 
-const {Button,Card,CardFooter,Image} = await importShared('@heroui/react');
-
-const {Typography} = await importShared('antd');
+const {Button,Card,Image} = await importShared('@heroui/react');
 
 const {useEffect,useMemo,useState} = await importShared('react');
 
 const {useDispatch} = await importShared('react-redux');
 const title = "Python Toolkit";
 const desc = "Manage Python versions, virtual environments, packages, requirements files, and more.";
-const bgUrl = "https://image.civitai.com/xG1nkqKTMzGDvpLrqFT7WA/f5fb4d81-745e-45af-b85e-485cfd61263c/width=300/00014-503501982.jpeg";
+const iconUrl = "https://raw.githubusercontent.com/KindaBrazy/LynxHub-Python-Toolkit/refs/heads/source_ea/Icon.png";
 function ToolsPage() {
   const dispatch = useDispatch();
   const activeTab = useTabsState("activeTab");
@@ -18073,7 +18068,7 @@ function ToolsPage() {
   const [prevTabTitle, setPrevTabTitle] = useState(tabs.find((tab) => tab.id === activeTab)?.title);
   const [isOpen, setIsOpen] = useState(false);
   const [tabID, setTabID] = useState("");
-  const bg = useCacheImage("python-toolkit-bg", bgUrl);
+  const iconSrc = useCacheImage("python-toolkit-icon", iconUrl);
   useEffect(() => {
     if (isOpen && tabID === activeTab) dispatch(tabsActions.setTabTitle({ tabID, title }));
   }, [activeTab, tabID, isOpen]);
@@ -18096,33 +18091,26 @@ function ToolsPage() {
     /* @__PURE__ */ jsxRuntimeExports.jsxs(
       Card,
       {
-        className: `w-[276px] h-[367px] cursor-default shadow-md !transition border-1 border-foreground/5 duration-300 hover:shadow-xl dark:bg-[#3d3d3d] relative`,
-        radius: "lg",
+        className: "w-[276px] h-[367px] relative group transform cursor-default border-1 border-foreground/10 transition-all duration-300 hover:-translate-y-1 shadow-small hover:shadow-medium",
+        as: "div",
+        isPressable: true,
         children: [
-          bg && /* @__PURE__ */ jsxRuntimeExports.jsx(Image, { src: bg, className: "bottom-16 rounded-none" }),
-          /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "absolute top-4 left-1/2 -translate-x-1/2 z-10 backdrop-blur-md p-4 rounded-full", children: /* @__PURE__ */ jsxRuntimeExports.jsx(Python_Color_Icon, { className: "size-[6.2rem] hover:scale-110 transition duration-300" }) }),
-          /* @__PURE__ */ jsxRuntimeExports.jsxs(
+          /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "absolute inset-0 rounded-2xl bg-white dark:bg-stone-900" }),
+          /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "relative h-full flex flex-col justify-between p-6", children: [
+            /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "mt-2 flex justify-center", children: iconSrc && /* @__PURE__ */ jsxRuntimeExports.jsx(Image, { radius: "none", src: iconSrc, className: "size-20" }) }),
+            /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "text-center space-y-3", children: [
+              /* @__PURE__ */ jsxRuntimeExports.jsx("h3", { className: "text-2xl font-bold tracking-tight", children: title }),
+              /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "text-foreground/70 text-sm leading-relaxed", children: desc })
+            ] }),
+            /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "flex justify-center", children: /* @__PURE__ */ jsxRuntimeExports.jsx(Button, { radius: "full", color: "primary", onPress: openModal, fullWidth: true, children: /* @__PURE__ */ jsxRuntimeExports.jsx(Play_Icon, { className: "size-4" }) }) })
+          ] }),
+          /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "absolute inset-0 rounded-2xl border border-white/20 pointer-events-none" }),
+          /* @__PURE__ */ jsxRuntimeExports.jsx(
             "div",
             {
-              className: "absolute bottom-[4.4rem] z-10 left-1/2 -translate-x-1/2 inset-x-0 w-full text-center backdrop-blur-md bg-foreground-100/70 py-4 flex-col flex gap-y-2",
-              children: [
-                /* @__PURE__ */ jsxRuntimeExports.jsx("span", { className: "font-bold text-xl hover:opacity-50 transition duration-300", children: title }),
-                /* @__PURE__ */ jsxRuntimeExports.jsx(
-                  Typography.Paragraph,
-                  {
-                    ellipsis: {
-                      rows: 2,
-                      tooltip: { title: desc, mouseEnterDelay: 0.5 }
-                    },
-                    className: "mx-6 !mb-0 text-center hover:dark:!text-foreground hover:!text-foreground !text-foreground-600 dark:!text-foreground-500 font-semibold transition duration-300",
-                    type: "secondary",
-                    children: desc
-                  }
-                )
-              ]
+              className: "absolute inset-0 rounded-2xl bg-gradient-to-br from-white/10 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none"
             }
-          ),
-          /* @__PURE__ */ jsxRuntimeExports.jsx(CardFooter, { className: "absolute z-10 bottom-0 py-4 bg-foreground-100", children: /* @__PURE__ */ jsxRuntimeExports.jsx(Button, { color: "primary", onPress: openModal, className: "hover:scale-105", fullWidth: true, children: /* @__PURE__ */ jsxRuntimeExports.jsx(Play_Icon, { className: "size-[1.1rem]" }) }) })
+          )
         ]
       }
     ),

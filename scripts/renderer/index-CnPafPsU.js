@@ -1,5 +1,5 @@
-import { c as clamp, i as isEasingArray, N as NativeAnimation, s as supportsLinearEasing, a as supportedWaapiEasing, b as isBezierDefinition, m as memo, g as getValueAsType, n as numberValueTypes, f as frame, e as cancelFrame, t as transformPropOrder, r as resolveElements, h as transformProps, M as MotionValue, j as isCSSVar, k as statsBuffer, l as frameData, o as activeAnimations, p as interpolate, q as collectMotionValues, u as motionValue, v as isMotionValue, J as JSAnimation, w as getValueTransition$1, x as secondsToMilliseconds, y as applyGeneratorOptions, z as mapEasingToNativeEasing, A as microtask, B as removeItem, C as noop, D as stepsOrder, E as createMotionComponentFactory, F as animations, G as createDomVisualElement, H as layout, I as drag, K as gestureAnimations, L as createDOMMotionComponentProxy, O as isSVGElement, P as progress, Q as velocityPerSecond, R as isHTMLElement, S as defaultOffset$1, T as supportsScrollTimeline, U as useConstant, V as useIsomorphicLayoutEffect, W as warning, X as MotionConfigContext, Y as hasReducedMotionListener, Z as initPrefersReducedMotion, _ as prefersReducedMotion, $ as animateVisualElement, a0 as setTarget, a1 as mixNumber, a2 as createGeneratorEasing, a3 as fillOffset, a4 as isGenerator, a5 as VisualElement, a6 as createBox, a7 as isSVGSVGElement, a8 as SVGVisualElement, a9 as HTMLVisualElement, aa as visualElementStore, ab as animateSingleValue, ac as animateTarget, ad as spring, ae as fillWildcards, af as PresenceContext, ag as addDomEvent, ah as motionComponentSymbol, ai as rootProjectionNode, aj as MotionGlobalConfig, ak as useForceUpdate, al as optimizedAppearDataId, am as startWaapiAnimation, an as getOptimisedAppearId, ao as makeUseVisualState, ap as LayoutGroup, aq as MotionContext, ar as moveItem, as as easingDefinitionToFunction } from './index-DRrIGHZ7.js';
-export { at as AnimatePresence, bd as AsyncMotionValueAnimation, bp as DOMKeyframesResolver, aQ as DeprecatedLayoutGroupContext, aP as FlatTree, bq as KeyframeResolver, aN as LayoutGroupContext, au as LazyMotion, av as MotionConfig, bf as NativeAnimationExtended, a_ as SubscriptionManager, aO as SwitchLayoutGroupContext, aE as WillChangeMotionValue, bv as acceleratedValues, ax as addPointerEvent, ay as addPointerInfo, aK as addScaleCorrector, aU as addUniqueItem, c8 as alpha, c1 as analyseComplexValue, be as animateValue, b0 as anticipate, b1 as backIn, b2 as backInOut, b3 as backOut, aL as buildTransform, bn as calcGeneratorDuration, az as calcLength, by as cancelMicrotask, b4 as circIn, b5 as circInOut, b6 as circOut, bX as color, c2 as complex, bs as convertOffsetToTimes, bx as createRenderBatcher, aI as createRendererMotionComponent, b7 as cubicBezier, bt as cubicBezierAsString, bl as defaultEasing, bH as defaultTransformValue, c5 as defaultValueTypes, cb as degrees, aR as delay, c3 as dimensionValueTypes, aS as distance, aT as distance2D, d as domAnimation, aC as domMax, b8 as easeIn, b9 as easeInOut, ba as easeOut, aA as filterProps, c4 as findDimensionValueType, cj as findValueType, br as flushKeyframeResolvers, ck as frameSteps, bw as generateLinearEasing, ci as getAnimatableNone, c6 as getDefaultValueType, bP as getMixer, bg as getVariableValue, bY as hex, bD as hover, bZ as hsla, b_ as hslaToRgba, bk as inertia, aV as invariant, bU as invisibleValues, aB as isBrowser, bi as isCSSVariableName, bj as isCSSVariableToken, bA as isDragActive, bB as isDragging, bF as isNodeOrChild, aW as isNumericalString, aX as isObject, bG as isPrimaryPointer, aJ as isValidMotionProp, aY as isZeroValueString, bm as keyframes, aw as m, bo as maxGeneratorDuration, a$ as millisecondsToSeconds, bb as mirrorEasing, bM as mix, bQ as mixArray, bN as mixColor, bR as mixComplex, bT as mixImmediate, bO as mixLinearColor, bS as mixObject, bV as mixVisibility, c9 as number, aM as optimizedAppearDataAttribute, bh as parseCSSVariable, bI as parseValueFromTransform, cc as percent, aZ as pipe, bL as positionalKeys, bE as press, cd as progressPercentage, ce as px, bJ as readTransformValue, aF as resolveMotionValue, bc as reverseEasing, b$ as rgbUnit, c0 as rgba, ca as scale, bC as setDragLock, bK as setStyle, bu as supportsBrowserAnimation, bW as supportsFlags, ch as testValueType, bz as time, c7 as transformValueTypes, aG as useIsPresent, aH as usePresence, aD as useWillChange, cf as vh, cg as vw } from './index-DRrIGHZ7.js';
+import { c as clamp, i as isEasingArray, N as NativeAnimation, s as supportsLinearEasing, a as supportedWaapiEasing, b as isBezierDefinition, m as memo, r as resolveElements, g as getValueAsType, n as numberValueTypes, f as frame, e as cancelFrame, t as transformPropOrder, h as transformProps, j as isHTMLElement, M as MotionValue, k as isCSSVar, p as px, l as isSVGElement, o as statsBuffer, q as frameData, u as activeAnimations, v as interpolate, w as collectMotionValues, x as motionValue, y as isMotionValue, J as JSAnimation, z as getValueTransition$1, A as secondsToMilliseconds, B as applyGeneratorOptions, C as mapEasingToNativeEasing, D as microtask, E as removeItem, F as noop, G as stepsOrder, H as createMotionComponentFactory, I as animations, K as createDomVisualElement, L as layout, O as drag, P as gestureAnimations, Q as createDOMMotionComponentProxy, R as progress, S as velocityPerSecond, T as defaultOffset$1, U as supportsScrollTimeline, V as useConstant, W as useIsomorphicLayoutEffect, X as warning, Y as MotionConfigContext, Z as hasReducedMotionListener, _ as initPrefersReducedMotion, $ as prefersReducedMotion, a0 as animateVisualElement, a1 as setTarget, a2 as mixNumber, a3 as createGeneratorEasing, a4 as fillOffset, a5 as isGenerator, a6 as VisualElement, a7 as createBox, a8 as isSVGSVGElement, a9 as SVGVisualElement, aa as HTMLVisualElement, ab as visualElementStore, ac as animateSingleValue, ad as animateTarget, ae as spring, af as fillWildcards, ag as PresenceContext, ah as addDomEvent, ai as motionComponentSymbol, aj as rootProjectionNode, ak as MotionGlobalConfig, al as useForceUpdate, am as optimizedAppearDataId, an as startWaapiAnimation, ao as getOptimisedAppearId, ap as makeUseVisualState, aq as LayoutGroup, ar as MotionContext, as as moveItem, at as easingDefinitionToFunction } from './index-D9mVZJWm.js';
+export { au as AnimatePresence, be as AsyncMotionValueAnimation, bq as DOMKeyframesResolver, aR as DeprecatedLayoutGroupContext, aQ as FlatTree, br as KeyframeResolver, aO as LayoutGroupContext, av as LazyMotion, aw as MotionConfig, bg as NativeAnimationExtended, a$ as SubscriptionManager, aP as SwitchLayoutGroupContext, aF as WillChangeMotionValue, bw as acceleratedValues, ay as addPointerEvent, az as addPointerInfo, aL as addScaleCorrector, aV as addUniqueItem, c9 as alpha, c2 as analyseComplexValue, bf as animateValue, b1 as anticipate, b2 as backIn, b3 as backInOut, b4 as backOut, aM as buildTransform, bo as calcGeneratorDuration, aA as calcLength, bz as cancelMicrotask, b5 as circIn, b6 as circInOut, b7 as circOut, bY as color, c3 as complex, bt as convertOffsetToTimes, by as createRenderBatcher, aJ as createRendererMotionComponent, b8 as cubicBezier, bu as cubicBezierAsString, bm as defaultEasing, bI as defaultTransformValue, c6 as defaultValueTypes, cc as degrees, aS as delay, c4 as dimensionValueTypes, aT as distance, aU as distance2D, d as domAnimation, aD as domMax, b9 as easeIn, ba as easeInOut, bb as easeOut, aB as filterProps, c5 as findDimensionValueType, cj as findValueType, bs as flushKeyframeResolvers, ck as frameSteps, bx as generateLinearEasing, ci as getAnimatableNone, c7 as getDefaultValueType, bQ as getMixer, bh as getVariableValue, bZ as hex, bE as hover, b_ as hsla, b$ as hslaToRgba, bl as inertia, aW as invariant, bV as invisibleValues, aC as isBrowser, bj as isCSSVariableName, bk as isCSSVariableToken, bB as isDragActive, bC as isDragging, bG as isNodeOrChild, aX as isNumericalString, aY as isObject, bH as isPrimaryPointer, aK as isValidMotionProp, aZ as isZeroValueString, bn as keyframes, ax as m, bp as maxGeneratorDuration, b0 as millisecondsToSeconds, bc as mirrorEasing, bN as mix, bR as mixArray, bO as mixColor, bS as mixComplex, bU as mixImmediate, bP as mixLinearColor, bT as mixObject, bW as mixVisibility, ca as number, aN as optimizedAppearDataAttribute, bi as parseCSSVariable, bJ as parseValueFromTransform, cd as percent, a_ as pipe, bM as positionalKeys, bF as press, ce as progressPercentage, bK as readTransformValue, aG as resolveMotionValue, bd as reverseEasing, c0 as rgbUnit, c1 as rgba, cb as scale, bD as setDragLock, bL as setStyle, bv as supportsBrowserAnimation, bX as supportsFlags, ch as testValueType, bA as time, c8 as transformValueTypes, aH as useIsPresent, aI as usePresence, aE as useWillChange, cf as vh, cg as vw } from './index-D9mVZJWm.js';
 import { importShared } from './__federation_fn_import-JrT3xvdd.js';
 import { j as jsxRuntimeExports } from './chunk-736YWA4T-Da4CYBw8.js';
 
@@ -198,18 +198,43 @@ const supportsPartialKeyframes = /*@__PURE__*/ memo(() => {
     return true;
 });
 
+function camelToDash(str) {
+    return str.replace(/([A-Z])/g, (match) => `-${match.toLowerCase()}`);
+}
+
+function createSelectorEffect(subjectEffect) {
+    return (subject, values) => {
+        const elements = resolveElements(subject);
+        const subscriptions = [];
+        for (const element of elements) {
+            const remove = subjectEffect(element, values);
+            subscriptions.push(remove);
+        }
+        return () => {
+            for (const remove of subscriptions)
+                remove();
+        };
+    };
+}
+
 class MotionValueState {
     constructor() {
         this.latest = {};
         this.values = new Map();
     }
-    set(name, value, render, computed) {
+    set(name, value, render, computed, useDefaultValueType = true) {
         const existingValue = this.values.get(name);
         if (existingValue) {
             existingValue.onRemove();
         }
         const onChange = () => {
-            this.latest[name] = getValueAsType(value.get(), numberValueTypes[name]);
+            const v = value.get();
+            if (useDefaultValueType) {
+                this.latest[name] = getValueAsType(v, numberValueTypes[name]);
+            }
+            else {
+                this.latest[name] = v;
+            }
             render && frame.render(render);
         };
         onChange();
@@ -233,6 +258,66 @@ class MotionValueState {
         }
     }
 }
+
+function createEffect(addValue) {
+    const stateCache = new WeakMap();
+    const subscriptions = [];
+    return (subject, values) => {
+        const state = stateCache.get(subject) ?? new MotionValueState();
+        stateCache.set(subject, state);
+        for (const key in values) {
+            const value = values[key];
+            const remove = addValue(subject, state, key, value);
+            subscriptions.push(remove);
+        }
+        return () => {
+            for (const cancel of subscriptions)
+                cancel();
+        };
+    };
+}
+
+function canSetAsProperty(element, name) {
+    if (!(name in element))
+        return false;
+    const descriptor = Object.getOwnPropertyDescriptor(Object.getPrototypeOf(element), name) ||
+        Object.getOwnPropertyDescriptor(element, name);
+    // Check if it has a setter
+    return descriptor && typeof descriptor.set === "function";
+}
+const addAttrValue = (element, state, key, value) => {
+    const isProp = canSetAsProperty(element, key);
+    const name = isProp
+        ? key
+        : key.startsWith("data") || key.startsWith("aria")
+            ? camelToDash(key)
+            : key;
+    /**
+     * Set attribute directly via property if available
+     */
+    const render = isProp
+        ? () => {
+            element[name] = state.latest[key];
+        }
+        : () => {
+            const v = state.latest[key];
+            if (v === null || v === undefined) {
+                element.removeAttribute(name);
+            }
+            else {
+                element.setAttribute(name, String(v));
+            }
+        };
+    return state.set(key, value, render);
+};
+const attrEffect = /*@__PURE__*/ createSelectorEffect(
+/*@__PURE__*/ createEffect(addAttrValue));
+
+const propEffect = /*@__PURE__*/ createEffect((subject, state, key, value) => {
+    return state.set(key, value, () => {
+        subject[key] = state.latest[key];
+    }, undefined, false);
+});
 
 const translateAlias = {
     x: "translateX",
@@ -269,35 +354,33 @@ function buildTransform(state) {
     return transformIsDefault ? "none" : transform.trim();
 }
 
-const stateMap = new WeakMap();
-function styleEffect(subject, values) {
-    const elements = resolveElements(subject);
-    const subscriptions = [];
-    for (let i = 0; i < elements.length; i++) {
-        const element = elements[i];
-        const state = stateMap.get(element) ?? new MotionValueState();
-        stateMap.set(element, state);
-        for (const key in values) {
-            const value = values[key];
-            const remove = addValue(element, state, key, value);
-            subscriptions.push(remove);
-        }
-    }
-    return () => {
-        for (const cancel of subscriptions)
-            cancel();
-    };
-}
-function addValue(element, state, key, value) {
+const originProps = new Set(["originX", "originY", "originZ"]);
+const addStyleValue = (element, state, key, value) => {
     let render = undefined;
     let computed = undefined;
     if (transformProps.has(key)) {
         if (!state.get("transform")) {
+            // If this is an HTML element, we need to set the transform-box to fill-box
+            // to normalise the transform relative to the element's bounding box
+            if (!isHTMLElement(element) && !state.get("transformBox")) {
+                addStyleValue(element, state, "transformBox", new MotionValue("fill-box"));
+            }
             state.set("transform", new MotionValue("none"), () => {
                 element.style.transform = buildTransform(state);
             });
         }
         computed = state.get("transform");
+    }
+    else if (originProps.has(key)) {
+        if (!state.get("transformOrigin")) {
+            state.set("transformOrigin", new MotionValue(""), () => {
+                const originX = state.latest.originX ?? "50%";
+                const originY = state.latest.originY ?? "50%";
+                const originZ = state.latest.originZ ?? 0;
+                element.style.transformOrigin = `${originX} ${originY} ${originZ}`;
+            });
+        }
+        computed = state.get("transformOrigin");
     }
     else if (isCSSVar(key)) {
         render = () => {
@@ -310,6 +393,40 @@ function addValue(element, state, key, value) {
         };
     }
     return state.set(key, value, render, computed);
+};
+const styleEffect = /*@__PURE__*/ createSelectorEffect(
+/*@__PURE__*/ createEffect(addStyleValue));
+
+const toPx = px.transform;
+function addSVGPathValue(element, state, key, value) {
+    frame.render(() => element.setAttribute("pathLength", "1"));
+    if (key === "pathOffset") {
+        return state.set(key, value, () => element.setAttribute("stroke-dashoffset", toPx(-state.latest[key])));
+    }
+    else {
+        if (!state.get("stroke-dasharray")) {
+            state.set("stroke-dasharray", new MotionValue("1 1"), () => {
+                const { pathLength = 1, pathSpacing } = state.latest;
+                element.setAttribute("stroke-dasharray", `${toPx(pathLength)} ${toPx(pathSpacing ?? 1 - Number(pathLength))}`);
+            });
+        }
+        return state.set(key, value, undefined, state.get("stroke-dasharray"));
+    }
+}
+const addSVGValue = (element, state, key, value) => {
+    if (key.startsWith("path")) {
+        return addSVGPathValue(element, state, key, value);
+    }
+    else if (key.startsWith("attr")) {
+        return addAttrValue(element, state, convertAttrKey(key), value);
+    }
+    const handler = key in element.style ? addStyleValue : addAttrValue;
+    return handler(element, state, key, value);
+};
+const svgEffect = /*@__PURE__*/ createSelectorEffect(
+/*@__PURE__*/ createEffect(addSVGValue));
+function convertAttrKey(key) {
+    return key.replace(/^attr([A-Z])/, (_, firstChar) => firstChar.toLowerCase());
 }
 
 function getComputedStyle$1(element, name) {
@@ -317,6 +434,99 @@ function getComputedStyle$1(element, name) {
     return isCSSVar(name)
         ? computedStyle.getPropertyValue(name)
         : computedStyle[name];
+}
+
+const resizeHandlers = new WeakMap();
+let observer;
+const getSize = (borderBoxAxis, svgAxis, htmlAxis) => (target, borderBoxSize) => {
+    if (borderBoxSize && borderBoxSize[0]) {
+        return borderBoxSize[0][(borderBoxAxis + "Size")];
+    }
+    else if (isSVGElement(target) && "getBBox" in target) {
+        return target.getBBox()[svgAxis];
+    }
+    else {
+        return target[htmlAxis];
+    }
+};
+const getWidth = /*@__PURE__*/ getSize("inline", "width", "offsetWidth");
+const getHeight = /*@__PURE__*/ getSize("block", "height", "offsetHeight");
+function notifyTarget({ target, borderBoxSize }) {
+    resizeHandlers.get(target)?.forEach((handler) => {
+        handler(target, {
+            get width() {
+                return getWidth(target, borderBoxSize);
+            },
+            get height() {
+                return getHeight(target, borderBoxSize);
+            },
+        });
+    });
+}
+function notifyAll(entries) {
+    entries.forEach(notifyTarget);
+}
+function createResizeObserver() {
+    if (typeof ResizeObserver === "undefined")
+        return;
+    observer = new ResizeObserver(notifyAll);
+}
+function resizeElement(target, handler) {
+    if (!observer)
+        createResizeObserver();
+    const elements = resolveElements(target);
+    elements.forEach((element) => {
+        let elementHandlers = resizeHandlers.get(element);
+        if (!elementHandlers) {
+            elementHandlers = new Set();
+            resizeHandlers.set(element, elementHandlers);
+        }
+        elementHandlers.add(handler);
+        observer?.observe(element);
+    });
+    return () => {
+        elements.forEach((element) => {
+            const elementHandlers = resizeHandlers.get(element);
+            elementHandlers?.delete(handler);
+            if (!elementHandlers?.size) {
+                observer?.unobserve(element);
+            }
+        });
+    };
+}
+
+const windowCallbacks = new Set();
+let windowResizeHandler;
+function createWindowResizeHandler() {
+    windowResizeHandler = () => {
+        const info = {
+            get width() {
+                return window.innerWidth;
+            },
+            get height() {
+                return window.innerHeight;
+            },
+        };
+        windowCallbacks.forEach((callback) => callback(info));
+    };
+    window.addEventListener("resize", windowResizeHandler);
+}
+function resizeWindow(callback) {
+    windowCallbacks.add(callback);
+    if (!windowResizeHandler)
+        createWindowResizeHandler();
+    return () => {
+        windowCallbacks.delete(callback);
+        if (!windowCallbacks.size &&
+            typeof windowResizeHandler === "function") {
+            window.removeEventListener("resize", windowResizeHandler);
+            windowResizeHandler = undefined;
+        }
+    };
+}
+
+function resize(a, b) {
+    return typeof a === "function" ? resizeWindow(a) : resizeElement(a, b);
 }
 
 function observeTimeline(update, timeline) {
@@ -970,99 +1180,6 @@ function useMotionValueEvent(value, event, callback) {
     useInsertionEffect$1(() => value.on(event, callback), [value, event, callback]);
 }
 
-const resizeHandlers = new WeakMap();
-let observer;
-function getElementSize(target, borderBoxSize) {
-    if (borderBoxSize) {
-        const { inlineSize, blockSize } = borderBoxSize[0];
-        return { width: inlineSize, height: blockSize };
-    }
-    else if (isSVGElement(target) && "getBBox" in target) {
-        return target.getBBox();
-    }
-    else {
-        return {
-            width: target.offsetWidth,
-            height: target.offsetHeight,
-        };
-    }
-}
-function notifyTarget({ target, contentRect, borderBoxSize, }) {
-    resizeHandlers.get(target)?.forEach((handler) => {
-        handler({
-            target,
-            contentSize: contentRect,
-            get size() {
-                return getElementSize(target, borderBoxSize);
-            },
-        });
-    });
-}
-function notifyAll(entries) {
-    entries.forEach(notifyTarget);
-}
-function createResizeObserver() {
-    if (typeof ResizeObserver === "undefined")
-        return;
-    observer = new ResizeObserver(notifyAll);
-}
-function resizeElement(target, handler) {
-    if (!observer)
-        createResizeObserver();
-    const elements = resolveElements(target);
-    elements.forEach((element) => {
-        let elementHandlers = resizeHandlers.get(element);
-        if (!elementHandlers) {
-            elementHandlers = new Set();
-            resizeHandlers.set(element, elementHandlers);
-        }
-        elementHandlers.add(handler);
-        observer?.observe(element);
-    });
-    return () => {
-        elements.forEach((element) => {
-            const elementHandlers = resizeHandlers.get(element);
-            elementHandlers?.delete(handler);
-            if (!elementHandlers?.size) {
-                observer?.unobserve(element);
-            }
-        });
-    };
-}
-
-const windowCallbacks = new Set();
-let windowResizeHandler;
-function createWindowResizeHandler() {
-    windowResizeHandler = () => {
-        const size = {
-            width: window.innerWidth,
-            height: window.innerHeight,
-        };
-        const info = {
-            target: window,
-            size,
-            contentSize: size,
-        };
-        windowCallbacks.forEach((callback) => callback(info));
-    };
-    window.addEventListener("resize", windowResizeHandler);
-}
-function resizeWindow(callback) {
-    windowCallbacks.add(callback);
-    if (!windowResizeHandler)
-        createWindowResizeHandler();
-    return () => {
-        windowCallbacks.delete(callback);
-        if (!windowCallbacks.size && windowResizeHandler) {
-            windowResizeHandler = undefined;
-        }
-    };
-}
-
-function resize(a, b) {
-    return typeof a === "function" ? resizeWindow(a) : resizeElement(a, b);
-}
-
 /**
  * A time in milliseconds, beyond which we consider the scroll velocity to be 0.
  */
@@ -1312,8 +1429,8 @@ function measure(container, target = container, info) {
 }
 function createOnScrollHandler(element, onScroll, info, options = {}) {
   return {
-    measure: () => measure(element, options.target, info),
-    update: (time) => {
+    measure: (time) => {
+      measure(element, options.target, info);
       updateScrollInfo(element, info, time);
       if (options.offset || options.target) {
         resolveOffsets(element, info, options);
@@ -1351,23 +1468,17 @@ function scrollInfo(onScroll, { container = document.scrollingElement, ...option
      */
     if (!scrollListeners.has(container)) {
         const measureAll = () => {
-            for (const handler of containerHandlers)
-                handler.measure();
-        };
-        const updateAll = () => {
             for (const handler of containerHandlers) {
-                handler.update(frameData.timestamp);
+                handler.measure(frameData.timestamp);
             }
-        };
-        const notifyAll = () => {
-            for (const handler of containerHandlers)
-                handler.notify();
-        };
-        const listener = () => {
-            frame.read(measureAll);
-            frame.read(updateAll);
             frame.preUpdate(notifyAll);
         };
+        const notifyAll = () => {
+            for (const handler of containerHandlers) {
+                handler.notify();
+            }
+        };
+        const listener = () => frame.read(measureAll);
         scrollListeners.set(container, listener);
         const target = getEventTarget(container);
         window.addEventListener("resize", listener, { passive: true });
@@ -3213,4 +3324,4 @@ function stagger(duration = 0.1, { startDelay = 0, from = 0, ease } = {}) {
     };
 }
 
-export { AnimateSharedLayout, DragControls, GroupAnimation, GroupAnimationWithThen, JSAnimation, LayoutGroup, MotionConfigContext, MotionContext, MotionGlobalConfig, MotionValue, NativeAnimation, NativeAnimationWrapper, PresenceContext, namespace as Reorder, ViewTransitionBuilder, VisualElement, activeAnimations, animate, animateMini, animateView, animateVisualElement, animationControls, animationMapKey, animations, applyPxDefaults, attachSpring, cancelFrame, cancelSync, clamp, collectMotionValues, createBox, createGeneratorEasing, createScopedAnimate, defaultOffset$1 as defaultOffset, disableInstantTransitions, domMin, easingDefinitionToFunction, fillOffset, fillWildcards, frame, frameData, getAnimationMap, getComputedStyle$1 as getComputedStyle, getEasingForSegment, getValueAsType, getValueTransition$1 as getValueTransition, hasWarned, inView, interpolate, isBezierDefinition, isEasingArray, isGenerator, isHTMLElement, isMotionComponent, isMotionValue, isSVGElement, isSVGSVGElement, isWaapiSupportedEasing, makeUseVisualState, mapEasingToNativeEasing, mapValue, memo, microtask, mixNumber, motion, motionValue, moveItem, noop, numberValueTypes, observeTimeline, progress, recordStats, removeItem, resolveElements, scroll, scrollInfo, secondsToMilliseconds, spring, springValue, stagger, startOptimizedAppearAnimation, startWaapiAnimation, statsBuffer, steps, styleEffect, supportedWaapiEasing, supportsLinearEasing, supportsPartialKeyframes, supportsScrollTimeline, sync, transform, transformPropOrder, transformProps, transformValue, unwrapMotionComponent, useAnimate, useAnimateMini, useAnimation, useAnimationControls, useAnimationFrame, useCycle, useAnimatedState as useDeprecatedAnimatedState, useInvertedScale as useDeprecatedInvertedScale, useDomEvent, useDragControls, useElementScroll, useForceUpdate, useInView, useInstantLayoutTransition, useInstantTransition, useIsomorphicLayoutEffect, useMotionTemplate, useMotionValue, useMotionValueEvent, usePresenceData, useReducedMotion, useReducedMotionConfig, useResetProjection, useScroll, useSpring, useTime, useTransform, useUnmountEffect, useVelocity, useViewportScroll, velocityPerSecond, visualElementStore, warnOnce, warning, wrap };
+export { AnimateSharedLayout, DragControls, GroupAnimation, GroupAnimationWithThen, JSAnimation, LayoutGroup, MotionConfigContext, MotionContext, MotionGlobalConfig, MotionValue, NativeAnimation, NativeAnimationWrapper, PresenceContext, namespace as Reorder, ViewTransitionBuilder, VisualElement, activeAnimations, addAttrValue, addStyleValue, animate, animateMini, animateView, animateVisualElement, animationControls, animationMapKey, animations, applyPxDefaults, attachSpring, attrEffect, cancelFrame, cancelSync, clamp, collectMotionValues, createBox, createGeneratorEasing, createScopedAnimate, defaultOffset$1 as defaultOffset, disableInstantTransitions, domMin, easingDefinitionToFunction, fillOffset, fillWildcards, frame, frameData, getAnimationMap, getComputedStyle$1 as getComputedStyle, getEasingForSegment, getValueAsType, getValueTransition$1 as getValueTransition, hasWarned, inView, interpolate, isBezierDefinition, isEasingArray, isGenerator, isHTMLElement, isMotionComponent, isMotionValue, isSVGElement, isSVGSVGElement, isWaapiSupportedEasing, makeUseVisualState, mapEasingToNativeEasing, mapValue, memo, microtask, mixNumber, motion, motionValue, moveItem, noop, numberValueTypes, observeTimeline, progress, propEffect, px, recordStats, removeItem, resize, resolveElements, scroll, scrollInfo, secondsToMilliseconds, spring, springValue, stagger, startOptimizedAppearAnimation, startWaapiAnimation, statsBuffer, steps, styleEffect, supportedWaapiEasing, supportsLinearEasing, supportsPartialKeyframes, supportsScrollTimeline, svgEffect, sync, transform, transformPropOrder, transformProps, transformValue, unwrapMotionComponent, useAnimate, useAnimateMini, useAnimation, useAnimationControls, useAnimationFrame, useCycle, useAnimatedState as useDeprecatedAnimatedState, useInvertedScale as useDeprecatedInvertedScale, useDomEvent, useDragControls, useElementScroll, useForceUpdate, useInView, useInstantLayoutTransition, useInstantTransition, useIsomorphicLayoutEffect, useMotionTemplate, useMotionValue, useMotionValueEvent, usePresenceData, useReducedMotion, useReducedMotionConfig, useResetProjection, useScroll, useSpring, useTime, useTransform, useUnmountEffect, useVelocity, useViewportScroll, velocityPerSecond, visualElementStore, warnOnce, warning, wrap };
