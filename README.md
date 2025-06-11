@@ -1,6 +1,10 @@
 <div align="center">
 
+<img src="./icon.png" height="128" alt="LynxHub Python Toolkit Extension Logo"/>
+
 # [LynxHub](https://github.com/KindaBrazy/LynxHub) Python Toolkit Extension
+
+![Python Management Screenshot](./resources/python.png)
 
 **Python Toolkit Extension** is a powerful tool designed to streamline Python environment management within the
 [**LynxHub**](https://github.com/KindaBrazy/LynxHub) platform. It offers comprehensive features for managing Python
@@ -10,12 +14,10 @@ installations, virtual environments, and packages.
 [![GitHub Release Date][github-release-date-shield]](https://github.com/KindaBrazy/LynxHub-Module-Offline-Container/releases)
 [![GitHub Repo stars][github-repo-stars-shield]](https://github.com/KindaBrazy/LynxHub-Module-Offline-Container)
 
-![Python Management Screenshot](./resources/python.png)
-
-| Channel      | Version                                                                             | Date       |
-|--------------|-------------------------------------------------------------------------------------|------------|
-| Early Access | [V0.10.1](https://github.com/KindaBrazy/LynxHub-Python-Toolkit/releases/tag/V0.9.1) | 2025-05-22 |
-| Release      | [V0.10.0](https://github.com/KindaBrazy/LynxHub-Python-Toolkit/releases/tag/V0.9.1) | 2025-04-17 |
+| Channel      | Version                                                                                 | Date       |
+|--------------|-----------------------------------------------------------------------------------------|------------|
+| Early Access | [V0.10.2](https://github.com/KindaBrazy/LynxHub-Python-Toolkit/releases/tag/V0.10.2_EA) | 2025-06-08 |
+| Release      | [V0.10.0](https://github.com/KindaBrazy/LynxHub-Python-Toolkit/releases/tag/V0.10.0)    | 2025-04-17 |
 
 </div>
 
