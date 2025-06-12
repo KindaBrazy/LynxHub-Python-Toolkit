@@ -1,6 +1,6 @@
 <div align="center">
 
-<img src="./icon.png" height="128" alt="Python Toolkit Extension Icon"/>
+<img src="./icon.png" height="128" alt="LynxHub Python Toolkit Extension Logo"/>
 
 # [LynxHub](https://github.com/KindaBrazy/LynxHub) Python Toolkit Extension
 
