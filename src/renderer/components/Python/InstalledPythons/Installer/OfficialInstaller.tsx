@@ -9,6 +9,7 @@ import {useAppState} from '../../../../../../../src/renderer/src/App/Redux/Reduc
 import {Circle_Icon, Refresh_Icon} from '../../../../../../../src/renderer/src/assets/icons/SvgIcons/SvgIcons';
 import {DlProgressOfficial, PythonVersion} from '../../../../../cross/CrossExtTypes';
 import pIpc from '../../../../PIpc';
+import {Warn_Icon} from '../../../SvgIcons';
 
 const CACHE_KEY = 'available-pythons-list';
 
@@ -32,6 +33,9 @@ export default function InstallerOfficial({refresh, installed, closeModal, isOpe
   const [downloadProgress, setDownloadProgress] = useState<DlProgressOfficial>(undefined);
 
   const [installingVersion, setInstallingVersion] = useState<PythonVersion | undefined>(undefined);
+  const [errorLoadingVersion, setErrorLoadingVersion] = useState<string>(
+    'Error: Failed to fetch Python versions: fetch failed',
+  );
 
   const fetchPythonList = (refresh: boolean) => {
     setLoadingList(true);
@@ -40,12 +44,17 @@ export default function InstallerOfficial({refresh, installed, closeModal, isOpe
       setVersions((JSON.parse(cachedList) as PythonVersion[]).filter(item => !installed.includes(item.version)));
       setLoadingList(false);
     } else {
-      pIpc.getAvailableOfficial().then((result: PythonVersion[]) => {
-        localStorage.setItem(CACHE_KEY, JSON.stringify(result));
-        const filteredVersions = result.filter(item => !installed.includes(item.version));
-        setVersions(filteredVersions);
-        setLoadingList(false);
-      });
+      pIpc
+        .getAvailableOfficial()
+        .then((result: PythonVersion[]) => {
+          localStorage.setItem(CACHE_KEY, JSON.stringify(result));
+          const filteredVersions = result.filter(item => !installed.includes(item.version));
+          setVersions(filteredVersions);
+          setLoadingList(false);
+        })
+        .catch(e => {
+          setErrorLoadingVersion(e.message);
+        });
     }
   };
 
@@ -123,61 +132,69 @@ export default function InstallerOfficial({refresh, installed, closeModal, isOpe
           </Tooltip>
         </div>
       )}
-      <OverlayScrollbarsComponent
-        options={{
-          overflow: {x: 'hidden', y: 'scroll'},
-          scrollbars: {
-            autoHide: 'move',
-            clickScroll: true,
-            theme: isDarkMode ? 'os-theme-light' : 'os-theme-dark',
-          },
-        }}
-        className={`pr-3 mr-1 pl-4 pb-4`}>
-        {!isEmpty(installingVersion) ? (
-          installStage === 'installing' ? (
-            <Progress
-              className="my-4 px-2"
-              label={`Installing Python v${installingVersion?.version} ...`}
-              isIndeterminate
+      {errorLoadingVersion ? (
+        <div className="size-full py-2 text-danger flex flex-col items-center justify-center gap-4">
+          <Warn_Icon className="size-20" />
+          <span className="text-lg">{errorLoadingVersion}</span>
+          <span className="text-warning text-sm">Please check your internet connection and try again.</span>
+        </div>
+      ) : (
+        <OverlayScrollbarsComponent
+          options={{
+            overflow: {x: 'hidden', y: 'scroll'},
+            scrollbars: {
+              autoHide: 'move',
+              clickScroll: true,
+              theme: isDarkMode ? 'os-theme-light' : 'os-theme-dark',
+            },
+          }}
+          className={`pr-3 mr-1 pl-4 pb-4`}>
+          {!isEmpty(installingVersion) ? (
+            installStage === 'installing' ? (
+              <Progress
+                className="my-4 px-2"
+                label={`Installing Python v${installingVersion?.version} ...`}
+                isIndeterminate
+              />
+            ) : (
+              <Progress
+                className="my-4 px-2"
+                value={(downloadProgress?.percentage || 0.1) * 100}
+                classNames={{label: '!text-small', value: '!text-small'}}
+                label={`Downloading ${installingVersion?.url.split('/').pop()} ...`}
+                valueLabel={`${formatSize(downloadProgress?.downloaded)} / ${formatSize(downloadProgress?.total)}`}
+                showValueLabel
+              />
+            )
+          ) : loadingList ? (
+            <CircularProgress
+              size="lg"
+              className="justify-self-center my-4"
+              label="Loading available Python versions..."
+              classNames={{indicator: 'stroke-[#ffe66e]'}}
             />
           ) : (
-            <Progress
-              className="my-4 px-2"
-              value={(downloadProgress?.percentage || 0.1) * 100}
-              classNames={{label: '!text-small', value: '!text-small'}}
-              label={`Downloading ${installingVersion?.url.split('/').pop()} ...`}
-              valueLabel={`${formatSize(downloadProgress?.downloaded)} / ${formatSize(downloadProgress?.total)}`}
-              showValueLabel
+            <List
+              renderItem={item => (
+                <List.Item
+                  actions={[
+                    <Button size="sm" variant="flat" key={'install_python'} onPress={() => installPython(item)}>
+                      Install
+                    </Button>,
+                  ]}
+                  className="hover:bg-foreground-100 transition-colors duration-150">
+                  <Link size="sm" href={item.url} color="foreground" isExternal showAnchorIcon>
+                    {item.version}
+                  </Link>
+                </List.Item>
+              )}
+              className="overflow-hidden"
+              dataSource={searchVersions}
+              bordered
             />
-          )
-        ) : loadingList ? (
-          <CircularProgress
-            size="lg"
-            className="justify-self-center my-4"
-            label="Loading available Python versions..."
-            classNames={{indicator: 'stroke-[#ffe66e]'}}
-          />
-        ) : (
-          <List
-            renderItem={item => (
-              <List.Item
-                actions={[
-                  <Button size="sm" variant="flat" key={'install_python'} onPress={() => installPython(item)}>
-                    Install
-                  </Button>,
-                ]}
-                className="hover:bg-foreground-100 transition-colors duration-150">
-                <Link size="sm" href={item.url} color="foreground" isExternal showAnchorIcon>
-                  {item.version}
-                </Link>
-              </List.Item>
-            )}
-            className="overflow-hidden"
-            dataSource={searchVersions}
-            bordered
-          />
-        )}
-      </OverlayScrollbarsComponent>
+          )}
+        </OverlayScrollbarsComponent>
+      )}
     </>
   );
 }
