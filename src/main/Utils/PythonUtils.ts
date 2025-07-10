@@ -75,24 +75,29 @@ export async function parseVersion(pythonPath: string): Promise<{major: number; 
 }
 
 export function findFileInDir(dirPath: string, fileName: string | undefined): string | null {
-  if (!fileName) return null;
-  const files = readdirSync(dirPath);
+  try {
+    if (!fileName) return null;
+    const files = readdirSync(dirPath);
 
-  for (const file of files) {
-    const filePath = join(dirPath, file);
-    const stats = statSync(filePath);
+    for (const file of files) {
+      const filePath = join(dirPath, file);
+      const stats = statSync(filePath);
 
-    if (stats.isDirectory()) {
-      const result = findFileInDir(filePath, fileName);
-      if (result) {
-        return result;
+      if (stats.isDirectory()) {
+        const result = findFileInDir(filePath, fileName);
+        if (result) {
+          return result;
+        }
+      } else if (stats.isFile() && file.toLowerCase().includes(fileName.toLowerCase())) {
+        return filePath;
       }
-    } else if (stats.isFile() && file.toLowerCase().includes(fileName.toLowerCase())) {
-      return filePath;
     }
-  }
 
-  return null;
+    return null;
+  } catch (e) {
+    console.error(e);
+    return null;
+  }
 }
 
 export async function removeDir(dir: string): Promise<void> {
