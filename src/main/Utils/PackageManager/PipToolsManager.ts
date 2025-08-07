@@ -81,7 +81,5 @@ export async function checkPackageUpdates(
     return null;
   });
 
-  const j = compact(await Promise.all(result));
-
-  return j;
+  return compact(await Promise.all(result));
 }
