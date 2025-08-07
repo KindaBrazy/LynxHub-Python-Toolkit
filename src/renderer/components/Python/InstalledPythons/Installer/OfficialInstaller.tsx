@@ -1,6 +1,6 @@
 import {Button, CircularProgress, Input, Link, Progress} from '@heroui/react';
 import {List, message, Tooltip} from 'antd';
-import {isEmpty, isNil} from 'lodash';
+import {isEmpty, isNil, isString} from 'lodash';
 import {OverlayScrollbarsComponent} from 'overlayscrollbars-react';
 import {Dispatch, SetStateAction, useEffect, useState} from 'react';
 
@@ -33,9 +33,10 @@ export default function InstallerOfficial({refresh, installed, closeModal, isOpe
   const [downloadProgress, setDownloadProgress] = useState<DlProgressOfficial>(undefined);
 
   const [installingVersion, setInstallingVersion] = useState<PythonVersion | undefined>(undefined);
-  const [errorLoadingVersion, setErrorLoadingVersion] = useState<string>(
-    'Error: Failed to fetch Python versions: fetch failed',
-  );
+  const [errorLoadingVersion, setErrorLoadingVersion] = useState<{title: string; description: string}>({
+    title: 'Failed to fetch Python versions',
+    description: 'Please check your internet connection and try again.',
+  });
 
   const fetchPythonList = (refresh: boolean) => {
     setLoadingList(true);
@@ -53,7 +54,17 @@ export default function InstallerOfficial({refresh, installed, closeModal, isOpe
           setLoadingList(false);
         })
         .catch(e => {
-          setErrorLoadingVersion(e.message);
+          if (e.message && isString(e.message) && e.message.toLowerCase().includes('deadsnakes')) {
+            setErrorLoadingVersion({
+              title: 'Deadsnakes PPA Missing',
+              description:
+                'The application tried to add the Deadsnakes PPA but failed. ' +
+                'Please add it manually by running the following commands :' +
+                ' `sudo add-apt-repository -y ppa:deadsnakes/ppa` and then `sudo apt update`.',
+            });
+          } else {
+            setErrorLoadingVersion({title: 'Failed to fetch Python versions', description: e.message});
+          }
         });
     }
   };
@@ -135,8 +146,8 @@ export default function InstallerOfficial({refresh, installed, closeModal, isOpe
       {errorLoadingVersion ? (
         <div className="size-full py-2 text-danger flex flex-col items-center justify-center gap-4">
           <Warn_Icon className="size-20" />
-          <span className="text-lg">{errorLoadingVersion}</span>
-          <span className="text-warning text-sm">Please check your internet connection and try again.</span>
+          <span className="text-lg">{errorLoadingVersion.title}</span>
+          <span className="text-warning text-sm">{errorLoadingVersion.description}</span>
         </div>
       ) : (
         <OverlayScrollbarsComponent
