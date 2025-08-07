@@ -33,6 +33,7 @@ export default function Body_SelectPythonV({id, setPythonPath}: Props) {
           <DropdownItem
             key={p.version}
             onPress={() => handleSelectVersion(p)}
+            variant={p.isDefault ? 'flat' : 'solid'}
             color={p.isDefault ? 'secondary' : 'default'}>
             <div className="flex flex-row gap-x-1 items-end">
               <span className="font-bold">{p.version}</span>
