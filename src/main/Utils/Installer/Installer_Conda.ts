@@ -13,6 +13,10 @@ export async function listAvailablePythons(pty: any): Promise<string[]> {
 
     ptyProcess.onData(data => {
       output += data;
+      console.log('dataLine: ', data);
+      if (data.toLowerCase().includes('(ToS)'.toLowerCase())) {
+        ptyProcess.write(`a${COMMAND_LINE_ENDING}`);
+      }
     });
 
     ptyProcess.onExit(({exitCode}) => {
