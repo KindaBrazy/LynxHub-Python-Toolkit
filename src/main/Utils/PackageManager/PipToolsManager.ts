@@ -50,8 +50,12 @@ export async function checkPackageUpdates(
   const result = reqData.map(async req => {
     if (req.versionOperator === '==' || req.versionOperator?.includes('<')) return null;
 
+    const targetInPackage = packages.find(
+      item => item.name.toLowerCase().replaceAll('_', '-') === req.name.toLowerCase().replaceAll('_', '-'),
+    );
+
     const latestVersion = await getLatestPipPackageVersion(req.name);
-    const reqVersion = packages.find(item => item.name === req.name)?.version;
+    const reqVersion = targetInPackage?.version;
     const currentVersion = semver.coerce(reqVersion)?.version;
 
     if (!latestVersion || !packages || !currentVersion) return null;
@@ -76,7 +80,8 @@ export async function checkPackageUpdates(
         canUpdate = true;
     }
 
-    if (canUpdate && latestVersion !== currentVersion) return {name: req.name, version: latestVersion};
+    if (canUpdate && latestVersion !== currentVersion)
+      return {name: targetInPackage?.name || req.name, version: latestVersion};
 
     return null;
   });
