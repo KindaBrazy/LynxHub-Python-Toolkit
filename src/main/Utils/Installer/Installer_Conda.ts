@@ -65,20 +65,29 @@ export const createCondaEnv = async (envName: string, pythonVersion: string, pty
   });
 };
 
-export function isCondaInstalled(pty): Promise<boolean> {
+export function isCondaInstalled(pty: any): Promise<boolean> {
   return new Promise(resolve => {
+    const timeout = setTimeout(() => {
+      console.warn('Timeout reached. Conda not found or process hung.');
+      resolve(false);
+    }, 10000);
+
     const ptyProcess: IPty = pty.spawn(determineShell(), [], {});
+
     ptyProcess.write(`conda --version${COMMAND_LINE_ENDING}`);
     ptyProcess.write(`exit${COMMAND_LINE_ENDING}`);
 
-    let output = '';
+    let outData: string = '';
+    const condaVersionRegex = /conda\s+(\d+\.\d+\.\d+)/;
 
     ptyProcess.onData((data: string) => {
-      output += data;
+      outData += data;
     });
 
-    ptyProcess.onExit(({exitCode}) => {
-      if (exitCode === 0) {
+    ptyProcess.onExit(() => {
+      clearTimeout(timeout);
+
+      if (condaVersionRegex.test(outData)) {
         resolve(true);
       } else {
         resolve(false);
