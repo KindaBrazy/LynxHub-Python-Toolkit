@@ -33,10 +33,9 @@ export default function InstallerOfficial({refresh, installed, closeModal, isOpe
   const [downloadProgress, setDownloadProgress] = useState<DlProgressOfficial>(undefined);
 
   const [installingVersion, setInstallingVersion] = useState<PythonVersion | undefined>(undefined);
-  const [errorLoadingVersion, setErrorLoadingVersion] = useState<{title: string; description: string}>({
-    title: 'Failed to fetch Python versions',
-    description: 'Please check your internet connection and try again.',
-  });
+  const [errorLoadingVersion, setErrorLoadingVersion] = useState<{title: string; description: string} | undefined>(
+    undefined,
+  );
 
   const fetchPythonList = (refresh: boolean) => {
     setLoadingList(true);
@@ -52,6 +51,7 @@ export default function InstallerOfficial({refresh, installed, closeModal, isOpe
           const filteredVersions = result.filter(item => !installed.includes(item.version));
           setVersions(filteredVersions);
           setLoadingList(false);
+          setErrorLoadingVersion(undefined);
         })
         .catch(e => {
           if (e.message && isString(e.message) && e.message.toLowerCase().includes('deadsnakes')) {
