@@ -54,16 +54,25 @@ export default function InstallerOfficial({refresh, installed, closeModal, isOpe
           setErrorLoadingVersion(undefined);
         })
         .catch(e => {
-          if (e.message && isString(e.message) && e.message.toLowerCase().includes('deadsnakes')) {
-            setErrorLoadingVersion({
-              title: 'Deadsnakes PPA Missing',
-              description:
-                'The application tried to add the Deadsnakes PPA but failed. ' +
-                'Please add it manually by running the following commands :' +
-                ' `sudo add-apt-repository -y ppa:deadsnakes/ppa` and then `sudo apt update`.',
-            });
+          if (e.message && isString(e.message)) {
+            if (e.message.toLowerCase().includes('deadsnakes')) {
+              setErrorLoadingVersion({
+                title: 'Deadsnakes PPA Missing',
+                description:
+                  'The application tried to add the Deadsnakes PPA but failed. ' +
+                  'Please add it manually by running the following commands :' +
+                  ' `sudo add-apt-repository -y ppa:deadsnakes/ppa` and then `sudo apt update`.',
+              });
+            } else {
+              setErrorLoadingVersion({title: 'Failed to fetch Python versions', description: e.message});
+            }
           } else {
-            setErrorLoadingVersion({title: 'Failed to fetch Python versions', description: e.message});
+            setErrorLoadingVersion({
+              title: 'Failed to fetch Python versions',
+              description:
+                'Please check your internet connection and try again.' +
+                ' If the problem persists, please open an issue on GitHub.',
+            });
           }
         });
     }
