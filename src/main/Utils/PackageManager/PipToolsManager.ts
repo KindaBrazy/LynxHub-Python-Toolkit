@@ -1,6 +1,6 @@
 import axios from 'axios';
 import {compact} from 'lodash';
-import semver, {satisfies} from 'semver';
+import semver, {lt, satisfies} from 'semver';
 
 import {SitePackages_Info} from '../../../cross/CrossExtTypes';
 import {readRequirements} from '../Requirements/PythonRequirements';
@@ -48,8 +48,6 @@ export async function checkPackageUpdates(
   const reqData = await readRequirements(reqPath);
 
   const result = reqData.map(async req => {
-    if (req.versionOperator === '==' || req.versionOperator?.includes('<')) return null;
-
     const targetInPackage = packages.find(
       item => item.name.toLowerCase().replaceAll('_', '-') === req.name.toLowerCase().replaceAll('_', '-'),
     );
@@ -61,27 +59,51 @@ export async function checkPackageUpdates(
     if (!latestVersion || !packages || !currentVersion) return null;
 
     let canUpdate: boolean = false;
+    let targetVersion: string = currentVersion || '';
 
     switch (req.versionOperator) {
       case '>=':
       case '>':
       case '!=':
+        if (!req.version) break;
+
         canUpdate = satisfies(latestVersion, `${req.versionOperator}${req.version}`);
+        if (canUpdate) targetVersion = latestVersion;
+
         break;
+      case '<':
+      case '<=': {
+        if (!req.version) break;
+
+        canUpdate = lt(currentVersion, req.version);
+        if (canUpdate) targetVersion = req.version;
+
+        break;
+      }
+      case '==': {
+        if (!req.version) break;
+
+        canUpdate = currentVersion !== req.version;
+        if (canUpdate) targetVersion = req.version;
+
+        break;
+      }
       case '~=': {
         if (!req.version) break;
         const latestParts = latestVersion.split('.');
         const reqParts = req.version.split('.');
         canUpdate = latestParts[0] === reqParts[0] && satisfies(latestVersion, `>${req.version}`);
+        targetVersion = latestVersion;
         break;
       }
       default:
         // console.warn(`Unsupported operator: ${req.versionOperator}`);
         canUpdate = true;
+        targetVersion = latestVersion;
     }
 
-    if (canUpdate && latestVersion !== currentVersion)
-      return {name: targetInPackage?.name || req.name, version: latestVersion};
+    if (canUpdate && targetVersion !== currentVersion)
+      return {name: targetInPackage?.name || req.name, version: targetVersion};
 
     return null;
   });
