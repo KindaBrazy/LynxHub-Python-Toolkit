@@ -5,6 +5,7 @@ import {
   MainExtensionUtils,
 } from '../../../src/main/Managements/Plugin/Extensions/ExtensionTypes_Main';
 import StorageManager from '../../../src/main/Managements/Storage/StorageManager';
+import {MaxRetry_StorageID} from '../cross/CrossExtConstants';
 import {
   IdPathType,
   PackageInfo,
@@ -51,6 +52,7 @@ export let storageManager: StorageManager | undefined = undefined;
 export async function initialExtension(lynxApi: ExtensionMainApi, utils: MainExtensionUtils) {
   utils.getStorageManager().then(storeManager => {
     storageManager = storeManager;
+    if (!storeManager.getCustomData(MaxRetry_StorageID)) storeManager.setCustomData(MaxRetry_StorageID, 5);
   });
   lynxApi.listenForChannels(() => {
     ipcMain.on(pythonChannels.removeSavedPython, (_, pPath: string) => removeSavedPython(pPath));
@@ -117,5 +119,10 @@ export async function initialExtension(lynxApi: ExtensionMainApi, utils: MainExt
     ipcMain.handle(pythonChannels.getUpdatesReq, (_, reqFile: string, currentPackages: SitePackages_Info[]) =>
       checkPackageUpdates(reqFile, currentPackages),
     );
+
+    ipcMain.handle(pythonChannels.getMaxRetry, () => storageManager?.getCustomData(MaxRetry_StorageID));
+    ipcMain.on(pythonChannels.setMaxRetry, (_, value: number) => {
+      storageManager?.setCustomData(MaxRetry_StorageID, value);
+    });
   });
 }

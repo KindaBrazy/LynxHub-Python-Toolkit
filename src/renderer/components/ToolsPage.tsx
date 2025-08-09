@@ -1,11 +1,12 @@
-import {Button, Card, Image} from '@heroui/react';
+import {Button, ButtonGroup, Card, Image} from '@heroui/react';
 import {useEffect, useMemo, useState} from 'react';
 import {useDispatch} from 'react-redux';
 
 import {tabsActions, useTabsState} from '../../../../src/renderer/src/App/Redux/Reducer/TabsReducer';
 import {AppDispatch} from '../../../../src/renderer/src/App/Redux/Store';
-import {Play_Icon} from '../../../../src/renderer/src/assets/icons/SvgIcons/SvgIcons';
+import {Play_Icon, SettingsMinimal_Icon} from '../../../../src/renderer/src/assets/icons/SvgIcons/SvgIcons';
 import {useCacheImage} from '../Hooks';
+import {PythonToolkitActions} from '../reducer';
 import PythonToolkitModal from './Python/PythonToolkitModal';
 import UIProvider from './UIProvider';
 
@@ -48,6 +49,10 @@ export default function ToolsPage() {
     dispatch(tabsActions.setActiveTabTitle(title));
   };
 
+  const openSettings = () => {
+    dispatch(PythonToolkitActions.openSettingsModal({title: '', id: '', tabID: activeTab}));
+  };
+
   const show = useMemo(() => (activeTab === tabID ? 'flex' : 'hidden'), [activeTab, tabID]);
 
   return (
@@ -76,11 +81,14 @@ export default function ToolsPage() {
           </div>
 
           {/* Play button */}
-          <div className="flex justify-center">
+          <ButtonGroup className="flex justify-center">
             <Button radius="full" color="primary" onPress={openModal} fullWidth>
               <Play_Icon className="size-4" />
             </Button>
-          </div>
+            <Button radius="full" onPress={openSettings} isIconOnly>
+              <SettingsMinimal_Icon className="size-4" />
+            </Button>
+          </ButtonGroup>
         </div>
 
         {/* Subtle border glow */}

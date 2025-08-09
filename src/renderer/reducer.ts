@@ -12,6 +12,10 @@ type PythonToolkitState = {
     isOpen: boolean;
     context: ContextType;
   }[];
+  settingsModal: {
+    isOpen: boolean;
+    context: ContextType;
+  }[];
 };
 
 type PythonToolkitStateTypes = {
@@ -20,6 +24,7 @@ type PythonToolkitStateTypes = {
 
 const initialState: PythonToolkitState = {
   menuModal: [],
+  settingsModal: [],
 };
 
 const pythonToolkitReducer = createSlice({
@@ -36,6 +41,17 @@ const pythonToolkitReducer = createSlice({
     },
     removeMenuModal: (state: PythonToolkitState, action: PayloadAction<{tabID: string}>) => {
       state.menuModal = state.menuModal.filter(item => item.context.tabID !== action.payload.tabID);
+    },
+    openSettingsModal: (state: PythonToolkitState, action: PayloadAction<ContextType>) => {
+      state.settingsModal.push({isOpen: true, context: action.payload});
+    },
+    closeSettingsModal: (state: PythonToolkitState, action: PayloadAction<{tabID: string}>) => {
+      state.settingsModal = state.settingsModal.map(modal =>
+        modal.context.tabID === action.payload.tabID ? {...modal, isOpen: false} : modal,
+      );
+    },
+    removeSettingsModal: (state: PythonToolkitState, action: PayloadAction<{tabID: string}>) => {
+      state.settingsModal = state.settingsModal.filter(item => item.context.tabID !== action.payload.tabID);
     },
   },
 });

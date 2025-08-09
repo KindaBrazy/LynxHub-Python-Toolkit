@@ -85,6 +85,9 @@ const pIpc = {
     ipc.invoke(pythonChannels.getUpdatesReq, reqFile, currentPackages),
 
   readFile: (): Promise<string> => ipc.invoke(pythonChannels.readFile),
+
+  getMaxRetry: (): Promise<number> => ipc.invoke(pythonChannels.getMaxRetry),
+  setMaxRetry: (value: number) => ipc.send(pythonChannels.setMaxRetry, value),
 };
 
 export default pIpc;

@@ -13,3 +13,5 @@ export const PYTHON_SUPPORTED_AI = [
   'Gitmylo_AG',
   'OpenWebUI_TG',
 ];
+
+export const MaxRetry_StorageID = 'pythonToolkit_MaxRetry';

@@ -2,13 +2,16 @@ import axios from 'axios';
 import {compact} from 'lodash';
 import semver, {lt, satisfies} from 'semver';
 
+import {MaxRetry_StorageID} from '../../../cross/CrossExtConstants';
 import {SitePackages_Info} from '../../../cross/CrossExtTypes';
+import {storageManager} from '../../lynxExtension';
 import {readRequirements} from '../Requirements/PythonRequirements';
+
+let maxRetries = 5;
 
 /** @todo Add settings menu for retry option */
 export async function getLatestPipPackageVersion(packageName: string): Promise<string | null> {
   const url = `https://pypi.org/pypi/${packageName}/json`;
-  const maxRetries = 5;
   let attempt = 0;
 
   while (attempt <= maxRetries) {
@@ -45,6 +48,9 @@ export async function checkPackageUpdates(
   reqPath: string,
   packages: SitePackages_Info[],
 ): Promise<SitePackages_Info[]> {
+  const maxRetriesConfig = storageManager?.getCustomData(MaxRetry_StorageID);
+  if (maxRetriesConfig) maxRetries = maxRetriesConfig;
+
   const reqData = await readRequirements(reqPath);
 
   const result = reqData.map(async req => {

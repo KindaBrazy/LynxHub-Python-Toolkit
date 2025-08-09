@@ -110,4 +110,7 @@ export const pythonChannels = {
   checkAIVenvEnabled: 'check-ai-venv-enable',
 
   readFile: 'read-file',
+
+  getMaxRetry: 'get-max-retry',
+  setMaxRetry: 'set-max-retry',
 };
