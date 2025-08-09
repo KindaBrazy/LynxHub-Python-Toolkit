@@ -1,4 +1,5 @@
 import {readdirSync, readFileSync, statSync, writeFileSync} from 'graceful-fs';
+import {isEmpty} from 'lodash';
 import {join} from 'path';
 
 import {IdPathType, RequirementData} from '../../../cross/CrossExtTypes';
@@ -7,6 +8,8 @@ import {storageManager} from '../../lynxExtension';
 const REQ_STORE_ID = 'reqs_path';
 
 export async function readRequirements(filePath: string): Promise<RequirementData[]> {
+  if (isEmpty(filePath)) return [];
+
   try {
     const data = readFileSync(filePath, 'utf-8');
 
