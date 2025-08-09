@@ -8,7 +8,7 @@ import {readRequirements} from '../Requirements/PythonRequirements';
 /** @todo Add settings menu for retry option */
 export async function getLatestPipPackageVersion(packageName: string): Promise<string | null> {
   const url = `https://pypi.org/pypi/${packageName}/json`;
-  const maxRetries = 2;
+  const maxRetries = 5;
   let attempt = 0;
 
   while (attempt <= maxRetries) {
