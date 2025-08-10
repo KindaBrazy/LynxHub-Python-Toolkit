@@ -15,3 +15,4 @@ export const PYTHON_SUPPORTED_AI = [
 ];
 
 export const MaxRetry_StorageID = 'pythonToolkit_MaxRetry';
+export const PkgDisplay_StorageID = 'pythonToolkit_MpkgDisplay';

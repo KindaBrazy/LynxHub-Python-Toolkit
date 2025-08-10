@@ -1,6 +1,8 @@
 import {createSlice, PayloadAction} from '@reduxjs/toolkit';
 import {useSelector} from 'react-redux';
 
+import {PkgDisplayType} from '../cross/CrossExtTypes';
+
 export type ContextType = {
   id: string;
   title: string;
@@ -16,6 +18,7 @@ type PythonToolkitState = {
     isOpen: boolean;
     context: ContextType;
   }[];
+  pkgNameDisplay: PkgDisplayType;
 };
 
 type PythonToolkitStateTypes = {
@@ -25,6 +28,7 @@ type PythonToolkitStateTypes = {
 const initialState: PythonToolkitState = {
   menuModal: [],
   settingsModal: [],
+  pkgNameDisplay: 'default',
 };
 
 const pythonToolkitReducer = createSlice({
@@ -52,6 +56,9 @@ const pythonToolkitReducer = createSlice({
     },
     removeSettingsModal: (state: PythonToolkitState, action: PayloadAction<{tabID: string}>) => {
       state.settingsModal = state.settingsModal.filter(item => item.context.tabID !== action.payload.tabID);
+    },
+    setPkgDisplay: (state: PythonToolkitState, action: PayloadAction<PkgDisplayType>) => {
+      state.pkgNameDisplay = action.payload;
     },
   },
 });

@@ -113,4 +113,9 @@ export const pythonChannels = {
 
   getMaxRetry: 'get-max-retry',
   setMaxRetry: 'set-max-retry',
+
+  getPkgDisplay: 'get-pkg-display',
+  setPkgDisplay: 'set-pkg-display',
 };
+
+export type PkgDisplayType = 'capitalize' | 'startCase' | 'default' | string;

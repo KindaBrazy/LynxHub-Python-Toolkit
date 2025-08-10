@@ -1,10 +1,12 @@
 import {Button} from '@heroui/react';
 import {message} from 'antd';
-import {useCallback, useState} from 'react';
+import {capitalize, startCase} from 'lodash';
+import {useCallback, useMemo, useState} from 'react';
 
 import {PackageInfo} from '../../../../../cross/CrossExtTypes';
 import {getUpdateVersionColor} from '../../../../../cross/CrossExtUtils';
 import pIpc from '../../../../PIpc';
+import {usePythonToolkitState} from '../../../../reducer';
 import {Warn_Icon} from '../../../SvgIcons';
 import ActionButtons from './ActionButtons';
 
@@ -20,6 +22,19 @@ type Props = {
 export default function Body_TableItem({item, pythonPath, updated, removed, columnKey, isSelected}: Props) {
   const [isUpdating, setIsUpdating] = useState<boolean>(false);
   const [isUninstalling, setIsUninstalling] = useState<boolean>(false);
+  const pkgNameDisplay = usePythonToolkitState('pkgNameDisplay');
+
+  const itemName = useMemo(() => {
+    switch (pkgNameDisplay) {
+      case 'capitalize':
+        return capitalize(item.name);
+      case 'startCase':
+        return startCase(item.name);
+      case 'default':
+      default:
+        return item.name;
+    }
+  }, [item, pkgNameDisplay]);
 
   const update = useCallback(() => {
     setIsUpdating(true);
@@ -64,9 +79,9 @@ export default function Body_TableItem({item, pythonPath, updated, removed, colu
     return (
       <>
         <div className="flex flex-col">
-          <div className="text-bold text-sm capitalize">
+          <div className="text-bold text-sm">
             <div className="flex flex-row items-center gap-x-1 text-medium font-semibold">
-              <span>{item.name}</span>
+              <span>{itemName}</span>
               {item.updateVersion && (
                 <Warn_Icon className={`${getUpdateVersionColor(item.version, item.updateVersion)} size-[1.1rem]`} />
               )}

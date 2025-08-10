@@ -4,6 +4,7 @@ import {
   DlProgressOfficial,
   IdPathType,
   PackageInfo,
+  PkgDisplayType,
   pythonChannels,
   PythonInstallation,
   PythonVersion,
@@ -88,6 +89,9 @@ const pIpc = {
 
   getMaxRetry: (): Promise<number> => ipc.invoke(pythonChannels.getMaxRetry),
   setMaxRetry: (value: number) => ipc.send(pythonChannels.setMaxRetry, value),
+
+  getPkgDisplay: (): Promise<PkgDisplayType> => ipc.invoke(pythonChannels.getPkgDisplay),
+  setPkgDisplay: (value: PkgDisplayType) => ipc.send(pythonChannels.setPkgDisplay, value),
 };
 
 export default pIpc;

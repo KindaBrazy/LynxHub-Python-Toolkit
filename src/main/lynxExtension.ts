@@ -5,10 +5,11 @@ import {
   MainExtensionUtils,
 } from '../../../src/main/Managements/Plugin/Extensions/ExtensionTypes_Main';
 import StorageManager from '../../../src/main/Managements/Storage/StorageManager';
-import {MaxRetry_StorageID} from '../cross/CrossExtConstants';
+import {MaxRetry_StorageID, PkgDisplay_StorageID} from '../cross/CrossExtConstants';
 import {
   IdPathType,
   PackageInfo,
+  PkgDisplayType,
   pythonChannels,
   PythonVersion,
   SitePackages_Info,
@@ -120,9 +121,32 @@ export async function initialExtension(lynxApi: ExtensionMainApi, utils: MainExt
       checkPackageUpdates(reqFile, currentPackages),
     );
 
-    ipcMain.handle(pythonChannels.getMaxRetry, () => storageManager?.getCustomData(MaxRetry_StorageID));
+    ipcMain.handle(pythonChannels.getMaxRetry, () => {
+      const result = storageManager?.getCustomData(MaxRetry_StorageID);
+
+      if (!result) {
+        storageManager?.setCustomData(MaxRetry_StorageID, 5);
+        return 5;
+      }
+
+      return result;
+    });
     ipcMain.on(pythonChannels.setMaxRetry, (_, value: number) => {
       storageManager?.setCustomData(MaxRetry_StorageID, value);
+    });
+
+    ipcMain.handle(pythonChannels.getPkgDisplay, () => {
+      const result = storageManager?.getCustomData(PkgDisplay_StorageID);
+
+      if (!result) {
+        storageManager?.setCustomData(PkgDisplay_StorageID, 'default');
+        return 'default';
+      }
+
+      return result;
+    });
+    ipcMain.on(pythonChannels.setPkgDisplay, (_, value: PkgDisplayType) => {
+      storageManager?.setCustomData(PkgDisplay_StorageID, value);
     });
   });
 }
