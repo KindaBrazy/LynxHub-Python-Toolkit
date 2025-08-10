@@ -111,7 +111,7 @@ export default function InstalledPythons({
       <div className="w-full flex flex-row justify-between items-center">
         <span className="font-bold">Installed Versions</span>
         <div className="justify-center items-center flex gap-x-2">
-          <Button radius="sm" variant="solid" onPress={openInstallModal} startContent={<Add_Icon />}>
+          <Button variant="solid" onPress={openInstallModal} startContent={<Add_Icon />}>
             Install Version
           </Button>
           <Button variant="flat" startContent={<Refresh_Icon />} onPress={() => getInstalledPythons(true)}>

@@ -32,7 +32,7 @@ export default function Header_FilterButton({setSelectedFilter, updateAvailable}
   return (
     <Dropdown size="sm" className="border-1 border-foreground-100">
       <DropdownTrigger>
-        <Button size="sm" variant="faded" isIconOnly>
+        <Button size="sm" variant="flat" isIconOnly>
           <Filter_Icon />
         </Button>
       </DropdownTrigger>

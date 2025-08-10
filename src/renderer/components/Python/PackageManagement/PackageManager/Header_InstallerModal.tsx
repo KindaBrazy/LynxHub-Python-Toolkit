@@ -23,7 +23,7 @@ export default function Header_InstallerModal({refresh, pythonPath, show}: Props
 
   return (
     <>
-      <Button radius="sm" variant="solid" startContent={<Add_Icon />} onPress={() => setIsOpen(true)}>
+      <Button variant="solid" startContent={<Add_Icon />} onPress={() => setIsOpen(true)}>
         Install Package
       </Button>
       <Modal

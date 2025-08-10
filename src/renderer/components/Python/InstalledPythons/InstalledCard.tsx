@@ -19,12 +19,11 @@ import {
   MenuDots_Icon,
   OpenFolder_Icon,
   Refresh3_Icon,
-  Trash_Icon,
 } from '../../../../../../src/renderer/src/assets/icons/SvgIcons/SvgIcons';
 import {PythonInstallation} from '../../../../cross/CrossExtTypes';
 import {formatSizeMB} from '../../../../cross/CrossExtUtils';
 import pIpc from '../../../PIpc';
-import {DoubleCheck_Icon, HardDrive_Icon, Packages_Icon, Python_Icon} from '../../SvgIcons';
+import {DoubleCheck_Icon, HardDrive_Icon, Packages_Icon, Python_Icon, TrashDuo_Icon} from '../../SvgIcons';
 import PackageManagerModal from '../PackageManagement/PackageManager/PackageManagerModal';
 
 type Props = {
@@ -186,7 +185,7 @@ export default function InstalledCard({python, diskUsage, maxDiskValue, updateDe
                 showArrow>
                 <PopoverTrigger>
                   <Button size="sm" color="danger" variant="light" isIconOnly>
-                    <Trash_Icon className="size-[50%]" />
+                    <TrashDuo_Icon className="size-[50%]" />
                   </Button>
                 </PopoverTrigger>
                 <PopoverContent>

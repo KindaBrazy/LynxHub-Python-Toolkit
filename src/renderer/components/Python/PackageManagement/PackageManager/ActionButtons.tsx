@@ -4,10 +4,9 @@ import {isEmpty} from 'lodash';
 import {Dispatch, SetStateAction, useCallback, useEffect, useMemo, useState} from 'react';
 import semver, {compare, valid} from 'semver';
 
-import {Trash_Icon} from '../../../../../../../src/renderer/src/assets/icons/SvgIcons/SvgIcons';
 import {PackageInfo} from '../../../../../cross/CrossExtTypes';
 import pIpc from '../../../../PIpc';
-import {SolarBoxMinimalisticBoldDuotone} from '../../../SvgIcons';
+import {SolarBoxMinimalisticBoldDuotone, TrashDuo_Icon} from '../../../SvgIcons';
 
 type Props = {
   item: PackageInfo;
@@ -103,7 +102,7 @@ export default function ActionButtons({item, removed, pythonPath, isUninstalling
         showArrow>
         <PopoverTrigger>
           <Button size="sm" color="danger" variant="flat" isLoading={isUninstalling} isIconOnly>
-            <Trash_Icon className="size-3.5" />
+            <TrashDuo_Icon className="size-3.5" />
           </Button>
         </PopoverTrigger>
         <PopoverContent>

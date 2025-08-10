@@ -208,12 +208,7 @@ export default function RequirementsBtn({id, projectPath, setIsReqAvailable, sho
             )}
           </ModalBody>
           <ModalFooter className="py-3">
-            <Button
-              size="md"
-              color="warning"
-              variant="light"
-              className="w-fit cursor-default"
-              onPress={() => setIsOpen(false)}>
+            <Button size="md" color="warning" variant="light" className="w-fit" onPress={() => setIsOpen(false)}>
               Close
             </Button>
           </ModalFooter>
@@ -221,7 +216,6 @@ export default function RequirementsBtn({id, projectPath, setIsReqAvailable, sho
       </Modal>
       <Button
         size="sm"
-        radius="sm"
         variant="solid"
         onPress={() => setIsOpen(true)}
         startContent={<Checklist_Icon className="size-3.5" />}>

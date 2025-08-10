@@ -267,7 +267,7 @@ export default function PackageManagerModal({
         />
         <ModalFooter className="items-center py-3">
           <Footer_TablePage setItems={setItems} searchData={searchData} />
-          <Button variant="light" color="warning" className="cursor-default" onPress={closePackageManager}>
+          <Button variant="light" color="warning" onPress={closePackageManager}>
             Close
           </Button>
         </ModalFooter>

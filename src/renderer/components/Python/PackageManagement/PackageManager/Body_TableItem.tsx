@@ -72,7 +72,7 @@ export default function Body_TableItem({item, pythonPath, updated, removed, colu
               )}
             </div>
           </div>
-          <div className="text-bold text-sm capitalize text-default-400">
+          <div className="text-bold text-sm text-default-400">
             <div className="flex flex-row items-center gap-x-1 text-tiny">
               <span>{item.version}</span>
               {item.updateVersion && (

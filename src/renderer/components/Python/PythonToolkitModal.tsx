@@ -62,7 +62,7 @@ export default function PythonToolkitModal({isOpen, setIsOpen, show}: ModalProps
           />
         </ModalBody>
         <ModalFooter className="py-3">
-          <Button variant="light" color="warning" onPress={onClose} className="cursor-default">
+          <Button variant="light" color="warning" onPress={onClose}>
             Close
           </Button>
         </ModalFooter>

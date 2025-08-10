@@ -70,12 +70,7 @@ export default function InstallerModal({isOpen, closeModal, refresh, installed, 
             )}
           </ModalBody>
           <ModalFooter className="py-3">
-            <Button
-              variant="light"
-              color="warning"
-              onPress={closeModal}
-              className="cursor-default"
-              isDisabled={closeDisabled}>
+            <Button variant="light" color="warning" onPress={closeModal} isDisabled={closeDisabled}>
               Close
             </Button>
           </ModalFooter>
