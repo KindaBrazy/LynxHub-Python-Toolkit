@@ -1,14 +1,14 @@
 import {createSlice, PayloadAction} from '@reduxjs/toolkit';
 import {useSelector} from 'react-redux';
 
-import {PkgDisplayType} from '../cross/CrossExtTypes';
+import {PkgDisplayType, PythonVenvSelectItem} from '../cross/CrossExtTypes';
 
 export type ContextType = {
   id: string;
   title: string;
   tabID: string;
 };
-
+type PythonVenvSelected = PythonVenvSelectItem & {id: string};
 type PythonToolkitState = {
   menuModal: {
     isOpen: boolean;
@@ -19,6 +19,7 @@ type PythonToolkitState = {
     context: ContextType;
   }[];
   pkgNameDisplay: PkgDisplayType;
+  pythonVenvSelected: PythonVenvSelected;
 };
 
 type PythonToolkitStateTypes = {
@@ -29,6 +30,11 @@ const initialState: PythonToolkitState = {
   menuModal: [],
   settingsModal: [],
   pkgNameDisplay: 'default',
+  pythonVenvSelected: {
+    id: '',
+    label: '',
+    type: 'python',
+  },
 };
 
 const pythonToolkitReducer = createSlice({
@@ -59,6 +65,9 @@ const pythonToolkitReducer = createSlice({
     },
     setPkgDisplay: (state: PythonToolkitState, action: PayloadAction<PkgDisplayType>) => {
       state.pkgNameDisplay = action.payload;
+    },
+    setSelectedPythonVenv: (state: PythonToolkitState, action: PayloadAction<PythonVenvSelected>) => {
+      state.pythonVenvSelected = action.payload;
     },
   },
 });

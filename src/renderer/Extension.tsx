@@ -6,9 +6,11 @@ import CardMenuModal from './components/CardMenuModal';
 import SettingsModal from './components/Settings/SettingsModal';
 import ToolsPage from './components/ToolsPage';
 import {setCards} from './DataHolder';
+import listenForEvents from './ListenForEvents';
 import pythonToolkitReducer from './reducer';
 
 export function InitialExtensions(lynxAPI: ExtensionRendererApi) {
+  listenForEvents(lynxAPI);
   setCards(lynxAPI.modulesData?.allCards || []);
 
   lynxAPI.addReducer([{name: 'pythonToolkit', reducer: pythonToolkitReducer}]);

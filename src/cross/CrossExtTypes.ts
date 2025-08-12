@@ -119,3 +119,5 @@ export const pythonChannels = {
 };
 
 export type PkgDisplayType = 'capitalize' | 'startCase' | 'default' | string;
+
+export type PythonVenvSelectItem = {label: string; type: 'python' | 'venv'};
