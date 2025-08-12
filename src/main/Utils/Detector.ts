@@ -306,6 +306,8 @@ export default async function detectPythonInstallations(refresh: boolean): Promi
         (async () => await getSitePackagesPath(pythonPath))(),
       ]);
 
+      const installFolder = dirname(pythonPath);
+
       const installation: PythonInstallation = {
         version: `${version.major}.${version.minor}.${version.patch}`,
         packages,
@@ -313,7 +315,7 @@ export default async function detectPythonInstallations(refresh: boolean): Promi
         condaName,
         architecture,
         installPath: pythonPath,
-        installFolder: dirname(pythonPath),
+        installFolder,
         pipPath,
         venvPaths,
         sitePackagesPath,
