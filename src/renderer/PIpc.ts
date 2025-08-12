@@ -92,6 +92,8 @@ const pIpc = {
 
   getPkgDisplay: (): Promise<PkgDisplayType> => ipc.invoke(pythonChannels.getPkgDisplay),
   setPkgDisplay: (value: PkgDisplayType) => ipc.send(pythonChannels.setPkgDisplay, value),
+
+  replacePythonPath: (pythonPath: string): Promise<boolean> => ipc.invoke(pythonChannels.replacePythonPath, pythonPath),
 };
 
 export default pIpc;

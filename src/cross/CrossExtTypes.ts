@@ -116,6 +116,8 @@ export const pythonChannels = {
 
   getPkgDisplay: 'get-pkg-display',
   setPkgDisplay: 'set-pkg-display',
+
+  replacePythonPath: 'ptoolkit-replace-python-path',
 };
 
 export type PkgDisplayType = 'capitalize' | 'startCase' | 'default' | string;

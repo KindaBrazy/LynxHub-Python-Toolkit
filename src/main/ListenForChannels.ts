@@ -11,6 +11,7 @@ import {
   SitePackages_Info,
   VenvCreateOptions,
 } from '../cross/CrossExtTypes';
+import {replacePythonPath} from '../cross/CrossExtUtils';
 import {checkAIVenvsEnabled} from './Utils/AIVenvs';
 import {getAvailablePythonVersions} from './Utils/Available';
 import {setDefaultPython} from './Utils/DefaultPython';
@@ -43,6 +44,8 @@ import {
 } from './Utils/Requirements/PythonRequirements';
 import uninstallPython from './Utils/Uninstaller/Uninstaller';
 import createPythonVenv, {getVenvs, locateVenv} from './Utils/VirtualEnv/CreateVenv';
+
+const defaultEnvPath = process.env.PATH;
 
 export default function ListenForChannels(storageManager: StorageManager | undefined, nodePty: any) {
   ipcMain.on(pythonChannels.removeSavedPython, (_, pPath: string) => removeSavedPython(pPath));
@@ -136,5 +139,18 @@ export default function ListenForChannels(storageManager: StorageManager | undef
   });
   ipcMain.on(pythonChannels.setPkgDisplay, (_, value: PkgDisplayType) => {
     storageManager?.setCustomData(PkgDisplay_StorageID, value);
+  });
+
+  ipcMain.handle(pythonChannels.replacePythonPath, (_, pythonPath: string) => {
+    try {
+      if (!defaultEnvPath) return false;
+
+      const newPath = replacePythonPath(defaultEnvPath, pythonPath);
+      process.env.PATH = newPath;
+      return true;
+    } catch (e) {
+      console.log(e);
+      return false;
+    }
   });
 }
