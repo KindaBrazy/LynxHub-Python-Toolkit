@@ -34,26 +34,21 @@ async function getPythonVersion(venvPath: string): Promise<string> {
   });
 }
 
-export async function getVenvInfo(venvPath: string): Promise<VenvInfo | null> {
-  try {
-    const pythonVersion = await getPythonVersion(venvPath);
+export async function getVenvInfo(venvPath: string): Promise<VenvInfo> {
+  const pythonVersion = await getPythonVersion(venvPath);
 
-    const pythonExecutable = getVenvPythonPath(venvPath);
-    const sitePackagesCount = await getSitePackagesCount(pythonExecutable);
+  const pythonExecutable = getVenvPythonPath(venvPath);
+  const sitePackagesCount = await getSitePackagesCount(pythonExecutable);
 
-    const folderName = basename(venvPath);
+  const folderName = basename(venvPath);
 
-    return {
-      pythonVersion,
-      pythonPath: pythonExecutable,
-      sitePackagesCount,
-      name: folderName,
-      folder: venvPath,
-    };
-  } catch (error) {
-    console.error(`Error getting venv information for ${venvPath}:`, error);
-    return null;
-  }
+  return {
+    pythonVersion,
+    pythonPath: pythonExecutable,
+    sitePackagesCount,
+    name: folderName,
+    folder: venvPath,
+  };
 }
 
 export function getVenvPythonPath(venvPath: string): string {

@@ -122,6 +122,8 @@ export const pythonChannels = {
   setCacheStorageUsage: 'set-cache-storage-usage',
 
   replacePythonPath: 'ptoolkit-replace-python-path',
+
+  errorGetVenvInfo: 'ptoolkit-errorGetVenvInfo',
 };
 
 export type PkgDisplayType = 'capitalize' | 'startCase' | 'default' | string;

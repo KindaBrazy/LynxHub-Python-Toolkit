@@ -1,9 +1,10 @@
 import {join} from 'node:path';
 
 import {exec} from 'child_process';
+import {BrowserWindow} from 'electron';
 import {compact, filter, isEmpty, isNil} from 'lodash';
 
-import {VenvCreateOptions, VenvInfo} from '../../../cross/CrossExtTypes';
+import {pythonChannels, VenvCreateOptions, VenvInfo} from '../../../cross/CrossExtTypes';
 import {storageManager} from '../../lynxExtension';
 import {openDialogExt} from '../PythonUtils';
 import {getVenvInfo, isVenvDirectory} from './VenvUtils';
@@ -37,14 +38,30 @@ function updateVenvStorage(newVenvPath: string) {
   }
 }
 
+function removeVenvStorage(venvPath: string) {
+  const existVenvs = storageManager?.getCustomData(STORE_VENVS_ID) as string[];
+  if (existVenvs) {
+    storageManager?.setCustomData(STORE_VENVS_ID, Array.from(existVenvs.filter(venv => venv !== venvPath)));
+  }
+}
+
 export async function getVenvs() {
   const venvs = validateVenvs();
+  const window = BrowserWindow.getFocusedWindow();
 
   const venvsInfo: (VenvInfo | null)[] = [];
 
   for (const venv of venvs) {
-    const info = await getVenvInfo(venv);
-    venvsInfo.push(info);
+    try {
+      const info = await getVenvInfo(venv);
+      venvsInfo.push(info);
+    } catch (e) {
+      if (window) {
+        window.webContents.send(pythonChannels.errorGetVenvInfo, e);
+        removeVenvStorage(venv);
+      }
+      continue;
+    }
   }
 
   return compact(venvsInfo);

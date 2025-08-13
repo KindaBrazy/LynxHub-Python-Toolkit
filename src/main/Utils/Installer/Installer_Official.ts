@@ -6,8 +6,8 @@ import {app, BrowserWindow} from 'electron';
 import {download} from 'electron-dl';
 import {promisify} from 'util';
 
-import {findFileInDir} from '../PythonUtils';
 import {pythonChannels, PythonVersion} from '../../../cross/CrossExtTypes';
+import {findFileInDir} from '../PythonUtils';
 
 const execAsync = promisify(exec);
 

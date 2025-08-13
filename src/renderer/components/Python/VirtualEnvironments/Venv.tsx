@@ -47,50 +47,53 @@ export default function Venv({visible, installedPythons, isLoadingPythons, show}
   const getVenvs = useCallback(() => {
     setIsLoading(true);
     const condaVenvs = installedPythons.filter(pt => pt.installationType === 'conda');
-    pIpc.getVenvs().then((venvs: VenvInfo[]) => {
-      const resultVenvs: VenvInfo[] = [
-        ...venvs,
-        ...condaVenvs.map(venv => {
-          return {
-            pythonVersion: venv.version,
-            pythonPath: venv.installPath,
-            folder: venv.installFolder,
-            sitePackagesCount: venv.packages,
-            name: venv.condaName,
-          };
-        }),
-      ];
-      setPythonVenvs(
-        resultVenvs.map(venv => {
-          return {
-            pythonVersion: venv.pythonVersion,
-            pythonPath: venv.pythonPath,
-            title: venv.name,
-            installedPackages: venv.sitePackagesCount,
-            folder: venv.folder,
-          };
-        }),
-      );
-      for (const venv of resultVenvs) {
-        if (cacheStorageUsage) {
-          const cachedUsage = window.localStorage.getItem(getDiskUsageID(venv.folder));
-          if (!cachedUsage) {
-            calcDiskUsage(venv);
+    pIpc
+      .getVenvs()
+      .then((venvs: VenvInfo[]) => {
+        const resultVenvs: VenvInfo[] = [
+          ...venvs,
+          ...condaVenvs.map(venv => {
+            return {
+              pythonVersion: venv.version,
+              pythonPath: venv.installPath,
+              folder: venv.installFolder,
+              sitePackagesCount: venv.packages,
+              name: venv.condaName,
+            };
+          }),
+        ];
+        setPythonVenvs(
+          resultVenvs.map(venv => {
+            return {
+              pythonVersion: venv.pythonVersion,
+              pythonPath: venv.pythonPath,
+              title: venv.name,
+              installedPackages: venv.sitePackagesCount,
+              folder: venv.folder,
+            };
+          }),
+        );
+        for (const venv of resultVenvs) {
+          if (cacheStorageUsage) {
+            const cachedUsage = window.localStorage.getItem(getDiskUsageID(venv.folder));
+            if (!cachedUsage) {
+              calcDiskUsage(venv);
+            } else {
+              setDiskUsage(prevState => [
+                ...prevState,
+                {
+                  path: venv.folder,
+                  value: JSON.parse(cachedUsage) as number,
+                },
+              ]);
+            }
           } else {
-            setDiskUsage(prevState => [
-              ...prevState,
-              {
-                path: venv.folder,
-                value: JSON.parse(cachedUsage) as number,
-              },
-            ]);
+            calcDiskUsage(venv);
           }
-        } else {
-          calcDiskUsage(venv);
         }
-      }
-      setIsLoading(false);
-    });
+        setIsLoading(false);
+      })
+      .catch(console.error);
   }, [installedPythons, cacheStorageUsage]);
 
   useEffect(() => {

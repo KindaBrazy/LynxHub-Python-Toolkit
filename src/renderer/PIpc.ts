@@ -97,6 +97,10 @@ const pIpc = {
   setCacheStorageUsage: (value: boolean) => ipc.send(pythonChannels.setCacheStorageUsage, value),
 
   replacePythonPath: (pythonPath: string): Promise<boolean> => ipc.invoke(pythonChannels.replacePythonPath, pythonPath),
+
+  onErrorGetVenvInfo: (result: (event: IpcRendererEvent, error: any) => void) =>
+    ipc.on(pythonChannels.errorGetVenvInfo, result),
+  offErrorGetVenvInfo: (): void => ipc.removeAllListeners(pythonChannels.errorGetVenvInfo),
 };
 
 export default pIpc;
