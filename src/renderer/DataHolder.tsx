@@ -1,4 +1,4 @@
-import {CardData} from '../../../src/renderer/src/App/Modules/types';
+import {CardData} from '@lynx_module/types';
 
 export let allCardsExt: CardData[] = [];
 
