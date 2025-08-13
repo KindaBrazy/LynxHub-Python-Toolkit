@@ -11,6 +11,7 @@ import which from 'which';
 import {PythonInstallation} from '../../cross/CrossExtTypes';
 import {storageManager} from '../lynxExtension';
 import {isDefaultPython} from './DefaultPython';
+import {isFirstPythonPath} from './ExtMainUtils';
 import {detectInstallationType, getSitePackagesCount, parseVersion} from './PythonUtils';
 import {getCondaEnvName} from './Uninstaller/Uninstaller_Conda';
 
@@ -307,6 +308,7 @@ export default async function detectPythonInstallations(refresh: boolean): Promi
       ]);
 
       const installFolder = dirname(pythonPath);
+      const isLynxHubDefault = process.env.PATH ? isFirstPythonPath(process.env.PATH, installFolder) : false;
 
       const installation: PythonInstallation = {
         version: `${version.major}.${version.minor}.${version.patch}`,
@@ -320,6 +322,7 @@ export default async function detectPythonInstallations(refresh: boolean): Promi
         venvPaths,
         sitePackagesPath,
         isDefault,
+        isLynxHubDefault,
       };
 
       return installation;

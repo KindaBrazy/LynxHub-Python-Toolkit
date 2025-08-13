@@ -13,8 +13,10 @@ import {
 import {Card, Divider, Spin} from 'antd';
 import {isNil, startCase} from 'lodash';
 import {useMemo, useState} from 'react';
+import {useDispatch} from 'react-redux';
 
 import rendererIpc from '../../../../../../src/renderer/src/App/RendererIpc';
+import {lynxTopToast} from '../../../../../../src/renderer/src/App/Utils/UtilHooks';
 import {
   MenuDots_Icon,
   OpenFolder_Icon,
@@ -23,14 +25,21 @@ import {
 import {PythonInstallation} from '../../../../cross/CrossExtTypes';
 import {formatSizeMB} from '../../../../cross/CrossExtUtils';
 import pIpc from '../../../PIpc';
-import {DoubleCheck_Icon, HardDrive_Icon, Packages_Icon, Python_Icon, TrashDuo_Icon} from '../../SvgIcons';
+import {
+  CheckCircle_Icon,
+  DoubleCheck_Icon,
+  HardDrive_Icon,
+  Packages_Icon,
+  Python_Icon,
+  TrashDuo_Icon,
+} from '../../SvgIcons';
 import PackageManagerModal from '../PackageManagement/PackageManager/PackageManagerModal';
 
 type Props = {
   python: PythonInstallation;
   diskUsage: {path: string; value: number | undefined}[];
   maxDiskValue: number;
-  updateDefault: (installFolder: string) => void;
+  updateDefault: (installFolder: string, type: 'isDefault' | 'isLynxHubDefault') => void;
   refresh: (research: boolean) => void;
   show: string;
 };
@@ -41,15 +50,38 @@ export default function InstalledCard({python, diskUsage, maxDiskValue, updateDe
   }, [diskUsage]);
 
   const [isUninstalling, setIsUninstalling] = useState<boolean>(false);
+  const dispatch = useDispatch();
 
   const makeDefault = () => {
     pIpc
       .setDefaultPython(python.installFolder)
       .then(() => {
-        updateDefault(python.installFolder);
+        lynxTopToast(dispatch).success(`Python ${python.version} is now the system default.`);
+        updateDefault(python.installFolder, 'isDefault');
       })
       .catch(error => {
+        lynxTopToast(dispatch).error(`Failed to set ${python.version} as system default. Please try again later.`);
         console.error(error);
+      });
+  };
+
+  const makeLynxDefault = () => {
+    const showFailedToast = () => {
+      lynxTopToast(dispatch).error(`Failed to set ${python.version} as LynxHub default. Please try again later.`);
+    };
+    pIpc
+      .replacePythonPath(python.installFolder)
+      .then(result => {
+        if (result) {
+          lynxTopToast(dispatch).success(`Python ${python.version} is now the default for LynxHub.`);
+          updateDefault(python.installFolder, 'isLynxHubDefault');
+        } else {
+          showFailedToast();
+        }
+      })
+      .catch(e => {
+        console.log(e);
+        showFailedToast();
       });
   };
 
@@ -91,6 +123,62 @@ export default function InstalledCard({python, diskUsage, maxDiskValue, updateDe
     setPackageManagerOpen(true);
   };
 
+  const borderColor = useMemo(() => {
+    return python.isDefault && python.isLynxHubDefault
+      ? 'border-2 border-success border-opacity-60 hover:border-opacity-100'
+      : python.isDefault
+        ? 'border-secondary border-opacity-60 hover:border-opacity-100'
+        : python.isLynxHubDefault
+          ? 'border-primary border-opacity-60 hover:border-opacity-100'
+          : 'dark:hover:border-white/20 hover:border-black/20 ';
+  }, [python]);
+
+  const defaultChip = useMemo(() => {
+    if (python.isDefault && python.isLynxHubDefault) {
+      return (
+        <Chip
+          size="sm"
+          radius="sm"
+          variant="flat"
+          color="success"
+          startContent={<CheckCircle_Icon />}
+          classNames={{content: '!font-semibold'}}>
+          System & LynxHub
+        </Chip>
+      );
+    }
+
+    if (python.isDefault) {
+      return (
+        <Chip
+          size="sm"
+          radius="sm"
+          variant="light"
+          color="secondary"
+          startContent={<CheckCircle_Icon />}
+          classNames={{content: '!font-semibold'}}>
+          System
+        </Chip>
+      );
+    }
+
+    if (python.isLynxHubDefault) {
+      return (
+        <Chip
+          size="sm"
+          radius="sm"
+          variant="light"
+          color="primary"
+          startContent={<CheckCircle_Icon />}
+          classNames={{content: '!font-semibold'}}>
+          LynxHub
+        </Chip>
+      );
+    }
+
+    return null;
+  }, [python]);
+
   return (
     <div className="grow relative">
       <PackageManagerModal
@@ -110,30 +198,13 @@ export default function InstalledCard({python, diskUsage, maxDiskValue, updateDe
         </div>
       )}
       <Card
-        className={
-          `min-w-[27rem] transition-colors duration-300 shadow-small` +
-          ` ${
-            python.isDefault
-              ? 'border-secondary border-opacity-60 hover:border-opacity-100'
-              : 'dark:hover:border-white/20 hover:border-black/20 '
-          }`
-        }
         title={
           <div className="flex flex-row justify-between items-center">
             <div className="flex flex-col my-3">
               <div className="flex flex-row items-center gap-x-2">
                 <Python_Icon className="size-4" />
                 Python {python.version}
-                {python.isDefault && (
-                  <Chip
-                    size="sm"
-                    radius="sm"
-                    variant="light"
-                    color="secondary"
-                    classNames={{content: '!font-semibold'}}>
-                    System Default
-                  </Chip>
-                )}
+                {defaultChip}
               </div>
               <div>
                 <span className="text-tiny text-foreground-500">{python.architecture}</span>
@@ -156,13 +227,28 @@ export default function InstalledCard({python, diskUsage, maxDiskValue, updateDe
                 </DropdownTrigger>
                 <DropdownMenu>
                   {window.osPlatform === 'win32' ? (
-                    <DropdownItem
-                      key="system-default"
-                      onPress={makeDefault}
-                      textValue="Set as System Default"
-                      startContent={python.isDefault ? <Refresh3_Icon className="size-4" /> : <DoubleCheck_Icon />}>
-                      Set as <span className="font-bold">System Default</span>
-                    </DropdownItem>
+                    <>
+                      <DropdownItem
+                        variant="flat"
+                        color="secondary"
+                        key="system-default"
+                        onPress={makeDefault}
+                        textValue="Set as System Default"
+                        startContent={python.isDefault ? <Refresh3_Icon className="size-4" /> : <DoubleCheck_Icon />}>
+                        Set as <span className="font-bold text-secondary">System Default</span>
+                      </DropdownItem>
+                      <DropdownItem
+                        startContent={
+                          python.isLynxHubDefault ? <Refresh3_Icon className="size-4" /> : <DoubleCheck_Icon />
+                        }
+                        variant="flat"
+                        color="success"
+                        key="lynxhub-default"
+                        onPress={makeLynxDefault}
+                        textValue="Set as LynxHub Default">
+                        Set as <span className="font-bold text-primary">LynxHub Default</span>
+                      </DropdownItem>
+                    </>
                   ) : (
                     <DropdownItem className="hidden" key="system-default" textValue="system_default" />
                   )}
@@ -210,7 +296,8 @@ export default function InstalledCard({python, diskUsage, maxDiskValue, updateDe
             </div>
           </div>
         }
-        classNames={{body: 'gap-y-4'}}>
+        classNames={{body: 'gap-y-4'}}
+        className={`min-w-[27rem] transition-colors duration-300 shadow-small` + ` ${borderColor}`}>
         <div className="gap-y-4 flex flex-col">
           <Button size="sm" variant="light" onPress={openPath} className="flex flex-row justify-start -ml-3 -mb-1.5">
             <OpenFolder_Icon className="flex-shrink-0" />

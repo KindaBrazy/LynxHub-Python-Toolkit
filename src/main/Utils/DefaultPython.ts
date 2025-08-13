@@ -1,9 +1,11 @@
 import {spawn} from 'node:child_process';
 import {platform} from 'node:os';
-import {join} from 'node:path';
 
 import {promises} from 'graceful-fs';
 import which from 'which';
+
+import {defaultEnvPath, setDefaultEnvPath} from '../lynxExtension';
+import {replacePythonPath} from './ExtMainUtils';
 
 async function validatePath(path: string): Promise<boolean> {
   try {
@@ -36,7 +38,7 @@ export async function setDefaultPython(pythonPath: string): Promise<void> {
 
 export async function isDefaultPython(pythonPath: string): Promise<boolean> {
   try {
-    const defaultPath = await which('python');
+    const defaultPath = await which('python', {path: defaultEnvPath});
     return defaultPath.toLowerCase() === pythonPath.toLowerCase();
   } catch (error) {
     return false;
@@ -69,11 +71,8 @@ async function setDefaultPythonWindows(pythonPath: string): Promise<void> {
         return;
       }
 
-      // Process paths
-      const paths = match[1].split(';').filter(Boolean);
-      const nonPythonPaths = paths.filter(path => !path.toLowerCase().includes('python'));
-      const newPaths = [pythonPath, join(pythonPath, 'Scripts'), ...nonPythonPaths];
-      const newPathValue = newPaths.join(';');
+      const newPathValue = replacePythonPath(match[1], pythonPath);
+      if (defaultEnvPath) setDefaultEnvPath(replacePythonPath(defaultEnvPath, pythonPath));
 
       const regAdd = spawn(
         'reg',

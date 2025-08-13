@@ -1,6 +1,6 @@
 import {Button, Spinner} from '@heroui/react';
 import {Empty} from 'antd';
-import {isEmpty} from 'lodash';
+import {cloneDeep, isEmpty} from 'lodash';
 import {Dispatch, SetStateAction, useEffect, useState} from 'react';
 
 import rendererIpc from '../../../../../../src/renderer/src/App/RendererIpc';
@@ -77,17 +77,19 @@ export default function InstalledPythons({
     setInstallModalOpen(false);
   };
 
-  const updateDefault = (installFolder: string) => {
+  const updateDefault = (installFolder: string, type: 'isDefault' | 'isLynxHubDefault') => {
     setInstalledPythons(prevState =>
-      prevState.map(python => {
-        if (python.installFolder === installFolder) {
-          python.isDefault = true;
-          return python;
-        } else {
-          python.isDefault = false;
-          return python;
-        }
-      }),
+      cloneDeep(
+        prevState.map(python => {
+          if (python.installFolder === installFolder) {
+            python[type] = true;
+            return python;
+          } else {
+            python[type] = false;
+            return python;
+          }
+        }),
+      ),
     );
   };
 

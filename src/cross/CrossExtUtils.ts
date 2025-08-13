@@ -44,29 +44,3 @@ export function bytesToMegabytes(bytes: number): number {
   const megabytes = bytes / (1024 * 1024);
   return parseFloat(megabytes.toFixed(2)); // Rounded to 2 decimal places
 }
-
-export function replacePythonPath(envPath: string, newPythonBase: string): string {
-  // Normalize slashes and remove trailing slash
-  const normalizedNewPython = newPythonBase.replace(/\\/g, '/').replace(/\/+$/, '');
-
-  // Split PATH into individual entries
-  const pathEntries = envPath
-    .split(/;|:/)
-    .map(p => p.trim())
-    .filter(p => p.length > 0);
-
-  // Filter out old Python paths
-  const filtered = pathEntries.filter(p => {
-    const normP = p.replace(/\\/g, '/');
-    return (
-      !/python\d*\.?\d*\/?$/i.test(normP) && // python folder
-      !/python\d*\.?\d*\/scripts\/?$/i.test(normP) // scripts folder
-    );
-  });
-
-  // Add new Python paths at the start (or end if you want)
-  filtered.unshift(normalizedNewPython, `${normalizedNewPython}/Scripts`);
-
-  // Join back into PATH string
-  return filtered.join(';');
-}

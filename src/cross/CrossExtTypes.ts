@@ -10,6 +10,7 @@ export type PythonInstallation = {
   venvPaths: string[];
   sitePackagesPath: string;
   isDefault: boolean;
+  isLynxHubDefault: boolean;
 };
 
 export type PythonVenvs = {

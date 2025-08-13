@@ -1,7 +1,7 @@
 import {ipcMain} from 'electron';
 
 import StorageManager from '../../../src/main/Managements/Storage/StorageManager';
-import {MaxRetry_StorageID, PkgDisplay_StorageID} from '../cross/CrossExtConstants';
+import {DefaultLynxPython_StorageID, MaxRetry_StorageID, PkgDisplay_StorageID} from '../cross/CrossExtConstants';
 import {
   IdPathType,
   PackageInfo,
@@ -11,11 +11,12 @@ import {
   SitePackages_Info,
   VenvCreateOptions,
 } from '../cross/CrossExtTypes';
-import {replacePythonPath} from '../cross/CrossExtUtils';
+import {defaultEnvPath} from './lynxExtension';
 import {checkAIVenvsEnabled} from './Utils/AIVenvs';
 import {getAvailablePythonVersions} from './Utils/Available';
 import {setDefaultPython} from './Utils/DefaultPython';
 import detectPythonInstallations, {addSavedPython, removeSavedPython} from './Utils/Detector';
+import {replacePythonPath} from './Utils/ExtMainUtils';
 import {createCondaEnv, isCondaInstalled, listAvailablePythons} from './Utils/Installer/Installer_Conda';
 import downloadPython from './Utils/Installer/Installer_Official';
 import {
@@ -44,8 +45,6 @@ import {
 } from './Utils/Requirements/PythonRequirements';
 import uninstallPython from './Utils/Uninstaller/Uninstaller';
 import createPythonVenv, {getVenvs, locateVenv} from './Utils/VirtualEnv/CreateVenv';
-
-const defaultEnvPath = process.env.PATH;
 
 export default function ListenForChannels(storageManager: StorageManager | undefined, nodePty: any) {
   ipcMain.on(pythonChannels.removeSavedPython, (_, pPath: string) => removeSavedPython(pPath));
@@ -146,6 +145,8 @@ export default function ListenForChannels(storageManager: StorageManager | undef
       if (!defaultEnvPath) return false;
 
       const newPath = replacePythonPath(defaultEnvPath, pythonPath);
+      storageManager?.setCustomData(DefaultLynxPython_StorageID, pythonPath);
+
       process.env.PATH = newPath;
       return true;
     } catch (e) {
