@@ -149,7 +149,7 @@ export default function ListenForChannels(storageManager: StorageManager | undef
     const result = storageManager?.getCustomData(CacheDirUsage_StorageID);
 
     if (!result) {
-      storageManager?.setCustomData(CacheDirUsage_StorageID, 'default');
+      storageManager?.setCustomData(CacheDirUsage_StorageID, true);
       return true;
     }
 
