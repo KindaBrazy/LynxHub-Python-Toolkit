@@ -31,7 +31,6 @@ function UpdateReducer() {
       const message = e.message;
       if (message && isString(message)) {
         if (message.toLowerCase().includes('no python at')) {
-          console.info(message);
           notification.error({
             message: 'Python Not Found',
             description: (
