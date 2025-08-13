@@ -1,13 +1,15 @@
 import {Button, Spinner} from '@heroui/react';
 import {Empty} from 'antd';
 import {cloneDeep, isEmpty} from 'lodash';
-import {Dispatch, SetStateAction, useEffect, useState} from 'react';
+import {Dispatch, SetStateAction, useCallback, useEffect, useState} from 'react';
 
 import rendererIpc from '../../../../../../src/renderer/src/App/RendererIpc';
 import {Add_Icon, Refresh_Icon} from '../../../../../../src/renderer/src/assets/icons/SvgIcons/SvgIcons';
+import {getDiskUsageID} from '../../../../cross/CrossExtConstants';
 import {PythonInstallation} from '../../../../cross/CrossExtTypes';
 import {bytesToMegabytes} from '../../../../cross/CrossExtUtils';
 import pIpc from '../../../PIpc';
+import {usePythonToolkitState} from '../../../reducer';
 import InstalledCard from './InstalledCard';
 import InstallerModal from './Installer/InstallerModal';
 
@@ -27,6 +29,7 @@ export default function InstalledPythons({
   isLoadingPythons,
   show,
 }: Props) {
+  const cacheStorageUsage = usePythonToolkitState('cacheStorageUsage');
   const [diskUsage, setDiskUsage] = useState<{path: string; value: number | undefined}[]>([]);
   const [maxDiskValue, setMaxDiskValue] = useState<number>(0);
 
@@ -43,6 +46,24 @@ export default function InstalledPythons({
     });
   }, [diskUsage]);
 
+  const calcDiskUsage = useCallback(
+    (python: PythonInstallation) => {
+      rendererIpc.file.calcFolderSize(python.sitePackagesPath).then((value: number) => {
+        if (value) {
+          window.localStorage.setItem(getDiskUsageID(python.installFolder), JSON.stringify(bytesToMegabytes(value)));
+          setDiskUsage(prevState => [
+            ...prevState,
+            {
+              path: python.installFolder,
+              value: bytesToMegabytes(value),
+            },
+          ]);
+        }
+      });
+    },
+    [setDiskUsage],
+  );
+
   const getInstalledPythons = (refresh: boolean) => {
     setIsLoadingPythons(true);
     pIpc.getInstalledPythons(refresh).then((result: PythonInstallation[]) => {
@@ -50,16 +71,22 @@ export default function InstalledPythons({
       setIsLoadingPythons(false);
 
       for (const python of result) {
-        rendererIpc.file.calcFolderSize(python.sitePackagesPath).then(value => {
-          if (value)
+        if (cacheStorageUsage) {
+          const cachedUsage = window.localStorage.getItem(getDiskUsageID(python.installFolder));
+          if (!cachedUsage) {
+            calcDiskUsage(python);
+          } else {
             setDiskUsage(prevState => [
               ...prevState,
               {
                 path: python.installFolder,
-                value: bytesToMegabytes(value),
+                value: JSON.parse(cachedUsage) as number,
               },
             ]);
-        });
+          }
+        } else {
+          calcDiskUsage(python);
+        }
       }
     });
   };

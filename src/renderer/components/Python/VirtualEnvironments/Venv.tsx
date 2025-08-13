@@ -5,9 +5,11 @@ import {useCallback, useEffect, useState} from 'react';
 
 import rendererIpc from '../../../../../../src/renderer/src/App/RendererIpc';
 import {OpenFolder_Icon} from '../../../../../../src/renderer/src/assets/icons/SvgIcons/SvgIcons';
+import {getDiskUsageID} from '../../../../cross/CrossExtConstants';
 import {PythonInstallation, PythonVenvs, VenvInfo} from '../../../../cross/CrossExtTypes';
 import {bytesToMegabytes} from '../../../../cross/CrossExtUtils';
 import pIpc from '../../../PIpc';
+import {usePythonToolkitState} from '../../../reducer';
 import VenvCard from './VenvCard';
 import VenvCreator from './VenvCreator';
 
@@ -19,12 +21,28 @@ type Props = {
 };
 
 export default function Venv({visible, installedPythons, isLoadingPythons, show}: Props) {
+  const cacheStorageUsage = usePythonToolkitState('cacheStorageUsage');
   const [pythonVenvs, setPythonVenvs] = useState<PythonVenvs[]>([]);
   const [isLoading, setIsLoading] = useState<boolean>(true);
 
   const [isLocating, setIsLocating] = useState<boolean>(false);
 
   const [diskUsage, setDiskUsage] = useState<{path: string; value: number | undefined}[]>([]);
+
+  const calcDiskUsage = useCallback((venv: VenvInfo) => {
+    rendererIpc.file.calcFolderSize(venv.folder).then(value => {
+      if (value) {
+        window.localStorage.setItem(getDiskUsageID(venv.folder), JSON.stringify(bytesToMegabytes(value)));
+        setDiskUsage(prevState => [
+          ...prevState,
+          {
+            path: venv.folder,
+            value: bytesToMegabytes(value),
+          },
+        ]);
+      }
+    });
+  }, []);
 
   const getVenvs = useCallback(() => {
     setIsLoading(true);
@@ -54,20 +72,26 @@ export default function Venv({visible, installedPythons, isLoadingPythons, show}
         }),
       );
       for (const venv of resultVenvs) {
-        rendererIpc.file.calcFolderSize(venv.folder).then(value => {
-          if (value)
+        if (cacheStorageUsage) {
+          const cachedUsage = window.localStorage.getItem(getDiskUsageID(venv.folder));
+          if (!cachedUsage) {
+            calcDiskUsage(venv);
+          } else {
             setDiskUsage(prevState => [
               ...prevState,
               {
                 path: venv.folder,
-                value: bytesToMegabytes(value),
+                value: JSON.parse(cachedUsage) as number,
               },
             ]);
-        });
+          }
+        } else {
+          calcDiskUsage(venv);
+        }
       }
       setIsLoading(false);
     });
-  }, [installedPythons]);
+  }, [installedPythons, cacheStorageUsage]);
 
   useEffect(() => {
     if (!isEmpty(installedPythons)) getVenvs();

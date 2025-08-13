@@ -1,7 +1,12 @@
 import {ipcMain} from 'electron';
 
 import StorageManager from '../../../src/main/Managements/Storage/StorageManager';
-import {DefaultLynxPython_StorageID, MaxRetry_StorageID, PkgDisplay_StorageID} from '../cross/CrossExtConstants';
+import {
+  CacheDirUsage_StorageID,
+  DefaultLynxPython_StorageID,
+  MaxRetry_StorageID,
+  PkgDisplay_StorageID,
+} from '../cross/CrossExtConstants';
 import {
   IdPathType,
   PackageInfo,
@@ -138,6 +143,20 @@ export default function ListenForChannels(storageManager: StorageManager | undef
   });
   ipcMain.on(pythonChannels.setPkgDisplay, (_, value: PkgDisplayType) => {
     storageManager?.setCustomData(PkgDisplay_StorageID, value);
+  });
+
+  ipcMain.handle(pythonChannels.getCacheStorageUsage, () => {
+    const result = storageManager?.getCustomData(CacheDirUsage_StorageID);
+
+    if (!result) {
+      storageManager?.setCustomData(CacheDirUsage_StorageID, 'default');
+      return true;
+    }
+
+    return result;
+  });
+  ipcMain.on(pythonChannels.setCacheStorageUsage, (_, value: boolean) => {
+    storageManager?.setCustomData(CacheDirUsage_StorageID, value);
   });
 
   ipcMain.handle(pythonChannels.replacePythonPath, (_, pythonPath: string) => {

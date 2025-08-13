@@ -20,6 +20,7 @@ type PythonToolkitState = {
   }[];
   pkgNameDisplay: PkgDisplayType;
   pythonVenvSelected: PythonVenvSelected;
+  cacheStorageUsage: boolean;
 };
 
 type PythonToolkitStateTypes = {
@@ -35,6 +36,7 @@ const initialState: PythonToolkitState = {
     label: '',
     type: 'python',
   },
+  cacheStorageUsage: true,
 };
 
 const pythonToolkitReducer = createSlice({
@@ -68,6 +70,9 @@ const pythonToolkitReducer = createSlice({
     },
     setSelectedPythonVenv: (state: PythonToolkitState, action: PayloadAction<PythonVenvSelected>) => {
       state.pythonVenvSelected = action.payload;
+    },
+    setCacheStorageUsage: (state: PythonToolkitState, action: PayloadAction<boolean>) => {
+      state.cacheStorageUsage = action.payload;
     },
   },
 });

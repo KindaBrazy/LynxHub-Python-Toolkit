@@ -118,6 +118,9 @@ export const pythonChannels = {
   getPkgDisplay: 'get-pkg-display',
   setPkgDisplay: 'set-pkg-display',
 
+  getCacheStorageUsage: 'get-cache-storage-usage',
+  setCacheStorageUsage: 'set-cache-storage-usage',
+
   replacePythonPath: 'ptoolkit-replace-python-path',
 };
 
