@@ -18,7 +18,7 @@ export const PYTHON_SUPPORTED_AI = [
 export const MaxRetry_StorageID = 'pythonToolkit_MaxRetry';
 export const PkgDisplay_StorageID = 'pythonToolkit_MpkgDisplay';
 export const DefaultLynxPython_StorageID = 'pythonToolkit_DefaultLynxPython';
-export const CacheDirUsage_StorageID = 'pythonToolkit_DefaultLynxPython';
+export const CacheDirUsage_StorageID = 'pythonToolkit_CacheDirUsage';
 
 // Renderer storage id's
 export const FolderDiskUsage_StorageID = 'pythonToolkit_FolderDiskUsage';
