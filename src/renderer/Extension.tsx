@@ -1,5 +1,8 @@
 import './index.css';
 
+import {Fragment, useEffect} from 'react';
+import {useDispatch} from 'react-redux';
+
 import {ExtensionRendererApi} from '../../../src/renderer/src/App/Extensions/ExtensionTypes_Renderer_Api';
 import CardMenu from './components/CardMenu';
 import CardMenuModal from './components/CardMenuModal';
@@ -7,7 +10,23 @@ import SettingsModal from './components/Settings/SettingsModal';
 import ToolsPage from './components/ToolsPage';
 import {setCards} from './DataHolder';
 import listenForEvents from './ListenForEvents';
-import pythonToolkitReducer from './reducer';
+import pIpc from './PIpc';
+import pythonToolkitReducer, {PythonToolkitActions} from './reducer';
+
+function UpdateReducer() {
+  const dispatch = useDispatch();
+
+  useEffect(() => {
+    pIpc.getCacheStorageUsage().then(result => {
+      dispatch(PythonToolkitActions.setCacheStorageUsage(result));
+    });
+    pIpc.getPkgDisplay().then(result => {
+      dispatch(PythonToolkitActions.setPkgDisplay(result));
+    });
+  }, []);
+
+  return <Fragment />;
+}
 
 export function InitialExtensions(lynxAPI: ExtensionRendererApi) {
   listenForEvents(lynxAPI);
@@ -19,4 +38,5 @@ export function InitialExtensions(lynxAPI: ExtensionRendererApi) {
 
   lynxAPI.customizePages.tools.addComponent(ToolsPage);
   lynxAPI.cards.customize.menu.addSection([{index: 1, components: [CardMenu]}]);
+  lynxAPI.addCustomHook(UpdateReducer);
 }
