@@ -5,7 +5,7 @@ import {useDispatch} from 'react-redux';
 import {PythonVenvSelectItem} from '../../../cross/CrossExtTypes';
 import pIpc from '../../PIpc';
 import {PythonToolkitActions, usePythonToolkitState} from '../../reducer';
-import {Packages_Icon, Python_Icon} from '../SvgIcons';
+import {Env_Icon, Python_Icon} from '../SvgIcons';
 
 export const Installer_PythonSelector = (
   id: string,
@@ -28,12 +28,13 @@ export const Installer_PythonSelector = (
       Promise.all([pIpc.getInstalledPythons(false), pIpc.getVenvs()])
         .then(([pythons, venvs]) => {
           const pythonItems: PythonVenvSelectItem[] = pythons.map(python => ({
-            label: python.version,
+            condaName: python.installationType === 'conda' ? python.condaName : undefined,
+            label: python.installationType === 'conda' ? `${python.version}  |  ${python.condaName}` : python.version,
             dir: python.installFolder,
-            type: 'python',
+            type: python.installationType === 'conda' ? 'conda' : 'python',
           }));
           const venvItems: PythonVenvSelectItem[] = venvs.map(venv => ({
-            label: venv.name,
+            label: `${venv.pythonVersion}  |  ${venv.name}`,
             dir: venv.folder,
             type: 'venv',
           }));
@@ -75,11 +76,11 @@ export const Installer_PythonSelector = (
               <SelectItem key={item.label} textValue={item.label}>
                 {item.type === 'python' ? (
                   <span className="flex flex-row items-center gap-x-2">
-                    <Python_Icon className="text-primary/70" /> Python {item.label}
+                    <Python_Icon className="text-yellow-300" /> {item.label}
                   </span>
                 ) : (
                   <span className="flex flex-row items-center gap-x-2">
-                    <Packages_Icon className="text-secondary/70" /> {item.label}
+                    <Env_Icon className="text-yellow-300" /> {item.label}
                   </span>
                 )}
               </SelectItem>

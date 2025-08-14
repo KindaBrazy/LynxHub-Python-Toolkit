@@ -331,7 +331,10 @@ export default function InstalledCard({python, diskUsage, maxDiskValue, updateDe
         </CardBody>
 
         <CardFooter className="flex-col gap-y-3">
-          <Venv_Associate type="python" folder={python.installFolder} />
+          <Venv_Associate
+            folder={python.installFolder}
+            type={python.installationType === 'conda' ? 'conda' : 'python'}
+          />
         </CardFooter>
       </Card>
     </div>

@@ -131,5 +131,5 @@ export const pythonChannels = {
 
 export type PkgDisplayType = 'capitalize' | 'startCase' | 'default' | string;
 
-export type PythonVenvSelectItem = {label: string; dir: string; type: 'python' | 'venv'};
-export type AssociateItem = {id: string; dir: string; type: 'python' | 'venv'};
+export type PythonVenvSelectItem = {label: string; dir: string; type: 'python' | 'venv' | 'conda'; condaName?: string};
+export type AssociateItem = {id: string; dir: string; type: 'python' | 'venv' | 'conda'};

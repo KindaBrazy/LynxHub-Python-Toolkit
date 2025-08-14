@@ -5,7 +5,7 @@ import {useDispatch} from 'react-redux';
 import {lynxTopToast} from '../../../../../../../src/renderer/src/App/Utils/UtilHooks';
 import {AssociateItem, PythonVenvSelectItem} from '../../../../../cross/CrossExtTypes';
 import pIpc from '../../../../PIpc';
-import {Packages_Icon, Python_Icon} from '../../../SvgIcons';
+import {Env_Icon, Python_Icon} from '../../../SvgIcons';
 
 type Props = {id: string; setPythonPath?: Dispatch<SetStateAction<string>>};
 
@@ -37,12 +37,13 @@ export default function Body_SelectEnv({id, setPythonPath}: Props) {
     Promise.all([pIpc.getInstalledPythons(false), pIpc.getVenvs()])
       .then(([pythons, venvs]) => {
         const pythonItems: PythonVenvSelectItem[] = pythons.map(python => ({
-          label: python.version,
+          condaName: python.installationType === 'conda' ? python.condaName : undefined,
+          label: python.installationType === 'conda' ? `${python.version}  |  ${python.condaName}` : python.version,
           dir: python.installFolder,
-          type: 'python',
+          type: python.installationType === 'conda' ? 'conda' : 'python',
         }));
         const venvItems: PythonVenvSelectItem[] = venvs.map(venv => ({
-          label: venv.name,
+          label: `${venv.pythonVersion}  |  ${venv.name}`,
           dir: venv.folder,
           type: 'venv',
         }));
@@ -72,11 +73,11 @@ export default function Body_SelectEnv({id, setPythonPath}: Props) {
             <div className="flex flex-row gap-x-1 items-end">
               {item.type === 'python' ? (
                 <span className="flex flex-row items-center gap-x-2">
-                  <Python_Icon className="text-primary/70" /> Python {item.label}
+                  <Python_Icon className="text-yellow-300" /> {item.label}
                 </span>
               ) : (
                 <span className="flex flex-row items-center gap-x-2">
-                  <Packages_Icon className="text-secondary/70" /> {item.label}
+                  <Env_Icon className="text-yellow-300" /> {item.label}
                 </span>
               )}
             </div>

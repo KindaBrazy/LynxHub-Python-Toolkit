@@ -27,6 +27,13 @@ function SetTerminalCommand(set: (id: string, command: string[]) => void) {
           pIpc.setCardStartCommand({id, commands: [command]});
           break;
         }
+        case 'conda': {
+          const command = `conda activate ${item.condaName || `--prefix "${item.dir}"`}`;
+          set(id, [command]);
+          window.localStorage.setItem(getStorageId(id), JSON.stringify([command]));
+          pIpc.setCardStartCommand({id, commands: [command]});
+          break;
+        }
       }
     }
   };
@@ -49,7 +56,7 @@ export const getStep = (id: string, set: (id: string, command: string[]) => void
   switch (id) {
     case Python_AvailableModules.comfyui:
       return {
-        index: 2,
+        index: 1,
         title: 'Python',
         content: Installer_PythonSelector(id, SetTerminalCommand(set)),
       };
