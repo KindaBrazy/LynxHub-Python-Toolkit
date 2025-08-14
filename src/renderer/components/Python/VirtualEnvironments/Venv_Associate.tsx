@@ -13,12 +13,11 @@ type Props = {
   folder: string;
 };
 
-type Item = {id: string; title: string};
-type ItemAvatar = Item & {avatarUrl: string | undefined};
+type Item = {id: string; title: string; avatarUrl: string | undefined};
 
 export default function Venv_Associate({folder}: Props) {
   const [associated, setAssociated] = useState<Item[]>([]);
-  const [itemsToAdd, setItemsToAdd] = useState<ItemAvatar[]>([]);
+  const [itemsToAdd, setItemsToAdd] = useState<Item[]>([]);
 
   const installedCards = useCardsState('installedCards');
 
@@ -32,7 +31,7 @@ export default function Venv_Associate({folder}: Props) {
 
       const cardTitleMap = new Map(allCardsExt.map(card => [card.id, card.title]));
 
-      const installedCardsWithTitles: ItemAvatar[] = installedCards
+      const installedCardsWithTitles: Item[] = installedCards
         .filter(card => cardTitleMap.has(card.id))
         .map(card => {
           const avatarUrl = window.localStorage.getItem(`${card.id}-card-dev-img`) || undefined;
@@ -54,10 +53,14 @@ export default function Venv_Associate({folder}: Props) {
 
       const activeAssociatesWithTitles = associateList
         .filter(aiVenv => aiVenv.dir === folder && installedCards.some(card => card.id === aiVenv.id))
-        .map(aiVenv => ({
-          title: cardTitleMap.get(aiVenv.id)!,
-          id: aiVenv.id,
-        }));
+        .map(aiVenv => {
+          const avatarUrl = window.localStorage.getItem(`${aiVenv.id}-card-dev-img`) || undefined;
+          return {
+            avatarUrl,
+            title: cardTitleMap.get(aiVenv.id)!,
+            id: aiVenv.id,
+          };
+        });
 
       setAssociated(activeAssociatesWithTitles);
     });
@@ -75,27 +78,20 @@ export default function Venv_Associate({folder}: Props) {
 
   return (
     <>
-      <Divider variant="dashed" className="!my-0">
-        <div className="flex flex-row items-center gap-x-2">
-          <span className="text-small font-bold">Associated AI</span>
-        </div>
-      </Divider>
+      <Divider variant="solid" className="!my-0" />
       <div className="flex flex-row justify-between w-full">
         <div className="w-full flex flex-row gap-x-1 gap-y-2 items-center flex-wrap">
           {isEmpty(associated) ? (
-            <Chip size="sm" radius="sm" variant="dot" color="default" className="animate-appearance-in">
-              Not Associated
-            </Chip>
+            <Chip variant="flat">Not Associated</Chip>
           ) : (
             associated.map(item => (
               <Chip
-                size="sm"
-                radius="sm"
                 key={item.id}
-                variant="dot"
+                variant="flat"
                 color="success"
+                className="p-2"
                 onClose={() => remove(item.id)}
-                className="animate-appearance-in">
+                startContent={<Avatar className="size-5" src={item.avatarUrl} />}>
                 {item.title}
               </Chip>
             ))
@@ -103,7 +99,7 @@ export default function Venv_Associate({folder}: Props) {
         </div>
         <Dropdown size="sm" className="border-1 border-foreground/10">
           <DropdownTrigger>
-            <Button size="sm" variant="flat" isIconOnly>
+            <Button size="sm" radius="full" variant="flat" isIconOnly>
               <Add_Icon />
             </Button>
           </DropdownTrigger>
