@@ -1,5 +1,4 @@
 import {Button} from '@heroui/react';
-import {isNil} from 'lodash';
 import {useEffect, useMemo, useState} from 'react';
 import {useDispatch} from 'react-redux';
 
@@ -35,7 +34,6 @@ export default function CardMenu_Modals({isOpen, context, show}: Props) {
   }, [activeTab, context.tabID, isOpen]);
 
   const [pythonPath, setPythonPath] = useState<string>('');
-  const [isLocatingVenv, setIsLocatingVenv] = useState<boolean>(false);
 
   const onOpenChange = (value: boolean) => {
     if (!value) {
@@ -47,45 +45,8 @@ export default function CardMenu_Modals({isOpen, context, show}: Props) {
     }
   };
 
-  useEffect(() => {
-    if (isOpen) {
-      pIpc.getAIVenv(context.id).then(folder => {
-        if (isNil(folder)) {
-          pIpc
-            .findAIVenv(context.id, webUI?.dir)
-            .then(result => {
-              pIpc.checkAIVenvEnabled();
-              setPythonPath(result);
-            })
-            .catch(console.log);
-        } else {
-          setPythonPath(folder);
-          pIpc.checkAIVenvEnabled();
-        }
-      });
-    } else {
-      setPythonPath('');
-    }
-  }, [isOpen, webUI, context]);
-
-  const locateVenv = () => {
-    if (context) {
-      setIsLocatingVenv(true);
-      pIpc
-        .locateAIVenv(context.id)
-        .then(result => {
-          pIpc.checkAIVenvEnabled();
-          setPythonPath(result);
-        })
-        .catch(console.error)
-        .finally(() => {
-          setIsLocatingVenv(false);
-        });
-    }
-  };
-
   const handleDeselect = () => {
-    pIpc.removeAIVenv(context.id);
+    pIpc.removeAssociate(context.id);
     setPythonPath('');
   };
 
@@ -103,7 +64,7 @@ export default function CardMenu_Modals({isOpen, context, show}: Props) {
           </Button>,
         ]
       : [];
-  }, [pythonPath, isLocatingVenv]);
+  }, [pythonPath]);
 
   return (
     <UIProvider>
@@ -113,10 +74,8 @@ export default function CardMenu_Modals({isOpen, context, show}: Props) {
         isOpen={isOpen}
         id={context.id}
         pythonPath={pythonPath}
-        locateVenv={locateVenv}
         setIsOpen={onOpenChange}
         projectPath={webUI?.dir}
-        isLocating={isLocatingVenv}
         setPythonPath={setPythonPath}
         actionButtons={actionButtons}
         title={`${context.title} Dependencies`}

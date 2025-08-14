@@ -4,7 +4,7 @@ import {isEmpty, isNil} from 'lodash';
 
 import {storageManager} from '../lynxExtension';
 import {isWin} from './ExtMainUtils';
-import {getAIVenvs} from './PackageManager/PackageManager';
+import {getAssociates} from './PackageManager/PackageManager';
 
 function getActivatePath(pythonPath: string) {
   return resolve(isWin() ? `${dirname(pythonPath)}\\activate.ps1` : `${dirname(pythonPath)}/activate`);
@@ -88,7 +88,7 @@ async function removeArguments(id: string, pythonExe: string) {
 }
 
 export async function checkAIVenvsEnabled() {
-  const venvs = getAIVenvs();
+  const venvs = getAssociates();
   if (isNil(venvs) || isEmpty(venvs)) {
     return;
   }
@@ -105,14 +105,14 @@ export async function checkAIVenvsEnabled() {
       case 'Lllyasviel_SD':
       case 'ComfyUI_Zluda_ID':
       case 'Anapnoe_SD':
-        updatePromises.push(checkArguments(venv.id, venv.path));
+        updatePromises.push(checkArguments(venv.id, venv.dir));
         break;
       case 'ComfyUI_SD':
       case 'Nerogar_SD':
       case 'Erew123_SD':
       case 'Oobabooga_TG':
       case 'Gitmylo_AG':
-        preCommandUpdates.push(() => checkPreCommand(venv.id, venv.path));
+        preCommandUpdates.push(() => checkPreCommand(venv.id, venv.dir));
         break;
       case 'Bmaltais_SD':
         // TODO -> https://github.com/bmaltais/kohya_ss/blob/master/gui.bat

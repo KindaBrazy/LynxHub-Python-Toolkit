@@ -13,7 +13,6 @@ export const PYTHON_SUPPORTED_AI = [
   'Gitmylo_AG',
   'OpenWebUI_TG',
 ];
-
 export const Python_AvailableModules = {
   a1: 'Automatic1111_SD',
   sdAmd: 'LSHQQYTIGER_SD',
@@ -38,14 +37,19 @@ export const Python_AvailableModules = {
   ag: 'Gitmylo_AG',
 };
 
+/** @deprecated use Associates_StorageID instead */
+export const AI_VENV_STORE_KEYS = 'ai_venvs';
+
 // main storage id's
 export const MaxRetry_StorageID = 'pythonToolkit_MaxRetry';
 export const PkgDisplay_StorageID = 'pythonToolkit_MpkgDisplay';
 export const DefaultLynxPython_StorageID = 'pythonToolkit_DefaultLynxPython';
 export const CacheDirUsage_StorageID = 'pythonToolkit_CacheDirUsage';
 export const CardStartCommand_StorageID = 'pythonToolkit_CardStartCommands';
+export const Associates_StorageID = 'pythonToolkit_associates';
 
 // Renderer storage id's
 export const FolderDiskUsage_StorageID = 'pythonToolkit_FolderDiskUsage';
 
+// Utils
 export const getDiskUsageID = (path: string) => `${FolderDiskUsage_StorageID}_${path}`;

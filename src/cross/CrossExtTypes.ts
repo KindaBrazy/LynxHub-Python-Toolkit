@@ -101,14 +101,12 @@ export const pythonChannels = {
   getReqPath: 'get-requirements-path',
   findReq: 'find-req-file',
 
-  locateAIVenv: 'locate-ai-venv',
-  getAIVenv: 'get-ai-venv',
-  addAIVenv: 'add-ai-venv',
-  removeAIVenv: 'remove-ai-venv',
-  removeAIVenvPath: 'remove-ai-venv-path',
-  getAIVenvs: 'get-ai-venvs',
+  getAssociates: 'get-ai-venvs',
+  addAssociate: 'add-ai-venv',
+  removeAssociate: 'remove-ai-venv',
+  removeAssociatePath: 'remove-ai-venv-path',
+
   findAIVenv: 'find-ai-venv',
-  checkAIVenvEnabled: 'check-ai-venv-enable',
 
   readFile: 'read-file',
 
@@ -127,8 +125,11 @@ export const pythonChannels = {
   replacePythonPath: 'ptoolkit-replace-python-path',
 
   errorGetVenvInfo: 'ptoolkit-errorGetVenvInfo',
+
+  getExePathAssociate: 'get-exe-path-associate',
 };
 
 export type PkgDisplayType = 'capitalize' | 'startCase' | 'default' | string;
 
 export type PythonVenvSelectItem = {label: string; dir: string; type: 'python' | 'venv'};
+export type AssociateItem = {id: string; dir: string; type: 'python' | 'venv'};

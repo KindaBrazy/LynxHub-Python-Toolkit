@@ -1,5 +1,4 @@
 import {
-  Button,
   ModalBody,
   Selection,
   Spinner,
@@ -17,7 +16,7 @@ import {Dispatch, SetStateAction, useMemo} from 'react';
 
 import {useAppState} from '../../../../../../../src/renderer/src/App/Redux/Reducer/AppReducer';
 import {PackageInfo, SitePackages_Info} from '../../../../../cross/CrossExtTypes';
-import Body_SelectPythonV from './Body_SelectPythonV';
+import Body_SelectEnv from './Body_SelectEnv';
 import Body_TableItem from './Body_TableItem';
 
 type Props = {
@@ -28,8 +27,6 @@ type Props = {
   updated: (name: string, newVersion: string) => void;
   removed: (name: string) => void;
   isValidPython: boolean;
-  locateVenv?: () => void;
-  isLocating?: boolean;
   packagesUpdate: SitePackages_Info[];
   selectedKeys: Selection;
   setSelectedKeys: Dispatch<SetStateAction<Selection>>;
@@ -44,8 +41,6 @@ export default function PackageManagerBody({
   updated,
   removed,
   isValidPython,
-  isLocating,
-  locateVenv,
   setSelectedKeys,
   packagesUpdate,
   selectedKeys,
@@ -128,22 +123,10 @@ export default function PackageManagerBody({
             </>
           ) : (
             <Result
-              subTitle={
-                <span>
-                  Please <span className="text-foreground">locate venv</span> folder or{' '}
-                  <span className="text-foreground">select python version</span>.
-                </span>
-              }
-              extra={
-                <div className="flex flex-row gap-x-2 justify-center">
-                  <Button color="primary" key="locate_venv" onPress={locateVenv} isLoading={isLocating}>
-                    {!isLocating && 'Locate VENV'}
-                  </Button>
-                  <Body_SelectPythonV id={id} setPythonPath={setPythonPath} />
-                </div>
-              }
               status="404"
               title="Could not find a virtual environment."
+              subTitle={<span>Please select your desire environment.</span>}
+              extra={<Body_SelectEnv id={id} setPythonPath={setPythonPath} />}
             />
           )}
         </div>

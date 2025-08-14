@@ -1,18 +1,17 @@
 import {exec} from 'node:child_process';
+import {platform} from 'node:os';
 import {join} from 'node:path';
 
 import {promises} from 'graceful-fs';
 import {compact} from 'lodash';
+import {resolve} from 'path';
 import semver, {compare} from 'semver';
 
-import {IdPathType, PackageInfo, SitePackages_Info} from '../../../cross/CrossExtTypes';
+import {Associates_StorageID} from '../../../cross/CrossExtConstants';
+import {AssociateItem, PackageInfo, SitePackages_Info} from '../../../cross/CrossExtTypes';
 import {storageManager} from '../../lynxExtension';
-import {checkAIVenvsEnabled, removeAIVenvsEnabled} from '../AIVenvs';
-import {openDialogExt} from '../PythonUtils';
 import {getVenvPythonPath, isVenvDirectory} from '../VirtualEnv/VenvUtils';
 import {getLatestPipPackageVersion} from './PipToolsManager';
-
-const AI_VENV_STORE_KEYS = 'ai_venvs';
 
 export async function getSitePackagesInfo(pythonExePath: string): Promise<SitePackages_Info[]> {
   return new Promise((resolve, reject) => {
@@ -132,28 +131,6 @@ export async function uninstallPythonPackage(pythonExePath: string, packageName:
   });
 }
 
-export async function locateAIVenv(id: string) {
-  try {
-    const selectedFolder = await openDialogExt({properties: ['openDirectory']});
-
-    if (!selectedFolder) {
-      throw 'Folder not selected.';
-    }
-    const isVenv = isVenvDirectory(selectedFolder);
-
-    if (isVenv) {
-      const pythonExecutable = getVenvPythonPath(selectedFolder);
-      updateAIVenvStorage({id, path: pythonExecutable});
-      return pythonExecutable;
-    }
-
-    throw 'Selected folder is not venv.';
-  } catch (e) {
-    console.error(e);
-    throw e;
-  }
-}
-
 function isVenvFolderName(folder: string) {
   return (
     folder === 'venv' ||
@@ -191,8 +168,8 @@ async function findVenvFolder(dirPath: string): Promise<string | null> {
   }
 }
 
-function updateAIVenvStorage(data: IdPathType) {
-  const existingData = storageManager?.getCustomData(AI_VENV_STORE_KEYS) as IdPathType[] | undefined;
+function updateAIVenvStorage(data: AssociateItem) {
+  const existingData = storageManager?.getCustomData(Associates_StorageID) as AssociateItem[] | undefined;
 
   const result = existingData ? existingData.map(item => (item.id === data.id ? data : item)) : [];
 
@@ -200,7 +177,7 @@ function updateAIVenvStorage(data: IdPathType) {
     result.push(data);
   }
 
-  storageManager?.setCustomData(AI_VENV_STORE_KEYS, result);
+  storageManager?.setCustomData(Associates_StorageID, result);
 }
 
 export async function findAIVenv(id: string, folder: string | undefined) {
@@ -209,7 +186,7 @@ export async function findAIVenv(id: string, folder: string | undefined) {
     const venvFolder = await findVenvFolder(folder);
     if (venvFolder) {
       const pythonExecutable = getVenvPythonPath(venvFolder);
-      updateAIVenvStorage({id, path: pythonExecutable});
+      updateAIVenvStorage({id, dir: pythonExecutable, type: 'venv'});
       return pythonExecutable;
     }
     throw 'Venv folder not Found';
@@ -219,42 +196,42 @@ export async function findAIVenv(id: string, folder: string | undefined) {
   }
 }
 
-export function getAIVenv(id: string) {
-  const data = storageManager?.getCustomData(AI_VENV_STORE_KEYS) as IdPathType[] | undefined;
-  return data?.find(item => item.id === id)?.path;
+export function getExePathAssociate(item: AssociateItem) {
+  switch (item.type) {
+    case 'venv':
+      return resolve(getVenvPythonPath(item.dir));
+    case 'python':
+    default:
+      return resolve(platform() === 'win32' ? join(item.dir, 'python.exe') : join(item.dir, 'bin', 'python'));
+  }
 }
 
-export function getAIVenvs() {
-  return storageManager?.getCustomData(AI_VENV_STORE_KEYS) as IdPathType[] | undefined;
+export function getAssociates() {
+  return storageManager?.getCustomData(Associates_StorageID) as AssociateItem[] | undefined;
 }
 
-export function addAIVenv(id: string, pythonPath: string) {
-  updateAIVenvStorage({id, path: pythonPath});
-  checkAIVenvsEnabled();
+export function addAssociate(data: AssociateItem) {
+  updateAIVenvStorage(data);
 }
 
-export function removeAIVenv(id: string) {
-  const existingData = storageManager?.getCustomData(AI_VENV_STORE_KEYS) as IdPathType[] | undefined;
+export function removeAssociate(id: string) {
+  const existingData = storageManager?.getCustomData(Associates_StorageID) as AssociateItem[] | undefined;
 
   if (existingData) {
-    const pythonPath = existingData.find(item => item.id === id)?.path;
-    if (pythonPath) removeAIVenvsEnabled(id, pythonPath);
     storageManager?.setCustomData(
-      AI_VENV_STORE_KEYS,
+      Associates_StorageID,
       existingData.filter(item => item.id !== id),
     );
   }
 }
 
-export function removeAIVenvPath(pythonPath: string) {
-  const existingData = storageManager?.getCustomData(AI_VENV_STORE_KEYS) as IdPathType[] | undefined;
+export function removeAssociatePath(pythonPath: string) {
+  const existingData = storageManager?.getCustomData(Associates_StorageID) as AssociateItem[] | undefined;
 
   if (existingData) {
-    const id = existingData.find(item => item.path === pythonPath)?.id;
-    if (id) removeAIVenvsEnabled(id, pythonPath);
     storageManager?.setCustomData(
-      AI_VENV_STORE_KEYS,
-      existingData.filter(item => item.path !== id),
+      Associates_StorageID,
+      existingData.filter(item => item.dir !== pythonPath),
     );
   }
 }

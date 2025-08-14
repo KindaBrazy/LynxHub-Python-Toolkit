@@ -20,9 +20,6 @@ type Props = {
   actionButtons?: ReactNode[];
   size?: '2xl' | '3xl' | '4xl';
 
-  locateVenv?: () => void;
-  isLocating?: boolean;
-
   id: string;
   projectPath?: string;
   setPythonPath?: Dispatch<SetStateAction<string>>;
@@ -36,9 +33,7 @@ export default function PackageManagerModal({
   isOpen,
   setIsOpen,
   pythonPath,
-  locateVenv,
   id,
-  isLocating,
   projectPath,
   setPythonPath,
   show,
@@ -256,8 +251,6 @@ export default function PackageManagerModal({
           removed={removed}
           updated={updated}
           isLoading={isLoading}
-          locateVenv={locateVenv}
-          isLocating={isLocating}
           pythonPath={pythonPath}
           selectedKeys={selectedKeys}
           setPythonPath={setPythonPath}

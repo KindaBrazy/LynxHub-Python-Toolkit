@@ -2,6 +2,7 @@ import {IpcRendererEvent} from 'electron';
 
 import {OnPreCommands} from '../../../src/cross/IpcChannelAndTypes';
 import {
+  AssociateItem,
   DlProgressOfficial,
   IdPathType,
   PackageInfo,
@@ -73,15 +74,14 @@ const pIpc = {
     ipc.invoke(pythonChannels.installConda, envName, version),
   isCondaInstalled: (): Promise<boolean> => ipc.invoke(pythonChannels.isCondaInstalled),
 
-  locateAIVenv: (id: string): Promise<string> => ipc.invoke(pythonChannels.locateAIVenv, id),
-  getAIVenv: (id: string): Promise<string | undefined> => ipc.invoke(pythonChannels.getAIVenv, id),
-  addAIVenv: (id: string, pythonPath: string): void => ipc.send(pythonChannels.addAIVenv, id, pythonPath),
-  removeAIVenv: (id: string): void => ipc.send(pythonChannels.removeAIVenv, id),
-  removeAIVenvPath: (path: string): void => ipc.send(pythonChannels.removeAIVenvPath, path),
-  getAIVenvs: (): Promise<IdPathType[] | undefined> => ipc.invoke(pythonChannels.getAIVenvs),
+  getAssociates: (): Promise<AssociateItem[]> => ipc.invoke(pythonChannels.getAssociates),
+  addAssociate: (data: AssociateItem): void => ipc.send(pythonChannels.addAssociate, data),
+  removeAssociate: (id: string): void => ipc.send(pythonChannels.removeAssociate, id),
+  removeAssociatePath: (path: string): void => ipc.send(pythonChannels.removeAssociatePath, path),
+  getExePathAssociate: (item: AssociateItem): Promise<string> => ipc.invoke(pythonChannels.getExePathAssociate, item),
+
   findAIVenv: (id: string, folder: string | undefined): Promise<string> =>
     ipc.invoke(pythonChannels.findAIVenv, id, folder),
-  checkAIVenvEnabled: (): void => ipc.send(pythonChannels.checkAIVenvEnabled),
 
   getUpdatesReq: (reqFile: string, currentPackages: SitePackages_Info[]): Promise<SitePackages_Info[]> =>
     ipc.invoke(pythonChannels.getUpdatesReq, reqFile, currentPackages),

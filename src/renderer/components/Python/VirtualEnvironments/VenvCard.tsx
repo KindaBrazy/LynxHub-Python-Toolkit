@@ -65,6 +65,7 @@ export default function VenvCard({
   }, [diskUsage]);
 
   const [isRemoving, setIsRemoving] = useState<boolean>(false);
+
   const remove = () => {
     setPopoverUninstaller(false);
     setIsRemoving(true);
@@ -72,7 +73,7 @@ export default function VenvCard({
       .trashDir(folder)
       .then(() => {
         message.success(`Environment "${title}" removed successfully.`);
-        pIpc.removeAIVenvPath(pythonPath);
+        pIpc.removeAssociatePath(pythonPath);
         refresh();
       })
       .catch(error => {
@@ -202,7 +203,7 @@ export default function VenvCard({
             {isNil(size) ? <Spin size="small" /> : <span>{formatSizeMB(size || 0)}</span>}
           </div>
 
-          <Venv_Associate pythonPath={pythonPath} />
+          <Venv_Associate folder={folder} />
         </div>
       </Card>
     </>

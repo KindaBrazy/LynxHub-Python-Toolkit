@@ -10,6 +10,7 @@ import {
   PkgDisplay_StorageID,
 } from '../cross/CrossExtConstants';
 import {
+  AssociateItem,
   IdPathType,
   PackageInfo,
   PkgDisplayType,
@@ -19,7 +20,6 @@ import {
   VenvCreateOptions,
 } from '../cross/CrossExtTypes';
 import {defaultEnvPath} from './lynxExtension';
-import {checkAIVenvsEnabled} from './Utils/AIVenvs';
 import {getAvailablePythonVersions} from './Utils/Available';
 import {setDefaultPython} from './Utils/DefaultPython';
 import detectPythonInstallations, {addSavedPython, removeSavedPython} from './Utils/Detector';
@@ -27,16 +27,15 @@ import {replacePythonPath} from './Utils/ExtMainUtils';
 import {createCondaEnv, isCondaInstalled, listAvailablePythons} from './Utils/Installer/Installer_Conda';
 import downloadPython from './Utils/Installer/Installer_Official';
 import {
-  addAIVenv,
+  addAssociate,
   findAIVenv,
-  getAIVenv,
-  getAIVenvs,
+  getAssociates,
+  getExePathAssociate,
   getSitePackagesInfo,
   getSitePackagesUpdates,
   installPythonPackage,
-  locateAIVenv,
-  removeAIVenv,
-  removeAIVenvPath,
+  removeAssociate,
+  removeAssociatePath,
   uninstallPythonPackage,
   updateAllPythonPackages,
   updatePythonPackage,
@@ -106,14 +105,13 @@ export default function ListenForChannels(storageManager: StorageManager | undef
   ipcMain.on(pythonChannels.setReqPath, (_, data: IdPathType) => setReqPath(data));
   ipcMain.handle(pythonChannels.getReqPath, (_, id: string) => getReqPath(id));
 
-  ipcMain.handle(pythonChannels.locateAIVenv, (_, id: string) => locateAIVenv(id));
-  ipcMain.handle(pythonChannels.getAIVenv, (_, id: string) => getAIVenv(id));
-  ipcMain.on(pythonChannels.addAIVenv, (_, id: string, pythonPath: string) => addAIVenv(id, pythonPath));
-  ipcMain.on(pythonChannels.removeAIVenv, (_, id: string) => removeAIVenv(id));
-  ipcMain.on(pythonChannels.removeAIVenvPath, (_, path: string) => removeAIVenvPath(path));
-  ipcMain.handle(pythonChannels.getAIVenvs, () => getAIVenvs());
+  ipcMain.handle(pythonChannels.getAssociates, () => getAssociates());
+  ipcMain.on(pythonChannels.addAssociate, (_, data: AssociateItem) => addAssociate(data));
+  ipcMain.on(pythonChannels.removeAssociate, (_, id: string) => removeAssociate(id));
+  ipcMain.on(pythonChannels.removeAssociatePath, (_, path: string) => removeAssociatePath(path));
+  ipcMain.on(pythonChannels.getExePathAssociate, (_, item: AssociateItem) => getExePathAssociate(item));
+
   ipcMain.handle(pythonChannels.findAIVenv, (_, id: string, folder: string | undefined) => findAIVenv(id, folder));
-  ipcMain.on(pythonChannels.checkAIVenvEnabled, () => checkAIVenvsEnabled());
 
   ipcMain.handle(pythonChannels.getUpdatesReq, (_, reqFile: string, currentPackages: SitePackages_Info[]) =>
     checkPackageUpdates(reqFile, currentPackages),

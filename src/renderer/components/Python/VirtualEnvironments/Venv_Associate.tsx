@@ -10,24 +10,24 @@ import {allCardsExt} from '../../../DataHolder';
 import pIpc from '../../../PIpc';
 
 type Props = {
-  pythonPath: string;
+  folder: string;
 };
 
 type Item = {id: string; title: string};
 
-export default function Venv_Associate({pythonPath}: Props) {
+export default function Venv_Associate({folder}: Props) {
   const [associated, setAssociated] = useState<Item[]>([]);
   const [itemsToAdd, setItemsToAdd] = useState<Item[]>([]);
 
   const installedCards = useCardsState('installedCards');
 
   useEffect(() => {
-    if (pythonPath) getAssociated();
-  }, [pythonPath]);
+    if (folder) getAssociated();
+  }, [folder]);
 
   const getAssociated = useCallback(() => {
-    pIpc.getAIVenvs().then(aiVenvs => {
-      if (!aiVenvs) return;
+    pIpc.getAssociates().then(associates => {
+      const associateList = associates || [];
 
       const cardTitleMap = new Map(allCardsExt.map(card => [card.id, card.title]));
 
@@ -38,32 +38,33 @@ export default function Venv_Associate({pythonPath}: Props) {
           id: card.id,
         }));
 
-      const aiVenvIds = new Set(aiVenvs.map(aiVenv => aiVenv.id));
+      const associateIds = new Set(associateList.map(item => item.id));
 
+      // TODO: add or remove supported modules
       const newItemsToAdd = installedCardsWithTitles.filter(
-        card => !aiVenvIds.has(card.id) && PYTHON_SUPPORTED_AI.includes(card.id),
+        card => !associateIds.has(card.id) && PYTHON_SUPPORTED_AI.includes(card.id),
       );
 
       setItemsToAdd(newItemsToAdd);
 
-      const activeAiVenvsWithTitles = aiVenvs
-        .filter(aiVenv => aiVenv.path === pythonPath && installedCards.some(card => card.id === aiVenv.id))
+      const activeAssociatesWithTitles = associateList
+        .filter(aiVenv => aiVenv.dir === folder && installedCards.some(card => card.id === aiVenv.id))
         .map(aiVenv => ({
           title: cardTitleMap.get(aiVenv.id)!,
           id: aiVenv.id,
         }));
 
-      setAssociated(activeAiVenvsWithTitles);
+      setAssociated(activeAssociatesWithTitles);
     });
-  }, [pythonPath, installedCards]);
+  }, [folder, installedCards]);
 
   const add = (id: string) => {
-    pIpc.addAIVenv(id, pythonPath);
+    pIpc.addAssociate({id, dir: folder, type: 'venv'});
     getAssociated();
   };
 
   const remove = (id: string) => {
-    pIpc.removeAIVenv(id);
+    pIpc.removeAssociate(id);
     getAssociated();
   };
 
