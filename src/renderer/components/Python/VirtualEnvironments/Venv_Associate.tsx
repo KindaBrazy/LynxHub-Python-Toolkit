@@ -1,4 +1,4 @@
-import {Button, Chip, Dropdown, DropdownItem, DropdownMenu, DropdownTrigger} from '@heroui/react';
+import {Avatar, Button, Chip, Dropdown, DropdownItem, DropdownMenu, DropdownTrigger} from '@heroui/react';
 import {Divider} from 'antd';
 import {isEmpty} from 'lodash';
 import {useCallback, useEffect, useState} from 'react';
@@ -14,10 +14,11 @@ type Props = {
 };
 
 type Item = {id: string; title: string};
+type ItemAvatar = Item & {avatarUrl: string | undefined};
 
 export default function Venv_Associate({folder}: Props) {
   const [associated, setAssociated] = useState<Item[]>([]);
-  const [itemsToAdd, setItemsToAdd] = useState<Item[]>([]);
+  const [itemsToAdd, setItemsToAdd] = useState<ItemAvatar[]>([]);
 
   const installedCards = useCardsState('installedCards');
 
@@ -31,12 +32,16 @@ export default function Venv_Associate({folder}: Props) {
 
       const cardTitleMap = new Map(allCardsExt.map(card => [card.id, card.title]));
 
-      const installedCardsWithTitles: Item[] = installedCards
+      const installedCardsWithTitles: ItemAvatar[] = installedCards
         .filter(card => cardTitleMap.has(card.id))
-        .map(card => ({
-          title: cardTitleMap.get(card.id)!,
-          id: card.id,
-        }));
+        .map(card => {
+          const avatarUrl = window.localStorage.getItem(`${card.id}-card-dev-img`) || undefined;
+          return {
+            avatarUrl,
+            title: cardTitleMap.get(card.id)!,
+            id: card.id,
+          };
+        });
 
       const associateIds = new Set(associateList.map(item => item.id));
 
@@ -96,15 +101,18 @@ export default function Venv_Associate({folder}: Props) {
             ))
           )}
         </div>
-        <Dropdown size="sm" className="border-1 border-foreground-200">
+        <Dropdown size="sm" className="border-1 border-foreground/10">
           <DropdownTrigger>
             <Button size="sm" variant="flat" isIconOnly>
               <Add_Icon />
             </Button>
           </DropdownTrigger>
-          <DropdownMenu variant="faded" items={itemsToAdd}>
+          <DropdownMenu variant="flat" items={itemsToAdd}>
             {item => (
-              <DropdownItem key={item.id} onPress={() => add(item.id)}>
+              <DropdownItem
+                key={item.id}
+                onPress={() => add(item.id)}
+                startContent={<Avatar className="size-6" src={item.avatarUrl} />}>
                 {item.title}
               </DropdownItem>
             )}
