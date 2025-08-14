@@ -1,5 +1,6 @@
 import {IpcRendererEvent} from 'electron';
 
+import {OnPreCommands} from '../../../src/cross/IpcChannelAndTypes';
 import {
   DlProgressOfficial,
   IdPathType,
@@ -95,6 +96,9 @@ const pIpc = {
 
   getCacheStorageUsage: (): Promise<boolean> => ipc.invoke(pythonChannels.getCacheStorageUsage),
   setCacheStorageUsage: (value: boolean) => ipc.send(pythonChannels.setCacheStorageUsage, value),
+
+  getCardStartCommand: (): Promise<OnPreCommands[] | undefined> => ipc.invoke(pythonChannels.getCardStartCommand),
+  setCardStartCommand: (value: OnPreCommands) => ipc.send(pythonChannels.setCardStartCommand, value),
 
   replacePythonPath: (pythonPath: string): Promise<boolean> => ipc.invoke(pythonChannels.replacePythonPath, pythonPath),
 

@@ -35,6 +35,7 @@ const initialState: PythonToolkitState = {
     id: '',
     label: '',
     type: 'python',
+    dir: '',
   },
   cacheStorageUsage: true,
 };

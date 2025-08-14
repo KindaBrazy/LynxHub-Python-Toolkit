@@ -1,8 +1,10 @@
 import {ipcMain} from 'electron';
 
+import {OnPreCommands} from '../../../src/cross/IpcChannelAndTypes';
 import StorageManager from '../../../src/main/Managements/Storage/StorageManager';
 import {
   CacheDirUsage_StorageID,
+  CardStartCommand_StorageID,
   DefaultLynxPython_StorageID,
   MaxRetry_StorageID,
   PkgDisplay_StorageID,
@@ -157,6 +159,22 @@ export default function ListenForChannels(storageManager: StorageManager | undef
   });
   ipcMain.on(pythonChannels.setCacheStorageUsage, (_, value: boolean) => {
     storageManager?.setCustomData(CacheDirUsage_StorageID, value);
+  });
+
+  ipcMain.handle(pythonChannels.getCardStartCommand, () => storageManager?.getCustomData(CardStartCommand_StorageID));
+  ipcMain.on(pythonChannels.setCardStartCommand, (_, value: OnPreCommands) => {
+    const currentCommands = storageManager?.getCustomData(CardStartCommand_StorageID) as OnPreCommands[] | undefined;
+
+    if (currentCommands) {
+      const existing = currentCommands.findIndex(item => item.id === value.id);
+      if (existing !== -1) {
+        currentCommands[existing].commands = value.commands;
+      } else {
+        currentCommands.push(value);
+      }
+    }
+
+    storageManager?.setCustomData(CardStartCommand_StorageID, currentCommands);
   });
 
   ipcMain.handle(pythonChannels.replacePythonPath, (_, pythonPath: string) => {

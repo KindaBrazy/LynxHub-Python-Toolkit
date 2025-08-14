@@ -1,5 +1,5 @@
 import {Alert, CircularProgress, Select, SelectItem, SharedSelection} from '@heroui/react';
-import {useEffect, useState} from 'react';
+import {useCallback, useEffect, useState} from 'react';
 import {useDispatch} from 'react-redux';
 
 import {PythonVenvSelectItem} from '../../../cross/CrossExtTypes';
@@ -7,33 +7,41 @@ import pIpc from '../../PIpc';
 import {PythonToolkitActions, usePythonToolkitState} from '../../reducer';
 import {Packages_Icon, Python_Icon} from '../SvgIcons';
 
-export const Installer_PythonSelector = (id: string) =>
+export const Installer_PythonSelector = (
+  id: string,
+  setTerminalCommand: (id: string, item: PythonVenvSelectItem) => void,
+) =>
   function Selector() {
     const dispatch = useDispatch();
     const selected = usePythonToolkitState('pythonVenvSelected');
     const [list, setList] = useState<PythonVenvSelectItem[]>([]);
     const [isLoading, setIsLoading] = useState<boolean>(false);
 
+    const onSelected = useCallback((item: PythonVenvSelectItem) => {
+      const resultItem = {...item, id};
+      dispatch(PythonToolkitActions.setSelectedPythonVenv(resultItem));
+      setTerminalCommand(id, item);
+    }, []);
+
     useEffect(() => {
       setIsLoading(true);
       Promise.all([pIpc.getInstalledPythons(false), pIpc.getVenvs()])
         .then(([pythons, venvs]) => {
-          console.log(pythons);
           const pythonItems: PythonVenvSelectItem[] = pythons.map(python => ({
             label: python.version,
+            dir: python.installFolder,
             type: 'python',
           }));
           const venvItems: PythonVenvSelectItem[] = venvs.map(venv => ({
             label: venv.name,
+            dir: venv.folder,
             type: 'venv',
           }));
 
           const combined = [...pythonItems, ...venvItems];
           setList(combined);
 
-          if (combined.length > 0) {
-            dispatch(PythonToolkitActions.setSelectedPythonVenv({...combined[0], id}));
-          }
+          if (combined.length > 0) onSelected(combined[0]);
         })
         .finally(() => setIsLoading(false));
     }, []);
@@ -41,9 +49,7 @@ export const Installer_PythonSelector = (id: string) =>
     const onSelectionChange = (keys: SharedSelection) => {
       const item = list.find(item => item.label === Array.from(keys)[0]);
 
-      if (!item) return;
-
-      dispatch(PythonToolkitActions.setSelectedPythonVenv({...item, id}));
+      if (item) onSelected(item);
     };
 
     return (

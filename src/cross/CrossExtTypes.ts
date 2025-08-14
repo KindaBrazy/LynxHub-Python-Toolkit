@@ -121,6 +121,9 @@ export const pythonChannels = {
   getCacheStorageUsage: 'get-cache-storage-usage',
   setCacheStorageUsage: 'set-cache-storage-usage',
 
+  getCardStartCommand: 'get-card-start-command',
+  setCardStartCommand: 'set-card-start-command',
+
   replacePythonPath: 'ptoolkit-replace-python-path',
 
   errorGetVenvInfo: 'ptoolkit-errorGetVenvInfo',
@@ -128,4 +131,4 @@ export const pythonChannels = {
 
 export type PkgDisplayType = 'capitalize' | 'startCase' | 'default' | string;
 
-export type PythonVenvSelectItem = {label: string; type: 'python' | 'venv'};
+export type PythonVenvSelectItem = {label: string; dir: string; type: 'python' | 'venv'};

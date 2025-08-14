@@ -14,11 +14,36 @@ export const PYTHON_SUPPORTED_AI = [
   'OpenWebUI_TG',
 ];
 
+export const Python_AvailableModules = {
+  a1: 'Automatic1111_SD',
+  sdAmd: 'LSHQQYTIGER_SD',
+  sdForgeAmd: 'LSHQQYTIGER_Forge_SD',
+  sdForge: 'Lllyasviel_SD',
+  comfyui: 'ComfyUI_SD',
+  comfyuiZluda: 'ComfyUI_Zluda_ID',
+  sdNext: 'VLADMANDIC_SD',
+  swarm: 'McMonkeyProjects_SD',
+  kohya: 'Bmaltais_SD',
+  onetrainer: 'Nerogar_SD',
+  sdUiux: 'Anapnoe_SD',
+  invoke: 'InvokeAI_SD',
+  alltalk: 'Erew123_SD',
+  tg: 'Oobabooga_TG',
+  sillyTavern: 'SillyTavern_TG',
+  openWebui: 'OpenWebUI_TG',
+  boltDiy: 'BoltDiy_TG',
+  flowiseAi: 'FlowiseAI_TG',
+  lollms: 'LoLLMS_TG',
+  tts: 'Rsxdalv_AG',
+  ag: 'Gitmylo_AG',
+};
+
 // main storage id's
 export const MaxRetry_StorageID = 'pythonToolkit_MaxRetry';
 export const PkgDisplay_StorageID = 'pythonToolkit_MpkgDisplay';
 export const DefaultLynxPython_StorageID = 'pythonToolkit_DefaultLynxPython';
 export const CacheDirUsage_StorageID = 'pythonToolkit_CacheDirUsage';
+export const CardStartCommand_StorageID = 'pythonToolkit_CardStartCommands';
 
 // Renderer storage id's
 export const FolderDiskUsage_StorageID = 'pythonToolkit_FolderDiskUsage';
