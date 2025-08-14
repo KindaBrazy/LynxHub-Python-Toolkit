@@ -214,7 +214,7 @@ export default function InstallerConda({refresh, installed, closeModal, isOpen, 
             <Spinner
               size="lg"
               className="justify-self-center my-4"
-              label="Loading available Conda Python versions..."
+              label="Loading available Python versions..."
               classNames={{circle2: 'border-b-[#ffe66e]', circle1: 'border-b-[#ffe66e] '}}
             />
           ) : (
