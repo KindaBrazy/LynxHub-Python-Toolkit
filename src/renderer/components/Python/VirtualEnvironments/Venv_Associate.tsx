@@ -4,13 +4,13 @@ import {useCallback, useEffect, useState} from 'react';
 
 import {useCardsState} from '../../../../../../src/renderer/src/App/Redux/Reducer/CardsReducer';
 import {Add_Icon} from '../../../../../../src/renderer/src/assets/icons/SvgIcons/SvgIcons';
-import {PYTHON_SUPPORTED_AI} from '../../../../cross/CrossExtConstants';
+import {ModulesSupportPython} from '../../../../cross/CrossExtConstants';
 import {allCardsExt} from '../../../DataHolder';
 import pIpc from '../../../PIpc';
 
 type Props = {
   folder: string;
-  type: 'python' | 'venv';
+  type: 'python' | 'venv' | 'conda';
 };
 
 type Item = {id: string; title: string; avatarUrl: string | undefined};
@@ -46,7 +46,7 @@ export default function Venv_Associate({folder, type}: Props) {
 
       // TODO: add or remove supported modules
       const newItemsToAdd = installedCardsWithTitles.filter(
-        card => !associateIds.has(card.id) && PYTHON_SUPPORTED_AI.includes(card.id),
+        card => !associateIds.has(card.id) && ModulesSupportPython.includes(card.id),
       );
 
       setItemsToAdd(newItemsToAdd);

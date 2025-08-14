@@ -1,4 +1,4 @@
-export const PYTHON_SUPPORTED_AI = [
+export const ModulesSupportPython = [
   'LSHQQYTIGER_SD',
   'LSHQQYTIGER_Forge_SD',
   'Automatic1111_SD',
@@ -13,6 +13,7 @@ export const PYTHON_SUPPORTED_AI = [
   'Gitmylo_AG',
   'OpenWebUI_TG',
 ];
+
 export const Python_AvailableModules = {
   a1: 'Automatic1111_SD',
   sdAmd: 'LSHQQYTIGER_SD',

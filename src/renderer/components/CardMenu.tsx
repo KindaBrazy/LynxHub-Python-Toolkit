@@ -4,7 +4,7 @@ import {useDispatch} from 'react-redux';
 
 import {CardsDataManager} from '../../../../src/renderer/src/App/Components/Cards/CardsDataManager';
 import {useTabsState} from '../../../../src/renderer/src/App/Redux/Reducer/TabsReducer';
-import {PYTHON_SUPPORTED_AI} from '../../cross/CrossExtConstants';
+import {ModulesSupportPython} from '../../cross/CrossExtConstants';
 import {PythonToolkitActions} from '../reducer';
 import {Python_Icon} from './SvgIcons';
 
@@ -21,7 +21,7 @@ export default function CardMenu({context}: Props) {
     context?.setMenuIsOpen(false);
   }, [context, activeTab]);
 
-  if (!PYTHON_SUPPORTED_AI.includes(context.id)) return null;
+  if (!ModulesSupportPython.includes(context.id)) return null;
 
   return (
     <DropdownSection key="python_toolkit" showDivider>
