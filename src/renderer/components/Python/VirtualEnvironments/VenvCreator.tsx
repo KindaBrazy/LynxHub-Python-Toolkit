@@ -78,7 +78,6 @@ export default function VenvCreator({installedPythons, refresh, isLoadingPythons
     <Popover size="lg" isOpen={isOpen} placement="bottom" onOpenChange={setIsOpen} showArrow>
       <PopoverTrigger>
         <Button
-          radius="sm"
           variant="solid"
           isLoading={isLoadingPythons}
           isDisabled={isEmpty(installedPythons)}

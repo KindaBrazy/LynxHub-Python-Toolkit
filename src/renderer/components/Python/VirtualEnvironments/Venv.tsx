@@ -123,7 +123,6 @@ export default function Venv({visible, installedPythons, isLoadingPythons, show}
           <VenvCreator refresh={getVenvs} installedPythons={installedPythons} isLoadingPythons={isLoadingPythons} />
 
           <Button
-            radius="sm"
             variant="flat"
             onPress={locateVenv}
             isLoading={isLocating}
