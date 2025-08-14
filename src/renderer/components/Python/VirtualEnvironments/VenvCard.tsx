@@ -205,7 +205,7 @@ export default function VenvCard({
         </CardBody>
 
         <CardFooter className="flex-col gap-y-3">
-          <Venv_Associate folder={folder} />
+          <Venv_Associate type="venv" folder={folder} />
         </CardFooter>
       </Card>
     </>

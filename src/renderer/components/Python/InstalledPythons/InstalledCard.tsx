@@ -38,6 +38,7 @@ import {
   TrashDuo_Icon,
 } from '../../SvgIcons';
 import PackageManagerModal from '../PackageManagement/PackageManager/PackageManagerModal';
+import Venv_Associate from '../VirtualEnvironments/Venv_Associate';
 
 type Props = {
   python: PythonInstallation;
@@ -329,7 +330,9 @@ export default function InstalledCard({python, diskUsage, maxDiskValue, updateDe
           />
         </CardBody>
 
-        <CardFooter></CardFooter>
+        <CardFooter className="flex-col gap-y-3">
+          <Venv_Associate type="python" folder={python.installFolder} />
+        </CardFooter>
       </Card>
     </div>
   );

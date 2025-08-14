@@ -10,11 +10,12 @@ import pIpc from '../../../PIpc';
 
 type Props = {
   folder: string;
+  type: 'python' | 'venv';
 };
 
 type Item = {id: string; title: string; avatarUrl: string | undefined};
 
-export default function Venv_Associate({folder}: Props) {
+export default function Venv_Associate({folder, type}: Props) {
   const [associated, setAssociated] = useState<Item[]>([]);
   const [itemsToAdd, setItemsToAdd] = useState<Item[]>([]);
 
@@ -66,7 +67,7 @@ export default function Venv_Associate({folder}: Props) {
   }, [folder, installedCards]);
 
   const add = (id: string) => {
-    pIpc.addAssociate({id, dir: folder, type: 'venv'});
+    pIpc.addAssociate({id, dir: folder, type});
     getAssociated();
   };
 
