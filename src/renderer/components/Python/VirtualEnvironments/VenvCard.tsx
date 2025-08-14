@@ -1,5 +1,9 @@
 import {
   Button,
+  Card,
+  CardBody,
+  CardFooter,
+  CardHeader,
   Dropdown,
   DropdownItem,
   DropdownMenu,
@@ -8,20 +12,16 @@ import {
   PopoverContent,
   PopoverTrigger,
 } from '@heroui/react';
-import {Card, message, Spin} from 'antd';
+import {message, Spin} from 'antd';
 import {SHA256} from 'crypto-js';
 import {isNil} from 'lodash';
 import {FormEvent, useEffect, useMemo, useState} from 'react';
 
 import rendererIpc from '../../../../../../src/renderer/src/App/RendererIpc';
-import {
-  MenuDots_Icon,
-  OpenFolder_Icon,
-  Trash_Icon,
-} from '../../../../../../src/renderer/src/assets/icons/SvgIcons/SvgIcons';
+import {MenuDots_Icon, OpenFolder_Icon} from '../../../../../../src/renderer/src/assets/icons/SvgIcons/SvgIcons';
 import {formatSizeMB} from '../../../../cross/CrossExtUtils';
 import pIpc from '../../../PIpc';
-import {Env_Icon, HardDrive_Icon, Packages_Icon} from '../../SvgIcons';
+import {Env_Icon, HardDrive_Icon, Packages_Icon, TrashDuo_Icon} from '../../SvgIcons';
 import PackageManagerModal from '../PackageManagement/PackageManager/PackageManagerModal';
 import Venv_Associate from './Venv_Associate';
 
@@ -122,89 +122,91 @@ export default function VenvCard({
       />
       <Card
         className={
-          `min-w-[27rem] grow transition-colors duration-300 shadow-small ` +
-          'dark:hover:border-white/20 hover:border-black/20'
+          'min-w-[27rem] grow border-1 transition-all border-foreground/10 hover:border-foreground/20 cursor-default'
         }
-        title={
-          <div className="flex flex-row justify-between items-center">
-            <div className="flex flex-col my-3">
-              <div className="flex flex-row items-center gap-x-2">
-                <Env_Icon className="size-[1.2rem]" />
-                <span
-                  className="pr-7"
-                  spellCheck={false}
-                  onInput={onTitleChange}
-                  contentEditable
-                  suppressContentEditableWarning>
-                  {editedTitle}
-                </span>
-              </div>
-              <span className="text-tiny text-foreground-500">Python {pythonVersion}</span>
+        as="div"
+        isPressable>
+        <CardHeader className="flex flex-row justify-between items-center py-1 px-4">
+          <div className="flex flex-col my-3">
+            <div className="flex flex-row items-center gap-x-2">
+              <Env_Icon className="size-[1.2rem] text-yellow-300" />
+              <span
+                spellCheck={false}
+                onInput={onTitleChange}
+                className="pr-7 cursor-text"
+                contentEditable
+                suppressContentEditableWarning>
+                {editedTitle}
+              </span>
             </div>
-            <div className="space-x-2 flex items-center">
-              <Dropdown className="dark:bg-LynxRaisinBlack">
-                <DropdownTrigger>
-                  <Button size="sm" variant="light" isIconOnly>
-                    <MenuDots_Icon className="rotate-90 size-3.5" />
-                  </Button>
-                </DropdownTrigger>
-                <DropdownMenu>
-                  <DropdownItem
-                    key="package-manager"
-                    onPress={packageManager}
-                    startContent={<Packages_Icon className="size-4" />}>
-                    Package Manager
-                  </DropdownItem>
-                </DropdownMenu>
-              </Dropdown>
-
-              <Popover
-                size="sm"
-                color="danger"
-                placement="left"
-                className="max-w-[15rem]"
-                isOpen={popoverUninstaller}
-                onOpenChange={setPopoverUninstaller}
-                showArrow>
-                <PopoverTrigger>
-                  <Button size="sm" color="danger" variant="light" isLoading={isRemoving} isIconOnly>
-                    <Trash_Icon className="size-[50%]" />
-                  </Button>
-                </PopoverTrigger>
-                <PopoverContent>
-                  <div className="p-2 space-y-2">
-                    <span>{`Permanently delete '${title}' and all its contents? This action cannot be undone.`}</span>
-                    <Button size="sm" onPress={remove} fullWidth>
-                      Yes, Delete
-                    </Button>
-                  </div>
-                </PopoverContent>
-              </Popover>
-            </div>
+            <span className="text-tiny text-foreground-500">Python {pythonVersion}</span>
           </div>
-        }>
-        <div className="gap-y-4 flex flex-col">
+          <div className="space-x-2 flex items-center">
+            <Dropdown className="border-1 border-foreground/10">
+              <DropdownTrigger>
+                <Button size="sm" variant="light" isIconOnly>
+                  <MenuDots_Icon className="rotate-90 size-3.5" />
+                </Button>
+              </DropdownTrigger>
+              <DropdownMenu variant="flat">
+                <DropdownItem
+                  key="package-manager"
+                  onPress={packageManager}
+                  startContent={<Packages_Icon className="size-4" />}>
+                  Package Manager
+                </DropdownItem>
+              </DropdownMenu>
+            </Dropdown>
+
+            <Popover
+              size="sm"
+              color="danger"
+              placement="left"
+              className="max-w-[15rem]"
+              isOpen={popoverUninstaller}
+              onOpenChange={setPopoverUninstaller}
+              showArrow>
+              <PopoverTrigger>
+                <Button size="sm" color="danger" variant="light" isLoading={isRemoving} isIconOnly>
+                  <TrashDuo_Icon className="size-[50%]" />
+                </Button>
+              </PopoverTrigger>
+              <PopoverContent>
+                <div className="p-2 space-y-2">
+                  <span>{`Permanently delete '${title}' and all its contents? This action cannot be undone.`}</span>
+                  <Button size="sm" onPress={remove} fullWidth>
+                    Yes, Delete
+                  </Button>
+                </div>
+              </PopoverContent>
+            </Popover>
+          </div>
+        </CardHeader>
+
+        <CardBody className="gap-y-4 px-4 flex flex-col text-sm">
           <Button size="sm" variant="light" onPress={openPath} className="flex flex-row justify-start -ml-3 -mb-1.5">
             <OpenFolder_Icon className="flex-shrink-0" />
             <span className="truncate">{folder}</span>
           </Button>
           <div className="w-full justify-between flex flex-row">
-            <div className="flex flex-row gap-x-1 items-center">
+            <div className="flex flex-row gap-x-2 items-center">
               <Packages_Icon className="size-3" />
               <span>Installed Packages:</span>
             </div>
             <span>{installedPackages}</span>
           </div>
           <div className="w-full justify-between flex flex-row">
-            <div className="flex flex-row gap-x-1 items-center">
-              <HardDrive_Icon />
+            <div className="flex flex-row gap-x-2 items-center">
+              <HardDrive_Icon className="size-3" />
               <span>Disk Usage:</span>
             </div>
             {isNil(size) ? <Spin size="small" /> : <span>{formatSizeMB(size || 0)}</span>}
           </div>
+        </CardBody>
 
+        <CardFooter className="flex-col gap-y-3">
           <Venv_Associate folder={folder} />
-        </div>
+        </CardFooter>
       </Card>
     </>
   );

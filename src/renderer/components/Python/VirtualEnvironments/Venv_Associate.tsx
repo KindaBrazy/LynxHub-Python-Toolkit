@@ -1,5 +1,4 @@
 import {Avatar, Button, Chip, Dropdown, DropdownItem, DropdownMenu, DropdownTrigger} from '@heroui/react';
-import {Divider} from 'antd';
 import {isEmpty} from 'lodash';
 import {useCallback, useEffect, useState} from 'react';
 
@@ -78,7 +77,6 @@ export default function Venv_Associate({folder}: Props) {
 
   return (
     <>
-      <Divider variant="solid" className="!my-0" />
       <div className="flex flex-row justify-between w-full">
         <div className="w-full flex flex-row gap-x-1 gap-y-2 items-center flex-wrap">
           {isEmpty(associated) ? (
@@ -103,7 +101,7 @@ export default function Venv_Associate({folder}: Props) {
               <Add_Icon />
             </Button>
           </DropdownTrigger>
-          <DropdownMenu variant="flat" items={itemsToAdd}>
+          <DropdownMenu variant="flat" items={itemsToAdd} emptyContent="No AI available to associate with this venv.">
             {item => (
               <DropdownItem
                 key={item.id}
