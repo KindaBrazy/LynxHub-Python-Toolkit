@@ -10,31 +10,28 @@ function SetTerminalCommand(set: (id: string, command: string[]) => void) {
     const isWin = window.osPlatform === 'win32';
 
     if (id === Python_AvailableModules.comfyui) {
+      let command = '';
+
       switch (item.type) {
         case 'python': {
-          const command = isWin
+          command = isWin
             ? `$env:Path = "${item.dir};${item.dir}/Scripts" + $env:Path`
             : `export PATH="${item.dir}:${item.dir}/bin:$PATH"`;
-          set(id, [command]);
-          window.localStorage.setItem(getStorageId(id), JSON.stringify([command]));
-          pIpc.setCardStartCommand({id, commands: [command]});
           break;
         }
         case 'venv': {
-          const command = isWin ? `${item.dir}/Scripts/activate.ps1` : `source ${item.dir}/bin/activate`;
-          set(id, [command]);
-          window.localStorage.setItem(getStorageId(id), JSON.stringify([command]));
-          pIpc.setCardStartCommand({id, commands: [command]});
+          command = isWin ? `${item.dir}/Scripts/activate.ps1` : `source ${item.dir}/bin/activate`;
           break;
         }
         case 'conda': {
-          const command = `conda activate ${item.condaName || `--prefix "${item.dir}"`}`;
-          set(id, [command]);
-          window.localStorage.setItem(getStorageId(id), JSON.stringify([command]));
-          pIpc.setCardStartCommand({id, commands: [command]});
+          command = `conda activate ${item.condaName || `--prefix "${item.dir}"`}`;
           break;
         }
       }
+
+      set(id, [command]);
+      window.localStorage.setItem(getStorageId(id), JSON.stringify([command]));
+      pIpc.setCardStartCommand({id, commands: [command]});
     }
   };
 }
