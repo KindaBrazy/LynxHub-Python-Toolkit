@@ -2,6 +2,7 @@ import {platform} from 'node:os';
 import {join, resolve} from 'node:path';
 
 import {BrowserWindow} from 'electron';
+import {isString} from 'lodash';
 
 import {Associates_StorageID} from '../../cross/CrossExtConstants';
 import {AssociateItem, pythonChannels} from '../../cross/CrossExtTypes';
@@ -20,15 +21,27 @@ function updateAssociateStorage(data: AssociateItem) {
   storageManager?.setCustomData(Associates_StorageID, result);
 }
 
-export function getExePathAssociate(item: AssociateItem) {
-  switch (item.type) {
-    case 'venv':
-      return resolve(getVenvPythonPath(item.dir));
-    case 'python':
-    case 'conda':
-    default:
-      return resolve(platform() === 'win32' ? join(item.dir, 'python.exe') : join(item.dir, 'bin', 'python'));
+export function getExePathAssociate(target: AssociateItem | string) {
+  const getDir = (item: AssociateItem) => {
+    switch (item.type) {
+      case 'venv':
+        return resolve(getVenvPythonPath(item.dir));
+      case 'python':
+      case 'conda':
+      default:
+        return resolve(platform() === 'win32' ? join(item.dir, 'python.exe') : join(item.dir, 'bin', 'python'));
+    }
+  };
+  if (isString(target)) {
+    const associate = getAssociates()?.find(value => value.id === target);
+    if (associate) {
+      return getDir(associate);
+    }
+  } else {
+    return getDir(target);
   }
+
+  return undefined;
 }
 
 export function getAssociates() {

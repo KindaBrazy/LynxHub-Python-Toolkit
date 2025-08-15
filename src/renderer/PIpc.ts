@@ -79,7 +79,8 @@ const pIpc = {
   addAssociate: (data: AssociateItem): void => ipc.send(pythonChannels.addAssociate, data),
   removeAssociate: (id: string): void => ipc.send(pythonChannels.removeAssociate, id),
   removeAssociatePath: (path: string): void => ipc.send(pythonChannels.removeAssociatePath, path),
-  getExePathAssociate: (item: AssociateItem): Promise<string> => ipc.invoke(pythonChannels.getExePathAssociate, item),
+  getExePathAssociate: (item: AssociateItem | string): Promise<string | undefined> =>
+    ipc.invoke(pythonChannels.getExePathAssociate, item),
   onAssociateChange: (
     result: (
       event: IpcRendererEvent,

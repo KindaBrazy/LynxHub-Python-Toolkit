@@ -111,7 +111,7 @@ export default function ListenForChannels(storageManager: StorageManager | undef
   ipcMain.on(pythonChannels.addAssociate, (_, data: AssociateItem) => addAssociate(data));
   ipcMain.on(pythonChannels.removeAssociate, (_, id: string) => removeAssociate(id));
   ipcMain.on(pythonChannels.removeAssociatePath, (_, path: string) => removeAssociatePath(path));
-  ipcMain.on(pythonChannels.getExePathAssociate, (_, item: AssociateItem) => getExePathAssociate(item));
+  ipcMain.handle(pythonChannels.getExePathAssociate, (_, item: AssociateItem | string) => getExePathAssociate(item));
 
   ipcMain.handle(pythonChannels.findAIVenv, (_, id: string, folder: string | undefined) => findAIVenv(id, folder));
 
