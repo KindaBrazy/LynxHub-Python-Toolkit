@@ -23,13 +23,6 @@ export const setDefaultEnvPath = (path: string) => {
 };
 
 export async function initialExtension(lynxApi: ExtensionMainApi, utils: MainExtensionUtils) {
-  lynxApi.onReadyToShow(() => {
-    utils.getStorageManager().then(storeManager => {
-      const associates = storeManager.getCustomData(Associates_StorageID) as AssociateItem[] | undefined;
-      BrowserWindow.getFocusedWindow()?.webContents.send(pythonChannels.onAssociateChange, associates, 'init');
-    });
-  });
-
   utils.getStorageManager().then(storeManager => {
     storageManager = storeManager;
 
@@ -50,6 +43,11 @@ export async function initialExtension(lynxApi: ExtensionMainApi, utils: MainExt
         storeManager.setCustomData(AI_VENV_STORE_KEYS, undefined);
       }
     }
+
+    lynxApi.onReadyToShow(() => {
+      const associates = storeManager.getCustomData(Associates_StorageID) as AssociateItem[] | undefined;
+      BrowserWindow.getFocusedWindow()?.webContents.send(pythonChannels.onAssociateChange, associates, 'init');
+    });
   });
   lynxApi.listenForChannels(() => ListenForChannels(storageManager, utils.nodePty));
 }
