@@ -5,7 +5,7 @@ import {basename, join} from 'node:path';
 import {existsSync, promises} from 'graceful-fs';
 
 import {VenvInfo} from '../../../cross/CrossExtTypes';
-import {updateAssociateStorage} from '../AssociateManager';
+import {addAssociate} from '../AssociateManager';
 import {getSitePackagesCount} from '../PythonUtils';
 import {updateVenvStorage} from './CreateVenv';
 
@@ -92,7 +92,6 @@ function isVenvFolderName(folder: string) {
 }
 
 async function findVenvFolder(dirPath: string): Promise<string | null> {
-  console.log('dirPath', dirPath);
   try {
     const items = await promises.readdir(dirPath, {withFileTypes: true});
 
@@ -120,7 +119,7 @@ export async function findAIVenv(id: string, folder: string | undefined) {
     if (venvFolder) {
       const pythonExecutable = getVenvPythonPath(venvFolder);
       updateVenvStorage(venvFolder);
-      updateAssociateStorage({id, dir: venvFolder, type: 'venv'});
+      addAssociate({id, dir: venvFolder, type: 'venv'});
       return pythonExecutable;
     }
     throw 'Venv folder not Found';

@@ -9,11 +9,13 @@ import {
   AI_VENV_STORE_KEYS,
   Associates_StorageID,
   DefaultLynxPython_StorageID,
+  IsAutoDetectedVenvs_StorageID,
   MaxRetry_StorageID,
 } from '../cross/CrossExtConstants';
 import {AssociateItem, IdPathType, pythonChannels} from '../cross/CrossExtTypes';
 import ListenForChannels from './ListenForChannels';
 import {replacePythonPath} from './Utils/ExtMainUtils';
+import {findAIVenv} from './Utils/VirtualEnv/VenvUtils';
 
 export let storageManager: StorageManager | undefined = undefined;
 export let defaultEnvPath = process.env.PATH;
@@ -42,6 +44,13 @@ export async function initialExtension(lynxApi: ExtensionMainApi, utils: MainExt
         storeManager.setCustomData(Associates_StorageID, newAssociates);
         storeManager.setCustomData(AI_VENV_STORE_KEYS, undefined);
       }
+    }
+
+    if (!storeManager.getCustomData(IsAutoDetectedVenvs_StorageID)) {
+      storeManager.getData('cards').installedCards.forEach(card => {
+        findAIVenv(card.id, card.dir);
+      });
+      storeManager.setCustomData(IsAutoDetectedVenvs_StorageID, true);
     }
 
     lynxApi.onReadyToShow(() => {

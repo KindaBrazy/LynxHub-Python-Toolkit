@@ -48,6 +48,7 @@ export const DefaultLynxPython_StorageID = 'pythonToolkit_DefaultLynxPython';
 export const CacheDirUsage_StorageID = 'pythonToolkit_CacheDirUsage';
 export const CardStartCommand_StorageID = 'pythonToolkit_CardStartCommands';
 export const Associates_StorageID = 'pythonToolkit_associates';
+export const IsAutoDetectedVenvs_StorageID = 'pythonToolkit_IsAutoDetectedVenvs';
 
 // Renderer storage id's
 export const FolderDiskUsage_StorageID = 'pythonToolkit_FolderDiskUsage';
