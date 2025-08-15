@@ -8,7 +8,7 @@ import {AssociateItem, pythonChannels} from '../../cross/CrossExtTypes';
 import {storageManager} from '../lynxExtension';
 import {getVenvPythonPath} from './VirtualEnv/VenvUtils';
 
-function updateAssociateStorage(data: AssociateItem) {
+export function updateAssociateStorage(data: AssociateItem) {
   const existingData = storageManager?.getCustomData(Associates_StorageID) as AssociateItem[] | undefined;
 
   const result = existingData ? existingData.map(item => (item.id === data.id ? data : item)) : [];

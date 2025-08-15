@@ -5,7 +5,9 @@ import {basename, join} from 'node:path';
 import {existsSync, promises} from 'graceful-fs';
 
 import {VenvInfo} from '../../../cross/CrossExtTypes';
+import {updateAssociateStorage} from '../AssociateManager';
 import {getSitePackagesCount} from '../PythonUtils';
+import {updateVenvStorage} from './CreateVenv';
 
 async function getPythonVersion(venvPath: string): Promise<string> {
   return new Promise((resolve, reject) => {
@@ -111,13 +113,14 @@ async function findVenvFolder(dirPath: string): Promise<string | null> {
   }
 }
 
-export async function findAIVenv(_id: string, folder: string | undefined) {
+export async function findAIVenv(id: string, folder: string | undefined) {
   try {
     if (!folder) throw 'Provided folder is not correct.';
     const venvFolder = await findVenvFolder(folder);
     if (venvFolder) {
       const pythonExecutable = getVenvPythonPath(venvFolder);
-      // updateAIVenvStorage({id, dir: pythonExecutable, type: 'venv'});
+      updateVenvStorage(venvFolder);
+      updateAssociateStorage({id, dir: venvFolder, type: 'venv'});
       return pythonExecutable;
     }
     throw 'Venv folder not Found';

@@ -27,7 +27,7 @@ function validateVenvs() {
   return validEnvs;
 }
 
-function updateVenvStorage(newVenvPath: string) {
+export function updateVenvStorage(newVenvPath: string) {
   const existVenvs = storageManager?.getCustomData(STORE_VENVS_ID) as string[];
 
   if (isEmpty(existVenvs)) {

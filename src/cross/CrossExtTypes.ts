@@ -108,7 +108,6 @@ export const pythonChannels = {
   getExePathAssociate: 'get-exe-path-associate',
   onAssociateChange: 'on-associate-change',
 
-  // TODO: change it to detect venv and call it on card installation done.
   findAIVenv: 'find-ai-venv',
 
   readFile: 'read-file',
