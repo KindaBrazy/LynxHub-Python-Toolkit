@@ -187,9 +187,7 @@ export default function PackageManagerModal({
     } else {
       setSearchData([]);
       setPackages([]);
-      console.log('id', id);
       pIpc.getExePathAssociate(id).then(result => {
-        console.log('re', result);
         if (result && setPythonPath) setPythonPath(result);
       });
     }
