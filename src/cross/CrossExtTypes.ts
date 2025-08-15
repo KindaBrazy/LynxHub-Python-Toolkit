@@ -105,7 +105,10 @@ export const pythonChannels = {
   addAssociate: 'add-ai-venv',
   removeAssociate: 'remove-ai-venv',
   removeAssociatePath: 'remove-ai-venv-path',
+  getExePathAssociate: 'get-exe-path-associate',
+  onAssociateChange: 'on-associate-change',
 
+  // TODO: change it to detect venv and call it on card installation done.
   findAIVenv: 'find-ai-venv',
 
   readFile: 'read-file',
@@ -125,11 +128,10 @@ export const pythonChannels = {
   replacePythonPath: 'ptoolkit-replace-python-path',
 
   errorGetVenvInfo: 'ptoolkit-errorGetVenvInfo',
-
-  getExePathAssociate: 'get-exe-path-associate',
 };
 
 export type PkgDisplayType = 'capitalize' | 'startCase' | 'default' | string;
 
 export type PythonVenvSelectItem = {label: string; dir: string; type: 'python' | 'venv' | 'conda'; condaName?: string};
-export type AssociateItem = {id: string; dir: string; type: 'python' | 'venv' | 'conda'};
+export type AssociateItem = {id: string; dir: string; type: 'python' | 'venv' | 'conda'; condaName?: string};
+export type AssociateAction = 'add' | 'remove' | 'init';

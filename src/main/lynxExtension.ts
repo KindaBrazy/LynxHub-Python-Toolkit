@@ -1,3 +1,5 @@
+import {BrowserWindow} from 'electron';
+
 import {
   ExtensionMainApi,
   MainExtensionUtils,
@@ -9,7 +11,7 @@ import {
   DefaultLynxPython_StorageID,
   MaxRetry_StorageID,
 } from '../cross/CrossExtConstants';
-import {AssociateItem, IdPathType} from '../cross/CrossExtTypes';
+import {AssociateItem, IdPathType, pythonChannels} from '../cross/CrossExtTypes';
 import ListenForChannels from './ListenForChannels';
 import {replacePythonPath} from './Utils/ExtMainUtils';
 
@@ -21,6 +23,13 @@ export const setDefaultEnvPath = (path: string) => {
 };
 
 export async function initialExtension(lynxApi: ExtensionMainApi, utils: MainExtensionUtils) {
+  lynxApi.onReadyToShow(() => {
+    utils.getStorageManager().then(storeManager => {
+      const associates = storeManager.getCustomData(Associates_StorageID) as AssociateItem[] | undefined;
+      BrowserWindow.getFocusedWindow()?.webContents.send(pythonChannels.onAssociateChange, associates, 'init');
+    });
+  });
+
   utils.getStorageManager().then(storeManager => {
     storageManager = storeManager;
 

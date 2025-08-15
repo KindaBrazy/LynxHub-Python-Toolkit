@@ -8,11 +8,9 @@ import ToolsPage from './components/ToolsPage';
 import CustomHook from './CustomHook';
 import {setCards} from './DataHolder';
 import listenForEvents from './ListenForEvents';
-import {onIntiExtension} from './ManagerTerminalCommand';
 import pythonToolkitReducer from './reducer';
 
 export function InitialExtensions(lynxAPI: ExtensionRendererApi) {
-  onIntiExtension();
   listenForEvents(lynxAPI);
   setCards(lynxAPI.modulesData?.allCards || []);
 

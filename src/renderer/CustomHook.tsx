@@ -4,6 +4,7 @@ import {isString} from 'lodash';
 import {Fragment, useEffect} from 'react';
 import {useDispatch} from 'react-redux';
 
+import {handleAssociateChange} from './ManagerTerminalCommand';
 import pIpc from './PIpc';
 import {PythonToolkitActions} from './reducer';
 
@@ -44,8 +45,13 @@ export default function CustomHook() {
       }
     });
 
+    pIpc.onAssociateChange((_, associates, action) => {
+      handleAssociateChange(associates, action);
+    });
+
     return () => {
       pIpc.offErrorGetVenvInfo();
+      pIpc.offAssociateChange();
     };
   }, []);
 

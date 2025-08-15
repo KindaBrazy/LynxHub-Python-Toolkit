@@ -2,6 +2,7 @@ import {IpcRendererEvent} from 'electron';
 
 import {OnPreCommands} from '../../../src/cross/IpcChannelAndTypes';
 import {
+  AssociateAction,
   AssociateItem,
   DlProgressOfficial,
   IdPathType,
@@ -79,6 +80,14 @@ const pIpc = {
   removeAssociate: (id: string): void => ipc.send(pythonChannels.removeAssociate, id),
   removeAssociatePath: (path: string): void => ipc.send(pythonChannels.removeAssociatePath, path),
   getExePathAssociate: (item: AssociateItem): Promise<string> => ipc.invoke(pythonChannels.getExePathAssociate, item),
+  onAssociateChange: (
+    result: (
+      event: IpcRendererEvent,
+      associates: AssociateItem | AssociateItem[] | string,
+      action: AssociateAction,
+    ) => void,
+  ) => ipc.on(pythonChannels.onAssociateChange, result),
+  offAssociateChange: (): void => ipc.removeAllListeners(pythonChannels.onAssociateChange),
 
   findAIVenv: (id: string, folder: string | undefined): Promise<string> =>
     ipc.invoke(pythonChannels.findAIVenv, id, folder),

@@ -2,13 +2,14 @@ import {exec} from 'node:child_process';
 import {platform} from 'node:os';
 import {join} from 'node:path';
 
+import {BrowserWindow} from 'electron';
 import {promises} from 'graceful-fs';
 import {compact} from 'lodash';
 import {resolve} from 'path';
 import semver, {compare} from 'semver';
 
 import {Associates_StorageID} from '../../../cross/CrossExtConstants';
-import {AssociateItem, PackageInfo, SitePackages_Info} from '../../../cross/CrossExtTypes';
+import {AssociateItem, PackageInfo, pythonChannels, SitePackages_Info} from '../../../cross/CrossExtTypes';
 import {storageManager} from '../../lynxExtension';
 import {getVenvPythonPath, isVenvDirectory} from '../VirtualEnv/VenvUtils';
 import {getLatestPipPackageVersion} from './PipToolsManager';
@@ -201,6 +202,7 @@ export function getExePathAssociate(item: AssociateItem) {
     case 'venv':
       return resolve(getVenvPythonPath(item.dir));
     case 'python':
+    case 'conda':
     default:
       return resolve(platform() === 'win32' ? join(item.dir, 'python.exe') : join(item.dir, 'bin', 'python'));
   }
@@ -211,7 +213,12 @@ export function getAssociates() {
 }
 
 export function addAssociate(data: AssociateItem) {
-  updateAIVenvStorage(data);
+  try {
+    updateAIVenvStorage(data);
+    BrowserWindow.getFocusedWindow()?.webContents.send(pythonChannels.onAssociateChange, data, 'add');
+  } catch (e) {
+    console.log(e);
+  }
 }
 
 export function removeAssociate(id: string) {
@@ -222,16 +229,23 @@ export function removeAssociate(id: string) {
       Associates_StorageID,
       existingData.filter(item => item.id !== id),
     );
+    BrowserWindow.getFocusedWindow()?.webContents.send(pythonChannels.onAssociateChange, id, 'remove');
   }
 }
 
 export function removeAssociatePath(pythonPath: string) {
-  const existingData = storageManager?.getCustomData(Associates_StorageID) as AssociateItem[] | undefined;
+  try {
+    const existingData = storageManager?.getCustomData(Associates_StorageID) as AssociateItem[] | undefined;
+    const targetID = existingData?.find(item => item.dir === pythonPath)?.id;
 
-  if (existingData) {
-    storageManager?.setCustomData(
-      Associates_StorageID,
-      existingData.filter(item => item.dir !== pythonPath),
-    );
+    if (existingData && targetID) {
+      storageManager?.setCustomData(
+        Associates_StorageID,
+        existingData.filter(item => item.id !== targetID),
+      );
+      BrowserWindow.getFocusedWindow()?.webContents.send(pythonChannels.onAssociateChange, targetID, 'remove');
+    }
+  } catch (e) {
+    console.warn(e);
   }
 }
