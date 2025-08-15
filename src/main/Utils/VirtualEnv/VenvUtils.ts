@@ -2,7 +2,7 @@ import {exec} from 'node:child_process';
 import {platform} from 'node:os';
 import {basename, join} from 'node:path';
 
-import {existsSync} from 'graceful-fs';
+import {existsSync, promises} from 'graceful-fs';
 
 import {VenvInfo} from '../../../cross/CrossExtTypes';
 import {getSitePackagesCount} from '../PythonUtils';
@@ -71,5 +71,58 @@ export function isVenvDirectory(dirPath: string): boolean {
   } catch (err) {
     console.error(`Error checking if directory is a venv: ${err}`);
     return false;
+  }
+}
+
+function isVenvFolderName(folder: string) {
+  return (
+    folder === 'venv' ||
+    folder === '.venv' ||
+    folder === 'env' ||
+    folder === '.env' ||
+    folder.startsWith('venv-') ||
+    folder.startsWith('.venv-') ||
+    folder.endsWith('-venv') ||
+    folder.endsWith('-env') ||
+    folder.toLowerCase().includes('virtualenv') ||
+    folder.toLowerCase().includes('virtualenvironment')
+  );
+}
+
+async function findVenvFolder(dirPath: string): Promise<string | null> {
+  console.log('dirPath', dirPath);
+  try {
+    const items = await promises.readdir(dirPath, {withFileTypes: true});
+
+    for (const item of items) {
+      if (item.isDirectory()) {
+        const itemName = item.name;
+        const fullPath = join(dirPath, itemName);
+        if (isVenvFolderName(itemName) && isVenvDirectory(fullPath)) {
+          return fullPath;
+        }
+      }
+    }
+
+    return null;
+  } catch (error) {
+    console.error(`Error searching for virtual environment in ${dirPath}:`, error);
+    return null;
+  }
+}
+
+export async function findAIVenv(_id: string, folder: string | undefined) {
+  try {
+    if (!folder) throw 'Provided folder is not correct.';
+    const venvFolder = await findVenvFolder(folder);
+    if (venvFolder) {
+      const pythonExecutable = getVenvPythonPath(venvFolder);
+      // updateAIVenvStorage({id, dir: pythonExecutable, type: 'venv'});
+      return pythonExecutable;
+    }
+    throw 'Venv folder not Found';
+  } catch (e) {
+    console.error(e);
+    throw e;
   }
 }

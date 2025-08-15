@@ -1,17 +1,9 @@
 import {exec} from 'node:child_process';
-import {platform} from 'node:os';
-import {join} from 'node:path';
 
-import {BrowserWindow} from 'electron';
-import {promises} from 'graceful-fs';
 import {compact} from 'lodash';
-import {resolve} from 'path';
 import semver, {compare} from 'semver';
 
-import {Associates_StorageID} from '../../../cross/CrossExtConstants';
-import {AssociateItem, PackageInfo, pythonChannels, SitePackages_Info} from '../../../cross/CrossExtTypes';
-import {storageManager} from '../../lynxExtension';
-import {getVenvPythonPath, isVenvDirectory} from '../VirtualEnv/VenvUtils';
+import {PackageInfo, SitePackages_Info} from '../../../cross/CrossExtTypes';
 import {getLatestPipPackageVersion} from './PipToolsManager';
 
 export async function getSitePackagesInfo(pythonExePath: string): Promise<SitePackages_Info[]> {
@@ -130,122 +122,4 @@ export async function uninstallPythonPackage(pythonExePath: string, packageName:
       resolve(stdout);
     });
   });
-}
-
-function isVenvFolderName(folder: string) {
-  return (
-    folder === 'venv' ||
-    folder === '.venv' ||
-    folder === 'env' ||
-    folder === '.env' ||
-    folder.startsWith('venv-') ||
-    folder.startsWith('.venv-') ||
-    folder.endsWith('-venv') ||
-    folder.endsWith('-env') ||
-    folder.toLowerCase().includes('virtualenv') ||
-    folder.toLowerCase().includes('virtualenvironment')
-  );
-}
-
-async function findVenvFolder(dirPath: string): Promise<string | null> {
-  console.log('dirPath', dirPath);
-  try {
-    const items = await promises.readdir(dirPath, {withFileTypes: true});
-
-    for (const item of items) {
-      if (item.isDirectory()) {
-        const itemName = item.name;
-        const fullPath = join(dirPath, itemName);
-        if (isVenvFolderName(itemName) && isVenvDirectory(fullPath)) {
-          return fullPath;
-        }
-      }
-    }
-
-    return null;
-  } catch (error) {
-    console.error(`Error searching for virtual environment in ${dirPath}:`, error);
-    return null;
-  }
-}
-
-function updateAIVenvStorage(data: AssociateItem) {
-  const existingData = storageManager?.getCustomData(Associates_StorageID) as AssociateItem[] | undefined;
-
-  const result = existingData ? existingData.map(item => (item.id === data.id ? data : item)) : [];
-
-  if (!existingData || !existingData.some(item => item.id === data.id)) {
-    result.push(data);
-  }
-
-  storageManager?.setCustomData(Associates_StorageID, result);
-}
-
-export async function findAIVenv(id: string, folder: string | undefined) {
-  try {
-    if (!folder) throw 'Provided folder is not correct.';
-    const venvFolder = await findVenvFolder(folder);
-    if (venvFolder) {
-      const pythonExecutable = getVenvPythonPath(venvFolder);
-      updateAIVenvStorage({id, dir: pythonExecutable, type: 'venv'});
-      return pythonExecutable;
-    }
-    throw 'Venv folder not Found';
-  } catch (e) {
-    console.error(e);
-    throw e;
-  }
-}
-
-export function getExePathAssociate(item: AssociateItem) {
-  switch (item.type) {
-    case 'venv':
-      return resolve(getVenvPythonPath(item.dir));
-    case 'python':
-    case 'conda':
-    default:
-      return resolve(platform() === 'win32' ? join(item.dir, 'python.exe') : join(item.dir, 'bin', 'python'));
-  }
-}
-
-export function getAssociates() {
-  return storageManager?.getCustomData(Associates_StorageID) as AssociateItem[] | undefined;
-}
-
-export function addAssociate(data: AssociateItem) {
-  try {
-    updateAIVenvStorage(data);
-    BrowserWindow.getFocusedWindow()?.webContents.send(pythonChannels.onAssociateChange, data, 'add');
-  } catch (e) {
-    console.log(e);
-  }
-}
-
-export function removeAssociate(id: string) {
-  const existingData = storageManager?.getCustomData(Associates_StorageID) as AssociateItem[] | undefined;
-
-  if (existingData) {
-    storageManager?.setCustomData(
-      Associates_StorageID,
-      existingData.filter(item => item.id !== id),
-    );
-    BrowserWindow.getFocusedWindow()?.webContents.send(pythonChannels.onAssociateChange, id, 'remove');
-  }
-}
-
-export function removeAssociatePath(pythonPath: string) {
-  try {
-    const existingData = storageManager?.getCustomData(Associates_StorageID) as AssociateItem[] | undefined;
-    const targetID = existingData?.find(item => item.dir === pythonPath)?.id;
-
-    if (existingData && targetID) {
-      storageManager?.setCustomData(
-        Associates_StorageID,
-        existingData.filter(item => item.id !== targetID),
-      );
-      BrowserWindow.getFocusedWindow()?.webContents.send(pythonChannels.onAssociateChange, targetID, 'remove');
-    }
-  } catch (e) {
-    console.warn(e);
-  }
 }

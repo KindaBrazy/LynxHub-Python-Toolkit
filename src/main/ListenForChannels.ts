@@ -20,6 +20,13 @@ import {
   VenvCreateOptions,
 } from '../cross/CrossExtTypes';
 import {defaultEnvPath} from './lynxExtension';
+import {
+  addAssociate,
+  getAssociates,
+  getExePathAssociate,
+  removeAssociate,
+  removeAssociatePath,
+} from './Utils/AssociateManager';
 import {getAvailablePythonVersions} from './Utils/Available';
 import {setDefaultPython} from './Utils/DefaultPython';
 import detectPythonInstallations, {addSavedPython, removeSavedPython} from './Utils/Detector';
@@ -27,15 +34,9 @@ import {replacePythonPath} from './Utils/ExtMainUtils';
 import {createCondaEnv, isCondaInstalled, listAvailablePythons} from './Utils/Installer/Installer_Conda';
 import downloadPython from './Utils/Installer/Installer_Official';
 import {
-  addAssociate,
-  findAIVenv,
-  getAssociates,
-  getExePathAssociate,
   getSitePackagesInfo,
   getSitePackagesUpdates,
   installPythonPackage,
-  removeAssociate,
-  removeAssociatePath,
   uninstallPythonPackage,
   updateAllPythonPackages,
   updatePythonPackage,
@@ -51,6 +52,7 @@ import {
 } from './Utils/Requirements/PythonRequirements';
 import uninstallPython from './Utils/Uninstaller/Uninstaller';
 import createPythonVenv, {getVenvs, locateVenv} from './Utils/VirtualEnv/CreateVenv';
+import {findAIVenv} from './Utils/VirtualEnv/VenvUtils';
 
 export default function ListenForChannels(storageManager: StorageManager | undefined, nodePty: any) {
   ipcMain.on(pythonChannels.removeSavedPython, (_, pPath: string) => removeSavedPython(pPath));
