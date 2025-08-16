@@ -1,12 +1,14 @@
 import {Avatar, Button, Chip, Dropdown, DropdownItem, DropdownMenu, DropdownTrigger} from '@heroui/react';
 import {isEmpty} from 'lodash';
 import {useCallback, useEffect, useState} from 'react';
+import {useDispatch} from 'react-redux';
 
 import {useCardsState} from '../../../../../../src/renderer/src/App/Redux/Reducer/CardsReducer';
 import {Add_Icon} from '../../../../../../src/renderer/src/assets/icons/SvgIcons/SvgIcons';
 import {ModulesSupportPython} from '../../../../cross/CrossExtConstants';
 import {allCardsExt} from '../../../DataHolder';
 import pIpc from '../../../PIpc';
+import {PythonToolkitActions, usePythonToolkitState} from '../../../reducer';
 
 type Props = {
   folder: string;
@@ -16,64 +18,66 @@ type Props = {
 type Item = {id: string; title: string; avatarUrl: string | undefined};
 
 export default function Venv_Associate({folder, type}: Props) {
-  const [associated, setAssociated] = useState<Item[]>([]);
-  const [itemsToAdd, setItemsToAdd] = useState<Item[]>([]);
-
+  const associates = usePythonToolkitState('associates');
   const installedCards = useCardsState('installedCards');
 
+  const [associated, setAssociated] = useState<Item[]>([]);
+  const [canBeAssociate, setCanBeAssociate] = useState<Item[]>([]);
+
+  const dispatch = useDispatch();
+
   useEffect(() => {
-    if (folder) getAssociated();
-  }, [folder]);
+    // Map card IDs to their titles
+    const cardTitleMap = new Map(allCardsExt.map(card => [card.id, card.title]));
 
-  const getAssociated = useCallback(() => {
-    pIpc.getAssociates().then(associates => {
-      const associateList = associates || [];
+    // Get installed cards that exist in the map and attach avatar/title
+    const installedCardsWithTitles: Item[] = installedCards
+      .filter(card => cardTitleMap.has(card.id))
+      .map(card => {
+        const avatarUrl = window.localStorage.getItem(`${card.id}-card-dev-img`) || undefined;
+        return {
+          avatarUrl,
+          title: cardTitleMap.get(card.id)!,
+          id: card.id,
+        };
+      });
 
-      const cardTitleMap = new Map(allCardsExt.map(card => [card.id, card.title]));
+    // Collect associate IDs for a quick lookup
+    const associateIds = new Set(associates.map(item => item.id));
 
-      const installedCardsWithTitles: Item[] = installedCards
-        .filter(card => cardTitleMap.has(card.id))
-        .map(card => {
-          const avatarUrl = window.localStorage.getItem(`${card.id}-card-dev-img`) || undefined;
-          return {
-            avatarUrl,
-            title: cardTitleMap.get(card.id)!,
-            id: card.id,
-          };
-        });
+    // Determine new items that can be added (only supported modules)
+    const newItemsToAdd = installedCardsWithTitles.filter(
+      card => !associateIds.has(card.id) && ModulesSupportPython.includes(card.id),
+    );
+    setCanBeAssociate(newItemsToAdd);
 
-      const associateIds = new Set(associateList.map(item => item.id));
+    // Filter associates that match the current folder and are still installed
+    const activeAssociatesWithTitles = associates
+      .filter(item => item.dir === folder && installedCards.some(card => card.id === item.id))
+      .map(item => {
+        const avatarUrl = window.localStorage.getItem(`${item.id}-card-dev-img`) || undefined;
+        return {
+          avatarUrl,
+          title: cardTitleMap.get(item.id)!,
+          id: item.id,
+        };
+      });
 
-      // TODO: add or remove supported modules
-      const newItemsToAdd = installedCardsWithTitles.filter(
-        card => !associateIds.has(card.id) && ModulesSupportPython.includes(card.id),
-      );
+    setAssociated(activeAssociatesWithTitles);
+  }, [associates]);
 
-      setItemsToAdd(newItemsToAdd);
-
-      const activeAssociatesWithTitles = associateList
-        .filter(aiVenv => aiVenv.dir === folder && installedCards.some(card => card.id === aiVenv.id))
-        .map(aiVenv => {
-          const avatarUrl = window.localStorage.getItem(`${aiVenv.id}-card-dev-img`) || undefined;
-          return {
-            avatarUrl,
-            title: cardTitleMap.get(aiVenv.id)!,
-            id: aiVenv.id,
-          };
-        });
-
-      setAssociated(activeAssociatesWithTitles);
-    });
-  }, [folder, installedCards]);
+  const refreshAssociates = useCallback(() => {
+    pIpc.getAssociates().then(associates => dispatch(PythonToolkitActions.setAssociates(associates || [])));
+  }, []);
 
   const add = (id: string) => {
     pIpc.addAssociate({id, dir: folder, type});
-    getAssociated();
+    refreshAssociates();
   };
 
   const remove = (id: string) => {
     pIpc.removeAssociate(id);
-    getAssociated();
+    refreshAssociates();
   };
 
   return (
@@ -102,7 +106,7 @@ export default function Venv_Associate({folder, type}: Props) {
               <Add_Icon />
             </Button>
           </DropdownTrigger>
-          <DropdownMenu variant="flat" items={itemsToAdd} emptyContent="No AI available to associate with this venv.">
+          <DropdownMenu variant="flat" items={canBeAssociate} emptyContent="Nothing available to associate.">
             {item => (
               <DropdownItem
                 key={item.id}

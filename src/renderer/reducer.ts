@@ -1,7 +1,7 @@
 import {createSlice, PayloadAction} from '@reduxjs/toolkit';
 import {useSelector} from 'react-redux';
 
-import {PkgDisplayType, PythonVenvSelectItem} from '../cross/CrossExtTypes';
+import {AssociateItem, PkgDisplayType, PythonVenvSelectItem} from '../cross/CrossExtTypes';
 
 export type ContextType = {
   id: string;
@@ -21,6 +21,7 @@ type PythonToolkitState = {
   pkgNameDisplay: PkgDisplayType;
   pythonVenvSelected: PythonVenvSelected;
   cacheStorageUsage: boolean;
+  associates: AssociateItem[];
 };
 
 type PythonToolkitStateTypes = {
@@ -38,6 +39,7 @@ const initialState: PythonToolkitState = {
     dir: '',
   },
   cacheStorageUsage: true,
+  associates: [],
 };
 
 const pythonToolkitReducer = createSlice({
@@ -74,6 +76,9 @@ const pythonToolkitReducer = createSlice({
     },
     setCacheStorageUsage: (state: PythonToolkitState, action: PayloadAction<boolean>) => {
       state.cacheStorageUsage = action.payload;
+    },
+    setAssociates: (state: PythonToolkitState, action: PayloadAction<AssociateItem[]>) => {
+      state.associates = action.payload;
     },
   },
 });

@@ -6,6 +6,7 @@ import {tabsActions, useTabsState} from '../../../../src/renderer/src/App/Redux/
 import {AppDispatch} from '../../../../src/renderer/src/App/Redux/Store';
 import {Play_Icon, SettingsMinimal_Icon} from '../../../../src/renderer/src/assets/icons/SvgIcons/SvgIcons';
 import {useCacheImage} from '../Hooks';
+import pIpc from '../PIpc';
 import {PythonToolkitActions} from '../reducer';
 import PythonToolkitModal from './Python/PythonToolkitModal';
 import UIProvider from './UIProvider';
@@ -47,6 +48,7 @@ export default function ToolsPage() {
     setTabID(activeTab);
     setPrevTabTitle(tabs.find(tab => tab.id === activeTab)?.title);
     dispatch(tabsActions.setActiveTabTitle(title));
+    pIpc.getAssociates().then(associates => dispatch(PythonToolkitActions.setAssociates(associates || [])));
   };
 
   const openSettings = () => {
