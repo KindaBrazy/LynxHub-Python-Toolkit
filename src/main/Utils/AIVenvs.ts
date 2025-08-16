@@ -3,8 +3,8 @@ import {dirname, resolve} from 'node:path';
 import {isEmpty, isNil} from 'lodash';
 
 import {storageManager} from '../lynxExtension';
+import {getAssociates} from './AssociateManager';
 import {isWin} from './ExtMainUtils';
-import {getAssociates} from './PackageManager/PackageManager';
 
 function getActivatePath(pythonPath: string) {
   return resolve(isWin() ? `${dirname(pythonPath)}\\activate.ps1` : `${dirname(pythonPath)}/activate`);
