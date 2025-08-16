@@ -1,4 +1,4 @@
-export const ModulesSupportPython = [
+export const ModulesThatSupportPython = [
   'LSHQQYTIGER_SD',
   'LSHQQYTIGER_Forge_SD',
   'Automatic1111_SD',
@@ -6,15 +6,18 @@ export const ModulesSupportPython = [
   'ComfyUI_Zluda_ID',
   'VLADMANDIC_SD',
   'Lllyasviel_SD',
+  'InvokeAI_SD',
+  'OpenWebUI_TG',
   'Nerogar_SD',
   'Anapnoe_SD',
   'Erew123_SD',
   'Oobabooga_TG',
   'Gitmylo_AG',
-  'OpenWebUI_TG',
+  'Bmaltais_SD',
+  'LoLLMS_TG',
 ];
 
-export const Python_AvailableModules = {
+export const AvailableModules = {
   a1: 'Automatic1111_SD',
   sdAmd: 'LSHQQYTIGER_SD',
   sdForgeAmd: 'LSHQQYTIGER_Forge_SD',
