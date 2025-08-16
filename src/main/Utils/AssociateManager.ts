@@ -20,7 +20,7 @@ function getCommandByType(type: 'python' | 'venv' | 'conda', dir: string, condaN
     case 'venv':
       return isWin ? `${dir}\\Scripts\\activate.ps1` : `source ${dir}/bin/activate`;
     case 'conda':
-      return `conda activate ${condaName || `--prefix "${dir}"`}`;
+      return `conda activate ${condaName || `"${dir}"`}`;
     default:
       throw new Error(`Unsupported environment type: ${type}`);
   }
