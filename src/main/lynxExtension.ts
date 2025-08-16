@@ -1,5 +1,3 @@
-import {BrowserWindow} from 'electron';
-
 import {
   ExtensionMainApi,
   MainExtensionUtils,
@@ -12,7 +10,7 @@ import {
   IsAutoDetectedVenvs_StorageID,
   MaxRetry_StorageID,
 } from '../cross/CrossExtConstants';
-import {AssociateItem, IdPathType, pythonChannels} from '../cross/CrossExtTypes';
+import {AssociateItem, IdPathType} from '../cross/CrossExtTypes';
 import ListenForChannels from './ListenForChannels';
 import {replacePythonPath} from './Utils/ExtMainUtils';
 import {findAIVenv} from './Utils/VirtualEnv/VenvUtils';
@@ -52,11 +50,6 @@ export async function initialExtension(lynxApi: ExtensionMainApi, utils: MainExt
       });
       storeManager.setCustomData(IsAutoDetectedVenvs_StorageID, true);
     }
-
-    lynxApi.onReadyToShow(() => {
-      const associates = storeManager.getCustomData(Associates_StorageID) as AssociateItem[] | undefined;
-      BrowserWindow.getFocusedWindow()?.webContents.send(pythonChannels.onAssociateChange, associates, 'init');
-    });
   });
   lynxApi.listenForChannels(() => ListenForChannels(storageManager, utils.nodePty));
 }
