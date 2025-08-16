@@ -106,7 +106,6 @@ export const pythonChannels = {
   removeAssociate: 'remove-ai-venv',
   removeAssociatePath: 'remove-ai-venv-path',
   getExePathAssociate: 'get-exe-path-associate',
-  onAssociateChange: 'on-associate-change',
 
   findAIVenv: 'find-ai-venv',
 

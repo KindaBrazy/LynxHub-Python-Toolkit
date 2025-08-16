@@ -7,10 +7,7 @@ import pIpc from '../../PIpc';
 import {PythonToolkitActions, usePythonToolkitState} from '../../reducer';
 import {Env_Icon, Python_Icon} from '../SvgIcons';
 
-export const Installer_PythonSelector = (
-  id: string,
-  setTerminalCommand: (id: string, item: PythonVenvSelectItem) => void,
-) =>
+export const Installer_PythonSelector = (id: string, addAssociate: (id: string, item: PythonVenvSelectItem) => void) =>
   function Selector() {
     const dispatch = useDispatch();
     const selected = usePythonToolkitState('pythonVenvSelected');
@@ -20,7 +17,7 @@ export const Installer_PythonSelector = (
     const onSelected = useCallback((item: PythonVenvSelectItem) => {
       const resultItem = {...item, id};
       dispatch(PythonToolkitActions.setSelectedPythonVenv(resultItem));
-      setTerminalCommand(id, item);
+      addAssociate(id, item);
     }, []);
 
     useEffect(() => {
