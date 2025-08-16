@@ -1,3 +1,4 @@
+import ElectronAppManager from '../../../src/main/Managements/ElectronAppManager';
 import {
   ExtensionMainApi,
   MainExtensionUtils,
@@ -16,6 +17,7 @@ import {replacePythonPath} from './Utils/ExtMainUtils';
 import {findAIVenv} from './Utils/VirtualEnv/VenvUtils';
 
 export let storageManager: StorageManager | undefined = undefined;
+export let appManager: ElectronAppManager | undefined = undefined;
 export let defaultEnvPath = process.env.PATH;
 
 export const setDefaultEnvPath = (path: string) => {
@@ -23,6 +25,9 @@ export const setDefaultEnvPath = (path: string) => {
 };
 
 export async function initialExtension(lynxApi: ExtensionMainApi, utils: MainExtensionUtils) {
+  utils.getAppManager().then(app => {
+    appManager = app;
+  });
   utils.getStorageManager().then(storeManager => {
     storageManager = storeManager;
 

@@ -1,11 +1,10 @@
 import {join} from 'node:path';
 
 import {exec} from 'child_process';
-import {BrowserWindow} from 'electron';
 import {compact, filter, isEmpty, isNil} from 'lodash';
 
 import {pythonChannels, VenvCreateOptions, VenvInfo} from '../../../cross/CrossExtTypes';
-import {storageManager} from '../../lynxExtension';
+import {appManager, storageManager} from '../../lynxExtension';
 import {openDialogExt} from '../PythonUtils';
 import {getVenvInfo, isVenvDirectory} from './VenvUtils';
 
@@ -47,7 +46,10 @@ function removeVenvStorage(venvPath: string) {
 
 export async function getVenvs() {
   const venvs = validateVenvs();
-  const window = BrowserWindow.getFocusedWindow();
+  const window = appManager?.getMainWindow();
+  if (!window) {
+    throw new Error('getVenvs: No window found');
+  }
 
   const venvsInfo: (VenvInfo | null)[] = [];
 

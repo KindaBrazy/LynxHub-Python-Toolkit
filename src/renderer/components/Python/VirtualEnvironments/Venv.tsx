@@ -93,7 +93,7 @@ export default function Venv({visible, installedPythons, isLoadingPythons, show}
         }
         setIsLoading(false);
       })
-      .catch(console.error);
+      .catch(console.warn);
   }, [installedPythons, cacheStorageUsage]);
 
   useEffect(() => {

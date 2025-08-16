@@ -1,7 +1,7 @@
-import {BrowserWindow} from 'electron';
 import {IPty} from 'node-pty';
 
 import {pythonChannels} from '../../../cross/CrossExtTypes';
+import {appManager} from '../../lynxExtension';
 import {COMMAND_LINE_ENDING, determineShell} from '../ExtMainUtils';
 
 export async function listAvailablePythons(pty: any): Promise<string[]> {
@@ -39,7 +39,12 @@ export async function listAvailablePythons(pty: any): Promise<string[]> {
 
 export const createCondaEnv = async (envName: string, pythonVersion: string, pty): Promise<void> => {
   return new Promise((resolve, reject) => {
-    const window = BrowserWindow.getFocusedWindow()!;
+    const window = appManager?.getMainWindow();
+    if (!window) {
+      reject('createCondaEnv: No window found');
+      return;
+    }
+
     const command = `conda create --name ${envName} python=${pythonVersion} -y`;
     const ptyProcess: IPty = pty.spawn(determineShell(), [], {});
 

@@ -41,6 +41,7 @@ export const Installer_PythonSelector = (id: string, addAssociate: (id: string, 
 
           if (combined.length > 0) onSelected(combined[0]);
         })
+        .catch(console.warn)
         .finally(() => setIsLoading(false));
     }, []);
 

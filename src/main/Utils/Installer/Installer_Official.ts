@@ -2,11 +2,12 @@ import {platform} from 'node:os';
 import {join} from 'node:path';
 
 import {exec} from 'child_process';
-import {app, BrowserWindow} from 'electron';
+import {app} from 'electron';
 import {download} from 'electron-dl';
 import {promisify} from 'util';
 
 import {pythonChannels, PythonVersion} from '../../../cross/CrossExtTypes';
+import {appManager} from '../../lynxExtension';
 import {findFileInDir} from '../PythonUtils';
 
 const execAsync = promisify(exec);
@@ -34,7 +35,11 @@ async function installPython(filePath: string, version: PythonVersion): Promise<
 
 export default async function downloadPython(version: PythonVersion): Promise<void> {
   return new Promise(async (resolve, reject) => {
-    const window = BrowserWindow.getFocusedWindow()!;
+    const window = appManager?.getMainWindow();
+    if (!window) {
+      reject('downloadPython: No window found');
+      return;
+    }
 
     const fileName = version.url.split('/').pop();
     const targetPath = join(app.getPath('downloads'), 'LynxHub');

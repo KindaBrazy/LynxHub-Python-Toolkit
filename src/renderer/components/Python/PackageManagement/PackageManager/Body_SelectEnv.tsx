@@ -51,6 +51,7 @@ export default function Body_SelectEnv({id, setPythonPath}: Props) {
         const combined = [...pythonItems, ...venvItems];
         setList(combined);
       })
+      .catch(console.warn)
       .finally(() => setIsLoading(false));
   }, []);
 

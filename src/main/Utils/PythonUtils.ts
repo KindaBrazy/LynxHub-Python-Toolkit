@@ -2,11 +2,12 @@ import {spawn} from 'node:child_process';
 import {join, resolve} from 'node:path';
 
 import {exec} from 'child_process';
-import {BrowserWindow, dialog, OpenDialogOptions, OpenDialogReturnValue} from 'electron';
+import {dialog, OpenDialogOptions, OpenDialogReturnValue} from 'electron';
 import {existsSync, promises, readdirSync, statSync} from 'graceful-fs';
 import {compare} from 'semver';
 
 import {PythonInstallation} from '../../cross/CrossExtTypes';
+import {appManager} from '../lynxExtension';
 
 export async function detectInstallationType(pythonPath: string): Promise<PythonInstallation['installationType']> {
   const normalize = (str: string) => str.toLowerCase();
@@ -144,9 +145,13 @@ export async function getSitePackagesCount(pythonPath: string): Promise<number> 
 
 export async function openDialogExt(options: OpenDialogOptions): Promise<string | undefined> {
   try {
-    const mainWindow = BrowserWindow.getFocusedWindow()!;
-    const result: OpenDialogReturnValue = await (mainWindow
-      ? dialog.showOpenDialog(mainWindow, options)
+    const window = appManager?.getMainWindow();
+    if (!window) {
+      throw new Error('openDialogExt: No window found');
+    }
+
+    const result: OpenDialogReturnValue = await (window
+      ? dialog.showOpenDialog(window, options)
       : dialog.showOpenDialog(options));
     if (result.filePaths) return result.filePaths[0];
     return undefined;
