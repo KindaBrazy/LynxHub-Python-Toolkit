@@ -1,6 +1,7 @@
-import {exec} from 'node:child_process';
+import {exec, execFile} from 'node:child_process';
 import {platform} from 'node:os';
 import {basename, join} from 'node:path';
+import {promisify} from 'node:util';
 
 import {existsSync, promises} from 'graceful-fs';
 
@@ -8,6 +9,8 @@ import {VenvInfo} from '../../../cross/CrossExtTypes';
 import {addAssociate} from '../AssociateManager';
 import {getSitePackagesCount} from '../PythonUtils';
 import {updateVenvStorage} from './CreateVenv';
+
+const execFileAsync = promisify(execFile);
 
 async function getPythonVersion(venvPath: string): Promise<string> {
   return new Promise((resolve, reject) => {
@@ -36,10 +39,37 @@ async function getPythonVersion(venvPath: string): Promise<string> {
   });
 }
 
+async function checkPipInstallation(exePath: string): Promise<void> {
+  return new Promise(async (resolve, reject) => {
+    try {
+      await execFileAsync(exePath, ['-m', 'pip', '--version']);
+      resolve();
+    } catch (e) {
+      console.log('pip not found. Attempting to install pip...');
+
+      const installPipCommand = `"${exePath}" -m ensurepip --default-pip`;
+
+      exec(installPipCommand, (installError, _, installStderr) => {
+        if (installError) {
+          return reject(`Error installing pip: ${installError.message}`);
+        }
+        if (installStderr) {
+          console.warn(`stderr during pip installation: ${installStderr}`);
+        }
+
+        console.log('pip installed successfully.');
+
+        resolve();
+      });
+    }
+  });
+}
+
 export async function getVenvInfo(venvPath: string): Promise<VenvInfo> {
   const pythonVersion = await getPythonVersion(venvPath);
 
   const pythonExecutable = getVenvPythonPath(venvPath);
+  await checkPipInstallation(pythonExecutable);
   const sitePackagesCount = await getSitePackagesCount(pythonExecutable);
 
   const folderName = basename(venvPath);
