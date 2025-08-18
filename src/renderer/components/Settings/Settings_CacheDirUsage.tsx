@@ -4,6 +4,7 @@ import {useDispatch} from 'react-redux';
 
 import LynxSwitch from '../../../../../src/renderer/src/App/Components/Reusable/LynxSwitch';
 import {BroomDuo_Icon} from '../../../../../src/renderer/src/assets/icons/SvgIcons/SvgIcons';
+import {FolderDiskUsage_StorageID} from '../../../cross/CrossExtConstants';
 import pIpc from '../../PIpc';
 import {PythonToolkitActions, usePythonToolkitState} from '../../reducer';
 
@@ -25,7 +26,19 @@ export default function Settings_CacheDirUsage() {
     updateValue(value);
   };
 
-  const clearCache = () => {};
+  const clearCache = () => {
+    const prefix = FolderDiskUsage_StorageID;
+
+    const keysToRemove: string[] = [];
+    for (let i = 0; i < localStorage.length; i++) {
+      const key = localStorage.key(i);
+      if (key && key.startsWith(prefix)) {
+        keysToRemove.push(key);
+      }
+    }
+
+    keysToRemove.forEach(key => localStorage.removeItem(key));
+  };
 
   return (
     <div className="w-full flex flex-row gap-x-2">
