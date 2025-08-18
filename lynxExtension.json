@@ -27,9 +27,15 @@
             {
               "label": "Settings",
               "subitems": [
-                "New retry configuration option and improved handling of maximum retries.",
-                "Customize how package names are displayed in the Settings modal.",
-                "Added a “Cache Disk Usage” toggle with an option to clear cache."
+                {
+                  "label": "New retry configuration option and improved handling of maximum retries."
+                },
+                {
+                  "label": "Customize how package names are displayed in the Settings modal."
+                },
+                {
+                  "label": "Added a “Cache Disk Usage” toggle with an option to clear cache."
+                }
               ]
             }
           ]
@@ -39,45 +45,77 @@
           "subitems": [
             {
               "label": "UI",
-              "subitems": ["Refreshed design for Python versions and virtual environment cards."]
+              "subitems": [
+                {
+                  "label": "Refreshed design for Python versions and virtual environment cards."
+                }
+              ]
             },
             {
               "label": "Installer",
               "subitems": [
-                "Better error handling and clearer error messages.",
-                "Improved handling of Deadsnakes PPA installation errors."
+                {
+                  "label": "Better error handling and clearer error messages."
+                },
+                {
+                  "label": "Improved handling of Deadsnakes PPA installation errors."
+                }
               ]
             },
             {
               "label": "Conda Installer",
               "subitems": [
-                "Improved error handling for additional cases.",
-                "Added timeout & regex validation for detecting Conda installations.",
-                "Auto-accept Terms of Service prompts during Conda setup.",
-                "More reliable Python version fetching."
+                {
+                  "label": "Improved error handling for additional cases."
+                },
+                {
+                  "label": "Added timeout & regex validation for detecting Conda installations."
+                },
+                {
+                  "label": "Auto-accept Terms of Service prompts during Conda setup."
+                },
+                {
+                  "label": "More reliable Python version fetching."
+                }
               ]
             },
             {
               "label": "Requirements",
               "subitems": [
-                "Smarter handling of mismatched `-` and `_` in package names.",
-                "Improved logic for requirements update checks (operators & version comparisons).",
-                "Increased maxRetries for fetching package versions from Pip."
+                {
+                  "label": "Smarter handling of mismatched `-` and `_` in package names."
+                },
+                {
+                  "label": "Improved logic for requirements update checks (operators & version comparisons)."
+                },
+                {
+                  "label": "Increased maxRetries for fetching package versions from Pip."
+                }
               ]
             },
             {
               "label": "Virtual Environments",
               "subitems": [
-                "More robust error handling and improved venv loading states.",
-                "Automatically ensures pip is installed for package management."
+                {
+                  "label": "More robust error handling and improved venv loading states."
+                },
+                {
+                  "label": "Automatically ensures pip is installed for package management."
+                }
               ]
             },
             {
               "label": "Associations",
               "subitems": [
-                "Added avatar support in the virtual environment association dropdown.",
-                "Improved styling for associated item “chips.”",
-                "Support for associating installed Pythons with environments."
+                {
+                  "label": "Added avatar support in the virtual environment association dropdown."
+                },
+                {
+                  "label": "Improved styling for associated item “chips.”"
+                },
+                {
+                  "label": "Support for associating installed Pythons with environments."
+                }
               ]
             }
           ]
@@ -99,10 +137,18 @@
             {
               "label": "Package Manager",
               "subitems": [
-                "New styling for the Python version dropdown.",
-                "Improved button styles & icons; removed redundant props.",
-                "Clearer Conda installer loading label.",
-                "Updated trash icon to a new duo-tone version."
+                {
+                  "label": "New styling for the Python version dropdown."
+                },
+                {
+                  "label": "Improved button styles & icons; removed redundant props."
+                },
+                {
+                  "label": "Clearer Conda installer loading label."
+                },
+                {
+                  "label": "Updated trash icon to a new duo-tone version."
+                }
               ]
             }
           ]
