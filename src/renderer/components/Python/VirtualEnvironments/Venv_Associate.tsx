@@ -89,10 +89,10 @@ export default function Venv_Associate({folder, type}: Props) {
           ) : (
             associated.map(item => (
               <Chip
-                key={item.id}
                 variant="flat"
                 color="success"
                 className="p-2"
+                key={`${item.id}_associated`}
                 onClose={() => remove(item.id)}
                 startContent={<Avatar className="size-5" src={item.avatarUrl} />}>
                 {item.title}
@@ -109,8 +109,8 @@ export default function Venv_Associate({folder, type}: Props) {
           <DropdownMenu variant="flat" items={canBeAssociate} emptyContent="Nothing available to associate.">
             {item => (
               <DropdownItem
-                key={item.id}
                 onPress={() => add(item.id)}
+                key={`${item.id}_canBeAssociate`}
                 startContent={<Avatar className="size-6" src={item.avatarUrl} />}>
                 {item.title}
               </DropdownItem>
