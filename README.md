@@ -14,11 +14,6 @@ installations, virtual environments, and packages.
 [![GitHub Release Date][github-release-date-shield]](https://github.com/KindaBrazy/LynxHub-Module-Offline-Container/releases)
 [![GitHub Repo stars][github-repo-stars-shield]](https://github.com/KindaBrazy/LynxHub-Module-Offline-Container)
 
-| Channel      | Version                                                                                 | Date       |
-|--------------|-----------------------------------------------------------------------------------------|------------|
-| Early Access | [V0.10.2](https://github.com/KindaBrazy/LynxHub-Python-Toolkit/releases/tag/V0.10.2_EA) | 2025-06-08 |
-| Release      | [V0.10.0](https://github.com/KindaBrazy/LynxHub-Python-Toolkit/releases/tag/V0.10.0)    | 2025-04-17 |
-
 </div>
 
 <br/>
@@ -42,19 +37,18 @@ installations, virtual environments, and packages.
 
 - [x] **Linux** support.
 - [ ] **macOS** support.
-- [ ] Use`conda activate`for Conda environments.
+- [x] Use`conda activate`for Conda environments.
 - [ ] Merge`requirements.txt`files and manage conflicts.
 - [ ] Improve package installation:
     - Show`pip`output, progress bar, and download size (MB).
 - [X] Optimize disk usage calculations and caching.
-- [ ] Refresh only Python/venv on changes, no full reload.
+- [x] Refresh only Python/venv on changes, no full reload.
 - [ ] Expand tools page to full screen.
-- [ ] Activate Python/venv during AI installation.
+- [x] Activate Python/venv during AI installation.
 - [ ] Check for Python version updates and auto-update on startup.
 - [ ] Show detailed errors for installations/updates.
 - [ ] Add settings to disable auto venv assignment for AIs.
 - [ ] Set a default venv for all AIs.
-- [ ] Prompt and warn user to modify pre-command of arguments to set venv for AI.
 - [x] Change package version (upgrade/downgrade)
 
 ## 🚀 Features
@@ -135,7 +129,7 @@ Contributions are welcome! If you'd like to contribute to the project, please fo
 4. Submit a pull request.
 
 > [!NOTE]
-> The source code for this extension is available in the `source` branch.
+> The source code for this extension is available in the `source_ea` branch.
 
 ---
 

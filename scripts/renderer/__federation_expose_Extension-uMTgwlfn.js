@@ -1,6 +1,6 @@
 import { importShared } from './__federation_fn_import-JrT3xvdd.js';
 import { j as jsxRuntimeExports, a as TRANSITION_EASINGS } from './chunk-736YWA4T-Da4CYBw8.js';
-import { c as commonjsGlobal, g as getDefaultExportFromCjs, a as getAugmentedNamespace } from './_commonjsHelpers-D5KtpA0t.js';
+import { c as commonjsGlobal, g as getDefaultExportFromCjs, a as getAugmentedNamespace } from './_commonjsHelpers-BAGoDD49.js';
 
 function isPlainObject$2(obj) {
   if (typeof obj !== "object" || obj === null)
@@ -1127,6 +1127,17 @@ function Refresh_Icon(props) {
     )
   ] }) });
 }
+function SettingsMinimal_Icon(props) {
+  return /* @__PURE__ */ jsxRuntimeExports.jsx("svg", { ...props, height: "1em", viewBox: "0 0 24 24", xmlns: "http://www.w3.org/2000/svg", children: /* @__PURE__ */ jsxRuntimeExports.jsx(
+    "path",
+    {
+      fillRule: "evenodd",
+      clipRule: "evenodd",
+      fill: "currentColor",
+      d: "M12.428 2c-1.114 0-2.129.6-4.157 1.802l-.686.406C5.555 5.41 4.542 6.011 3.985 7c-.557.99-.557 2.19-.557 4.594v.812c0 2.403 0 3.605.557 4.594c.557.99 1.57 1.59 3.6 2.791l.686.407C10.299 21.399 11.314 22 12.428 22c1.114 0 2.128-.6 4.157-1.802l.686-.407c2.028-1.2 3.043-1.802 3.6-2.791c.557-.99.557-2.19.557-4.594v-.812c0-2.403 0-3.605-.557-4.594c-.557-.99-1.572-1.59-3.6-2.792l-.686-.406C14.555 2.601 13.542 2 12.428 2m-3.75 10a3.75 3.75 0 1 1 7.5 0a3.75 3.75 0 0 1-7.5 0"
+    }
+  ) });
+}
 function Trash_Icon(props) {
   return /* @__PURE__ */ jsxRuntimeExports.jsx("svg", { ...props, height: "1em", viewBox: "0 0 24 24", xmlns: "http://www.w3.org/2000/svg", children: /* @__PURE__ */ jsxRuntimeExports.jsx(
     "path",
@@ -1194,6 +1205,39 @@ function Refresh3_Icon(props) {
     )
   ] });
 }
+function BroomDuo_Icon(props) {
+  return /* @__PURE__ */ jsxRuntimeExports.jsxs("svg", { ...props, height: "1em", viewBox: "0 0 24 24", xmlns: "http://www.w3.org/2000/svg", children: [
+    /* @__PURE__ */ jsxRuntimeExports.jsx(
+      "path",
+      {
+        opacity: "0.5",
+        fill: "currentColor",
+        d: "M22.53 2.53a.75.75 0 1 0-1.06-1.06l-2.403 2.402a4.5 4.5 0 0 1 1.061 1.06zM2.449 11.411l.74 1.218a24.45 24.45 0 0 0 8.181 8.181l1.219.741c1.898.97 4.353.347 5.414-1.661c.5-.949.977-2.012 1.279-3.07a19.5 19.5 0 0 0 .712-4.33c.033-.64.049-.961-.104-1.357c-.152-.395-.416-.66-.944-1.187L14.12 5.12c-.491-.491-.737-.737-1.107-.89c-.37-.151-.664-.15-1.253-.148a17.2 17.2 0 0 0-4.581.635c-1.057.302-2.12.778-3.069 1.28c-2.008 1.06-2.63 3.515-1.661 5.413"
+      }
+    ),
+    /* @__PURE__ */ jsxRuntimeExports.jsx(
+      "path",
+      {
+        fill: "currentColor",
+        d: "M19.643 4.358a4.445 4.445 0 0 0-6.287 0l-.038.037c.232.156.456.38.802.726l4.825 4.825c.302.302.518.517.675.72l.023-.022a4.445 4.445 0 0 0 0-6.286"
+      }
+    )
+  ] });
+}
+
+function mitt(n){return {all:n=n||new Map,on:function(t,e){var i=n.get(t);i?i.push(e):n.set(t,[e]);},off:function(t,e){var i=n.get(t);i&&(e?i.splice(i.indexOf(e)>>>0,1):n.set(t,[]));},emit:function(t,e){var i=n.get(t);i&&i.slice().map(function(n){n(e);}),(i=n.get("*"))&&i.slice().map(function(n){n(t,e);});}}}
+
+const {isEqual} = await importShared('lodash');
+function formatSize(size) {
+  if (!size) return "0KB";
+  if (size < 1024 * 1024) {
+    return `${(size / 1024).toFixed(2)} KB`;
+  } else if (size < 1024 * 1024 * 1024) {
+    return `${(size / (1024 * 1024)).toFixed(2)} MB`;
+  } else {
+    return `${(size / (1024 * 1024 * 1024)).toFixed(2)} GB`;
+  }
+}
 
 const fileChannels = {
   getAppDirectories: "app:getAppDirectories",
@@ -1205,7 +1249,8 @@ const fileChannels = {
   checkFilesExist: "app:checkFilesExist",
   calcFolderSize: "app:calcFolderSize",
   getRelativePath: "app:getRelativePath",
-  getAbsolutePath: "app:getAbsolutePath"
+  getAbsolutePath: "app:getAbsolutePath",
+  isEmptyDir: "app:isEmptyDir"
 };
 const ptyChannels = {
   process: "pty-process",
@@ -1213,9 +1258,11 @@ const ptyChannels = {
   emptyProcess: "pty-custom-process",
   customCommands: "pty-custom-commands",
   write: "pty-write",
+  clear: "pty-clear",
   resize: "pty-resize",
   onData: "pty-on-data",
-  onTitle: "pty-on-title"
+  onTitle: "pty-on-title",
+  onExit: "pty-on-exit-code"
 };
 const browserChannels = {
   createBrowser: "browser:create-browser",
@@ -1241,53 +1288,157 @@ const browserChannels = {
   onDomReady: "browser:on-dom-ready",
   getUserAgent: "browser:get-user-agent",
   updateUserAgent: "browser:update-user-agent",
-  addOffset: "browser:add-offset"
+  addOffset: "browser:add-offset",
+  clearHistory: "browser:clear-history"
 };
 
 const ipc$1 = window.electron.ipcRenderer;
 const rendererIpc = {
   /** Managing files and directories */
   file: {
-    openDlg: (option) => ipc$1.invoke(fileChannels.dialog, option),
-    openPath: (dir) => ipc$1.send(fileChannels.openPath, dir),
-    getAppDirectories: (name) => ipc$1.invoke(fileChannels.getAppDirectories, name),
-    removeDir: (dir) => ipc$1.invoke(fileChannels.removeDir, dir),
-    trashDir: (dir) => ipc$1.invoke(fileChannels.trashDir, dir),
-    listDir: (dirPath, relatives) => ipc$1.invoke(fileChannels.listDir, dirPath, relatives),
-    checkFilesExist: (dir, fileNames) => ipc$1.invoke(fileChannels.checkFilesExist, dir, fileNames),
-    calcFolderSize: (dir) => ipc$1.invoke(fileChannels.calcFolderSize, dir),
-    getRelativePath: (basePath, targetPath) => ipc$1.invoke(fileChannels.getRelativePath, basePath, targetPath),
-    getAbsolutePath: (basePath, targetPath) => ipc$1.invoke(fileChannels.getAbsolutePath, basePath, targetPath)
+    openDlg: (option) => {
+      extensionRendererApi.events_ipc.emit("file_open_dialog", { option });
+      return ipc$1.invoke(fileChannels.dialog, option);
+    },
+    openPath: (dir) => {
+      extensionRendererApi.events_ipc.emit("file_open_path", { dir });
+      ipc$1.send(fileChannels.openPath, dir);
+    },
+    getAppDirectories: (name) => {
+      extensionRendererApi.events_ipc.emit("file_get_app_directories", { name });
+      return ipc$1.invoke(fileChannels.getAppDirectories, name);
+    },
+    removeDir: (dir) => {
+      extensionRendererApi.events_ipc.emit("file_remove_dir", { dir });
+      return ipc$1.invoke(fileChannels.removeDir, dir);
+    },
+    trashDir: (dir) => {
+      extensionRendererApi.events_ipc.emit("file_trash_dir", { dir });
+      return ipc$1.invoke(fileChannels.trashDir, dir);
+    },
+    listDir: (dirPath, relatives) => {
+      extensionRendererApi.events_ipc.emit("file_list_dir", { dirPath, relatives });
+      return ipc$1.invoke(fileChannels.listDir, dirPath, relatives);
+    },
+    checkFilesExist: (dir, fileNames) => {
+      extensionRendererApi.events_ipc.emit("file_check_files_exist", { dir, fileNames });
+      return ipc$1.invoke(fileChannels.checkFilesExist, dir, fileNames);
+    },
+    calcFolderSize: (dir) => {
+      extensionRendererApi.events_ipc.emit("file_calc_folder_size", { dir });
+      return ipc$1.invoke(fileChannels.calcFolderSize, dir);
+    },
+    getRelativePath: (basePath, targetPath) => {
+      extensionRendererApi.events_ipc.emit("file_get_relative_path", { basePath, targetPath });
+      return ipc$1.invoke(fileChannels.getRelativePath, basePath, targetPath);
+    },
+    getAbsolutePath: (basePath, targetPath) => {
+      extensionRendererApi.events_ipc.emit("file_get_absolute_path", { basePath, targetPath });
+      return ipc$1.invoke(fileChannels.getAbsolutePath, basePath, targetPath);
+    },
+    isEmptyDir: (dir) => {
+      extensionRendererApi.events_ipc.emit("file_is_empty_dir", { dir });
+      return ipc$1.invoke(fileChannels.isEmptyDir, dir);
+    }
   },
-  /** Managing and using node-pty(Pseudo Terminal ) */
+  /** Managing and using node_pty(Pseudo Terminal ) */
   pty: {
-    process: (id, opt, cardId) => ipc$1.send(ptyChannels.process, id, opt, cardId),
-    customProcess: (id, opt, dir, file) => ipc$1.send(ptyChannels.customProcess, id, opt, dir, file),
-    emptyProcess: (id, opt, dir) => ipc$1.send(ptyChannels.emptyProcess, id, opt, dir),
-    customCommands: (id, opt, commands, dir) => ipc$1.send(ptyChannels.customCommands, id, opt, commands, dir),
-    write: (id, data) => ipc$1.send(ptyChannels.write, id, data),
-    resize: (id, cols, rows) => ipc$1.send(ptyChannels.resize, id, cols, rows),
+    process: (id, opt, cardId) => {
+      extensionRendererApi.events_ipc.emit("terminal_process", { id, opt, cardId });
+      ipc$1.send(ptyChannels.process, id, opt, cardId);
+    },
+    customProcess: (id, opt, dir, file) => {
+      extensionRendererApi.events_ipc.emit("terminal_process_custom", { id, opt, dir, file });
+      ipc$1.send(ptyChannels.customProcess, id, opt, dir, file);
+    },
+    emptyProcess: (id, opt, dir) => {
+      extensionRendererApi.events_ipc.emit("terminal_process_empty", { id, opt, dir });
+      ipc$1.send(ptyChannels.emptyProcess, id, opt, dir);
+    },
+    customCommands: (id, opt, commands, dir) => {
+      extensionRendererApi.events_ipc.emit("terminal_process_custom_command", { id, opt, commands, dir });
+      ipc$1.send(ptyChannels.customCommands, id, opt, commands, dir);
+    },
+    write: (id, data) => {
+      extensionRendererApi.events_ipc.emit("terminal_write", { id, data });
+      ipc$1.send(ptyChannels.write, id, data);
+    },
+    clear: (id) => {
+      extensionRendererApi.events_ipc.emit("terminal_clear", { id });
+      ipc$1.send(ptyChannels.clear, id);
+    },
+    resize: (id, cols, rows) => {
+      extensionRendererApi.events_ipc.emit("terminal_resize", { id, cols, rows });
+      ipc$1.send(ptyChannels.resize, id, cols, rows);
+    },
     onData: (result) => ipc$1.on(ptyChannels.onData, result),
     onTitle: (result) => ipc$1.on(ptyChannels.onTitle, result),
+    onExit: (result) => ipc$1.on(ptyChannels.onExit, result),
     offData: () => ipc$1.removeAllListeners(ptyChannels.onData),
-    offTitle: () => ipc$1.removeAllListeners(ptyChannels.onTitle)
+    offTitle: () => ipc$1.removeAllListeners(ptyChannels.onTitle),
+    offExit: () => ipc$1.removeAllListeners(ptyChannels.onExit)
   },
   browser: {
-    createBrowser: (id) => ipc$1.send(browserChannels.createBrowser, id),
-    removeBrowser: (id) => ipc$1.send(browserChannels.removeBrowser, id),
-    loadURL: (id, url) => ipc$1.send(browserChannels.loadURL, id, url),
-    setVisible: (id, visible) => ipc$1.send(browserChannels.setVisible, id, visible),
-    openFindInPage: (id, customPosition) => ipc$1.send(browserChannels.openFindInPage, id, customPosition),
-    openZoom: (id) => ipc$1.send(browserChannels.openZoom, id),
-    findInPage: (id, value, options) => ipc$1.send(browserChannels.findInPage, id, value, options),
-    stopFindInPage: (id, action) => ipc$1.send(browserChannels.stopFindInPage, id, action),
-    focusWebView: (id) => ipc$1.send(browserChannels.focusWebView, id),
-    clearCache: () => ipc$1.send(browserChannels.clearCache),
-    clearCookies: () => ipc$1.send(browserChannels.clearCookies),
-    setZoomFactor: (id, factor) => ipc$1.send(browserChannels.setZoomFactor, id, factor),
-    reload: (id) => ipc$1.send(browserChannels.reload, id),
-    goBack: (id) => ipc$1.send(browserChannels.goBack, id),
-    goForward: (id) => ipc$1.send(browserChannels.goForward, id),
+    createBrowser: (id) => {
+      extensionRendererApi.events_ipc.emit("browser_create", { id });
+      ipc$1.send(browserChannels.createBrowser, id);
+    },
+    removeBrowser: (id) => {
+      extensionRendererApi.events_ipc.emit("browser_remove", { id });
+      ipc$1.send(browserChannels.removeBrowser, id);
+    },
+    loadURL: (id, url) => {
+      extensionRendererApi.events_ipc.emit("browser_load_url", { id, url });
+      ipc$1.send(browserChannels.loadURL, id, url);
+    },
+    setVisible: (id, visible) => {
+      extensionRendererApi.events_ipc.emit("browser_set_visible", { id, visible });
+      ipc$1.send(browserChannels.setVisible, id, visible);
+    },
+    openFindInPage: (id, customPosition) => {
+      extensionRendererApi.events_ipc.emit("browser_open_find_in_page", { id, customPosition });
+      ipc$1.send(browserChannels.openFindInPage, id, customPosition);
+    },
+    openZoom: (id) => {
+      extensionRendererApi.events_ipc.emit("browser_open_zoom", { id });
+      ipc$1.send(browserChannels.openZoom, id);
+    },
+    findInPage: (id, value, options) => {
+      extensionRendererApi.events_ipc.emit("browser_find_in_page", { id, value, options });
+      ipc$1.send(browserChannels.findInPage, id, value, options);
+    },
+    stopFindInPage: (id, action) => {
+      extensionRendererApi.events_ipc.emit("browser_stop_find_in_page", { id, action });
+      ipc$1.send(browserChannels.stopFindInPage, id, action);
+    },
+    focusWebView: (id) => {
+      extensionRendererApi.events_ipc.emit("browser_focus_web_view", { id });
+      ipc$1.send(browserChannels.focusWebView, id);
+    },
+    clearCache: () => {
+      extensionRendererApi.events_ipc.emit("browser_clear_cache", {});
+      ipc$1.send(browserChannels.clearCache);
+    },
+    clearCookies: () => {
+      extensionRendererApi.events_ipc.emit("browser_clear_cookies", {});
+      ipc$1.send(browserChannels.clearCookies);
+    },
+    setZoomFactor: (id, factor) => {
+      extensionRendererApi.events_ipc.emit("browser_set_zoom_factor", { id, factor });
+      ipc$1.send(browserChannels.setZoomFactor, id, factor);
+    },
+    reload: (id) => {
+      extensionRendererApi.events_ipc.emit("browser_reload", { id });
+      ipc$1.send(browserChannels.reload, id);
+    },
+    goBack: (id) => {
+      extensionRendererApi.events_ipc.emit("browser_go_back", { id });
+      ipc$1.send(browserChannels.goBack, id);
+    },
+    goForward: (id) => {
+      extensionRendererApi.events_ipc.emit("browser_go_forward", { id });
+      ipc$1.send(browserChannels.goForward, id);
+    },
     onCanGo: (result) => ipc$1.on(browserChannels.onCanGo, result),
     offCanGo: () => ipc$1.removeAllListeners(browserChannels.onCanGo),
     onIsLoading: (result) => ipc$1.on(browserChannels.isLoading, result),
@@ -1300,11 +1451,33 @@ const rendererIpc = {
     offUrlChange: () => ipc$1.removeAllListeners(browserChannels.onUrlChange),
     onDomReady: (result) => ipc$1.on(browserChannels.onDomReady, result),
     offDomReady: () => ipc$1.removeAllListeners(browserChannels.onDomReady),
-    getUserAgent: (type) => ipc$1.invoke(browserChannels.getUserAgent, type),
-    updateUserAgent: () => ipc$1.send(browserChannels.updateUserAgent),
-    addOffset: (id, offset) => ipc$1.send(browserChannels.addOffset, id, offset)
-  }
-};
+    getUserAgent: (type) => {
+      extensionRendererApi.events_ipc.emit("browser_get_user_agent", { type });
+      return ipc$1.invoke(browserChannels.getUserAgent, type);
+    },
+    updateUserAgent: () => {
+      extensionRendererApi.events_ipc.emit("browser_update_user_agent", {});
+      ipc$1.send(browserChannels.updateUserAgent);
+    },
+    addOffset: (id, offset) => {
+      extensionRendererApi.events_ipc.emit("browser_add_offset", { id, offset });
+      ipc$1.send(browserChannels.addOffset, id, offset);
+    },
+    clearHistory: (selected) => ipc$1.send(browserChannels.clearHistory, selected)
+  }};
+
+mitt();
+const emitter_ipc = mitt();
+const extensionRendererApi = {
+  events_ipc: {
+    on: emitter_ipc.on,
+    off: emitter_ipc.off,
+    emit: emitter_ipc.emit,
+    getListenerCount: (eventName) => {
+      const listeners = emitter_ipc.all.get(eventName);
+      return listeners ? listeners.length : 0;
+    }
+  }};
 
 const {includes} = await importShared('lodash');
 
@@ -1467,27 +1640,6 @@ createSlice({
   }
 });
 const useCardsState = (name) => useSelector$3((state) => state.cards[name]);
-
-function formatSize(size) {
-  if (!size) return "0KB";
-  if (size < 1024 * 1024) {
-    return `${(size / 1024).toFixed(2)} KB`;
-  } else if (size < 1024 * 1024 * 1024) {
-    return `${(size / (1024 * 1024)).toFixed(2)} MB`;
-  } else {
-    return `${(size / (1024 * 1024 * 1024)).toFixed(2)} GB`;
-  }
-}
-
-const {addToast} = await importShared('@heroui/react');
-
-const {isEmpty: isEmpty$g,isNil: isNil$5} = await importShared('lodash');
-
-const {Fragment,useMemo: useMemo$b} = await importShared('react');
-function useInstalledCard(cardId) {
-  const installedCards = useCardsState("installedCards");
-  return useMemo$b(() => installedCards.find((card) => card.id === cardId), [installedCards, cardId]);
-}
 
 /** Detect free variable `global` from Node.js. */
 
@@ -1749,9 +1901,10 @@ const initialState$2 = {
   maximized: false,
   onFocus: true,
   navBar: true,
-  appTitle: void 0
+  appTitle: void 0,
+  toastPlacement: "top-center"
 };
-createSlice({
+const appSlice = createSlice({
   name: "app",
   initialState: initialState$2,
   reducers: {
@@ -1760,6 +1913,9 @@ createSlice({
     },
     setAppTitle: (state, action) => {
       state.appTitle = action.payload;
+    },
+    setToastPlacement: (state, action) => {
+      state.toastPlacement = action.payload;
     },
     toggleAppState: (state, action) => {
       const key = action.payload;
@@ -1770,6 +1926,42 @@ createSlice({
   }
 });
 const useAppState = (key) => useSelector$2((state) => state.app[key]);
+const appActions = appSlice.actions;
+
+const {addToast,Button: Button$o} = await importShared('@heroui/react');
+
+const {isEmpty: isEmpty$g,isNil: isNil$4} = await importShared('lodash');
+
+const {Fragment: Fragment$1,useEffect: useEffect$q,useMemo: useMemo$d,useState: useState$u} = await importShared('react');
+function useInstalledCard(cardId) {
+  const installedCards = useCardsState("installedCards");
+  return useMemo$d(() => installedCards.find((card) => card.id === cardId), [installedCards, cardId]);
+}
+function topToast(options) {
+  const { title, color = "success", timeout = 2e3, promise, placement } = options;
+  addToast({
+    title,
+    color,
+    variant: "flat",
+    size: "sm",
+    timeout,
+    promise,
+    classNames: {
+      base: placement.includes("top") ? "top-10" : `right-6 bottom-8 flex flex-col gap-y-2 cursor-default ${color === "danger" && "pt-6"}`
+    },
+    endContent: placement.includes("bottom") && color === "danger" ? /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "w-full flex flex-row justify-end", children: /* @__PURE__ */ jsxRuntimeExports.jsx(Button$o, { size: "sm", color: "warning", variant: "light", children: "Restart App" }) }) : null
+  });
+}
+const lynxTopToast = (dispatch, placement = "top-center") => {
+  dispatch(appActions.setToastPlacement(placement));
+  return {
+    success: (title, timeout) => topToast({ title, color: "success", timeout, placement }),
+    error: (title, timeout) => topToast({ title, color: "danger", timeout, placement }),
+    warning: (title, timeout) => topToast({ title, color: "warning", timeout, placement }),
+    info: (title, timeout) => topToast({ title, color: "default", timeout, placement }),
+    loading: (title, promise) => topToast({ title, color: "default", promise, timeout: 1, placement })
+  };
+};
 
 const {isEmpty: isEmpty$f} = await importShared('lodash');
 function convertBlobToDataUrl(blob) {
@@ -1853,7 +2045,7 @@ const isNull = t => t === null;
 
 const isNumber = t => typeof t === "number";
 
-const isString = t => typeof t === "string";
+const isString$3 = t => typeof t === "string";
 
 const isBoolean = t => typeof t === "boolean";
 
@@ -1893,7 +2085,7 @@ const inArray = (t, n) => t.indexOf(n) >= 0;
 const concat = (t, n) => t.concat(n);
 
 const push = (t, n, o) => {
-  if (!isString(n) && isArrayLike(n)) {
+  if (!isString$3(n) && isArrayLike(n)) {
     Array.prototype.push.apply(t, n);
   } else {
     t.push(n);
@@ -1907,7 +2099,7 @@ const createOrKeepArray = t => {
   if (isArray(t)) {
     return t;
   }
-  return !isString(t) && isArrayLike(t) ? from(t) : [ t ];
+  return !isString$3(t) && isArrayLike(t) ? from(t) : [ t ];
 };
 
 const isEmptyArray = t => !!t && !t.length;
@@ -2003,7 +2195,7 @@ const getDebouncer = t => {
   return n && n._;
 };
 
-const debounce = (t, n) => {
+const debounce$1 = (t, n) => {
   const {p: o, v: s, S: e, m: c} = n || {};
   let r;
   let i;
@@ -2260,7 +2452,7 @@ function setStyles(t, n) {
 }
 
 function getStyles(t, o, s) {
-  const e = isString(o);
+  const e = isString$3(o);
   let c = e ? "" : {};
   if (t) {
     const r = n.getComputedStyle(t, s) || t.style;
@@ -2468,7 +2660,7 @@ const createEventListenerHub = t => {
     }
   };
   const addEvent = (t, o) => {
-    if (isString(t)) {
+    if (isString$3(t)) {
       const s = n.get(t) || new Set;
       n.set(t, s);
       manageListener((t => {
@@ -2857,7 +3049,7 @@ const createEventContentChange = (t, n, o) => {
 const createDOMObserver = (t, n, o, s) => {
   let e = false;
   const {et: c, ct: r, rt: i, it: l, lt: a, ut: u} = s || {};
-  const _ = debounce((() => e && o(true)), {
+  const _ = debounce$1((() => e && o(true)), {
     p: 33,
     v: 99
   });
@@ -2880,7 +3072,7 @@ const createDOMObserver = (t, n, o, s) => {
         const y = t === c;
         const S = b && e;
         const m = S && getAttr(c, e || "");
-        const O = isString(m) ? m : null;
+        const O = isString$3(m) ? m : null;
         const $ = S && u !== O;
         const C = inArray(g, e) && $;
         if (n && (w || !y)) {
@@ -2987,7 +3179,7 @@ const createSizeObserver = (t, n, o) => {
         Dt = Dt || false;
         n.disconnect();
       }
-      const n = debounce(onSizeChangedCallbackProxy, {
+      const n = debounce$1(onSizeChangedCallbackProxy, {
         p: 0,
         v: 0
       });
@@ -3101,7 +3293,7 @@ const createObserversSetup = (t, n, o, s) => {
       h: f.h + _.h
     };
   }));
-  const E = debounce(s, {
+  const E = debounce$1(s, {
     p: () => e,
     v: () => c,
     m(t, n) {
@@ -3184,7 +3376,7 @@ const createObserversSetup = (t, n, o, s) => {
     });
     l = n;
   }));
-  const R = debounce((() => {
+  const R = debounce$1((() => {
     const [, t] = H();
     s({
       xt: t
@@ -4628,6 +4820,72 @@ const S = () => {
   /* @__PURE__ */ w.createElement(s, { "data-overlayscrollbars-initialize": "", ref: n, ...u }, t === "body" ? r : /* @__PURE__ */ w.createElement("div", { "data-overlayscrollbars-contents": "", ref: e }, r));
 }, g = E(q);
 
+const {cn,Switch} = await importShared('@heroui/react');
+
+const {useCallback: useCallback$a,useEffect: useEffect$p,useMemo: useMemo$c,useState: useState$t} = await importShared('react');
+
+function LynxSwitch({
+  enabled = false,
+  onEnabledChange,
+  title,
+  description,
+  isDisabled,
+  className,
+  size = "default"
+}) {
+  const [isSelected, setIsSelected] = useState$t(enabled);
+  useEffect$p(() => {
+    setIsSelected(enabled);
+  }, [enabled]);
+  const onChange = useCallback$a(
+    (selected) => {
+      setIsSelected(selected);
+      onEnabledChange?.(selected);
+    },
+    [onEnabledChange]
+  );
+  const baseClassName = useMemo$c(() => {
+    return cn(
+      "inline-flex flex-row-reverse w-full max-w-full items-center",
+      "dark:bg-default-100 bg-default-200 dark:hover:bg-default-200 hover:bg-default-100",
+      "justify-between cursor-pointer rounded-lg gap-2 transition duration-300",
+      size === "sm" ? "px-2 py-1" : "px-4 py-2.5",
+      "border-2 border-transparent data-[selected=true]:border-secondary/40"
+    );
+  }, [size]);
+  const wrapperClassName = useMemo$c(() => {
+    return `p-0 ${size === "sm" ? "w-8 h-2" : "w-10 h-3.5"} bg-foreground-300 overflow-visible`;
+  }, [size]);
+  const thumbClassName = useMemo$c(() => {
+    return cn(
+      size === "sm" ? "w-4 h-4" : "w-5 h-5",
+      "shadow-md bg-white dark:bg-white",
+      `group-data-[selected=true]:${size === "sm" ? "ml-4" : "ml-5"}`,
+      "group-data-[pressed=true]:w-7 shrink-0",
+      "group-data-[selected]:group-data-[pressed]:ml-4"
+    );
+  }, [size]);
+  return /* @__PURE__ */ jsxRuntimeExports.jsx(
+    Switch,
+    {
+      classNames: {
+        base: baseClassName,
+        wrapper: wrapperClassName,
+        thumb: thumbClassName
+      },
+      color: "secondary",
+      isSelected,
+      isDisabled,
+      onValueChange: onChange,
+      className: "cursor-default whitespace-pre-line " + className,
+      children: /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "flex flex-col gap-1", children: [
+        /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "text-sm", children: title }),
+        description && /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "text-tiny text-default-400", children: description })
+      ] })
+    }
+  );
+}
+
 const PageID = {
   home: "home_page"};
 const modalMotionProps = {
@@ -4782,7 +5040,7 @@ const tabsSlice = createSlice({
 const useTabsState = (key) => useSelector$1((state) => state.tabs[key]);
 const tabsActions = tabsSlice.actions;
 
-const PYTHON_SUPPORTED_AI = [
+const ModulesThatSupportPython = [
   "LSHQQYTIGER_SD",
   "LSHQQYTIGER_Forge_SD",
   "Automatic1111_SD",
@@ -4790,18 +5048,51 @@ const PYTHON_SUPPORTED_AI = [
   "ComfyUI_Zluda_ID",
   "VLADMANDIC_SD",
   "Lllyasviel_SD",
+  "InvokeAI_SD",
+  "OpenWebUI_TG",
   "Nerogar_SD",
   "Anapnoe_SD",
   "Erew123_SD",
   "Oobabooga_TG",
   "Gitmylo_AG",
-  "OpenWebUI_TG"
+  "Bmaltais_SD",
+  "LoLLMS_TG"
 ];
+const AvailableModules = {
+  a1: "Automatic1111_SD",
+  sdAmd: "LSHQQYTIGER_SD",
+  sdForgeAmd: "LSHQQYTIGER_Forge_SD",
+  sdForge: "Lllyasviel_SD",
+  comfyui: "ComfyUI_SD",
+  comfyuiZluda: "ComfyUI_Zluda_ID",
+  sdNext: "VLADMANDIC_SD",
+  kohya: "Bmaltais_SD",
+  onetrainer: "Nerogar_SD",
+  sdUiux: "Anapnoe_SD",
+  invoke: "InvokeAI_SD",
+  alltalk: "Erew123_SD",
+  tg: "Oobabooga_TG",
+  openWebui: "OpenWebUI_TG",
+  lollms: "LoLLMS_TG",
+  ag: "Gitmylo_AG"
+};
+const FolderDiskUsage_StorageID = "pythonToolkit_FolderDiskUsage";
+const getDiskUsageID = (path) => `${FolderDiskUsage_StorageID}_${path}`;
 
 const {useSelector} = await importShared('react-redux');
 
 const initialState = {
-  menuModal: []
+  menuModal: [],
+  settingsModal: [],
+  pkgNameDisplay: "default",
+  pythonVenvSelected: {
+    id: "",
+    label: "",
+    type: "python",
+    dir: ""
+  },
+  cacheStorageUsage: true,
+  associates: []
 };
 const pythonToolkitReducer = createSlice({
   initialState,
@@ -4817,6 +5108,29 @@ const pythonToolkitReducer = createSlice({
     },
     removeMenuModal: (state, action) => {
       state.menuModal = state.menuModal.filter((item) => item.context.tabID !== action.payload.tabID);
+    },
+    openSettingsModal: (state, action) => {
+      state.settingsModal.push({ isOpen: true, context: action.payload });
+    },
+    closeSettingsModal: (state, action) => {
+      state.settingsModal = state.settingsModal.map(
+        (modal) => modal.context.tabID === action.payload.tabID ? { ...modal, isOpen: false } : modal
+      );
+    },
+    removeSettingsModal: (state, action) => {
+      state.settingsModal = state.settingsModal.filter((item) => item.context.tabID !== action.payload.tabID);
+    },
+    setPkgDisplay: (state, action) => {
+      state.pkgNameDisplay = action.payload;
+    },
+    setSelectedPythonVenv: (state, action) => {
+      state.pythonVenvSelected = action.payload;
+    },
+    setCacheStorageUsage: (state, action) => {
+      state.cacheStorageUsage = action.payload;
+    },
+    setAssociates: (state, action) => {
+      state.associates = action.payload;
     }
   }
 });
@@ -4906,14 +5220,15 @@ function Env_Icon(props) {
     /* @__PURE__ */ jsxRuntimeExports.jsx(
       "path",
       {
-        fill: "url(#vscodeIconsFileTypePyenv0)",
+        fill: "currentColor",
         d: "M15.885 2.1c-7.1 0-6.651 3.07-6.651 3.07v3.19h6.752v1H6.545S2 8.8 2 16.005s4.013 6.912 4.013 6.912H8.33v-3.361s-.13-4.013 3.9-4.013h6.762s3.772.06 3.772-3.652V5.8s.572-3.712-6.842-3.712Zm-3.732 2.137a1.214 1.214 0 1 1-1.183 1.244v-.02a1.214 1.214 0 0 1 1.214-1.214Z"
       }
     ),
     /* @__PURE__ */ jsxRuntimeExports.jsx(
       "path",
       {
-        fill: "url(#vscodeIconsFileTypePyenv1)",
+        opacity: "40%",
+        fill: "currentColor",
         d: "M16.085 29.91c7.1 0 6.651-3.08 6.651-3.08v-3.18h-6.751v-1h9.47S30 23.158 30 15.995s-4.013-6.912-4.013-6.912H23.64V12.4s.13 4.013-3.9 4.013h-6.765S9.2 16.356 9.2 20.068V26.2s-.572 3.712 6.842 3.712h.04Zm3.732-2.147A1.214 1.214 0 1 1 21 26.519v.03a1.214 1.214 0 0 1-1.214 1.214z"
       }
     )
@@ -5004,20 +5319,58 @@ function HardDrive_Icon(props) {
     }
   ) });
 }
+function TrashDuo_Icon(props) {
+  return /* @__PURE__ */ jsxRuntimeExports.jsxs("svg", { ...props, width: "1em", height: "1em", viewBox: "0 0 24 24", xmlns: "http://www.w3.org/2000/svg", children: [
+    /* @__PURE__ */ jsxRuntimeExports.jsx(
+      "path",
+      {
+        fill: "currentColor",
+        d: "M2.75 6.167c0-.46.345-.834.771-.834h2.665c.529-.015.996-.378 1.176-.916l.03-.095l.115-.372c.07-.228.131-.427.217-.605c.338-.702.964-1.189 1.687-1.314c.184-.031.377-.031.6-.031h3.478c.223 0 .417 0 .6.031c.723.125 1.35.612 1.687 1.314c.086.178.147.377.217.605l.115.372l.03.095c.18.538.74.902 1.27.916h2.57c.427 0 .772.373.772.834S20.405 7 19.979 7H3.52c-.426 0-.771-.373-.771-.833"
+      }
+    ),
+    /* @__PURE__ */ jsxRuntimeExports.jsx(
+      "path",
+      {
+        opacity: 0.5,
+        fill: "currentColor",
+        d: "M11.607 22h.787c2.707 0 4.06 0 4.941-.863c.88-.864.97-2.28 1.15-5.111l.26-4.081c.098-1.537.147-2.305-.295-2.792s-1.187-.487-2.679-.487H8.23c-1.491 0-2.237 0-2.679.487s-.392 1.255-.295 2.792l.26 4.08c.18 2.833.27 4.248 1.15 5.112S8.9 22 11.607 22"
+      }
+    )
+  ] });
+}
+function CheckCircle_Icon(props) {
+  return /* @__PURE__ */ jsxRuntimeExports.jsxs("svg", { ...props, width: "1em", height: "1em", viewBox: "0 0 24 24", xmlns: "http://www.w3.org/2000/svg", children: [
+    /* @__PURE__ */ jsxRuntimeExports.jsx(
+      "path",
+      {
+        opacity: 0.5,
+        fill: "currentColor",
+        d: "M22 12c0 5.523-4.477 10-10 10S2 17.523 2 12S6.477 2 12 2s10 4.477 10 10"
+      }
+    ),
+    /* @__PURE__ */ jsxRuntimeExports.jsx(
+      "path",
+      {
+        fill: "currentColor",
+        d: "M16.03 8.97a.75.75 0 0 1 0 1.06l-5 5a.75.75 0 0 1-1.06 0l-2-2a.75.75 0 1 1 1.06-1.06l1.47 1.47l2.235-2.235L14.97 8.97a.75.75 0 0 1 1.06 0"
+      }
+    )
+  ] });
+}
 
 const {DropdownItem: DropdownItem$6,DropdownSection: DropdownSection$1} = await importShared('@heroui/react');
 
-const {useCallback: useCallback$6} = await importShared('react');
+const {useCallback: useCallback$9} = await importShared('react');
 
-const {useDispatch: useDispatch$3} = await importShared('react-redux');
+const {useDispatch: useDispatch$c} = await importShared('react-redux');
 function CardMenu({ context }) {
   const activeTab = useTabsState("activeTab");
-  const dispatch = useDispatch$3();
-  const onPress = useCallback$6(() => {
+  const dispatch = useDispatch$c();
+  const onPress = useCallback$9(() => {
     dispatch(PythonToolkitActions.openMenuModal({ title: context.title, id: context.id, tabID: activeTab }));
     context?.setMenuIsOpen(false);
   }, [context, activeTab]);
-  if (!PYTHON_SUPPORTED_AI.includes(context.id)) return null;
+  if (!ModulesThatSupportPython.includes(context.id)) return null;
   return /* @__PURE__ */ jsxRuntimeExports.jsx(DropdownSection$1, { showDivider: true, children: /* @__PURE__ */ jsxRuntimeExports.jsx(
     DropdownItem$6,
     {
@@ -5059,15 +5412,23 @@ const pythonChannels = {
   setReqPath: "set-requirements-path",
   getReqPath: "get-requirements-path",
   findReq: "find-req-file",
-  locateAIVenv: "locate-ai-venv",
-  getAIVenv: "get-ai-venv",
-  addAIVenv: "add-ai-venv",
-  removeAIVenv: "remove-ai-venv",
-  removeAIVenvPath: "remove-ai-venv-path",
-  getAIVenvs: "get-ai-venvs",
+  getAssociates: "get-ai-venvs",
+  addAssociate: "add-ai-venv",
+  removeAssociate: "remove-ai-venv",
+  removeAssociatePath: "remove-ai-venv-path",
+  getExePathAssociate: "get-exe-path-associate",
   findAIVenv: "find-ai-venv",
-  checkAIVenvEnabled: "check-ai-venv-enable",
-  readFile: "read-file"
+  readFile: "read-file",
+  getMaxRetry: "get-max-retry",
+  setMaxRetry: "set-max-retry",
+  getPkgDisplay: "get-pkg-display",
+  setPkgDisplay: "set-pkg-display",
+  getCacheStorageUsage: "get-cache-storage-usage",
+  setCacheStorageUsage: "set-cache-storage-usage",
+  getCardStartCommand: "get-card-start-command",
+  setCardStartCommand: "set-card-start-command",
+  replacePythonPath: "ptoolkit-replace-python-path",
+  errorGetVenvInfo: "ptoolkit-errorGetVenvInfo"
 };
 
 const ipc = window.electron.ipcRenderer;
@@ -5101,16 +5462,25 @@ const pIpc = {
   on_DlProgressConda: (result) => ipc.on(pythonChannels.downloadProgressConda, result),
   installConda: (envName, version) => ipc.invoke(pythonChannels.installConda, envName, version),
   isCondaInstalled: () => ipc.invoke(pythonChannels.isCondaInstalled),
-  locateAIVenv: (id) => ipc.invoke(pythonChannels.locateAIVenv, id),
-  getAIVenv: (id) => ipc.invoke(pythonChannels.getAIVenv, id),
-  addAIVenv: (id, pythonPath) => ipc.send(pythonChannels.addAIVenv, id, pythonPath),
-  removeAIVenv: (id) => ipc.send(pythonChannels.removeAIVenv, id),
-  removeAIVenvPath: (path) => ipc.send(pythonChannels.removeAIVenvPath, path),
-  getAIVenvs: () => ipc.invoke(pythonChannels.getAIVenvs),
+  getAssociates: () => ipc.invoke(pythonChannels.getAssociates),
+  addAssociate: (data) => ipc.send(pythonChannels.addAssociate, data),
+  removeAssociate: (id) => ipc.send(pythonChannels.removeAssociate, id),
+  removeAssociatePath: (path) => ipc.send(pythonChannels.removeAssociatePath, path),
+  getExePathAssociate: (item) => ipc.invoke(pythonChannels.getExePathAssociate, item),
   findAIVenv: (id, folder) => ipc.invoke(pythonChannels.findAIVenv, id, folder),
-  checkAIVenvEnabled: () => ipc.send(pythonChannels.checkAIVenvEnabled),
   getUpdatesReq: (reqFile, currentPackages) => ipc.invoke(pythonChannels.getUpdatesReq, reqFile, currentPackages),
-  readFile: () => ipc.invoke(pythonChannels.readFile)
+  readFile: () => ipc.invoke(pythonChannels.readFile),
+  getMaxRetry: () => ipc.invoke(pythonChannels.getMaxRetry),
+  setMaxRetry: (value) => ipc.send(pythonChannels.setMaxRetry, value),
+  getPkgDisplay: () => ipc.invoke(pythonChannels.getPkgDisplay),
+  setPkgDisplay: (value) => ipc.send(pythonChannels.setPkgDisplay, value),
+  getCacheStorageUsage: () => ipc.invoke(pythonChannels.getCacheStorageUsage),
+  setCacheStorageUsage: (value) => ipc.send(pythonChannels.setCacheStorageUsage, value),
+  getCardStartCommand: () => ipc.invoke(pythonChannels.getCardStartCommand),
+  setCardStartCommand: (value) => ipc.send(pythonChannels.setCardStartCommand, value),
+  replacePythonPath: (pythonPath) => ipc.invoke(pythonChannels.replacePythonPath, pythonPath),
+  onErrorGetVenvInfo: (result) => ipc.on(pythonChannels.errorGetVenvInfo, result),
+  offErrorGetVenvInfo: () => ipc.removeAllListeners(pythonChannels.errorGetVenvInfo)
 };
 
 var re = {exports: {}};
@@ -5121,6 +5491,7 @@ var hasRequiredConstants;
 function requireConstants () {
 	if (hasRequiredConstants) return constants;
 	hasRequiredConstants = 1;
+
 	// Note: this is the semver.org version of the spec that it implements
 	// Not necessarily the package version of this code.
 	const SEMVER_SPEC_VERSION = '2.0.0';
@@ -5178,6 +5549,7 @@ function requireRe () {
 	if (hasRequiredRe) return re.exports;
 	hasRequiredRe = 1;
 	(function (module, exports) {
+
 		const {
 		  MAX_SAFE_COMPONENT_LENGTH,
 		  MAX_SAFE_BUILD_LENGTH,
@@ -5256,12 +5628,14 @@ function requireRe () {
 
 		// ## Pre-release Version Identifier
 		// A numeric identifier, or a non-numeric identifier.
+		// Non-numberic identifiers include numberic identifiers but can be longer.
+		// Therefore non-numberic identifiers must go first.
 
-		createToken('PRERELEASEIDENTIFIER', `(?:${src[t.NUMERICIDENTIFIER]
-		}|${src[t.NONNUMERICIDENTIFIER]})`);
+		createToken('PRERELEASEIDENTIFIER', `(?:${src[t.NONNUMERICIDENTIFIER]
+		}|${src[t.NUMERICIDENTIFIER]})`);
 
-		createToken('PRERELEASEIDENTIFIERLOOSE', `(?:${src[t.NUMERICIDENTIFIERLOOSE]
-		}|${src[t.NONNUMERICIDENTIFIER]})`);
+		createToken('PRERELEASEIDENTIFIERLOOSE', `(?:${src[t.NONNUMERICIDENTIFIER]
+		}|${src[t.NUMERICIDENTIFIERLOOSE]})`);
 
 		// ## Pre-release Version
 		// Hyphen, followed by one or more dot-separated pre-release version
@@ -5407,6 +5781,7 @@ var hasRequiredParseOptions;
 function requireParseOptions () {
 	if (hasRequiredParseOptions) return parseOptions_1;
 	hasRequiredParseOptions = 1;
+
 	// parse out just the options we care about
 	const looseOption = Object.freeze({ loose: true });
 	const emptyOpts = Object.freeze({ });
@@ -5431,6 +5806,7 @@ var hasRequiredIdentifiers;
 function requireIdentifiers () {
 	if (hasRequiredIdentifiers) return identifiers;
 	hasRequiredIdentifiers = 1;
+
 	const numeric = /^[0-9]+$/;
 	const compareIdentifiers = (a, b) => {
 	  const anum = numeric.test(a);
@@ -5463,9 +5839,10 @@ var hasRequiredSemver$1;
 function requireSemver$1 () {
 	if (hasRequiredSemver$1) return semver$2;
 	hasRequiredSemver$1 = 1;
+
 	const debug = /*@__PURE__*/ requireDebug();
 	const { MAX_LENGTH, MAX_SAFE_INTEGER } = /*@__PURE__*/ requireConstants();
-	const { safeRe: re, safeSrc: src, t } = /*@__PURE__*/ requireRe();
+	const { safeRe: re, t } = /*@__PURE__*/ requireRe();
 
 	const parseOptions = /*@__PURE__*/ requireParseOptions();
 	const { compareIdentifiers } = /*@__PURE__*/ requireIdentifiers();
@@ -5647,8 +6024,7 @@ function requireSemver$1 () {
 	      }
 	      // Avoid an invalid semver results
 	      if (identifier) {
-	        const r = new RegExp(`^${this.options.loose ? src[t.PRERELEASELOOSE] : src[t.PRERELEASE]}$`);
-	        const match = `-${identifier}`.match(r);
+	        const match = `-${identifier}`.match(this.options.loose ? re[t.PRERELEASELOOSE] : re[t.PRERELEASE]);
 	        if (!match || match[1] !== identifier) {
 	          throw new Error(`invalid identifier: ${identifier}`)
 	        }
@@ -5790,6 +6166,7 @@ var hasRequiredParse;
 function requireParse () {
 	if (hasRequiredParse) return parse_1;
 	hasRequiredParse = 1;
+
 	const SemVer = /*@__PURE__*/ requireSemver$1();
 	const parse = (version, options, throwErrors = false) => {
 	  if (version instanceof SemVer) {
@@ -5815,6 +6192,7 @@ var hasRequiredValid$1;
 function requireValid$1 () {
 	if (hasRequiredValid$1) return valid_1;
 	hasRequiredValid$1 = 1;
+
 	const parse = /*@__PURE__*/ requireParse();
 	const valid = (version, options) => {
 	  const v = parse(version, options);
@@ -5830,6 +6208,7 @@ var hasRequiredClean;
 function requireClean () {
 	if (hasRequiredClean) return clean_1;
 	hasRequiredClean = 1;
+
 	const parse = /*@__PURE__*/ requireParse();
 	const clean = (version, options) => {
 	  const s = parse(version.trim().replace(/^[=v]+/, ''), options);
@@ -5845,6 +6224,7 @@ var hasRequiredInc;
 function requireInc () {
 	if (hasRequiredInc) return inc_1;
 	hasRequiredInc = 1;
+
 	const SemVer = /*@__PURE__*/ requireSemver$1();
 
 	const inc = (version, release, options, identifier, identifierBase) => {
@@ -5873,6 +6253,7 @@ var hasRequiredDiff;
 function requireDiff () {
 	if (hasRequiredDiff) return diff_1;
 	hasRequiredDiff = 1;
+
 	const parse = /*@__PURE__*/ requireParse();
 
 	const diff = (version1, version2) => {
@@ -5940,6 +6321,7 @@ var hasRequiredMajor;
 function requireMajor () {
 	if (hasRequiredMajor) return major_1;
 	hasRequiredMajor = 1;
+
 	const SemVer = /*@__PURE__*/ requireSemver$1();
 	const major = (a, loose) => new SemVer(a, loose).major;
 	major_1 = major;
@@ -5952,6 +6334,7 @@ var hasRequiredMinor;
 function requireMinor () {
 	if (hasRequiredMinor) return minor_1;
 	hasRequiredMinor = 1;
+
 	const SemVer = /*@__PURE__*/ requireSemver$1();
 	const minor = (a, loose) => new SemVer(a, loose).minor;
 	minor_1 = minor;
@@ -5964,6 +6347,7 @@ var hasRequiredPatch;
 function requirePatch () {
 	if (hasRequiredPatch) return patch_1;
 	hasRequiredPatch = 1;
+
 	const SemVer = /*@__PURE__*/ requireSemver$1();
 	const patch = (a, loose) => new SemVer(a, loose).patch;
 	patch_1 = patch;
@@ -5976,6 +6360,7 @@ var hasRequiredPrerelease;
 function requirePrerelease () {
 	if (hasRequiredPrerelease) return prerelease_1;
 	hasRequiredPrerelease = 1;
+
 	const parse = /*@__PURE__*/ requireParse();
 	const prerelease = (version, options) => {
 	  const parsed = parse(version, options);
@@ -5991,6 +6376,7 @@ var hasRequiredCompare;
 function requireCompare () {
 	if (hasRequiredCompare) return compare_1;
 	hasRequiredCompare = 1;
+
 	const SemVer = /*@__PURE__*/ requireSemver$1();
 	const compare = (a, b, loose) =>
 	  new SemVer(a, loose).compare(new SemVer(b, loose));
@@ -6005,6 +6391,7 @@ var hasRequiredRcompare;
 function requireRcompare () {
 	if (hasRequiredRcompare) return rcompare_1;
 	hasRequiredRcompare = 1;
+
 	const compare = /*@__PURE__*/ requireCompare();
 	const rcompare = (a, b, loose) => compare(b, a, loose);
 	rcompare_1 = rcompare;
@@ -6017,6 +6404,7 @@ var hasRequiredCompareLoose;
 function requireCompareLoose () {
 	if (hasRequiredCompareLoose) return compareLoose_1;
 	hasRequiredCompareLoose = 1;
+
 	const compare = /*@__PURE__*/ requireCompare();
 	const compareLoose = (a, b) => compare(a, b, true);
 	compareLoose_1 = compareLoose;
@@ -6029,6 +6417,7 @@ var hasRequiredCompareBuild;
 function requireCompareBuild () {
 	if (hasRequiredCompareBuild) return compareBuild_1;
 	hasRequiredCompareBuild = 1;
+
 	const SemVer = /*@__PURE__*/ requireSemver$1();
 	const compareBuild = (a, b, loose) => {
 	  const versionA = new SemVer(a, loose);
@@ -6045,6 +6434,7 @@ var hasRequiredSort;
 function requireSort () {
 	if (hasRequiredSort) return sort_1;
 	hasRequiredSort = 1;
+
 	const compareBuild = /*@__PURE__*/ requireCompareBuild();
 	const sort = (list, loose) => list.sort((a, b) => compareBuild(a, b, loose));
 	sort_1 = sort;
@@ -6057,6 +6447,7 @@ var hasRequiredRsort;
 function requireRsort () {
 	if (hasRequiredRsort) return rsort_1;
 	hasRequiredRsort = 1;
+
 	const compareBuild = /*@__PURE__*/ requireCompareBuild();
 	const rsort = (list, loose) => list.sort((a, b) => compareBuild(b, a, loose));
 	rsort_1 = rsort;
@@ -6069,6 +6460,7 @@ var hasRequiredGt;
 function requireGt () {
 	if (hasRequiredGt) return gt_1;
 	hasRequiredGt = 1;
+
 	const compare = /*@__PURE__*/ requireCompare();
 	const gt = (a, b, loose) => compare(a, b, loose) > 0;
 	gt_1 = gt;
@@ -6081,6 +6473,7 @@ var hasRequiredLt;
 function requireLt () {
 	if (hasRequiredLt) return lt_1;
 	hasRequiredLt = 1;
+
 	const compare = /*@__PURE__*/ requireCompare();
 	const lt = (a, b, loose) => compare(a, b, loose) < 0;
 	lt_1 = lt;
@@ -6093,6 +6486,7 @@ var hasRequiredEq;
 function requireEq () {
 	if (hasRequiredEq) return eq_1;
 	hasRequiredEq = 1;
+
 	const compare = /*@__PURE__*/ requireCompare();
 	const eq = (a, b, loose) => compare(a, b, loose) === 0;
 	eq_1 = eq;
@@ -6105,6 +6499,7 @@ var hasRequiredNeq;
 function requireNeq () {
 	if (hasRequiredNeq) return neq_1;
 	hasRequiredNeq = 1;
+
 	const compare = /*@__PURE__*/ requireCompare();
 	const neq = (a, b, loose) => compare(a, b, loose) !== 0;
 	neq_1 = neq;
@@ -6117,6 +6512,7 @@ var hasRequiredGte;
 function requireGte () {
 	if (hasRequiredGte) return gte_1;
 	hasRequiredGte = 1;
+
 	const compare = /*@__PURE__*/ requireCompare();
 	const gte = (a, b, loose) => compare(a, b, loose) >= 0;
 	gte_1 = gte;
@@ -6129,6 +6525,7 @@ var hasRequiredLte;
 function requireLte () {
 	if (hasRequiredLte) return lte_1;
 	hasRequiredLte = 1;
+
 	const compare = /*@__PURE__*/ requireCompare();
 	const lte = (a, b, loose) => compare(a, b, loose) <= 0;
 	lte_1 = lte;
@@ -6141,6 +6538,7 @@ var hasRequiredCmp;
 function requireCmp () {
 	if (hasRequiredCmp) return cmp_1;
 	hasRequiredCmp = 1;
+
 	const eq = /*@__PURE__*/ requireEq();
 	const neq = /*@__PURE__*/ requireNeq();
 	const gt = /*@__PURE__*/ requireGt();
@@ -6202,6 +6600,7 @@ var hasRequiredCoerce;
 function requireCoerce () {
 	if (hasRequiredCoerce) return coerce_1;
 	hasRequiredCoerce = 1;
+
 	const SemVer = /*@__PURE__*/ requireSemver$1();
 	const parse = /*@__PURE__*/ requireParse();
 	const { safeRe: re, t } = /*@__PURE__*/ requireRe();
@@ -6271,6 +6670,7 @@ var hasRequiredLrucache;
 function requireLrucache () {
 	if (hasRequiredLrucache) return lrucache;
 	hasRequiredLrucache = 1;
+
 	class LRUCache {
 	  constructor () {
 	    this.max = 1000;
@@ -6320,6 +6720,7 @@ var hasRequiredRange;
 function requireRange () {
 	if (hasRequiredRange) return range;
 	hasRequiredRange = 1;
+
 	const SPACE_CHARACTERS = /\s+/g;
 
 	// hoisted class for cyclic dependency
@@ -6883,6 +7284,7 @@ var hasRequiredComparator;
 function requireComparator () {
 	if (hasRequiredComparator) return comparator;
 	hasRequiredComparator = 1;
+
 	const ANY = Symbol('SemVer ANY');
 	// hoisted class for cyclic dependency
 	class Comparator {
@@ -7033,6 +7435,7 @@ var hasRequiredSatisfies;
 function requireSatisfies () {
 	if (hasRequiredSatisfies) return satisfies_1;
 	hasRequiredSatisfies = 1;
+
 	const Range = /*@__PURE__*/ requireRange();
 	const satisfies = (version, range, options) => {
 	  try {
@@ -7052,6 +7455,7 @@ var hasRequiredToComparators;
 function requireToComparators () {
 	if (hasRequiredToComparators) return toComparators_1;
 	hasRequiredToComparators = 1;
+
 	const Range = /*@__PURE__*/ requireRange();
 
 	// Mostly just for testing and legacy API reasons
@@ -7069,6 +7473,7 @@ var hasRequiredMaxSatisfying;
 function requireMaxSatisfying () {
 	if (hasRequiredMaxSatisfying) return maxSatisfying_1;
 	hasRequiredMaxSatisfying = 1;
+
 	const SemVer = /*@__PURE__*/ requireSemver$1();
 	const Range = /*@__PURE__*/ requireRange();
 
@@ -7103,6 +7508,7 @@ var hasRequiredMinSatisfying;
 function requireMinSatisfying () {
 	if (hasRequiredMinSatisfying) return minSatisfying_1;
 	hasRequiredMinSatisfying = 1;
+
 	const SemVer = /*@__PURE__*/ requireSemver$1();
 	const Range = /*@__PURE__*/ requireRange();
 	const minSatisfying = (versions, range, options) => {
@@ -7136,6 +7542,7 @@ var hasRequiredMinVersion;
 function requireMinVersion () {
 	if (hasRequiredMinVersion) return minVersion_1;
 	hasRequiredMinVersion = 1;
+
 	const SemVer = /*@__PURE__*/ requireSemver$1();
 	const Range = /*@__PURE__*/ requireRange();
 	const gt = /*@__PURE__*/ requireGt();
@@ -7206,6 +7613,7 @@ var hasRequiredValid;
 function requireValid () {
 	if (hasRequiredValid) return valid;
 	hasRequiredValid = 1;
+
 	const Range = /*@__PURE__*/ requireRange();
 	const validRange = (range, options) => {
 	  try {
@@ -7226,6 +7634,7 @@ var hasRequiredOutside;
 function requireOutside () {
 	if (hasRequiredOutside) return outside_1;
 	hasRequiredOutside = 1;
+
 	const SemVer = /*@__PURE__*/ requireSemver$1();
 	const Comparator = /*@__PURE__*/ requireComparator();
 	const { ANY } = Comparator;
@@ -7315,6 +7724,7 @@ var hasRequiredGtr;
 function requireGtr () {
 	if (hasRequiredGtr) return gtr_1;
 	hasRequiredGtr = 1;
+
 	// Determine if version is greater than all the versions possible in the range.
 	const outside = /*@__PURE__*/ requireOutside();
 	const gtr = (version, range, options) => outside(version, range, '>', options);
@@ -7328,6 +7738,7 @@ var hasRequiredLtr;
 function requireLtr () {
 	if (hasRequiredLtr) return ltr_1;
 	hasRequiredLtr = 1;
+
 	const outside = /*@__PURE__*/ requireOutside();
 	// Determine if version is less than all the versions possible in the range
 	const ltr = (version, range, options) => outside(version, range, '<', options);
@@ -7341,6 +7752,7 @@ var hasRequiredIntersects;
 function requireIntersects () {
 	if (hasRequiredIntersects) return intersects_1;
 	hasRequiredIntersects = 1;
+
 	const Range = /*@__PURE__*/ requireRange();
 	const intersects = (r1, r2, options) => {
 	  r1 = new Range(r1, options);
@@ -7357,6 +7769,7 @@ var hasRequiredSimplify;
 function requireSimplify () {
 	if (hasRequiredSimplify) return simplify;
 	hasRequiredSimplify = 1;
+
 	// given a set of versions and a range, create a "simplified" range
 	// that includes the same versions that the original range does
 	// If the original range is shorter than the simplified one, return that.
@@ -7413,6 +7826,7 @@ var hasRequiredSubset;
 function requireSubset () {
 	if (hasRequiredSubset) return subset_1;
 	hasRequiredSubset = 1;
+
 	const Range = /*@__PURE__*/ requireRange();
 	const Comparator = /*@__PURE__*/ requireComparator();
 	const { ANY } = Comparator;
@@ -7669,6 +8083,7 @@ var hasRequiredSemver;
 function requireSemver () {
 	if (hasRequiredSemver) return semver$1;
 	hasRequiredSemver = 1;
+
 	// just pre-load all the stuff that index.js lazily exports
 	const internalRe = /*@__PURE__*/ requireRe();
 	const constants = /*@__PURE__*/ requireConstants();
@@ -7803,56 +8218,84 @@ function bytesToMegabytes(bytes) {
   return parseFloat(megabytes.toFixed(2));
 }
 
-const {Button: Button$m,Dropdown: Dropdown$5,DropdownItem: DropdownItem$5,DropdownMenu: DropdownMenu$5,DropdownTrigger: DropdownTrigger$5} = await importShared('@heroui/react');
+const {Button: Button$n,CircularProgress: CircularProgress$3,Dropdown: Dropdown$5,DropdownItem: DropdownItem$5,DropdownMenu: DropdownMenu$5,DropdownTrigger: DropdownTrigger$5} = await importShared('@heroui/react');
 
-const {capitalize: capitalize$1} = await importShared('lodash');
+const {useEffect: useEffect$o,useState: useState$s} = await importShared('react');
 
-const {useEffect: useEffect$i,useState: useState$o} = await importShared('react');
-function Body_SelectPythonV({ id, setPythonPath }) {
-  const [installedPythons, setInstalledPythons] = useState$o([]);
-  const handleSelectVersion = (python) => {
-    pIpc.addAIVenv(id, python.installPath);
-    setPythonPath?.(python.installPath);
-  };
-  useEffect$i(() => {
-    pIpc.getInstalledPythons(false).then((result) => {
-      setInstalledPythons(result);
+const {useDispatch: useDispatch$b} = await importShared('react-redux');
+function Body_SelectEnv({ id, setPythonPath }) {
+  const [list, setList] = useState$s([]);
+  const [isLoading, setIsLoading] = useState$s(true);
+  const dispatch = useDispatch$b();
+  const onPress = (python) => {
+    const result = { id, dir: python.dir, type: python.type };
+    pIpc.addAssociate(result);
+    pIpc.getExePathAssociate(result).then((exePath) => {
+      if (setPythonPath && exePath) {
+        setPythonPath(exePath);
+        lynxTopToast(dispatch).success(`${python.label} associated successfully!`);
+      } else {
+        console.warn("PythonToolkit: Exe path or setPythonPath is not defined.");
+      }
+    }).catch((e) => {
+      console.warn("PythonToolkit: Failed to get exe path: ", e);
     });
+  };
+  useEffect$o(() => {
+    setIsLoading(true);
+    Promise.all([pIpc.getInstalledPythons(false), pIpc.getVenvs()]).then(([pythons, venvs]) => {
+      const pythonItems = pythons.map((python) => ({
+        condaName: python.installationType === "conda" ? python.condaName : void 0,
+        label: python.installationType === "conda" ? `${python.version}  |  ${python.condaName}` : python.version,
+        dir: python.installFolder,
+        type: python.installationType === "conda" ? "conda" : "python"
+      }));
+      const venvItems = venvs.map((venv) => ({
+        label: `${venv.pythonVersion}  |  ${venv.name}`,
+        dir: venv.folder,
+        type: "venv"
+      }));
+      const combined = [...pythonItems, ...venvItems];
+      setList(combined);
+    }).catch(console.warn).finally(() => setIsLoading(false));
   }, []);
-  return /* @__PURE__ */ jsxRuntimeExports.jsxs(Dropdown$5, { size: "sm", showArrow: true, children: [
-    /* @__PURE__ */ jsxRuntimeExports.jsx(DropdownTrigger$5, { children: /* @__PURE__ */ jsxRuntimeExports.jsx(Button$m, { color: "secondary", children: "Select Python Version" }, "select_python_version") }),
-    /* @__PURE__ */ jsxRuntimeExports.jsx(DropdownMenu$5, { children: installedPythons.map((p) => /* @__PURE__ */ jsxRuntimeExports.jsx(
-      DropdownItem$5,
-      {
-        onPress: () => handleSelectVersion(p),
-        color: p.isDefault ? "secondary" : "default",
-        children: /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "flex flex-row gap-x-1 items-end", children: [
-          /* @__PURE__ */ jsxRuntimeExports.jsx("span", { className: "font-bold", children: p.version }),
-          /* @__PURE__ */ jsxRuntimeExports.jsx("span", { className: "text-foreground-500 font-semibold text-xs", children: capitalize$1(p.installationType) }),
-          p.isDefault && /* @__PURE__ */ jsxRuntimeExports.jsx("span", { className: "text-xs font-bold text-secondary", children: "System Default" })
-        ] })
-      },
-      p.version
-    )) })
+  return isLoading ? /* @__PURE__ */ jsxRuntimeExports.jsx(
+    CircularProgress$3,
+    {
+      color: "secondary",
+      className: "justify-self-center",
+      label: "Loading available pythons and venvs..."
+    }
+  ) : /* @__PURE__ */ jsxRuntimeExports.jsxs(Dropdown$5, { size: "md", showArrow: true, children: [
+    /* @__PURE__ */ jsxRuntimeExports.jsx(DropdownTrigger$5, { children: /* @__PURE__ */ jsxRuntimeExports.jsx(Button$n, { color: "secondary", children: "Select Environment" }, "select_python_version") }),
+    /* @__PURE__ */ jsxRuntimeExports.jsx(DropdownMenu$5, { items: list, children: (item) => /* @__PURE__ */ jsxRuntimeExports.jsx(DropdownItem$5, { onPress: () => onPress(item), children: /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "flex flex-row gap-x-1 items-end", children: item.type === "python" ? /* @__PURE__ */ jsxRuntimeExports.jsxs("span", { className: "flex flex-row items-center gap-x-2", children: [
+      /* @__PURE__ */ jsxRuntimeExports.jsx(Python_Icon, { className: "text-yellow-300" }),
+      " ",
+      item.label
+    ] }) : /* @__PURE__ */ jsxRuntimeExports.jsxs("span", { className: "flex flex-row items-center gap-x-2", children: [
+      /* @__PURE__ */ jsxRuntimeExports.jsx(Env_Icon, { className: "text-yellow-300" }),
+      " ",
+      item.label
+    ] }) }) }, `${item.label}_${item.dir}`) })
   ] });
 }
 
-const {Button: Button$l,Input: Input$7,Popover: Popover$4,PopoverContent: PopoverContent$4,PopoverTrigger: PopoverTrigger$4} = await importShared('@heroui/react');
+const {Button: Button$m,Input: Input$7,Popover: Popover$4,PopoverContent: PopoverContent$4,PopoverTrigger: PopoverTrigger$4} = await importShared('@heroui/react');
 
 const {message: message$8} = await importShared('antd');
 
 const {isEmpty: isEmpty$e} = await importShared('lodash');
 
-const {useCallback: useCallback$5,useEffect: useEffect$h,useMemo: useMemo$a,useState: useState$n} = await importShared('react');
+const {useCallback: useCallback$8,useEffect: useEffect$n,useMemo: useMemo$b,useState: useState$r} = await importShared('react');
 function ActionButtons({ item, removed, pythonPath, isUninstalling, setIsUninstalling, updated }) {
-  const [isUninstallOpen, setIsUninstallOpen] = useState$n(false);
-  const [isChangeItemOpen, setIsChangeItemOpen] = useState$n(false);
-  const [versionValue, setVersionValue] = useState$n(item.version);
-  const [isChanging, setIsChanging] = useState$n(false);
-  useEffect$h(() => {
+  const [isUninstallOpen, setIsUninstallOpen] = useState$r(false);
+  const [isChangeItemOpen, setIsChangeItemOpen] = useState$r(false);
+  const [versionValue, setVersionValue] = useState$r(item.version);
+  const [isChanging, setIsChanging] = useState$r(false);
+  useEffect$n(() => {
     if (!isChangeItemOpen) setVersionValue(item.version);
   }, [isChangeItemOpen]);
-  const remove = useCallback$5(() => {
+  const remove = useCallback$8(() => {
     setIsUninstallOpen(false);
     setIsUninstalling(true);
     pIpc.uninstallPackage(pythonPath, item.name).then(() => {
@@ -7864,7 +8307,7 @@ function ActionButtons({ item, removed, pythonPath, isUninstalling, setIsUninsta
       setIsUninstalling(false);
     });
   }, [item]);
-  const changeVersion = useCallback$5(() => {
+  const changeVersion = useCallback$8(() => {
     setIsChanging(true);
     setIsChangeItemOpen(false);
     pIpc.changePackageVersion(pythonPath, item.name, item.version, versionValue).then(() => {
@@ -7876,7 +8319,7 @@ function ActionButtons({ item, removed, pythonPath, isUninstalling, setIsUninsta
       setIsChanging(false);
     });
   }, [pythonPath, item, versionValue]);
-  const upgradeProps = useMemo$a(() => {
+  const upgradeProps = useMemo$b(() => {
     if (isEmpty$e(versionValue)) return { color: "default", title: "Invalid Version", disabled: true };
     const currentVersion = semver.coerce(item.version)?.version;
     const targetVersion = semver.coerce(versionValue)?.version;
@@ -7908,14 +8351,14 @@ function ActionButtons({ item, removed, pythonPath, isUninstalling, setIsUninsta
         onOpenChange: setIsUninstallOpen,
         showArrow: true,
         children: [
-          /* @__PURE__ */ jsxRuntimeExports.jsx(PopoverTrigger$4, { children: /* @__PURE__ */ jsxRuntimeExports.jsx(Button$l, { size: "sm", color: "danger", variant: "flat", isLoading: isUninstalling, isIconOnly: true, children: /* @__PURE__ */ jsxRuntimeExports.jsx(Trash_Icon, { className: "size-3.5" }) }) }),
+          /* @__PURE__ */ jsxRuntimeExports.jsx(PopoverTrigger$4, { children: /* @__PURE__ */ jsxRuntimeExports.jsx(Button$m, { size: "sm", color: "danger", variant: "flat", isLoading: isUninstalling, isIconOnly: true, children: /* @__PURE__ */ jsxRuntimeExports.jsx(TrashDuo_Icon, { className: "size-3.5" }) }) }),
           /* @__PURE__ */ jsxRuntimeExports.jsx(PopoverContent$4, { children: /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "p-2 space-y-2", children: [
             /* @__PURE__ */ jsxRuntimeExports.jsxs("span", { children: [
               'Are you sure you want to remove the package "',
               item.name,
               '"?'
             ] }),
-            /* @__PURE__ */ jsxRuntimeExports.jsx(Button$l, { size: "sm", onPress: remove, fullWidth: true, children: "Remove" })
+            /* @__PURE__ */ jsxRuntimeExports.jsx(Button$m, { size: "sm", onPress: remove, fullWidth: true, children: "Remove" })
           ] }) })
         ]
       },
@@ -7931,12 +8374,12 @@ function ActionButtons({ item, removed, pythonPath, isUninstalling, setIsUninsta
         onOpenChange: setIsChangeItemOpen,
         showArrow: true,
         children: [
-          /* @__PURE__ */ jsxRuntimeExports.jsx(PopoverTrigger$4, { children: /* @__PURE__ */ jsxRuntimeExports.jsx(Button$l, { size: "sm", variant: "flat", isLoading: isChanging, isIconOnly: true, children: /* @__PURE__ */ jsxRuntimeExports.jsx(SolarBoxMinimalisticBoldDuotone, { className: "size-3.5" }) }) }),
+          /* @__PURE__ */ jsxRuntimeExports.jsx(PopoverTrigger$4, { children: /* @__PURE__ */ jsxRuntimeExports.jsx(Button$m, { size: "sm", variant: "flat", isLoading: isChanging, isIconOnly: true, children: /* @__PURE__ */ jsxRuntimeExports.jsx(SolarBoxMinimalisticBoldDuotone, { className: "size-3.5" }) }) }),
           /* @__PURE__ */ jsxRuntimeExports.jsx(PopoverContent$4, { children: /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "p-2 space-y-2 flex flex-col items-center", children: [
             /* @__PURE__ */ jsxRuntimeExports.jsx("span", { className: "text-lg", children: item.name }),
             /* @__PURE__ */ jsxRuntimeExports.jsx(Input$7, { size: "sm", value: versionValue, onValueChange: setVersionValue }),
             /* @__PURE__ */ jsxRuntimeExports.jsx(
-              Button$l,
+              Button$m,
               {
                 size: "sm",
                 onPress: changeVersion,
@@ -7954,15 +8397,29 @@ function ActionButtons({ item, removed, pythonPath, isUninstalling, setIsUninsta
   ] });
 }
 
-const {Button: Button$k} = await importShared('@heroui/react');
+const {Button: Button$l} = await importShared('@heroui/react');
 
 const {message: message$7} = await importShared('antd');
 
-const {useCallback: useCallback$4,useState: useState$m} = await importShared('react');
+const {capitalize: capitalize$2,startCase: startCase$2} = await importShared('lodash');
+
+const {useCallback: useCallback$7,useMemo: useMemo$a,useState: useState$q} = await importShared('react');
 function Body_TableItem({ item, pythonPath, updated, removed, columnKey, isSelected }) {
-  const [isUpdating, setIsUpdating] = useState$m(false);
-  const [isUninstalling, setIsUninstalling] = useState$m(false);
-  const update = useCallback$4(() => {
+  const [isUpdating, setIsUpdating] = useState$q(false);
+  const [isUninstalling, setIsUninstalling] = useState$q(false);
+  const pkgNameDisplay = usePythonToolkitState("pkgNameDisplay");
+  const itemName = useMemo$a(() => {
+    switch (pkgNameDisplay) {
+      case "capitalize":
+        return capitalize$2(item.name);
+      case "startCase":
+        return startCase$2(item.name);
+      case "default":
+      default:
+        return item.name;
+    }
+  }, [item, pkgNameDisplay]);
+  const update = useCallback$7(() => {
     setIsUpdating(true);
     pIpc.updatePackage(pythonPath, item.name).then(() => {
       updated(item.name, item.updateVersion);
@@ -7986,14 +8443,14 @@ function Body_TableItem({ item, pythonPath, updated, removed, columnKey, isSelec
       }
     );
   } else if (columnKey === "update") {
-    return !isSelected && !isUninstalling && item.updateVersion && /* @__PURE__ */ jsxRuntimeExports.jsx(Button$k, { size: "sm", variant: "flat", color: "success", onPress: update, isLoading: isUpdating, children: isUpdating ? "Updating..." : "Update" }, "update");
+    return !isSelected && !isUninstalling && item.updateVersion && /* @__PURE__ */ jsxRuntimeExports.jsx(Button$l, { size: "sm", variant: "flat", color: "success", onPress: update, isLoading: isUpdating, children: isUpdating ? "Updating..." : "Update" }, "update");
   } else if (columnKey === "name") {
     return /* @__PURE__ */ jsxRuntimeExports.jsx(jsxRuntimeExports.Fragment, { children: /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "flex flex-col", children: [
-      /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "text-bold text-sm capitalize", children: /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "flex flex-row items-center gap-x-1 text-medium font-semibold", children: [
-        /* @__PURE__ */ jsxRuntimeExports.jsx("span", { children: item.name }),
+      /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "text-bold text-sm", children: /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "flex flex-row items-center gap-x-1 text-medium font-semibold", children: [
+        /* @__PURE__ */ jsxRuntimeExports.jsx("span", { children: itemName }),
         item.updateVersion && /* @__PURE__ */ jsxRuntimeExports.jsx(Warn_Icon, { className: `${getUpdateVersionColor(item.version, item.updateVersion)} size-[1.1rem]` })
       ] }) }),
-      /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "text-bold text-sm capitalize text-default-400", children: /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "flex flex-row items-center gap-x-1 text-tiny", children: [
+      /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "text-bold text-sm text-default-400", children: /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "flex flex-row items-center gap-x-1 text-tiny", children: [
         /* @__PURE__ */ jsxRuntimeExports.jsx("span", { children: item.version }),
         item.updateVersion && /* @__PURE__ */ jsxRuntimeExports.jsxs("span", { children: [
           "(",
@@ -8006,11 +8463,11 @@ function Body_TableItem({ item, pythonPath, updated, removed, columnKey, isSelec
   return null;
 }
 
-const {Button: Button$j,ModalBody: ModalBody$4,Spinner: Spinner$3,Table: Table$1,TableBody: TableBody$1,TableCell: TableCell$1,TableColumn: TableColumn$1,TableHeader: TableHeader$1,TableRow: TableRow$1} = await importShared('@heroui/react');
+const {ModalBody: ModalBody$5,Spinner: Spinner$3,Table: Table$1,TableBody: TableBody$1,TableCell: TableCell$1,TableColumn: TableColumn$1,TableHeader: TableHeader$1,TableRow: TableRow$1} = await importShared('@heroui/react');
 
 const {Result: Result$2} = await importShared('antd');
 
-const {cloneDeep,isEmpty: isEmpty$d} = await importShared('lodash');
+const {cloneDeep: cloneDeep$1,isEmpty: isEmpty$d} = await importShared('lodash');
 const {useMemo: useMemo$9} = await importShared('react');
 function PackageManagerBody({
   id,
@@ -8020,8 +8477,6 @@ function PackageManagerBody({
   updated,
   removed,
   isValidPython,
-  isLocating,
-  locateVenv,
   setSelectedKeys,
   packagesUpdate,
   selectedKeys,
@@ -8041,9 +8496,9 @@ function PackageManagerBody({
     if (anyUpdateAvailable) data.splice(1, 0, { key: "update", label: "Update" });
     return data;
   }, [anyUpdateAvailable]);
-  const refreshedItems = useMemo$9(() => cloneDeep(items), [items, selectedKeys]);
+  const refreshedItems = useMemo$9(() => cloneDeep$1(items), [items, selectedKeys]);
   return /* @__PURE__ */ jsxRuntimeExports.jsx(
-    ModalBody$4,
+    ModalBody$5,
     {
       options: {
         overflow: { x: "hidden", y: "scroll" },
@@ -8091,20 +8546,10 @@ function PackageManagerBody({
       ) }) : /* @__PURE__ */ jsxRuntimeExports.jsx(
         Result$2,
         {
-          subTitle: /* @__PURE__ */ jsxRuntimeExports.jsxs("span", { children: [
-            "Please ",
-            /* @__PURE__ */ jsxRuntimeExports.jsx("span", { className: "text-foreground", children: "locate venv" }),
-            " folder or",
-            " ",
-            /* @__PURE__ */ jsxRuntimeExports.jsx("span", { className: "text-foreground", children: "select python version" }),
-            "."
-          ] }),
-          extra: /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "flex flex-row gap-x-2 justify-center", children: [
-            /* @__PURE__ */ jsxRuntimeExports.jsx(Button$j, { color: "primary", onPress: locateVenv, isLoading: isLocating, children: !isLocating && "Locate VENV" }, "locate_venv"),
-            /* @__PURE__ */ jsxRuntimeExports.jsx(Body_SelectPythonV, { id, setPythonPath })
-          ] }),
           status: "404",
-          title: "Could not find a virtual environment."
+          title: "Could not find a virtual environment.",
+          subTitle: /* @__PURE__ */ jsxRuntimeExports.jsx("span", { children: "Please select your desire environment." }),
+          extra: /* @__PURE__ */ jsxRuntimeExports.jsx(Body_SelectEnv, { id, setPythonPath })
         }
       ) }) })
     }
@@ -8115,13 +8560,13 @@ const {Pagination} = await importShared('@heroui/react');
 
 const {isEmpty: isEmpty$c} = await importShared('lodash');
 
-const {useEffect: useEffect$g,useMemo: useMemo$8,useState: useState$l} = await importShared('react');
+const {useEffect: useEffect$m,useMemo: useMemo$8,useState: useState$p} = await importShared('react');
 
 function Footer_TablePage({ searchData, setItems }) {
-  const [page, setPage] = useState$l(1);
-  const [rowsPerPage] = useState$l(50);
+  const [page, setPage] = useState$p(1);
+  const [rowsPerPage] = useState$p(50);
   const pages = useMemo$8(() => Math.ceil(searchData.length / rowsPerPage), [searchData, rowsPerPage]);
-  useEffect$g(() => {
+  useEffect$m(() => {
     const start = (page - 1) * rowsPerPage;
     const end = start + rowsPerPage;
     const data = searchData.slice(start, end);
@@ -8130,8 +8575,8 @@ function Footer_TablePage({ searchData, setItems }) {
   return /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "flex w-full justify-center absolute left-1/2 -translate-x-1/2", children: !isEmpty$c(searchData) && /* @__PURE__ */ jsxRuntimeExports.jsx(Pagination, { size: "lg", page, total: pages, color: "secondary", onChange: setPage, isCompact: true, showControls: true }) });
 }
 
-const {Button: Button$i,getKeyValue,Input: Input$6,Select: Select$1,SelectItem: SelectItem$1,Table,TableBody,TableCell,TableColumn,TableHeader,TableRow} = await importShared('@heroui/react');
-const {useEffect: useEffect$f,useState: useState$k} = await importShared('react');
+const {Button: Button$k,getKeyValue,Input: Input$6,Select: Select$2,SelectItem: SelectItem$2,Table,TableBody,TableCell,TableColumn,TableHeader,TableRow} = await importShared('@heroui/react');
+const {useEffect: useEffect$l,useState: useState$o} = await importShared('react');
 const operators = [
   { key: "all", label: "Any" },
   { key: "==", label: "==" },
@@ -8144,14 +8589,14 @@ const operators = [
 ];
 function RequirementsManager({ requirements, setRequirements, scrollRef }) {
   const darkMode = useAppState("darkMode");
-  const [tableReq, setTableReq] = useState$k([]);
+  const [tableReq, setTableReq] = useState$o([]);
   const handleRequirementChange = (index, updatedRequirement) => {
     setRequirements((prevState) => prevState.map((req, i) => i === index ? updatedRequirement : req));
   };
   const handleDeleteRequirement = (name) => {
     setRequirements((prevState) => prevState.filter((item) => item.name !== name));
   };
-  useEffect$f(() => {
+  useEffect$l(() => {
     setTableReq(
       requirements.map((req, index) => {
         return {
@@ -8176,7 +8621,7 @@ function RequirementsManager({ requirements, setRequirements, scrollRef }) {
             }
           ),
           operator: /* @__PURE__ */ jsxRuntimeExports.jsx(
-            Select$1,
+            Select$2,
             {
               onSelectionChange: (selected) => handleRequirementChange(index, {
                 ...req,
@@ -8186,10 +8631,10 @@ function RequirementsManager({ requirements, setRequirements, scrollRef }) {
               "aria-label": "Operator selection",
               classNames: { mainWrapper: "!min-w-20" },
               defaultSelectedKeys: [req.versionOperator || "all"],
-              children: operators.map((op) => /* @__PURE__ */ jsxRuntimeExports.jsx(SelectItem$1, { "aria-label": op.label, children: op.label }, op.key))
+              children: operators.map((op) => /* @__PURE__ */ jsxRuntimeExports.jsx(SelectItem$2, { "aria-label": op.label, children: op.label }, op.key))
             }
           ),
-          actions: /* @__PURE__ */ jsxRuntimeExports.jsx(Button$i, { size: "sm", color: "danger", variant: "flat", onPress: () => handleDeleteRequirement(req.name), children: "Remove" })
+          actions: /* @__PURE__ */ jsxRuntimeExports.jsx(Button$k, { size: "sm", color: "danger", variant: "flat", onPress: () => handleDeleteRequirement(req.name), children: "Remove" })
         };
       })
     );
@@ -8226,24 +8671,24 @@ function RequirementsManager({ requirements, setRequirements, scrollRef }) {
   );
 }
 
-const {Button: Button$h,Input: Input$5,Modal: Modal$4,ModalBody: ModalBody$3,ModalContent: ModalContent$4,ModalFooter: ModalFooter$3,ModalHeader: ModalHeader$4} = await importShared('@heroui/react');
+const {Button: Button$j,Input: Input$5,Modal: Modal$5,ModalBody: ModalBody$4,ModalContent: ModalContent$5,ModalFooter: ModalFooter$4,ModalHeader: ModalHeader$5} = await importShared('@heroui/react');
 
 const {Empty: Empty$2,message: message$6,Result: Result$1} = await importShared('antd');
 
 const {isEmpty: isEmpty$b} = await importShared('lodash');
 
-const {useEffect: useEffect$e,useRef,useState: useState$j} = await importShared('react');
+const {useEffect: useEffect$k,useRef,useState: useState$n} = await importShared('react');
 function RequirementsBtn({ id, projectPath, setIsReqAvailable, show }) {
-  const [isOpen, setIsOpen] = useState$j(false);
-  const [requirements, setRequirements] = useState$j([]);
-  const [filePath, setFilePath] = useState$j("");
-  const [isSaving, setIsSaving] = useState$j(false);
-  const [searchValue, setSearchValue] = useState$j("");
-  const [searchReqs, setSearchReqs] = useState$j([]);
-  useEffect$e(() => {
+  const [isOpen, setIsOpen] = useState$n(false);
+  const [requirements, setRequirements] = useState$n([]);
+  const [filePath, setFilePath] = useState$n("");
+  const [isSaving, setIsSaving] = useState$n(false);
+  const [searchValue, setSearchValue] = useState$n("");
+  const [searchReqs, setSearchReqs] = useState$n([]);
+  useEffect$k(() => {
     setIsReqAvailable(!!filePath);
   }, [filePath]);
-  useEffect$e(() => {
+  useEffect$k(() => {
     const findReqs = () => {
       if (projectPath) {
         pIpc.findReq(projectPath).then((reqPath) => {
@@ -8265,7 +8710,7 @@ function RequirementsBtn({ id, projectPath, setIsReqAvailable, show }) {
       findReqs();
     });
   }, [projectPath, id]);
-  useEffect$e(() => {
+  useEffect$k(() => {
     setSearchReqs(requirements.filter((item) => searchInStrings(searchValue, [item.name])));
   }, [searchValue, requirements]);
   const scrollRef = useRef(null);
@@ -8279,7 +8724,7 @@ function RequirementsBtn({ id, projectPath, setIsReqAvailable, show }) {
     const { scrollHeight } = scrollOffsetElement;
     scrollOffsetElement.scrollTo({ behavior: "smooth", top: scrollHeight + 100 });
   };
-  useEffect$e(() => {
+  useEffect$k(() => {
     pIpc.readReqs(filePath).then((result) => {
       setRequirements(result);
     });
@@ -8317,7 +8762,7 @@ function RequirementsBtn({ id, projectPath, setIsReqAvailable, show }) {
   };
   return /* @__PURE__ */ jsxRuntimeExports.jsxs(jsxRuntimeExports.Fragment, { children: [
     /* @__PURE__ */ jsxRuntimeExports.jsx(
-      Modal$4,
+      Modal$5,
       {
         size: "2xl",
         isOpen,
@@ -8328,14 +8773,14 @@ function RequirementsBtn({ id, projectPath, setIsReqAvailable, show }) {
         onClose: () => setIsOpen(false),
         classNames: { backdrop: `!top-10 ${show}`, wrapper: `!top-10 pb-8 ${show}` },
         hideCloseButton: true,
-        children: /* @__PURE__ */ jsxRuntimeExports.jsxs(ModalContent$4, { className: "overflow-hidden", children: [
-          /* @__PURE__ */ jsxRuntimeExports.jsxs(ModalHeader$4, { className: "bg-foreground-200 dark:bg-LynxRaisinBlack flex flex-col gap-y-2", children: [
+        children: /* @__PURE__ */ jsxRuntimeExports.jsxs(ModalContent$5, { className: "overflow-hidden", children: [
+          /* @__PURE__ */ jsxRuntimeExports.jsxs(ModalHeader$5, { className: "bg-foreground-200 dark:bg-LynxRaisinBlack flex flex-col gap-y-2", children: [
             /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "flex flex-row justify-between", children: [
               /* @__PURE__ */ jsxRuntimeExports.jsx("span", { children: "Manage Requirements" }),
               !isEmpty$b(filePath) && /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "flex gap-x-2", children: [
-                /* @__PURE__ */ jsxRuntimeExports.jsx("div", { children: /* @__PURE__ */ jsxRuntimeExports.jsx(Button$h, { size: "sm", variant: "faded", startContent: /* @__PURE__ */ jsxRuntimeExports.jsx(Add_Icon, {}), onPress: handleAddRequirement, children: "Add" }) }),
+                /* @__PURE__ */ jsxRuntimeExports.jsx("div", { children: /* @__PURE__ */ jsxRuntimeExports.jsx(Button$j, { size: "sm", variant: "faded", startContent: /* @__PURE__ */ jsxRuntimeExports.jsx(Add_Icon, {}), onPress: handleAddRequirement, children: "Add" }) }),
                 /* @__PURE__ */ jsxRuntimeExports.jsx("div", { children: /* @__PURE__ */ jsxRuntimeExports.jsx(
-                  Button$h,
+                  Button$j,
                   {
                     size: "sm",
                     variant: "faded",
@@ -8349,7 +8794,7 @@ function RequirementsBtn({ id, projectPath, setIsReqAvailable, show }) {
               ] })
             ] }),
             /* @__PURE__ */ jsxRuntimeExports.jsx("div", { children: /* @__PURE__ */ jsxRuntimeExports.jsx(
-              Button$h,
+              Button$j,
               {
                 size: "sm",
                 variant: "flat",
@@ -8374,10 +8819,10 @@ function RequirementsBtn({ id, projectPath, setIsReqAvailable, show }) {
               }
             )
           ] }),
-          /* @__PURE__ */ jsxRuntimeExports.jsx(ModalBody$3, { className: "pr-0 pl-2 pt-4 scrollbar-hide", children: isEmpty$b(filePath) ? /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "size-full text-center mb-2", children: /* @__PURE__ */ jsxRuntimeExports.jsx(
+          /* @__PURE__ */ jsxRuntimeExports.jsx(ModalBody$4, { className: "pr-0 pl-2 pt-4 scrollbar-hide", children: isEmpty$b(filePath) ? /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "size-full text-center mb-2", children: /* @__PURE__ */ jsxRuntimeExports.jsx(
             Result$1,
             {
-              extra: /* @__PURE__ */ jsxRuntimeExports.jsx(Button$h, { variant: "flat", color: "primary", onPress: openFilePath, children: "Choose or Create requirements file" }, "create_req_file"),
+              extra: /* @__PURE__ */ jsxRuntimeExports.jsx(Button$j, { variant: "flat", color: "primary", onPress: openFilePath, children: "Choose or Create requirements file" }, "create_req_file"),
               title: "Select or create a requirements file to continue."
             }
           ) }) : isEmpty$b(requirements) ? /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "size-full text-center mb-2", children: /* @__PURE__ */ jsxRuntimeExports.jsx(
@@ -8390,25 +8835,14 @@ function RequirementsBtn({ id, projectPath, setIsReqAvailable, show }) {
               ] })
             }
           ) }) : /* @__PURE__ */ jsxRuntimeExports.jsx(RequirementsManager, { scrollRef, requirements: searchReqs, setRequirements }) }),
-          /* @__PURE__ */ jsxRuntimeExports.jsx(ModalFooter$3, { className: "py-3", children: /* @__PURE__ */ jsxRuntimeExports.jsx(
-            Button$h,
-            {
-              size: "md",
-              color: "warning",
-              variant: "light",
-              className: "w-fit cursor-default",
-              onPress: () => setIsOpen(false),
-              children: "Close"
-            }
-          ) })
+          /* @__PURE__ */ jsxRuntimeExports.jsx(ModalFooter$4, { className: "py-3", children: /* @__PURE__ */ jsxRuntimeExports.jsx(Button$j, { size: "md", color: "warning", variant: "light", className: "w-fit", onPress: () => setIsOpen(false), children: "Close" }) })
         ] })
       }
     ),
     /* @__PURE__ */ jsxRuntimeExports.jsx(
-      Button$h,
+      Button$j,
       {
         size: "sm",
-        radius: "sm",
         variant: "solid",
         onPress: () => setIsOpen(true),
         startContent: /* @__PURE__ */ jsxRuntimeExports.jsx(Checklist_Icon, { className: "size-3.5" }),
@@ -8418,15 +8852,15 @@ function RequirementsBtn({ id, projectPath, setIsReqAvailable, show }) {
   ] });
 }
 
-const {Button: Button$g,Dropdown: Dropdown$4,DropdownItem: DropdownItem$4,DropdownMenu: DropdownMenu$4,DropdownSection,DropdownTrigger: DropdownTrigger$4} = await importShared('@heroui/react');
+const {Button: Button$i,Dropdown: Dropdown$4,DropdownItem: DropdownItem$4,DropdownMenu: DropdownMenu$4,DropdownSection,DropdownTrigger: DropdownTrigger$4} = await importShared('@heroui/react');
 
-const {useEffect: useEffect$d,useState: useState$i} = await importShared('react');
+const {useEffect: useEffect$j,useState: useState$m} = await importShared('react');
 function Header_FilterButton({ setSelectedFilter, updateAvailable }) {
-  const [selectedKeys, setSelectedKeys] = useState$i(/* @__PURE__ */ new Set(["all"]));
-  useEffect$d(() => {
+  const [selectedKeys, setSelectedKeys] = useState$m(/* @__PURE__ */ new Set(["all"]));
+  useEffect$j(() => {
     setSelectedFilter(Array.from(selectedKeys).join(", ").replace(/_/g, ""));
   }, [selectedKeys]);
-  useEffect$d(() => {
+  useEffect$j(() => {
     if (updateAvailable) {
       setSelectedKeys(/* @__PURE__ */ new Set(["updates"]));
     } else {
@@ -8439,7 +8873,7 @@ function Header_FilterButton({ setSelectedFilter, updateAvailable }) {
     }
   }, [updateAvailable]);
   return /* @__PURE__ */ jsxRuntimeExports.jsxs(Dropdown$4, { size: "sm", className: "border-1 border-foreground-100", children: [
-    /* @__PURE__ */ jsxRuntimeExports.jsx(DropdownTrigger$4, { children: /* @__PURE__ */ jsxRuntimeExports.jsx(Button$g, { size: "sm", variant: "faded", isIconOnly: true, children: /* @__PURE__ */ jsxRuntimeExports.jsx(Filter_Icon, {}) }) }),
+    /* @__PURE__ */ jsxRuntimeExports.jsx(DropdownTrigger$4, { children: /* @__PURE__ */ jsxRuntimeExports.jsx(Button$i, { size: "sm", variant: "flat", isIconOnly: true, children: /* @__PURE__ */ jsxRuntimeExports.jsx(Filter_Icon, {}) }) }),
     /* @__PURE__ */ jsxRuntimeExports.jsxs(
       DropdownMenu$4,
       {
@@ -8468,19 +8902,19 @@ function Header_FilterButton({ setSelectedFilter, updateAvailable }) {
   ] });
 }
 
-const {Alert,Button: Button$f,Code,Input: Input$4} = await importShared('@heroui/react');
+const {Alert: Alert$1,Button: Button$h,Code: Code$1,Input: Input$4} = await importShared('@heroui/react');
 
 const {Divider: Divider$3,message: message$5} = await importShared('antd');
 
 const {compact,isEmpty: isEmpty$a} = await importShared('lodash');
 
-const {useState: useState$h} = await importShared('react');
+const {useState: useState$l} = await importShared('react');
 function Header_Installer({ pythonPath, refresh, close }) {
-  const [packageString, setPackageString] = useState$h("");
-  const [packages, setPackages] = useState$h([]);
-  const [indexUrl, setIndexUrl] = useState$h("");
-  const [extraOptions, setExtraOptions] = useState$h("");
-  const [installing, setInstalling] = useState$h(false);
+  const [packageString, setPackageString] = useState$l("");
+  const [packages, setPackages] = useState$l([]);
+  const [indexUrl, setIndexUrl] = useState$l("");
+  const [extraOptions, setExtraOptions] = useState$l("");
+  const [installing, setInstalling] = useState$l(false);
   const handlePackageStringChange = (value) => {
     setPackageString(value);
     if (value.endsWith(" ") || value.endsWith("\n")) {
@@ -8579,13 +9013,13 @@ function Header_Installer({ pythonPath, refresh, close }) {
       ] }),
       !isEmpty$a(packages) && /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "space-y-2", children: [
         /* @__PURE__ */ jsxRuntimeExports.jsx(Divider$3, { children: "Selected Packages" }),
-        /* @__PURE__ */ jsxRuntimeExports.jsx("div", { children: /* @__PURE__ */ jsxRuntimeExports.jsx(Button$f, { color: "danger", variant: "flat", startContent: /* @__PURE__ */ jsxRuntimeExports.jsx(Close_Icon, {}), onPress: () => setPackages([]), children: "Clear All" }) }),
+        /* @__PURE__ */ jsxRuntimeExports.jsx("div", { children: /* @__PURE__ */ jsxRuntimeExports.jsx(Button$h, { color: "danger", variant: "flat", startContent: /* @__PURE__ */ jsxRuntimeExports.jsx(Close_Icon, {}), onPress: () => setPackages([]), children: "Clear All" }) }),
         packages.map((pkg, index) => /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "flex items-center gap-2 p-2 rounded bg-foreground-100 animate-appearance-in", children: [
           /* @__PURE__ */ jsxRuntimeExports.jsxs("span", { className: "flex-1 font-mono", children: [
             pkg.name,
             pkg.version && `@${pkg.version}`
           ] }),
-          /* @__PURE__ */ jsxRuntimeExports.jsx("div", { children: /* @__PURE__ */ jsxRuntimeExports.jsx(Button$f, { className: "size-8", onPress: () => removePackage(index), isIconOnly: true, children: /* @__PURE__ */ jsxRuntimeExports.jsx(Trash_Icon, { className: "size-4" }) }) })
+          /* @__PURE__ */ jsxRuntimeExports.jsx("div", { children: /* @__PURE__ */ jsxRuntimeExports.jsx(Button$h, { className: "size-8", onPress: () => removePackage(index), isIconOnly: true, children: /* @__PURE__ */ jsxRuntimeExports.jsx(Trash_Icon, { className: "size-4" }) }) })
         ] }, index))
       ] })
     ] }),
@@ -8604,7 +9038,7 @@ function Header_Installer({ pythonPath, refresh, close }) {
     ] }),
     /* @__PURE__ */ jsxRuntimeExports.jsx(Divider$3, { children: "Requirements file selection" }),
     /* @__PURE__ */ jsxRuntimeExports.jsx("div", { children: /* @__PURE__ */ jsxRuntimeExports.jsx(
-      Button$f,
+      Button$h,
       {
         className: "cursor-pointer",
         onPress: handleFileSelect,
@@ -8613,13 +9047,13 @@ function Header_Installer({ pythonPath, refresh, close }) {
       }
     ) }),
     /* @__PURE__ */ jsxRuntimeExports.jsx(Divider$3, { children: "Preview" }),
-    /* @__PURE__ */ jsxRuntimeExports.jsxs(Code, { className: "w-full p-3 overflow-hidden text-wrap break-words", children: [
+    /* @__PURE__ */ jsxRuntimeExports.jsxs(Code$1, { className: "w-full p-3 overflow-hidden text-wrap break-words", children: [
       "pip install ",
       generateInstallCommand()
     ] }),
     /* @__PURE__ */ jsxRuntimeExports.jsx(Divider$3, { children: "Install" }),
     installing && /* @__PURE__ */ jsxRuntimeExports.jsx(
-      Alert,
+      Alert$1,
       {
         description: "Installing packages... This may take several minutes depending on the number and size of the packages you selected.",
         color: "warning",
@@ -8627,7 +9061,7 @@ function Header_Installer({ pythonPath, refresh, close }) {
       }
     ),
     /* @__PURE__ */ jsxRuntimeExports.jsx("div", { children: /* @__PURE__ */ jsxRuntimeExports.jsx(
-      Button$f,
+      Button$h,
       {
         size: "md",
         variant: "flat",
@@ -8642,18 +9076,18 @@ function Header_Installer({ pythonPath, refresh, close }) {
   ] });
 }
 
-const {Button: Button$e,Modal: Modal$3,ModalBody: ModalBody$2,ModalContent: ModalContent$3,ModalHeader: ModalHeader$3} = await importShared('@heroui/react');
-const {useCallback: useCallback$3,useState: useState$g} = await importShared('react');
+const {Button: Button$g,Modal: Modal$4,ModalBody: ModalBody$3,ModalContent: ModalContent$4,ModalHeader: ModalHeader$4} = await importShared('@heroui/react');
+const {useCallback: useCallback$6,useState: useState$k} = await importShared('react');
 function Header_InstallerModal({ refresh, pythonPath, show }) {
-  const [isOpen, setIsOpen] = useState$g(false);
+  const [isOpen, setIsOpen] = useState$k(false);
   const isDarkMode = useAppState("darkMode");
-  const close = useCallback$3(() => {
+  const close = useCallback$6(() => {
     setIsOpen(false);
   }, []);
   return /* @__PURE__ */ jsxRuntimeExports.jsxs(jsxRuntimeExports.Fragment, { children: [
-    /* @__PURE__ */ jsxRuntimeExports.jsx(Button$e, { radius: "sm", variant: "solid", startContent: /* @__PURE__ */ jsxRuntimeExports.jsx(Add_Icon, {}), onPress: () => setIsOpen(true), children: "Install Package" }),
+    /* @__PURE__ */ jsxRuntimeExports.jsx(Button$g, { variant: "solid", startContent: /* @__PURE__ */ jsxRuntimeExports.jsx(Add_Icon, {}), onPress: () => setIsOpen(true), children: "Install Package" }),
     /* @__PURE__ */ jsxRuntimeExports.jsx(
-      Modal$3,
+      Modal$4,
       {
         size: "xl",
         isOpen,
@@ -8662,9 +9096,9 @@ function Header_InstallerModal({ refresh, pythonPath, show }) {
         isDismissable: false,
         scrollBehavior: "inside",
         classNames: { backdrop: `!top-10 ${show}`, wrapper: `!top-10 pb-8 ${show}` },
-        children: /* @__PURE__ */ jsxRuntimeExports.jsxs(ModalContent$3, { children: [
-          /* @__PURE__ */ jsxRuntimeExports.jsx(ModalHeader$3, { className: "pb-1 justify-center", children: "Python Package Installer" }),
-          /* @__PURE__ */ jsxRuntimeExports.jsx(ModalBody$2, { className: "scrollbar-hide px-0 pt-0", children: /* @__PURE__ */ jsxRuntimeExports.jsx(
+        children: /* @__PURE__ */ jsxRuntimeExports.jsxs(ModalContent$4, { children: [
+          /* @__PURE__ */ jsxRuntimeExports.jsx(ModalHeader$4, { className: "pb-1 justify-center", children: "Python Package Installer" }),
+          /* @__PURE__ */ jsxRuntimeExports.jsx(ModalBody$3, { className: "scrollbar-hide px-0 pt-0", children: /* @__PURE__ */ jsxRuntimeExports.jsx(
             g,
             {
               options: {
@@ -8684,11 +9118,11 @@ function Header_InstallerModal({ refresh, pythonPath, show }) {
   ] });
 }
 
-const {Button: Button$d,ButtonGroup: ButtonGroup$1,Dropdown: Dropdown$3,DropdownItem: DropdownItem$3,DropdownMenu: DropdownMenu$3,DropdownTrigger: DropdownTrigger$3} = await importShared('@heroui/react');
+const {Button: Button$f,ButtonGroup: ButtonGroup$2,Dropdown: Dropdown$3,DropdownItem: DropdownItem$3,DropdownMenu: DropdownMenu$3,DropdownTrigger: DropdownTrigger$3} = await importShared('@heroui/react');
 
 const {isEmpty: isEmpty$9} = await importShared('lodash');
 
-const {useEffect: useEffect$c,useMemo: useMemo$7,useState: useState$f} = await importShared('react');
+const {useEffect: useEffect$i,useMemo: useMemo$7,useState: useState$j} = await importShared('react');
 function Header_UpdateButton({
   packagesUpdate,
   update,
@@ -8700,8 +9134,8 @@ function Header_UpdateButton({
   visibleItems,
   selectedFilter
 }) {
-  const [selectedOption, setSelectedOption] = useState$f(/* @__PURE__ */ new Set([isReqAvailable ? "req" : "all"]));
-  useEffect$c(() => {
+  const [selectedOption, setSelectedOption] = useState$j(/* @__PURE__ */ new Set([isReqAvailable ? "req" : "all"]));
+  useEffect$i(() => {
     setSelectedOption(/* @__PURE__ */ new Set([isReqAvailable ? "req" : "all"]));
   }, [isReqAvailable]);
   const descriptionsMap = useMemo$7(() => {
@@ -8727,7 +9161,7 @@ function Header_UpdateButton({
     }
   };
   return !isEmpty$9(packagesUpdate) ? /* @__PURE__ */ jsxRuntimeExports.jsx(
-    Button$d,
+    Button$f,
     {
       size: "sm",
       radius: "sm",
@@ -8752,9 +9186,9 @@ function Header_UpdateButton({
         ] })
       ] })
     }
-  ) : /* @__PURE__ */ jsxRuntimeExports.jsxs(ButtonGroup$1, { size: "sm", variant: "solid", children: [
+  ) : /* @__PURE__ */ jsxRuntimeExports.jsxs(ButtonGroup$2, { size: "sm", variant: "solid", children: [
     /* @__PURE__ */ jsxRuntimeExports.jsx(
-      Button$d,
+      Button$f,
       {
         onPress: checkForUpdate,
         isLoading: checkingUpdates,
@@ -8763,7 +9197,7 @@ function Header_UpdateButton({
       }
     ),
     /* @__PURE__ */ jsxRuntimeExports.jsxs(Dropdown$3, { placement: "bottom-end", children: [
-      /* @__PURE__ */ jsxRuntimeExports.jsx(DropdownTrigger$3, { children: /* @__PURE__ */ jsxRuntimeExports.jsx(Button$d, { variant: "faded", isDisabled: !isReqAvailable || checkingUpdates, isIconOnly: true, children: /* @__PURE__ */ jsxRuntimeExports.jsx(AltArrow_Icon, { className: "size-4" }) }) }),
+      /* @__PURE__ */ jsxRuntimeExports.jsx(DropdownTrigger$3, { children: /* @__PURE__ */ jsxRuntimeExports.jsx(Button$f, { variant: "faded", isDisabled: !isReqAvailable || checkingUpdates, isIconOnly: true, children: /* @__PURE__ */ jsxRuntimeExports.jsx(AltArrow_Icon, { className: "size-4" }) }) }),
       /* @__PURE__ */ jsxRuntimeExports.jsxs(
         DropdownMenu$3,
         {
@@ -8782,13 +9216,13 @@ function Header_UpdateButton({
   ] });
 }
 
-const {ButtonGroup,Input: Input$3,ModalHeader: ModalHeader$2} = await importShared('@heroui/react');
+const {ButtonGroup: ButtonGroup$1,Input: Input$3,ModalHeader: ModalHeader$3} = await importShared('@heroui/react');
 
 const {message: message$4} = await importShared('antd');
 
 const {isEmpty: isEmpty$8} = await importShared('lodash');
 
-const {useState: useState$e} = await importShared('react');
+const {useState: useState$i} = await importShared('react');
 function PackageManagerHeader({
   searchValue,
   setSearchValue,
@@ -8810,8 +9244,8 @@ function PackageManagerHeader({
   visibleItems,
   show
 }) {
-  const [isUpdating, setIsUpdating] = useState$e(false);
-  const [isReqAvailable, setIsReqAvailable] = useState$e(false);
+  const [isUpdating, setIsUpdating] = useState$i(false);
+  const [isReqAvailable, setIsReqAvailable] = useState$i(false);
   const update = () => {
     setIsUpdating(true);
     let updateList;
@@ -8829,7 +9263,7 @@ function PackageManagerHeader({
       setIsUpdating(false);
     });
   };
-  return /* @__PURE__ */ jsxRuntimeExports.jsxs(ModalHeader$2, { className: "bg-foreground-200 dark:bg-LynxRaisinBlack items-center flex-col gap-y-2", children: [
+  return /* @__PURE__ */ jsxRuntimeExports.jsxs(ModalHeader$3, { className: "bg-foreground-200 dark:bg-LynxRaisinBlack items-center flex-col gap-y-2", children: [
     /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "flex flex-row justify-between w-full", children: isValidPython ? /* @__PURE__ */ jsxRuntimeExports.jsxs(jsxRuntimeExports.Fragment, { children: [
       /* @__PURE__ */ jsxRuntimeExports.jsxs("span", { children: [
         title,
@@ -8867,7 +9301,7 @@ function PackageManagerHeader({
           checkingUpdates
         }
       ),
-      /* @__PURE__ */ jsxRuntimeExports.jsx(ButtonGroup, { size: "sm", fullWidth: true, children: isValidPython && /* @__PURE__ */ jsxRuntimeExports.jsxs(jsxRuntimeExports.Fragment, { children: [
+      /* @__PURE__ */ jsxRuntimeExports.jsx(ButtonGroup$1, { size: "sm", fullWidth: true, children: isValidPython && /* @__PURE__ */ jsxRuntimeExports.jsxs(jsxRuntimeExports.Fragment, { children: [
         /* @__PURE__ */ jsxRuntimeExports.jsx(Header_InstallerModal, { show, refresh, pythonPath }),
         /* @__PURE__ */ jsxRuntimeExports.jsx(RequirementsBtn, { id, show, projectPath, setIsReqAvailable })
       ] }) }),
@@ -8876,11 +9310,11 @@ function PackageManagerHeader({
   ] });
 }
 
-const {Button: Button$c,Modal: Modal$2,ModalContent: ModalContent$2,ModalFooter: ModalFooter$2} = await importShared('@heroui/react');
+const {Button: Button$e,Modal: Modal$3,ModalContent: ModalContent$3,ModalFooter: ModalFooter$3} = await importShared('@heroui/react');
 
 const {isEmpty: isEmpty$7} = await importShared('lodash');
 
-const {useEffect: useEffect$b,useState: useState$d} = await importShared('react');
+const {useEffect: useEffect$h,useState: useState$h} = await importShared('react');
 function PackageManagerModal({
   title = "Package Manager",
   size = "2xl",
@@ -8888,25 +9322,23 @@ function PackageManagerModal({
   isOpen,
   setIsOpen,
   pythonPath,
-  locateVenv,
   id,
-  isLocating,
   projectPath,
   setPythonPath,
   show
 }) {
-  const [isLoading, setIsLoading] = useState$d(false);
-  const [isLoadingUpdates, setIsLoadingUpdates] = useState$d(false);
-  const [packages, setPackages] = useState$d([]);
-  const [filteredPackages, setFilteredPackages] = useState$d([]);
-  const [packagesUpdate, setPackagesUpdate] = useState$d([]);
-  const [searchValue, setSearchValue] = useState$d("");
-  const [searchData, setSearchData] = useState$d([]);
-  const [isValidPython, setIsValidPython] = useState$d(true);
-  const [selectedFilter, setSelectedFilter] = useState$d("all");
-  const [items, setItems] = useState$d(searchData);
-  const [selectedKeys, setSelectedKeys] = useState$d(/* @__PURE__ */ new Set([]));
-  useEffect$b(() => {
+  const [isLoading, setIsLoading] = useState$h(false);
+  const [isLoadingUpdates, setIsLoadingUpdates] = useState$h(false);
+  const [packages, setPackages] = useState$h([]);
+  const [filteredPackages, setFilteredPackages] = useState$h([]);
+  const [packagesUpdate, setPackagesUpdate] = useState$h([]);
+  const [searchValue, setSearchValue] = useState$h("");
+  const [searchData, setSearchData] = useState$h([]);
+  const [isValidPython, setIsValidPython] = useState$h(true);
+  const [selectedFilter, setSelectedFilter] = useState$h("all");
+  const [items, setItems] = useState$h(searchData);
+  const [selectedKeys, setSelectedKeys] = useState$h(/* @__PURE__ */ new Set([]));
+  useEffect$h(() => {
     switch (selectedFilter) {
       case "all":
         setFilteredPackages(packages);
@@ -8961,10 +9393,10 @@ function PackageManagerModal({
         break;
     }
   }, [selectedFilter, packagesUpdate, packages]);
-  useEffect$b(() => {
+  useEffect$h(() => {
     if (isEmpty$7(pythonPath)) setIsValidPython(false);
   }, [pythonPath]);
-  useEffect$b(() => {
+  useEffect$h(() => {
     setSearchData(filteredPackages.filter((item) => searchInStrings(searchValue, [item.name])));
   }, [searchValue, filteredPackages]);
   const closePackageManager = () => {
@@ -9011,12 +9443,15 @@ function PackageManagerModal({
       setIsLoading(false);
     });
   };
-  useEffect$b(() => {
+  useEffect$h(() => {
     if (isOpen && !isEmpty$7(pythonPath)) {
       getPackageList();
     } else {
       setSearchData([]);
       setPackages([]);
+      pIpc.getExePathAssociate(id).then((result) => {
+        if (result && setPythonPath) setPythonPath(result);
+      });
     }
   }, [pythonPath, isOpen]);
   const updated = (name, newVersion) => {
@@ -9039,7 +9474,7 @@ function PackageManagerModal({
     setPackagesUpdate([]);
   };
   return /* @__PURE__ */ jsxRuntimeExports.jsx(
-    Modal$2,
+    Modal$3,
     {
       size,
       isOpen,
@@ -9050,7 +9485,7 @@ function PackageManagerModal({
       motionProps: modalMotionProps,
       classNames: { backdrop: `!top-10 ${show}`, wrapper: `!top-10 pb-8 ${show}` },
       hideCloseButton: true,
-      children: /* @__PURE__ */ jsxRuntimeExports.jsxs(ModalContent$2, { className: "overflow-hidden", children: [
+      children: /* @__PURE__ */ jsxRuntimeExports.jsxs(ModalContent$3, { className: "overflow-hidden", children: [
         /* @__PURE__ */ jsxRuntimeExports.jsx(
           PackageManagerHeader,
           {
@@ -9083,8 +9518,6 @@ function PackageManagerModal({
             removed,
             updated,
             isLoading,
-            locateVenv,
-            isLocating,
             pythonPath,
             selectedKeys,
             setPythonPath,
@@ -9093,9 +9526,9 @@ function PackageManagerModal({
             setSelectedKeys
           }
         ),
-        /* @__PURE__ */ jsxRuntimeExports.jsxs(ModalFooter$2, { className: "items-center py-3", children: [
+        /* @__PURE__ */ jsxRuntimeExports.jsxs(ModalFooter$3, { className: "items-center py-3", children: [
           /* @__PURE__ */ jsxRuntimeExports.jsx(Footer_TablePage, { setItems, searchData }),
-          /* @__PURE__ */ jsxRuntimeExports.jsx(Button$c, { variant: "light", color: "warning", className: "cursor-default", onPress: closePackageManager, children: "Close" })
+          /* @__PURE__ */ jsxRuntimeExports.jsx(Button$e, { variant: "light", color: "warning", onPress: closePackageManager, children: "Close" })
         ] })
       ] })
     }
@@ -9126,31 +9559,28 @@ function UIProvider({ children }) {
   );
 }
 
-const {Button: Button$b} = await importShared('@heroui/react');
+const {Button: Button$d} = await importShared('@heroui/react');
 
-const {isNil: isNil$4} = await importShared('lodash');
+const {useEffect: useEffect$g,useMemo: useMemo$5,useState: useState$g} = await importShared('react');
 
-const {useEffect: useEffect$a,useMemo: useMemo$5,useState: useState$c} = await importShared('react');
-
-const {useDispatch: useDispatch$2} = await importShared('react-redux');
+const {useDispatch: useDispatch$a} = await importShared('react-redux');
 function CardMenu_Modals({ isOpen, context, show }) {
   const activeTab = useTabsState("activeTab");
   const webUI = useInstalledCard(context.id);
-  const dispatch = useDispatch$2();
+  const dispatch = useDispatch$a();
   const tabs = useTabsState("tabs");
-  const [prevTabTitle, setPrevTabTitle] = useState$c(
+  const [prevTabTitle, setPrevTabTitle] = useState$g(
     tabs.find((tab) => tab.id === context.tabID)?.title
   );
-  useEffect$a(() => {
+  useEffect$g(() => {
     setPrevTabTitle(tabs.find((tab) => tab.id === context.tabID)?.title);
     dispatch(tabsActions.setTabTitle({ tabID: context.tabID, title: `${context.title} Dependencies` }));
   }, []);
-  useEffect$a(() => {
+  useEffect$g(() => {
     if (isOpen && context.tabID === activeTab)
       dispatch(tabsActions.setTabTitle({ tabID: context.tabID, title: `${context.title} Dependencies` }));
   }, [activeTab, context.tabID, isOpen]);
-  const [pythonPath, setPythonPath] = useState$c("");
-  const [isLocatingVenv, setIsLocatingVenv] = useState$c(false);
+  const [pythonPath, setPythonPath] = useState$g("");
   const onOpenChange = (value) => {
     if (!value) {
       dispatch(PythonToolkitActions.closeMenuModal({ tabID: context.tabID }));
@@ -9160,42 +9590,14 @@ function CardMenu_Modals({ isOpen, context, show }) {
       if (prevTabTitle) dispatch(tabsActions.setTabTitle({ tabID: context.tabID, title: prevTabTitle }));
     }
   };
-  useEffect$a(() => {
-    if (isOpen) {
-      pIpc.getAIVenv(context.id).then((folder) => {
-        if (isNil$4(folder)) {
-          pIpc.findAIVenv(context.id, webUI?.dir).then((result) => {
-            pIpc.checkAIVenvEnabled();
-            setPythonPath(result);
-          }).catch(console.log);
-        } else {
-          setPythonPath(folder);
-          pIpc.checkAIVenvEnabled();
-        }
-      });
-    } else {
-      setPythonPath("");
-    }
-  }, [isOpen, webUI, context]);
-  const locateVenv = () => {
-    if (context) {
-      setIsLocatingVenv(true);
-      pIpc.locateAIVenv(context.id).then((result) => {
-        pIpc.checkAIVenvEnabled();
-        setPythonPath(result);
-      }).catch(console.error).finally(() => {
-        setIsLocatingVenv(false);
-      });
-    }
-  };
   const handleDeselect = () => {
-    pIpc.removeAIVenv(context.id);
+    pIpc.removeAssociate(context.id);
     setPythonPath("");
   };
   const actionButtons = useMemo$5(() => {
     return pythonPath ? [
       /* @__PURE__ */ jsxRuntimeExports.jsx(
-        Button$b,
+        Button$d,
         {
           size: "sm",
           variant: "flat",
@@ -9207,7 +9609,7 @@ function CardMenu_Modals({ isOpen, context, show }) {
         "reloacte_venv"
       )
     ] : [];
-  }, [pythonPath, isLocatingVenv]);
+  }, [pythonPath]);
   return /* @__PURE__ */ jsxRuntimeExports.jsx(UIProvider, { children: /* @__PURE__ */ jsxRuntimeExports.jsx(
     PackageManagerModal,
     {
@@ -9216,10 +9618,8 @@ function CardMenu_Modals({ isOpen, context, show }) {
       isOpen,
       id: context.id,
       pythonPath,
-      locateVenv,
       setIsOpen: onOpenChange,
       projectPath: webUI?.dir,
-      isLocating: isLocatingVenv,
       setPythonPath,
       actionButtons,
       title: `${context.title} Dependencies`
@@ -9227,15 +9627,15 @@ function CardMenu_Modals({ isOpen, context, show }) {
   ) });
 }
 
-const {useEffect: useEffect$9} = await importShared('react');
+const {useEffect: useEffect$f} = await importShared('react');
 
-const {useDispatch: useDispatch$1} = await importShared('react-redux');
+const {useDispatch: useDispatch$9} = await importShared('react-redux');
 function CardMenuModal() {
-  const dispatch = useDispatch$1();
+  const dispatch = useDispatch$9();
   const activeTab = useTabsState("activeTab");
   const tabs = useTabsState("tabs");
   const cards = usePythonToolkitState("menuModal");
-  useEffect$9(() => {
+  useEffect$f(() => {
     cards.forEach((card) => {
       const exist = tabs.some((tab) => tab.id === card.context.tabID);
       if (!exist) {
@@ -9257,12 +9657,238 @@ function CardMenuModal() {
   )) });
 }
 
+const {Button: Button$c} = await importShared('@heroui/react');
+
+const {useEffect: useEffect$e,useState: useState$f} = await importShared('react');
+
+const {useDispatch: useDispatch$8} = await importShared('react-redux');
+function Settings_CacheDirUsage() {
+  const cacheStorageUsage = usePythonToolkitState("cacheStorageUsage");
+  const [clearing, setClearing] = useState$f(false);
+  const dispatch = useDispatch$8();
+  const updateValue = (value) => {
+    dispatch(PythonToolkitActions.setCacheStorageUsage(value));
+  };
+  useEffect$e(() => {
+    pIpc.getCacheStorageUsage().then(updateValue);
+  }, []);
+  const onEnabledChange = (value) => {
+    pIpc.setCacheStorageUsage(value);
+    updateValue(value);
+  };
+  const clearCache = () => {
+    setClearing(true);
+    const prefix = FolderDiskUsage_StorageID;
+    const keysToRemove = [];
+    for (let i = 0; i < localStorage.length; i++) {
+      const key = localStorage.key(i);
+      if (key && key.startsWith(prefix)) {
+        keysToRemove.push(key);
+      }
+    }
+    keysToRemove.forEach((key) => localStorage.removeItem(key));
+    setTimeout(() => {
+      setClearing(false);
+      lynxTopToast(dispatch).success("Disk usage cache cleared successfully");
+    }, 700);
+  };
+  return /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "w-full flex flex-row gap-x-2", children: [
+    /* @__PURE__ */ jsxRuntimeExports.jsx(
+      LynxSwitch,
+      {
+        description: "When disabled, disk usage is recalculated every time you open toolkit window, which can take longer depending on installed packages.",
+        title: "Cache Disk Usage",
+        enabled: cacheStorageUsage,
+        onEnabledChange
+      }
+    ),
+    /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "flex flex-col items-center justify-center gap-y-1", children: [
+      /* @__PURE__ */ jsxRuntimeExports.jsx(
+        Button$c,
+        {
+          variant: "flat",
+          isLoading: clearing,
+          onPress: clearCache,
+          className: "h-14 shrink-0",
+          isDisabled: !cacheStorageUsage,
+          startContent: !clearing && /* @__PURE__ */ jsxRuntimeExports.jsx(BroomDuo_Icon, {}),
+          fullWidth: true,
+          children: !clearing ? "Clear Cache" : "Clearing..."
+        }
+      ),
+      /* @__PURE__ */ jsxRuntimeExports.jsx("span", { className: "text-tiny text-default-400 text-center", children: "Clear the cache to refresh usage statistics." })
+    ] })
+  ] });
+}
+
+const {Radio,RadioGroup} = await importShared('@heroui/react');
+
+const {capitalize: capitalize$1,startCase: startCase$1} = await importShared('lodash');
+
+const {useEffect: useEffect$d,useState: useState$e} = await importShared('react');
+
+const {useDispatch: useDispatch$7} = await importShared('react-redux');
+const exampleName = "azure-storage-blob";
+function Settings_PkgString() {
+  const [value, setValue] = useState$e("default");
+  const [exampleResult, setExampleResult] = useState$e(exampleName);
+  const dispatch = useDispatch$7();
+  useEffect$d(() => {
+    pIpc.getPkgDisplay().then((result) => setValue(result));
+  }, []);
+  const onValueChange = (valueText) => {
+    setValue(valueText);
+    switch (valueText) {
+      case "capitalize":
+        setExampleResult(capitalize$1(exampleName));
+        break;
+      case "startCase":
+        setExampleResult(startCase$1(exampleName));
+        break;
+      case "default":
+      default:
+        setExampleResult(exampleName);
+        break;
+    }
+    dispatch(PythonToolkitActions.setPkgDisplay(valueText));
+    pIpc.setPkgDisplay(valueText);
+  };
+  return /* @__PURE__ */ jsxRuntimeExports.jsxs(
+    RadioGroup,
+    {
+      description: `This setting changes how package names are displayed in the
+       package manager. It has no effect on functionality.`,
+      label: /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { children: [
+        "Package Name Display Format.",
+        /* @__PURE__ */ jsxRuntimeExports.jsxs("span", { className: "text-success/70", children: [
+          " Example: ",
+          exampleResult
+        ] })
+      ] }),
+      value,
+      orientation: "horizontal",
+      onValueChange,
+      children: [
+        /* @__PURE__ */ jsxRuntimeExports.jsx(Radio, { value: "default", children: "Default" }),
+        /* @__PURE__ */ jsxRuntimeExports.jsx(Radio, { value: "capitalize", children: "Capitalize" }),
+        /* @__PURE__ */ jsxRuntimeExports.jsx(Radio, { value: "startCase", children: "Start Case" })
+      ]
+    }
+  );
+}
+
+const {NumberInput} = await importShared('@heroui/react');
+
+const {debounce} = await importShared('lodash');
+
+const {useCallback: useCallback$5,useEffect: useEffect$c,useState: useState$d} = await importShared('react');
+function Settings_Retry() {
+  const [value, setValue] = useState$d(5);
+  const debouncedSetMaxRetry = useCallback$5(
+    debounce((value2) => pIpc.setMaxRetry(value2), 500),
+    []
+  );
+  const onValueChange = (value2) => {
+    setValue(value2);
+    debouncedSetMaxRetry(value2);
+  };
+  useEffect$c(() => {
+    pIpc.getMaxRetry().then((result) => {
+      setValue(result);
+    });
+  }, []);
+  return /* @__PURE__ */ jsxRuntimeExports.jsx(
+    NumberInput,
+    {
+      minValue: 1,
+      value,
+      maxValue: 50,
+      defaultValue: 0,
+      onValueChange,
+      label: "Max Package Update Retries",
+      description: "Set the maximum number of attempts for a failed package update check. (Default is 5)"
+    }
+  );
+}
+
+const {Button: Button$b,Modal: Modal$2,ModalBody: ModalBody$2,ModalContent: ModalContent$2,ModalFooter: ModalFooter$2,ModalHeader: ModalHeader$2} = await importShared('@heroui/react');
+
+const {Divider: Divider$2} = await importShared('antd');
+
+const {useDispatch: useDispatch$6} = await importShared('react-redux');
+function CardSettings_Modals({ isOpen, context, show }) {
+  const dispatch = useDispatch$6();
+  const onOpenChange = (isOpen2) => {
+    if (!isOpen2) {
+      dispatch(PythonToolkitActions.closeSettingsModal({ tabID: context.tabID }));
+      setTimeout(() => {
+        dispatch(PythonToolkitActions.removeSettingsModal({ tabID: context.tabID }));
+      }, 500);
+    }
+  };
+  return /* @__PURE__ */ jsxRuntimeExports.jsx(UIProvider, { children: /* @__PURE__ */ jsxRuntimeExports.jsx(
+    Modal$2,
+    {
+      size: "3xl",
+      isOpen,
+      placement: "center",
+      isDismissable: false,
+      scrollBehavior: "inside",
+      onOpenChange,
+      motionProps: modalMotionProps,
+      classNames: { backdrop: `!top-10 ${show}`, wrapper: `!top-10 pb-8 ${show}` },
+      hideCloseButton: true,
+      children: /* @__PURE__ */ jsxRuntimeExports.jsx(ModalContent$2, { className: "overflow-hidden", children: (close) => /* @__PURE__ */ jsxRuntimeExports.jsxs(jsxRuntimeExports.Fragment, { children: [
+        /* @__PURE__ */ jsxRuntimeExports.jsx(ModalHeader$2, { children: "Python Toolkit Settings" }),
+        /* @__PURE__ */ jsxRuntimeExports.jsxs(ModalBody$2, { children: [
+          /* @__PURE__ */ jsxRuntimeExports.jsx(Settings_Retry, {}),
+          /* @__PURE__ */ jsxRuntimeExports.jsx(Divider$2, { variant: "dashed", className: "my-4" }),
+          /* @__PURE__ */ jsxRuntimeExports.jsx(Settings_PkgString, {}),
+          /* @__PURE__ */ jsxRuntimeExports.jsx(Divider$2, { variant: "dashed", className: "my-4" }),
+          /* @__PURE__ */ jsxRuntimeExports.jsx(Settings_CacheDirUsage, {})
+        ] }),
+        /* @__PURE__ */ jsxRuntimeExports.jsx(ModalFooter$2, { children: /* @__PURE__ */ jsxRuntimeExports.jsx(Button$b, { onPress: close, variant: "light", color: "warning", children: "Close" }) })
+      ] }) })
+    }
+  ) });
+}
+
+const {useEffect: useEffect$b} = await importShared('react');
+
+const {useDispatch: useDispatch$5} = await importShared('react-redux');
+function SettingsModal() {
+  const dispatch = useDispatch$5();
+  const activeTab = useTabsState("activeTab");
+  const tabs = useTabsState("tabs");
+  const modals = usePythonToolkitState("settingsModal");
+  useEffect$b(() => {
+    modals.forEach((modal) => {
+      const exist = tabs.some((tab) => tab.id === modal.context.tabID);
+      if (!exist) {
+        dispatch(PythonToolkitActions.closeSettingsModal({ tabID: modal.context.tabID }));
+        setTimeout(() => {
+          dispatch(PythonToolkitActions.removeSettingsModal({ tabID: modal.context.tabID }));
+        }, 500);
+      }
+    });
+  }, [tabs, modals, dispatch]);
+  return /* @__PURE__ */ jsxRuntimeExports.jsx(jsxRuntimeExports.Fragment, { children: modals.map((modal) => /* @__PURE__ */ jsxRuntimeExports.jsx(
+    CardSettings_Modals,
+    {
+      isOpen: modal.isOpen,
+      context: modal.context,
+      show: activeTab === modal.context.tabID ? "flex" : "hidden"
+    },
+    `${modal.context.id}_card`
+  )) });
+}
+
 const {isEmpty: isEmpty$6} = await importShared('lodash');
 
-const {useEffect: useEffect$8,useState: useState$b} = await importShared('react');
+const {useEffect: useEffect$a,useState: useState$c} = await importShared('react');
 function useCacheImage(id, url) {
-  const [imageSrc, setImageSrc] = useState$b("");
-  useEffect$8(() => {
+  const [imageSrc, setImageSrc] = useState$c("");
+  useEffect$a(() => {
     if (isEmpty$6(url)) return;
     const fetchAndStoreImage = async () => {
       try {
@@ -9285,23 +9911,126 @@ function useCacheImage(id, url) {
   return imageSrc;
 }
 
-const {Button: Button$a,Chip: Chip$1,Dropdown: Dropdown$2,DropdownItem: DropdownItem$2,DropdownMenu: DropdownMenu$2,DropdownTrigger: DropdownTrigger$2,Popover: Popover$3,PopoverContent: PopoverContent$3,PopoverTrigger: PopoverTrigger$3,Progress: Progress$2} = await importShared('@heroui/react');
+let allCardsExt = [];
+const setCards = (cards) => {
+  allCardsExt = cards;
+};
 
-const {Card: Card$2,Divider: Divider$2,Spin: Spin$1} = await importShared('antd');
+const {Avatar,Button: Button$a,Chip: Chip$1,Dropdown: Dropdown$2,DropdownItem: DropdownItem$2,DropdownMenu: DropdownMenu$2,DropdownTrigger: DropdownTrigger$2} = await importShared('@heroui/react');
+
+const {isEmpty: isEmpty$5} = await importShared('lodash');
+
+const {useCallback: useCallback$4,useEffect: useEffect$9,useState: useState$b} = await importShared('react');
+
+const {useDispatch: useDispatch$4} = await importShared('react-redux');
+function Venv_Associate({ folder, type }) {
+  const associates = usePythonToolkitState("associates");
+  const installedCards = useCardsState("installedCards");
+  const [associated, setAssociated] = useState$b([]);
+  const [canBeAssociate, setCanBeAssociate] = useState$b([]);
+  const dispatch = useDispatch$4();
+  useEffect$9(() => {
+    const cardTitleMap = new Map(allCardsExt.map((card) => [card.id, card.title]));
+    const installedCardsWithTitles = installedCards.filter((card) => cardTitleMap.has(card.id)).map((card) => {
+      const avatarUrl = window.localStorage.getItem(`${card.id}-card-dev-img`) || void 0;
+      return {
+        avatarUrl,
+        title: cardTitleMap.get(card.id),
+        id: card.id
+      };
+    });
+    const associateIds = new Set(associates.map((item) => item.id));
+    const newItemsToAdd = installedCardsWithTitles.filter(
+      (card) => !associateIds.has(card.id) && ModulesThatSupportPython.includes(card.id)
+    );
+    setCanBeAssociate(newItemsToAdd);
+    const activeAssociatesWithTitles = associates.filter((item) => item.dir === folder && installedCards.some((card) => card.id === item.id)).map((item) => {
+      const avatarUrl = window.localStorage.getItem(`${item.id}-card-dev-img`) || void 0;
+      return {
+        avatarUrl,
+        title: cardTitleMap.get(item.id),
+        id: item.id
+      };
+    });
+    setAssociated(activeAssociatesWithTitles);
+  }, [associates]);
+  const refreshAssociates = useCallback$4(() => {
+    pIpc.getAssociates().then((associates2) => dispatch(PythonToolkitActions.setAssociates(associates2 || [])));
+  }, []);
+  const add = (id) => {
+    pIpc.addAssociate({ id, dir: folder, type });
+    refreshAssociates();
+  };
+  const remove = (id) => {
+    pIpc.removeAssociate(id);
+    refreshAssociates();
+  };
+  return /* @__PURE__ */ jsxRuntimeExports.jsx(jsxRuntimeExports.Fragment, { children: /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "flex flex-row justify-between w-full", children: [
+    /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "w-full flex flex-row gap-x-1 gap-y-2 items-center flex-wrap", children: isEmpty$5(associated) ? /* @__PURE__ */ jsxRuntimeExports.jsx(Chip$1, { variant: "flat", children: "Not Associated" }) : associated.map((item) => /* @__PURE__ */ jsxRuntimeExports.jsx(
+      Chip$1,
+      {
+        variant: "flat",
+        color: "success",
+        className: "p-2",
+        onClose: () => remove(item.id),
+        startContent: /* @__PURE__ */ jsxRuntimeExports.jsx(Avatar, { className: "size-5", src: item.avatarUrl }),
+        children: item.title
+      },
+      `${item.id}_associated`
+    )) }),
+    /* @__PURE__ */ jsxRuntimeExports.jsxs(Dropdown$2, { size: "sm", className: "border-1 border-foreground/10", children: [
+      /* @__PURE__ */ jsxRuntimeExports.jsx(DropdownTrigger$2, { children: /* @__PURE__ */ jsxRuntimeExports.jsx(Button$a, { size: "sm", radius: "full", variant: "flat", isIconOnly: true, children: /* @__PURE__ */ jsxRuntimeExports.jsx(Add_Icon, {}) }) }),
+      /* @__PURE__ */ jsxRuntimeExports.jsx(DropdownMenu$2, { variant: "flat", items: canBeAssociate, emptyContent: "Nothing available to associate.", children: (item) => /* @__PURE__ */ jsxRuntimeExports.jsx(
+        DropdownItem$2,
+        {
+          onPress: () => add(item.id),
+          startContent: /* @__PURE__ */ jsxRuntimeExports.jsx(Avatar, { className: "size-6", src: item.avatarUrl }),
+          children: item.title
+        },
+        `${item.id}_canBeAssociate`
+      ) })
+    ] })
+  ] }) });
+}
+
+const {Button: Button$9,Card: Card$2,CardBody: CardBody$1,CardFooter: CardFooter$1,CardHeader: CardHeader$1,Chip,Dropdown: Dropdown$1,DropdownItem: DropdownItem$1,DropdownMenu: DropdownMenu$1,DropdownTrigger: DropdownTrigger$1,Popover: Popover$3,PopoverContent: PopoverContent$3,PopoverTrigger: PopoverTrigger$3,Progress: Progress$2} = await importShared('@heroui/react');
+
+const {Divider: Divider$1,Spin: Spin$1} = await importShared('antd');
 
 const {isNil: isNil$3,startCase} = await importShared('lodash');
 
 const {useMemo: useMemo$4,useState: useState$a} = await importShared('react');
+
+const {useDispatch: useDispatch$3} = await importShared('react-redux');
 function InstalledCard({ python, diskUsage, maxDiskValue, updateDefault, refresh, show }) {
   const size = useMemo$4(() => {
     return diskUsage.find((usage) => usage.path === python.installFolder)?.value;
   }, [diskUsage]);
   const [isUninstalling, setIsUninstalling] = useState$a(false);
+  const dispatch = useDispatch$3();
   const makeDefault = () => {
     pIpc.setDefaultPython(python.installFolder).then(() => {
-      updateDefault(python.installFolder);
+      lynxTopToast(dispatch).success(`Python ${python.version} is now the system default.`);
+      updateDefault(python.installFolder, "isDefault");
     }).catch((error) => {
+      lynxTopToast(dispatch).error(`Failed to set ${python.version} as system default. Please try again later.`);
       console.error(error);
+    });
+  };
+  const makeLynxDefault = () => {
+    const showFailedToast = () => {
+      lynxTopToast(dispatch).error(`Failed to set ${python.version} as LynxHub default. Please try again later.`);
+    };
+    pIpc.replacePythonPath(python.installFolder).then((result) => {
+      if (result) {
+        lynxTopToast(dispatch).success(`Python ${python.version} is now the default for LynxHub.`);
+        updateDefault(python.installFolder, "isLynxHubDefault");
+      } else {
+        showFailedToast();
+      }
+    }).catch((e) => {
+      console.log(e);
+      showFailedToast();
     });
   };
   const uninstall = () => {
@@ -9333,6 +10062,54 @@ function InstalledCard({ python, diskUsage, maxDiskValue, updateDefault, refresh
   const packageManager = () => {
     setPackageManagerOpen(true);
   };
+  const borderColor = useMemo$4(() => {
+    return python.isDefault && python.isLynxHubDefault ? "border-2 border-success/60 hover:border-success" : python.isDefault ? "border border-secondary/60 hover:border-secondary" : python.isLynxHubDefault ? "border border-primary/60 hover:border-primary" : "border border-foreground/10 hover:border-foreground/20";
+  }, [python]);
+  const defaultChip = useMemo$4(() => {
+    if (python.isDefault && python.isLynxHubDefault) {
+      return /* @__PURE__ */ jsxRuntimeExports.jsx(
+        Chip,
+        {
+          size: "sm",
+          radius: "sm",
+          variant: "flat",
+          color: "success",
+          startContent: /* @__PURE__ */ jsxRuntimeExports.jsx(CheckCircle_Icon, {}),
+          classNames: { content: "!font-semibold" },
+          children: "System & LynxHub"
+        }
+      );
+    }
+    if (python.isDefault) {
+      return /* @__PURE__ */ jsxRuntimeExports.jsx(
+        Chip,
+        {
+          size: "sm",
+          radius: "sm",
+          variant: "light",
+          color: "secondary",
+          startContent: /* @__PURE__ */ jsxRuntimeExports.jsx(CheckCircle_Icon, {}),
+          classNames: { content: "!font-semibold" },
+          children: "System"
+        }
+      );
+    }
+    if (python.isLynxHubDefault) {
+      return /* @__PURE__ */ jsxRuntimeExports.jsx(
+        Chip,
+        {
+          size: "sm",
+          radius: "sm",
+          variant: "light",
+          color: "primary",
+          startContent: /* @__PURE__ */ jsxRuntimeExports.jsx(CheckCircle_Icon, {}),
+          classNames: { content: "!font-semibold" },
+          children: "LynxHub"
+        }
+      );
+    }
+    return null;
+  }, [python]);
   return /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "grow relative", children: [
     /* @__PURE__ */ jsxRuntimeExports.jsx(
       PackageManagerModal,
@@ -9349,129 +10126,140 @@ function InstalledCard({ python, diskUsage, maxDiskValue, updateDefault, refresh
       /* @__PURE__ */ jsxRuntimeExports.jsx(Spin$1, {}),
       /* @__PURE__ */ jsxRuntimeExports.jsx("span", { children: "Uninstalling... Please wait." })
     ] }) }),
-    /* @__PURE__ */ jsxRuntimeExports.jsx(
-      Card$2,
-      {
-        className: `min-w-[27rem] transition-colors duration-300 shadow-small ${python.isDefault ? "border-secondary border-opacity-60 hover:border-opacity-100" : "dark:hover:border-white/20 hover:border-black/20 "}`,
-        title: /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "flex flex-row justify-between items-center", children: [
-          /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "flex flex-col my-3", children: [
-            /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "flex flex-row items-center gap-x-2", children: [
-              /* @__PURE__ */ jsxRuntimeExports.jsx(Python_Icon, { className: "size-4" }),
-              "Python ",
-              python.version,
-              python.isDefault && /* @__PURE__ */ jsxRuntimeExports.jsx(
-                Chip$1,
-                {
-                  size: "sm",
-                  radius: "sm",
-                  variant: "light",
-                  color: "secondary",
-                  classNames: { content: "!font-semibold" },
-                  children: "System Default"
-                }
-              )
-            ] }),
-            /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { children: [
-              /* @__PURE__ */ jsxRuntimeExports.jsx("span", { className: "text-tiny text-foreground-500", children: python.architecture }),
-              /* @__PURE__ */ jsxRuntimeExports.jsx(Divider$2, { type: "vertical" }),
-              /* @__PURE__ */ jsxRuntimeExports.jsx("span", { className: "text-tiny " + installTypeColor, children: startCase(python.installationType) }),
-              python.installationType === "conda" && /* @__PURE__ */ jsxRuntimeExports.jsxs(jsxRuntimeExports.Fragment, { children: [
-                /* @__PURE__ */ jsxRuntimeExports.jsx(Divider$2, { type: "vertical" }),
-                /* @__PURE__ */ jsxRuntimeExports.jsx("span", { className: "text-tiny text-cyan-500", children: python.condaName })
-              ] })
-            ] })
+    /* @__PURE__ */ jsxRuntimeExports.jsxs(Card$2, { as: "div", className: `min-w-[27rem] grow transition-all cursor-default ${borderColor}`, isPressable: true, children: [
+      /* @__PURE__ */ jsxRuntimeExports.jsxs(CardHeader$1, { className: "flex flex-row justify-between items-center py-1 px-4", children: [
+        /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "flex flex-col my-3", children: [
+          /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "flex flex-row items-center gap-x-2", children: [
+            /* @__PURE__ */ jsxRuntimeExports.jsx(Python_Icon, { className: "size-4 text-yellow-300" }),
+            "Python ",
+            python.version,
+            defaultChip
           ] }),
-          /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "space-x-1 flex items-center", children: [
-            /* @__PURE__ */ jsxRuntimeExports.jsxs(Dropdown$2, { className: "dark:bg-LynxRaisinBlack", children: [
-              /* @__PURE__ */ jsxRuntimeExports.jsx(DropdownTrigger$2, { children: /* @__PURE__ */ jsxRuntimeExports.jsx(Button$a, { size: "sm", variant: "light", isIconOnly: true, children: /* @__PURE__ */ jsxRuntimeExports.jsx(MenuDots_Icon, { className: "rotate-90 size-3.5" }) }) }),
-              /* @__PURE__ */ jsxRuntimeExports.jsxs(DropdownMenu$2, { children: [
-                window.osPlatform === "win32" ? /* @__PURE__ */ jsxRuntimeExports.jsxs(
-                  DropdownItem$2,
+          /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { children: [
+            /* @__PURE__ */ jsxRuntimeExports.jsx("span", { className: "text-tiny text-foreground-500", children: python.architecture }),
+            /* @__PURE__ */ jsxRuntimeExports.jsx(Divider$1, { type: "vertical" }),
+            /* @__PURE__ */ jsxRuntimeExports.jsx("span", { className: "text-tiny " + installTypeColor, children: startCase(python.installationType) }),
+            python.installationType === "conda" && /* @__PURE__ */ jsxRuntimeExports.jsxs(jsxRuntimeExports.Fragment, { children: [
+              /* @__PURE__ */ jsxRuntimeExports.jsx(Divider$1, { type: "vertical" }),
+              /* @__PURE__ */ jsxRuntimeExports.jsx("span", { className: "text-tiny text-cyan-500", children: python.condaName })
+            ] })
+          ] })
+        ] }),
+        /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "space-x-1 flex items-center", children: [
+          /* @__PURE__ */ jsxRuntimeExports.jsxs(Dropdown$1, { className: "dark:bg-LynxRaisinBlack", children: [
+            /* @__PURE__ */ jsxRuntimeExports.jsx(DropdownTrigger$1, { children: /* @__PURE__ */ jsxRuntimeExports.jsx(Button$9, { size: "sm", variant: "light", isIconOnly: true, children: /* @__PURE__ */ jsxRuntimeExports.jsx(MenuDots_Icon, { className: "rotate-90 size-3.5" }) }) }),
+            /* @__PURE__ */ jsxRuntimeExports.jsxs(DropdownMenu$1, { children: [
+              window.osPlatform === "win32" ? /* @__PURE__ */ jsxRuntimeExports.jsxs(jsxRuntimeExports.Fragment, { children: [
+                /* @__PURE__ */ jsxRuntimeExports.jsxs(
+                  DropdownItem$1,
                   {
+                    variant: "flat",
+                    color: "secondary",
                     onPress: makeDefault,
                     textValue: "Set as System Default",
                     startContent: python.isDefault ? /* @__PURE__ */ jsxRuntimeExports.jsx(Refresh3_Icon, { className: "size-4" }) : /* @__PURE__ */ jsxRuntimeExports.jsx(DoubleCheck_Icon, {}),
                     children: [
                       "Set as ",
-                      /* @__PURE__ */ jsxRuntimeExports.jsx("span", { className: "font-bold", children: "System Default" })
+                      /* @__PURE__ */ jsxRuntimeExports.jsx("span", { className: "font-bold text-secondary", children: "System Default" })
                     ]
                   },
                   "system-default"
-                ) : /* @__PURE__ */ jsxRuntimeExports.jsx(DropdownItem$2, { className: "hidden", textValue: "system_default" }, "system-default"),
-                /* @__PURE__ */ jsxRuntimeExports.jsx(
-                  DropdownItem$2,
+                ),
+                /* @__PURE__ */ jsxRuntimeExports.jsxs(
+                  DropdownItem$1,
                   {
-                    onPress: packageManager,
-                    startContent: /* @__PURE__ */ jsxRuntimeExports.jsx(Packages_Icon, { className: "size-4" }),
-                    children: "Manage Packages"
+                    startContent: python.isLynxHubDefault ? /* @__PURE__ */ jsxRuntimeExports.jsx(Refresh3_Icon, { className: "size-4" }) : /* @__PURE__ */ jsxRuntimeExports.jsx(DoubleCheck_Icon, {}),
+                    variant: "flat",
+                    color: "success",
+                    onPress: makeLynxDefault,
+                    textValue: "Set as LynxHub Default",
+                    children: [
+                      "Set as ",
+                      /* @__PURE__ */ jsxRuntimeExports.jsx("span", { className: "font-bold text-primary", children: "LynxHub Default" })
+                    ]
                   },
-                  "package-manager"
+                  "lynxhub-default"
                 )
-              ] })
-            ] }),
-            /* @__PURE__ */ jsxRuntimeExports.jsxs(
-              Popover$3,
-              {
-                size: "sm",
-                color: "danger",
-                placement: "left",
-                className: "max-w-[15rem]",
-                isOpen: popoverUninstaller,
-                onOpenChange: setPopoverUninstaller,
-                showArrow: true,
-                children: [
-                  /* @__PURE__ */ jsxRuntimeExports.jsx(PopoverTrigger$3, { children: /* @__PURE__ */ jsxRuntimeExports.jsx(Button$a, { size: "sm", color: "danger", variant: "light", isIconOnly: true, children: /* @__PURE__ */ jsxRuntimeExports.jsx(Trash_Icon, { className: "size-[50%]" }) }) }),
-                  /* @__PURE__ */ jsxRuntimeExports.jsx(PopoverContent$3, { children: /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "p-2 space-y-2", children: [
-                    python.installationType === "conda" ? /* @__PURE__ */ jsxRuntimeExports.jsx("span", { children: `Confirm deletion of the entire Conda environment "${python.condaName}" and all associated packages. This action is irreversible.` }) : /* @__PURE__ */ jsxRuntimeExports.jsx("span", { children: `Confirm uninstallation of Python version ${python.version} and deletion of all associated packages. This action is irreversible.` }),
-                    /* @__PURE__ */ jsxRuntimeExports.jsx(Button$a, { size: "sm", onPress: uninstall, fullWidth: true, children: "Uninstall" })
-                  ] }) })
-                ]
-              }
-            )
-          ] })
-        ] }),
-        classNames: { body: "gap-y-4" },
-        children: /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "gap-y-4 flex flex-col", children: [
-          /* @__PURE__ */ jsxRuntimeExports.jsxs(Button$a, { size: "sm", variant: "light", onPress: openPath, className: "flex flex-row justify-start -ml-3 -mb-1.5", children: [
-            /* @__PURE__ */ jsxRuntimeExports.jsx(OpenFolder_Icon, { className: "flex-shrink-0" }),
-            /* @__PURE__ */ jsxRuntimeExports.jsx("span", { className: "truncate", children: python.installFolder })
+              ] }) : /* @__PURE__ */ jsxRuntimeExports.jsx(DropdownItem$1, { className: "hidden", textValue: "system_default" }, "system-default"),
+              /* @__PURE__ */ jsxRuntimeExports.jsx(
+                DropdownItem$1,
+                {
+                  onPress: packageManager,
+                  startContent: /* @__PURE__ */ jsxRuntimeExports.jsx(Packages_Icon, { className: "size-4" }),
+                  children: "Manage Packages"
+                },
+                "package-manager"
+              )
+            ] })
           ] }),
-          /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "w-full justify-between flex flex-row", children: [
-            /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "flex flex-row gap-x-1 items-center", children: [
-              /* @__PURE__ */ jsxRuntimeExports.jsx(Packages_Icon, { className: "size-3" }),
-              /* @__PURE__ */ jsxRuntimeExports.jsx("span", { children: "Installed Packages:" })
-            ] }),
-            /* @__PURE__ */ jsxRuntimeExports.jsx("span", { children: python.packages })
-          ] }),
-          /* @__PURE__ */ jsxRuntimeExports.jsx(
-            Progress$2,
+          /* @__PURE__ */ jsxRuntimeExports.jsxs(
+            Popover$3,
             {
-              label: /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "flex flex-row gap-x-2 items-center", children: [
-                /* @__PURE__ */ jsxRuntimeExports.jsx(HardDrive_Icon, {}),
-                /* @__PURE__ */ jsxRuntimeExports.jsx("span", { children: "Disk Usage:" })
-              ] }),
               size: "sm",
-              minValue: 0,
-              value: size,
-              color: "primary",
-              maxValue: maxDiskValue,
-              isIndeterminate: isNil$3(size),
-              valueLabel: formatSizeMB(size || 0),
-              showValueLabel: true
+              color: "danger",
+              placement: "left",
+              className: "max-w-[15rem]",
+              isOpen: popoverUninstaller,
+              onOpenChange: setPopoverUninstaller,
+              showArrow: true,
+              children: [
+                /* @__PURE__ */ jsxRuntimeExports.jsx(PopoverTrigger$3, { children: /* @__PURE__ */ jsxRuntimeExports.jsx(Button$9, { size: "sm", color: "danger", variant: "light", isIconOnly: true, children: /* @__PURE__ */ jsxRuntimeExports.jsx(TrashDuo_Icon, { className: "size-[50%]" }) }) }),
+                /* @__PURE__ */ jsxRuntimeExports.jsx(PopoverContent$3, { children: /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "p-2 space-y-2", children: [
+                  python.installationType === "conda" ? /* @__PURE__ */ jsxRuntimeExports.jsx("span", { children: `Confirm deletion of the entire Conda environment "${python.condaName}" and all associated packages. This action is irreversible.` }) : /* @__PURE__ */ jsxRuntimeExports.jsx("span", { children: `Confirm uninstallation of Python version ${python.version} and deletion of all associated packages. This action is irreversible.` }),
+                  /* @__PURE__ */ jsxRuntimeExports.jsx(Button$9, { size: "sm", onPress: uninstall, fullWidth: true, children: "Uninstall" })
+                ] }) })
+              ]
             }
           )
         ] })
-      }
-    )
+      ] }),
+      /* @__PURE__ */ jsxRuntimeExports.jsxs(CardBody$1, { className: "gap-y-4 px-4 flex flex-col text-sm", children: [
+        /* @__PURE__ */ jsxRuntimeExports.jsxs(Button$9, { size: "sm", variant: "light", onPress: openPath, className: "flex flex-row justify-start -ml-3 -mb-1.5", children: [
+          /* @__PURE__ */ jsxRuntimeExports.jsx(OpenFolder_Icon, { className: "flex-shrink-0" }),
+          /* @__PURE__ */ jsxRuntimeExports.jsx("span", { className: "truncate", children: python.installFolder })
+        ] }),
+        /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "w-full justify-between flex flex-row", children: [
+          /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "flex flex-row gap-x-2 items-center", children: [
+            /* @__PURE__ */ jsxRuntimeExports.jsx(Packages_Icon, { className: "size-3" }),
+            /* @__PURE__ */ jsxRuntimeExports.jsx("span", { children: "Installed Packages:" })
+          ] }),
+          /* @__PURE__ */ jsxRuntimeExports.jsx("span", { children: python.packages })
+        ] }),
+        /* @__PURE__ */ jsxRuntimeExports.jsx(
+          Progress$2,
+          {
+            label: /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "flex flex-row gap-x-2 items-center", children: [
+              /* @__PURE__ */ jsxRuntimeExports.jsx(HardDrive_Icon, { className: "size-3" }),
+              /* @__PURE__ */ jsxRuntimeExports.jsx("span", { children: "Disk Usage:" })
+            ] }),
+            size: "sm",
+            minValue: 0,
+            value: size,
+            color: "primary",
+            maxValue: maxDiskValue,
+            isIndeterminate: isNil$3(size),
+            valueLabel: formatSizeMB(size || 0),
+            showValueLabel: true
+          }
+        )
+      ] }),
+      /* @__PURE__ */ jsxRuntimeExports.jsx(CardFooter$1, { className: "flex-col gap-y-3", children: /* @__PURE__ */ jsxRuntimeExports.jsx(
+        Venv_Associate,
+        {
+          folder: python.installFolder,
+          type: python.installationType === "conda" ? "conda" : "python"
+        }
+      ) })
+    ] })
   ] });
 }
 
-const {Button: Button$9,CircularProgress: CircularProgress$1,Input: Input$2,Link: Link$1,Popover: Popover$2,PopoverContent: PopoverContent$2,PopoverTrigger: PopoverTrigger$2,Progress: Progress$1,Spinner: Spinner$2} = await importShared('@heroui/react');
+const {Button: Button$8,CircularProgress: CircularProgress$2,Input: Input$2,Link: Link$1,Popover: Popover$2,PopoverContent: PopoverContent$2,PopoverTrigger: PopoverTrigger$2,Progress: Progress$1,Spinner: Spinner$2} = await importShared('@heroui/react');
 
 const {List: List$1,Result,Tooltip: Tooltip$1} = await importShared('antd');
 
-const {isEmpty: isEmpty$5,isNil: isNil$2} = await importShared('lodash');
-const {useEffect: useEffect$7,useState: useState$9} = await importShared('react');
+const {isEmpty: isEmpty$4,isNil: isNil$2,isString: isString$2} = await importShared('lodash');
+const {useEffect: useEffect$8,useState: useState$9} = await importShared('react');
 const CACHE_KEY$1 = "available-conda-pythons-list";
 function InstallerConda({ refresh, installed, closeModal, isOpen, setCloseDisabled }) {
   const isDarkMode = useAppState("darkMode");
@@ -9483,34 +10271,59 @@ function InstallerConda({ refresh, installed, closeModal, isOpen, setCloseDisabl
   const [percentage, setPercentage] = useState$9(0);
   const [envName, setEnvName] = useState$9("");
   const [isCondaInstalled, setIsCondaInstalled] = useState$9(void 0);
-  useEffect$7(() => {
+  const [errorLoadingVersion, setErrorLoadingVersion] = useState$9({
+    title: "Failed to fetch available Python versions",
+    description: "Please check your internet connection and try again. If the problem persists, please open an issue on GitHub."
+  });
+  useEffect$8(() => {
     pIpc.isCondaInstalled().then((result) => {
       setIsCondaInstalled(result);
     });
   }, []);
-  useEffect$7(() => {
-    if (isOpen && isEmpty$5(versions)) fetchPythonList(false);
+  useEffect$8(() => {
+    if (isOpen && isEmpty$4(versions)) fetchPythonList(false);
   }, [isOpen, versions]);
-  useEffect$7(() => {
-    if (isEmpty$5(inputValue)) {
+  useEffect$8(() => {
+    if (isEmpty$4(inputValue)) {
       setSearchVersions(versions);
     } else {
       setSearchVersions(versions.filter((version) => version.startsWith(inputValue)));
     }
   }, [inputValue, versions]);
   const fetchPythonList = (refresh2) => {
-    setLoadingList(true);
-    const cachedList = localStorage.getItem(CACHE_KEY$1);
-    if (!refresh2 && !isNil$2(cachedList)) {
-      setVersions(JSON.parse(cachedList).filter((item) => !installed.includes(item)));
-      setLoadingList(false);
-    } else {
+    setErrorLoadingVersion(void 0);
+    const getFreshData = () => {
       pIpc.getAvailableConda().then((result) => {
+        console.log("result: ", result);
         localStorage.setItem(CACHE_KEY$1, JSON.stringify(result));
         const filteredVersions = result.filter((item) => !installed.includes(item));
         setVersions(filteredVersions);
         setLoadingList(false);
+        setErrorLoadingVersion(void 0);
+      }).catch((e) => {
+        console.log("error: ", e);
+        if (e.message && isString$2(e.message)) {
+          setErrorLoadingVersion({ title: "Failed to fetch available Python versions", description: e.message });
+        } else {
+          setErrorLoadingVersion({
+            title: "Failed to fetch available Python versions",
+            description: "Please check your internet connection and validate conda. If the problem persists, please open an issue on GitHub."
+          });
+        }
       });
+    };
+    setLoadingList(true);
+    const cachedList = localStorage.getItem(CACHE_KEY$1);
+    if (!refresh2 && !isNil$2(cachedList)) {
+      const cachedVersions = JSON.parse(cachedList).filter((item) => !installed.includes(item));
+      if (isEmpty$4(cachedVersions)) {
+        getFreshData();
+      } else {
+        setVersions(cachedVersions);
+        setLoadingList(false);
+      }
+    } else {
+      getFreshData();
     }
   };
   const installPython = (version) => {
@@ -9532,7 +10345,7 @@ function InstallerConda({ refresh, installed, closeModal, isOpen, setCloseDisabl
     });
   };
   if (isCondaInstalled === void 0) {
-    return /* @__PURE__ */ jsxRuntimeExports.jsx(CircularProgress$1, { size: "lg", className: "mb-4 self-center", label: "Checking for Conda installation..." });
+    return /* @__PURE__ */ jsxRuntimeExports.jsx(CircularProgress$2, { size: "lg", className: "mb-4 self-center", label: "Checking for Conda installation..." });
   } else if (!isCondaInstalled) {
     return /* @__PURE__ */ jsxRuntimeExports.jsx(
       Result,
@@ -9540,7 +10353,7 @@ function InstallerConda({ refresh, installed, closeModal, isOpen, setCloseDisabl
         extra: /* @__PURE__ */ jsxRuntimeExports.jsx(
           Link$1,
           {
-            as: Button$9,
+            as: Button$8,
             variant: "flat",
             color: "foreground",
             onPress: () => window.open("https://docs.conda.io/projects/conda/en/latest/user-guide/install/index.html"),
@@ -9557,7 +10370,7 @@ function InstallerConda({ refresh, installed, closeModal, isOpen, setCloseDisabl
     );
   }
   return /* @__PURE__ */ jsxRuntimeExports.jsxs(jsxRuntimeExports.Fragment, { children: [
-    isEmpty$5(installingVersion) && /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "flex flex-row gap-x-2 px-4", children: [
+    isEmpty$4(installingVersion) && /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "flex flex-row gap-x-2 px-4", children: [
       /* @__PURE__ */ jsxRuntimeExports.jsx(
         Input$2,
         {
@@ -9570,7 +10383,7 @@ function InstallerConda({ refresh, installed, closeModal, isOpen, setCloseDisabl
         }
       ),
       /* @__PURE__ */ jsxRuntimeExports.jsx(Tooltip$1, { title: "Refresh from server", children: /* @__PURE__ */ jsxRuntimeExports.jsx(
-        Button$9,
+        Button$8,
         {
           size: "sm",
           variant: "flat",
@@ -9580,7 +10393,11 @@ function InstallerConda({ refresh, installed, closeModal, isOpen, setCloseDisabl
         }
       ) })
     ] }),
-    /* @__PURE__ */ jsxRuntimeExports.jsx(
+    errorLoadingVersion ? /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "size-full py-2 px-16 text-danger flex flex-col items-center justify-center gap-4", children: [
+      /* @__PURE__ */ jsxRuntimeExports.jsx(Warn_Icon, { className: "size-20" }),
+      /* @__PURE__ */ jsxRuntimeExports.jsx("span", { className: "text-lg", children: errorLoadingVersion.title }),
+      /* @__PURE__ */ jsxRuntimeExports.jsx("span", { className: "text-warning/50 text-sm", children: errorLoadingVersion.description })
+    ] }) : /* @__PURE__ */ jsxRuntimeExports.jsx(
       g,
       {
         options: {
@@ -9592,7 +10409,7 @@ function InstallerConda({ refresh, installed, closeModal, isOpen, setCloseDisabl
           }
         },
         className: `pr-3 mr-1 pl-4 pb-4 text-center`,
-        children: !isEmpty$5(installingVersion) ? /* @__PURE__ */ jsxRuntimeExports.jsx(
+        children: !isEmpty$4(installingVersion) ? /* @__PURE__ */ jsxRuntimeExports.jsx(
           Progress$1,
           {
             value: percentage,
@@ -9606,7 +10423,7 @@ function InstallerConda({ refresh, installed, closeModal, isOpen, setCloseDisabl
           {
             size: "lg",
             className: "justify-self-center my-4",
-            label: "Loading available Conda Python versions...",
+            label: "Loading available Python versions...",
             classNames: { circle2: "border-b-[#ffe66e]", circle1: "border-b-[#ffe66e] " }
           }
         ) : /* @__PURE__ */ jsxRuntimeExports.jsx(
@@ -9617,7 +10434,7 @@ function InstallerConda({ refresh, installed, closeModal, isOpen, setCloseDisabl
               {
                 actions: [
                   /* @__PURE__ */ jsxRuntimeExports.jsxs(Popover$2, { children: [
-                    /* @__PURE__ */ jsxRuntimeExports.jsx(PopoverTrigger$2, { children: /* @__PURE__ */ jsxRuntimeExports.jsx(Button$9, { size: "sm", variant: "flat", children: "Install" }) }),
+                    /* @__PURE__ */ jsxRuntimeExports.jsx(PopoverTrigger$2, { children: /* @__PURE__ */ jsxRuntimeExports.jsx(Button$8, { size: "sm", variant: "flat", children: "Install" }) }),
                     /* @__PURE__ */ jsxRuntimeExports.jsx(PopoverContent$2, { children: /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "px-2 py-1 space-y-2 text-center", children: [
                       /* @__PURE__ */ jsxRuntimeExports.jsx(
                         Input$2,
@@ -9633,7 +10450,7 @@ function InstallerConda({ refresh, installed, closeModal, isOpen, setCloseDisabl
                           placeholder: "Enter Conda environment name..."
                         }
                       ),
-                      /* @__PURE__ */ jsxRuntimeExports.jsxs(Button$9, { size: "sm", onPress: () => installPython(item), fullWidth: true, children: [
+                      /* @__PURE__ */ jsxRuntimeExports.jsxs(Button$8, { size: "sm", onPress: () => installPython(item), fullWidth: true, children: [
                         "Install v",
                         item
                       ] })
@@ -9654,12 +10471,12 @@ function InstallerConda({ refresh, installed, closeModal, isOpen, setCloseDisabl
   ] });
 }
 
-const {Button: Button$8,CircularProgress,Input: Input$1,Link,Progress} = await importShared('@heroui/react');
+const {Button: Button$7,CircularProgress: CircularProgress$1,Input: Input$1,Link,Progress} = await importShared('@heroui/react');
 
 const {List,message: message$3,Tooltip} = await importShared('antd');
 
-const {isEmpty: isEmpty$4,isNil: isNil$1} = await importShared('lodash');
-const {useEffect: useEffect$6,useState: useState$8} = await importShared('react');
+const {isEmpty: isEmpty$3,isNil: isNil$1,isString: isString$1} = await importShared('lodash');
+const {useEffect: useEffect$7,useState: useState$8} = await importShared('react');
 const CACHE_KEY = "available-pythons-list";
 function InstallerOfficial({ refresh, installed, closeModal, isOpen, setCloseDisabled }) {
   const isDarkMode = useAppState("darkMode");
@@ -9670,6 +10487,9 @@ function InstallerOfficial({ refresh, installed, closeModal, isOpen, setCloseDis
   const [installStage, setInstallStage] = useState$8();
   const [downloadProgress, setDownloadProgress] = useState$8(void 0);
   const [installingVersion, setInstallingVersion] = useState$8(void 0);
+  const [errorLoadingVersion, setErrorLoadingVersion] = useState$8(
+    void 0
+  );
   const fetchPythonList = (refresh2) => {
     setLoadingList(true);
     const cachedList = localStorage.getItem(CACHE_KEY);
@@ -9682,14 +10502,31 @@ function InstallerOfficial({ refresh, installed, closeModal, isOpen, setCloseDis
         const filteredVersions = result.filter((item) => !installed.includes(item.version));
         setVersions(filteredVersions);
         setLoadingList(false);
+        setErrorLoadingVersion(void 0);
+      }).catch((e) => {
+        if (e.message && isString$1(e.message)) {
+          if (e.message.toLowerCase().includes("deadsnakes")) {
+            setErrorLoadingVersion({
+              title: "Deadsnakes PPA Missing",
+              description: "The application tried to add the Deadsnakes PPA but failed. Please add it manually by running the following commands : `sudo add-apt-repository -y ppa:deadsnakes/ppa` and then `sudo apt update`."
+            });
+          } else {
+            setErrorLoadingVersion({ title: "Failed to fetch Python versions", description: e.message });
+          }
+        } else {
+          setErrorLoadingVersion({
+            title: "Failed to fetch Python versions",
+            description: "Please check your internet connection and try again. If the problem persists, please open an issue on GitHub."
+          });
+        }
       });
     }
   };
-  useEffect$6(() => {
-    if (isOpen && isEmpty$4(versions)) fetchPythonList(false);
+  useEffect$7(() => {
+    if (isOpen && isEmpty$3(versions)) fetchPythonList(false);
   }, [isOpen, versions]);
-  useEffect$6(() => {
-    if (isEmpty$4(inputValue)) {
+  useEffect$7(() => {
+    if (isEmpty$3(inputValue)) {
       setSearchVersions(versions);
     } else {
       setSearchVersions(versions.filter((version) => version.version.startsWith(inputValue)));
@@ -9727,7 +10564,7 @@ function InstallerOfficial({ refresh, installed, closeModal, isOpen, setCloseDis
     });
   };
   return /* @__PURE__ */ jsxRuntimeExports.jsxs(jsxRuntimeExports.Fragment, { children: [
-    isEmpty$4(installingVersion) && /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "flex flex-row gap-x-2 px-4", children: [
+    isEmpty$3(installingVersion) && /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "flex flex-row gap-x-2 px-4", children: [
       /* @__PURE__ */ jsxRuntimeExports.jsx(
         Input$1,
         {
@@ -9740,7 +10577,7 @@ function InstallerOfficial({ refresh, installed, closeModal, isOpen, setCloseDis
         }
       ),
       /* @__PURE__ */ jsxRuntimeExports.jsx(Tooltip, { title: "Refresh available Python versions", children: /* @__PURE__ */ jsxRuntimeExports.jsx(
-        Button$8,
+        Button$7,
         {
           size: "sm",
           variant: "flat",
@@ -9750,7 +10587,11 @@ function InstallerOfficial({ refresh, installed, closeModal, isOpen, setCloseDis
         }
       ) })
     ] }),
-    /* @__PURE__ */ jsxRuntimeExports.jsx(
+    errorLoadingVersion ? /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "size-full py-2 text-danger flex flex-col items-center justify-center gap-4", children: [
+      /* @__PURE__ */ jsxRuntimeExports.jsx(Warn_Icon, { className: "size-20" }),
+      /* @__PURE__ */ jsxRuntimeExports.jsx("span", { className: "text-lg", children: errorLoadingVersion.title }),
+      /* @__PURE__ */ jsxRuntimeExports.jsx("span", { className: "text-warning text-sm", children: errorLoadingVersion.description })
+    ] }) : /* @__PURE__ */ jsxRuntimeExports.jsx(
       g,
       {
         options: {
@@ -9762,7 +10603,7 @@ function InstallerOfficial({ refresh, installed, closeModal, isOpen, setCloseDis
           }
         },
         className: `pr-3 mr-1 pl-4 pb-4`,
-        children: !isEmpty$4(installingVersion) ? installStage === "installing" ? /* @__PURE__ */ jsxRuntimeExports.jsx(
+        children: !isEmpty$3(installingVersion) ? installStage === "installing" ? /* @__PURE__ */ jsxRuntimeExports.jsx(
           Progress,
           {
             className: "my-4 px-2",
@@ -9780,7 +10621,7 @@ function InstallerOfficial({ refresh, installed, closeModal, isOpen, setCloseDis
             showValueLabel: true
           }
         ) : loadingList ? /* @__PURE__ */ jsxRuntimeExports.jsx(
-          CircularProgress,
+          CircularProgress$1,
           {
             size: "lg",
             className: "justify-self-center my-4",
@@ -9794,7 +10635,7 @@ function InstallerOfficial({ refresh, installed, closeModal, isOpen, setCloseDis
               List.Item,
               {
                 actions: [
-                  /* @__PURE__ */ jsxRuntimeExports.jsx(Button$8, { size: "sm", variant: "flat", onPress: () => installPython(item), children: "Install" }, "install_python")
+                  /* @__PURE__ */ jsxRuntimeExports.jsx(Button$7, { size: "sm", variant: "flat", onPress: () => installPython(item), children: "Install" }, "install_python")
                 ],
                 className: "hover:bg-foreground-100 transition-colors duration-150",
                 children: /* @__PURE__ */ jsxRuntimeExports.jsx(Link, { size: "sm", href: item.url, color: "foreground", isExternal: true, showAnchorIcon: true, children: item.version })
@@ -9810,7 +10651,7 @@ function InstallerOfficial({ refresh, installed, closeModal, isOpen, setCloseDis
   ] });
 }
 
-const {Button: Button$7,Modal: Modal$1,ModalBody: ModalBody$1,ModalContent: ModalContent$1,ModalFooter: ModalFooter$1,ModalHeader: ModalHeader$1,Tab: Tab$1,Tabs: Tabs$1} = await importShared('@heroui/react');
+const {Button: Button$6,Modal: Modal$1,ModalBody: ModalBody$1,ModalContent: ModalContent$1,ModalFooter: ModalFooter$1,ModalHeader: ModalHeader$1,Tab: Tab$1,Tabs: Tabs$1} = await importShared('@heroui/react');
 
 const {useMemo: useMemo$3,useState: useState$7} = await importShared('react');
 function InstallerModal({ isOpen, closeModal, refresh, installed, show }) {
@@ -9866,29 +10707,19 @@ function InstallerModal({ isOpen, closeModal, refresh, installed, show }) {
             }
           )
         ] }),
-        /* @__PURE__ */ jsxRuntimeExports.jsx(ModalFooter$1, { className: "py-3", children: /* @__PURE__ */ jsxRuntimeExports.jsx(
-          Button$7,
-          {
-            variant: "light",
-            color: "warning",
-            onPress: closeModal,
-            className: "cursor-default",
-            isDisabled: closeDisabled,
-            children: "Close"
-          }
-        ) })
+        /* @__PURE__ */ jsxRuntimeExports.jsx(ModalFooter$1, { className: "py-3", children: /* @__PURE__ */ jsxRuntimeExports.jsx(Button$6, { variant: "light", color: "warning", onPress: closeModal, isDisabled: closeDisabled, children: "Close" }) })
       ] })
     }
   ) });
 }
 
-const {Button: Button$6,Spinner: Spinner$1} = await importShared('@heroui/react');
+const {Button: Button$5,Spinner: Spinner$1} = await importShared('@heroui/react');
 
 const {Empty: Empty$1} = await importShared('antd');
 
-const {isEmpty: isEmpty$3} = await importShared('lodash');
+const {cloneDeep,isEmpty: isEmpty$2} = await importShared('lodash');
 
-const {useEffect: useEffect$5,useState: useState$6} = await importShared('react');
+const {useCallback: useCallback$3,useEffect: useEffect$6,useState: useState$6} = await importShared('react');
 function InstalledPythons({
   visible,
   installedPythons,
@@ -9897,9 +10728,10 @@ function InstalledPythons({
   isLoadingPythons,
   show
 }) {
+  const cacheStorageUsage = usePythonToolkitState("cacheStorageUsage");
   const [diskUsage, setDiskUsage] = useState$6([]);
   const [maxDiskValue, setMaxDiskValue] = useState$6(0);
-  useEffect$5(() => {
+  useEffect$6(() => {
     diskUsage.forEach((disk) => {
       setMaxDiskValue((prevState) => {
         const size = disk.value || 0;
@@ -9911,26 +10743,49 @@ function InstalledPythons({
       });
     });
   }, [diskUsage]);
+  const calcDiskUsage = useCallback$3(
+    (python) => {
+      rendererIpc.file.calcFolderSize(python.sitePackagesPath).then((value) => {
+        if (value) {
+          window.localStorage.setItem(getDiskUsageID(python.installFolder), JSON.stringify(bytesToMegabytes(value)));
+          setDiskUsage((prevState) => [
+            ...prevState,
+            {
+              path: python.installFolder,
+              value: bytesToMegabytes(value)
+            }
+          ]);
+        }
+      });
+    },
+    [setDiskUsage]
+  );
   const getInstalledPythons = (refresh) => {
     setIsLoadingPythons(true);
     pIpc.getInstalledPythons(refresh).then((result) => {
       setInstalledPythons(result);
       setIsLoadingPythons(false);
       for (const python of result) {
-        rendererIpc.file.calcFolderSize(python.sitePackagesPath).then((value) => {
-          if (value)
+        if (cacheStorageUsage) {
+          const cachedUsage = window.localStorage.getItem(getDiskUsageID(python.installFolder));
+          if (!cachedUsage) {
+            calcDiskUsage(python);
+          } else {
             setDiskUsage((prevState) => [
               ...prevState,
               {
                 path: python.installFolder,
-                value: bytesToMegabytes(value)
+                value: JSON.parse(cachedUsage)
               }
             ]);
-        });
+          }
+        } else {
+          calcDiskUsage(python);
+        }
       }
     });
   };
-  useEffect$5(() => {
+  useEffect$6(() => {
     getInstalledPythons(false);
   }, []);
   const [installModalOpen, setInstallModalOpen] = useState$6(false);
@@ -9940,17 +10795,19 @@ function InstalledPythons({
   const closeInstallModal = () => {
     setInstallModalOpen(false);
   };
-  const updateDefault = (installFolder) => {
+  const updateDefault = (installFolder, type) => {
     setInstalledPythons(
-      (prevState) => prevState.map((python) => {
-        if (python.installFolder === installFolder) {
-          python.isDefault = true;
-          return python;
-        } else {
-          python.isDefault = false;
-          return python;
-        }
-      })
+      (prevState) => cloneDeep(
+        prevState.map((python) => {
+          if (python.installFolder === installFolder) {
+            python[type] = true;
+            return python;
+          } else {
+            python[type] = false;
+            return python;
+          }
+        })
+      )
     );
   };
   if (!visible) return null;
@@ -9974,14 +10831,14 @@ function InstalledPythons({
     /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "w-full flex flex-row justify-between items-center", children: [
       /* @__PURE__ */ jsxRuntimeExports.jsx("span", { className: "font-bold", children: "Installed Versions" }),
       /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "justify-center items-center flex gap-x-2", children: [
-        /* @__PURE__ */ jsxRuntimeExports.jsx(Button$6, { radius: "sm", variant: "solid", onPress: openInstallModal, startContent: /* @__PURE__ */ jsxRuntimeExports.jsx(Add_Icon, {}), children: "Install Version" }),
-        /* @__PURE__ */ jsxRuntimeExports.jsx(Button$6, { variant: "flat", startContent: /* @__PURE__ */ jsxRuntimeExports.jsx(Refresh_Icon, {}), onPress: () => getInstalledPythons(true), children: "Refresh List" })
+        /* @__PURE__ */ jsxRuntimeExports.jsx(Button$5, { variant: "solid", onPress: openInstallModal, startContent: /* @__PURE__ */ jsxRuntimeExports.jsx(Add_Icon, {}), children: "Install Version" }),
+        /* @__PURE__ */ jsxRuntimeExports.jsx(Button$5, { variant: "flat", startContent: /* @__PURE__ */ jsxRuntimeExports.jsx(Refresh_Icon, {}), onPress: () => getInstalledPythons(true), children: "Refresh List" })
       ] })
     ] }),
     /* @__PURE__ */ jsxRuntimeExports.jsx(
       "div",
       {
-        className: `flex flex-row flex-wrap gap-8 ${(isLoadingPythons || isEmpty$3(installedPythons)) && "justify-center"}`,
+        className: `flex flex-row flex-wrap gap-8 ${(isLoadingPythons || isEmpty$2(installedPythons)) && "justify-center"}`,
         children: isLoadingPythons ? /* @__PURE__ */ jsxRuntimeExports.jsx(
           Spinner$1,
           {
@@ -9989,7 +10846,7 @@ function InstalledPythons({
             label: "Loading Python installations...",
             classNames: { circle2: "border-b-[#ffe66e]", circle1: "border-b-[#ffe66e] " }
           }
-        ) : isEmpty$3(installedPythons) ? /* @__PURE__ */ jsxRuntimeExports.jsx(Empty$1, { description: `No Python installations found. Use the "Install Version" button to add one.` }) : installedPythons.map((python) => /* @__PURE__ */ jsxRuntimeExports.jsx(
+        ) : isEmpty$2(installedPythons) ? /* @__PURE__ */ jsxRuntimeExports.jsx(Empty$1, { description: `No Python installations found. Use the "Install Version" button to add one.` }) : installedPythons.map((python) => /* @__PURE__ */ jsxRuntimeExports.jsx(
           InstalledCard,
           {
             show,
@@ -17520,83 +18377,12 @@ function requireCryptoJs () {
 
 var cryptoJsExports = /*@__PURE__*/ requireCryptoJs();
 
-let allCardsExt = [];
-const setCards = (cards) => {
-  allCardsExt = cards;
-};
+const {Button: Button$4,Card: Card$1,CardBody,CardFooter,CardHeader,Dropdown,DropdownItem,DropdownMenu,DropdownTrigger,Popover: Popover$1,PopoverContent: PopoverContent$1,PopoverTrigger: PopoverTrigger$1} = await importShared('@heroui/react');
 
-const {Button: Button$5,Chip,Dropdown: Dropdown$1,DropdownItem: DropdownItem$1,DropdownMenu: DropdownMenu$1,DropdownTrigger: DropdownTrigger$1} = await importShared('@heroui/react');
-
-const {Divider: Divider$1} = await importShared('antd');
-
-const {isEmpty: isEmpty$2} = await importShared('lodash');
-
-const {useCallback: useCallback$2,useEffect: useEffect$4,useState: useState$5} = await importShared('react');
-function Venv_Associate({ pythonPath }) {
-  const [associated, setAssociated] = useState$5([]);
-  const [itemsToAdd, setItemsToAdd] = useState$5([]);
-  const installedCards = useCardsState("installedCards");
-  useEffect$4(() => {
-    if (pythonPath) getAssociated();
-  }, [pythonPath]);
-  const getAssociated = useCallback$2(() => {
-    pIpc.getAIVenvs().then((aiVenvs) => {
-      if (!aiVenvs) return;
-      const cardTitleMap = new Map(allCardsExt.map((card) => [card.id, card.title]));
-      const installedCardsWithTitles = installedCards.filter((card) => cardTitleMap.has(card.id)).map((card) => ({
-        title: cardTitleMap.get(card.id),
-        id: card.id
-      }));
-      const aiVenvIds = new Set(aiVenvs.map((aiVenv) => aiVenv.id));
-      const newItemsToAdd = installedCardsWithTitles.filter(
-        (card) => !aiVenvIds.has(card.id) && PYTHON_SUPPORTED_AI.includes(card.id)
-      );
-      setItemsToAdd(newItemsToAdd);
-      const activeAiVenvsWithTitles = aiVenvs.filter((aiVenv) => aiVenv.path === pythonPath && installedCards.some((card) => card.id === aiVenv.id)).map((aiVenv) => ({
-        title: cardTitleMap.get(aiVenv.id),
-        id: aiVenv.id
-      }));
-      setAssociated(activeAiVenvsWithTitles);
-    });
-  }, [pythonPath, installedCards]);
-  const add = (id) => {
-    pIpc.addAIVenv(id, pythonPath);
-    getAssociated();
-  };
-  const remove = (id) => {
-    pIpc.removeAIVenv(id);
-    getAssociated();
-  };
-  return /* @__PURE__ */ jsxRuntimeExports.jsxs(jsxRuntimeExports.Fragment, { children: [
-    /* @__PURE__ */ jsxRuntimeExports.jsx(Divider$1, { variant: "dashed", className: "!my-0", children: /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "flex flex-row items-center gap-x-2", children: /* @__PURE__ */ jsxRuntimeExports.jsx("span", { className: "text-small font-bold", children: "Associated AI" }) }) }),
-    /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "flex flex-row justify-between w-full", children: [
-      /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "w-full flex flex-row gap-x-1 gap-y-2 items-center flex-wrap", children: isEmpty$2(associated) ? /* @__PURE__ */ jsxRuntimeExports.jsx(Chip, { size: "sm", radius: "sm", variant: "dot", color: "default", className: "animate-appearance-in", children: "Not Associated" }) : associated.map((item) => /* @__PURE__ */ jsxRuntimeExports.jsx(
-        Chip,
-        {
-          size: "sm",
-          radius: "sm",
-          variant: "dot",
-          color: "success",
-          onClose: () => remove(item.id),
-          className: "animate-appearance-in",
-          children: item.title
-        },
-        item.id
-      )) }),
-      /* @__PURE__ */ jsxRuntimeExports.jsxs(Dropdown$1, { size: "sm", className: "border-1 border-foreground-200", children: [
-        /* @__PURE__ */ jsxRuntimeExports.jsx(DropdownTrigger$1, { children: /* @__PURE__ */ jsxRuntimeExports.jsx(Button$5, { size: "sm", variant: "flat", isIconOnly: true, children: /* @__PURE__ */ jsxRuntimeExports.jsx(Add_Icon, {}) }) }),
-        /* @__PURE__ */ jsxRuntimeExports.jsx(DropdownMenu$1, { variant: "faded", items: itemsToAdd, children: (item) => /* @__PURE__ */ jsxRuntimeExports.jsx(DropdownItem$1, { onPress: () => add(item.id), children: item.title }, item.id) })
-      ] })
-    ] })
-  ] });
-}
-
-const {Button: Button$4,Dropdown,DropdownItem,DropdownMenu,DropdownTrigger,Popover: Popover$1,PopoverContent: PopoverContent$1,PopoverTrigger: PopoverTrigger$1} = await importShared('@heroui/react');
-
-const {Card: Card$1,message: message$2,Spin} = await importShared('antd');
+const {message: message$2,Spin} = await importShared('antd');
 const {isNil} = await importShared('lodash');
 
-const {useEffect: useEffect$3,useMemo: useMemo$2,useState: useState$4} = await importShared('react');
+const {useEffect: useEffect$5,useMemo: useMemo$2,useState: useState$5} = await importShared('react');
 const TITLE_STORE_KEY = "title_change_key";
 function VenvCard({
   title,
@@ -17608,9 +18394,9 @@ function VenvCard({
   refresh,
   show
 }) {
-  const [popoverUninstaller, setPopoverUninstaller] = useState$4(false);
-  const [editedTitle, setEditedTitle] = useState$4(title);
-  useEffect$3(() => {
+  const [popoverUninstaller, setPopoverUninstaller] = useState$5(false);
+  const [editedTitle, setEditedTitle] = useState$5(title);
+  useEffect$5(() => {
     const storedItems = JSON.parse(localStorage.getItem(TITLE_STORE_KEY) || "[]");
     const existingTitle = storedItems.find((item) => item.path === cryptoJsExports.SHA256(folder).toString());
     if (existingTitle) setEditedTitle(existingTitle.title);
@@ -17618,13 +18404,13 @@ function VenvCard({
   const size = useMemo$2(() => {
     return diskUsage.find((usage) => usage.path === folder)?.value;
   }, [diskUsage]);
-  const [isRemoving, setIsRemoving] = useState$4(false);
+  const [isRemoving, setIsRemoving] = useState$5(false);
   const remove = () => {
     setPopoverUninstaller(false);
     setIsRemoving(true);
     rendererIpc.file.trashDir(folder).then(() => {
       message$2.success(`Environment "${title}" removed successfully.`);
-      pIpc.removeAIVenvPath(pythonPath);
+      pIpc.removeAssociatePath(pythonPath);
       refresh();
     }).catch((error) => {
       console.error(error);
@@ -17647,7 +18433,7 @@ function VenvCard({
     }
     localStorage.setItem(TITLE_STORE_KEY, JSON.stringify(storedItems));
   };
-  const [packageManagerOpen, setPackageManagerOpen] = useState$4(false);
+  const [packageManagerOpen, setPackageManagerOpen] = useState$5(false);
   const packageManager = () => {
     setPackageManagerOpen(true);
   };
@@ -17663,105 +18449,109 @@ function VenvCard({
         setIsOpen: setPackageManagerOpen
       }
     ),
-    /* @__PURE__ */ jsxRuntimeExports.jsx(
+    /* @__PURE__ */ jsxRuntimeExports.jsxs(
       Card$1,
       {
-        className: `min-w-[27rem] grow transition-colors duration-300 shadow-small dark:hover:border-white/20 hover:border-black/20`,
-        title: /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "flex flex-row justify-between items-center", children: [
-          /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "flex flex-col my-3", children: [
-            /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "flex flex-row items-center gap-x-2", children: [
-              /* @__PURE__ */ jsxRuntimeExports.jsx(Env_Icon, { className: "size-[1.2rem]" }),
-              /* @__PURE__ */ jsxRuntimeExports.jsx(
-                "span",
+        className: "min-w-[27rem] grow border-1 transition-all border-foreground/10 hover:border-foreground/20 cursor-default",
+        as: "div",
+        isPressable: true,
+        children: [
+          /* @__PURE__ */ jsxRuntimeExports.jsxs(CardHeader, { className: "flex flex-row justify-between items-center py-1 px-4", children: [
+            /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "flex flex-col my-3", children: [
+              /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "flex flex-row items-center gap-x-2", children: [
+                /* @__PURE__ */ jsxRuntimeExports.jsx(Env_Icon, { className: "size-[1.2rem] text-yellow-300" }),
+                /* @__PURE__ */ jsxRuntimeExports.jsx(
+                  "span",
+                  {
+                    spellCheck: false,
+                    onInput: onTitleChange,
+                    className: "pr-7 cursor-text",
+                    contentEditable: true,
+                    suppressContentEditableWarning: true,
+                    children: editedTitle
+                  }
+                )
+              ] }),
+              /* @__PURE__ */ jsxRuntimeExports.jsxs("span", { className: "text-tiny text-foreground-500", children: [
+                "Python ",
+                pythonVersion
+              ] })
+            ] }),
+            /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "space-x-2 flex items-center", children: [
+              /* @__PURE__ */ jsxRuntimeExports.jsxs(Dropdown, { className: "border-1 border-foreground/10", children: [
+                /* @__PURE__ */ jsxRuntimeExports.jsx(DropdownTrigger, { children: /* @__PURE__ */ jsxRuntimeExports.jsx(Button$4, { size: "sm", variant: "light", isIconOnly: true, children: /* @__PURE__ */ jsxRuntimeExports.jsx(MenuDots_Icon, { className: "rotate-90 size-3.5" }) }) }),
+                /* @__PURE__ */ jsxRuntimeExports.jsx(DropdownMenu, { variant: "flat", children: /* @__PURE__ */ jsxRuntimeExports.jsx(
+                  DropdownItem,
+                  {
+                    onPress: packageManager,
+                    startContent: /* @__PURE__ */ jsxRuntimeExports.jsx(Packages_Icon, { className: "size-4" }),
+                    children: "Package Manager"
+                  },
+                  "package-manager"
+                ) })
+              ] }),
+              /* @__PURE__ */ jsxRuntimeExports.jsxs(
+                Popover$1,
                 {
-                  className: "pr-7",
-                  spellCheck: false,
-                  onInput: onTitleChange,
-                  contentEditable: true,
-                  suppressContentEditableWarning: true,
-                  children: editedTitle
+                  size: "sm",
+                  color: "danger",
+                  placement: "left",
+                  className: "max-w-[15rem]",
+                  isOpen: popoverUninstaller,
+                  onOpenChange: setPopoverUninstaller,
+                  showArrow: true,
+                  children: [
+                    /* @__PURE__ */ jsxRuntimeExports.jsx(PopoverTrigger$1, { children: /* @__PURE__ */ jsxRuntimeExports.jsx(Button$4, { size: "sm", color: "danger", variant: "light", isLoading: isRemoving, isIconOnly: true, children: /* @__PURE__ */ jsxRuntimeExports.jsx(TrashDuo_Icon, { className: "size-[50%]" }) }) }),
+                    /* @__PURE__ */ jsxRuntimeExports.jsx(PopoverContent$1, { children: /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "p-2 space-y-2", children: [
+                      /* @__PURE__ */ jsxRuntimeExports.jsx("span", { children: `Permanently delete '${title}' and all its contents? This action cannot be undone.` }),
+                      /* @__PURE__ */ jsxRuntimeExports.jsx(Button$4, { size: "sm", onPress: remove, fullWidth: true, children: "Yes, Delete" })
+                    ] }) })
+                  ]
                 }
               )
-            ] }),
-            /* @__PURE__ */ jsxRuntimeExports.jsxs("span", { className: "text-tiny text-foreground-500", children: [
-              "Python ",
-              pythonVersion
             ] })
           ] }),
-          /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "space-x-2 flex items-center", children: [
-            /* @__PURE__ */ jsxRuntimeExports.jsxs(Dropdown, { className: "dark:bg-LynxRaisinBlack", children: [
-              /* @__PURE__ */ jsxRuntimeExports.jsx(DropdownTrigger, { children: /* @__PURE__ */ jsxRuntimeExports.jsx(Button$4, { size: "sm", variant: "light", isIconOnly: true, children: /* @__PURE__ */ jsxRuntimeExports.jsx(MenuDots_Icon, { className: "rotate-90 size-3.5" }) }) }),
-              /* @__PURE__ */ jsxRuntimeExports.jsx(DropdownMenu, { children: /* @__PURE__ */ jsxRuntimeExports.jsx(
-                DropdownItem,
-                {
-                  onPress: packageManager,
-                  startContent: /* @__PURE__ */ jsxRuntimeExports.jsx(Packages_Icon, { className: "size-4" }),
-                  children: "Package Manager"
-                },
-                "package-manager"
-              ) })
+          /* @__PURE__ */ jsxRuntimeExports.jsxs(CardBody, { className: "gap-y-4 px-4 flex flex-col text-sm", children: [
+            /* @__PURE__ */ jsxRuntimeExports.jsxs(Button$4, { size: "sm", variant: "light", onPress: openPath, className: "flex flex-row justify-start -ml-3 -mb-1.5", children: [
+              /* @__PURE__ */ jsxRuntimeExports.jsx(OpenFolder_Icon, { className: "flex-shrink-0" }),
+              /* @__PURE__ */ jsxRuntimeExports.jsx("span", { className: "truncate", children: folder })
             ] }),
-            /* @__PURE__ */ jsxRuntimeExports.jsxs(
-              Popover$1,
-              {
-                size: "sm",
-                color: "danger",
-                placement: "left",
-                className: "max-w-[15rem]",
-                isOpen: popoverUninstaller,
-                onOpenChange: setPopoverUninstaller,
-                showArrow: true,
-                children: [
-                  /* @__PURE__ */ jsxRuntimeExports.jsx(PopoverTrigger$1, { children: /* @__PURE__ */ jsxRuntimeExports.jsx(Button$4, { size: "sm", color: "danger", variant: "light", isLoading: isRemoving, isIconOnly: true, children: /* @__PURE__ */ jsxRuntimeExports.jsx(Trash_Icon, { className: "size-[50%]" }) }) }),
-                  /* @__PURE__ */ jsxRuntimeExports.jsx(PopoverContent$1, { children: /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "p-2 space-y-2", children: [
-                    /* @__PURE__ */ jsxRuntimeExports.jsx("span", { children: `Permanently delete '${title}' and all its contents? This action cannot be undone.` }),
-                    /* @__PURE__ */ jsxRuntimeExports.jsx(Button$4, { size: "sm", onPress: remove, fullWidth: true, children: "Yes, Delete" })
-                  ] }) })
-                ]
-              }
-            )
-          ] })
-        ] }),
-        children: /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "gap-y-4 flex flex-col", children: [
-          /* @__PURE__ */ jsxRuntimeExports.jsxs(Button$4, { size: "sm", variant: "light", onPress: openPath, className: "flex flex-row justify-start -ml-3 -mb-1.5", children: [
-            /* @__PURE__ */ jsxRuntimeExports.jsx(OpenFolder_Icon, { className: "flex-shrink-0" }),
-            /* @__PURE__ */ jsxRuntimeExports.jsx("span", { className: "truncate", children: folder })
-          ] }),
-          /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "w-full justify-between flex flex-row", children: [
-            /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "flex flex-row gap-x-1 items-center", children: [
-              /* @__PURE__ */ jsxRuntimeExports.jsx(Packages_Icon, { className: "size-3" }),
-              /* @__PURE__ */ jsxRuntimeExports.jsx("span", { children: "Installed Packages:" })
+            /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "w-full justify-between flex flex-row", children: [
+              /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "flex flex-row gap-x-2 items-center", children: [
+                /* @__PURE__ */ jsxRuntimeExports.jsx(Packages_Icon, { className: "size-3" }),
+                /* @__PURE__ */ jsxRuntimeExports.jsx("span", { children: "Installed Packages:" })
+              ] }),
+              /* @__PURE__ */ jsxRuntimeExports.jsx("span", { children: installedPackages })
             ] }),
-            /* @__PURE__ */ jsxRuntimeExports.jsx("span", { children: installedPackages })
+            /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "w-full justify-between flex flex-row", children: [
+              /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "flex flex-row gap-x-2 items-center", children: [
+                /* @__PURE__ */ jsxRuntimeExports.jsx(HardDrive_Icon, { className: "size-3" }),
+                /* @__PURE__ */ jsxRuntimeExports.jsx("span", { children: "Disk Usage:" })
+              ] }),
+              isNil(size) ? /* @__PURE__ */ jsxRuntimeExports.jsx(Spin, { size: "small" }) : /* @__PURE__ */ jsxRuntimeExports.jsx("span", { children: formatSizeMB(size || 0) })
+            ] })
           ] }),
-          /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "w-full justify-between flex flex-row", children: [
-            /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "flex flex-row gap-x-1 items-center", children: [
-              /* @__PURE__ */ jsxRuntimeExports.jsx(HardDrive_Icon, {}),
-              /* @__PURE__ */ jsxRuntimeExports.jsx("span", { children: "Disk Usage:" })
-            ] }),
-            isNil(size) ? /* @__PURE__ */ jsxRuntimeExports.jsx(Spin, { size: "small" }) : /* @__PURE__ */ jsxRuntimeExports.jsx("span", { children: formatSizeMB(size || 0) })
-          ] }),
-          /* @__PURE__ */ jsxRuntimeExports.jsx(Venv_Associate, { pythonPath })
-        ] })
+          /* @__PURE__ */ jsxRuntimeExports.jsx(CardFooter, { className: "flex-col gap-y-3", children: /* @__PURE__ */ jsxRuntimeExports.jsx(Venv_Associate, { type: "venv", folder }) })
+        ]
       }
     )
   ] });
 }
 
-const {Button: Button$3,Divider,Input,Popover,PopoverContent,PopoverTrigger,Select,SelectItem} = await importShared('@heroui/react');
+const {Button: Button$3,Divider,Input,Popover,PopoverContent,PopoverTrigger,Select: Select$1,SelectItem: SelectItem$1} = await importShared('@heroui/react');
 
 const {message: message$1} = await importShared('antd');
 
 const {capitalize,isEmpty: isEmpty$1} = await importShared('lodash');
 
-const {useCallback: useCallback$1,useEffect: useEffect$2,useMemo: useMemo$1,useState: useState$3} = await importShared('react');
+const {useCallback: useCallback$2,useEffect: useEffect$4,useMemo: useMemo$1,useState: useState$4} = await importShared('react');
 function VenvCreator({ installedPythons, refresh, isLoadingPythons }) {
-  const [selectedVersion, setSelectedVersion] = useState$3(/* @__PURE__ */ new Set([""]));
-  const [targetFolder, setTargetFolder] = useState$3("");
-  const [envName, setEnvName] = useState$3("");
-  const [isCreating, setIsCreating] = useState$3(false);
-  const [isOpen, setIsOpen] = useState$3(false);
-  useEffect$2(() => {
+  const [selectedVersion, setSelectedVersion] = useState$4(/* @__PURE__ */ new Set([""]));
+  const [targetFolder, setTargetFolder] = useState$4("");
+  const [envName, setEnvName] = useState$4("");
+  const [isCreating, setIsCreating] = useState$4(false);
+  const [isOpen, setIsOpen] = useState$4(false);
+  useEffect$4(() => {
     if (!isOpen) {
       setTargetFolder("");
       setEnvName("");
@@ -17770,15 +18560,15 @@ function VenvCreator({ installedPythons, refresh, isLoadingPythons }) {
   const disabledCreate = useMemo$1(() => {
     return isEmpty$1(targetFolder) || isEmpty$1(envName) || isEmpty$1(selectedVersion);
   }, [targetFolder, envName, selectedVersion]);
-  const selectFolder = useCallback$1(() => {
+  const selectFolder = useCallback$2(() => {
     rendererIpc.file.openDlg({ properties: ["openDirectory"] }).then((folder) => {
       setTargetFolder(folder || "");
     });
   }, []);
-  useEffect$2(() => {
+  useEffect$4(() => {
     if (!isEmpty$1(installedPythons)) setSelectedVersion(/* @__PURE__ */ new Set([installedPythons[0].version]));
   }, [installedPythons]);
-  const createEnv = useCallback$1(() => {
+  const createEnv = useCallback$2(() => {
     setIsCreating(true);
     const pythonPath = installedPythons.find(
       (item) => item.version === selectedVersion.values().next().value
@@ -17808,7 +18598,6 @@ function VenvCreator({ installedPythons, refresh, isLoadingPythons }) {
     /* @__PURE__ */ jsxRuntimeExports.jsx(PopoverTrigger, { children: /* @__PURE__ */ jsxRuntimeExports.jsx(
       Button$3,
       {
-        radius: "sm",
         variant: "solid",
         isLoading: isLoadingPythons,
         isDisabled: isEmpty$1(installedPythons),
@@ -17832,7 +18621,7 @@ function VenvCreator({ installedPythons, refresh, isLoadingPythons }) {
           }
         ),
         /* @__PURE__ */ jsxRuntimeExports.jsx(
-          Select,
+          Select$1,
           {
             size: "sm",
             variant: "faded",
@@ -17842,7 +18631,7 @@ function VenvCreator({ installedPythons, refresh, isLoadingPythons }) {
             selectedKeys: selectedVersion,
             placeholder: "Choose a version...",
             onSelectionChange: setSelectedVersion,
-            children: (item) => /* @__PURE__ */ jsxRuntimeExports.jsx(SelectItem, { children: `${item.version} | ${capitalize(item.installationType)} ${item.installationType === "conda" ? `| ${item.condaName}` : ""}` }, item.version)
+            children: (item) => /* @__PURE__ */ jsxRuntimeExports.jsx(SelectItem$1, { children: `${item.version} | ${capitalize(item.installationType)} ${item.installationType === "conda" ? `| ${item.condaName}` : ""}` }, item.version)
           }
         ),
         /* @__PURE__ */ jsxRuntimeExports.jsx(
@@ -17881,13 +18670,28 @@ const {Empty,message} = await importShared('antd');
 
 const {isEmpty} = await importShared('lodash');
 
-const {useCallback,useEffect: useEffect$1,useState: useState$2} = await importShared('react');
+const {useCallback: useCallback$1,useEffect: useEffect$3,useState: useState$3} = await importShared('react');
 function Venv({ visible, installedPythons, isLoadingPythons, show }) {
-  const [pythonVenvs, setPythonVenvs] = useState$2([]);
-  const [isLoading, setIsLoading] = useState$2(true);
-  const [isLocating, setIsLocating] = useState$2(false);
-  const [diskUsage, setDiskUsage] = useState$2([]);
-  const getVenvs = useCallback(() => {
+  const cacheStorageUsage = usePythonToolkitState("cacheStorageUsage");
+  const [pythonVenvs, setPythonVenvs] = useState$3([]);
+  const [isLoading, setIsLoading] = useState$3(true);
+  const [isLocating, setIsLocating] = useState$3(false);
+  const [diskUsage, setDiskUsage] = useState$3([]);
+  const calcDiskUsage = useCallback$1((venv) => {
+    rendererIpc.file.calcFolderSize(venv.folder).then((value) => {
+      if (value) {
+        window.localStorage.setItem(getDiskUsageID(venv.folder), JSON.stringify(bytesToMegabytes(value)));
+        setDiskUsage((prevState) => [
+          ...prevState,
+          {
+            path: venv.folder,
+            value: bytesToMegabytes(value)
+          }
+        ]);
+      }
+    });
+  }, []);
+  const getVenvs = useCallback$1(() => {
     setIsLoading(true);
     const condaVenvs = installedPythons.filter((pt) => pt.installationType === "conda");
     pIpc.getVenvs().then((venvs) => {
@@ -17915,21 +18719,27 @@ function Venv({ visible, installedPythons, isLoadingPythons, show }) {
         })
       );
       for (const venv of resultVenvs) {
-        rendererIpc.file.calcFolderSize(venv.folder).then((value) => {
-          if (value)
+        if (cacheStorageUsage) {
+          const cachedUsage = window.localStorage.getItem(getDiskUsageID(venv.folder));
+          if (!cachedUsage) {
+            calcDiskUsage(venv);
+          } else {
             setDiskUsage((prevState) => [
               ...prevState,
               {
                 path: venv.folder,
-                value: bytesToMegabytes(value)
+                value: JSON.parse(cachedUsage)
               }
             ]);
-        });
+          }
+        } else {
+          calcDiskUsage(venv);
+        }
       }
       setIsLoading(false);
-    });
-  }, [installedPythons]);
-  useEffect$1(() => {
+    }).catch(console.warn);
+  }, [installedPythons, cacheStorageUsage]);
+  useEffect$3(() => {
     if (!isEmpty(installedPythons)) getVenvs();
   }, [installedPythons]);
   const locateVenv = () => {
@@ -17953,7 +18763,6 @@ function Venv({ visible, installedPythons, isLoadingPythons, show }) {
         /* @__PURE__ */ jsxRuntimeExports.jsx(
           Button$2,
           {
-            radius: "sm",
             variant: "flat",
             onPress: locateVenv,
             isLoading: isLocating,
@@ -17989,11 +18798,11 @@ function Venv({ visible, installedPythons, isLoadingPythons, show }) {
 
 const {Button: Button$1,Modal,ModalBody,ModalContent,ModalFooter,ModalHeader,Tab,Tabs} = await importShared('@heroui/react');
 
-const {useState: useState$1} = await importShared('react');
+const {useState: useState$2} = await importShared('react');
 function PythonToolkitModal({ isOpen, setIsOpen, show }) {
-  const [installedPythons, setInstalledPythons] = useState$1([]);
-  const [isLoadingPythons, setIsLoadingPythons] = useState$1(false);
-  const [currentTab, setCurrentTab] = useState$1("installation");
+  const [installedPythons, setInstalledPythons] = useState$2([]);
+  const [isLoadingPythons, setIsLoadingPythons] = useState$2(false);
+  const [currentTab, setCurrentTab] = useState$2("installation");
   const onClose = () => {
     setIsOpen(false);
   };
@@ -18047,37 +18856,37 @@ function PythonToolkitModal({ isOpen, setIsOpen, show }) {
             }
           )
         ] }),
-        /* @__PURE__ */ jsxRuntimeExports.jsx(ModalFooter, { className: "py-3", children: /* @__PURE__ */ jsxRuntimeExports.jsx(Button$1, { variant: "light", color: "warning", onPress: onClose, className: "cursor-default", children: "Close" }) })
+        /* @__PURE__ */ jsxRuntimeExports.jsx(ModalFooter, { className: "py-3", children: /* @__PURE__ */ jsxRuntimeExports.jsx(Button$1, { variant: "light", color: "warning", onPress: onClose, children: "Close" }) })
       ] })
     }
   );
 }
 
-const {Button,Card,Image} = await importShared('@heroui/react');
+const {Button,ButtonGroup,Card,Image} = await importShared('@heroui/react');
 
-const {useEffect,useMemo,useState} = await importShared('react');
+const {useEffect: useEffect$2,useMemo,useState: useState$1} = await importShared('react');
 
-const {useDispatch} = await importShared('react-redux');
+const {useDispatch: useDispatch$2} = await importShared('react-redux');
 const title = "Python Toolkit";
 const desc = "Manage Python versions, virtual environments, packages, requirements files, and more.";
 const iconUrl = "https://raw.githubusercontent.com/KindaBrazy/LynxHub-Python-Toolkit/refs/heads/source_ea/Icon.png";
 function ToolsPage() {
-  const dispatch = useDispatch();
+  const dispatch = useDispatch$2();
   const activeTab = useTabsState("activeTab");
   const tabs = useTabsState("tabs");
-  const [prevTabTitle, setPrevTabTitle] = useState(tabs.find((tab) => tab.id === activeTab)?.title);
-  const [isOpen, setIsOpen] = useState(false);
-  const [tabID, setTabID] = useState("");
+  const [prevTabTitle, setPrevTabTitle] = useState$1(tabs.find((tab) => tab.id === activeTab)?.title);
+  const [isOpen, setIsOpen] = useState$1(false);
+  const [tabID, setTabID] = useState$1("");
   const iconSrc = useCacheImage("python-toolkit-icon", iconUrl);
-  useEffect(() => {
+  useEffect$2(() => {
     if (isOpen && tabID === activeTab) dispatch(tabsActions.setTabTitle({ tabID, title }));
   }, [activeTab, tabID, isOpen]);
-  useEffect(() => {
+  useEffect$2(() => {
     if (!tabs.find((tab) => tab.id === activeTab)) {
       setIsOpen(false);
     }
   }, [tabs, activeTab]);
-  useEffect(() => {
+  useEffect$2(() => {
     if (!isOpen && prevTabTitle) dispatch(tabsActions.setActiveTabTitle(prevTabTitle));
   }, [isOpen]);
   const openModal = () => {
@@ -18085,6 +18894,10 @@ function ToolsPage() {
     setTabID(activeTab);
     setPrevTabTitle(tabs.find((tab) => tab.id === activeTab)?.title);
     dispatch(tabsActions.setActiveTabTitle(title));
+    pIpc.getAssociates().then((associates) => dispatch(PythonToolkitActions.setAssociates(associates || [])));
+  };
+  const openSettings = () => {
+    dispatch(PythonToolkitActions.openSettingsModal({ title: "", id: "", tabID: activeTab }));
   };
   const show = useMemo(() => activeTab === tabID ? "flex" : "hidden", [activeTab, tabID]);
   return /* @__PURE__ */ jsxRuntimeExports.jsxs(UIProvider, { children: [
@@ -18102,7 +18915,10 @@ function ToolsPage() {
               /* @__PURE__ */ jsxRuntimeExports.jsx("h3", { className: "text-2xl font-bold tracking-tight", children: title }),
               /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "text-foreground/70 text-sm leading-relaxed", children: desc })
             ] }),
-            /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "flex justify-center", children: /* @__PURE__ */ jsxRuntimeExports.jsx(Button, { radius: "full", color: "primary", onPress: openModal, fullWidth: true, children: /* @__PURE__ */ jsxRuntimeExports.jsx(Play_Icon, { className: "size-4" }) }) })
+            /* @__PURE__ */ jsxRuntimeExports.jsxs(ButtonGroup, { className: "flex justify-center", children: [
+              /* @__PURE__ */ jsxRuntimeExports.jsx(Button, { radius: "full", color: "primary", onPress: openModal, fullWidth: true, children: /* @__PURE__ */ jsxRuntimeExports.jsx(Play_Icon, { className: "size-4" }) }),
+              /* @__PURE__ */ jsxRuntimeExports.jsx(Button, { radius: "full", onPress: openSettings, isIconOnly: true, children: /* @__PURE__ */ jsxRuntimeExports.jsx(SettingsMinimal_Icon, { className: "size-4" }) })
+            ] })
           ] }),
           /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "absolute inset-0 rounded-2xl border border-white/20 pointer-events-none" }),
           /* @__PURE__ */ jsxRuntimeExports.jsx(
@@ -18118,12 +18934,185 @@ function ToolsPage() {
   ] });
 }
 
+const {Code} = await importShared('@heroui/react');
+
+const {notification} = await importShared('antd');
+
+const {isString} = await importShared('lodash');
+
+const {Fragment,useEffect: useEffect$1} = await importShared('react');
+
+const {useDispatch: useDispatch$1} = await importShared('react-redux');
+function CustomHook() {
+  const dispatch = useDispatch$1();
+  useEffect$1(() => {
+    pIpc.getCacheStorageUsage().then((result) => {
+      dispatch(PythonToolkitActions.setCacheStorageUsage(result));
+    });
+    pIpc.getPkgDisplay().then((result) => {
+      dispatch(PythonToolkitActions.setPkgDisplay(result));
+    });
+    pIpc.onErrorGetVenvInfo((_, e) => {
+      const message = e.message;
+      if (message && isString(message)) {
+        if (message.toLowerCase().includes("no python at")) {
+          notification.error({
+            message: "Python Not Found",
+            description: /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { children: [
+              /* @__PURE__ */ jsxRuntimeExports.jsx("span", { className: "!text-md whitespace-pre-line", children: `Required Python version is missing. Please install it, so LynxHub can validate your environment.
+Details:
+` }),
+              /* @__PURE__ */ jsxRuntimeExports.jsx(
+                Code,
+                {
+                  color: "warning",
+                  className: "whitespace-pre-line text-nowrap font-JetBrainsMono w-full overflow-auto",
+                  children: message.replace("Error invoking remote method 'get-venvs': Error:", "")
+                }
+              )
+            ] }),
+            className: "!w-fit !max-w-[777px]",
+            duration: 0
+          });
+        }
+      }
+    });
+    return () => {
+      pIpc.offErrorGetVenvInfo();
+    };
+  }, []);
+  return /* @__PURE__ */ jsxRuntimeExports.jsx(Fragment, {});
+}
+
+const {Alert,CircularProgress,Select,SelectItem} = await importShared('@heroui/react');
+
+const {useCallback,useEffect,useState} = await importShared('react');
+
+const {useDispatch} = await importShared('react-redux');
+const Installer_PythonSelector = (id, addAssociate) => function Selector() {
+  const dispatch = useDispatch();
+  const selected = usePythonToolkitState("pythonVenvSelected");
+  const [list, setList] = useState([]);
+  const [isLoading, setIsLoading] = useState(false);
+  const onSelected = useCallback((item) => {
+    const resultItem = { ...item, id };
+    dispatch(PythonToolkitActions.setSelectedPythonVenv(resultItem));
+    addAssociate(id, item);
+  }, []);
+  useEffect(() => {
+    setIsLoading(true);
+    Promise.all([pIpc.getInstalledPythons(false), pIpc.getVenvs()]).then(([pythons, venvs]) => {
+      const pythonItems = pythons.map((python) => ({
+        condaName: python.installationType === "conda" ? python.condaName : void 0,
+        label: python.installationType === "conda" ? `${python.version}  |  ${python.condaName}` : python.version,
+        dir: python.installFolder,
+        type: python.installationType === "conda" ? "conda" : "python"
+      }));
+      const venvItems = venvs.map((venv) => ({
+        label: `${venv.pythonVersion}  |  ${venv.name}`,
+        dir: venv.folder,
+        type: "venv"
+      }));
+      const combined = [...pythonItems, ...venvItems];
+      setList(combined);
+      if (combined.length > 0) onSelected(combined[0]);
+    }).catch(console.warn).finally(() => setIsLoading(false));
+  }, []);
+  const onSelectionChange = (keys) => {
+    const item = list.find((item2) => `${item2.label}_${item2.dir}` === Array.from(keys)[0]);
+    if (item) onSelected(item);
+  };
+  return /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "flex flex-col gap-y-4 py-4 size-full", children: [
+    /* @__PURE__ */ jsxRuntimeExports.jsx("h2", { className: "text-lg font-semibold", children: "Select Python or Virtual Environment" }),
+    /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "text-sm text-foreground-400", children: "Choose the Python interpreter or virtual environment you want to use." }),
+    isLoading ? /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "flex w-full items-center justify-center", children: /* @__PURE__ */ jsxRuntimeExports.jsx(CircularProgress, { size: "lg", label: "Loading available pythons and venvs..." }) }) : /* @__PURE__ */ jsxRuntimeExports.jsx(
+      Select,
+      {
+        items: list,
+        label: "Python / Virtual Environment",
+        onSelectionChange,
+        selectedKeys: [`${selected.label}_${selected.dir}`],
+        disallowEmptySelection: true,
+        children: (item) => /* @__PURE__ */ jsxRuntimeExports.jsx(SelectItem, { textValue: item.label, children: item.type === "python" ? /* @__PURE__ */ jsxRuntimeExports.jsxs("span", { className: "flex flex-row items-center gap-x-2", children: [
+          /* @__PURE__ */ jsxRuntimeExports.jsx(Python_Icon, { className: "text-yellow-300" }),
+          " ",
+          item.label
+        ] }) : /* @__PURE__ */ jsxRuntimeExports.jsxs("span", { className: "flex flex-row items-center gap-x-2", children: [
+          /* @__PURE__ */ jsxRuntimeExports.jsx(Env_Icon, { className: "text-yellow-300" }),
+          " ",
+          item.label
+        ] }) }, `${item.label}_${item.dir}`)
+      }
+    ),
+    /* @__PURE__ */ jsxRuntimeExports.jsx(
+      Alert,
+      {
+        title: "If you need to install Python or create a virtual environment, open the Python Toolkit window in the tools page. Once done, return here and select your desired interpreter.",
+        color: "primary",
+        variant: "faded"
+      }
+    )
+  ] });
+};
+
+function addAssociate(id, item) {
+  if (ModulesThatSupportPython.includes(id)) {
+    pIpc.addAssociate({ id, dir: item.dir, type: item.type, condaName: item.condaName });
+  }
+}
+const getStep = (id) => {
+  let index = 1;
+  switch (id) {
+    case AvailableModules.sdForge:
+    case AvailableModules.comfyui:
+    case AvailableModules.comfyuiZluda:
+    case AvailableModules.sdNext:
+    case AvailableModules.a1:
+    case AvailableModules.sdAmd:
+    case AvailableModules.sdForgeAmd:
+    case AvailableModules.onetrainer:
+    case AvailableModules.kohya:
+    case AvailableModules.sdUiux:
+    case AvailableModules.tg:
+    case AvailableModules.lollms:
+    case AvailableModules.ag:
+    case AvailableModules.alltalk:
+      index = 2;
+      break;
+    case AvailableModules.invoke:
+    case AvailableModules.openWebui:
+    default:
+      index = 1;
+      break;
+  }
+  return {
+    index,
+    title: "Python",
+    content: Installer_PythonSelector(id, addAssociate)
+  };
+};
+
+function listenForEvents(lynxAPI) {
+  lynxAPI.events.on("card_install_addStep", ({ id, addStep }) => {
+    if (ModulesThatSupportPython.includes(id)) {
+      const { index, title, content } = getStep(id);
+      addStep(index, title, content);
+    }
+  });
+  lynxAPI.events_ipc.on("storage_utils_add_installed_card", ({ cardData }) => {
+    pIpc.findAIVenv(cardData.id, cardData.dir);
+  });
+}
+
 function InitialExtensions(lynxAPI) {
+  listenForEvents(lynxAPI);
   setCards(lynxAPI.modulesData?.allCards || []);
   lynxAPI.addReducer([{ name: "pythonToolkit", reducer: pythonToolkitReducer$1 }]);
   lynxAPI.addModal(CardMenuModal);
+  lynxAPI.addModal(SettingsModal);
   lynxAPI.customizePages.tools.addComponent(ToolsPage);
   lynxAPI.cards.customize.menu.addSection([{ index: 1, components: [CardMenu] }]);
+  lynxAPI.addCustomHook(CustomHook);
 }
 
 export { InitialExtensions };

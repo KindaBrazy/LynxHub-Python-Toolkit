@@ -25,10 +25,6 @@
 .z-10 {
     z-index: 10;
 }
-.\!my-0 {
-    margin-top: 0px !important;
-    margin-bottom: 0px !important;
-}
 .mx-auto {
     margin-left: auto;
     margin-right: auto;
@@ -94,6 +90,14 @@
     width: 1rem;
     height: 1rem;
 }
+.size-5 {
+    width: 1.25rem;
+    height: 1.25rem;
+}
+.size-6 {
+    width: 1.5rem;
+    height: 1.5rem;
+}
 .size-8 {
     width: 2rem;
     height: 2rem;
@@ -114,11 +118,18 @@
     width: 100%;
     height: 100%;
 }
+.h-14 {
+    height: 3.5rem;
+}
 .h-\[367px\] {
     height: 367px;
 }
 .h-full {
     height: 100%;
+}
+.\!w-fit {
+    width: -moz-fit-content !important;
+    width: fit-content !important;
 }
 .w-\[276px\] {
     width: 276px;
@@ -141,6 +152,9 @@
 }
 .min-w-\[27rem\] {
     min-width: 27rem;
+}
+.\!max-w-\[777px\] {
+    max-width: 777px !important;
 }
 .max-w-4xl {
     max-width: 56rem;
@@ -199,6 +213,9 @@
 .cursor-pointer {
     cursor: pointer;
 }
+.cursor-text {
+    cursor: text;
+}
 .flex-row {
     flex-direction: row;
 }
@@ -226,6 +243,9 @@
 .gap-2 {
     gap: 0.5rem;
 }
+.gap-4 {
+    gap: 1rem;
+}
 .gap-8 {
     gap: 2rem;
 }
@@ -237,8 +257,14 @@
     -moz-column-gap: 0.5rem;
          column-gap: 0.5rem;
 }
+.gap-y-1 {
+    row-gap: 0.25rem;
+}
 .gap-y-2 {
     row-gap: 0.5rem;
+}
+.gap-y-3 {
+    row-gap: 0.75rem;
 }
 .gap-y-4 {
     row-gap: 1rem;
@@ -279,6 +305,9 @@
 .justify-self-center {
     justify-self: center;
 }
+.overflow-auto {
+    overflow: auto;
+}
 .overflow-hidden {
     overflow: hidden;
 }
@@ -287,8 +316,14 @@
     text-overflow: ellipsis;
     white-space: nowrap;
 }
+.whitespace-pre-line {
+    white-space: pre-line;
+}
 .text-wrap {
     text-wrap: wrap;
+}
+.text-nowrap {
+    text-wrap: nowrap;
 }
 .break-words {
     overflow-wrap: break-word;
@@ -308,20 +343,24 @@
 .border-1 {
     border-width: 1px;
 }
+.border-2 {
+    border-width: 2px;
+}
 .border-foreground-100 {
     --tw-border-opacity: 1;
-    border-color: hsl(var(--heroui-foreground-100) / var(--heroui-foreground-100-opacity, var(--tw-border-opacity)));
-}
-.border-foreground-200 {
-    --tw-border-opacity: 1;
-    border-color: hsl(var(--heroui-foreground-200) / var(--heroui-foreground-200-opacity, var(--tw-border-opacity)));
+    border-color: hsl(var(--heroui-foreground-100) / var(--tw-border-opacity, 1));
 }
 .border-foreground\/10 {
     border-color: hsl(var(--heroui-foreground) / 0.1);
 }
-.border-secondary {
-    --tw-border-opacity: 1;
-    border-color: hsl(var(--heroui-secondary) / var(--heroui-secondary-opacity, var(--tw-border-opacity)));
+.border-primary\/60 {
+    border-color: hsl(var(--heroui-primary) / 0.6);
+}
+.border-secondary\/60 {
+    border-color: hsl(var(--heroui-secondary) / 0.6);
+}
+.border-success\/60 {
+    border-color: hsl(var(--heroui-success) / 0.6);
 }
 .border-white\/20 {
     border-color: rgb(255 255 255 / 0.2);
@@ -330,16 +369,13 @@
     --tw-border-opacity: 1;
     border-bottom-color: rgb(255 230 110 / var(--tw-border-opacity, 1));
 }
-.border-opacity-60 {
-    --tw-border-opacity: 0.6;
-}
 .bg-foreground-100 {
     --tw-bg-opacity: 1;
-    background-color: hsl(var(--heroui-foreground-100) / var(--heroui-foreground-100-opacity, var(--tw-bg-opacity)));
+    background-color: hsl(var(--heroui-foreground-100) / var(--tw-bg-opacity, 1));
 }
 .bg-foreground-200 {
     --tw-bg-opacity: 1;
-    background-color: hsl(var(--heroui-foreground-200) / var(--heroui-foreground-200-opacity, var(--tw-bg-opacity)));
+    background-color: hsl(var(--heroui-foreground-200) / var(--tw-bg-opacity, 1));
 }
 .bg-white {
     --tw-bg-opacity: 1;
@@ -381,6 +417,10 @@
     padding-left: 0px;
     padding-right: 0px;
 }
+.px-16 {
+    padding-left: 4rem;
+    padding-right: 4rem;
+}
 .px-2 {
     padding-left: 0.5rem;
     padding-right: 0.5rem;
@@ -400,6 +440,10 @@
 .py-3 {
     padding-top: 0.75rem;
     padding-bottom: 0.75rem;
+}
+.py-4 {
+    padding-top: 1rem;
+    padding-bottom: 1rem;
 }
 .pb-0 {
     padding-bottom: 0px;
@@ -446,9 +490,8 @@
 .text-center {
     text-align: center;
 }
-.\!text-small {
-    font-size: var(--heroui-font-size-small) !important;
-    line-height: var(--heroui-line-height-small) !important;
+.font-JetBrainsMono {
+    font-family: JetBrainsMono, sans-serif;
 }
 .text-2xl {
     font-size: 1.5rem;
@@ -461,25 +504,9 @@
     font-size: 1.125rem;
     line-height: 1.75rem;
 }
-.text-medium {
-    font-size: var(--heroui-font-size-medium);
-    line-height: var(--heroui-line-height-medium);
-}
 .text-sm {
     font-size: 0.875rem;
     line-height: 1.25rem;
-}
-.text-small {
-    font-size: var(--heroui-font-size-small);
-    line-height: var(--heroui-line-height-small);
-}
-.text-tiny {
-    font-size: var(--heroui-font-size-tiny);
-    line-height: var(--heroui-line-height-tiny);
-}
-.text-xs {
-    font-size: 0.75rem;
-    line-height: 1rem;
 }
 .\!font-semibold {
     font-weight: 600 !important;
@@ -519,21 +546,21 @@
     --tw-text-opacity: 1;
     color: rgb(6 182 212 / var(--tw-text-opacity, 1));
 }
+.text-danger {
+    --tw-text-opacity: 1;
+    color: hsl(var(--heroui-danger) / var(--tw-text-opacity, 1));
+}
 .text-default-400 {
     --tw-text-opacity: 1;
-    color: hsl(var(--heroui-default-400) / var(--heroui-default-400-opacity, var(--tw-text-opacity)));
-}
-.text-foreground {
-    --tw-text-opacity: 1;
-    color: hsl(var(--heroui-foreground) / var(--heroui-foreground-opacity, var(--tw-text-opacity)));
+    color: hsl(var(--heroui-default-400) / var(--tw-text-opacity, 1));
 }
 .text-foreground-400 {
     --tw-text-opacity: 1;
-    color: hsl(var(--heroui-foreground-400) / var(--heroui-foreground-400-opacity, var(--tw-text-opacity)));
+    color: hsl(var(--heroui-foreground-400) / var(--tw-text-opacity, 1));
 }
 .text-foreground-500 {
     --tw-text-opacity: 1;
-    color: hsl(var(--heroui-foreground-500) / var(--heroui-foreground-500-opacity, var(--tw-text-opacity)));
+    color: hsl(var(--heroui-foreground-500) / var(--tw-text-opacity, 1));
 }
 .text-foreground\/70 {
     color: hsl(var(--heroui-foreground) / 0.7);
@@ -546,13 +573,31 @@
     --tw-text-opacity: 1;
     color: rgb(34 197 94 / var(--tw-text-opacity, 1));
 }
+.text-primary {
+    --tw-text-opacity: 1;
+    color: hsl(var(--heroui-primary) / var(--tw-text-opacity, 1));
+}
 .text-red-500 {
     --tw-text-opacity: 1;
     color: rgb(239 68 68 / var(--tw-text-opacity, 1));
 }
 .text-secondary {
     --tw-text-opacity: 1;
-    color: hsl(var(--heroui-secondary) / var(--heroui-secondary-opacity, var(--tw-text-opacity)));
+    color: hsl(var(--heroui-secondary) / var(--tw-text-opacity, 1));
+}
+.text-success\/70 {
+    color: hsl(var(--heroui-success) / 0.7);
+}
+.text-warning {
+    --tw-text-opacity: 1;
+    color: hsl(var(--heroui-warning) / var(--tw-text-opacity, 1));
+}
+.text-warning\/50 {
+    color: hsl(var(--heroui-warning) / 0.5);
+}
+.text-yellow-300 {
+    --tw-text-opacity: 1;
+    color: rgb(253 224 71 / var(--tw-text-opacity, 1));
 }
 .text-yellow-500 {
     --tw-text-opacity: 1;
@@ -599,7 +644,7 @@
 .duration-300 {
     transition-duration: 300ms;
 }
-:root,.light,[data-theme="light"] {
+.light {
     color-scheme: light;
     --heroui-background: 0 0% 100%;
     --heroui-foreground-50: 0 0% 98.04%;
@@ -614,7 +659,6 @@
     --heroui-foreground-900: 240 5.88% 10%;
     --heroui-foreground: 201.81999999999994 24.44% 8.82%;
     --heroui-divider: 0 0% 6.67%;
-    --heroui-divider-opacity: 0.15;
     --heroui-focus: 212.01999999999998 100% 46.67%;
     --heroui-overlay: 0 0% 0%;
     --heroui-content1: 0 0% 100%;
@@ -718,125 +762,6 @@
     --heroui-box-shadow-large: 0px 0px 30px 0px rgb(0 0 0 / 0.04), 0px 30px 60px 0px rgb(0 0 0 / 0.12), 0px 0px 1px 0px rgb(0 0 0 / 0.3);
     --heroui-hover-opacity: .8;
 }
-.dark,[data-theme="dark"] {
-    color-scheme: dark;
-    --heroui-background: 0 0% 0%;
-    --heroui-foreground-50: 240 5.88% 10%;
-    --heroui-foreground-100: 240 3.7% 15.88%;
-    --heroui-foreground-200: 240 5.26% 26.08%;
-    --heroui-foreground-300: 240 5.2% 33.92%;
-    --heroui-foreground-400: 240 3.83% 46.08%;
-    --heroui-foreground-500: 240 5.03% 64.9%;
-    --heroui-foreground-600: 240 4.88% 83.92%;
-    --heroui-foreground-700: 240 5.88% 90%;
-    --heroui-foreground-800: 240 4.76% 95.88%;
-    --heroui-foreground-900: 0 0% 98.04%;
-    --heroui-foreground: 210 5.56% 92.94%;
-    --heroui-focus: 212.01999999999998 100% 46.67%;
-    --heroui-overlay: 0 0% 0%;
-    --heroui-divider: 0 0% 100%;
-    --heroui-divider-opacity: 0.15;
-    --heroui-content1: 240 5.88% 10%;
-    --heroui-content1-foreground: 0 0% 98.04%;
-    --heroui-content2: 240 3.7% 15.88%;
-    --heroui-content2-foreground: 240 4.76% 95.88%;
-    --heroui-content3: 240 5.26% 26.08%;
-    --heroui-content3-foreground: 240 5.88% 90%;
-    --heroui-content4: 240 5.2% 33.92%;
-    --heroui-content4-foreground: 240 4.88% 83.92%;
-    --heroui-default-50: 240 5.88% 10%;
-    --heroui-default-100: 240 3.7% 15.88%;
-    --heroui-default-200: 240 5.26% 26.08%;
-    --heroui-default-300: 240 5.2% 33.92%;
-    --heroui-default-400: 240 3.83% 46.08%;
-    --heroui-default-500: 240 5.03% 64.9%;
-    --heroui-default-600: 240 4.88% 83.92%;
-    --heroui-default-700: 240 5.88% 90%;
-    --heroui-default-800: 240 4.76% 95.88%;
-    --heroui-default-900: 0 0% 98.04%;
-    --heroui-default-foreground: 0 0% 100%;
-    --heroui-default: 240 5.26% 26.08%;
-    --heroui-primary-50: 211.84000000000003 100% 9.61%;
-    --heroui-primary-100: 211.84000000000003 100% 19.22%;
-    --heroui-primary-200: 212.24 100% 28.82%;
-    --heroui-primary-300: 212.14 100% 38.43%;
-    --heroui-primary-400: 212.01999999999998 100% 46.67%;
-    --heroui-primary-500: 212.14 92.45% 58.43%;
-    --heroui-primary-600: 212.24 92.45% 68.82%;
-    --heroui-primary-700: 211.84000000000003 92.45% 79.22%;
-    --heroui-primary-800: 211.84000000000003 92.45% 89.61%;
-    --heroui-primary-900: 212.5 92.31% 94.9%;
-    --heroui-primary-foreground: 0 0% 100%;
-    --heroui-primary: 219.91999999999996 100% 46.86%;
-    --heroui-secondary-50: 270 66.67% 9.41%;
-    --heroui-secondary-100: 270 66.67% 18.82%;
-    --heroui-secondary-200: 270 66.67% 28.24%;
-    --heroui-secondary-300: 270 66.67% 37.65%;
-    --heroui-secondary-400: 270 66.67% 47.06%;
-    --heroui-secondary-500: 270 59.26% 57.65%;
-    --heroui-secondary-600: 270 59.26% 68.24%;
-    --heroui-secondary-700: 270 59.26% 78.82%;
-    --heroui-secondary-800: 270 59.26% 89.41%;
-    --heroui-secondary-900: 270 61.54% 94.9%;
-    --heroui-secondary-foreground: 0 0% 100%;
-    --heroui-secondary: 280 100% 50%;
-    --heroui-success-50: 145.71000000000004 77.78% 8.82%;
-    --heroui-success-100: 146.2 79.78% 17.45%;
-    --heroui-success-200: 145.78999999999996 79.26% 26.47%;
-    --heroui-success-300: 146.01 79.89% 35.1%;
-    --heroui-success-400: 145.96000000000004 79.46% 43.92%;
-    --heroui-success-500: 146.01 62.45% 55.1%;
-    --heroui-success-600: 145.78999999999996 62.57% 66.47%;
-    --heroui-success-700: 146.2 61.74% 77.45%;
-    --heroui-success-800: 145.71000000000004 61.4% 88.82%;
-    --heroui-success-900: 146.66999999999996 64.29% 94.51%;
-    --heroui-success-foreground: 0 0% 0%;
-    --heroui-success: 145.96000000000004 79.46% 43.92%;
-    --heroui-warning-50: 37.139999999999986 75% 10.98%;
-    --heroui-warning-100: 37.139999999999986 75% 21.96%;
-    --heroui-warning-200: 36.95999999999998 73.96% 33.14%;
-    --heroui-warning-300: 37.00999999999999 74.22% 44.12%;
-    --heroui-warning-400: 37.02999999999997 91.27% 55.1%;
-    --heroui-warning-500: 37.00999999999999 91.26% 64.12%;
-    --heroui-warning-600: 36.95999999999998 91.24% 73.14%;
-    --heroui-warning-700: 37.139999999999986 91.3% 81.96%;
-    --heroui-warning-800: 37.139999999999986 91.3% 90.98%;
-    --heroui-warning-900: 54.55000000000001 91.67% 95.29%;
-    --heroui-warning-foreground: 0 0% 0%;
-    --heroui-warning: 37.02999999999997 91.27% 55.1%;
-    --heroui-danger-50: 340 84.91% 10.39%;
-    --heroui-danger-100: 339.3299999999999 86.54% 20.39%;
-    --heroui-danger-200: 339.11 85.99% 30.78%;
-    --heroui-danger-300: 339 86.54% 40.78%;
-    --heroui-danger-400: 339.20000000000005 90.36% 51.18%;
-    --heroui-danger-500: 339 90% 60.78%;
-    --heroui-danger-600: 339.11 90.6% 70.78%;
-    --heroui-danger-700: 339.3299999999999 90% 80.39%;
-    --heroui-danger-800: 340 91.84% 90.39%;
-    --heroui-danger-900: 339.13 92% 95.1%;
-    --heroui-danger-foreground: 0 0% 100%;
-    --heroui-danger: 0 72.22% 50.59%;
-    --heroui-divider-weight: 1px;
-    --heroui-disabled-opacity: .5;
-    --heroui-font-size-tiny: 0.75rem;
-    --heroui-font-size-small: 0.875rem;
-    --heroui-font-size-medium: 1rem;
-    --heroui-font-size-large: 1.125rem;
-    --heroui-line-height-tiny: 1rem;
-    --heroui-line-height-small: 1.25rem;
-    --heroui-line-height-medium: 1.5rem;
-    --heroui-line-height-large: 1.75rem;
-    --heroui-radius-small: 8px;
-    --heroui-radius-medium: 12px;
-    --heroui-radius-large: 14px;
-    --heroui-border-width-small: 1px;
-    --heroui-border-width-medium: 2px;
-    --heroui-border-width-large: 3px;
-    --heroui-box-shadow-small: 0px 0px 5px 0px rgb(0 0 0 / 0.05), 0px 2px 10px 0px rgb(0 0 0 / 0.2), inset 0px 0px 1px 0px rgb(255 255 255 / 0.15);
-    --heroui-box-shadow-medium: 0px 0px 15px 0px rgb(0 0 0 / 0.06), 0px 2px 30px 0px rgb(0 0 0 / 0.22), inset 0px 0px 1px 0px rgb(255 255 255 / 0.15);
-    --heroui-box-shadow-large: 0px 0px 30px 0px rgb(0 0 0 / 0.07), 0px 30px 60px 0px rgb(0 0 0 / 0.26), inset 0px 0px 1px 0px rgb(255 255 255 / 0.15);
-    --heroui-hover-opacity: .9;
-}
 .scrollbar-hide {
     -ms-overflow-style: none;
     scrollbar-width: none;
@@ -844,19 +769,40 @@
 .scrollbar-hide::-webkit-scrollbar {
     display: none;
 }
+.text-tiny {
+    font-size: var(--heroui-font-size-tiny);
+    line-height: var(--heroui-line-height-tiny);
+}
+.\!text-small {
+    font-size: var(--heroui-font-size-small) !important;
+    line-height: var(--heroui-line-height-small) !important;
+}
+.text-medium {
+    font-size: var(--heroui-font-size-medium);
+    line-height: var(--heroui-line-height-medium);
+}
 .hover\:-translate-y-1:hover {
     --tw-translate-y: -0.25rem;
     transform: translate(var(--tw-translate-x), var(--tw-translate-y)) rotate(var(--tw-rotate)) skewX(var(--tw-skew-x)) skewY(var(--tw-skew-y)) scaleX(var(--tw-scale-x)) scaleY(var(--tw-scale-y));
 }
-.hover\:border-black\/20:hover {
-    border-color: rgb(0 0 0 / 0.2);
+.hover\:border-foreground\/20:hover {
+    border-color: hsl(var(--heroui-foreground) / 0.2);
 }
-.hover\:border-opacity-100:hover {
+.hover\:border-primary:hover {
     --tw-border-opacity: 1;
+    border-color: hsl(var(--heroui-primary) / var(--tw-border-opacity, 1));
+}
+.hover\:border-secondary:hover {
+    --tw-border-opacity: 1;
+    border-color: hsl(var(--heroui-secondary) / var(--tw-border-opacity, 1));
+}
+.hover\:border-success:hover {
+    --tw-border-opacity: 1;
+    border-color: hsl(var(--heroui-success) / var(--tw-border-opacity, 1));
 }
 .hover\:bg-foreground-100:hover {
     --tw-bg-opacity: 1;
-    background-color: hsl(var(--heroui-foreground-100) / var(--heroui-foreground-100-opacity, var(--tw-bg-opacity)));
+    background-color: hsl(var(--heroui-foreground-100) / var(--tw-bg-opacity, 1));
 }
 .hover\:shadow-medium:hover {
     --tw-shadow: var(--heroui-box-shadow-medium);
@@ -879,7 +825,4 @@
 .dark\:bg-stone-900:is(.dark *) {
     --tw-bg-opacity: 1;
     background-color: rgb(28 25 23 / var(--tw-bg-opacity, 1));
-}
-.dark\:hover\:border-white\/20:hover:is(.dark *) {
-    border-color: rgb(255 255 255 / 0.2);
 }
