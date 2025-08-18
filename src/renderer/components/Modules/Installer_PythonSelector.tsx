@@ -46,7 +46,7 @@ export const Installer_PythonSelector = (id: string, addAssociate: (id: string, 
     }, []);
 
     const onSelectionChange = (keys: SharedSelection) => {
-      const item = list.find(item => item.label === Array.from(keys)[0]);
+      const item = list.find(item => `${item.label}_${item.dir}` === Array.from(keys)[0]);
 
       if (item) onSelected(item);
     };
@@ -66,12 +66,12 @@ export const Installer_PythonSelector = (id: string, addAssociate: (id: string, 
         ) : (
           <Select
             items={list}
-            selectedKeys={[selected.label]}
             label="Python / Virtual Environment"
             onSelectionChange={onSelectionChange}
+            selectedKeys={[`${selected.label}_${selected.dir}`]}
             disallowEmptySelection>
             {item => (
-              <SelectItem key={item.label} textValue={item.label}>
+              <SelectItem textValue={item.label} key={`${item.label}_${item.dir}`}>
                 {item.type === 'python' ? (
                   <span className="flex flex-row items-center gap-x-2">
                     <Python_Icon className="text-yellow-300" /> {item.label}

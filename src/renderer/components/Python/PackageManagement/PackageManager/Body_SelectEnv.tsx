@@ -70,7 +70,7 @@ export default function Body_SelectEnv({id, setPythonPath}: Props) {
       </DropdownTrigger>
       <DropdownMenu items={list}>
         {item => (
-          <DropdownItem key={item.label} onPress={() => onPress(item)}>
+          <DropdownItem onPress={() => onPress(item)} key={`${item.label}_${item.dir}`}>
             <div className="flex flex-row gap-x-1 items-end">
               {item.type === 'python' ? (
                 <span className="flex flex-row items-center gap-x-2">
