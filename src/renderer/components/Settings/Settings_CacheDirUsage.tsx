@@ -1,8 +1,9 @@
 import {Button} from '@heroui/react';
-import {useEffect} from 'react';
+import {useEffect, useState} from 'react';
 import {useDispatch} from 'react-redux';
 
 import LynxSwitch from '../../../../../src/renderer/src/App/Components/Reusable/LynxSwitch';
+import {lynxTopToast} from '../../../../../src/renderer/src/App/Utils/UtilHooks';
 import {BroomDuo_Icon} from '../../../../../src/renderer/src/assets/icons/SvgIcons/SvgIcons';
 import {FolderDiskUsage_StorageID} from '../../../cross/CrossExtConstants';
 import pIpc from '../../PIpc';
@@ -10,6 +11,7 @@ import {PythonToolkitActions, usePythonToolkitState} from '../../reducer';
 
 export default function Settings_CacheDirUsage() {
   const cacheStorageUsage = usePythonToolkitState('cacheStorageUsage');
+  const [clearing, setClearing] = useState<boolean>(false);
 
   const dispatch = useDispatch();
 
@@ -27,6 +29,7 @@ export default function Settings_CacheDirUsage() {
   };
 
   const clearCache = () => {
+    setClearing(true);
     const prefix = FolderDiskUsage_StorageID;
 
     const keysToRemove: string[] = [];
@@ -38,6 +41,11 @@ export default function Settings_CacheDirUsage() {
     }
 
     keysToRemove.forEach(key => localStorage.removeItem(key));
+
+    setTimeout(() => {
+      setClearing(false);
+      lynxTopToast(dispatch).success('Disk usage cache cleared successfully');
+    }, 700);
   };
 
   return (
@@ -54,12 +62,13 @@ export default function Settings_CacheDirUsage() {
       <div className="flex flex-col items-center justify-center gap-y-1">
         <Button
           variant="flat"
+          isLoading={clearing}
           onPress={clearCache}
           className="h-14 shrink-0"
           isDisabled={!cacheStorageUsage}
-          startContent={<BroomDuo_Icon />}
+          startContent={!clearing && <BroomDuo_Icon />}
           fullWidth>
-          Clear Cache
+          {!clearing ? 'Clear Cache' : 'Clearing...'}
         </Button>
         <span className="text-tiny text-default-400 text-center">Clear the cache to refresh usage statistics.</span>
       </div>
