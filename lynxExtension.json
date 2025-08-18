@@ -3,12 +3,112 @@
   "id": "python_toolkit",
   "title": "Python Toolkit",
   "description": "Effortlessly manage your Python environments and dependencies.",
-  "version": "0.10.2",
+  "version": "0.11.0",
   "publishDate": "2025-01-01",
-  "updateDate": "2025-06-08",
-  "requireAppBuild": 21,
+  "updateDate": "2025-08-18",
+  "requireAppBuild": 24,
   "repoUrl": "https://github.com/KindaBrazy/LynxHub-Python-Toolkit",
   "changeLog": [
+    {
+      "title": "🚀 V0.11.0",
+      "items": [
+        {
+          "label": "✨ New Features",
+          "subitems": [
+            {
+              "label": "Choose between Python or venv when setting up AI environments."
+            },
+            {
+              "label": "Select or change the Python version for the LynxHub environment."
+            },
+            {
+              "label": "Disk usage caching for Python environments to improve performance."
+            },
+            {
+              "label": "Settings",
+              "subitems": [
+                "New retry configuration option and improved handling of maximum retries.",
+                "Customize how package names are displayed in the Settings modal.",
+                "Added a “Cache Disk Usage” toggle with an option to clear cache."
+              ]
+            }
+          ]
+        },
+        {
+          "label": "⚡ Improvements",
+          "subitems": [
+            {
+              "label": "UI",
+              "subitems": ["Refreshed design for Python versions and virtual environment cards."]
+            },
+            {
+              "label": "Installer",
+              "subitems": [
+                "Better error handling and clearer error messages.",
+                "Improved handling of Deadsnakes PPA installation errors."
+              ]
+            },
+            {
+              "label": "Conda Installer",
+              "subitems": [
+                "Improved error handling for additional cases.",
+                "Added timeout & regex validation for detecting Conda installations.",
+                "Auto-accept Terms of Service prompts during Conda setup.",
+                "More reliable Python version fetching."
+              ]
+            },
+            {
+              "label": "Requirements",
+              "subitems": [
+                "Smarter handling of mismatched `-` and `_` in package names.",
+                "Improved logic for requirements update checks (operators & version comparisons).",
+                "Increased maxRetries for fetching package versions from Pip."
+              ]
+            },
+            {
+              "label": "Virtual Environments",
+              "subitems": [
+                "More robust error handling and improved venv loading states.",
+                "Automatically ensures pip is installed for package management."
+              ]
+            },
+            {
+              "label": "Associations",
+              "subitems": [
+                "Added avatar support in the virtual environment association dropdown.",
+                "Improved styling for associated item “chips.”",
+                "Support for associating installed Pythons with environments."
+              ]
+            }
+          ]
+        },
+        {
+          "label": "🪲 Bug Fixes",
+          "subitems": [
+            {
+              "label": "Fixed crash when requirements file path is empty."
+            }
+          ]
+        },
+        {
+          "label": "📌 Minor Changes",
+          "subitems": [
+            {
+              "label": "Automatic detection of venvs during initialization."
+            },
+            {
+              "label": "Package Manager",
+              "subitems": [
+                "New styling for the Python version dropdown.",
+                "Improved button styles & icons; removed redundant props.",
+                "Clearer Conda installer loading label.",
+                "Updated trash icon to a new duo-tone version."
+              ]
+            }
+          ]
+        }
+      ]
+    },
     {
       "title": "🚀 V0.10.2",
       "items": [
@@ -246,8 +346,5 @@
   ],
   "avatarUrl": "https://raw.githubusercontent.com/KindaBrazy/LynxHub-Python-Toolkit/refs/heads/compiled/icon.png",
   "tag": "tools",
-  "platforms": [
-    "win32",
-    "linux"
-  ]
+  "platforms": ["win32", "linux"]
 }
