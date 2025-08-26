@@ -37,7 +37,6 @@ export default defineConfig({
           lodash: {generate: false},
           'react-dom': {generate: false},
           'react-redux': {generate: false},
-          'mobx-react-lite': {generate: false},
           '@heroui/react': {generate: false},
         },
       }),
