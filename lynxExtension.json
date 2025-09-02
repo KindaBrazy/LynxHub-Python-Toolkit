@@ -7,6 +7,9 @@
   "publishDate": "2025-01-01",
   "updateDate": "2025-08-18",
   "requireAppBuild": 24,
+  "engines": {
+    "extensionApi": "^1.0.0"
+  },
   "repoUrl": "https://github.com/KindaBrazy/LynxHub-Python-Toolkit",
   "changeLog": [
     {

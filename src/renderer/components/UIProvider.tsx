@@ -1,3 +1,4 @@
+import {StyleProvider} from '@ant-design/cssinjs';
 import {ConfigProvider, theme} from 'antd';
 import {ReactNode, useMemo} from 'react';
 
@@ -20,7 +21,7 @@ export default function UIProvider({children}: {children: ReactNode}) {
         },
         token: {colorBgMask: 'rgba(0, 0, 0, 0.2)', fontFamily: 'Nunito, sans-serif'},
       }}>
-      {children}
+      <StyleProvider layer>{children}</StyleProvider>
     </ConfigProvider>
   );
 }

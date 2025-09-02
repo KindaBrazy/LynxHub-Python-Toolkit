@@ -1,4 +1,5 @@
 import federation from '@originjs/vite-plugin-federation';
+import tailwindcss from '@tailwindcss/vite';
 import react from '@vitejs/plugin-react';
 import {defineConfig, externalizeDepsPlugin} from 'electron-vite';
 import {resolve} from 'path';
@@ -25,6 +26,7 @@ export default defineConfig({
     root: resolve('extension/src/renderer'),
     plugins: [
       react(),
+      tailwindcss(),
       federation({
         name: 'extension',
         filename: 'rendererEntry.mjs',

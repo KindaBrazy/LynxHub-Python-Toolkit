@@ -185,7 +185,7 @@ export default function VenvCard({
 
         <CardBody className="gap-y-4 px-4 flex flex-col text-sm">
           <Button size="sm" variant="light" onPress={openPath} className="flex flex-row justify-start -ml-3 -mb-1.5">
-            <OpenFolder_Icon className="flex-shrink-0" />
+            <OpenFolder_Icon className="shrink-0" />
             <span className="truncate">{folder}</span>
           </Button>
           <div className="w-full justify-between flex flex-row">
