@@ -2,26 +2,28 @@ import {DropdownItem, DropdownSection} from '@heroui/react';
 import {useCallback} from 'react';
 import {useDispatch} from 'react-redux';
 
-import {CardsDataManager} from '../../../../src/renderer/src/App/Components/Cards/CardsDataManager';
+import {UseCardStoreType} from '../../../../src/cross/plugin/ExtensionTypes_Renderer';
 import {useTabsState} from '../../../../src/renderer/src/App/Redux/Reducer/TabsReducer';
 import {ModulesThatSupportPython} from '../../cross/CrossExtConstants';
 import {PythonToolkitActions} from '../reducer';
 import {Python_Icon} from './SvgIcons';
 
-type Props = {
-  context: CardsDataManager;
-};
+type Props = {useCardStore: UseCardStoreType};
 
-export default function CardMenu({context}: Props) {
+export default function CardMenu({useCardStore}: Props) {
   const activeTab = useTabsState('activeTab');
   const dispatch = useDispatch();
 
-  const onPress = useCallback(() => {
-    dispatch(PythonToolkitActions.openMenuModal({title: context.title, id: context.id, tabID: activeTab}));
-    context?.setMenuIsOpen(false);
-  }, [context, activeTab]);
+  const id = useCardStore(state => state.id);
+  const title = useCardStore(state => state.title);
+  const setMenuIsOpen = useCardStore(state => state.setMenuIsOpen);
 
-  if (!ModulesThatSupportPython.includes(context.id)) return null;
+  const onPress = useCallback(() => {
+    dispatch(PythonToolkitActions.openMenuModal({title, id, tabID: activeTab}));
+    setMenuIsOpen(false);
+  }, [setMenuIsOpen, title, id, activeTab]);
+
+  if (!ModulesThatSupportPython.includes(id)) return null;
 
   return (
     <DropdownSection key="python_toolkit" showDivider>
