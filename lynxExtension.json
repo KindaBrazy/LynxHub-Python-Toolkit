@@ -6,7 +6,7 @@
   "version": "0.11.1",
   "publishDate": "2025-01-01",
   "updateDate": "2025-09-04",
-  "requireAppBuild": 24,
+  "requireAppBuild": 29,
   "engines": {
     "extensionApi": "^1.0.0"
   },
