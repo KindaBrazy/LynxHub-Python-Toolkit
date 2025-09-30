@@ -1,0 +1,205 @@
+{
+  "$schema": "https://raw.githubusercontent.com/KindaBrazy/LynxHub-Statics/refs/heads/schema/plugins/versioning.schema.json",
+  "versions": [
+    {
+      "version": "0.11.1",
+      "commit": "69aa793",
+      "engines": {
+        "extensionApi": "^1.0.0"
+      },
+      "stage": ["public"]
+    }
+  ],
+  "changes": [
+    {
+      "version": "0.11.1",
+      "date": "2025-09-04",
+      "items": [
+        {
+          "⚡ Improvements": ["Support LynxHub Version 3.2.0"]
+        }
+      ]
+    },
+    {
+      "version": "0.11.0",
+      "date": "2025-08-18",
+      "items": [
+        {
+          "✨ New Features": [
+            "Choose between Python or venv when setting up AI environments.",
+            "Select or change the Python version for the LynxHub environment.",
+            "Disk usage caching for Python environments to improve performance.",
+            {
+              "Settings": [
+                "New retry configuration option and improved handling of maximum retries.",
+                "Customize how package names are displayed in the Settings modal.",
+                "Added a “Cache Disk Usage” toggle with an option to clear cache."
+              ]
+            }
+          ]
+        },
+        {
+          "⚡ Improvements": [
+            {
+              "UI": [
+                "Refreshed design for Python versions and virtual environment cards."
+              ]
+            },
+            {
+              "Installer": [
+                "Better error handling and clearer error messages.",
+                "Improved handling of Deadsnakes PPA installation errors."
+              ]
+            },
+            {
+              "Conda Installer": [
+                "Improved error handling for additional cases.",
+                "Added timeout & regex validation for detecting Conda installations.",
+                "Auto-accept Terms of Service prompts during Conda setup.",
+                "More reliable Python version fetching."
+              ]
+            },
+            {
+              "Requirements": [
+                "Smarter handling of mismatched `-` and `_` in package names.",
+                "Improved logic for requirements update checks (operators & version comparisons).",
+                "Increased maxRetries for fetching package versions from Pip."
+              ]
+            },
+            {
+              "Virtual Environments": [
+                "More robust error handling and improved venv loading states.",
+                "Automatically ensures pip is installed for package management."
+              ]
+            },
+            {
+              "Associations": [
+                "Added avatar support in the virtual environment association dropdown.",
+                "Improved styling for associated item “chips.”",
+                "Support for associating installed Pythons with environments."
+              ]
+            }
+          ]
+        },
+        {
+          "🪲 Bug Fixes": ["Fixed crash when requirements file path is empty."]
+        },
+        {
+          "📌 Minor Changes": [
+            "Automatic detection of venvs during initialization.",
+            {
+              "Package Manager": [
+                "New styling for the Python version dropdown.",
+                "Improved button styles & icons; removed redundant props.",
+                "Clearer Conda installer loading label.",
+                "Updated trash icon to a new duo-tone version."
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "version": "0.10.2",
+      "date": "2025-06-08",
+      "items": [
+        {
+          "⚡ Improvements": ["Redesign ToolsPage card layout"]
+        }
+      ]
+    },
+    {
+      "version": "0.10.1",
+      "date": "2025-05-22",
+      "items": [
+        {
+          "✨ New Features": ["Support LynxHub Version 3"]
+        }
+      ]
+    },
+    {
+      "version": "0.10.0",
+      "date": "2025-04-17",
+      "items": [
+        {
+          "✨ New Features": [
+            "Allow selecting installed Python versions for AI dependencies management.",
+            "Add Open WebUI to supported AI dependencies"
+          ]
+        },
+        {
+          "🪲 Bug Fixes": [
+            "Fixed issues with closing and reopening AI Dependencies window"
+          ]
+        }
+      ]
+    },
+    {
+      "version": "0.9.2",
+      "date": "2025-03-23",
+      "items": [
+        {
+          "🪲 Bug Fixes": [
+            "Fixed \"Set as System Default\" on windows might not work in some situations."
+          ]
+        }
+      ]
+    },
+    {
+      "version": "0.9.1",
+      "date": "2025-03-04",
+      "items": [
+        {
+          "🪲 Bug Fixes": [
+            "Correct venv activation command for AI interfaces on Windows and Linux."
+          ]
+        }
+      ]
+    },
+    {
+      "version": "0.9.0",
+      "date": "2025-02-07",
+      "items": [
+        {
+          "✨ New Features": [
+            "Added Linux Support.",
+            "Added ability to change package version (upgrade/downgrade). KindaBrazy/LynxHub#20"
+          ]
+        },
+        {
+          "⚡ Improvements": [
+            "Improved tools page card style.",
+            {
+              "Improved performance and speed (3-10x faster)": [
+                "Improved Python detection speed and performance.",
+                "Improved site package count performance.",
+                "Improved packages update checking performance."
+              ]
+            },
+            "Switch filter to \"All\" when \"Updates\" list is empty during update.",
+            "Refresh venv list after removal.",
+            "Updated modal footer backgrounds and use minimal buttons."
+          ]
+        },
+        {
+          "🪲 Bug Fixes": [
+            "Prevented modal overlay persistence when closing modals with tabs.",
+            "Ensured requirements file selection is saved correctly.",
+            "Corrected package update comparison logic.",
+            "Fixed create button not working in creating venvs.",
+            "Fixed small freeze on venv creation."
+          ]
+        },
+        {
+          "📌 Minor Changes": [
+            "Removed Python versions below 3 from installer list.",
+            "Centered conda installer content (loading indicator).",
+            "Calculate disk usage by site packages folder.",
+            "Display status message on official Python installation result.",
+            "Display error message when Python install path not found."
+          ]
+        }
+      ]
+    }
+  ]
+}
