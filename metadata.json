@@ -3,6 +3,5 @@
   "id": "python_toolkit",
   "title": "Python Toolkit",
   "description": "Effortlessly manage your Python environments and dependencies.",
-  "platforms": ["win32", "linux"],
   "type": "extension"
 }
