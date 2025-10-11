@@ -14,7 +14,7 @@ import UIProvider from './UIProvider';
 const title: string = 'Python Toolkit';
 const desc: string = 'Manage Python versions, virtual environments, packages, requirements files, and more.';
 const iconUrl: string =
-  'https://raw.githubusercontent.com/KindaBrazy/LynxHub-Python-Toolkit/refs/heads/source_ea/Icon.png';
+  'https://raw.githubusercontent.com/KindaBrazy/LynxHub-Python-Toolkit/refs/heads/metadata/icon.png';
 
 export default function ToolsPage() {
   const dispatch = useDispatch<AppDispatch>();
