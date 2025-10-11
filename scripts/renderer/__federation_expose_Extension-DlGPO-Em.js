@@ -20561,7 +20561,7 @@ const {useEffect: useEffect$2,useMemo,useState: useState$1} = await importShared
 const {useDispatch: useDispatch$2} = await importShared('react-redux');
 const title = "Python Toolkit";
 const desc = "Manage Python versions, virtual environments, packages, requirements files, and more.";
-const iconUrl = "https://raw.githubusercontent.com/KindaBrazy/LynxHub-Python-Toolkit/refs/heads/source_ea/Icon.png";
+const iconUrl = "https://raw.githubusercontent.com/KindaBrazy/LynxHub-Python-Toolkit/refs/heads/metadata/icon.png";
 function ToolsPage() {
   const dispatch = useDispatch$2();
   const activeTab = useTabsState("activeTab");
