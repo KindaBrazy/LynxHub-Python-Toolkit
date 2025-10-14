@@ -24,7 +24,7 @@ import {lynxTopToast} from '../../../../../../src/renderer/src/App/Utils/UtilHoo
 import {
   MenuDots_Icon,
   OpenFolder_Icon,
-  Refresh3_Icon,
+  RefreshDuo_Icon,
 } from '../../../../../../src/renderer/src/assets/icons/SvgIcons/SvgIcons';
 import {PythonInstallation} from '../../../../cross/CrossExtTypes';
 import {formatSizeMB} from '../../../../cross/CrossExtUtils';
@@ -238,12 +238,12 @@ export default function InstalledCard({python, diskUsage, maxDiskValue, updateDe
                       key="system-default"
                       onPress={makeDefault}
                       textValue="Set as System Default"
-                      startContent={python.isDefault ? <Refresh3_Icon className="size-4" /> : <DoubleCheck_Icon />}>
+                      startContent={python.isDefault ? <RefreshDuo_Icon className="size-4" /> : <DoubleCheck_Icon />}>
                       Set as <span className="font-bold text-secondary">System Default</span>
                     </DropdownItem>
                     <DropdownItem
                       startContent={
-                        python.isLynxHubDefault ? <Refresh3_Icon className="size-4" /> : <DoubleCheck_Icon />
+                        python.isLynxHubDefault ? <RefreshDuo_Icon className="size-4" /> : <DoubleCheck_Icon />
                       }
                       variant="flat"
                       color="success"
