@@ -20648,7 +20648,7 @@ function ToolsPage() {
   const [prevTabTitle, setPrevTabTitle] = useState$1(tabs.find((tab) => tab.id === activeTab)?.title);
   const [isOpen, setIsOpen] = useState$1(false);
   const [tabID, setTabID] = useState$1("");
-  const iconSrc = useCacheImage("python-toolkit-icon", iconUrl);
+  const iconSrc = useCacheImage("python_toolkit-icon", iconUrl);
   useEffect$2(() => {
     if (isOpen && tabID === activeTab) dispatch(tabsActions.setTabTitle({ tabID, title }));
   }, [activeTab, tabID, isOpen]);
