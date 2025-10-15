@@ -3,15 +3,19 @@
   "id": "python_toolkit",
   "title": "Python Toolkit",
   "description": "Effortlessly manage your Python environments and dependencies.",
-  "version": "0.11.1",
+  "version": "0.11.2",
   "publishDate": "2025-01-01",
-  "updateDate": "2025-09-04",
+  "updateDate": "2025-10-15",
   "requireAppBuild": 29,
   "engines": {
     "extensionApi": "^1.0.0"
   },
   "repoUrl": "https://github.com/KindaBrazy/LynxHub-Python-Toolkit",
   "changeLog": [
+    {
+      "title": "🚀 V0.11.2",
+      "items": [{"label": "📌 Minor Changes", "subitems": [{"label": "Remove alltalk-tts Python environment selection (Alltalk-tts uses a self-managed Conda environment)"}]}]
+    },
     {
       "title": "🚀 V0.11.1",
       "items": [{"label": "⚡ Improvements", "subitems": [{"label": "Support LynxHub Version 3.2.0"}]}]

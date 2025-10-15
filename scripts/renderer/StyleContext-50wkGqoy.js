@@ -189,6 +189,7 @@ var Entity = /*#__PURE__*/function () {
     _defineProperty(this, "instanceId", void 0);
     /** @private Internal cache map. Do not access this directly */
     _defineProperty(this, "cache", new Map());
+    _defineProperty(this, "extracted", new Set());
     this.instanceId = instanceId;
   }
   _createClass(Entity, [{
