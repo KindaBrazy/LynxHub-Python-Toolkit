@@ -10,7 +10,6 @@ export const ModulesThatSupportPython = [
   'OpenWebUI_TG',
   'Nerogar_SD',
   'Anapnoe_SD',
-  'Erew123_SD',
   'Oobabooga_TG',
   'Gitmylo_AG',
   'Bmaltais_SD',
