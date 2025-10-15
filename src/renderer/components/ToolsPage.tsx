@@ -27,7 +27,7 @@ export default function ToolsPage() {
   const [isOpen, setIsOpen] = useState(false);
   const [tabID, setTabID] = useState<string>('');
 
-  const iconSrc = useCacheImage('python-toolkit-icon', iconUrl);
+  const iconSrc = useCacheImage('python_toolkit-icon', iconUrl);
 
   useEffect(() => {
     if (isOpen && tabID === activeTab) dispatch(tabsActions.setTabTitle({tabID, title}));
