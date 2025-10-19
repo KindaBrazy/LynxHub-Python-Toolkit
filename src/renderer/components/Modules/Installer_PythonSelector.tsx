@@ -3,9 +3,9 @@ import {useCallback, useEffect, useState} from 'react';
 import {useDispatch} from 'react-redux';
 
 import {PythonVenvSelectItem} from '../../../cross/CrossExtTypes';
-import pIpc from '../../PIpc';
 import {PythonToolkitActions, usePythonToolkitState} from '../../reducer';
 import {Env_Icon, Python_Icon} from '../SvgIcons';
+import {fetchAndSetPythonVenvs} from '../UtilHooks';
 
 export const Installer_PythonSelector = (id: string, addAssociate: (id: string, item: PythonVenvSelectItem) => void) =>
   function Selector() {
@@ -22,27 +22,7 @@ export const Installer_PythonSelector = (id: string, addAssociate: (id: string, 
 
     useEffect(() => {
       setIsLoading(true);
-      Promise.all([pIpc.getInstalledPythons(false), pIpc.getVenvs()])
-        .then(([pythons, venvs]) => {
-          const pythonItems: PythonVenvSelectItem[] = pythons.map(python => ({
-            condaName: python.installationType === 'conda' ? python.condaName : undefined,
-            label: python.installationType === 'conda' ? `${python.version}  |  ${python.condaName}` : python.version,
-            dir: python.installFolder,
-            type: python.installationType === 'conda' ? 'conda' : 'python',
-          }));
-          const venvItems: PythonVenvSelectItem[] = venvs.map(venv => ({
-            label: `${venv.pythonVersion}  |  ${venv.name}`,
-            dir: venv.folder,
-            type: 'venv',
-          }));
-
-          const combined = [...pythonItems, ...venvItems];
-          setList(combined);
-
-          if (combined.length > 0) onSelected(combined[0]);
-        })
-        .catch(console.warn)
-        .finally(() => setIsLoading(false));
+      fetchAndSetPythonVenvs(setList, setIsLoading, onSelected);
     }, []);
 
     const onSelectionChange = (keys: SharedSelection) => {

@@ -6,6 +6,7 @@ import {lynxTopToast} from '../../../../../../../src/renderer/src/App/Utils/Util
 import {AssociateItem, PythonVenvSelectItem} from '../../../../../cross/CrossExtTypes';
 import pIpc from '../../../../PIpc';
 import {Env_Icon, Python_Icon} from '../../../SvgIcons';
+import {fetchAndSetPythonVenvs} from '../../../UtilHooks';
 
 type Props = {id: string; setPythonPath?: Dispatch<SetStateAction<string>>};
 
@@ -34,25 +35,7 @@ export default function Body_SelectEnv({id, setPythonPath}: Props) {
 
   useEffect(() => {
     setIsLoading(true);
-    Promise.all([pIpc.getInstalledPythons(false), pIpc.getVenvs()])
-      .then(([pythons, venvs]) => {
-        const pythonItems: PythonVenvSelectItem[] = pythons.map(python => ({
-          condaName: python.installationType === 'conda' ? python.condaName : undefined,
-          label: python.installationType === 'conda' ? `${python.version}  |  ${python.condaName}` : python.version,
-          dir: python.installFolder,
-          type: python.installationType === 'conda' ? 'conda' : 'python',
-        }));
-        const venvItems: PythonVenvSelectItem[] = venvs.map(venv => ({
-          label: `${venv.pythonVersion}  |  ${venv.name}`,
-          dir: venv.folder,
-          type: 'venv',
-        }));
-
-        const combined = [...pythonItems, ...venvItems];
-        setList(combined);
-      })
-      .catch(console.warn)
-      .finally(() => setIsLoading(false));
+    fetchAndSetPythonVenvs(setList, setIsLoading);
   }, []);
 
   return isLoading ? (
