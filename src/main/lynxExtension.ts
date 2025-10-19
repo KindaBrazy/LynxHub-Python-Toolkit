@@ -35,8 +35,7 @@ export async function initialExtension(lynxApi: ExtensionMainApi, utils: MainExt
 
     const defaultLynxPython = storeManager.getCustomData(DefaultLynxPython_StorageID);
     if (defaultLynxPython && defaultEnvPath) {
-      const newPath = replacePythonPath(defaultEnvPath, defaultLynxPython);
-      process.env.PATH = newPath;
+      process.env.PATH = replacePythonPath(defaultEnvPath, defaultLynxPython);
     }
 
     const associates = storeManager.getCustomData(Associates_StorageID);
