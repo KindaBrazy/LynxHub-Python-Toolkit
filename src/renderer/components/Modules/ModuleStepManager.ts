@@ -10,7 +10,7 @@ function addAssociate(id: string, item: PythonVenvSelectItem) {
 }
 
 export const getStep = (id: string) => {
-  let index = 1;
+  let index: number;
 
   switch (id) {
     case AvailableModules.sdForge:
