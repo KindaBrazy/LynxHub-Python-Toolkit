@@ -62,7 +62,6 @@ export async function getVenvs() {
         window.webContents.send(pythonChannels.errorGetVenvInfo, e);
         removeVenvStorage(venv);
       }
-      continue;
     }
   }
 
