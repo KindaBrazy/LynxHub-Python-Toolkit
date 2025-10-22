@@ -15,10 +15,11 @@ export default defineConfig({
       }),
     ],
     build: {
+      emptyOutDir: true,
       outDir: resolve('extension_out/main'),
       rollupOptions: {
         input: resolve('extension/src/main/lynxExtension.ts'),
-        output: {entryFileNames: 'mainEntry.mjs'},
+        output: {entryFileNames: 'mainEntry.cjs'},
       },
     },
   },
