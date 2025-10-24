@@ -2,40 +2,25 @@
   "$schema": "https://raw.githubusercontent.com/KindaBrazy/LynxHub-Statics/refs/heads/schema/plugins/versioning.schema.json",
   "versions": [
     {
-      "version": "0.11.2",
-      "commit": "31bcb64",
+      "version": "0.12.0",
+      "commit": "4faf811",
       "engines": {
         "extensionApi": "^1.0.0"
       },
-      "stage": "public",
-      "platforms": ["win32", "linux"]
-    },
-    {
-      "version": "0.11.1",
-      "commit": "69aa793",
-      "engines": {
-        "extensionApi": "^1.0.0"
-      },
-      "stage": "public",
+      "stage": "early_access",
       "platforms": ["win32", "linux"]
     }
   ],
   "changes": [
     {
-      "version": "0.11.2",
-      "date": "2025-10-15",
+      "version": "0.12.0",
+      "date": "2025-10-24",
       "items": [
         {
-          "📌 Minor Changes": ["Remove alltalk-tts Python environment selection (Alltalk-tts uses a self-managed Conda environment)"]
-        }
-      ]
-    },
-    {
-      "version": "0.11.1",
-      "date": "2025-09-04",
-      "items": [
-        {
-          "⚡ Improvements": ["Support LynxHub Version 3.2.0"]
+          "⚡ Improvements": ["Support LynxHub Version 3.3.0"],
+          "📌 Minor Changes": [
+            "Remove alltalk-tts Python environment selection (Alltalk-tts uses a self-managed Conda environment)"
+          ]
         }
       ]
     },
@@ -60,9 +45,7 @@
         {
           "⚡ Improvements": [
             {
-              "UI": [
-                "Refreshed design for Python versions and virtual environment cards."
-              ]
+              "UI": ["Refreshed design for Python versions and virtual environment cards."]
             },
             {
               "Installer": [
@@ -147,9 +130,7 @@
           ]
         },
         {
-          "🪲 Bug Fixes": [
-            "Fixed issues with closing and reopening AI Dependencies window"
-          ]
+          "🪲 Bug Fixes": ["Fixed issues with closing and reopening AI Dependencies window"]
         }
       ]
     },
@@ -158,9 +139,7 @@
       "date": "2025-03-23",
       "items": [
         {
-          "🪲 Bug Fixes": [
-            "Fixed \"Set as System Default\" on windows might not work in some situations."
-          ]
+          "🪲 Bug Fixes": ["Fixed \"Set as System Default\" on windows might not work in some situations."]
         }
       ]
     },
@@ -169,9 +148,7 @@
       "date": "2025-03-04",
       "items": [
         {
-          "🪲 Bug Fixes": [
-            "Correct venv activation command for AI interfaces on Windows and Linux."
-          ]
+          "🪲 Bug Fixes": ["Correct venv activation command for AI interfaces on Windows and Linux."]
         }
       ]
     },
