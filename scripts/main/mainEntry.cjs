@@ -1,30 +1,28 @@
-import { dialog, BrowserWindow, app, shell, ipcMain } from "electron";
-import { spawn, execFile, exec as exec$1, execSync } from "node:child_process";
-import { platform as platform$2, homedir as homedir$1 } from "node:os";
-import path, { join, resolve, basename, dirname } from "node:path";
-import require$$0$3, { constants as constants$1 } from "fs";
-import require$$0$2 from "constants";
-import stream, { Readable } from "stream";
-import require$$1, { promisify as promisify$1 } from "util";
-import require$$5 from "assert";
-import { promisify } from "node:util";
-import { exec } from "child_process";
-import require$$1$1 from "fs/promises";
-import require$$1$2, { join as join$1 } from "path";
-import require$$0$5, { platform as platform$3, homedir, arch } from "os";
-import process$1 from "node:process";
-import fs from "node:fs";
-import require$$3 from "http";
-import require$$4 from "https";
-import require$$0$4 from "url";
-import require$$8 from "crypto";
-import require$$1$3 from "tty";
-import zlib from "zlib";
-import { EventEmitter } from "events";
-import __cjs_mod__ from "node:module";
-const __filename = import.meta.filename;
-const __dirname = import.meta.dirname;
-const require2 = __cjs_mod__.createRequire(import.meta.url);
+"use strict";
+Object.defineProperty(exports, Symbol.toStringTag, { value: "Module" });
+const electron = require("electron");
+const node_child_process = require("node:child_process");
+const node_os = require("node:os");
+const path = require("node:path");
+const require$$0$3 = require("fs");
+const require$$0$2 = require("constants");
+const stream = require("stream");
+const require$$1 = require("util");
+const require$$5 = require("assert");
+const node_util = require("node:util");
+const child_process = require("child_process");
+const require$$1$1 = require("fs/promises");
+const require$$1$2 = require("path");
+const require$$0$4 = require("os");
+const process$1 = require("node:process");
+const fs = require("node:fs");
+const require$$3 = require("http");
+const require$$4 = require("https");
+const require$$0$5 = require("url");
+const require$$8 = require("crypto");
+const require$$1$3 = require("tty");
+const zlib = require("zlib");
+const events = require("events");
 const AI_VENV_STORE_KEYS = "ai_venvs";
 const MaxRetry_StorageID = "pythonToolkit_MaxRetry";
 const PkgDisplay_StorageID = "pythonToolkit_MpkgDisplay";
@@ -98,7 +96,7 @@ var hasRequiredLodash;
 function requireLodash() {
   if (hasRequiredLodash) return lodash$1.exports;
   hasRequiredLodash = 1;
-  (function(module, exports) {
+  (function(module2, exports2) {
     (function() {
       var undefined$1;
       var VERSION2 = "4.17.21";
@@ -426,8 +424,8 @@ function requireLodash() {
       var freeGlobal = typeof commonjsGlobal == "object" && commonjsGlobal && commonjsGlobal.Object === Object && commonjsGlobal;
       var freeSelf = typeof self == "object" && self && self.Object === Object && self;
       var root = freeGlobal || freeSelf || Function("return this")();
-      var freeExports = exports && !exports.nodeType && exports;
-      var freeModule = freeExports && true && module && !module.nodeType && module;
+      var freeExports = exports2 && !exports2.nodeType && exports2;
+      var freeModule = freeExports && true && module2 && !module2.nodeType && module2;
       var moduleExports = freeModule && freeModule.exports === freeExports;
       var freeProcess = moduleExports && freeGlobal.process;
       var nodeUtil = (function() {
@@ -3400,7 +3398,7 @@ function requireLodash() {
           }
           return mapped.length && mapped[0] === arrays[0] ? baseIntersection(mapped, undefined$1, comparator2) : [];
         });
-        function join2(array, separator) {
+        function join(array, separator) {
           return array == null ? "" : nativeJoin.call(array, separator);
         }
         function last(array) {
@@ -5319,7 +5317,7 @@ function requireLodash() {
         lodash2.isUndefined = isUndefined2;
         lodash2.isWeakMap = isWeakMap;
         lodash2.isWeakSet = isWeakSet;
-        lodash2.join = join2;
+        lodash2.join = join;
         lodash2.kebabCase = kebabCase;
         lodash2.last = last;
         lodash2.lastIndexOf = lastIndexOf;
@@ -6398,19 +6396,19 @@ var hasRequiredRe;
 function requireRe() {
   if (hasRequiredRe) return re.exports;
   hasRequiredRe = 1;
-  (function(module, exports) {
+  (function(module2, exports2) {
     const {
       MAX_SAFE_COMPONENT_LENGTH,
       MAX_SAFE_BUILD_LENGTH,
       MAX_LENGTH
     } = requireConstants();
     const debug = requireDebug$1();
-    exports = module.exports = {};
-    const re2 = exports.re = [];
-    const safeRe = exports.safeRe = [];
-    const src2 = exports.src = [];
-    const safeSrc = exports.safeSrc = [];
-    const t = exports.t = {};
+    exports2 = module2.exports = {};
+    const re2 = exports2.re = [];
+    const safeRe = exports2.safeRe = [];
+    const src2 = exports2.src = [];
+    const safeSrc = exports2.safeSrc = [];
+    const t = exports2.t = {};
     let R = 0;
     const LETTERDASHNUMBER = "[a-zA-Z0-9-]";
     const safeRegexReplacements = [
@@ -6463,18 +6461,18 @@ function requireRe() {
     createToken("COERCERTLFULL", src2[t.COERCEFULL], true);
     createToken("LONETILDE", "(?:~>?)");
     createToken("TILDETRIM", `(\\s*)${src2[t.LONETILDE]}\\s+`, true);
-    exports.tildeTrimReplace = "$1~";
+    exports2.tildeTrimReplace = "$1~";
     createToken("TILDE", `^${src2[t.LONETILDE]}${src2[t.XRANGEPLAIN]}$`);
     createToken("TILDELOOSE", `^${src2[t.LONETILDE]}${src2[t.XRANGEPLAINLOOSE]}$`);
     createToken("LONECARET", "(?:\\^)");
     createToken("CARETTRIM", `(\\s*)${src2[t.LONECARET]}\\s+`, true);
-    exports.caretTrimReplace = "$1^";
+    exports2.caretTrimReplace = "$1^";
     createToken("CARET", `^${src2[t.LONECARET]}${src2[t.XRANGEPLAIN]}$`);
     createToken("CARETLOOSE", `^${src2[t.LONECARET]}${src2[t.XRANGEPLAINLOOSE]}$`);
     createToken("COMPARATORLOOSE", `^${src2[t.GTLT]}\\s*(${src2[t.LOOSEPLAIN]})$|^$`);
     createToken("COMPARATOR", `^${src2[t.GTLT]}\\s*(${src2[t.FULLPLAIN]})$|^$`);
     createToken("COMPARATORTRIM", `(\\s*)${src2[t.GTLT]}\\s*(${src2[t.LOOSEPLAIN]}|${src2[t.XRANGEPLAIN]})`, true);
-    exports.comparatorTrimReplace = "$1$2$3";
+    exports2.comparatorTrimReplace = "$1$2$3";
     createToken("HYPHENRANGE", `^\\s*(${src2[t.XRANGEPLAIN]})\\s+-\\s+(${src2[t.XRANGEPLAIN]})\\s*$`);
     createToken("HYPHENRANGELOOSE", `^\\s*(${src2[t.XRANGEPLAINLOOSE]})\\s+-\\s+(${src2[t.XRANGEPLAINLOOSE]})\\s*$`);
     createToken("STAR", "(<|>)?=?\\s*\\*");
@@ -8308,7 +8306,7 @@ async function detectInstallationType(pythonPath) {
 }
 async function parseVersion(pythonPath) {
   return new Promise((resolve2, reject) => {
-    const pythonProcess = spawn(pythonPath, ["--version"]);
+    const pythonProcess = node_child_process.spawn(pythonPath, ["--version"]);
     let stdout = "";
     let stderr = "";
     pythonProcess.stdout.on("data", (data) => {
@@ -8342,7 +8340,7 @@ function findFileInDir(dirPath, fileName) {
     if (!fileName) return null;
     const files = gracefulFsExports.readdirSync(dirPath);
     for (const file of files) {
-      const filePath = join(dirPath, file);
+      const filePath = path.join(dirPath, file);
       const stats = gracefulFsExports.statSync(filePath);
       if (stats.isDirectory()) {
         const result = findFileInDir(filePath, fileName);
@@ -8361,7 +8359,7 @@ function findFileInDir(dirPath, fileName) {
 }
 async function removeDir(dir) {
   try {
-    const resolvedPath = resolve(dir);
+    const resolvedPath = path.resolve(dir);
     console.log(`Removing directory: ${resolvedPath}`);
     return await gracefulFsExports.promises.rm(resolvedPath, { recursive: true, force: true });
   } catch (e) {
@@ -8374,7 +8372,7 @@ async function getSitePackagesCount(pythonPath) {
   return new Promise((resolve2, reject) => {
     const supportImportLib = semverExports.compare(`${version.major}.${version.minor}.${version.patch}`, "3.8.0") === 1;
     const command = supportImportLib ? `import importlib.metadata; print(len(list(importlib.metadata.distributions())))` : `import pkg_resources; print(len(list(pkg_resources.working_set)))`;
-    exec(`"${pythonPath}" -c "${command}"`, (error, stdout, stderr) => {
+    child_process.exec(`"${pythonPath}" -c "${command}"`, (error, stdout, stderr) => {
       if (error) {
         reject(error);
         return;
@@ -8397,11 +8395,11 @@ async function getSitePackagesCount(pythonPath) {
 }
 async function openDialogExt(options2) {
   try {
-    const window2 = appManager?.getMainWindow();
+    const window2 = exports.appManager?.getMainWindow();
     if (!window2) {
       throw new Error("openDialogExt: No window found");
     }
-    const result = await (window2 ? dialog.showOpenDialog(window2, options2) : dialog.showOpenDialog(options2));
+    const result = await (window2 ? electron.dialog.showOpenDialog(window2, options2) : electron.dialog.showOpenDialog(options2));
     if (result.filePaths) return result.filePaths[0];
     return void 0;
   } catch (error) {
@@ -8411,7 +8409,7 @@ async function openDialogExt(options2) {
 }
 function spawnAsync(command, args) {
   return new Promise((resolve2, reject) => {
-    const child = spawn(command, args);
+    const child = node_child_process.spawn(command, args);
     let stdout = "";
     let stderr = "";
     child.stdout.on("data", (data) => {
@@ -8434,34 +8432,34 @@ function spawnAsync(command, args) {
 }
 const STORE_VENVS_ID = "python-venvs-locations";
 function validateVenvs() {
-  const venvs = storageManager?.getCustomData(STORE_VENVS_ID);
+  const venvs = exports.storageManager?.getCustomData(STORE_VENVS_ID);
   let validEnvs;
   if (lodashExports.isNil(venvs)) {
     validEnvs = [];
   } else {
     validEnvs = lodashExports.filter(venvs, isVenvDirectory);
   }
-  storageManager?.setCustomData(STORE_VENVS_ID, validEnvs);
+  exports.storageManager?.setCustomData(STORE_VENVS_ID, validEnvs);
   return validEnvs;
 }
 function updateVenvStorage(newVenvPath) {
-  const existVenvs = storageManager?.getCustomData(STORE_VENVS_ID);
+  const existVenvs = exports.storageManager?.getCustomData(STORE_VENVS_ID);
   if (lodashExports.isEmpty(existVenvs)) {
-    storageManager?.setCustomData(STORE_VENVS_ID, [newVenvPath]);
+    exports.storageManager?.setCustomData(STORE_VENVS_ID, [newVenvPath]);
   } else {
     const newVenvs = /* @__PURE__ */ new Set([...existVenvs, newVenvPath]);
-    storageManager?.setCustomData(STORE_VENVS_ID, Array.from(newVenvs));
+    exports.storageManager?.setCustomData(STORE_VENVS_ID, Array.from(newVenvs));
   }
 }
 function removeVenvStorage(venvPath) {
-  const existVenvs = storageManager?.getCustomData(STORE_VENVS_ID);
+  const existVenvs = exports.storageManager?.getCustomData(STORE_VENVS_ID);
   if (existVenvs) {
-    storageManager?.setCustomData(STORE_VENVS_ID, Array.from(existVenvs.filter((venv) => venv !== venvPath)));
+    exports.storageManager?.setCustomData(STORE_VENVS_ID, Array.from(existVenvs.filter((venv) => venv !== venvPath)));
   }
 }
 async function getVenvs() {
   const venvs = validateVenvs();
-  const window2 = appManager?.getMainWindow();
+  const window2 = exports.appManager?.getMainWindow();
   if (!window2) {
     throw new Error("getVenvs: No window found");
   }
@@ -8475,7 +8473,6 @@ async function getVenvs() {
         window2.webContents.send(pythonChannels.errorGetVenvInfo, e);
         removeVenvStorage(venv);
       }
-      continue;
     }
   }
   return lodashExports.compact(venvsInfo);
@@ -8496,22 +8493,22 @@ async function locateVenv() {
 }
 async function createPythonVenv(options2) {
   const { pythonPath, destinationFolder, venvName } = options2;
-  const venvPath = join(destinationFolder, venvName);
+  const venvPath = path.join(destinationFolder, venvName);
   const command = `${pythonPath} -m venv ${venvPath}`;
-  return new Promise((resolve2) => {
-    exec(command, (error, stdout, stderr) => {
+  return new Promise((resolve) => {
+    child_process.exec(command, (error, stdout, stderr) => {
       if (error) {
         console.error(`Error creating virtual environment: ${error.message}`);
         if (stderr) {
           console.error(stderr);
         }
-        resolve2(false);
+        resolve(false);
         return;
       }
       if (stderr) {
         if (stderr.includes("Error:")) {
           console.error(`Error creating virtual environment: ${stderr}`);
-          resolve2(false);
+          resolve(false);
           return;
         } else {
           console.warn(stderr);
@@ -8520,15 +8517,15 @@ async function createPythonVenv(options2) {
       console.log(stdout);
       console.log(`Virtual environment created successfully at: ${venvPath}`);
       updateVenvStorage(venvPath);
-      resolve2(true);
+      resolve(true);
     });
   });
 }
-const execFileAsync = promisify(execFile);
+const execFileAsync = node_util.promisify(node_child_process.execFile);
 async function getPythonVersion(venvPath) {
-  return new Promise((resolve2, reject) => {
+  return new Promise((resolve, reject) => {
     const pythonExecutable = getVenvPythonPath(venvPath);
-    exec$1(`"${pythonExecutable}" --version`, (error, stdout, stderr) => {
+    node_child_process.exec(`"${pythonExecutable}" --version`, (error, stdout, stderr) => {
       if (error) {
         reject(error);
         return;
@@ -8536,14 +8533,14 @@ async function getPythonVersion(venvPath) {
       if (stderr) {
         const versionMatch2 = stderr.match(/Python (\d+\.\d+(\.\d+)?)/);
         if (versionMatch2) {
-          resolve2(versionMatch2[1]);
+          resolve(versionMatch2[1]);
           return;
         }
         reject(new Error(`Could not parse Python version from stderr: ${stderr}`));
       }
       const versionMatch = stdout.match(/Python (\d+\.\d+(\.\d+)?)/);
       if (versionMatch) {
-        resolve2(versionMatch[1]);
+        resolve(versionMatch[1]);
       } else {
         reject(new Error(`Could not parse Python version from stdout: ${stdout}`));
       }
@@ -8551,14 +8548,14 @@ async function getPythonVersion(venvPath) {
   });
 }
 async function checkPipInstallation(exePath) {
-  return new Promise(async (resolve2, reject) => {
+  return new Promise(async (resolve, reject) => {
     try {
       await execFileAsync(exePath, ["-m", "pip", "--version"]);
-      resolve2();
+      resolve();
     } catch (e) {
       console.log("pip not found. Attempting to install pip...");
       const installPipCommand = `"${exePath}" -m ensurepip --default-pip`;
-      exec$1(installPipCommand, (installError, _, installStderr) => {
+      node_child_process.exec(installPipCommand, (installError, _, installStderr) => {
         if (installError) {
           return reject(`Error installing pip: ${installError.message}`);
         }
@@ -8566,7 +8563,7 @@ async function checkPipInstallation(exePath) {
           console.warn(`stderr during pip installation: ${installStderr}`);
         }
         console.log("pip installed successfully.");
-        resolve2();
+        resolve();
       });
     }
   });
@@ -8576,7 +8573,7 @@ async function getVenvInfo(venvPath) {
   const pythonExecutable = getVenvPythonPath(venvPath);
   await checkPipInstallation(pythonExecutable);
   const sitePackagesCount = await getSitePackagesCount(pythonExecutable);
-  const folderName = basename(venvPath);
+  const folderName = path.basename(venvPath);
   return {
     pythonVersion,
     pythonPath: pythonExecutable,
@@ -8586,7 +8583,7 @@ async function getVenvInfo(venvPath) {
   };
 }
 function getVenvPythonPath(venvPath) {
-  return platform$2() === "win32" ? join(venvPath, "Scripts", "python.exe") : join(venvPath, "bin", "python");
+  return node_os.platform() === "win32" ? path.join(venvPath, "Scripts", "python.exe") : path.join(venvPath, "bin", "python");
 }
 function isVenvDirectory(dirPath) {
   try {
@@ -8597,7 +8594,7 @@ function isVenvDirectory(dirPath) {
     if (!gracefulFsExports.existsSync(pythonExePath)) {
       return false;
     }
-    const libPath = join(dirPath, "lib");
+    const libPath = path.join(dirPath, "lib");
     return gracefulFsExports.existsSync(libPath);
   } catch (err) {
     console.error(`Error checking if directory is a venv: ${err}`);
@@ -8613,7 +8610,7 @@ async function findVenvFolder(dirPath) {
     for (const item of items) {
       if (item.isDirectory()) {
         const itemName = item.name;
-        const fullPath = join(dirPath, itemName);
+        const fullPath = path.join(dirPath, itemName);
         if (isVenvFolderName(itemName) && isVenvDirectory(fullPath)) {
           return fullPath;
         }
@@ -8642,7 +8639,7 @@ async function findAIVenv(id, folder) {
   }
 }
 function getCommandByType(type2, dir, condaName) {
-  const isWin = platform$2() === "win32";
+  const isWin = node_os.platform() === "win32";
   switch (type2) {
     case "python":
       return isWin ? `$env:Path = "${dir};${dir}\\Scripts" + $env:Path` : `export PATH="${dir}:${dir}/bin:$PATH"`;
@@ -8656,10 +8653,10 @@ function getCommandByType(type2, dir, condaName) {
 }
 function removePreCommands(id) {
   try {
-    if (!storageManager) return;
-    const prevCommands = storageManager.getData("cards")?.cardTerminalPreCommands;
+    if (!exports.storageManager) return;
+    const prevCommands = exports.storageManager.getData("cards")?.cardTerminalPreCommands;
     if (!prevCommands) return;
-    storageManager.updateData("cards", {
+    exports.storageManager.updateData("cards", {
       cardTerminalPreCommands: prevCommands.filter((item) => item.id !== id)
     });
   } catch (err) {
@@ -8668,7 +8665,7 @@ function removePreCommands(id) {
 }
 function getAssociates() {
   try {
-    return storageManager?.getCustomData(Associates_StorageID);
+    return exports.storageManager?.getCustomData(Associates_StorageID);
   } catch (err) {
     console.warn("Failed to get associates:", err);
     return void 0;
@@ -8676,11 +8673,11 @@ function getAssociates() {
 }
 function updateAssociateStorage(data) {
   try {
-    if (!storageManager) return;
+    if (!exports.storageManager) return;
     const existingData = getAssociates() || [];
     const exists = existingData.some((item) => item.id === data.id);
     const updated = exists ? existingData.map((item) => item.id === data.id ? data : item) : [...existingData, data];
-    storageManager.setCustomData(Associates_StorageID, updated);
+    exports.storageManager.setCustomData(Associates_StorageID, updated);
   } catch (err) {
     console.error("Failed to update associate storage:", err);
   }
@@ -8690,11 +8687,11 @@ function getExePathAssociate(target) {
     const buildPath = (item) => {
       switch (item.type) {
         case "venv":
-          return resolve(getVenvPythonPath(item.dir));
+          return path.resolve(getVenvPythonPath(item.dir));
         case "python":
         case "conda":
         default:
-          return resolve(platform$2() === "win32" ? join(item.dir, "python.exe") : join(item.dir, "bin", "python"));
+          return path.resolve(node_os.platform() === "win32" ? path.join(item.dir, "python.exe") : path.join(item.dir, "bin", "python"));
       }
     };
     if (lodashExports.isString(target)) {
@@ -8710,8 +8707,8 @@ function getExePathAssociate(target) {
 function addAssociate(data) {
   try {
     updateAssociateStorage(data);
-    if (storageManager) {
-      storageManager.setCardTerminalPreCommands(data.id, [getCommandByType(data.type, data.dir, data.condaName)]);
+    if (exports.storageManager) {
+      exports.storageManager.setCardTerminalPreCommands(data.id, [getCommandByType(data.type, data.dir, data.condaName)]);
     }
   } catch (err) {
     console.error("Error adding associate:", err);
@@ -8720,8 +8717,8 @@ function addAssociate(data) {
 function removeAssociate(id) {
   try {
     const existingData = getAssociates();
-    if (!existingData || !storageManager) return;
-    storageManager.setCustomData(
+    if (!existingData || !exports.storageManager) return;
+    exports.storageManager.setCustomData(
       Associates_StorageID,
       existingData.filter((item) => item.id !== id)
     );
@@ -8734,8 +8731,8 @@ function removeAssociatePath(pythonPath) {
   try {
     const existingData = getAssociates();
     const targetID = existingData?.find((item) => item.dir === pythonPath)?.id;
-    if (!existingData || !targetID || !storageManager) return;
-    storageManager.setCustomData(
+    if (!existingData || !targetID || !exports.storageManager) return;
+    exports.storageManager.setCustomData(
       Associates_StorageID,
       existingData.filter((item) => item.id !== targetID)
     );
@@ -8744,7 +8741,7 @@ function removeAssociatePath(pythonPath) {
     console.warn(`Error removing associate by path: ${pythonPath}`, err);
   }
 }
-const execAsync$5 = promisify$1(exec);
+const execAsync$5 = require$$1.promisify(child_process.exec);
 function removeDuplicateUrls(versions) {
   const seenUrls = /* @__PURE__ */ new Set();
   return versions.filter((version) => {
@@ -8795,7 +8792,7 @@ async function ensureDeadsnakesPPA() {
 }
 async function getAvailablePythonVersions() {
   try {
-    if (platform$2() === "win32") {
+    if (node_os.platform() === "win32") {
       const response = await fetch("https://www.python.org/downloads/");
       const text = await response.text();
       const versionRegex = /Python\s+(\d+\.\d+\.\d+)/g;
@@ -8815,7 +8812,7 @@ async function getAvailablePythonVersions() {
         })
       );
       return removeDuplicateUrls(validVersions.filter((v) => v !== null));
-    } else if (platform$2() === "linux") {
+    } else if (node_os.platform() === "linux") {
       await ensureSoftwarePropertiesCommon();
       await ensureDeadsnakesPPA();
       const { stdout } = await execAsync$5("apt-cache search ^python3\\.[0-9]+$");
@@ -8830,7 +8827,7 @@ async function getAvailablePythonVersions() {
 }
 function getPythonDownloadUrl(version) {
   const baseUrl = "https://www.python.org/ftp/python";
-  switch (platform$2()) {
+  switch (node_os.platform()) {
     case "win32":
       return version.startsWith("2") ? `${baseUrl}/${version}/python-${version}.amd64.msi` : `${baseUrl}/${version}/python-${version}-amd64.exe`;
     case "linux":
@@ -8957,7 +8954,7 @@ var hasRequiredCjs;
 function requireCjs() {
   if (hasRequiredCjs) return cjs;
   hasRequiredCjs = 1;
-  (function(exports) {
+  (function(exports2) {
     var __createBinding = cjs && cjs.__createBinding || (Object.create ? (function(o, m, k, k2) {
       if (k2 === void 0) k2 = k;
       var desc = Object.getOwnPropertyDescriptor(m, k);
@@ -8985,20 +8982,20 @@ function requireCjs() {
       __setModuleDefault(result, mod);
       return result;
     };
-    var __exportStar = cjs && cjs.__exportStar || function(m, exports2) {
-      for (var p in m) if (p !== "default" && !Object.prototype.hasOwnProperty.call(exports2, p)) __createBinding(exports2, m, p);
+    var __exportStar = cjs && cjs.__exportStar || function(m, exports22) {
+      for (var p in m) if (p !== "default" && !Object.prototype.hasOwnProperty.call(exports22, p)) __createBinding(exports22, m, p);
     };
-    Object.defineProperty(exports, "__esModule", { value: true });
-    exports.sync = exports.isexe = exports.posix = exports.win32 = void 0;
+    Object.defineProperty(exports2, "__esModule", { value: true });
+    exports2.sync = exports2.isexe = exports2.posix = exports2.win32 = void 0;
     const posix2 = __importStar(requirePosix());
-    exports.posix = posix2;
+    exports2.posix = posix2;
     const win322 = __importStar(requireWin32());
-    exports.win32 = win322;
-    __exportStar(requireOptions(), exports);
+    exports2.win32 = win322;
+    __exportStar(requireOptions(), exports2);
     const platform2 = process.env._ISEXE_TEST_PLATFORM_ || process.platform;
     const impl = platform2 === "win32" ? win322 : posix2;
-    exports.isexe = impl.isexe;
-    exports.sync = impl.sync;
+    exports2.isexe = impl.isexe;
+    exports2.sync = impl.sync;
   })(cjs);
   return cjs;
 }
@@ -9008,7 +9005,7 @@ function requireLib() {
   if (hasRequiredLib) return lib;
   hasRequiredLib = 1;
   const { isexe, sync: isexeSync } = requireCjs();
-  const { join: join2, delimiter, sep, posix: posix2 } = require$$1$2;
+  const { join, delimiter, sep, posix: posix2 } = require$$1$2;
   const isWindows = process.platform === "win32";
   const rSlash = new RegExp(`[${posix2.sep}${sep === posix2.sep ? "" : sep}]`.replace(/(\\)/g, "\\$1"));
   const rRel = new RegExp(`^\\.${rSlash.source}`);
@@ -9037,7 +9034,7 @@ function requireLib() {
   const getPathPart = (raw, cmd) => {
     const pathPart = /^".*"$/.test(raw) ? raw.slice(1, -1) : raw;
     const prefix = !pathPart && rRel.test(cmd) ? cmd.slice(0, 2) : "";
-    return prefix + join2(pathPart, cmd);
+    return prefix + join(pathPart, cmd);
   };
   const which2 = async (cmd, opt = {}) => {
     const { pathEnv, pathExt, pathExtExe } = getPathInfo(cmd, opt);
@@ -9093,12 +9090,12 @@ function requireLib() {
 }
 var libExports = requireLib();
 const which = /* @__PURE__ */ getDefaultExportFromCjs(libExports);
-const COMMAND_LINE_ENDING = platform$2() === "win32" ? "\r" : "\n";
+const COMMAND_LINE_ENDING = node_os.platform() === "win32" ? "\r" : "\n";
 function getPowerShellVersion() {
   const command = "$PSVersionTable.PSVersion.Major";
   try {
     const pwshVersion = parseInt(
-      execSync(`pwsh.exe -NoProfile -Command "${command}"`, {
+      node_child_process.execSync(`pwsh.exe -NoProfile -Command "${command}"`, {
         encoding: "utf8",
         stdio: ["pipe", "pipe", "ignore"]
       }).trim(),
@@ -9106,7 +9103,7 @@ function getPowerShellVersion() {
     );
     if (pwshVersion >= 7) return pwshVersion;
     const psVersion = parseInt(
-      execSync(`powershell.exe -NoProfile -Command "${command}"`, {
+      node_child_process.execSync(`powershell.exe -NoProfile -Command "${command}"`, {
         encoding: "utf8",
         stdio: ["pipe", "pipe", "ignore"]
       }).trim(),
@@ -9119,7 +9116,7 @@ function getPowerShellVersion() {
   }
 }
 function determineShell() {
-  switch (platform$2()) {
+  switch (node_os.platform()) {
     case "darwin":
       return "zsh";
     case "linux":
@@ -9138,18 +9135,18 @@ function validatePath$1(path2) {
   }
 }
 function replacePythonPath(envPath, newPythonBase) {
-  const targetPath = resolve(newPythonBase);
+  const targetPath = path.resolve(newPythonBase);
   const pathExists = validatePath$1(targetPath);
   if (!pathExists) {
     throw new Error(`Python path does not exist: ${targetPath}`);
   }
   const paths = envPath.split(";").filter(Boolean);
   const nonPythonPaths = paths.filter((path2) => !path2.toLowerCase().includes("python"));
-  const newPaths = [targetPath, join(targetPath, "Scripts"), ...nonPythonPaths];
+  const newPaths = [targetPath, path.join(targetPath, "Scripts"), ...nonPythonPaths];
   return newPaths.join(";");
 }
 function isFirstPythonPath(envPath, targetPythonBase) {
-  const targetPath = resolve(targetPythonBase);
+  const targetPath = path.resolve(targetPythonBase);
   const pathExists = validatePath$1(targetPath);
   if (!pathExists) {
     throw new Error(`Python path does not exist: ${targetPath}`);
@@ -9171,7 +9168,7 @@ async function setDefaultPython(pythonPath) {
     throw new Error(`Python path does not exist: ${pythonPath}`);
   }
   try {
-    switch (platform$2()) {
+    switch (node_os.platform()) {
       case "win32":
         await setDefaultPythonWindows(pythonPath);
         break;
@@ -9186,15 +9183,15 @@ async function setDefaultPython(pythonPath) {
 }
 async function isDefaultPython(pythonPath) {
   try {
-    const defaultPath = await which("python", { path: defaultEnvPath });
+    const defaultPath = await which("python", { path: exports.defaultEnvPath });
     return defaultPath.toLowerCase() === pythonPath.toLowerCase();
   } catch (error) {
     return false;
   }
 }
 async function setDefaultPythonWindows(pythonPath) {
-  return new Promise((resolve2, reject) => {
-    const regQuery = spawn("reg", ["query", "HKEY_CURRENT_USER\\Environment", "/v", "Path"]);
+  return new Promise((resolve, reject) => {
+    const regQuery = node_child_process.spawn("reg", ["query", "HKEY_CURRENT_USER\\Environment", "/v", "Path"]);
     let queryOutput = "";
     regQuery.stdout.on("data", (data) => {
       queryOutput += data.toString();
@@ -9213,8 +9210,8 @@ async function setDefaultPythonWindows(pythonPath) {
         return;
       }
       const newPathValue = replacePythonPath(match[1], pythonPath);
-      if (defaultEnvPath) setDefaultEnvPath(replacePythonPath(defaultEnvPath, pythonPath));
-      const regAdd = spawn(
+      if (exports.defaultEnvPath) setDefaultEnvPath(replacePythonPath(exports.defaultEnvPath, pythonPath));
+      const regAdd = node_child_process.spawn(
         "reg",
         ["add", "HKEY_CURRENT_USER\\Environment", "/v", "Path", "/t", "REG_EXPAND_SZ", "/d", newPathValue, "/f"],
         {
@@ -9231,14 +9228,14 @@ async function setDefaultPythonWindows(pythonPath) {
           return;
         }
         process.env.PATH = newPathValue;
-        resolve2();
+        resolve();
       });
     });
   });
 }
-const execAsync$4 = promisify(exec$1);
+const execAsync$4 = node_util.promisify(node_child_process.exec);
 async function uninstallCondaPython(pythonPath, pty) {
-  return new Promise(async (resolve2) => {
+  return new Promise(async (resolve) => {
     try {
       const ptyProcess = pty.spawn(determineShell(), [], {});
       const envName = await getCondaEnvName(pythonPath);
@@ -9246,19 +9243,19 @@ async function uninstallCondaPython(pythonPath, pty) {
       ptyProcess.write(`exit${COMMAND_LINE_ENDING}`);
       ptyProcess.onExit(({ exitCode }) => {
         if (exitCode === 0) {
-          resolve2({
+          resolve({
             success: true,
             message: `Successfully removed conda environment ${envName}`
           });
         } else {
-          resolve2({
+          resolve({
             success: false,
             message: `Failed to remove conda environment.`
           });
         }
       });
     } catch (err) {
-      resolve2({
+      resolve({
         success: false,
         message: `Failed to remove conda environment: ${err.message}`
       });
@@ -9268,12 +9265,12 @@ async function uninstallCondaPython(pythonPath, pty) {
 async function getCondaEnvName(pythonPath) {
   try {
     const { stdout } = await execAsync$4(`"${pythonPath}" -c "import sys; print(sys.prefix.split('/')[-1])"`);
-    return basename(stdout.trim());
+    return path.basename(stdout.trim());
   } catch (err) {
     throw new Error(`Failed to get conda environment name: ${err.message}`);
   }
 }
-const execAsync$3 = promisify$1(exec);
+const execAsync$3 = require$$1.promisify(child_process.exec);
 const commonPaths = {
   win32: [
     "C:\\Python*",
@@ -9314,22 +9311,22 @@ async function fileExists(filePath) {
 }
 async function isExecutable(filePath) {
   try {
-    await gracefulFsExports.promises.access(filePath, constants$1.X_OK);
+    await gracefulFsExports.promises.access(filePath, require$$0$3.constants.X_OK);
     return true;
   } catch {
     return false;
   }
 }
 async function isPythonPathValid(pythonPath) {
-  return new Promise((resolve2) => {
-    exec(`${pythonPath} --version`, (error, stdout, stderr) => {
+  return new Promise((resolve) => {
+    child_process.exec(`${pythonPath} --version`, (error, stdout, stderr) => {
       if (error) {
-        resolve2(false);
+        resolve(false);
       } else {
         if (stdout.includes("Python") || stderr.includes("Python")) {
-          resolve2(true);
+          resolve(true);
         } else {
-          resolve2(false);
+          resolve(false);
         }
       }
     });
@@ -9342,7 +9339,7 @@ async function findPythonInPath() {
     for (const cmd of pythonCommands) {
       try {
         const path2 = await which(cmd);
-        if (path2) paths.push(platform$3() === "win32" ? path2.replace(".EXE", ".exe") : path2);
+        if (path2) paths.push(require$$0$4.platform() === "win32" ? path2.replace(".EXE", ".exe") : path2);
       } catch (error) {
       }
     }
@@ -9352,31 +9349,31 @@ async function findPythonInPath() {
   }
 }
 async function findInCommonLocations() {
-  const os = platform$3();
+  const os = require$$0$4.platform();
   const paths = commonPaths[os] || [];
   const expandedPaths = [];
   for (const pathPattern of paths) {
-    const expandedPath = pathPattern.replace("%LOCALAPPDATA%", process.env.LOCALAPPDATA || "").replace("%USERPROFILE%", homedir()).replace("~", homedir());
-    const basePath = dirname(expandedPath);
-    const pattern = basename(expandedPath);
+    const expandedPath = pathPattern.replace("%LOCALAPPDATA%", process.env.LOCALAPPDATA || "").replace("%USERPROFILE%", require$$0$4.homedir()).replace("~", require$$0$4.homedir());
+    const basePath = path.dirname(expandedPath);
+    const pattern = path.basename(expandedPath);
     try {
       const files = await gracefulFsExports.promises.readdir(basePath);
       for (const file of files) {
         if (matchPattern(file, pattern)) {
-          const fullPath = join(basePath, file);
+          const fullPath = path.join(basePath, file);
           const stats = await gracefulFsExports.promises.stat(fullPath);
           if (stats.isDirectory()) {
-            const pythonExecutable = os === "win32" ? join(fullPath, "python.exe") : join(fullPath, "bin", "python");
+            const pythonExecutable = os === "win32" ? path.join(fullPath, "python.exe") : path.join(fullPath, "bin", "python");
             const shouldAdd = os === "win32" ? await fileExists(pythonExecutable) : await fileExists(pythonExecutable) && await isExecutable(pythonExecutable) && await isPythonPathValid(pythonExecutable);
             if (shouldAdd) {
               expandedPaths.push(pythonExecutable);
             } else {
               const subFiles = await gracefulFsExports.promises.readdir(fullPath);
               for (const subFile of subFiles) {
-                const subPath = join(fullPath, subFile);
+                const subPath = path.join(fullPath, subFile);
                 const subStats = await gracefulFsExports.promises.stat(subPath);
                 if (subStats.isDirectory()) {
-                  const subPythonExecutable = os === "win32" ? join(subPath, "python.exe") : join(subPath, "bin", "python");
+                  const subPythonExecutable = os === "win32" ? path.join(subPath, "python.exe") : path.join(subPath, "bin", "python");
                   const subShouldAdd = os === "win32" ? await fileExists(subPythonExecutable) : await fileExists(subPythonExecutable) && await isExecutable(subPythonExecutable) && await isPythonPathValid(pythonExecutable);
                   if (subShouldAdd) {
                     expandedPaths.push(subPythonExecutable);
@@ -9401,7 +9398,7 @@ async function detectArchitecture(pythonPath) {
     const { stdout } = await execAsync$3(`"${pythonPath}" -c "import struct; print(struct.calcsize('P') * 8)"`);
     return stdout.trim() === "64" ? "64bit" : "32bit";
   } catch (error) {
-    return arch() === "x64" ? "64bit" : "32bit";
+    return require$$0$4.arch() === "x64" ? "64bit" : "32bit";
   }
 }
 async function getPipPath(pythonPath) {
@@ -9438,22 +9435,22 @@ async function getSitePackagesPath(pythonPath) {
 }
 const STORAGE_INSTALLED_KEY = "installed_pythons";
 function removeSavedPython(pPath) {
-  const savedInstallations = storageManager?.getCustomData(STORAGE_INSTALLED_KEY);
+  const savedInstallations = exports.storageManager?.getCustomData(STORAGE_INSTALLED_KEY);
   if (!lodashExports.isNil(savedInstallations)) {
-    storageManager?.setCustomRun(
+    exports.storageManager?.setCustomRun(
       STORAGE_INSTALLED_KEY,
       savedInstallations.filter((p) => p !== pPath)
     );
   }
 }
 function addSavedPython(pPath) {
-  const savedInstallations = storageManager?.getCustomData(STORAGE_INSTALLED_KEY);
+  const savedInstallations = exports.storageManager?.getCustomData(STORAGE_INSTALLED_KEY);
   const paths = /* @__PURE__ */ new Set();
   if (!lodashExports.isNil(savedInstallations)) {
     savedInstallations.forEach((path2) => paths.add(path2));
   }
   paths.add(pPath);
-  storageManager?.setCustomRun(STORAGE_INSTALLED_KEY, Array.from(paths));
+  exports.storageManager?.setCustomRun(STORAGE_INSTALLED_KEY, Array.from(paths));
 }
 function removeDuplicateInstallations(installations) {
   const seenInstallations = /* @__PURE__ */ new Set();
@@ -9468,14 +9465,14 @@ function removeDuplicateInstallations(installations) {
   return uniqueInstallations;
 }
 async function detectPythonInstallations(refresh) {
-  const savedInstallations = storageManager?.getCustomData(STORAGE_INSTALLED_KEY);
+  const savedInstallations = exports.storageManager?.getCustomData(STORAGE_INSTALLED_KEY);
   const paths = /* @__PURE__ */ new Set();
   if (!refresh && !lodashExports.isNil(savedInstallations) && !lodashExports.isEmpty(savedInstallations)) {
     savedInstallations.forEach((path2) => paths.add(path2));
   } else {
     const pathSources = await Promise.all([await findPythonInPath(), await findInCommonLocations()]);
     pathSources.flat().forEach((path2) => paths.add(path2));
-    storageManager?.setCustomData(STORAGE_INSTALLED_KEY, Array.from(paths));
+    exports.storageManager?.setCustomData(STORAGE_INSTALLED_KEY, Array.from(paths));
   }
   const installationPromises = Array.from(paths).map(async (pythonPath) => {
     try {
@@ -9502,7 +9499,7 @@ async function detectPythonInstallations(refresh) {
         (async () => await getVenvPaths(pythonPath))(),
         (async () => await getSitePackagesPath(pythonPath))()
       ]);
-      const installFolder = dirname(pythonPath);
+      const installFolder = path.dirname(pythonPath);
       const isLynxHubDefault = process.env.PATH ? isFirstPythonPath(process.env.PATH, installFolder) : false;
       const installation = {
         version: `${version.major}.${version.minor}.${version.patch}`,
@@ -9527,7 +9524,7 @@ async function detectPythonInstallations(refresh) {
   return removeDuplicateInstallations(lodashExports.compact(await Promise.all(installationPromises)));
 }
 async function listAvailablePythons(pty) {
-  return new Promise((resolve2, reject) => {
+  return new Promise((resolve, reject) => {
     const ptyProcess = pty.spawn(determineShell(), [], {});
     ptyProcess.write(`conda search python --info${COMMAND_LINE_ENDING}`);
     ptyProcess.write(`exit${COMMAND_LINE_ENDING}`);
@@ -9548,7 +9545,7 @@ async function listAvailablePythons(pty) {
             if (result) versions.unshift(result.trim());
           }
         }
-        resolve2([...new Set(versions)]);
+        resolve([...new Set(versions)]);
       } else {
         reject(new Error("Unable to list available python versions."));
       }
@@ -9556,8 +9553,8 @@ async function listAvailablePythons(pty) {
   });
 }
 const createCondaEnv = async (envName, pythonVersion, pty) => {
-  return new Promise((resolve2, reject) => {
-    const window2 = appManager?.getMainWindow();
+  return new Promise((resolve, reject) => {
+    const window2 = exports.appManager?.getMainWindow();
     if (!window2) {
       reject("createCondaEnv: No window found");
       return;
@@ -9579,7 +9576,7 @@ const createCondaEnv = async (envName, pythonVersion, pty) => {
     ptyProcess.onExit(({ exitCode }) => {
       if (exitCode === 0) {
         console.log("Environment creation completed successfully!");
-        resolve2();
+        resolve();
       } else {
         reject(`Environment creation failed with exit code ${exitCode}`);
       }
@@ -9587,10 +9584,10 @@ const createCondaEnv = async (envName, pythonVersion, pty) => {
   });
 };
 function isCondaInstalled(pty) {
-  return new Promise((resolve2) => {
+  return new Promise((resolve) => {
     const timeout = setTimeout(() => {
       console.warn("Timeout reached. Conda not found or process hung.");
-      resolve2(false);
+      resolve(false);
     }, 1e4);
     const ptyProcess = pty.spawn(determineShell(), [], {});
     ptyProcess.write(`conda --version${COMMAND_LINE_ENDING}`);
@@ -9603,9 +9600,9 @@ function isCondaInstalled(pty) {
     ptyProcess.onExit(() => {
       clearTimeout(timeout);
       if (condaVersionRegex.test(outData)) {
-        resolve2(true);
+        resolve(true);
       } else {
-        resolve2(false);
+        resolve(false);
       }
     });
   });
@@ -9633,9 +9630,9 @@ const parenthesesIncrementer = (inputFilename, extension) => {
 };
 const incrementPath = (filePath, incrementer) => {
   const ext = path.extname(filePath);
-  const dirname2 = path.dirname(filePath);
+  const dirname = path.dirname(filePath);
   const [originalFilename, incrementedFilename] = incrementer(path.basename(filePath, ext), ext);
-  return [path.join(dirname2, originalFilename), path.join(dirname2, incrementedFilename)];
+  return [path.join(dirname, originalFilename), path.join(dirname, incrementedFilename)];
 };
 function unusedFilenameSync(filePath, { incrementer = parenthesesIncrementer, maxTries = Number.POSITIVE_INFINITY } = {}) {
   let tries = 0;
@@ -12430,14 +12427,14 @@ function registerListener(session, options2, callback = () => {
   const listener = (event, item, webContents) => {
     downloadItems.add(item);
     totalBytes += item.getTotalBytes();
-    const window_ = BrowserWindow.fromWebContents(webContents);
+    const window_ = electron.BrowserWindow.fromWebContents(webContents);
     if (!window_) {
       throw new Error("Failed to get window from web contents.");
     }
     if (options2.directory && !path.isAbsolute(options2.directory)) {
       throw new Error("The `directory` option must be an absolute path");
     }
-    const directory = options2.directory ?? app.getPath("downloads");
+    const directory = options2.directory ?? electron.app.getPath("downloads");
     let filePath;
     if (options2.filename) {
       filePath = path.join(directory, options2.filename);
@@ -12458,7 +12455,7 @@ function registerListener(session, options2, callback = () => {
         receivedBytes += item2.getReceivedBytes();
       }
       if (options2.showBadge && ["darwin", "linux"].includes(process$1.platform)) {
-        app.badgeCount = activeDownloadItems();
+        electron.app.badgeCount = activeDownloadItems();
       }
       if (!window_.isDestroyed() && options2.showProgressBar) {
         window_.setProgressBar(progressDownloadItems());
@@ -12484,7 +12481,7 @@ function registerListener(session, options2, callback = () => {
       completedBytes += item.getTotalBytes();
       downloadItems.delete(item);
       if (options2.showBadge && ["darwin", "linux"].includes(process$1.platform)) {
-        app.badgeCount = activeDownloadItems();
+        electron.app.badgeCount = activeDownloadItems();
       }
       if (!window_.isDestroyed() && !activeDownloadItems()) {
         window_.setProgressBar(-1);
@@ -12506,10 +12503,10 @@ function registerListener(session, options2, callback = () => {
       } else if (state === "completed") {
         const savePath = item.getSavePath();
         if (process$1.platform === "darwin") {
-          app.dock.downloadFinished(savePath);
+          electron.app.dock.downloadFinished(savePath);
         }
         if (options2.openFolderWhenDone) {
-          shell.showItemInFolder(savePath);
+          electron.shell.showItemInFolder(savePath);
         }
         if (typeof options2.onCompleted === "function") {
           options2.onCompleted({
@@ -12532,7 +12529,7 @@ function registerListener(session, options2, callback = () => {
   session.on("will-download", listener);
 }
 async function download(window_, url, options2) {
-  return new Promise((resolve2, reject) => {
+  return new Promise((resolve, reject) => {
     options2 = {
       ...options2,
       unregisterWhenDone: true
@@ -12541,16 +12538,16 @@ async function download(window_, url, options2) {
       if (error) {
         reject(error);
       } else {
-        resolve2(item);
+        resolve(item);
       }
     });
     window_.webContents.downloadURL(url);
   });
 }
-const execAsync$2 = promisify$1(exec);
+const execAsync$2 = require$$1.promisify(child_process.exec);
 async function installPython(filePath, version) {
   try {
-    switch (platform$2()) {
+    switch (node_os.platform()) {
       case "win32":
         await installOnWindows(filePath);
         break;
@@ -12568,20 +12565,20 @@ async function installPython(filePath, version) {
   }
 }
 async function downloadPython(version) {
-  return new Promise(async (resolve2, reject) => {
-    const window2 = appManager?.getMainWindow();
+  return new Promise(async (resolve, reject) => {
+    const window2 = exports.appManager?.getMainWindow();
     if (!window2) {
       reject("downloadPython: No window found");
       return;
     }
     const fileName = version.url.split("/").pop();
-    const targetPath = join(app.getPath("downloads"), "LynxHub");
+    const targetPath = path.join(electron.app.getPath("downloads"), "LynxHub");
     const found = findFileInDir(targetPath, fileName);
     if (found) {
       try {
         window2.webContents.send(pythonChannels.downloadProgressOfficial, "installing");
         await installPython(found, version);
-        resolve2();
+        resolve();
       } catch (e) {
         reject(e);
       }
@@ -12600,7 +12597,7 @@ async function downloadPython(version) {
         window2.webContents.send(pythonChannels.downloadProgressOfficial, "installing");
         try {
           await installPython(item.savePath, version);
-          resolve2();
+          resolve();
         } catch (e) {
           reject(e);
         }
@@ -12612,9 +12609,9 @@ async function downloadPython(version) {
   });
 }
 async function installOnWindows(installerPath) {
-  return new Promise((resolve2, reject) => {
-    execAsync$2(`"${installerPath}" /quiet InstallAllUsers=0 PrependPath=1 Include_test=0 Include_pip=1 `).then(() => resolve2()).catch(() => {
-      execAsync$2(`"${installerPath}" /repair`).then(() => resolve2()).catch((e) => {
+  return new Promise((resolve, reject) => {
+    execAsync$2(`"${installerPath}" /quiet InstallAllUsers=0 PrependPath=1 Include_test=0 Include_pip=1 `).then(() => resolve()).catch(() => {
+      execAsync$2(`"${installerPath}" /repair`).then(() => resolve()).catch((e) => {
         reject(e);
       });
     });
@@ -12624,9 +12621,9 @@ async function installOnLinux(version) {
   const pythonVersion = `python${version}`;
   const packagesToInstall = `${pythonVersion} ${pythonVersion}-dev ${pythonVersion}-venv`;
   const command = `pkexec apt install ${packagesToInstall} -y`;
-  return new Promise((resolve2, reject) => {
+  return new Promise((resolve, reject) => {
     try {
-      exec(command, (error, stdout, stderr) => {
+      child_process.exec(command, (error, stdout, stderr) => {
         if (error) {
           console.error(`Error executing command: ${command}`);
           console.error(stderr);
@@ -12634,7 +12631,7 @@ async function installOnLinux(version) {
         } else {
           console.log(`Command executed successfully: ${command}`);
           console.log(stdout);
-          resolve2();
+          resolve();
         }
       });
     } catch (e) {
@@ -15674,19 +15671,19 @@ var hasRequiredMimeTypes;
 function requireMimeTypes() {
   if (hasRequiredMimeTypes) return mimeTypes;
   hasRequiredMimeTypes = 1;
-  (function(exports) {
+  (function(exports2) {
     var db = requireMimeDb();
     var extname = require$$1$2.extname;
     var EXTRACT_TYPE_REGEXP = /^\s*([^;\s]*)(?:;|\s|$)/;
     var TEXT_TYPE_REGEXP = /^text\//i;
-    exports.charset = charset;
-    exports.charsets = { lookup: charset };
-    exports.contentType = contentType;
-    exports.extension = extension;
-    exports.extensions = /* @__PURE__ */ Object.create(null);
-    exports.lookup = lookup;
-    exports.types = /* @__PURE__ */ Object.create(null);
-    populateMaps(exports.extensions, exports.types);
+    exports2.charset = charset;
+    exports2.charsets = { lookup: charset };
+    exports2.contentType = contentType;
+    exports2.extension = extension;
+    exports2.extensions = /* @__PURE__ */ Object.create(null);
+    exports2.lookup = lookup;
+    exports2.types = /* @__PURE__ */ Object.create(null);
+    populateMaps(exports2.extensions, exports2.types);
     function charset(type2) {
       if (!type2 || typeof type2 !== "string") {
         return false;
@@ -15705,12 +15702,12 @@ function requireMimeTypes() {
       if (!str || typeof str !== "string") {
         return false;
       }
-      var mime = str.indexOf("/") === -1 ? exports.lookup(str) : str;
+      var mime = str.indexOf("/") === -1 ? exports2.lookup(str) : str;
       if (!mime) {
         return false;
       }
       if (mime.indexOf("charset") === -1) {
-        var charset2 = exports.charset(mime);
+        var charset2 = exports2.charset(mime);
         if (charset2) mime += "; charset=" + charset2.toLowerCase();
       }
       return mime;
@@ -15720,7 +15717,7 @@ function requireMimeTypes() {
         return false;
       }
       var match = EXTRACT_TYPE_REGEXP.exec(type2);
-      var exts = match && exports.extensions[match[1].toLowerCase()];
+      var exts = match && exports2.extensions[match[1].toLowerCase()];
       if (!exts || !exts.length) {
         return false;
       }
@@ -15734,7 +15731,7 @@ function requireMimeTypes() {
       if (!extension2) {
         return false;
       }
-      return exports.types[extension2] || false;
+      return exports2.types[extension2] || false;
     }
     function populateMaps(extensions, types) {
       var preference = ["nginx", "apache", void 0, "iana"];
@@ -16842,7 +16839,7 @@ function requireForm_data() {
   var path2 = require$$1$2;
   var http = require$$3;
   var https = require$$4;
-  var parseUrl = require$$0$4.parse;
+  var parseUrl = require$$0$5.parse;
   var fs2 = require$$0$3;
   var Stream = stream.Stream;
   var crypto = require$$8;
@@ -17390,7 +17387,7 @@ const transitionalDefaults = {
   forcedJSONParsing: true,
   clarifyTimeoutError: false
 };
-const URLSearchParams = require$$0$4.URLSearchParams;
+const URLSearchParams = require$$0$5.URLSearchParams;
 const ALPHA = "abcdefghijklmnopqrstuvwxyz";
 const DIGIT = "0123456789";
 const ALPHABET = {
@@ -17897,10 +17894,10 @@ function CanceledError$1(message, config, request) {
 utils$1.inherits(CanceledError$1, AxiosError$1, {
   __CANCEL__: true
 });
-function settle(resolve2, reject, response) {
+function settle(resolve, reject, response) {
   const validateStatus2 = response.config.validateStatus;
   if (!response.status || !validateStatus2 || validateStatus2(response.status)) {
-    resolve2(response);
+    resolve(response);
   } else {
     reject(new AxiosError$1(
       "Request failed with status code " + response.status,
@@ -17929,7 +17926,7 @@ var hasRequiredProxyFromEnv;
 function requireProxyFromEnv() {
   if (hasRequiredProxyFromEnv) return proxyFromEnv$1;
   hasRequiredProxyFromEnv = 1;
-  var parseUrl = require$$0$4.parse;
+  var parseUrl = require$$0$5.parse;
   var DEFAULT_PORTS = {
     ftp: 21,
     gopher: 70,
@@ -18298,13 +18295,13 @@ var hasRequiredBrowser;
 function requireBrowser() {
   if (hasRequiredBrowser) return browser.exports;
   hasRequiredBrowser = 1;
-  (function(module, exports) {
-    exports.formatArgs = formatArgs;
-    exports.save = save;
-    exports.load = load;
-    exports.useColors = useColors;
-    exports.storage = localstorage();
-    exports.destroy = /* @__PURE__ */ (() => {
+  (function(module2, exports2) {
+    exports2.formatArgs = formatArgs;
+    exports2.save = save;
+    exports2.load = load;
+    exports2.useColors = useColors;
+    exports2.storage = localstorage();
+    exports2.destroy = /* @__PURE__ */ (() => {
       let warned = false;
       return () => {
         if (!warned) {
@@ -18313,7 +18310,7 @@ function requireBrowser() {
         }
       };
     })();
-    exports.colors = [
+    exports2.colors = [
       "#0000CC",
       "#0000FF",
       "#0033CC",
@@ -18406,7 +18403,7 @@ function requireBrowser() {
       typeof navigator !== "undefined" && navigator.userAgent && navigator.userAgent.toLowerCase().match(/applewebkit\/(\d+)/);
     }
     function formatArgs(args) {
-      args[0] = (this.useColors ? "%c" : "") + this.namespace + (this.useColors ? " %c" : " ") + args[0] + (this.useColors ? "%c " : " ") + "+" + module.exports.humanize(this.diff);
+      args[0] = (this.useColors ? "%c" : "") + this.namespace + (this.useColors ? " %c" : " ") + args[0] + (this.useColors ? "%c " : " ") + "+" + module2.exports.humanize(this.diff);
       if (!this.useColors) {
         return;
       }
@@ -18425,14 +18422,14 @@ function requireBrowser() {
       });
       args.splice(lastC, 0, c);
     }
-    exports.log = console.debug || console.log || (() => {
+    exports2.log = console.debug || console.log || (() => {
     });
     function save(namespaces) {
       try {
         if (namespaces) {
-          exports.storage.setItem("debug", namespaces);
+          exports2.storage.setItem("debug", namespaces);
         } else {
-          exports.storage.removeItem("debug");
+          exports2.storage.removeItem("debug");
         }
       } catch (error) {
       }
@@ -18440,7 +18437,7 @@ function requireBrowser() {
     function load() {
       let r;
       try {
-        r = exports.storage.getItem("debug") || exports.storage.getItem("DEBUG");
+        r = exports2.storage.getItem("debug") || exports2.storage.getItem("DEBUG");
       } catch (error) {
       }
       if (!r && typeof process !== "undefined" && "env" in process) {
@@ -18454,8 +18451,8 @@ function requireBrowser() {
       } catch (error) {
       }
     }
-    module.exports = requireCommon()(exports);
-    const { formatters } = module.exports;
+    module2.exports = requireCommon()(exports2);
+    const { formatters } = module2.exports;
     formatters.j = function(v) {
       try {
         return JSON.stringify(v);
@@ -18485,7 +18482,7 @@ var hasRequiredSupportsColor;
 function requireSupportsColor() {
   if (hasRequiredSupportsColor) return supportsColor_1;
   hasRequiredSupportsColor = 1;
-  const os = require$$0$5;
+  const os = require$$0$4;
   const tty = require$$1$3;
   const hasFlag2 = requireHasFlag();
   const { env } = process;
@@ -18586,25 +18583,25 @@ var hasRequiredNode;
 function requireNode() {
   if (hasRequiredNode) return node.exports;
   hasRequiredNode = 1;
-  (function(module, exports) {
+  (function(module2, exports2) {
     const tty = require$$1$3;
     const util = require$$1;
-    exports.init = init;
-    exports.log = log;
-    exports.formatArgs = formatArgs;
-    exports.save = save;
-    exports.load = load;
-    exports.useColors = useColors;
-    exports.destroy = util.deprecate(
+    exports2.init = init;
+    exports2.log = log;
+    exports2.formatArgs = formatArgs;
+    exports2.save = save;
+    exports2.load = load;
+    exports2.useColors = useColors;
+    exports2.destroy = util.deprecate(
       () => {
       },
       "Instance method `debug.destroy()` is deprecated and no longer does anything. It will be removed in the next major version of `debug`."
     );
-    exports.colors = [6, 2, 3, 4, 5, 1];
+    exports2.colors = [6, 2, 3, 4, 5, 1];
     try {
       const supportsColor = requireSupportsColor();
       if (supportsColor && (supportsColor.stderr || supportsColor).level >= 2) {
-        exports.colors = [
+        exports2.colors = [
           20,
           21,
           26,
@@ -18685,7 +18682,7 @@ function requireNode() {
       }
     } catch (error) {
     }
-    exports.inspectOpts = Object.keys(process.env).filter((key) => {
+    exports2.inspectOpts = Object.keys(process.env).filter((key) => {
       return /^debug_/i.test(key);
     }).reduce((obj, key) => {
       const prop = key.substring(6).toLowerCase().replace(/_([a-z])/g, (_, k) => {
@@ -18705,7 +18702,7 @@ function requireNode() {
       return obj;
     }, {});
     function useColors() {
-      return "colors" in exports.inspectOpts ? Boolean(exports.inspectOpts.colors) : tty.isatty(process.stderr.fd);
+      return "colors" in exports2.inspectOpts ? Boolean(exports2.inspectOpts.colors) : tty.isatty(process.stderr.fd);
     }
     function formatArgs(args) {
       const { namespace: name, useColors: useColors2 } = this;
@@ -18714,19 +18711,19 @@ function requireNode() {
         const colorCode = "\x1B[3" + (c < 8 ? c : "8;5;" + c);
         const prefix = `  ${colorCode};1m${name} \x1B[0m`;
         args[0] = prefix + args[0].split("\n").join("\n" + prefix);
-        args.push(colorCode + "m+" + module.exports.humanize(this.diff) + "\x1B[0m");
+        args.push(colorCode + "m+" + module2.exports.humanize(this.diff) + "\x1B[0m");
       } else {
         args[0] = getDate() + name + " " + args[0];
       }
     }
     function getDate() {
-      if (exports.inspectOpts.hideDate) {
+      if (exports2.inspectOpts.hideDate) {
         return "";
       }
       return (/* @__PURE__ */ new Date()).toISOString() + " ";
     }
     function log(...args) {
-      return process.stderr.write(util.formatWithOptions(exports.inspectOpts, ...args) + "\n");
+      return process.stderr.write(util.formatWithOptions(exports2.inspectOpts, ...args) + "\n");
     }
     function save(namespaces) {
       if (namespaces) {
@@ -18740,13 +18737,13 @@ function requireNode() {
     }
     function init(debug) {
       debug.inspectOpts = {};
-      const keys = Object.keys(exports.inspectOpts);
+      const keys = Object.keys(exports2.inspectOpts);
       for (let i = 0; i < keys.length; i++) {
-        debug.inspectOpts[keys[i]] = exports.inspectOpts[keys[i]];
+        debug.inspectOpts[keys[i]] = exports2.inspectOpts[keys[i]];
       }
     }
-    module.exports = requireCommon()(exports);
-    const { formatters } = module.exports;
+    module2.exports = requireCommon()(exports2);
+    const { formatters } = module2.exports;
     formatters.o = function(v) {
       this.inspectOpts.colors = this.useColors;
       return util.inspect(v, this.inspectOpts).split("\n").map((str) => str.trim()).join(" ");
@@ -18794,7 +18791,7 @@ var hasRequiredFollowRedirects;
 function requireFollowRedirects() {
   if (hasRequiredFollowRedirects) return followRedirects$1.exports;
   hasRequiredFollowRedirects = 1;
-  var url = require$$0$4;
+  var url = require$$0$5;
   var URL2 = url.URL;
   var http = require$$3;
   var https = require$$4;
@@ -18828,9 +18825,9 @@ function requireFollowRedirects() {
     "search",
     "hash"
   ];
-  var events = ["abort", "aborted", "connect", "error", "socket", "timeout"];
+  var events2 = ["abort", "aborted", "connect", "error", "socket", "timeout"];
   var eventHandlers = /* @__PURE__ */ Object.create(null);
-  events.forEach(function(event) {
+  events2.forEach(function(event) {
     eventHandlers[event] = function(arg1, arg2, arg3) {
       this._redirectable.emit(event, arg1, arg2, arg3);
     };
@@ -19044,7 +19041,7 @@ function requireFollowRedirects() {
     }
     var request = this._currentRequest = nativeProtocol.request(this._options, this._onNativeResponse);
     request._redirectable = this;
-    for (var event of events) {
+    for (var event of events2) {
       request.on(event, eventHandlers[event]);
     }
     this._currentUrl = /^\//.test(this._options.path) ? url.format(this._options) : (
@@ -19139,7 +19136,7 @@ function requireFollowRedirects() {
     this._performRequest();
   };
   function wrap(protocols) {
-    var exports = {
+    var exports2 = {
       maxRedirects: 21,
       maxBodyLength: 10 * 1024 * 1024
     };
@@ -19147,7 +19144,7 @@ function requireFollowRedirects() {
     Object.keys(protocols).forEach(function(scheme) {
       var protocol = scheme + ":";
       var nativeProtocol = nativeProtocols[protocol] = protocols[scheme];
-      var wrappedProtocol = exports[scheme] = Object.create(nativeProtocol);
+      var wrappedProtocol = exports2[scheme] = Object.create(nativeProtocol);
       function request(input, options2, callback) {
         if (isURL(input)) {
           input = spreadUrlObject(input);
@@ -19163,8 +19160,8 @@ function requireFollowRedirects() {
           options2 = null;
         }
         options2 = Object.assign({
-          maxRedirects: exports.maxRedirects,
-          maxBodyLength: exports.maxBodyLength
+          maxRedirects: exports2.maxRedirects,
+          maxBodyLength: exports2.maxBodyLength
         }, input, options2);
         options2.nativeProtocols = nativeProtocols;
         if (!isString2(options2.host) && !isString2(options2.hostname)) {
@@ -19184,7 +19181,7 @@ function requireFollowRedirects() {
         get: { value: get2, configurable: true, enumerable: true, writable: true }
       });
     });
-    return exports;
+    return exports2;
   }
   function noop2() {
   }
@@ -19259,7 +19256,7 @@ function requireFollowRedirects() {
     return CustomError;
   }
   function destroyRequest(request, error) {
-    for (var event of events) {
+    for (var event of events2) {
       request.removeListener(event, eventHandlers[event]);
     }
     request.on("error", noop2);
@@ -19511,7 +19508,7 @@ const formDataToStream = (form, headersHandler, options2) => {
     computedHeaders["Content-Length"] = contentLength;
   }
   headersHandler && headersHandler(computedHeaders);
-  return Readable.from((async function* () {
+  return stream.Readable.from((async function* () {
     for (const part of parts) {
       yield boundaryBytes;
       yield* part.encode();
@@ -19757,7 +19754,7 @@ function setProxy(options2, configProxy, location) {
 }
 const isHttpAdapterSupported = typeof process !== "undefined" && utils$1.kindOf(process) === "process";
 const wrapAsync = (asyncExecutor) => {
-  return new Promise((resolve2, reject) => {
+  return new Promise((resolve, reject) => {
     let onDone;
     let isDone;
     const done = (value, isRejected) => {
@@ -19767,7 +19764,7 @@ const wrapAsync = (asyncExecutor) => {
     };
     const _resolve = (value) => {
       done(value);
-      resolve2(value);
+      resolve(value);
     };
     const _reject = (reason) => {
       done(reason, true);
@@ -19787,7 +19784,7 @@ const resolveFamily = ({ address, family }) => {
 };
 const buildAddressEntry = (address, family) => resolveFamily(utils$1.isObject(address) ? address : { address, family });
 const httpAdapter = isHttpAdapterSupported && function httpAdapter2(config) {
-  return wrapAsync(async function dispatchHttpRequest(resolve2, reject, onDone) {
+  return wrapAsync(async function dispatchHttpRequest(resolve, reject, onDone) {
     let { data, lookup, family } = config;
     const { responseType, responseEncoding } = config;
     const method = config.method.toUpperCase();
@@ -19806,7 +19803,7 @@ const httpAdapter = isHttpAdapterSupported && function httpAdapter2(config) {
         });
       };
     }
-    const emitter = new EventEmitter();
+    const emitter = new events.EventEmitter();
     const onFinished = () => {
       if (config.cancelToken) {
         config.cancelToken.unsubscribe(abort);
@@ -19850,7 +19847,7 @@ const httpAdapter = isHttpAdapterSupported && function httpAdapter2(config) {
       }
       let convertedData;
       if (method !== "GET") {
-        return settle(resolve2, reject, {
+        return settle(resolve, reject, {
           status: 405,
           statusText: "method not allowed",
           headers: {},
@@ -19872,7 +19869,7 @@ const httpAdapter = isHttpAdapterSupported && function httpAdapter2(config) {
       } else if (responseType === "stream") {
         convertedData = stream.Readable.from(convertedData);
       }
-      return settle(resolve2, reject, {
+      return settle(resolve, reject, {
         data: convertedData,
         status: 200,
         statusText: "OK",
@@ -20090,7 +20087,7 @@ const httpAdapter = isHttpAdapterSupported && function httpAdapter2(config) {
       };
       if (responseType === "stream") {
         response.data = responseStream;
-        settle(resolve2, reject, response);
+        settle(resolve, reject, response);
       } else {
         const responseBuffer = [];
         let totalResponseBytes = 0;
@@ -20138,7 +20135,7 @@ const httpAdapter = isHttpAdapterSupported && function httpAdapter2(config) {
           } catch (err) {
             return reject(AxiosError$1.from(err, null, config, response.request, response));
           }
-          settle(resolve2, reject, response);
+          settle(resolve, reject, response);
         });
       }
       emitter.once("abort", (err) => {
@@ -20359,7 +20356,7 @@ const resolveConfig = (config) => {
 };
 const isXHRAdapterSupported = typeof XMLHttpRequest !== "undefined";
 const xhrAdapter = isXHRAdapterSupported && function(config) {
-  return new Promise(function dispatchXhrRequest(resolve2, reject) {
+  return new Promise(function dispatchXhrRequest(resolve, reject) {
     const _config = resolveConfig(config);
     let requestData = _config.data;
     const requestHeaders = AxiosHeaders$1.from(_config.headers).normalize();
@@ -20393,7 +20390,7 @@ const xhrAdapter = isXHRAdapterSupported && function(config) {
         request
       };
       settle(function _resolve(value) {
-        resolve2(value);
+        resolve(value);
         done();
       }, function _reject(err) {
         reject(err);
@@ -20757,8 +20754,8 @@ const factory = (env) => {
       responseType = responseType || "text";
       let responseData = await resolvers[utils$1.findKey(resolvers, responseType) || "text"](response, config);
       !isStreamResponse && unsubscribe && unsubscribe();
-      return await new Promise((resolve2, reject) => {
-        settle(resolve2, reject, {
+      return await new Promise((resolve, reject) => {
+        settle(resolve, reject, {
           data: responseData,
           headers: AxiosHeaders$1.from(response.headers),
           status: response.status,
@@ -21134,8 +21131,8 @@ let CancelToken$1 = class CancelToken {
       throw new TypeError("executor must be a function.");
     }
     let resolvePromise;
-    this.promise = new Promise(function promiseExecutor(resolve2) {
-      resolvePromise = resolve2;
+    this.promise = new Promise(function promiseExecutor(resolve) {
+      resolvePromise = resolve;
     });
     const token = this;
     this.promise.then((cancel) => {
@@ -21148,9 +21145,9 @@ let CancelToken$1 = class CancelToken {
     });
     this.promise.then = (onfulfilled) => {
       let _resolve;
-      const promise = new Promise((resolve2) => {
-        token.subscribe(resolve2);
-        _resolve = resolve2;
+      const promise = new Promise((resolve) => {
+        token.subscribe(resolve);
+        _resolve = resolve;
       }).then(onfulfilled);
       promise.cancel = function reject() {
         token.unsubscribe(_resolve);
@@ -21406,8 +21403,8 @@ function findValidRequirementsFiles(dirPath) {
     let bestMatch = void 0;
     let bestMatchScore = -1;
     for (const file of files) {
-      if (file.includes("requirements") && gracefulFsExports.statSync(join$1(dirPath, file)).isFile()) {
-        const fullPath = join$1(dirPath, file);
+      if (file.includes("requirements") && gracefulFsExports.statSync(require$$1$2.join(dirPath, file)).isFile()) {
+        const fullPath = require$$1$2.join(dirPath, file);
         if (isValidRequirementsFile(fullPath)) {
           const score = calculatePriorityScore(file);
           if (score > bestMatchScore) {
@@ -21444,7 +21441,7 @@ function calculatePriorityScore(filename) {
   return score;
 }
 function setReqPath(data) {
-  const existingData = storageManager?.getCustomData(REQ_STORE_ID);
+  const existingData = exports.storageManager?.getCustomData(REQ_STORE_ID);
   let result = [];
   if (existingData) {
     const found = existingData.some((item) => item.id === data.id);
@@ -21458,10 +21455,10 @@ function setReqPath(data) {
   } else {
     result.push(data);
   }
-  storageManager?.setCustomData(REQ_STORE_ID, result);
+  exports.storageManager?.setCustomData(REQ_STORE_ID, result);
 }
 function getReqPath(id) {
-  const data = storageManager?.getCustomData(REQ_STORE_ID);
+  const data = exports.storageManager?.getCustomData(REQ_STORE_ID);
   return data?.find((item) => item.id === id)?.path;
 }
 let maxRetries = 5;
@@ -21497,7 +21494,7 @@ async function getLatestPipPackageVersion(packageName) {
   return null;
 }
 async function checkPackageUpdates(reqPath, packages) {
-  const maxRetriesConfig = storageManager?.getCustomData(MaxRetry_StorageID);
+  const maxRetriesConfig = exports.storageManager?.getCustomData(MaxRetry_StorageID);
   if (maxRetriesConfig) maxRetries = maxRetriesConfig;
   const reqData = await readRequirements(reqPath);
   const result = reqData.map(async (req) => {
@@ -21550,9 +21547,9 @@ async function checkPackageUpdates(reqPath, packages) {
   return lodashExports.compact(await Promise.all(result));
 }
 async function getSitePackagesInfo(pythonExePath) {
-  return new Promise((resolve2, reject) => {
+  return new Promise((resolve, reject) => {
     const command = `"${pythonExePath}" -m pip list --format json`;
-    exec$1(command, (error, stdout, stderr) => {
+    node_child_process.exec(command, (error, stdout, stderr) => {
       if (error) {
         reject(`Error getting site packages: ${error.message}`);
         return;
@@ -21565,7 +21562,7 @@ async function getSitePackagesInfo(pythonExePath) {
         const packagePromises = packages.map((pkg) => {
           return { name: pkg.name, version: pkg.version };
         });
-        resolve2(packagePromises);
+        resolve(packagePromises);
       } catch (parseError) {
         reject(`Error parsing pip output: ${parseError}`);
       }
@@ -21591,9 +21588,9 @@ async function getSitePackagesUpdates(packages) {
   }
 }
 async function installPythonPackage(pythonExePath, commands) {
-  return new Promise((resolve2, reject) => {
+  return new Promise((resolve, reject) => {
     const command = `${pythonExePath} -m pip install ${commands} --disable-pip-version-check`;
-    exec$1(command, (error, stdout, stderr) => {
+    node_child_process.exec(command, (error, stdout, stderr) => {
       if (error) {
         reject(new Error(`Error installing package: ${error.message}
 Stderr: ${stderr}`));
@@ -21602,57 +21599,57 @@ Stderr: ${stderr}`));
       if (stderr) {
         console.warn(`pip stderr: ${stderr}`);
       }
-      resolve2(stdout);
+      resolve(stdout);
     });
   });
 }
 async function updatePythonPackage(pythonExePath, packageName) {
-  return new Promise((resolve2, reject) => {
+  return new Promise((resolve, reject) => {
     const command = `"${pythonExePath}" -m pip install --upgrade "${packageName}"`;
-    exec$1(command, (error, stdout, stderr) => {
+    node_child_process.exec(command, (error, stdout, stderr) => {
       if (error) {
         reject(`Error updating package ${packageName}: ${error.message}
 stderr: ${stderr}`);
         return;
       }
-      resolve2(stdout);
+      resolve(stdout);
     });
   });
 }
 async function updateAllPythonPackages(pythonExePath, packages) {
-  return new Promise((resolve2, reject) => {
+  return new Promise((resolve, reject) => {
     if (packages.length === 0) {
-      resolve2("All packages are up to date.");
+      resolve("All packages are up to date.");
       return;
     }
     const updateCommand = `"${pythonExePath}" -m pip install --upgrade ${packages.join(" ")}`;
-    exec$1(updateCommand, (updateError, updateStdout, updateStderr) => {
+    node_child_process.exec(updateCommand, (updateError, updateStdout, updateStderr) => {
       if (updateError) {
         reject(`Error updating packages: ${updateError.message}
 stderr: ${updateStderr}`);
         return;
       }
-      resolve2(updateStdout);
+      resolve(updateStdout);
     });
   });
 }
 async function uninstallPythonPackage(pythonExePath, packageName) {
-  return new Promise((resolve2, reject) => {
+  return new Promise((resolve, reject) => {
     const command = `"${pythonExePath}" -m pip uninstall -y "${packageName}"`;
-    exec$1(command, (error, stdout, stderr) => {
+    node_child_process.exec(command, (error, stdout, stderr) => {
       if (error) {
         reject(`Error uninstalling package ${packageName}: ${error.message}
 stderr: ${stderr}`);
         return;
       }
-      resolve2(stdout);
+      resolve(stdout);
     });
   });
 }
 async function changePythonPackageVersion(pythonPath, packageName, cVersion, tVersion) {
   const currentVersion = semver.coerce(cVersion)?.version;
   const targetVersion = semver.coerce(tVersion)?.version;
-  return new Promise((resolve2, reject) => {
+  return new Promise((resolve, reject) => {
     if (lodashExports.isNil(currentVersion) || lodashExports.isNil(targetVersion)) {
       reject("Invalid current or target version provided");
       return;
@@ -21671,7 +21668,7 @@ async function changePythonPackageVersion(pythonPath, packageName, cVersion, tVe
       targetVersion
     };
     const changeVersionCommand = constructChangeVersionCommand(pythonPath, packageInfo);
-    exec(changeVersionCommand, (error, stdout, stderr) => {
+    child_process.exec(changeVersionCommand, (error, stdout, stderr) => {
       if (error) {
         reject(`Error changing version of ${packageName}: ${error.message}`);
         return;
@@ -21681,7 +21678,7 @@ async function changePythonPackageVersion(pythonPath, packageName, cVersion, tVe
         console.error(stderr);
       }
       console.log(`Successfully changed ${packageName} to version ${targetVersion}`);
-      resolve2();
+      resolve();
     });
   });
 }
@@ -21699,7 +21696,7 @@ function constructChangeVersionCommand(pythonExePath, packageInfo) {
   command += ` ${packageName}==${targetVersion}`;
   return command;
 }
-const execAsync$1 = promisify$1(exec);
+const execAsync$1 = require$$1.promisify(child_process.exec);
 async function uninstallLinuxPython(pythonExecutablePath) {
   try {
     if (!pythonExecutablePath) {
@@ -21730,8 +21727,8 @@ async function uninstallLinuxPython(pythonExecutablePath) {
     };
   }
 }
-const execAsync = promisify(exec$1);
-const defaultPackageCachePath = join(homedir$1(), "AppData", "Local", "Package Cache");
+const execAsync = node_util.promisify(node_child_process.exec);
+const defaultPackageCachePath = path.join(node_os.homedir(), "AppData", "Local", "Package Cache");
 async function uninstallWindowsPython(pythonPath) {
   const version = await parseVersion(pythonPath);
   const versionString = `${version.major}.${version.minor}`;
@@ -21751,7 +21748,7 @@ async function uninstallWindowsPython(pythonPath) {
   } catch (err) {
     console.log(err);
     try {
-      await removeDir(dirname(pythonPath));
+      await removeDir(path.dirname(pythonPath));
       await cleanupWindowsRegistry(versionString);
       await removePythonFromPath(pythonPath);
       return {
@@ -21772,7 +21769,7 @@ function findPythonInstallerByVersion(version) {
     const normalizedVersion = version.trim();
     let fileName = null;
     directories.find((dir) => {
-      fileName = findFileInDir(join(defaultPackageCachePath, dir), `python-${normalizedVersion}`);
+      fileName = findFileInDir(path.join(defaultPackageCachePath, dir), `python-${normalizedVersion}`);
       return !lodashExports.isNil(fileName);
     });
     if (!fileName) {
@@ -21786,18 +21783,18 @@ function findPythonInstallerByVersion(version) {
   }
 }
 async function uninstallPythonWindows(installerPath) {
-  return new Promise((resolve2, reject) => {
+  return new Promise((resolve, reject) => {
     if (!gracefulFsExports.existsSync(installerPath)) {
       return reject(new Error(`Installer not found at ${installerPath}`));
     }
     const uninstallArgs = ["/uninstall", "/quiet"];
-    execFile(installerPath, uninstallArgs, (error, stdout) => {
+    node_child_process.execFile(installerPath, uninstallArgs, (error, stdout) => {
       if (error) {
         console.error("Uninstall error:", error);
         return reject(error);
       }
       console.log("Python uninstall output:", stdout);
-      resolve2("Python uninstalled successfully");
+      resolve("Python uninstalled successfully");
     });
   });
 }
@@ -21819,7 +21816,7 @@ async function cleanupWindowsRegistry(version) {
   }
 }
 async function removePythonFromPath(pythonPath) {
-  return new Promise(async (resolve2, reject) => {
+  return new Promise(async (resolve, reject) => {
     try {
       const { stdout: currentPath } = await execAsync('reg query "HKEY_CURRENT_USER\\Environment" /v Path');
       const match = currentPath.match(/REG_\w+\s+(.+)/);
@@ -21837,7 +21834,7 @@ async function removePythonFromPath(pythonPath) {
       await execAsync(regCommand);
       process.env.PATH = newPathValue;
       console.log("Python paths removed successfully");
-      resolve2();
+      resolve();
     } catch (error) {
       const errorMessage = error instanceof Error ? error.message : String(error);
       reject(new Error(`Failed to remove Python from PATH: ${errorMessage}`));
@@ -21845,7 +21842,7 @@ async function removePythonFromPath(pythonPath) {
   });
 }
 async function uninstallOfficialPython(pythonPath) {
-  const os = platform$3();
+  const os = require$$0$4.platform();
   try {
     switch (os) {
       case "win32":
@@ -21894,99 +21891,99 @@ async function uninstallPython(pythonPath, pty) {
     };
   }
 }
-function ListenForChannels(storageManager2, nodePty) {
-  ipcMain.on(pythonChannels.removeSavedPython, (_, pPath) => removeSavedPython(pPath));
-  ipcMain.on(pythonChannels.addSavedPython, (_, pPath) => addSavedPython(pPath));
-  ipcMain.handle(
+function ListenForChannels(storageManager, nodePty) {
+  electron.ipcMain.on(pythonChannels.removeSavedPython, (_, pPath) => removeSavedPython(pPath));
+  electron.ipcMain.on(pythonChannels.addSavedPython, (_, pPath) => addSavedPython(pPath));
+  electron.ipcMain.handle(
     pythonChannels.changePythonVersion,
     (_, pythonPath, packageName, currentVersion, targetVersion) => changePythonPackageVersion(pythonPath, packageName, currentVersion, targetVersion)
   );
-  ipcMain.handle(pythonChannels.getInstalledPythons, (_, refresh) => detectPythonInstallations(refresh));
-  ipcMain.handle(pythonChannels.uninstallPython, (_, path2) => uninstallPython(path2, nodePty));
-  ipcMain.handle(pythonChannels.setDefaultPython, (_, pythonPath) => setDefaultPython(pythonPath));
-  ipcMain.handle(pythonChannels.getAvailableOfficial, () => getAvailablePythonVersions());
-  ipcMain.handle(pythonChannels.installOfficial, (_, version) => downloadPython(version));
-  ipcMain.handle(pythonChannels.getAvailableConda, () => listAvailablePythons(nodePty));
-  ipcMain.handle(
+  electron.ipcMain.handle(pythonChannels.getInstalledPythons, (_, refresh) => detectPythonInstallations(refresh));
+  electron.ipcMain.handle(pythonChannels.uninstallPython, (_, path2) => uninstallPython(path2, nodePty));
+  electron.ipcMain.handle(pythonChannels.setDefaultPython, (_, pythonPath) => setDefaultPython(pythonPath));
+  electron.ipcMain.handle(pythonChannels.getAvailableOfficial, () => getAvailablePythonVersions());
+  electron.ipcMain.handle(pythonChannels.installOfficial, (_, version) => downloadPython(version));
+  electron.ipcMain.handle(pythonChannels.getAvailableConda, () => listAvailablePythons(nodePty));
+  electron.ipcMain.handle(
     pythonChannels.installConda,
     (_, envName, version) => createCondaEnv(envName, version, nodePty)
   );
-  ipcMain.handle(pythonChannels.isCondaInstalled, () => isCondaInstalled(nodePty));
-  ipcMain.handle(pythonChannels.createVenv, (_, options2) => createPythonVenv(options2));
-  ipcMain.handle(pythonChannels.getVenvs, () => getVenvs());
-  ipcMain.handle(pythonChannels.locateVenv, () => locateVenv());
-  ipcMain.handle(pythonChannels.getPackagesInfo, (_, pythonPath) => getSitePackagesInfo(pythonPath));
-  ipcMain.handle(
+  electron.ipcMain.handle(pythonChannels.isCondaInstalled, () => isCondaInstalled(nodePty));
+  electron.ipcMain.handle(pythonChannels.createVenv, (_, options2) => createPythonVenv(options2));
+  electron.ipcMain.handle(pythonChannels.getVenvs, () => getVenvs());
+  electron.ipcMain.handle(pythonChannels.locateVenv, () => locateVenv());
+  electron.ipcMain.handle(pythonChannels.getPackagesInfo, (_, pythonPath) => getSitePackagesInfo(pythonPath));
+  electron.ipcMain.handle(
     pythonChannels.uninstallPackage,
     (_, pythonPath, packageName) => uninstallPythonPackage(pythonPath, packageName)
   );
-  ipcMain.handle(
+  electron.ipcMain.handle(
     pythonChannels.installPackage,
     (_, pythonPath, command) => installPythonPackage(pythonPath, command)
   );
-  ipcMain.handle(
+  electron.ipcMain.handle(
     pythonChannels.getPackagesUpdateInfo,
     (_, packages) => getSitePackagesUpdates(packages)
   );
-  ipcMain.handle(
+  electron.ipcMain.handle(
     pythonChannels.updatePackage,
     (_, pythonPath, packageName) => updatePythonPackage(pythonPath, packageName)
   );
-  ipcMain.handle(
+  electron.ipcMain.handle(
     pythonChannels.updateAllPackages,
     (_, pythonPath, packages) => updateAllPythonPackages(pythonPath, packages)
   );
-  ipcMain.handle(pythonChannels.readReqs, (_, filePath) => readRequirements(filePath));
-  ipcMain.handle(pythonChannels.saveReqs, (_, filePath, data) => saveRequirements(filePath, data));
-  ipcMain.handle(pythonChannels.findReq, (_, dirPath) => findValidRequirementsFiles(dirPath));
-  ipcMain.on(pythonChannels.setReqPath, (_, data) => setReqPath(data));
-  ipcMain.handle(pythonChannels.getReqPath, (_, id) => getReqPath(id));
-  ipcMain.handle(pythonChannels.getAssociates, () => getAssociates());
-  ipcMain.on(pythonChannels.addAssociate, (_, data) => addAssociate(data));
-  ipcMain.on(pythonChannels.removeAssociate, (_, id) => removeAssociate(id));
-  ipcMain.on(pythonChannels.removeAssociatePath, (_, path2) => removeAssociatePath(path2));
-  ipcMain.handle(pythonChannels.getExePathAssociate, (_, item) => getExePathAssociate(item));
-  ipcMain.handle(pythonChannels.findAIVenv, (_, id, folder) => findAIVenv(id, folder));
-  ipcMain.handle(
+  electron.ipcMain.handle(pythonChannels.readReqs, (_, filePath) => readRequirements(filePath));
+  electron.ipcMain.handle(pythonChannels.saveReqs, (_, filePath, data) => saveRequirements(filePath, data));
+  electron.ipcMain.handle(pythonChannels.findReq, (_, dirPath) => findValidRequirementsFiles(dirPath));
+  electron.ipcMain.on(pythonChannels.setReqPath, (_, data) => setReqPath(data));
+  electron.ipcMain.handle(pythonChannels.getReqPath, (_, id) => getReqPath(id));
+  electron.ipcMain.handle(pythonChannels.getAssociates, () => getAssociates());
+  electron.ipcMain.on(pythonChannels.addAssociate, (_, data) => addAssociate(data));
+  electron.ipcMain.on(pythonChannels.removeAssociate, (_, id) => removeAssociate(id));
+  electron.ipcMain.on(pythonChannels.removeAssociatePath, (_, path2) => removeAssociatePath(path2));
+  electron.ipcMain.handle(pythonChannels.getExePathAssociate, (_, item) => getExePathAssociate(item));
+  electron.ipcMain.handle(pythonChannels.findAIVenv, (_, id, folder) => findAIVenv(id, folder));
+  electron.ipcMain.handle(
     pythonChannels.getUpdatesReq,
     (_, reqFile, currentPackages) => checkPackageUpdates(reqFile, currentPackages)
   );
-  ipcMain.handle(pythonChannels.getMaxRetry, () => {
-    const result = storageManager2?.getCustomData(MaxRetry_StorageID);
+  electron.ipcMain.handle(pythonChannels.getMaxRetry, () => {
+    const result = storageManager?.getCustomData(MaxRetry_StorageID);
     if (!result) {
-      storageManager2?.setCustomData(MaxRetry_StorageID, 5);
+      storageManager?.setCustomData(MaxRetry_StorageID, 5);
       return 5;
     }
     return result;
   });
-  ipcMain.on(pythonChannels.setMaxRetry, (_, value) => {
-    storageManager2?.setCustomData(MaxRetry_StorageID, value);
+  electron.ipcMain.on(pythonChannels.setMaxRetry, (_, value) => {
+    storageManager?.setCustomData(MaxRetry_StorageID, value);
   });
-  ipcMain.handle(pythonChannels.getPkgDisplay, () => {
-    const result = storageManager2?.getCustomData(PkgDisplay_StorageID);
+  electron.ipcMain.handle(pythonChannels.getPkgDisplay, () => {
+    const result = storageManager?.getCustomData(PkgDisplay_StorageID);
     if (!result) {
-      storageManager2?.setCustomData(PkgDisplay_StorageID, "default");
+      storageManager?.setCustomData(PkgDisplay_StorageID, "default");
       return "default";
     }
     return result;
   });
-  ipcMain.on(pythonChannels.setPkgDisplay, (_, value) => {
-    storageManager2?.setCustomData(PkgDisplay_StorageID, value);
+  electron.ipcMain.on(pythonChannels.setPkgDisplay, (_, value) => {
+    storageManager?.setCustomData(PkgDisplay_StorageID, value);
   });
-  ipcMain.handle(pythonChannels.getCacheStorageUsage, () => {
-    const result = storageManager2?.getCustomData(CacheDirUsage_StorageID);
+  electron.ipcMain.handle(pythonChannels.getCacheStorageUsage, () => {
+    const result = storageManager?.getCustomData(CacheDirUsage_StorageID);
     if (!result) {
-      storageManager2?.setCustomData(CacheDirUsage_StorageID, true);
+      storageManager?.setCustomData(CacheDirUsage_StorageID, true);
       return true;
     }
     return result;
   });
-  ipcMain.on(pythonChannels.setCacheStorageUsage, (_, value) => {
-    storageManager2?.setCustomData(CacheDirUsage_StorageID, value);
+  electron.ipcMain.on(pythonChannels.setCacheStorageUsage, (_, value) => {
+    storageManager?.setCustomData(CacheDirUsage_StorageID, value);
   });
-  ipcMain.handle(pythonChannels.getCardStartCommand, () => storageManager2?.getCustomData(CardStartCommand_StorageID));
-  ipcMain.on(pythonChannels.setCardStartCommand, (_, value) => {
-    const currentCommands = storageManager2?.getCustomData(CardStartCommand_StorageID);
+  electron.ipcMain.handle(pythonChannels.getCardStartCommand, () => storageManager?.getCustomData(CardStartCommand_StorageID));
+  electron.ipcMain.on(pythonChannels.setCardStartCommand, (_, value) => {
+    const currentCommands = storageManager?.getCustomData(CardStartCommand_StorageID);
     if (currentCommands) {
       const existing = currentCommands.findIndex((item) => item.id === value.id);
       if (existing !== -1) {
@@ -21995,13 +21992,13 @@ function ListenForChannels(storageManager2, nodePty) {
         currentCommands.push(value);
       }
     }
-    storageManager2?.setCustomData(CardStartCommand_StorageID, currentCommands);
+    storageManager?.setCustomData(CardStartCommand_StorageID, currentCommands);
   });
-  ipcMain.handle(pythonChannels.replacePythonPath, (_, pythonPath) => {
+  electron.ipcMain.handle(pythonChannels.replacePythonPath, (_, pythonPath) => {
     try {
-      if (!defaultEnvPath) return false;
-      const newPath = replacePythonPath(defaultEnvPath, pythonPath);
-      storageManager2?.setCustomData(DefaultLynxPython_StorageID, pythonPath);
+      if (!exports.defaultEnvPath) return false;
+      const newPath = replacePythonPath(exports.defaultEnvPath, pythonPath);
+      storageManager?.setCustomData(DefaultLynxPython_StorageID, pythonPath);
       process.env.PATH = newPath;
       return true;
     } catch (e) {
@@ -22010,23 +22007,22 @@ function ListenForChannels(storageManager2, nodePty) {
     }
   });
 }
-let storageManager = void 0;
-let appManager = void 0;
-let defaultEnvPath = process.env.PATH;
+exports.storageManager = void 0;
+exports.appManager = void 0;
+exports.defaultEnvPath = process.env.PATH;
 const setDefaultEnvPath = (path2) => {
-  defaultEnvPath = path2;
+  exports.defaultEnvPath = path2;
 };
 async function initialExtension(lynxApi, utils2) {
-  utils2.getAppManager().then((app2) => {
-    appManager = app2;
+  utils2.getAppManager().then((app) => {
+    exports.appManager = app;
   });
   utils2.getStorageManager().then((storeManager) => {
-    storageManager = storeManager;
+    exports.storageManager = storeManager;
     if (!storeManager.getCustomData(MaxRetry_StorageID)) storeManager.setCustomData(MaxRetry_StorageID, 5);
     const defaultLynxPython = storeManager.getCustomData(DefaultLynxPython_StorageID);
-    if (defaultLynxPython && defaultEnvPath) {
-      const newPath = replacePythonPath(defaultEnvPath, defaultLynxPython);
-      process.env.PATH = newPath;
+    if (defaultLynxPython && exports.defaultEnvPath) {
+      process.env.PATH = replacePythonPath(exports.defaultEnvPath, defaultLynxPython);
     }
     const associates = storeManager.getCustomData(Associates_StorageID);
     if (!associates) {
@@ -22044,12 +22040,7 @@ async function initialExtension(lynxApi, utils2) {
       storeManager.setCustomData(IsAutoDetectedVenvs_StorageID, true);
     }
   });
-  lynxApi.listenForChannels(() => ListenForChannels(storageManager, utils2.nodePty));
+  lynxApi.listenForChannels(() => ListenForChannels(exports.storageManager, utils2.nodePty));
 }
-export {
-  appManager,
-  defaultEnvPath,
-  initialExtension,
-  setDefaultEnvPath,
-  storageManager
-};
+exports.initialExtension = initialExtension;
+exports.setDefaultEnvPath = setDefaultEnvPath;

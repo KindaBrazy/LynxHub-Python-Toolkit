@@ -1032,11 +1032,11 @@ function formatProdErrorMessage(code) {
   return `Minified Redux Toolkit error #${code}; visit https://redux-toolkit.js.org/Errors?code=${code} for the full message or use the non-minified dev environment for full errors. `;
 }
 
-const version = "3.3.0-insider-2";
+const version = "3.3.0";
 const author = {"name":"KindaBrazy","email":"kindofbrazy@gmail.com"};
 const repository = {"url":"https://github.com/KindaBrazy/LynxHub"};
 const license = "AGPL-3.0";
-const appDetails = {"title":"LynxHub","buildNumber":31,"detailedDescription":"Open-source, cross-platform terminal and browser, designed for managing AI. Highly modular and extensible, it's the all-in-one environment for AI power users."};
+const appDetails = {"title":"LynxHub","buildNumber":32,"detailedDescription":"Open-source, cross-platform terminal and browser, designed for managing AI. Highly modular and extensible, it's the all-in-one environment for AI power users."};
 const packageJson = {
   version,
   author,
@@ -1749,27 +1749,6 @@ function ShieldWarning_Icon(props) {
     )
   ] });
 }
-function Clock_Icon(props) {
-  return /* @__PURE__ */ jsxRuntimeExports.jsxs("svg", { ...props, height: "1rem", viewBox: "0 0 24 24", xmlns: "http://www.w3.org/2000/svg", children: [
-    /* @__PURE__ */ jsxRuntimeExports.jsx(
-      "path",
-      {
-        opacity: "0.5",
-        fill: "currentColor",
-        d: "M12 22c5.523 0 10-4.477 10-10S17.523 2 12 2S2 6.477 2 12s4.477 10 10 10"
-      }
-    ),
-    /* @__PURE__ */ jsxRuntimeExports.jsx(
-      "path",
-      {
-        fillRule: "evenodd",
-        clipRule: "evenodd",
-        fill: "currentColor",
-        d: "M12 7.25a.75.75 0 0 1 .75.75v3.69l2.28 2.28a.75.75 0 1 1-1.06 1.06l-2.5-2.5a.75.75 0 0 1-.22-.53V8a.75.75 0 0 1 .75-.75"
-      }
-    )
-  ] });
-}
 function ArrowDuo_Icon(props) {
   return /* @__PURE__ */ jsxRuntimeExports.jsxs("svg", { ...props, height: "1rem", viewBox: "0 0 24 24", xmlns: "http://www.w3.org/2000/svg", children: [
     /* @__PURE__ */ jsxRuntimeExports.jsx(
@@ -2105,7 +2084,8 @@ function extractGitUrl(url) {
     throw new Error(`Invalid Git repository URL: ${url}`);
   }
   const [, , , platform, owner, repo] = match;
-  return { owner, repo, platform };
+  const avatarUrl = `https://github.com/${owner}.png`;
+  return { owner, repo, platform, avatarUrl };
 }
 function formatSize(size) {
   if (!size) return "0KB";
@@ -2118,6 +2098,7 @@ function formatSize(size) {
   }
 }
 function validateGitRepoUrl(url) {
+  if (!url) return "";
   const githubMatch = url.toLowerCase().match(/^(?:https?:\/\/)?(?:www\.)?github\.com\/([^/]+)\/([^/]+?)(\.git)?(\/)?$/i);
   if (githubMatch) {
     return `https://github.com/${githubMatch[1]}/${githubMatch[2]}`;
@@ -2236,6 +2217,7 @@ const ptyChannels = {
   process: "pty-process",
   customProcess: "pty-custom-process",
   emptyProcess: "pty-custom-process",
+  stopProcess: "pty-stop-process",
   customCommands: "pty-custom-commands",
   write: "pty-write",
   clear: "pty-clear",
@@ -2369,7 +2351,9 @@ const browserChannels = {
   getUserAgent: "browser:get-user-agent",
   updateUserAgent: "browser:update-user-agent",
   addOffset: "browser:add-offset",
-  clearHistory: "browser:clear-history"
+  clearHistory: "browser:clear-history",
+  onFailedLoadUrl: "browser:on-failed-load-url",
+  onClearFailed: "browser:on-clear-failed"
 };
 const staticsChannels = {
   pull: "statics:pull",
@@ -2603,10 +2587,7 @@ const rendererIpc = {
       return ipc$1.invoke(storageUtilsChannels.customRun, opt, data);
     },
     onCustomRun: (result) => ipc$1.on(storageUtilsChannels.onCustomRun, result),
-    updateCustomRunBehavior: (data) => {
-      extensionRendererApi.events_ipc.emit("storage_utils_update_custom_run_behavior", { data });
-      ipc$1.send(storageUtilsChannels.customRunBehavior, data);
-    },
+    updateCustomRunBehavior: (data) => ipc$1.send(storageUtilsChannels.customRunBehavior, data),
     preOpen: (opt, open) => {
       extensionRendererApi.events_ipc.emit("storage_utils_pre_open", { opt, open });
       return ipc$1.invoke(storageUtilsChannels.preOpen, opt, open);
@@ -2731,21 +2712,25 @@ const rendererIpc = {
   },
   /** Managing and using node_pty(Pseudo Terminal ) */
   pty: {
-    process: (id, opt, cardId) => {
-      extensionRendererApi.events_ipc.emit("terminal_process", { id, opt, cardId });
-      ipc$1.send(ptyChannels.process, id, opt, cardId);
+    process: (id, cardId) => {
+      extensionRendererApi.events_ipc.emit("terminal_process", { id, cardId });
+      ipc$1.send(ptyChannels.process, id, cardId);
     },
-    customProcess: (id, opt, dir, file) => {
-      extensionRendererApi.events_ipc.emit("terminal_process_custom", { id, opt, dir, file });
-      ipc$1.send(ptyChannels.customProcess, id, opt, dir, file);
+    customProcess: (id, dir, file) => {
+      extensionRendererApi.events_ipc.emit("terminal_process_custom", { id, dir, file });
+      ipc$1.send(ptyChannels.customProcess, id, dir, file);
     },
-    emptyProcess: (id, opt, dir) => {
-      extensionRendererApi.events_ipc.emit("terminal_process_empty", { id, opt, dir });
-      ipc$1.send(ptyChannels.emptyProcess, id, opt, dir);
+    emptyProcess: (id, dir) => {
+      extensionRendererApi.events_ipc.emit("terminal_process_empty", { id, dir });
+      ipc$1.send(ptyChannels.emptyProcess, id, dir);
     },
-    customCommands: (id, opt, commands, dir) => {
-      extensionRendererApi.events_ipc.emit("terminal_process_custom_command", { id, opt, commands, dir });
-      ipc$1.send(ptyChannels.customCommands, id, opt, commands, dir);
+    customCommands: (id, commands, dir) => {
+      extensionRendererApi.events_ipc.emit("terminal_process_custom_command", { id, commands, dir });
+      ipc$1.send(ptyChannels.customCommands, id, commands, dir);
+    },
+    stop: (id) => {
+      extensionRendererApi.events_ipc.emit("terminal_process_stop", { id });
+      ipc$1.send(ptyChannels.stopProcess, id);
     },
     write: (id, data) => {
       extensionRendererApi.events_ipc.emit("terminal_write", { id, data });
@@ -2827,9 +2812,9 @@ const rendererIpc = {
     onShowToast: (result) => ipc$1.on(appWindowChannels.showToast, result)
   },
   contextMenu: {
-    resizeWindow: (dimensions) => {
-      extensionRendererApi.events_ipc.emit("context_menu_resize_window", { dimensions });
-      ipc$1.send(contextMenuChannels.resizeWindow, dimensions);
+    resizeWindow: (data) => {
+      extensionRendererApi.events_ipc.emit("context_menu_resize_window", { data });
+      ipc$1.send(contextMenuChannels.resizeWindow, data);
     },
     showWindow: () => {
       extensionRendererApi.events_ipc.emit("context_menu_show_window", {});
@@ -2997,7 +2982,9 @@ const rendererIpc = {
       extensionRendererApi.events_ipc.emit("browser_add_offset", { id, offset });
       ipc$1.send(browserChannels.addOffset, id, offset);
     },
-    clearHistory: (selected) => ipc$1.send(browserChannels.clearHistory, selected)
+    clearHistory: (selected) => ipc$1.send(browserChannels.clearHistory, selected),
+    onFailedLoadUrl: (result) => ipc$1.on(browserChannels.onFailedLoadUrl, result),
+    onClearFailed: (result) => ipc$1.on(browserChannels.onClearFailed, result)
   },
   statics: {
     pull: () => {
@@ -3300,7 +3287,7 @@ const cardsSlice = createSlice({
         }
       ];
       if (type !== "terminal") rendererIpc.browser.createBrowser(id);
-      if (type !== "browser") rendererIpc.pty.emptyProcess(id, "start");
+      if (type !== "browser") rendererIpc.pty.emptyProcess(id);
     },
     addRunningCard: (state, action) => {
       const { tabId, id } = action.payload;
@@ -3630,7 +3617,9 @@ const isBoolean$1 = /*@__PURE__*/getDefaultExportFromCjs(isBooleanExports);
 
 const {useSelector: useSelector$2} = await importShared('react-redux');
 const storageData = await rendererIpc.storage.get("app");
-let darkMode = true;
+let darkMode;
+let showWizard;
+let isUpgradeFlow = false;
 if (storageData.darkMode === "dark") {
   darkMode = true;
 } else if (storageData.darkMode === "light") {
@@ -3638,6 +3627,20 @@ if (storageData.darkMode === "dark") {
 } else {
   const systemDark = await rendererIpc.win.getSystemDarkMode();
   darkMode = systemDark === "dark";
+}
+const oldSetupDone = storageData.initialized;
+const newSetupDone = storageData.inited;
+const isWindows = window.osPlatform === "win32";
+if (newSetupDone) {
+  showWizard = false;
+} else {
+  if (oldSetupDone && !isWindows) {
+    rendererIpc.storage.update("app", { inited: true });
+    showWizard = false;
+  } else {
+    isUpgradeFlow = oldSetupDone;
+    showWizard = true;
+  }
 }
 const initialState$2 = {
   darkMode,
@@ -3647,7 +3650,8 @@ const initialState$2 = {
   onFocus: true,
   navBar: true,
   appTitle: void 0,
-  toastPlacement: "top-center"
+  toastPlacement: "top-center",
+  initializer: { showWizard, isUpgradeFlow }
 };
 const appSlice = createSlice({
   name: "app",
@@ -3677,7 +3681,9 @@ const {addToast,Button: Button$o} = await importShared('@heroui/react');
 
 const {isEmpty: isEmpty$f,isNil: isNil$4} = await importShared('lodash');
 
-const {Fragment: Fragment$1,useEffect: useEffect$q,useMemo: useMemo$d,useState: useState$u} = await importShared('react');
+const {Fragment: Fragment$1,useCallback: useCallback$b,useEffect: useEffect$q,useMemo: useMemo$d,useState: useState$u} = await importShared('react');
+
+const {useDispatch: useDispatch$d} = await importShared('react-redux');
 function useInstalledCard(cardId) {
   const installedCards = useCardsState("installedCards");
   return useMemo$d(() => installedCards.find((card) => card.id === cardId), [installedCards, cardId]);
@@ -6819,7 +6825,6 @@ const AvailableModules = {
   onetrainer: "Nerogar_SD",
   sdUiux: "Anapnoe_SD",
   invoke: "InvokeAI_SD",
-  alltalk: "Erew123_SD",
   tg: "Oobabooga_TG",
   openWebui: "OpenWebUI_TG",
   lollms: "LoLLMS_TG",
@@ -9989,6 +9994,27 @@ function bytesToMegabytes(bytes) {
   return parseFloat(megabytes.toFixed(2));
 }
 
+function fetchAndSetPythonVenvs(setList, setIsLoading, onSelected) {
+  return Promise.all([pIpc.getInstalledPythons(false), pIpc.getVenvs()]).then(([pythons, venvs]) => {
+    const pythonItems = pythons.map((python) => ({
+      condaName: python.installationType === "conda" ? python.condaName : void 0,
+      label: python.installationType === "conda" ? `${python.version}  |  ${python.condaName}` : python.version,
+      dir: python.installFolder,
+      type: python.installationType === "conda" ? "conda" : "python"
+    }));
+    const venvItems = venvs.map((venv) => ({
+      label: `${venv.pythonVersion}  |  ${venv.name}`,
+      dir: venv.folder,
+      type: "venv"
+    }));
+    const combined = [...pythonItems, ...venvItems];
+    setList(combined);
+    if (onSelected && combined.length > 0) {
+      onSelected(combined[0]);
+    }
+  }).catch(console.warn).finally(() => setIsLoading(false));
+}
+
 const {Button: Button$n,CircularProgress: CircularProgress$3,Dropdown: Dropdown$5,DropdownItem: DropdownItem$5,DropdownMenu: DropdownMenu$5,DropdownTrigger: DropdownTrigger$5} = await importShared('@heroui/react');
 
 const {useEffect: useEffect$o,useState: useState$s} = await importShared('react');
@@ -10014,21 +10040,7 @@ function Body_SelectEnv({ id, setPythonPath }) {
   };
   useEffect$o(() => {
     setIsLoading(true);
-    Promise.all([pIpc.getInstalledPythons(false), pIpc.getVenvs()]).then(([pythons, venvs]) => {
-      const pythonItems = pythons.map((python) => ({
-        condaName: python.installationType === "conda" ? python.condaName : void 0,
-        label: python.installationType === "conda" ? `${python.version}  |  ${python.condaName}` : python.version,
-        dir: python.installFolder,
-        type: python.installationType === "conda" ? "conda" : "python"
-      }));
-      const venvItems = venvs.map((venv) => ({
-        label: `${venv.pythonVersion}  |  ${venv.name}`,
-        dir: venv.folder,
-        type: "venv"
-      }));
-      const combined = [...pythonItems, ...venvItems];
-      setList(combined);
-    }).catch(console.warn).finally(() => setIsLoading(false));
+    fetchAndSetPythonVenvs(setList, setIsLoading);
   }, []);
   return isLoading ? /* @__PURE__ */ jsxRuntimeExports.jsx(
     CircularProgress$3,
@@ -20772,22 +20784,7 @@ const Installer_PythonSelector = (id, addAssociate) => function Selector() {
   }, []);
   useEffect(() => {
     setIsLoading(true);
-    Promise.all([pIpc.getInstalledPythons(false), pIpc.getVenvs()]).then(([pythons, venvs]) => {
-      const pythonItems = pythons.map((python) => ({
-        condaName: python.installationType === "conda" ? python.condaName : void 0,
-        label: python.installationType === "conda" ? `${python.version}  |  ${python.condaName}` : python.version,
-        dir: python.installFolder,
-        type: python.installationType === "conda" ? "conda" : "python"
-      }));
-      const venvItems = venvs.map((venv) => ({
-        label: `${venv.pythonVersion}  |  ${venv.name}`,
-        dir: venv.folder,
-        type: "venv"
-      }));
-      const combined = [...pythonItems, ...venvItems];
-      setList(combined);
-      if (combined.length > 0) onSelected(combined[0]);
-    }).catch(console.warn).finally(() => setIsLoading(false));
+    fetchAndSetPythonVenvs(setList, setIsLoading, onSelected);
   }, []);
   const onSelectionChange = (keys) => {
     const item = list.find((item2) => `${item2.label}_${item2.dir}` === Array.from(keys)[0]);
@@ -20832,7 +20829,7 @@ function addAssociate(id, item) {
   }
 }
 const getStep = (id) => {
-  let index = 1;
+  let index;
   switch (id) {
     case AvailableModules.sdForge:
     case AvailableModules.comfyui:
@@ -20847,7 +20844,6 @@ const getStep = (id) => {
     case AvailableModules.tg:
     case AvailableModules.lollms:
     case AvailableModules.ag:
-    case AvailableModules.alltalk:
       index = 2;
       break;
     case AvailableModules.invoke:
