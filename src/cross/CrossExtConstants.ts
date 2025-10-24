@@ -29,7 +29,6 @@ export const AvailableModules = {
   onetrainer: 'Nerogar_SD',
   sdUiux: 'Anapnoe_SD',
   invoke: 'InvokeAI_SD',
-  alltalk: 'Erew123_SD',
   tg: 'Oobabooga_TG',
   sillyTavern: 'SillyTavern_TG',
   openWebui: 'OpenWebUI_TG',

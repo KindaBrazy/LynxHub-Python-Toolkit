@@ -26,7 +26,6 @@ export const getStep = (id: string) => {
     case AvailableModules.tg:
     case AvailableModules.lollms:
     case AvailableModules.ag:
-    case AvailableModules.alltalk:
       index = 2;
       break;
     case AvailableModules.invoke:
