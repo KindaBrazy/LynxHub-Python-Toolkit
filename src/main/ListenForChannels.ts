@@ -20,6 +20,7 @@ import {
   VenvCreateOptions,
 } from '../cross/CrossExtTypes';
 import {defaultEnvPath} from './lynxExtension';
+import ListenForStorage from './StorageIpcHandler';
 import {
   addAssociate,
   getAssociates,
@@ -191,4 +192,6 @@ export default function ListenForChannels(storageManager: StorageManager | undef
       return false;
     }
   });
+
+  ListenForStorage(storageManager);
 }
