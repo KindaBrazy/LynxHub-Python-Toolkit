@@ -25,9 +25,6 @@ import {Env_Icon, HardDrive_Icon, Packages_Icon, TrashDuo_Icon} from '../../SvgI
 import PackageManagerModal from '../PackageManagement/PackageManager/PackageManagerModal';
 import Venv_Associate from './Venv_Associate';
 
-const TITLE_STORE_KEY = 'title_change_key';
-type StorageItem = {title: string; path: string};
-
 type Props = {
   title: string;
   pythonVersion: string;
@@ -53,11 +50,11 @@ export default function VenvCard({
   const [editedTitle, setEditedTitle] = useState<string>(title);
 
   useEffect(() => {
-    const storedItems: StorageItem[] = JSON.parse(localStorage.getItem(TITLE_STORE_KEY) || '[]');
+    pIpc.storage.getVenvCustomTitle().then(storedItems => {
+      const existingTitle = storedItems.find(item => item.path === SHA256(folder).toString());
 
-    const existingTitle = storedItems.find(item => item.path === SHA256(folder).toString());
-
-    if (existingTitle) setEditedTitle(existingTitle.title);
+      if (existingTitle) setEditedTitle(existingTitle.title);
+    });
   }, [folder]);
 
   const size = useMemo(() => {
@@ -92,17 +89,17 @@ export default function VenvCard({
   const onTitleChange = (event: FormEvent<HTMLSpanElement>) => {
     const textContent = event.currentTarget.textContent || '';
 
-    const storedItems: StorageItem[] = JSON.parse(localStorage.getItem(TITLE_STORE_KEY) || '[]');
+    pIpc.storage.getVenvCustomTitle().then(storedItems => {
+      const existingIndex = storedItems.findIndex(item => item.path === SHA256(folder).toString());
 
-    const existingIndex = storedItems.findIndex(item => item.path === SHA256(folder).toString());
+      if (existingIndex > -1) {
+        storedItems[existingIndex].title = textContent;
+      } else {
+        storedItems.push({path: SHA256(folder).toString(), title: textContent});
+      }
 
-    if (existingIndex > -1) {
-      storedItems[existingIndex].title = textContent;
-    } else {
-      storedItems.push({path: SHA256(folder).toString(), title: textContent});
-    }
-
-    localStorage.setItem(TITLE_STORE_KEY, JSON.stringify(storedItems));
+      pIpc.storage.setVenvCustomTitle(storedItems);
+    });
   };
 
   const [packageManagerOpen, setPackageManagerOpen] = useState<boolean>(false);
