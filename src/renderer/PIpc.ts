@@ -3,7 +3,6 @@ import {IpcRendererEvent} from 'electron';
 import {OnPreCommands} from '../../../src/cross/IpcChannelAndTypes';
 import {
   AssociateItem,
-  CachedUsage,
   CustomTitle,
   DlProgressOfficial,
   IdPathType,
@@ -117,10 +116,8 @@ const pIpc = {
     getAvailableOfficial: (): Promise<PythonVersion[]> => ipc.invoke(pythonStorageChannels.getAvailableOfficial),
     setAvailableOfficial: (value: PythonVersion[]) => ipc.send(pythonStorageChannels.setAvailableOfficial, value),
 
-    getCachedUsage: (type: 'python' | 'venv'): Promise<CachedUsage[]> =>
-      ipc.invoke(pythonStorageChannels.getCachedUsage, type),
-    setCachedUsage: (value: CachedUsage[], type: 'python' | 'venv') =>
-      ipc.send(pythonStorageChannels.setCachedUsage, value, type),
+    getCachedUsage: (id: string): Promise<number> => ipc.invoke(pythonStorageChannels.getCachedUsage, id),
+    setCachedUsage: (id: string, value: number) => ipc.send(pythonStorageChannels.setCachedUsage, id, value),
     clearCachedUsage: () => ipc.send(pythonStorageChannels.clearCachedUsage),
 
     getVenvCustomTitle: (): Promise<CustomTitle[]> => ipc.invoke(pythonStorageChannels.getVenvCustomTitle),

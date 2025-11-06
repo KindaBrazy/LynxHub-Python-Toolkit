@@ -5,7 +5,6 @@ import {Dispatch, SetStateAction, useCallback, useEffect, useState} from 'react'
 
 import rendererIpc from '../../../../../../src/renderer/src/App/RendererIpc';
 import {Add_Icon, Refresh_Icon} from '../../../../../../src/renderer/src/assets/icons/SvgIcons/SvgIcons';
-import {getDiskUsageID} from '../../../../cross/CrossExtConstants';
 import {PythonInstallation} from '../../../../cross/CrossExtTypes';
 import {bytesToMegabytes} from '../../../../cross/CrossExtUtils';
 import pIpc from '../../../PIpc';
@@ -50,7 +49,7 @@ export default function InstalledPythons({
     (python: PythonInstallation) => {
       rendererIpc.file.calcFolderSize(python.sitePackagesPath).then((value: number) => {
         if (value) {
-          window.localStorage.setItem(getDiskUsageID(python.installFolder), JSON.stringify(bytesToMegabytes(value)));
+          pIpc.storage.setCachedUsage(python.installFolder, bytesToMegabytes(value));
           setDiskUsage(prevState => [
             ...prevState,
             {
@@ -72,18 +71,19 @@ export default function InstalledPythons({
 
       for (const python of result) {
         if (cacheStorageUsage) {
-          const cachedUsage = window.localStorage.getItem(getDiskUsageID(python.installFolder));
-          if (!cachedUsage) {
-            calcDiskUsage(python);
-          } else {
-            setDiskUsage(prevState => [
-              ...prevState,
-              {
-                path: python.installFolder,
-                value: JSON.parse(cachedUsage) as number,
-              },
-            ]);
-          }
+          pIpc.storage.getCachedUsage(python.installFolder).then(cachedUsage => {
+            if (!cachedUsage) {
+              calcDiskUsage(python);
+            } else {
+              setDiskUsage(prevState => [
+                ...prevState,
+                {
+                  path: python.installFolder,
+                  value: cachedUsage,
+                },
+              ]);
+            }
+          });
         } else {
           calcDiskUsage(python);
         }
