@@ -3,7 +3,7 @@ import {isEmpty} from 'lodash';
 import {join} from 'path';
 
 import {IdPathType, RequirementData} from '../../../cross/CrossExtTypes';
-import {storageManager} from '../../lynxExtension';
+import {getStorage} from '../../DataHolder';
 
 const REQ_STORE_ID = 'reqs_path';
 
@@ -132,6 +132,7 @@ function calculatePriorityScore(filename: string): number {
 }
 
 export function setReqPath(data: IdPathType) {
+  const storageManager = getStorage();
   const existingData = storageManager?.getCustomData(REQ_STORE_ID) as IdPathType[] | undefined;
 
   let result: IdPathType[] = [];
@@ -152,6 +153,6 @@ export function setReqPath(data: IdPathType) {
 }
 
 export function getReqPath(id: string) {
-  const data = storageManager?.getCustomData(REQ_STORE_ID) as IdPathType[] | undefined;
+  const data = getStorage()?.getCustomData(REQ_STORE_ID) as IdPathType[] | undefined;
   return data?.find(item => item.id === id)?.path;
 }

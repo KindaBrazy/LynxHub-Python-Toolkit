@@ -1,7 +1,6 @@
 import {ipcMain} from 'electron';
 
 import {OnPreCommands} from '../../../src/cross/IpcChannelAndTypes';
-import StorageManager from '../../../src/main/Managements/Storage/StorageManager';
 import {
   CacheDirUsage_StorageID,
   CardStartCommand_StorageID,
@@ -19,7 +18,7 @@ import {
   SitePackages_Info,
   VenvCreateOptions,
 } from '../cross/CrossExtTypes';
-import {defaultEnvPath} from './lynxExtension';
+import {getDefaultEnvPath, getStorage} from './DataHolder';
 import ListenForStorage from './StorageIpcHandler';
 import {
   addAssociate,
@@ -55,7 +54,9 @@ import uninstallPython from './Utils/Uninstaller/Uninstaller';
 import createPythonVenv, {getVenvs, locateVenv} from './Utils/VirtualEnv/CreateVenv';
 import {findAIVenv} from './Utils/VirtualEnv/VenvUtils';
 
-export default function ListenForChannels(storageManager: StorageManager | undefined, nodePty: any) {
+export default function ListenForChannels(nodePty: any) {
+  const storageManager = getStorage();
+
   ipcMain.on(pythonChannels.removeSavedPython, (_, pPath: string) => removeSavedPython(pPath));
   ipcMain.on(pythonChannels.addSavedPython, (_, pPath: string) => addSavedPython(pPath));
 
@@ -180,6 +181,7 @@ export default function ListenForChannels(storageManager: StorageManager | undef
 
   ipcMain.handle(pythonChannels.replacePythonPath, (_, pythonPath: string) => {
     try {
+      const defaultEnvPath = getDefaultEnvPath();
       if (!defaultEnvPath) return false;
 
       const newPath = replacePythonPath(defaultEnvPath, pythonPath);

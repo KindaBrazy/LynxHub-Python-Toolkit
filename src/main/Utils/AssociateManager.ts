@@ -5,7 +5,7 @@ import {isString} from 'lodash';
 
 import {Associates_StorageID} from '../../cross/CrossExtConstants';
 import {AssociateItem} from '../../cross/CrossExtTypes';
-import {storageManager} from '../lynxExtension';
+import {getStorage} from '../DataHolder';
 import {getVenvPythonPath} from './VirtualEnv/VenvUtils';
 
 /**
@@ -31,6 +31,7 @@ function getCommandByType(type: 'python' | 'venv' | 'conda', dir: string, condaN
  */
 function removePreCommands(id: string): void {
   try {
+    const storageManager = getStorage();
     if (!storageManager) return;
 
     const prevCommands = storageManager.getData('cards')?.cardTerminalPreCommands;
@@ -49,7 +50,7 @@ function removePreCommands(id: string): void {
  */
 export function getAssociates(): AssociateItem[] | undefined {
   try {
-    return storageManager?.getCustomData(Associates_StorageID) as AssociateItem[] | undefined;
+    return getStorage()?.getCustomData(Associates_StorageID) as AssociateItem[] | undefined;
   } catch (err) {
     console.warn('Failed to get associates:', err);
     return undefined;
@@ -61,6 +62,7 @@ export function getAssociates(): AssociateItem[] | undefined {
  */
 function updateAssociateStorage(data: AssociateItem): void {
   try {
+    const storageManager = getStorage();
     if (!storageManager) return;
 
     const existingData = getAssociates() || [];
@@ -109,6 +111,7 @@ export function addAssociate(data: AssociateItem): void {
   try {
     updateAssociateStorage(data);
 
+    const storageManager = getStorage();
     if (storageManager) {
       storageManager.setCardTerminalPreCommands(data.id, [getCommandByType(data.type, data.dir, data.condaName)]);
     }
@@ -123,6 +126,7 @@ export function addAssociate(data: AssociateItem): void {
 export function removeAssociate(id: string): void {
   try {
     const existingData = getAssociates();
+    const storageManager = getStorage();
     if (!existingData || !storageManager) return;
 
     storageManager.setCustomData(
@@ -144,6 +148,7 @@ export function removeAssociatePath(pythonPath: string): void {
     const existingData = getAssociates();
     const targetID = existingData?.find(item => item.dir === pythonPath)?.id;
 
+    const storageManager = getStorage();
     if (!existingData || !targetID || !storageManager) return;
 
     storageManager.setCustomData(

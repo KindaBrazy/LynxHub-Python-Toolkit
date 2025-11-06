@@ -1,7 +1,7 @@
 import {IPty} from 'node-pty';
 
 import {pythonChannels} from '../../../cross/CrossExtTypes';
-import {appManager} from '../../lynxExtension';
+import {getAppManager} from '../../DataHolder';
 import {COMMAND_LINE_ENDING, determineShell} from '../ExtMainUtils';
 
 export async function listAvailablePythons(pty: any): Promise<string[]> {
@@ -39,7 +39,7 @@ export async function listAvailablePythons(pty: any): Promise<string[]> {
 
 export const createCondaEnv = async (envName: string, pythonVersion: string, pty): Promise<void> => {
   return new Promise((resolve, reject) => {
-    const window = appManager?.getMainWindow();
+    const window = getAppManager()?.getMainWindow();
     if (!window) {
       reject('createCondaEnv: No window found');
       return;

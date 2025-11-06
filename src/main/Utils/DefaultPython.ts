@@ -4,7 +4,7 @@ import {platform} from 'node:os';
 import {promises} from 'graceful-fs';
 import which from 'which';
 
-import {defaultEnvPath, setDefaultEnvPath} from '../lynxExtension';
+import {getDefaultEnvPath, setDefaultEnvPath} from '../DataHolder';
 import {replacePythonPath} from './ExtMainUtils';
 
 async function validatePath(path: string): Promise<boolean> {
@@ -38,7 +38,7 @@ export async function setDefaultPython(pythonPath: string): Promise<void> {
 
 export async function isDefaultPython(pythonPath: string): Promise<boolean> {
   try {
-    const defaultPath = await which('python', {path: defaultEnvPath});
+    const defaultPath = await which('python', {path: getDefaultEnvPath()});
     return defaultPath.toLowerCase() === pythonPath.toLowerCase();
   } catch (error) {
     return false;
@@ -72,6 +72,7 @@ async function setDefaultPythonWindows(pythonPath: string): Promise<void> {
       }
 
       const newPathValue = replacePythonPath(match[1], pythonPath);
+      const defaultEnvPath = getDefaultEnvPath();
       if (defaultEnvPath) setDefaultEnvPath(replacePythonPath(defaultEnvPath, pythonPath));
 
       const regAdd = spawn(

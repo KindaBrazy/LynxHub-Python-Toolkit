@@ -7,7 +7,7 @@ import {existsSync, promises, readdirSync, statSync} from 'graceful-fs';
 import {compare} from 'semver';
 
 import {PythonInstallation} from '../../cross/CrossExtTypes';
-import {appManager} from '../lynxExtension';
+import {getAppManager} from '../DataHolder';
 
 export async function detectInstallationType(pythonPath: string): Promise<PythonInstallation['installationType']> {
   const normalize = (str: string) => str.toLowerCase();
@@ -145,7 +145,7 @@ export async function getSitePackagesCount(pythonPath: string): Promise<number> 
 
 export async function openDialogExt(options: OpenDialogOptions): Promise<string | undefined> {
   try {
-    const window = appManager?.getMainWindow();
+    const window = getAppManager()?.getMainWindow();
     if (!window) {
       throw new Error('openDialogExt: No window found');
     }

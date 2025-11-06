@@ -9,7 +9,7 @@ import {promisify} from 'util';
 import which from 'which';
 
 import {PythonInstallation} from '../../cross/CrossExtTypes';
-import {storageManager} from '../lynxExtension';
+import {getStorage} from '../DataHolder';
 import {isDefaultPython} from './DefaultPython';
 import {isFirstPythonPath} from './ExtMainUtils';
 import {detectInstallationType, getSitePackagesCount, parseVersion} from './PythonUtils';
@@ -229,6 +229,7 @@ async function getSitePackagesPath(pythonPath: string): Promise<string> {
 const STORAGE_INSTALLED_KEY = 'installed_pythons';
 
 export function removeSavedPython(pPath: string) {
+  const storageManager = getStorage();
   const savedInstallations: string[] | undefined = storageManager?.getCustomData(STORAGE_INSTALLED_KEY);
 
   if (!isNil(savedInstallations)) {
@@ -240,6 +241,7 @@ export function removeSavedPython(pPath: string) {
 }
 
 export function addSavedPython(pPath: string) {
+  const storageManager = getStorage();
   const savedInstallations: string[] | undefined = storageManager?.getCustomData(STORAGE_INSTALLED_KEY);
   const paths = new Set<string>();
 
@@ -267,6 +269,7 @@ function removeDuplicateInstallations(installations: PythonInstallation[]): Pyth
 }
 
 export default async function detectPythonInstallations(refresh: boolean): Promise<PythonInstallation[]> {
+  const storageManager = getStorage();
   const savedInstallations: string[] | undefined = storageManager?.getCustomData(STORAGE_INSTALLED_KEY);
   const paths = new Set<string>();
 

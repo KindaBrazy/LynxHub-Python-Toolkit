@@ -7,7 +7,7 @@ import {download} from 'electron-dl';
 import {promisify} from 'util';
 
 import {pythonChannels, PythonVersion} from '../../../cross/CrossExtTypes';
-import {appManager} from '../../lynxExtension';
+import {getAppManager} from '../../DataHolder';
 import {findFileInDir} from '../PythonUtils';
 
 const execAsync = promisify(exec);
@@ -35,7 +35,7 @@ async function installPython(filePath: string, version: PythonVersion): Promise<
 
 export default async function downloadPython(version: PythonVersion): Promise<void> {
   return new Promise(async (resolve, reject) => {
-    const window = appManager?.getMainWindow();
+    const window = getAppManager()?.getMainWindow();
     if (!window) {
       reject('downloadPython: No window found');
       return;

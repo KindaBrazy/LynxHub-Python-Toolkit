@@ -4,13 +4,14 @@ import {exec} from 'child_process';
 import {compact, filter, isEmpty, isNil} from 'lodash';
 
 import {pythonChannels, VenvCreateOptions, VenvInfo} from '../../../cross/CrossExtTypes';
-import {appManager, storageManager} from '../../lynxExtension';
+import {getAppManager, getStorage} from '../../DataHolder';
 import {openDialogExt} from '../PythonUtils';
 import {getVenvInfo, isVenvDirectory} from './VenvUtils';
 
 const STORE_VENVS_ID = 'python-venvs-locations';
 
 function validateVenvs() {
+  const storageManager = getStorage();
   const venvs = storageManager?.getCustomData(STORE_VENVS_ID) as string[] | null;
 
   let validEnvs: string[];
@@ -27,6 +28,7 @@ function validateVenvs() {
 }
 
 export function updateVenvStorage(newVenvPath: string) {
+  const storageManager = getStorage();
   const existVenvs = storageManager?.getCustomData(STORE_VENVS_ID) as string[];
 
   if (isEmpty(existVenvs)) {
@@ -38,6 +40,7 @@ export function updateVenvStorage(newVenvPath: string) {
 }
 
 function removeVenvStorage(venvPath: string) {
+  const storageManager = getStorage();
   const existVenvs = storageManager?.getCustomData(STORE_VENVS_ID) as string[];
   if (existVenvs) {
     storageManager?.setCustomData(STORE_VENVS_ID, Array.from(existVenvs.filter(venv => venv !== venvPath)));
@@ -46,7 +49,7 @@ function removeVenvStorage(venvPath: string) {
 
 export async function getVenvs() {
   const venvs = validateVenvs();
-  const window = appManager?.getMainWindow();
+  const window = getAppManager()?.getMainWindow();
   if (!window) {
     throw new Error('getVenvs: No window found');
   }

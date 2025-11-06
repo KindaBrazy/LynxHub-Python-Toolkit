@@ -1,9 +1,7 @@
-import ElectronAppManager from '../../../src/main/Managements/ElectronAppManager';
 import {
   ExtensionMainApi,
   MainExtensionUtils,
 } from '../../../src/main/Managements/Plugin/Extensions/ExtensionTypes_Main';
-import StorageManager from '../../../src/main/Managements/Storage/StorageManager';
 import {
   AI_VENV_STORE_KEYS,
   Associates_StorageID,
@@ -12,28 +10,23 @@ import {
   MaxRetry_StorageID,
 } from '../cross/CrossExtConstants';
 import {AssociateItem, IdPathType} from '../cross/CrossExtTypes';
+import {getDefaultEnvPath, setAppManager, setStorage} from './DataHolder';
 import ListenForChannels from './ListenForChannels';
 import {replacePythonPath} from './Utils/ExtMainUtils';
 import {findAIVenv} from './Utils/VirtualEnv/VenvUtils';
 
-export let storageManager: StorageManager | undefined = undefined;
-export let appManager: ElectronAppManager | undefined = undefined;
-export let defaultEnvPath = process.env.PATH;
-
-export const setDefaultEnvPath = (path: string) => {
-  defaultEnvPath = path;
-};
-
 export async function initialExtension(lynxApi: ExtensionMainApi, utils: MainExtensionUtils) {
   utils.getAppManager().then(app => {
-    appManager = app;
+    setAppManager(app);
   });
   utils.getStorageManager().then(storeManager => {
-    storageManager = storeManager;
+    setStorage(storeManager);
 
     if (!storeManager.getCustomData(MaxRetry_StorageID)) storeManager.setCustomData(MaxRetry_StorageID, 5);
 
     const defaultLynxPython = storeManager.getCustomData(DefaultLynxPython_StorageID);
+    const defaultEnvPath = getDefaultEnvPath();
+
     if (defaultLynxPython && defaultEnvPath) {
       process.env.PATH = replacePythonPath(defaultEnvPath, defaultLynxPython);
     }
@@ -55,5 +48,5 @@ export async function initialExtension(lynxApi: ExtensionMainApi, utils: MainExt
       storeManager.setCustomData(IsAutoDetectedVenvs_StorageID, true);
     }
   });
-  lynxApi.listenForChannels(() => ListenForChannels(storageManager, utils.nodePty));
+  lynxApi.listenForChannels(() => ListenForChannels(utils.nodePty));
 }

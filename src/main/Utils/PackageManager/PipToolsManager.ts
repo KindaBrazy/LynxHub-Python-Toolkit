@@ -4,7 +4,7 @@ import semver, {lt, satisfies} from 'semver';
 
 import {MaxRetry_StorageID} from '../../../cross/CrossExtConstants';
 import {SitePackages_Info} from '../../../cross/CrossExtTypes';
-import {storageManager} from '../../lynxExtension';
+import {getStorage} from '../../DataHolder';
 import {readRequirements} from '../Requirements/PythonRequirements';
 
 let maxRetries = 5;
@@ -47,7 +47,7 @@ export async function checkPackageUpdates(
   reqPath: string,
   packages: SitePackages_Info[],
 ): Promise<SitePackages_Info[]> {
-  const maxRetriesConfig = storageManager?.getCustomData(MaxRetry_StorageID);
+  const maxRetriesConfig = getStorage()?.getCustomData(MaxRetry_StorageID);
   if (maxRetriesConfig) maxRetries = maxRetriesConfig;
 
   const reqData = await readRequirements(reqPath);
