@@ -3,12 +3,15 @@ import {IpcRendererEvent} from 'electron';
 import {OnPreCommands} from '../../../src/cross/IpcChannelAndTypes';
 import {
   AssociateItem,
+  CachedUsage,
+  CustomTitle,
   DlProgressOfficial,
   IdPathType,
   PackageInfo,
   PkgDisplayType,
   pythonChannels,
   PythonInstallation,
+  pythonStorageChannels,
   PythonVersion,
   RequirementData,
   SitePackages_Info,
@@ -106,6 +109,21 @@ const pIpc = {
   onErrorGetVenvInfo: (result: (event: IpcRendererEvent, error: any) => void) =>
     ipc.on(pythonChannels.errorGetVenvInfo, result),
   offErrorGetVenvInfo: (): void => ipc.removeAllListeners(pythonChannels.errorGetVenvInfo),
+
+  storage: {
+    getAvailableConda: (): Promise<string[]> => ipc.invoke(pythonStorageChannels.getAvailableConda),
+    setAvailableConda: (value: string[]) => ipc.send(pythonStorageChannels.setAvailableConda, value),
+
+    getAvailableOfficial: (): Promise<PythonVersion[]> => ipc.invoke(pythonStorageChannels.getAvailableOfficial),
+    setAvailableOfficial: (value: PythonVersion[]) => ipc.send(pythonStorageChannels.setAvailableOfficial, value),
+
+    getCachedUsage: (): Promise<CachedUsage[]> => ipc.invoke(pythonStorageChannels.getCachedUsage),
+    setCachedUsage: (value: CachedUsage[]) => ipc.send(pythonStorageChannels.setCachedUsage, value),
+    clearCachedUsage: () => ipc.send(pythonStorageChannels.clearCachedUsage),
+
+    getVenvCustomTitle: (): Promise<CustomTitle[]> => ipc.invoke(pythonStorageChannels.getVenvCustomTitle),
+    setVenvCustomTitle: (value: CustomTitle[]) => ipc.send(pythonStorageChannels.setVenvCustomTitle, value),
+  },
 };
 
 export default pIpc;

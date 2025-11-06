@@ -128,7 +128,25 @@ export const pythonChannels = {
   errorGetVenvInfo: 'ptoolkit-errorGetVenvInfo',
 };
 
+export const pythonStorageChannels = {
+  getAvailableConda: 'psc:getAvailableConda',
+  setAvailableConda: 'psc:setAvailableConda',
+
+  getAvailableOfficial: 'psc:getAvailableOfficial',
+  setAvailableOfficial: 'psc:setAvailableOfficial',
+
+  getCachedUsage: 'psc:getCachedUsage',
+  setCachedUsage: 'psc:setCachedUsage',
+  clearCachedUsage: 'psc:clearCachedUsage',
+
+  getVenvCustomTitle: 'psc:getVenvCustomTitle',
+  setVenvCustomTitle: 'psc:setVenvCustomTitle',
+};
+
 export type PkgDisplayType = 'capitalize' | 'startCase' | 'default' | string;
+
+export type CachedUsage = {id: string; usage: number};
+export type CustomTitle = {title: string; path: string};
 
 export type PythonVenvSelectItem = {label: string; dir: string; type: 'python' | 'venv' | 'conda'; condaName?: string};
 export type AssociateItem = {id: string; dir: string; type: 'python' | 'venv' | 'conda'; condaName?: string};
