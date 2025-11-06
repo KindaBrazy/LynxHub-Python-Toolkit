@@ -5,7 +5,6 @@ import {useCallback, useEffect, useState} from 'react';
 
 import rendererIpc from '../../../../../../src/renderer/src/App/RendererIpc';
 import {OpenFolder_Icon} from '../../../../../../src/renderer/src/assets/icons/SvgIcons/SvgIcons';
-import {getDiskUsageID} from '../../../../cross/CrossExtConstants';
 import {PythonInstallation, PythonVenvs, VenvInfo} from '../../../../cross/CrossExtTypes';
 import {bytesToMegabytes} from '../../../../cross/CrossExtUtils';
 import pIpc from '../../../PIpc';
@@ -32,7 +31,7 @@ export default function Venv({visible, installedPythons, isLoadingPythons, show}
   const calcDiskUsage = useCallback((venv: VenvInfo) => {
     rendererIpc.file.calcFolderSize(venv.folder).then(value => {
       if (value) {
-        window.localStorage.setItem(getDiskUsageID(venv.folder), JSON.stringify(bytesToMegabytes(value)));
+        pIpc.storage.setCachedUsage(venv.folder, bytesToMegabytes(value));
         setDiskUsage(prevState => [
           ...prevState,
           {
@@ -75,18 +74,19 @@ export default function Venv({visible, installedPythons, isLoadingPythons, show}
         );
         for (const venv of resultVenvs) {
           if (cacheStorageUsage) {
-            const cachedUsage = window.localStorage.getItem(getDiskUsageID(venv.folder));
-            if (!cachedUsage) {
-              calcDiskUsage(venv);
-            } else {
-              setDiskUsage(prevState => [
-                ...prevState,
-                {
-                  path: venv.folder,
-                  value: JSON.parse(cachedUsage) as number,
-                },
-              ]);
-            }
+            pIpc.storage.getCachedUsage(venv.folder).then(cachedUsage => {
+              if (!cachedUsage) {
+                calcDiskUsage(venv);
+              } else {
+                setDiskUsage(prevState => [
+                  ...prevState,
+                  {
+                    path: venv.folder,
+                    value: cachedUsage,
+                  },
+                ]);
+              }
+            });
           } else {
             calcDiskUsage(venv);
           }
