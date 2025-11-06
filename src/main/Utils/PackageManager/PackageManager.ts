@@ -33,6 +33,7 @@ export async function getSitePackagesInfo(pythonExePath: string): Promise<SitePa
   });
 }
 
+// TODO: add MaxRetry_StorageID for this
 export async function getSitePackagesUpdates(packages: PackageInfo[]): Promise<SitePackages_Info[]> {
   try {
     const getLatest = packages.map(async pkg => {
@@ -74,9 +75,15 @@ export async function installPythonPackage(pythonExePath: string, commands: stri
   });
 }
 
-export async function updatePythonPackage(pythonExePath: string, packageName: string): Promise<string> {
+export async function updatePythonPackage(
+  pythonExePath: string,
+  packageName: string,
+  version?: string,
+): Promise<string> {
   return new Promise((resolve, reject) => {
-    const command = `"${pythonExePath}" -m pip install --upgrade "${packageName}"`;
+    const packageSpecifier = version ? `${packageName}==${version}` : packageName;
+
+    const command = `"${pythonExePath}" -m pip install --upgrade "${packageSpecifier}"`;
 
     exec(command, (error, stdout, stderr) => {
       if (error) {
