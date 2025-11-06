@@ -1,7 +1,7 @@
 import {ipcMain} from 'electron';
 
 import StorageManager from '../../../src/main/Managements/Storage/StorageManager';
-import {pythonStorageChannels} from '../cross/CrossExtTypes';
+import {CachedUsage, pythonStorageChannels} from '../cross/CrossExtTypes';
 
 const keys = {
   availableConda: 'availableConda',
@@ -32,6 +32,30 @@ export default function ListenForStorage(storageManager: StorageManager | undefi
   ipcMain.on(pythonStorageChannels.setAvailableOfficial, (_, data: string[]) => {
     if (storageManager) {
       storageManager.setCustomData(keys.availableOfficial, data);
+    }
+  });
+
+  ipcMain.handle(pythonStorageChannels.getCachedUsage, (_, id: string) => {
+    if (!storageManager) return 0;
+    const usageList = storageManager.getCustomData(keys.cachedUsage) as CachedUsage[] | undefined;
+
+    return usageList?.find(item => item.id === id)?.usage || 0;
+  });
+
+  ipcMain.on(pythonStorageChannels.setCachedUsage, (_, id: string, value: number) => {
+    if (storageManager) {
+      const usageList = storageManager.getCustomData(keys.cachedUsage) as CachedUsage[] | undefined;
+      if (usageList) {
+        const index = usageList.findIndex(item => item.id === id);
+        if (index !== undefined && index !== -1) {
+          usageList[index].usage = value;
+        } else {
+          usageList.push({id, usage: value});
+        }
+        storageManager.setCustomData(keys.cachedUsage, usageList);
+      } else {
+        storageManager.setCustomData(keys.cachedUsage, []);
+      }
     }
   });
 }
