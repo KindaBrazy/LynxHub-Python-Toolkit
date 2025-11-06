@@ -3,6 +3,7 @@ import {isEmpty} from 'lodash';
 import {useCallback, useEffect, useState} from 'react';
 import {useDispatch} from 'react-redux';
 
+import {extractGitUrl} from '../../../../../../src/cross/CrossUtils';
 import {useCardsState} from '../../../../../../src/renderer/src/App/Redux/Reducer/CardsReducer';
 import {Add_Icon} from '../../../../../../src/renderer/src/assets/icons/SvgIcons/SvgIcons';
 import {ModulesThatSupportPython} from '../../../../cross/CrossExtConstants';
@@ -29,16 +30,20 @@ export default function Venv_Associate({folder, type}: Props) {
   useEffect(() => {
     // Map card IDs to their titles
     const cardTitleMap = new Map(allCardsExt.map(card => [card.id, card.title]));
+    const cardAvatarMap = new Map(allCardsExt.map(card => [card.id, extractGitUrl(card.repoUrl).avatarUrl]));
 
     // Get installed cards that exist in the map and attach avatar/title
     const installedCardsWithTitles: Item[] = installedCards
       .filter(card => cardTitleMap.has(card.id))
       .map(card => {
-        const avatarUrl = window.localStorage.getItem(`${card.id}-card-dev-img`) || undefined;
+        const id = card.id;
+        const avatarUrl = cardAvatarMap.get(id);
+        const title = cardTitleMap.get(id) || '';
+
         return {
           avatarUrl,
-          title: cardTitleMap.get(card.id)!,
-          id: card.id,
+          title,
+          id,
         };
       });
 
@@ -55,11 +60,14 @@ export default function Venv_Associate({folder, type}: Props) {
     const activeAssociatesWithTitles = associates
       .filter(item => item.dir === folder && installedCards.some(card => card.id === item.id))
       .map(item => {
-        const avatarUrl = window.localStorage.getItem(`${item.id}-card-dev-img`) || undefined;
+        const id = item.id;
+        const avatarUrl = cardAvatarMap.get(id);
+        const title = cardTitleMap.get(id) || '';
+
         return {
           avatarUrl,
-          title: cardTitleMap.get(item.id)!,
-          id: item.id,
+          title,
+          id,
         };
       });
 
