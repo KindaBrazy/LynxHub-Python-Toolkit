@@ -39,7 +39,7 @@ export default function Body_TableItem({item, pythonPath, updated, removed, colu
   const update = useCallback(() => {
     setIsUpdating(true);
     pIpc
-      .updatePackage(pythonPath, item.name)
+      .updatePackage(pythonPath, item.name, item.updateVersion)
       .then(() => {
         updated(item.name, item.updateVersion!);
         message.success(`Package "${item.name}" updated successfully.`);
