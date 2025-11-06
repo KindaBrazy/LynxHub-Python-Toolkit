@@ -1,11 +1,11 @@
-import {Button, ButtonGroup, Card, Image} from '@heroui/react';
+import {Button} from '@heroui/react';
 import {useEffect, useMemo, useState} from 'react';
 import {useDispatch} from 'react-redux';
 
+import {ToolsCard} from '../../../../src/renderer/src/App/Components/Reusable/ToolsCard';
 import {tabsActions, useTabsState} from '../../../../src/renderer/src/App/Redux/Reducer/TabsReducer';
 import {AppDispatch} from '../../../../src/renderer/src/App/Redux/Store';
-import {Play_Icon, SettingsMinimal_Icon} from '../../../../src/renderer/src/assets/icons/SvgIcons/SvgIcons';
-import {useCacheImage} from '../Hooks';
+import {SettingsMinimal_Icon} from '../../../../src/renderer/src/assets/icons/SvgIcons/SvgIcons';
 import pIpc from '../PIpc';
 import {PythonToolkitActions} from '../reducer';
 import PythonToolkitModal from './Python/PythonToolkitModal';
@@ -26,8 +26,6 @@ export default function ToolsPage() {
 
   const [isOpen, setIsOpen] = useState(false);
   const [tabID, setTabID] = useState<string>('');
-
-  const iconSrc = useCacheImage('python_toolkit-icon', iconUrl);
 
   useEffect(() => {
     if (isOpen && tabID === activeTab) dispatch(tabsActions.setTabTitle({tabID, title}));
@@ -59,51 +57,17 @@ export default function ToolsPage() {
 
   return (
     <UIProvider>
-      <Card
-        className={
-          'w-[276px] h-[367px] relative group transform cursor-default border-1 border-foreground/10 ' +
-          'transition-all duration-300 hover:-translate-y-1 shadow-small hover:shadow-medium'
+      <ToolsCard
+        footer={
+          <Button variant="flat" color="primary" onPress={openSettings} isIconOnly>
+            <SettingsMinimal_Icon className="size-4" />
+          </Button>
         }
-        as={'div'}
-        isPressable>
-        {/* Background with gradient overlay */}
-        <div className={'absolute inset-0 rounded-2xl bg-white dark:bg-stone-900'} />
-
-        {/* Content container */}
-        <div className="relative h-full flex flex-col justify-between p-6">
-          {/* Icon section */}
-          <div className="mt-2 flex justify-center">
-            {iconSrc && <Image radius="none" src={iconSrc} className="size-20" />}
-          </div>
-
-          {/* Title and Description */}
-          <div className="text-center space-y-3">
-            <h3 className="text-2xl font-bold tracking-tight">{title}</h3>
-            <p className="text-foreground/70 text-sm leading-relaxed">{desc}</p>
-          </div>
-
-          {/* Play button */}
-          <ButtonGroup className="flex justify-center">
-            <Button radius="full" color="primary" onPress={openModal} fullWidth>
-              <Play_Icon className="size-4" />
-            </Button>
-            <Button radius="full" onPress={openSettings} isIconOnly>
-              <SettingsMinimal_Icon className="size-4" />
-            </Button>
-          </ButtonGroup>
-        </div>
-
-        {/* Subtle border glow */}
-        <div className="absolute inset-0 rounded-2xl border border-white/20 pointer-events-none" />
-
-        {/* Hover glow effect */}
-        <div
-          className={
-            'absolute inset-0 rounded-2xl bg-linear-to-br from-white/10 to-transparent opacity-0' +
-            ' group-hover:opacity-100 transition-opacity duration-300 pointer-events-none'
-          }
-        />
-      </Card>
+        title={title}
+        icon={iconUrl}
+        description={desc}
+        onPress={openModal}
+      />
       <PythonToolkitModal show={show} isOpen={isOpen} setIsOpen={setIsOpen} />
     </UIProvider>
   );
