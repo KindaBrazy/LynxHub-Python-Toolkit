@@ -39,7 +39,7 @@ export default function InstallerOfficial({refresh, installed, closeModal, isOpe
     setLoadingList(true);
 
     pIpc.storage.getAvailableOfficial().then(cachedList => {
-      if (!refresh && !isNil(cachedList)) {
+      if (!refresh && (!isNil(cachedList) || !isEmpty(cachedList))) {
         setVersions(cachedList.filter(item => !installed.includes(item.version)));
         setLoadingList(false);
       } else {
@@ -79,8 +79,8 @@ export default function InstallerOfficial({refresh, installed, closeModal, isOpe
   };
 
   useEffect(() => {
-    if (isOpen && isEmpty(versions)) fetchPythonList(false);
-  }, [isOpen, versions]);
+    if (isOpen) fetchPythonList(false);
+  }, [isOpen]);
 
   useEffect(() => {
     if (isEmpty(inputValue)) {

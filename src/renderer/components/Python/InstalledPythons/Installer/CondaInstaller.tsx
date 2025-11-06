@@ -94,7 +94,7 @@ export default function InstallerConda({refresh, installed, closeModal, isOpen, 
     pIpc.storage
       .getAvailableConda()
       .then(cachedList => {
-        if (!refresh && !isNil(cachedList)) {
+        if (!refresh && (!isNil(cachedList) || !isEmpty(cachedList))) {
           const cachedVersions = cachedList.filter(item => !installed.includes(item));
 
           if (isEmpty(cachedVersions)) {
@@ -114,8 +114,8 @@ export default function InstallerConda({refresh, installed, closeModal, isOpen, 
   };
 
   useEffect(() => {
-    if (isOpen && isEmpty(versions)) fetchPythonList(false);
-  }, [isOpen, versions]);
+    if (isOpen) fetchPythonList(false);
+  }, [isOpen]);
 
   const installPython = (version: string) => {
     setInstallingVersion(version);
