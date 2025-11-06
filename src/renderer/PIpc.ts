@@ -117,8 +117,10 @@ const pIpc = {
     getAvailableOfficial: (): Promise<PythonVersion[]> => ipc.invoke(pythonStorageChannels.getAvailableOfficial),
     setAvailableOfficial: (value: PythonVersion[]) => ipc.send(pythonStorageChannels.setAvailableOfficial, value),
 
-    getCachedUsage: (): Promise<CachedUsage[]> => ipc.invoke(pythonStorageChannels.getCachedUsage),
-    setCachedUsage: (value: CachedUsage[]) => ipc.send(pythonStorageChannels.setCachedUsage, value),
+    getCachedUsage: (type: 'python' | 'venv'): Promise<CachedUsage[]> =>
+      ipc.invoke(pythonStorageChannels.getCachedUsage, type),
+    setCachedUsage: (value: CachedUsage[], type: 'python' | 'venv') =>
+      ipc.send(pythonStorageChannels.setCachedUsage, value, type),
     clearCachedUsage: () => ipc.send(pythonStorageChannels.clearCachedUsage),
 
     getVenvCustomTitle: (): Promise<CustomTitle[]> => ipc.invoke(pythonStorageChannels.getVenvCustomTitle),

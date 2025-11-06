@@ -19,8 +19,6 @@ import {Circle_Icon, Refresh_Icon} from '../../../../../../../src/renderer/src/a
 import pIpc from '../../../../PIpc';
 import {Warn_Icon} from '../../../SvgIcons';
 
-const CACHE_KEY = 'available-conda-pythons-list';
-
 type Props = {
   isOpen: boolean;
   closeModal: () => void;
@@ -55,10 +53,6 @@ export default function InstallerConda({refresh, installed, closeModal, isOpen, 
   }, []);
 
   useEffect(() => {
-    if (isOpen && isEmpty(versions)) fetchPythonList(false);
-  }, [isOpen, versions]);
-
-  useEffect(() => {
     if (isEmpty(inputValue)) {
       setSearchVersions(versions);
     } else {
@@ -73,15 +67,15 @@ export default function InstallerConda({refresh, installed, closeModal, isOpen, 
       pIpc
         .getAvailableConda()
         .then((result: string[]) => {
-          console.log('result: ', result);
-          localStorage.setItem(CACHE_KEY, JSON.stringify(result));
+          pIpc.storage.setAvailableConda(result);
+
           const filteredVersions = result.filter(item => !installed.includes(item));
           setVersions(filteredVersions);
           setLoadingList(false);
           setErrorLoadingVersion(undefined);
         })
         .catch(e => {
-          console.log('error: ', e);
+          console.error('error getting fresh conda list: ', e);
           if (e.message && isString(e.message)) {
             setErrorLoadingVersion({title: 'Failed to fetch available Python versions', description: e.message});
           } else {
@@ -97,21 +91,31 @@ export default function InstallerConda({refresh, installed, closeModal, isOpen, 
 
     setLoadingList(true);
 
-    const cachedList = localStorage.getItem(CACHE_KEY);
+    pIpc.storage
+      .getAvailableConda()
+      .then(cachedList => {
+        if (!refresh && !isNil(cachedList)) {
+          const cachedVersions = cachedList.filter(item => !installed.includes(item));
 
-    if (!refresh && !isNil(cachedList)) {
-      const cachedVersions = (JSON.parse(cachedList) as string[]).filter(item => !installed.includes(item));
-
-      if (isEmpty(cachedVersions)) {
+          if (isEmpty(cachedVersions)) {
+            getFreshData();
+          } else {
+            setVersions(cachedVersions);
+            setLoadingList(false);
+          }
+        } else {
+          getFreshData();
+        }
+      })
+      .catch(e => {
+        console.error('Failed to get cached conda list', e);
         getFreshData();
-      } else {
-        setVersions(cachedVersions);
-        setLoadingList(false);
-      }
-    } else {
-      getFreshData();
-    }
+      });
   };
+
+  useEffect(() => {
+    if (isOpen && isEmpty(versions)) fetchPythonList(false);
+  }, [isOpen, versions]);
 
   const installPython = (version: string) => {
     setInstallingVersion(version);
