@@ -5,7 +5,6 @@ import {useDispatch} from 'react-redux';
 import LynxSwitch from '../../../../../src/renderer/src/App/Components/Reusable/LynxSwitch';
 import {lynxTopToast} from '../../../../../src/renderer/src/App/Utils/UtilHooks';
 import {BroomDuo_Icon} from '../../../../../src/renderer/src/assets/icons/SvgIcons/SvgIcons';
-import {FolderDiskUsage_StorageID} from '../../../cross/CrossExtConstants';
 import pIpc from '../../PIpc';
 import {PythonToolkitActions, usePythonToolkitState} from '../../reducer';
 
@@ -30,17 +29,8 @@ export default function Settings_CacheDirUsage() {
 
   const clearCache = () => {
     setClearing(true);
-    const prefix = FolderDiskUsage_StorageID;
 
-    const keysToRemove: string[] = [];
-    for (let i = 0; i < localStorage.length; i++) {
-      const key = localStorage.key(i);
-      if (key && key.startsWith(prefix)) {
-        keysToRemove.push(key);
-      }
-    }
-
-    keysToRemove.forEach(key => localStorage.removeItem(key));
+    pIpc.storage.clearCachedUsage();
 
     setTimeout(() => {
       setClearing(false);
