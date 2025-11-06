@@ -1,7 +1,7 @@
 import {ipcMain} from 'electron';
 
 import StorageManager from '../../../src/main/Managements/Storage/StorageManager';
-import {CachedUsage, pythonStorageChannels} from '../cross/CrossExtTypes';
+import {CachedUsage, CustomTitle, pythonStorageChannels} from '../cross/CrossExtTypes';
 
 const keys = {
   availableConda: 'availableConda',
@@ -56,6 +56,18 @@ export default function ListenForStorage(storageManager: StorageManager | undefi
       } else {
         storageManager.setCustomData(keys.cachedUsage, []);
       }
+    }
+  });
+
+  ipcMain.handle(pythonStorageChannels.getVenvCustomTitle, () => {
+    if (!storageManager) return [];
+
+    return storageManager.getCustomData(keys.venvCustomTitle) || [];
+  });
+
+  ipcMain.on(pythonStorageChannels.setVenvCustomTitle, (_, data: CustomTitle[]) => {
+    if (storageManager) {
+      storageManager.setCustomData(keys.venvCustomTitle, data);
     }
   });
 }
