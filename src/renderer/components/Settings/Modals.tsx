@@ -6,6 +6,7 @@ import {modalMotionProps} from '../../../../../src/renderer/src/App/Utils/Consta
 import {ContextType, PythonToolkitActions} from '../../reducer';
 import UIProvider from '../UIProvider';
 import CacheDirUsage from './CacheDirUsage';
+import Concurrent from './Concurrent';
 import PkgString from './PkgString';
 import Retry from './Retry';
 
@@ -41,6 +42,7 @@ export default function Modals({isOpen, context, show}: Props) {
               <ModalHeader>Python Toolkit Settings</ModalHeader>
               <ModalBody>
                 <Retry />
+                <Concurrent />
                 <Divider variant="dashed" className="my-4" />
                 <PkgString />
                 <Divider variant="dashed" className="my-4" />

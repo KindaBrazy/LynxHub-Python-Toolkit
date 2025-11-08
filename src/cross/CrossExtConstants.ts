@@ -44,6 +44,7 @@ export const AI_VENV_STORE_KEYS = 'ai_venvs';
 
 // main storage id's
 export const MaxRetry_StorageID = 'pythonToolkit_MaxRetry';
+export const MaxConcurrent_StorageID = 'pythonToolkit_MaxConcurrent';
 export const PkgDisplay_StorageID = 'pythonToolkit_MpkgDisplay';
 export const DefaultLynxPython_StorageID = 'pythonToolkit_DefaultLynxPython';
 export const CacheDirUsage_StorageID = 'pythonToolkit_CacheDirUsage';

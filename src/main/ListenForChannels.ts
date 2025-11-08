@@ -5,6 +5,7 @@ import {
   CacheDirUsage_StorageID,
   CardStartCommand_StorageID,
   DefaultLynxPython_StorageID,
+  MaxConcurrent_StorageID,
   MaxRetry_StorageID,
   PkgDisplay_StorageID,
 } from '../cross/CrossExtConstants';
@@ -136,6 +137,20 @@ export default function ListenForChannels(nodePty: any) {
   });
   ipcMain.on(pythonChannels.setMaxRetry, (_, value: number) => {
     storageManager?.setCustomData(MaxRetry_StorageID, value);
+  });
+
+  ipcMain.handle(pythonChannels.getMaxConcurrent, () => {
+    const result = storageManager?.getCustomData(MaxConcurrent_StorageID);
+
+    if (!result) {
+      storageManager?.setCustomData(MaxConcurrent_StorageID, 0);
+      return 0;
+    }
+
+    return result;
+  });
+  ipcMain.on(pythonChannels.setMaxConcurrent, (_, value: number) => {
+    storageManager?.setCustomData(MaxConcurrent_StorageID, value);
   });
 
   ipcMain.handle(pythonChannels.getPkgDisplay, () => {

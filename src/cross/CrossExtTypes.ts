@@ -116,6 +116,9 @@ export const pythonChannels = {
   getMaxRetry: 'get-max-retry',
   setMaxRetry: 'set-max-retry',
 
+  getMaxConcurrent: 'get-max-concurrent',
+  setMaxConcurrent: 'set-max-concurrent',
+
   getPkgDisplay: 'get-pkg-display',
   setPkgDisplay: 'set-pkg-display',
 
