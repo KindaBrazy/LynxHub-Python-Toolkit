@@ -118,7 +118,9 @@ async function findInCommonLocations(): Promise<string[]> {
     const pattern = basename(expandedPath);
 
     try {
+      if (!existsSync(basePath)) continue; // Avoid errors for non-existent base paths
       const files = await promises.readdir(basePath);
+
       for (const file of files) {
         if (matchPattern(file, pattern)) {
           const fullPath = join(basePath, file);
@@ -136,8 +138,9 @@ async function findInCommonLocations(): Promise<string[]> {
 
             if (shouldAdd) {
               expandedPaths.push(pythonExecutable);
-            } else {
-              // Check subdirectories (like envs/*)
+            }
+
+            try {
               const subFiles = await promises.readdir(fullPath);
               for (const subFile of subFiles) {
                 const subPath = join(fullPath, subFile);
@@ -151,13 +154,15 @@ async function findInCommonLocations(): Promise<string[]> {
                       ? await fileExists(subPythonExecutable)
                       : (await fileExists(subPythonExecutable)) &&
                         (await isExecutable(subPythonExecutable)) &&
-                        (await isPythonPathValid(pythonExecutable));
+                        (await isPythonPathValid(subPythonExecutable));
 
                   if (subShouldAdd) {
                     expandedPaths.push(subPythonExecutable);
                   }
                 }
               }
+            } catch (subError) {
+              // Ignore if we can't read a subdirectory (e.g., envs doesn't exist)
             }
           } else if (os === 'linux') {
             // Check if file is executable
