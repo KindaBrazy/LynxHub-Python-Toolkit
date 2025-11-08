@@ -367,21 +367,15 @@ export default async function detectPythonInstallations(refresh: boolean): Promi
   const savedInstallations: string[] | undefined = storageManager?.getCustomData(STORAGE_INSTALLED_KEY);
   const paths = new Set<string>();
 
-  console.log('savedInstallations', savedInstallations);
-
   if (!refresh && !isNil(savedInstallations) && !isEmpty(savedInstallations)) {
-    console.log('not refresh');
     savedInstallations.forEach(path => paths.add(path));
   } else {
-    console.log('refresh');
     const pathSources = await Promise.all([findPythonInPath(), findInCommonLocations()]);
 
     pathSources.flat().forEach(path => paths.add(path));
 
     storageManager?.setCustomData(STORAGE_INSTALLED_KEY, Array.from(paths));
   }
-
-  console.log('paths', paths);
 
   const installationPromises = Array.from(paths).map(pythonPath => analyzePythonPath(pythonPath));
 
