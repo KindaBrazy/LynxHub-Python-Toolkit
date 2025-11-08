@@ -12,6 +12,7 @@ import {
   AssociateItem,
   IdPathType,
   PackageInfo,
+  PackageUpdate,
   PkgDisplayType,
   pythonChannels,
   PythonVersion,
@@ -98,7 +99,7 @@ export default function ListenForChannels(nodePty: any) {
   ipcMain.handle(pythonChannels.updatePackage, (_, pythonPath: string, packageName: string, version?: string) =>
     updatePythonPackage(pythonPath, packageName, version),
   );
-  ipcMain.handle(pythonChannels.updateAllPackages, (_, pythonPath: string, packages: string[]) =>
+  ipcMain.handle(pythonChannels.updateAllPackages, (_, pythonPath: string, packages: PackageUpdate[]) =>
     updateAllPythonPackages(pythonPath, packages),
   );
 

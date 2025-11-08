@@ -1,10 +1,10 @@
 import {ButtonGroup, Input, ModalHeader, Selection} from '@heroui/react';
 import {message} from 'antd';
-import {isEmpty} from 'lodash';
+import {compact, isEmpty} from 'lodash';
 import {Dispatch, ReactNode, SetStateAction, useState} from 'react';
 
 import {Circle_Icon} from '../../../../../../../src/renderer/src/assets/icons/SvgIcons/SvgIcons';
-import {FilterKeys, PackageInfo, SitePackages_Info} from '../../../../../cross/CrossExtTypes';
+import {FilterKeys, PackageInfo, PackageUpdate, SitePackages_Info} from '../../../../../cross/CrossExtTypes';
 import pIpc from '../../../../PIpc';
 import RequirementsBtn from '../Requirements/RequirementsModalButton';
 import Header_FilterButton from './Header_FilterButton';
@@ -62,12 +62,22 @@ export default function PackageManagerHeader({
 
   const update = () => {
     setIsUpdating(true);
-    let updateList: string[];
+    let updateList: PackageUpdate[];
     if (selectedKeys === 'all') {
       updateList =
-        selectedFilter === 'all' ? packagesUpdate.map(item => item.name) : visibleItems.map(item => item.name);
+        selectedFilter === 'all'
+          ? packagesUpdate.map(item => ({name: item.name, targetVersion: item.version}))
+          : visibleItems.map(item => ({name: item.name, targetVersion: item.updateVersion}));
     } else {
-      updateList = Array.from(selectedKeys) as string[];
+      updateList = compact(
+        packagesUpdate.map(item => {
+          const selections = Array.from(selectedKeys) as string[];
+
+          if (selections.includes(item.name)) return {name: item.name, targetVersion: item.version};
+
+          return null;
+        }),
+      );
     }
     pIpc
       .updateAllPackages(pythonPath, updateList)

@@ -49,6 +49,8 @@ export type PackageInfo = SitePackages_Info & {
   updateVersion?: string;
 };
 
+export type PackageUpdate = {name: string; targetVersion?: string};
+
 export type IdPathType = {id: string; path: string};
 
 export type RequirementData = {

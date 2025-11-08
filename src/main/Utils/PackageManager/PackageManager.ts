@@ -3,7 +3,7 @@ import {exec} from 'node:child_process';
 import {compact} from 'lodash';
 import semver, {compare} from 'semver';
 
-import {PackageInfo, SitePackages_Info} from '../../../cross/CrossExtTypes';
+import {PackageInfo, PackageUpdate, SitePackages_Info} from '../../../cross/CrossExtTypes';
 import {getLatestPipPackageVersion} from './PipToolsManager';
 
 export async function getSitePackagesInfo(pythonExePath: string): Promise<SitePackages_Info[]> {
@@ -96,18 +96,29 @@ export async function updatePythonPackage(
   });
 }
 
-export async function updateAllPythonPackages(pythonExePath: string, packages: string[]): Promise<string> {
+export async function updateAllPythonPackages(pythonExePath: string, packages: PackageUpdate[]): Promise<string> {
   return new Promise((resolve, reject) => {
     if (packages.length === 0) {
-      resolve('All packages are up to date.');
+      resolve('No packages selected for update.');
       return;
     }
 
-    const updateCommand = `"${pythonExePath}" -m pip install --upgrade ${packages.join(' ')}`;
+    const packageSpecs = packages
+      .map(pkg => (pkg.targetVersion ? `${pkg.name}==${pkg.targetVersion}` : pkg.name))
+      .join(' ');
+
+    const updateCommand = `"${pythonExePath}" -m pip install --upgrade ${packageSpecs}`;
+    console.log(`Executing: ${updateCommand}`); // Good for debugging
 
     exec(updateCommand, (updateError, updateStdout, updateStderr) => {
       if (updateError) {
-        reject(`Error updating packages: ${updateError.message}\nstderr: ${updateStderr}`);
+        // Provide a more detailed error message
+        const errorMessage = `Error updating packages.
+        Command: ${updateCommand}
+        Error: ${updateError.message}
+        Stderr: ${updateStderr}`;
+
+        reject(new Error(errorMessage));
         return;
       }
 

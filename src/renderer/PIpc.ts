@@ -7,6 +7,7 @@ import {
   DlProgressOfficial,
   IdPathType,
   PackageInfo,
+  PackageUpdate,
   PkgDisplayType,
   pythonChannels,
   PythonInstallation,
@@ -34,7 +35,7 @@ const pIpc = {
     ipc.invoke(pythonChannels.getPackagesInfo, pythonPath),
   getPackagesUpdateInfo: (packages: PackageInfo[]): Promise<SitePackages_Info[]> =>
     ipc.invoke(pythonChannels.getPackagesUpdateInfo, packages),
-  updateAllPackages: (pythonPath: string, packages: string[]): Promise<string> =>
+  updateAllPackages: (pythonPath: string, packages: PackageUpdate[]): Promise<string> =>
     ipc.invoke(pythonChannels.updateAllPackages, pythonPath, packages),
   installPackage: (pythonPath: string, command: string): Promise<string> =>
     ipc.invoke(pythonChannels.installPackage, pythonPath, command),
