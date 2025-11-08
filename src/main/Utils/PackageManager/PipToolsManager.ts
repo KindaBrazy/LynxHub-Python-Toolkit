@@ -2,14 +2,57 @@ import axios from 'axios';
 import {compact} from 'lodash';
 import semver, {compare, lt, satisfies} from 'semver';
 
-import {MaxRetry_StorageID} from '../../../cross/CrossExtConstants';
+import {MaxConcurrent_StorageID, MaxRetry_StorageID} from '../../../cross/CrossExtConstants';
 import {PackageInfo, pythonChannels, SitePackages_Info} from '../../../cross/CrossExtTypes';
 import {getAppManager, getStorage} from '../../DataHolder';
 import {readRequirements} from '../Requirements/PythonRequirements';
 
 let currentUpdateController: AbortController | null = null;
 
-// Cancels any ongoing package update check
+/**
+ * Executes an array of promise-returning functions with a specified concurrency limit.
+ * @param tasks An array of functions, where each function returns a promise.
+ * @param limit The maximum number of promises to execute concurrently. If 0 or invalid, no limit is applied.
+ * @param signal An AbortSignal to cancel ongoing operations.
+ * @returns A promise that resolves with an array of results in the same order as the input tasks.
+ */
+async function runWithConcurrencyLimit<T>(
+  tasks: (() => Promise<T>)[],
+  limit: number,
+  signal?: AbortSignal,
+): Promise<T[]> {
+  if (!limit || limit <= 0) {
+    const promises = tasks.map(task => task());
+    return Promise.all(promises);
+  }
+
+  const results: T[] = new Array(tasks.length);
+
+  const taskQueue = tasks.map((task, index) => ({task, index}));
+
+  const workers = Array(limit)
+    .fill(null)
+    .map(async () => {
+      while (taskQueue.length > 0) {
+        if (signal?.aborted) {
+          return;
+        }
+
+        const nextTask = taskQueue.shift();
+        if (nextTask) {
+          const {task, index} = nextTask;
+
+          const result = await task();
+          results[index] = result;
+        }
+      }
+    });
+
+  await Promise.all(workers);
+
+  return results;
+}
+
 export function cancelPackagesUpdateCheck() {
   if (currentUpdateController) {
     console.log('Cancelling ongoing package update check...');
@@ -82,77 +125,83 @@ export async function getPackagesUpdateByReq(
 
   try {
     const maxRetriesConfig = getStorage()?.getCustomData(MaxRetry_StorageID) as number | undefined;
+    const maxConcurrentConfig = getStorage()?.getCustomData(MaxConcurrent_StorageID) as number | undefined;
 
     const reqData = await readRequirements(reqPath);
 
-    const result = reqData.map(async req => {
-      if (signal.aborted) return null;
+    const tasks = reqData.map(req => {
+      return async (): Promise<SitePackages_Info | null> => {
+        if (signal.aborted) return null;
 
-      const targetInPackage = packages.find(
-        item => item.name.toLowerCase().replaceAll('_', '-') === req.name.toLowerCase().replaceAll('_', '-'),
-      );
+        const targetInPackage = packages.find(
+          item => item.name.toLowerCase().replaceAll('_', '-') === req.name.toLowerCase().replaceAll('_', '-'),
+        );
 
-      const latestVersion = await getLatestPipPackageVersion(req.name, maxRetriesConfig, signal);
-      const reqVersion = targetInPackage?.version;
-      const currentVersion = semver.coerce(reqVersion)?.version;
+        const latestVersion = await getLatestPipPackageVersion(req.name, maxRetriesConfig, signal);
+        const reqVersion = targetInPackage?.version;
+        const currentVersion = semver.coerce(reqVersion)?.version;
 
-      if (!latestVersion || !packages || !currentVersion) return null;
+        if (!latestVersion || !packages || !currentVersion) return null;
 
-      let canUpdate: boolean = false;
-      let targetVersion: string = currentVersion || '';
+        let canUpdate: boolean = false;
+        let targetVersion: string = currentVersion || '';
 
-      switch (req.versionOperator) {
-        case '>=':
-        case '>':
-        case '!=':
-          if (!req.version) break;
+        switch (req.versionOperator) {
+          case '>=':
+          case '>':
+          case '!=':
+            if (!req.version) break;
 
-          canUpdate = satisfies(latestVersion, `${req.versionOperator}${req.version}`);
-          if (canUpdate) targetVersion = latestVersion;
+            canUpdate = satisfies(latestVersion, `${req.versionOperator}${req.version}`);
+            if (canUpdate) targetVersion = latestVersion;
 
-          break;
-        case '<':
-        case '<=': {
-          if (!req.version) break;
+            break;
+          case '<':
+          case '<=': {
+            if (!req.version) break;
 
-          canUpdate = lt(currentVersion, req.version);
-          if (canUpdate) targetVersion = req.version;
+            canUpdate = lt(currentVersion, req.version);
+            if (canUpdate) targetVersion = req.version;
 
-          break;
+            break;
+          }
+          case '==': {
+            if (!req.version) break;
+
+            canUpdate = currentVersion !== req.version;
+            if (canUpdate) targetVersion = req.version;
+
+            break;
+          }
+          case '~=': {
+            if (!req.version) break;
+            const latestParts = latestVersion.split('.');
+            const reqParts = req.version.split('.');
+            canUpdate = latestParts[0] === reqParts[0] && satisfies(latestVersion, `>${req.version}`);
+            targetVersion = latestVersion;
+            break;
+          }
+          default:
+            // console.warn(`Unsupported operator: ${req.versionOperator}`);
+            canUpdate = true;
+            targetVersion = latestVersion;
         }
-        case '==': {
-          if (!req.version) break;
 
-          canUpdate = currentVersion !== req.version;
-          if (canUpdate) targetVersion = req.version;
+        if (canUpdate && targetVersion !== currentVersion)
+          return {name: targetInPackage?.name || req.name, version: targetVersion};
 
-          break;
-        }
-        case '~=': {
-          if (!req.version) break;
-          const latestParts = latestVersion.split('.');
-          const reqParts = req.version.split('.');
-          canUpdate = latestParts[0] === reqParts[0] && satisfies(latestVersion, `>${req.version}`);
-          targetVersion = latestVersion;
-          break;
-        }
-        default:
-          // console.warn(`Unsupported operator: ${req.versionOperator}`);
-          canUpdate = true;
-          targetVersion = latestVersion;
-      }
-
-      if (canUpdate && targetVersion !== currentVersion)
-        return {name: targetInPackage?.name || req.name, version: targetVersion};
-
-      return null;
+        return null;
+      };
     });
 
-    return compact(await Promise.all(result));
+    const results = await runWithConcurrencyLimit(tasks, maxConcurrentConfig || 0, signal);
+
+    return compact(results);
   } finally {
     currentUpdateController = null;
   }
 }
+
 export async function getPackagesUpdate(packages: PackageInfo[]): Promise<SitePackages_Info[]> {
   cancelPackagesUpdateCheck();
   currentUpdateController = new AbortController();
@@ -160,23 +209,28 @@ export async function getPackagesUpdate(packages: PackageInfo[]): Promise<SitePa
 
   try {
     const maxRetriesConfig = getStorage()?.getCustomData(MaxRetry_StorageID) as number | undefined;
+    const maxConcurrentConfig = getStorage()?.getCustomData(MaxConcurrent_StorageID) as number | undefined;
 
-    const getLatest = packages.map(async pkg => {
-      try {
-        if (signal.aborted) return null;
+    const tasks = packages.map(pkg => {
+      return async (): Promise<SitePackages_Info | null> => {
+        try {
+          if (signal.aborted) return null;
 
-        const latestVersion = await getLatestPipPackageVersion(pkg.name, maxRetriesConfig, signal);
-        const currentVersion = semver.coerce(pkg.version)?.version;
+          const latestVersion = await getLatestPipPackageVersion(pkg.name, maxRetriesConfig, signal);
+          const currentVersion = semver.coerce(pkg.version)?.version;
 
-        if (!latestVersion || !currentVersion || compare(currentVersion, latestVersion) !== -1) return null;
+          if (!latestVersion || !currentVersion || compare(currentVersion, latestVersion) !== -1) return null;
 
-        return {name: pkg.name, version: latestVersion};
-      } catch (e) {
-        return null;
-      }
+          return {name: pkg.name, version: latestVersion};
+        } catch (e) {
+          return null;
+        }
+      };
     });
 
-    return compact(await Promise.all(getLatest));
+    const results = await runWithConcurrencyLimit(tasks, maxConcurrentConfig || 0, signal);
+
+    return compact(results);
   } catch (e) {
     console.error(e);
     return [];
