@@ -1,4 +1,4 @@
-import {ButtonGroup, Input, ModalHeader, Selection} from '@heroui/react';
+import {ButtonGroup, Chip, Input, ModalHeader, Selection} from '@heroui/react';
 import {message} from 'antd';
 import {compact, isEmpty} from 'lodash';
 import {Dispatch, ReactNode, SetStateAction, useState} from 'react';
@@ -100,7 +100,10 @@ export default function PackageManagerHeader({
         {isValidPython ? (
           <>
             <span>
-              {title} ({packages.length})
+              {title}{' '}
+              <Chip size="sm" variant="flat">
+                {packages.length}
+              </Chip>
             </span>
             <Header_FilterButton setSelectedFilter={setSelectedFilter} updateAvailable={!isEmpty(packagesUpdate)} />
           </>
