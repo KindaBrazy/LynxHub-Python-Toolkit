@@ -1,10 +1,12 @@
-import {ButtonGroup, Chip, Input, ModalHeader, Progress, Selection} from '@heroui/react';
+import {Avatar, ButtonGroup, Chip, Input, ModalHeader, Progress, Selection} from '@heroui/react';
 import {message} from 'antd';
 import {compact, isEmpty} from 'lodash';
 import {Dispatch, ReactNode, SetStateAction, useEffect, useState} from 'react';
 
+import {extractGitUrl} from '../../../../../../../src/cross/CrossUtils';
 import {Circle_Icon} from '../../../../../../../src/renderer/src/assets/icons/SvgIcons/SvgIcons';
 import {FilterKeys, PackageInfo, PackageUpdate, SitePackages_Info} from '../../../../../cross/CrossExtTypes';
+import {allCardsExt} from '../../../../DataHolder';
 import pIpc from '../../../../PIpc';
 import RequirementsBtn from '../Requirements/RequirementsModalButton';
 import Header_FilterButton from './Header_FilterButton';
@@ -61,8 +63,16 @@ export default function PackageManagerHeader({
   const [isReqAvailable, setIsReqAvailable] = useState<boolean>(false);
   const [reqPackageCount, setReqPackageCount] = useState<number>(0);
   const [progressValue, setProgressValue] = useState<number>(0);
-
+  const [avatarUrl, setAvatarUrl] = useState<string | undefined>(undefined);
   const [pythonVersion, setPythonVersion] = useState<string>('');
+
+  useEffect(() => {
+    const url = allCardsExt.find(item => item.id === id)?.repoUrl;
+    if (url) {
+      const avatar = extractGitUrl(url).avatarUrl;
+      setAvatarUrl(avatar);
+    }
+  }, []);
 
   useEffect(() => {
     if (pythonPath) {
@@ -124,6 +134,7 @@ export default function PackageManagerHeader({
         {isValidPython ? (
           <>
             <div className="flex flex-row items-center gap-x-2">
+              {avatarUrl && <Avatar title={title} src={avatarUrl} />}
               <span>{title}</span>
               {pythonVersion && (
                 <Chip size="sm" variant="flat" color="primary">
