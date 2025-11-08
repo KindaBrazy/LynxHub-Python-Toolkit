@@ -26,6 +26,8 @@ const pIpc = {
   removeSavedPython: (pPath: string) => ipc.send(pythonChannels.removeSavedPython, pPath),
   addSavedPython: (pPath: string) => ipc.send(pythonChannels.addSavedPython, pPath),
 
+  locatePython: (pPath: string): Promise<PythonInstallation | null> => ipc.invoke(pythonChannels.locatePython, pPath),
+
   changePackageVersion: (pythonPath: string, packageName: string, currentVersion: string, targetVersion: string) =>
     ipc.invoke(pythonChannels.changePythonVersion, pythonPath, packageName, currentVersion, targetVersion),
 

@@ -68,6 +68,8 @@ export const pythonChannels = {
   removeSavedPython: 'remove-saved-python',
   addSavedPython: 'add-saved-python',
 
+  locatePython: 'ptoolkit-locate-python',
+
   changePythonVersion: 'change-python-version',
 
   getAvailableConda: 'get-available-conda-pythons',

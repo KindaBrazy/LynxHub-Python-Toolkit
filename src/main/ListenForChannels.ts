@@ -31,7 +31,7 @@ import {
 } from './Utils/AssociateManager';
 import {getAvailablePythonVersions} from './Utils/Available';
 import {setDefaultPython} from './Utils/DefaultPython';
-import detectPythonInstallations, {addSavedPython, removeSavedPython} from './Utils/Detector';
+import detectPythonInstallations, {addSavedPython, locatePythonInstallation, removeSavedPython} from './Utils/Detector';
 import {replacePythonPath} from './Utils/ExtMainUtils';
 import {createCondaEnv, isCondaInstalled, listAvailablePythons} from './Utils/Installer/Installer_Conda';
 import downloadPython from './Utils/Installer/Installer_Official';
@@ -65,6 +65,8 @@ export default function ListenForChannels(nodePty: any) {
 
   ipcMain.on(pythonChannels.removeSavedPython, (_, pPath: string) => removeSavedPython(pPath));
   ipcMain.on(pythonChannels.addSavedPython, (_, pPath: string) => addSavedPython(pPath));
+
+  ipcMain.handle(pythonChannels.locatePython, (_, pPath: string) => locatePythonInstallation(pPath));
 
   ipcMain.handle(
     pythonChannels.changePythonVersion,

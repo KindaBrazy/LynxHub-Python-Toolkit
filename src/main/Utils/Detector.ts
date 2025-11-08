@@ -68,11 +68,37 @@ async function isExecutable(filePath: string): Promise<boolean> {
 }
 
 async function isPythonPathValid(pythonPath: string): Promise<boolean> {
+  // 1. Basic Sanity Check: Does the file even exist?
+  if (!existsSync(pythonPath)) {
+    return false;
+  }
+
+  // 2. Plausibility Check: Does the filename look like a Python executable?
+  const fileName = basename(pythonPath).toLowerCase();
+  const isWindows = platform() === 'win32';
+
+  if (isWindows) {
+    if (fileName !== 'python.exe') {
+      return false; // On Windows, we strictly expect 'python.exe'
+    }
+  } else {
+    // On Linux/macOS, it could be 'python', 'python3', 'python3.10', etc.
+    if (!fileName.startsWith('python')) {
+      return false;
+    }
+    // Also check if it's executable on non-Windows systems
+    if (!(await isExecutable(pythonPath))) {
+      return false;
+    }
+  }
+
+  // 3. Final Confirmation: Only now, after passing the checks, do we execute it.
   return new Promise(resolve => {
-    exec(`${pythonPath} --version`, (error, stdout, stderr) => {
+    exec(`"${pythonPath}" --version`, (error, stdout, stderr) => {
       if (error) {
         resolve(false);
       } else {
+        // Check both stdout and stderr for the word "Python"
         if (stdout.includes('Python') || stderr.includes('Python')) {
           resolve(true);
         } else {
@@ -273,72 +299,91 @@ function removeDuplicateInstallations(installations: PythonInstallation[]): Pyth
   return uniqueInstallations;
 }
 
+async function analyzePythonPath(pythonPath: string): Promise<PythonInstallation | null> {
+  try {
+    const isValid = await isPythonPathValid(pythonPath);
+    console.log('is valid: ', pythonPath, isValid);
+    if (!isValid) return null;
+
+    const [
+      version,
+      isDefault,
+      installationType,
+      condaName,
+      packages,
+      architecture,
+      pipPath,
+      venvPaths,
+      sitePackagesPath,
+    ] = await Promise.all([
+      parseVersion(pythonPath),
+      isDefaultPython(pythonPath),
+      detectInstallationType(pythonPath),
+      getCondaEnvName(pythonPath),
+      getSitePackagesCount(pythonPath),
+      detectArchitecture(pythonPath),
+      getPipPath(pythonPath),
+      getVenvPaths(pythonPath),
+      getSitePackagesPath(pythonPath),
+    ]);
+
+    const installFolder = dirname(pythonPath);
+    const isLynxHubDefault = process.env.PATH ? isFirstPythonPath(process.env.PATH, installFolder) : false;
+
+    return {
+      version: `${version.major}.${version.minor}.${version.patch}`,
+      packages,
+      installationType,
+      condaName,
+      architecture,
+      installPath: pythonPath,
+      installFolder,
+      pipPath,
+      venvPaths,
+      sitePackagesPath,
+      isDefault,
+      isLynxHubDefault,
+    };
+  } catch (error) {
+    console.error(`Error analyzing Python installation at ${pythonPath}:`, error);
+    return null;
+  }
+}
+
+/**
+ * Analyzes a given path to determine if it's a valid Python installation and adds it to storage if so.
+ * @returns A PythonInstallation object if the path is valid, otherwise null.
+ */
+export async function locatePythonInstallation(pythonPath: string): Promise<PythonInstallation | null> {
+  const installation = await analyzePythonPath(pythonPath);
+  if (installation) {
+    addSavedPython(installation.installPath);
+  }
+  return installation;
+}
+
 export default async function detectPythonInstallations(refresh: boolean): Promise<PythonInstallation[]> {
   const storageManager = getStorage();
   const savedInstallations: string[] | undefined = storageManager?.getCustomData(STORAGE_INSTALLED_KEY);
   const paths = new Set<string>();
 
+  console.log('savedInstallations', savedInstallations);
+
   if (!refresh && !isNil(savedInstallations) && !isEmpty(savedInstallations)) {
+    console.log('not refresh');
     savedInstallations.forEach(path => paths.add(path));
   } else {
-    const pathSources = await Promise.all([await findPythonInPath(), await findInCommonLocations()]);
+    console.log('refresh');
+    const pathSources = await Promise.all([findPythonInPath(), findInCommonLocations()]);
 
     pathSources.flat().forEach(path => paths.add(path));
 
     storageManager?.setCustomData(STORAGE_INSTALLED_KEY, Array.from(paths));
   }
 
-  const installationPromises = Array.from(paths).map(async pythonPath => {
-    try {
-      const isValid = await isPythonPathValid(pythonPath);
-      if (!isValid) return null;
+  console.log('paths', paths);
 
-      const [
-        version,
-        isDefault,
-        installationType,
-        condaName,
-        packages,
-        architecture,
-        pipPath,
-        venvPaths,
-        sitePackagesPath,
-      ] = await Promise.all([
-        (async () => await parseVersion(pythonPath))(),
-        (async () => await isDefaultPython(pythonPath))(),
-        (async () => await detectInstallationType(pythonPath))(),
-        (async () => await getCondaEnvName(pythonPath))(),
-        (async () => await getSitePackagesCount(pythonPath))(),
-        (async () => await detectArchitecture(pythonPath))(),
-        (async () => await getPipPath(pythonPath))(),
-        (async () => await getVenvPaths(pythonPath))(),
-        (async () => await getSitePackagesPath(pythonPath))(),
-      ]);
-
-      const installFolder = dirname(pythonPath);
-      const isLynxHubDefault = process.env.PATH ? isFirstPythonPath(process.env.PATH, installFolder) : false;
-
-      const installation: PythonInstallation = {
-        version: `${version.major}.${version.minor}.${version.patch}`,
-        packages,
-        installationType,
-        condaName,
-        architecture,
-        installPath: pythonPath,
-        installFolder,
-        pipPath,
-        venvPaths,
-        sitePackagesPath,
-        isDefault,
-        isLynxHubDefault,
-      };
-
-      return installation;
-    } catch (error) {
-      console.error(`Error analyzing Python installation at ${pythonPath}:`, error);
-      return null;
-    }
-  });
+  const installationPromises = Array.from(paths).map(pythonPath => analyzePythonPath(pythonPath));
 
   return removeDuplicateInstallations(compact(await Promise.all(installationPromises)));
 }

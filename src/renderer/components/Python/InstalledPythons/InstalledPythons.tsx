@@ -1,12 +1,17 @@
 import {Button, Spinner} from '@heroui/react';
-import {Empty} from 'antd';
+import {Empty, message} from 'antd';
 import {cloneDeep, isEmpty} from 'lodash';
 import {Dispatch, SetStateAction, useCallback, useEffect, useState} from 'react';
 
 import rendererIpc from '../../../../../../src/renderer/src/App/RendererIpc';
-import {Add_Icon, Refresh_Icon} from '../../../../../../src/renderer/src/assets/icons/SvgIcons/SvgIcons';
+import {
+  Add_Icon,
+  FolderDuo_Icon,
+  RefreshDuo_Icon,
+} from '../../../../../../src/renderer/src/assets/icons/SvgIcons/SvgIcons';
 import {PythonInstallation} from '../../../../cross/CrossExtTypes';
 import {bytesToMegabytes} from '../../../../cross/CrossExtUtils';
+import {rIpc} from '../../../DataHolder';
 import pIpc from '../../../PIpc';
 import {usePythonToolkitState} from '../../../reducer';
 import InstalledCard from './InstalledCard';
@@ -28,6 +33,8 @@ export default function InstalledPythons({
   isLoadingPythons,
   show,
 }: Props) {
+  const [isLocating, setIsLocating] = useState<boolean>(false);
+
   const cacheStorageUsage = usePythonToolkitState('cacheStorageUsage');
   const [diskUsage, setDiskUsage] = useState<{path: string; value: number | undefined}[]>([]);
   const [maxDiskValue, setMaxDiskValue] = useState<number>(0);
@@ -66,6 +73,7 @@ export default function InstalledPythons({
   const getInstalledPythons = (refresh: boolean) => {
     setIsLoadingPythons(true);
     pIpc.getInstalledPythons(refresh).then((result: PythonInstallation[]) => {
+      console.log(result);
       setInstalledPythons(result);
       setIsLoadingPythons(false);
 
@@ -120,6 +128,41 @@ export default function InstalledPythons({
     );
   };
 
+  const locateVenv = () => {
+    setIsLocating(true);
+    rIpc.file
+      .openDlg({
+        properties: ['openFile'],
+        filters: [{name: 'Executable Python', extensions: [window.osPlatform === 'win32' ? 'exe' : '*']}],
+      })
+      .then(pPath => {
+        if (pPath) {
+          pIpc
+            .locatePython(pPath)
+            .then(installation => {
+              if (installation) {
+                message.success('Selected Python validated successfully.');
+                getInstalledPythons(false);
+              } else {
+                message.error('Failed to validate selected python.');
+              }
+              setIsLocating(false);
+            })
+            .catch(e => {
+              console.warn(e);
+              message.error('Failed to validate selected python.');
+              setIsLocating(false);
+            });
+        } else {
+          setIsLocating(false);
+        }
+      })
+      .catch(e => {
+        console.warn(e);
+        setIsLocating(false);
+      });
+  };
+
   if (!visible) return null;
 
   return (
@@ -143,7 +186,14 @@ export default function InstalledPythons({
           <Button variant="solid" onPress={openInstallModal} startContent={<Add_Icon />}>
             Install Version
           </Button>
-          <Button variant="flat" startContent={<Refresh_Icon />} onPress={() => getInstalledPythons(true)}>
+          <Button
+            variant="flat"
+            onPress={locateVenv}
+            isLoading={isLocating}
+            startContent={!isLocating && <FolderDuo_Icon />}>
+            {!isLocating && 'Locate'}
+          </Button>
+          <Button variant="flat" startContent={<RefreshDuo_Icon />} onPress={() => getInstalledPythons(true)}>
             Refresh List
           </Button>
         </div>
