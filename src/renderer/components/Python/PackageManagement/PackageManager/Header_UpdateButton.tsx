@@ -1,4 +1,13 @@
-import {Button, ButtonGroup, Dropdown, DropdownItem, DropdownMenu, DropdownTrigger, Selection} from '@heroui/react';
+import {
+  Button,
+  ButtonGroup,
+  Dropdown,
+  DropdownItem,
+  DropdownMenu,
+  DropdownTrigger,
+  Progress,
+  Selection,
+} from '@heroui/react';
 import {isEmpty} from 'lodash';
 import {useEffect, useMemo, useState} from 'react';
 
@@ -78,6 +87,21 @@ export default function Header_UpdateButton({
     }
   };
 
+  const progressPercentage = useMemo(() => {
+    let percentage = 0;
+
+    switch (selectedOptionValue) {
+      case 'req':
+        percentage = checkedCount.length / reqPackageCount;
+        break;
+      case 'all':
+        percentage = checkedCount.length / allPackageCount;
+        break;
+    }
+
+    return percentage * 100;
+  }, [selectedOptionValue, checkedCount, allPackageCount, reqPackageCount]);
+
   return !isEmpty(packagesUpdate) ? (
     <Button
       size="sm"
@@ -103,34 +127,47 @@ export default function Header_UpdateButton({
       )}
     </Button>
   ) : (
-    <ButtonGroup size="sm" variant="solid">
-      <Button
-        onPress={checkForUpdate}
-        isLoading={checkingUpdates}
-        startContent={!checkingUpdates && <Magnifier_Icon />}>
-        {labelsMap[selectedOptionValue]}
-      </Button>
-      <Dropdown placement="bottom-end">
-        <DropdownTrigger>
-          <Button variant="faded" isDisabled={!isReqAvailable || checkingUpdates} isIconOnly>
-            <AltArrow_Icon className="size-4" />
-          </Button>
-        </DropdownTrigger>
-        <DropdownMenu
-          selectionMode="single"
-          aria-label="Merge options"
-          selectedKeys={selectedOption}
-          // @ts-ignore-next-line
-          onSelectionChange={setSelectedOption}
-          disallowEmptySelection>
-          <DropdownItem key="all" description={descriptionsMap['all']}>
-            {labelsMap['all']}
-          </DropdownItem>
-          <DropdownItem key="req" description={descriptionsMap['req']}>
-            {labelsMap['req']}
-          </DropdownItem>
-        </DropdownMenu>
-      </Dropdown>
-    </ButtonGroup>
+    <div className="flex flex-col">
+      <ButtonGroup size="sm" variant="solid">
+        <Button
+          onPress={checkForUpdate}
+          isLoading={checkingUpdates}
+          startContent={!checkingUpdates && <Magnifier_Icon />}>
+          {labelsMap[selectedOptionValue]}
+          {checkingUpdates && (
+            <Progress
+              size="sm"
+              radius="none"
+              color="success"
+              value={progressPercentage}
+              className="absolute -bottom-[2px]"
+              aria-label="Update check progress"
+              classNames={{indicator: 'max-h-[2px]'}}
+            />
+          )}
+        </Button>
+        <Dropdown placement="bottom-end">
+          <DropdownTrigger>
+            <Button variant="faded" isDisabled={!isReqAvailable || checkingUpdates} isIconOnly>
+              <AltArrow_Icon className="size-4" />
+            </Button>
+          </DropdownTrigger>
+          <DropdownMenu
+            selectionMode="single"
+            aria-label="Merge options"
+            selectedKeys={selectedOption}
+            // @ts-ignore-next-line
+            onSelectionChange={setSelectedOption}
+            disallowEmptySelection>
+            <DropdownItem key="all" description={descriptionsMap['all']}>
+              {labelsMap['all']}
+            </DropdownItem>
+            <DropdownItem key="req" description={descriptionsMap['req']}>
+              {labelsMap['req']}
+            </DropdownItem>
+          </DropdownMenu>
+        </Dropdown>
+      </ButtonGroup>
+    </div>
   );
 }
