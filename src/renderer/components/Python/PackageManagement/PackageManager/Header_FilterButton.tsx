@@ -1,7 +1,7 @@
 import {Button, Dropdown, DropdownItem, DropdownMenu, DropdownSection, DropdownTrigger} from '@heroui/react';
 import {Dispatch, SetStateAction, useEffect, useState} from 'react';
 
-import {Filter_Icon} from '../../../../../../../src/renderer/src/assets/icons/SvgIcons/SvgIcons';
+import {FilterDuo_Icon} from '../../../../../../../src/renderer/src/assets/icons/SvgIcons/SvgIcons';
 import {FilterKeys} from '../../../../../cross/CrossExtTypes';
 
 type Props = {
@@ -30,10 +30,10 @@ export default function Header_FilterButton({setSelectedFilter, updateAvailable}
   }, [updateAvailable]);
 
   return (
-    <Dropdown size="sm" className="border-1 border-foreground-100">
+    <Dropdown className="border-1 border-foreground-100">
       <DropdownTrigger>
-        <Button size="sm" variant="flat" isIconOnly>
-          <Filter_Icon />
+        <Button variant="flat" isIconOnly>
+          <FilterDuo_Icon />
         </Button>
       </DropdownTrigger>
       <DropdownMenu

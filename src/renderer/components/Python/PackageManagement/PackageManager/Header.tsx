@@ -110,8 +110,6 @@ export default function PackageManagerHeader({
       </div>
       {!isEmpty(packages) && (
         <Input
-          size="sm"
-          radius="sm"
           type="search"
           className="pt-1"
           value={searchValue}
