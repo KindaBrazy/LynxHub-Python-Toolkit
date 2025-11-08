@@ -25,7 +25,16 @@ export default function Footer_TablePage({searchData, setItems}: Props) {
   return (
     <div className="flex w-full justify-center absolute left-1/2 -translate-x-1/2">
       {!isEmpty(searchData) && (
-        <Pagination size="lg" page={page} total={pages} color="secondary" onChange={setPage} isCompact showControls />
+        <Pagination
+          size="lg"
+          page={page}
+          total={pages}
+          color="secondary"
+          onChange={setPage}
+          classNames={{next: 'cursor-pointer', prev: 'cursor-pointer', item: 'cursor-pointer'}}
+          isCompact
+          showControls
+        />
       )}
     </div>
   );
