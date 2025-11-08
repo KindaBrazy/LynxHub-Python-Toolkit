@@ -3,42 +3,55 @@ import {compact} from 'lodash';
 import semver, {lt, satisfies} from 'semver';
 
 import {MaxRetry_StorageID} from '../../../cross/CrossExtConstants';
-import {SitePackages_Info} from '../../../cross/CrossExtTypes';
-import {getStorage} from '../../DataHolder';
+import {pythonChannels, SitePackages_Info} from '../../../cross/CrossExtTypes';
+import {getAppManager, getStorage} from '../../DataHolder';
 import {readRequirements} from '../Requirements/PythonRequirements';
 
 export async function getLatestPipPackageVersion(packageName: string, maxRetries: number = 5): Promise<string | null> {
   const url = `https://pypi.org/pypi/${packageName}/json`;
-  let attempt = 0;
+  const window = getAppManager()?.getMainWindow();
 
-  while (attempt <= maxRetries) {
-    try {
-      const response = await axios.get(url);
-      const data = response.data;
-      if (data && data.info && data.info.version) {
-        return semver.coerce(data.info.version)?.version || null;
-      } else {
-        console.error(`Could not find version information for ${packageName} in the response.`);
-        return null;
-      }
-    } catch (error: any) {
-      attempt++;
-      if (attempt > maxRetries) {
-        if (axios.isAxiosError(error)) {
-          if (error.response?.status === 404) {
-            console.error(`Package ${packageName} not found on PyPI.`);
-          } else {
-            console.error(`Error fetching package information for ${packageName}:`, error.message);
-          }
+  try {
+    for (let attempt = 1; attempt <= maxRetries; attempt++) {
+      try {
+        const response = await axios.get(url, {timeout: 15000});
+        const data = response.data;
+        if (data?.info?.version) {
+          return semver.coerce(data.info.version)?.version || null;
         } else {
-          console.error(`An unexpected error occurred while fetching package information:`, error);
+          console.error(`Could not find version information for ${packageName} in the response.`);
+          return null;
         }
-        return null;
+      } catch (error: any) {
+        if (attempt === maxRetries) {
+          if (axios.isAxiosError(error)) {
+            if (error.response?.status === 404) {
+              console.error(`Package ${packageName} not found on PyPI after ${maxRetries} attempts.`);
+            } else {
+              console.error(
+                `Error fetching package info for ${packageName} after ${maxRetries} attempts:`,
+                error.message,
+              );
+            }
+          } else {
+            console.error(`An unexpected error occurred for ${packageName} after ${maxRetries} attempts:`, error);
+          }
+
+          break;
+        }
+
+        const delay = Math.pow(2, attempt) * 100;
+        await new Promise(res => setTimeout(res, delay));
       }
     }
-  }
 
-  return null; // This line is technically unreachable, but TypeScript requires it.
+    return null;
+  } finally {
+    console.log(`Finished checking package: ${packageName}`);
+    if (window) {
+      window.webContents.send(pythonChannels.updateCheckProgress, packageName);
+    }
+  }
 }
 
 export async function checkPackageUpdates(

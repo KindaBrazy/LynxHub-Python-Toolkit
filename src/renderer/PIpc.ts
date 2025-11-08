@@ -110,6 +110,9 @@ const pIpc = {
     ipc.on(pythonChannels.errorGetVenvInfo, result),
   offErrorGetVenvInfo: (): void => ipc.removeAllListeners(pythonChannels.errorGetVenvInfo),
 
+  onUpdateCheckProgress: (result: (event: IpcRendererEvent, packageName: string) => void) =>
+    ipc.on(pythonChannels.updateCheckProgress, result),
+
   storage: {
     getAvailableConda: (): Promise<string[]> => ipc.invoke(pythonStorageChannels.getAvailableConda),
     setAvailableConda: (value: string[]) => ipc.send(pythonStorageChannels.setAvailableConda, value),

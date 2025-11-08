@@ -128,6 +128,8 @@ export const pythonChannels = {
   replacePythonPath: 'ptoolkit-replace-python-path',
 
   errorGetVenvInfo: 'ptoolkit-errorGetVenvInfo',
+
+  updateCheckProgress: 'ptoolkit-update-check-progress',
 };
 
 export const pythonStorageChannels = {
