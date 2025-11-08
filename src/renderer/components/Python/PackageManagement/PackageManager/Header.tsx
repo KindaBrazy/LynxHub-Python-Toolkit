@@ -65,12 +65,14 @@ export default function PackageManagerHeader({
   const [pythonVersion, setPythonVersion] = useState<string>('');
 
   useEffect(() => {
-    pIpc
-      .getPythonVersion(pythonPath)
-      .then(version => {
-        setPythonVersion(`${version.major}.${version.minor}.${version.patch}`);
-      })
-      .catch(console.log);
+    if (pythonPath) {
+      pIpc
+        .getPythonVersion(pythonPath)
+        .then(version => {
+          setPythonVersion(`${version.major}.${version.minor}.${version.patch}`);
+        })
+        .catch(console.log);
+    }
   }, [pythonPath]);
 
   const update = () => {
