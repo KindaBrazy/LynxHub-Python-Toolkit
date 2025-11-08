@@ -59,7 +59,7 @@ export default function ToolsPage() {
     <UIProvider>
       <ToolsCard
         footer={
-          <Button variant="flat" color="primary" onPress={openSettings} isIconOnly>
+          <Button as="div" variant="flat" color="primary" onPress={openSettings} isIconOnly>
             <SettingsMinimal_Icon className="size-4" />
           </Button>
         }
