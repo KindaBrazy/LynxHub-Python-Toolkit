@@ -47,6 +47,7 @@ import {
   getPackagesUpdate,
   getPackagesUpdateByReq,
 } from './Utils/PackageManager/PipToolsManager';
+import {parseVersion} from './Utils/PythonUtils';
 import {
   findValidRequirementsFiles,
   getReqPath,
@@ -198,6 +199,7 @@ export default function ListenForChannels(nodePty: any) {
   });
 
   ipcMain.on(pythonChannels.abortUpdateCheck, () => cancelPackagesUpdateCheck());
+  ipcMain.handle(pythonChannels.getPythonVersion, (_, pythonPath: string) => parseVersion(pythonPath));
 
   ListenForStorage(storageManager);
 }

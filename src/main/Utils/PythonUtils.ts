@@ -6,7 +6,7 @@ import {dialog, OpenDialogOptions, OpenDialogReturnValue} from 'electron';
 import {existsSync, promises, readdirSync, statSync} from 'graceful-fs';
 import {compare} from 'semver';
 
-import {PythonInstallation} from '../../cross/CrossExtTypes';
+import {ParsedPythonVersion, PythonInstallation} from '../../cross/CrossExtTypes';
 import {getAppManager} from '../DataHolder';
 
 export async function detectInstallationType(pythonPath: string): Promise<PythonInstallation['installationType']> {
@@ -37,7 +37,7 @@ export async function detectInstallationType(pythonPath: string): Promise<Python
   }
 }
 
-export async function parseVersion(pythonPath: string): Promise<{major: number; minor: number; patch: number}> {
+export async function parseVersion(pythonPath: string): Promise<ParsedPythonVersion> {
   return new Promise((resolve, reject) => {
     const pythonProcess = spawn(pythonPath, ['--version']);
 

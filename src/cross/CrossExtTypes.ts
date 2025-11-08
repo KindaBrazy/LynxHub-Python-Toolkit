@@ -132,6 +132,7 @@ export const pythonChannels = {
   updateCheckProgress: 'ptoolkit-update-check-progress',
 
   abortUpdateCheck: 'ptoolkit-abort-update-check',
+  getPythonVersion: 'ptoolkit-get-python-version',
 };
 
 export const pythonStorageChannels = {
@@ -157,3 +158,4 @@ export type CustomTitle = {title: string; path: string};
 export type PythonVenvSelectItem = {label: string; dir: string; type: 'python' | 'venv' | 'conda'; condaName?: string};
 export type AssociateItem = {id: string; dir: string; type: 'python' | 'venv' | 'conda'; condaName?: string};
 export type AssociateAction = 'add' | 'remove' | 'init';
+export type ParsedPythonVersion = {major: number; minor: number; patch: number};

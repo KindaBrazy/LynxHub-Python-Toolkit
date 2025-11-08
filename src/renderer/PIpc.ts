@@ -8,6 +8,7 @@ import {
   IdPathType,
   PackageInfo,
   PackageUpdate,
+  ParsedPythonVersion,
   PkgDisplayType,
   pythonChannels,
   PythonInstallation,
@@ -114,6 +115,8 @@ const pIpc = {
     ipc.on(pythonChannels.updateCheckProgress, result),
 
   abortUpdateCheck: () => ipc.send(pythonChannels.abortUpdateCheck),
+  getPythonVersion: (pythonPath: string): Promise<ParsedPythonVersion> =>
+    ipc.invoke(pythonChannels.getPythonVersion, pythonPath),
 
   storage: {
     getAvailableConda: (): Promise<string[]> => ipc.invoke(pythonStorageChannels.getAvailableConda),

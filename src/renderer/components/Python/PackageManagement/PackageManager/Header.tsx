@@ -1,7 +1,7 @@
 import {ButtonGroup, Chip, Input, ModalHeader, Selection} from '@heroui/react';
 import {message} from 'antd';
 import {compact, isEmpty} from 'lodash';
-import {Dispatch, ReactNode, SetStateAction, useState} from 'react';
+import {Dispatch, ReactNode, SetStateAction, useEffect, useState} from 'react';
 
 import {Circle_Icon} from '../../../../../../../src/renderer/src/assets/icons/SvgIcons/SvgIcons';
 import {FilterKeys, PackageInfo, PackageUpdate, SitePackages_Info} from '../../../../../cross/CrossExtTypes';
@@ -61,6 +61,17 @@ export default function PackageManagerHeader({
   const [isReqAvailable, setIsReqAvailable] = useState<boolean>(false);
   const [reqPackageCount, setReqPackageCount] = useState<number>(0);
 
+  const [pythonVersion, setPythonVersion] = useState<string>('');
+
+  useEffect(() => {
+    pIpc
+      .getPythonVersion(pythonPath)
+      .then(version => {
+        setPythonVersion(`${version.major}.${version.minor}.${version.patch}`);
+      })
+      .catch(console.log);
+  }, [pythonPath]);
+
   const update = () => {
     setIsUpdating(true);
     let updateList: PackageUpdate[];
@@ -99,12 +110,17 @@ export default function PackageManagerHeader({
       <div className="flex flex-row justify-between w-full">
         {isValidPython ? (
           <>
-            <span>
-              {title}{' '}
+            <div className="flex flex-row items-center gap-x-2">
+              <span>{title}</span>
+              {pythonVersion && (
+                <Chip size="sm" variant="flat" color="primary">
+                  Python: {pythonVersion}
+                </Chip>
+              )}
               <Chip size="sm" variant="flat">
-                {packages.length}
+                Packages: {packages.length}
               </Chip>
-            </span>
+            </div>
             <Header_FilterButton setSelectedFilter={setSelectedFilter} updateAvailable={!isEmpty(packagesUpdate)} />
           </>
         ) : (
