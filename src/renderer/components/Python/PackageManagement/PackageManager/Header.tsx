@@ -142,7 +142,7 @@ export default function PackageManagerHeader({
                 </Chip>
               )}
               <Chip size="sm" variant="flat">
-                Packages {packages.length}
+                {packages.length}
               </Chip>
             </div>
             <Header_FilterButton setSelectedFilter={setSelectedFilter} updateAvailable={!isEmpty(packagesUpdate)} />

@@ -1,4 +1,4 @@
-import {Button, Input, Modal, ModalBody, ModalContent, ModalFooter, ModalHeader} from '@heroui/react';
+import {Button, Chip, Input, Modal, ModalBody, ModalContent, ModalFooter, ModalHeader} from '@heroui/react';
 import {Empty, message, Result} from 'antd';
 import {isEmpty} from 'lodash';
 import {OverlayScrollbarsComponentRef} from 'overlayscrollbars-react';
@@ -7,7 +7,11 @@ import {Dispatch, SetStateAction, useEffect, useRef, useState} from 'react';
 import rendererIpc from '../../../../../../../src/renderer/src/App/RendererIpc';
 import {modalMotionProps} from '../../../../../../../src/renderer/src/App/Utils/Constants';
 import {searchInStrings} from '../../../../../../../src/renderer/src/App/Utils/UtilFunctions';
-import {Add_Icon, Circle_Icon, File_Icon} from '../../../../../../../src/renderer/src/assets/icons/SvgIcons/SvgIcons';
+import {
+  Add_Icon,
+  Circle_Icon,
+  FileDuo_Icon,
+} from '../../../../../../../src/renderer/src/assets/icons/SvgIcons/SvgIcons';
 import {RequirementData} from '../../../../../cross/CrossExtTypes';
 import pIpc from '../../../../PIpc';
 import {Checklist_Icon, Save_Icon} from '../../../SvgIcons';
@@ -125,7 +129,7 @@ export default function RequirementsBtn({id, projectPath, setIsReqAvailable, sho
   return (
     <>
       <Modal
-        size="2xl"
+        size="3xl"
         isOpen={isOpen}
         placement="center"
         isDismissable={false}
@@ -137,23 +141,15 @@ export default function RequirementsBtn({id, projectPath, setIsReqAvailable, sho
         <ModalContent className="overflow-hidden">
           <ModalHeader className="bg-foreground-200 dark:bg-LynxRaisinBlack flex flex-col gap-y-2">
             <div className="flex flex-row justify-between">
-              <span>Manage Requirements</span>
+              <div className="flex flex-row gap-x-2 items-center mb-2">
+                <span>Manage Requirements</span>
+                <Chip size="sm">{requirements.length}</Chip>
+              </div>
               {!isEmpty(filePath) && (
                 <div className="flex gap-x-2">
                   <div>
-                    <Button size="sm" variant="faded" startContent={<Add_Icon />} onPress={handleAddRequirement}>
+                    <Button size="sm" variant="flat" startContent={<Add_Icon />} onPress={handleAddRequirement}>
                       Add
-                    </Button>
-                  </div>
-                  <div>
-                    <Button
-                      size="sm"
-                      variant="faded"
-                      color="success"
-                      isLoading={isSaving}
-                      onPress={handleSaveRequirements}
-                      startContent={!isSaving && <Save_Icon className="size-3.5" />}>
-                      {!isSaving && 'Save'}
                     </Button>
                   </div>
                 </div>
@@ -161,21 +157,17 @@ export default function RequirementsBtn({id, projectPath, setIsReqAvailable, sho
             </div>
             <div>
               <Button
-                size="sm"
-                variant="flat"
                 endContent={<div />}
                 onPress={openFilePath}
-                startContent={<File_Icon />}
-                className="shrink-0 text-[10pt] justify-between"
+                className="shrink-0 justify-between"
+                startContent={<FileDuo_Icon className="size-3.5" />}
                 fullWidth>
                 {filePath || 'Choose or Create requirements file...'}
               </Button>
             </div>
             {!isEmpty(requirements) && (
               <Input
-                size="sm"
                 type="search"
-                variant="faded"
                 value={searchValue}
                 onValueChange={setSearchValue}
                 placeholder="Search requirements..."
@@ -211,9 +203,22 @@ export default function RequirementsBtn({id, projectPath, setIsReqAvailable, sho
             )}
           </ModalBody>
           <ModalFooter className="py-3">
-            <Button size="md" color="warning" variant="light" className="w-fit" onPress={() => setIsOpen(false)}>
-              Close
-            </Button>
+            <div>
+              <Button
+                size="md"
+                variant="flat"
+                color="success"
+                isLoading={isSaving}
+                onPress={handleSaveRequirements}
+                startContent={!isSaving && <Save_Icon className="size-3.5" />}>
+                {!isSaving && 'Save'}
+              </Button>
+            </div>
+            <div>
+              <Button size="md" color="warning" variant="light" className="w-fit" onPress={() => setIsOpen(false)}>
+                Close
+              </Button>
+            </div>
           </ModalFooter>
         </ModalContent>
       </Modal>

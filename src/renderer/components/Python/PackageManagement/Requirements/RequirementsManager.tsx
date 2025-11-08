@@ -16,6 +16,7 @@ import {Dispatch, ReactNode, RefObject, SetStateAction, useEffect, useState} fro
 
 import {useAppState} from '../../../../../../../src/renderer/src/App/Redux/Reducer/AppReducer';
 import {RequirementData} from '../../../../../cross/CrossExtTypes';
+import {TrashDuo_Icon} from '../../../SvgIcons';
 
 type TableReq = {
   key: string;
@@ -97,8 +98,13 @@ export default function RequirementsManager({requirements, setRequirements, scro
             </Select>
           ),
           actions: (
-            <Button size="sm" color="danger" variant="flat" onPress={() => handleDeleteRequirement(req.name)}>
-              Remove
+            <Button
+              size="sm"
+              color="danger"
+              variant="flat"
+              onPress={() => handleDeleteRequirement(req.name)}
+              isIconOnly>
+              <TrashDuo_Icon className="size-3.5" />
             </Button>
           ),
         };
