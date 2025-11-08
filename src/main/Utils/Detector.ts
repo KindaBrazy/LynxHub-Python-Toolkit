@@ -238,7 +238,7 @@ export function removeSavedPython(pPath: string) {
   const savedInstallations: string[] | undefined = storageManager?.getCustomData(STORAGE_INSTALLED_KEY);
 
   if (!isNil(savedInstallations)) {
-    storageManager?.setCustomRun(
+    storageManager?.setCustomData(
       STORAGE_INSTALLED_KEY,
       savedInstallations.filter(p => p !== pPath),
     );
@@ -255,7 +255,7 @@ export function addSavedPython(pPath: string) {
   }
   paths.add(pPath);
 
-  storageManager?.setCustomRun(STORAGE_INSTALLED_KEY, Array.from(paths));
+  storageManager?.setCustomData(STORAGE_INSTALLED_KEY, Array.from(paths));
 }
 
 function removeDuplicateInstallations(installations: PythonInstallation[]): PythonInstallation[] {
