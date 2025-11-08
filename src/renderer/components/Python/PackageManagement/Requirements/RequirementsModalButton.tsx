@@ -18,9 +18,10 @@ type Props = {
   projectPath?: string;
   setIsReqAvailable: Dispatch<SetStateAction<boolean>>;
   show: string;
+  setReqPackageCount: Dispatch<SetStateAction<number>>;
 };
 
-export default function RequirementsBtn({id, projectPath, setIsReqAvailable, show}: Props) {
+export default function RequirementsBtn({id, projectPath, setIsReqAvailable, show, setReqPackageCount}: Props) {
   const [isOpen, setIsOpen] = useState<boolean>(false);
   const [requirements, setRequirements] = useState<RequirementData[]>([]);
   const [filePath, setFilePath] = useState<string>('');
@@ -80,6 +81,7 @@ export default function RequirementsBtn({id, projectPath, setIsReqAvailable, sho
   useEffect(() => {
     pIpc.readReqs(filePath).then(result => {
       setRequirements(result);
+      setReqPackageCount(result.length);
     });
   }, [filePath]);
 
@@ -88,6 +90,7 @@ export default function RequirementsBtn({id, projectPath, setIsReqAvailable, sho
       ...prevRequirements,
       {name: '', versionOperator: null, version: null, originalLine: '', autoFocus: true},
     ]);
+    setReqPackageCount(prevState => prevState + 1);
     scrollToBottom();
   };
 

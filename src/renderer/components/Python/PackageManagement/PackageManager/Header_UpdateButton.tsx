@@ -4,6 +4,7 @@ import {useEffect, useMemo, useState} from 'react';
 
 import {Download2_Icon, Magnifier_Icon} from '../../../../../../../src/renderer/src/assets/icons/SvgIcons/SvgIcons';
 import {FilterKeys, PackageInfo, SitePackages_Info} from '../../../../../cross/CrossExtTypes';
+import pIpc from '../../../../PIpc';
 import {AltArrow_Icon} from '../../../SvgIcons';
 
 type Props = {
@@ -16,6 +17,9 @@ type Props = {
   selectedKeys: Selection;
   visibleItems: PackageInfo[];
   selectedFilter: FilterKeys;
+
+  allPackageCount: number;
+  reqPackageCount: number;
 };
 
 export default function Header_UpdateButton({
@@ -28,8 +32,19 @@ export default function Header_UpdateButton({
   selectedKeys,
   visibleItems,
   selectedFilter,
+  allPackageCount,
+  reqPackageCount,
 }: Props) {
   const [selectedOption, setSelectedOption] = useState(new Set([isReqAvailable ? 'req' : 'all']));
+  const [checkedCount, setCheckedCount] = useState<string[]>([]);
+
+  useEffect(() => {
+    const offProgress = pIpc.onUpdateCheckProgress((_, packageName) => {
+      setCheckedCount(prevState => (prevState.includes(packageName) ? prevState : [...prevState, packageName]));
+    });
+
+    return () => offProgress();
+  }, []);
 
   useEffect(() => {
     setSelectedOption(new Set([isReqAvailable ? 'req' : 'all']));
@@ -44,10 +59,12 @@ export default function Header_UpdateButton({
 
   const labelsMap = useMemo(() => {
     return {
-      all: checkingUpdates ? 'Checking (All)...' : `Check for Updates (All)`,
-      req: checkingUpdates ? 'Checking (Requirements)...' : `Check for Updates (Requirements)`,
+      all: checkingUpdates ? `Checking All (${checkedCount.length}/${allPackageCount})...` : `Check for Updates (All)`,
+      req: checkingUpdates
+        ? `Checking Requirements (${checkedCount.length}/${reqPackageCount})...`
+        : `Check for Updates (Requirements)`,
     };
-  }, [checkingUpdates]);
+  }, [checkingUpdates, allPackageCount, reqPackageCount, checkedCount]);
 
   const selectedOptionValue = useMemo(() => {
     return Array.from(selectedOption)[0];

@@ -47,7 +47,6 @@ export async function getLatestPipPackageVersion(packageName: string, maxRetries
 
     return null;
   } finally {
-    console.log(`Finished checking package: ${packageName}`);
     if (window) {
       window.webContents.send(pythonChannels.updateCheckProgress, packageName);
     }

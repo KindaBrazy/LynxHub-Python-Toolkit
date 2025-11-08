@@ -59,6 +59,7 @@ export default function PackageManagerHeader({
   const [isUpdating, setIsUpdating] = useState<boolean>(false);
 
   const [isReqAvailable, setIsReqAvailable] = useState<boolean>(false);
+  const [reqPackageCount, setReqPackageCount] = useState<number>(0);
 
   const update = () => {
     setIsUpdating(true);
@@ -129,6 +130,8 @@ export default function PackageManagerHeader({
             selectedFilter={selectedFilter}
             isReqAvailable={isReqAvailable}
             packagesUpdate={packagesUpdate}
+            reqPackageCount={reqPackageCount}
+            allPackageCount={packages.length}
             checkForUpdates={checkForUpdates}
             checkingUpdates={checkingUpdates}
           />
@@ -138,7 +141,13 @@ export default function PackageManagerHeader({
             <>
               <Header_InstallerModal show={show} refresh={refresh} pythonPath={pythonPath} />
 
-              <RequirementsBtn id={id} show={show} projectPath={projectPath} setIsReqAvailable={setIsReqAvailable} />
+              <RequirementsBtn
+                id={id}
+                show={show}
+                projectPath={projectPath}
+                setIsReqAvailable={setIsReqAvailable}
+                setReqPackageCount={setReqPackageCount}
+              />
             </>
           )}
         </ButtonGroup>
