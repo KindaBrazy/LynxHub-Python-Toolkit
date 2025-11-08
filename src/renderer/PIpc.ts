@@ -113,6 +113,8 @@ const pIpc = {
   onUpdateCheckProgress: (result: (event: IpcRendererEvent, packageName: string) => void) =>
     ipc.on(pythonChannels.updateCheckProgress, result),
 
+  abortUpdateCheck: () => ipc.send(pythonChannels.abortUpdateCheck),
+
   storage: {
     getAvailableConda: (): Promise<string[]> => ipc.invoke(pythonStorageChannels.getAvailableConda),
     setAvailableConda: (value: string[]) => ipc.send(pythonStorageChannels.setAvailableConda, value),

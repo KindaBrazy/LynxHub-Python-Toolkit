@@ -42,7 +42,11 @@ import {
   updatePythonPackage,
 } from './Utils/PackageManager/PackageManager';
 import {changePythonPackageVersion} from './Utils/PackageManager/PackageManagerUtil';
-import {getPackagesUpdate, getPackagesUpdateByReq} from './Utils/PackageManager/PipToolsManager';
+import {
+  cancelPackagesUpdateCheck,
+  getPackagesUpdate,
+  getPackagesUpdateByReq,
+} from './Utils/PackageManager/PipToolsManager';
 import {
   findValidRequirementsFiles,
   getReqPath,
@@ -192,6 +196,8 @@ export default function ListenForChannels(nodePty: any) {
       return false;
     }
   });
+
+  ipcMain.on(pythonChannels.abortUpdateCheck, () => cancelPackagesUpdateCheck());
 
   ListenForStorage(storageManager);
 }

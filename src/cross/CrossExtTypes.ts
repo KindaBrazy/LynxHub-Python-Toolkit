@@ -130,6 +130,8 @@ export const pythonChannels = {
   errorGetVenvInfo: 'ptoolkit-errorGetVenvInfo',
 
   updateCheckProgress: 'ptoolkit-update-check-progress',
+
+  abortUpdateCheck: 'ptoolkit-abort-update-check',
 };
 
 export const pythonStorageChannels = {
