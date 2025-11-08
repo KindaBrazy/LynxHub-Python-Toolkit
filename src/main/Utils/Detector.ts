@@ -45,7 +45,7 @@ const commonPaths: {[key: string]: string[]} = {
 
 function matchPattern(file: string, pattern: string) {
   const regexPattern = pattern.replace(/\*/g, '.*');
-  const regex = new RegExp(`^${regexPattern}$`);
+  const regex = new RegExp(`^${regexPattern}$`, 'i');
   return regex.test(file);
 }
 
