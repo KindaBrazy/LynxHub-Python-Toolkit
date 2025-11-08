@@ -3,7 +3,7 @@ import './index.css';
 import {ExtensionRendererApi} from '../../../src/cross/plugin/ExtensionTypes_Renderer_Api';
 import CardMenu from './components/CardMenu';
 import CardMenuModal from './components/CardMenuModal';
-import SettingsModal from './components/Settings/SettingsModal';
+import Settings from './components/Settings/Settings';
 import ToolsPage from './components/ToolsPage';
 import CustomHook from './CustomHook';
 import {setCards} from './DataHolder';
@@ -16,7 +16,7 @@ export function InitialExtensions(lynxAPI: ExtensionRendererApi) {
 
   lynxAPI.addReducer([{name: 'pythonToolkit', reducer: pythonToolkitReducer}]);
   lynxAPI.addModal(CardMenuModal);
-  lynxAPI.addModal(SettingsModal);
+  lynxAPI.addModal(Settings);
 
   lynxAPI.customizePages.tools.addComponent(ToolsPage);
   lynxAPI.cards.customize.menu.addSection([{index: 1, components: [CardMenu]}]);

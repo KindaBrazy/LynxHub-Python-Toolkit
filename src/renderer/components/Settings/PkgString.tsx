@@ -10,7 +10,7 @@ import {PythonToolkitActions} from '../../reducer';
 
 const exampleName = 'azure-storage-blob';
 
-export default function Settings_PkgString() {
+export default function PkgString() {
   const [value, setValue] = useState<PkgDisplayType>('default');
   const [exampleResult, setExampleResult] = useState<string>(exampleName);
 

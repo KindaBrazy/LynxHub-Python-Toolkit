@@ -5,13 +5,13 @@ import {useDispatch} from 'react-redux';
 import {modalMotionProps} from '../../../../../src/renderer/src/App/Utils/Constants';
 import {ContextType, PythonToolkitActions} from '../../reducer';
 import UIProvider from '../UIProvider';
-import Settings_CacheDirUsage from './Settings_CacheDirUsage';
-import Settings_PkgString from './Settings_PkgString';
-import Settings_Retry from './Settings_Retry';
+import CacheDirUsage from './CacheDirUsage';
+import PkgString from './PkgString';
+import Retry from './Retry';
 
 type Props = {isOpen: boolean; context: ContextType; show: string};
 
-export default function CardSettings_Modals({isOpen, context, show}: Props) {
+export default function Modals({isOpen, context, show}: Props) {
   const dispatch = useDispatch();
 
   const onOpenChange = (isOpen: boolean) => {
@@ -40,11 +40,11 @@ export default function CardSettings_Modals({isOpen, context, show}: Props) {
             <>
               <ModalHeader>Python Toolkit Settings</ModalHeader>
               <ModalBody>
-                <Settings_Retry />
+                <Retry />
                 <Divider variant="dashed" className="my-4" />
-                <Settings_PkgString />
+                <PkgString />
                 <Divider variant="dashed" className="my-4" />
-                <Settings_CacheDirUsage />
+                <CacheDirUsage />
               </ModalBody>
               <ModalFooter>
                 <Button onPress={close} variant="light" color="warning">

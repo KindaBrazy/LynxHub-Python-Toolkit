@@ -4,7 +4,7 @@ import {useEffect, useMemo, useState} from 'react';
 
 import pIpc from '../../PIpc';
 
-export default function Settings_Retry() {
+export default function Retry() {
   const [value, setValue] = useState<number>(5);
 
   const debouncedSetMaxRetry = useMemo(() => debounce((value: number) => pIpc.setMaxRetry(value), 500), []);

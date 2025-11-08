@@ -4,9 +4,9 @@ import {useDispatch} from 'react-redux';
 import {useTabsState} from '../../../../../src/renderer/src/App/Redux/Reducer/TabsReducer';
 import {AppDispatch} from '../../../../../src/renderer/src/App/Redux/Store';
 import {PythonToolkitActions, usePythonToolkitState} from '../../reducer';
-import CardSettings_Modals from './CardSettings_Modals';
+import Modals from './Modals';
 
-export default function SettingsModal() {
+export default function Settings() {
   const dispatch = useDispatch<AppDispatch>();
   const activeTab = useTabsState('activeTab');
   const tabs = useTabsState('tabs');
@@ -28,7 +28,7 @@ export default function SettingsModal() {
   return (
     <>
       {modals.map(modal => (
-        <CardSettings_Modals
+        <Modals
           isOpen={modal.isOpen}
           context={modal.context}
           key={`${modal.context.id}_card`}

@@ -8,7 +8,7 @@ import {BroomDuo_Icon} from '../../../../../src/renderer/src/assets/icons/SvgIco
 import pIpc from '../../PIpc';
 import {PythonToolkitActions, usePythonToolkitState} from '../../reducer';
 
-export default function Settings_CacheDirUsage() {
+export default function CacheDirUsage() {
   const cacheStorageUsage = usePythonToolkitState('cacheStorageUsage');
   const [clearing, setClearing] = useState<boolean>(false);
 
