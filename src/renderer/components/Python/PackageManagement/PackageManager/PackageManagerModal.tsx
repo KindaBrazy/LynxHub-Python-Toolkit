@@ -38,8 +38,8 @@ export default function PackageManagerModal({
   setPythonPath,
   show,
 }: Props) {
-  const [isLoading, setIsLoading] = useState<boolean>(false);
-  const [isLoadingUpdates, setIsLoadingUpdates] = useState<boolean>(false);
+  const [isLoadingPackages, setIsLoadingPackages] = useState<boolean>(false);
+  const [isCheckingUpdates, setIsCheckingUpdates] = useState<boolean>(false);
 
   const [packages, setPackages] = useState<PackageInfo[]>([]);
   const [filteredPackages, setFilteredPackages] = useState<PackageInfo[]>([]);
@@ -124,7 +124,7 @@ export default function PackageManagerModal({
   };
 
   const checkForUpdates = (type: 'req' | 'normal') => {
-    setIsLoadingUpdates(true);
+    setIsCheckingUpdates(true);
 
     const updateData = (result: SitePackages_Info[]) => {
       setPackagesUpdate(result);
@@ -145,26 +145,26 @@ export default function PackageManagerModal({
               .getUpdatesReq(reqPath, packages)
               .then(updateData)
               .finally(() => {
-                setIsLoadingUpdates(false);
+                setIsCheckingUpdates(false);
               });
           }
         })
         .catch(err => {
           console.log(err);
-          setIsLoadingUpdates(false);
+          setIsCheckingUpdates(false);
         });
     } else {
       pIpc
         .getPackagesUpdateInfo(packages)
         .then(updateData)
         .finally(() => {
-          setIsLoadingUpdates(false);
+          setIsCheckingUpdates(false);
         });
     }
   };
 
   const getPackageList = () => {
-    setIsLoading(true);
+    setIsLoadingPackages(true);
 
     pIpc
       .getPackagesInfo(pythonPath)
@@ -177,7 +177,7 @@ export default function PackageManagerModal({
         console.warn(err);
       })
       .finally(() => {
-        setIsLoading(false);
+        setIsLoadingPackages(false);
       });
   };
 
@@ -246,16 +246,16 @@ export default function PackageManagerModal({
           setSearchValue={setSearchValue}
           checkForUpdates={checkForUpdates}
           setSelectedFilter={setSelectedFilter}
-          checkingUpdates={!isLoading && isLoadingUpdates}
+          checkingUpdates={!isLoadingPackages && isCheckingUpdates}
         />
         <PackageManagerBody
           id={id}
           items={items}
           removed={removed}
           updated={updated}
-          isLoading={isLoading}
           pythonPath={pythonPath}
           selectedKeys={selectedKeys}
+          isLoading={isLoadingPackages}
           setPythonPath={setPythonPath}
           isValidPython={isValidPython}
           packagesUpdate={packagesUpdate}
