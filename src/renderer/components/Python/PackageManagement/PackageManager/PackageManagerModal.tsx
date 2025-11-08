@@ -1,4 +1,4 @@
-import {Button, Modal, ModalContent, ModalFooter, Selection} from '@heroui/react';
+import {Modal, ModalContent, ModalFooter, Selection} from '@heroui/react';
 import {isEmpty} from 'lodash';
 import {Dispatch, ReactNode, SetStateAction, useEffect, useState} from 'react';
 
@@ -8,6 +8,7 @@ import {FilterKeys, PackageInfo, SitePackages_Info} from '../../../../../cross/C
 import {getUpdateType} from '../../../../../cross/CrossExtUtils';
 import pIpc from '../../../../PIpc';
 import PackageManagerBody from './Body';
+import Footer_Close from './Footer_Close';
 import Footer_TablePage from './Footer_TablePage';
 import PackageManagerHeader from './Header';
 
@@ -263,9 +264,7 @@ export default function PackageManagerModal({
         />
         <ModalFooter className="items-center py-3">
           <Footer_TablePage setItems={setItems} searchData={searchData} />
-          <Button variant="light" color="warning" onPress={closePackageManager}>
-            Close
-          </Button>
+          <Footer_Close isCheckingUpdates={isCheckingUpdates} closePackageManager={closePackageManager} />
         </ModalFooter>
       </ModalContent>
     </Modal>

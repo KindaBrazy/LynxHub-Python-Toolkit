@@ -39,7 +39,6 @@ export async function getLatestPipPackageVersion(
         }
       } catch (error: any) {
         if (axios.isCancel(error)) {
-          console.log(`Request for ${packageName} was cancelled.`);
           return null;
         }
 
