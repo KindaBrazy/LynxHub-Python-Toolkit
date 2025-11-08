@@ -1,4 +1,4 @@
-import {ButtonGroup, Chip, Input, ModalHeader, Selection} from '@heroui/react';
+import {ButtonGroup, Chip, Input, ModalHeader, Progress, Selection} from '@heroui/react';
 import {message} from 'antd';
 import {compact, isEmpty} from 'lodash';
 import {Dispatch, ReactNode, SetStateAction, useEffect, useState} from 'react';
@@ -60,6 +60,7 @@ export default function PackageManagerHeader({
 
   const [isReqAvailable, setIsReqAvailable] = useState<boolean>(false);
   const [reqPackageCount, setReqPackageCount] = useState<number>(0);
+  const [progressValue, setProgressValue] = useState<number>(0);
 
   const [pythonVersion, setPythonVersion] = useState<string>('');
 
@@ -107,6 +108,16 @@ export default function PackageManagerHeader({
 
   return (
     <ModalHeader className="bg-foreground-200 dark:bg-LynxRaisinBlack items-center flex-col gap-y-2">
+      {progressValue > 0 && (
+        <Progress
+          size="sm"
+          radius="none"
+          color="primary"
+          value={progressValue}
+          className="absolute top-0"
+          aria-label="Package manager progress bar"
+        />
+      )}
       <div className="flex flex-row justify-between w-full">
         {isValidPython ? (
           <>
@@ -114,11 +125,11 @@ export default function PackageManagerHeader({
               <span>{title}</span>
               {pythonVersion && (
                 <Chip size="sm" variant="flat" color="primary">
-                  Python: {pythonVersion}
+                  Python {pythonVersion}
                 </Chip>
               )}
               <Chip size="sm" variant="flat">
-                Packages: {packages.length}
+                Packages {packages.length}
               </Chip>
             </div>
             <Header_FilterButton setSelectedFilter={setSelectedFilter} updateAvailable={!isEmpty(packagesUpdate)} />
@@ -151,6 +162,7 @@ export default function PackageManagerHeader({
             allPackageCount={packages.length}
             checkForUpdates={checkForUpdates}
             checkingUpdates={checkingUpdates}
+            setProgressValue={setProgressValue}
           />
         )}
         <ButtonGroup size="sm" fullWidth>

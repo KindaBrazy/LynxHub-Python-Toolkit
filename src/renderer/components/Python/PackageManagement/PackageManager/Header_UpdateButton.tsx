@@ -1,15 +1,6 @@
-import {
-  Button,
-  ButtonGroup,
-  Dropdown,
-  DropdownItem,
-  DropdownMenu,
-  DropdownTrigger,
-  Progress,
-  Selection,
-} from '@heroui/react';
+import {Button, ButtonGroup, Dropdown, DropdownItem, DropdownMenu, DropdownTrigger, Selection} from '@heroui/react';
 import {isEmpty} from 'lodash';
-import {useEffect, useMemo, useState} from 'react';
+import {Dispatch, SetStateAction, useEffect, useMemo, useState} from 'react';
 
 import {Download2_Icon, Magnifier_Icon} from '../../../../../../../src/renderer/src/assets/icons/SvgIcons/SvgIcons';
 import {FilterKeys, PackageInfo, SitePackages_Info} from '../../../../../cross/CrossExtTypes';
@@ -29,6 +20,7 @@ type Props = {
 
   allPackageCount: number;
   reqPackageCount: number;
+  setProgressValue: Dispatch<SetStateAction<number>>;
 };
 
 export default function Header_UpdateButton({
@@ -43,6 +35,7 @@ export default function Header_UpdateButton({
   selectedFilter,
   allPackageCount,
   reqPackageCount,
+  setProgressValue,
 }: Props) {
   const [selectedOption, setSelectedOption] = useState(new Set([isReqAvailable ? 'req' : 'all']));
   const [checkedCount, setCheckedCount] = useState<string[]>([]);
@@ -87,20 +80,24 @@ export default function Header_UpdateButton({
     }
   };
 
-  const progressPercentage = useMemo(() => {
-    let percentage = 0;
+  useEffect(() => {
+    if (!checkingUpdates) {
+      setProgressValue(0);
+    } else {
+      let percentage = 0;
 
-    switch (selectedOptionValue) {
-      case 'req':
-        percentage = checkedCount.length / reqPackageCount;
-        break;
-      case 'all':
-        percentage = checkedCount.length / allPackageCount;
-        break;
+      switch (selectedOptionValue) {
+        case 'req':
+          percentage = checkedCount.length / reqPackageCount;
+          break;
+        case 'all':
+          percentage = checkedCount.length / allPackageCount;
+          break;
+      }
+
+      setProgressValue(percentage * 100);
     }
-
-    return percentage * 100;
-  }, [selectedOptionValue, checkedCount, allPackageCount, reqPackageCount]);
+  }, [selectedOptionValue, checkedCount, allPackageCount, reqPackageCount, checkingUpdates]);
 
   return !isEmpty(packagesUpdate) ? (
     <Button
@@ -134,17 +131,6 @@ export default function Header_UpdateButton({
           isLoading={checkingUpdates}
           startContent={!checkingUpdates && <Magnifier_Icon />}>
           {labelsMap[selectedOptionValue]}
-          {checkingUpdates && (
-            <Progress
-              size="sm"
-              radius="none"
-              color="success"
-              value={progressPercentage}
-              className="absolute -bottom-[2px]"
-              aria-label="Update check progress"
-              classNames={{indicator: 'max-h-[2px]'}}
-            />
-          )}
         </Button>
         <Dropdown placement="bottom-end">
           <DropdownTrigger>
