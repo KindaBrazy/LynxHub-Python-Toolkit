@@ -4,7 +4,7 @@ import {isEmpty} from 'lodash';
 import {useCallback, useEffect, useState} from 'react';
 
 import rendererIpc from '../../../../../../src/renderer/src/App/RendererIpc';
-import {OpenFolder_Icon} from '../../../../../../src/renderer/src/assets/icons/SvgIcons/SvgIcons';
+import {FolderDuo_Icon} from '../../../../../../src/renderer/src/assets/icons/SvgIcons/SvgIcons';
 import {PythonInstallation, PythonVenvs, VenvInfo} from '../../../../cross/CrossExtTypes';
 import {bytesToMegabytes} from '../../../../cross/CrossExtUtils';
 import pIpc from '../../../PIpc';
@@ -126,7 +126,7 @@ export default function Venv({visible, installedPythons, isLoadingPythons, show}
             variant="flat"
             onPress={locateVenv}
             isLoading={isLocating}
-            startContent={!isLocating && <OpenFolder_Icon />}>
+            startContent={!isLocating && <FolderDuo_Icon />}>
             {!isLocating && 'Locate'}
           </Button>
         </div>
