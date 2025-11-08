@@ -6,13 +6,14 @@ import CardMenuModal from './components/CardMenuModal';
 import Settings from './components/Settings/Settings';
 import ToolsPage from './components/ToolsPage';
 import CustomHook from './CustomHook';
-import {setCards} from './DataHolder';
+import {setCards, setRendererIpc} from './DataHolder';
 import listenForEvents from './ListenForEvents';
 import pythonToolkitReducer from './reducer';
 
 export function InitialExtensions(lynxAPI: ExtensionRendererApi) {
   listenForEvents(lynxAPI);
   setCards(lynxAPI.modulesData?.allCards || []);
+  setRendererIpc(lynxAPI.rendererIpc);
 
   lynxAPI.addReducer([{name: 'pythonToolkit', reducer: pythonToolkitReducer}]);
   lynxAPI.addModal(CardMenuModal);
