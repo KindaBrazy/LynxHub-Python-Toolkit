@@ -7,9 +7,7 @@ import {SitePackages_Info} from '../../../cross/CrossExtTypes';
 import {getStorage} from '../../DataHolder';
 import {readRequirements} from '../Requirements/PythonRequirements';
 
-let maxRetries = 5;
-
-export async function getLatestPipPackageVersion(packageName: string): Promise<string | null> {
+export async function getLatestPipPackageVersion(packageName: string, maxRetries: number = 5): Promise<string | null> {
   const url = `https://pypi.org/pypi/${packageName}/json`;
   let attempt = 0;
 
@@ -47,8 +45,7 @@ export async function checkPackageUpdates(
   reqPath: string,
   packages: SitePackages_Info[],
 ): Promise<SitePackages_Info[]> {
-  const maxRetriesConfig = getStorage()?.getCustomData(MaxRetry_StorageID);
-  if (maxRetriesConfig) maxRetries = maxRetriesConfig;
+  const maxRetriesConfig = getStorage()?.getCustomData(MaxRetry_StorageID) as number | undefined;
 
   const reqData = await readRequirements(reqPath);
 
@@ -57,7 +54,7 @@ export async function checkPackageUpdates(
       item => item.name.toLowerCase().replaceAll('_', '-') === req.name.toLowerCase().replaceAll('_', '-'),
     );
 
-    const latestVersion = await getLatestPipPackageVersion(req.name);
+    const latestVersion = await getLatestPipPackageVersion(req.name, maxRetriesConfig);
     const reqVersion = targetInPackage?.version;
     const currentVersion = semver.coerce(reqVersion)?.version;
 

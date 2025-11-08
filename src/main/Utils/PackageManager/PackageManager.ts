@@ -3,7 +3,9 @@ import {exec} from 'node:child_process';
 import {compact} from 'lodash';
 import semver, {compare} from 'semver';
 
+import {MaxRetry_StorageID} from '../../../cross/CrossExtConstants';
 import {PackageInfo, PackageUpdate, SitePackages_Info} from '../../../cross/CrossExtTypes';
+import {getStorage} from '../../DataHolder';
 import {getLatestPipPackageVersion} from './PipToolsManager';
 
 export async function getSitePackagesInfo(pythonExePath: string): Promise<SitePackages_Info[]> {
@@ -33,12 +35,13 @@ export async function getSitePackagesInfo(pythonExePath: string): Promise<SitePa
   });
 }
 
-// TODO: add MaxRetry_StorageID for this
 export async function getSitePackagesUpdates(packages: PackageInfo[]): Promise<SitePackages_Info[]> {
+  const maxRetriesConfig = getStorage()?.getCustomData(MaxRetry_StorageID) as number | undefined;
+
   try {
     const getLatest = packages.map(async pkg => {
       try {
-        const latestVersion = await getLatestPipPackageVersion(pkg.name);
+        const latestVersion = await getLatestPipPackageVersion(pkg.name, maxRetriesConfig);
         const currentVersion = semver.coerce(pkg.version)?.version;
 
         if (!latestVersion || !currentVersion || compare(currentVersion, latestVersion) !== -1) return null;
