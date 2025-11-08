@@ -148,7 +148,7 @@ export default function Header_UpdateButton({
         </Button>
         <Dropdown placement="bottom-end">
           <DropdownTrigger>
-            <Button variant="faded" isDisabled={!isReqAvailable || checkingUpdates} isIconOnly>
+            <Button variant="flat" color="default" isDisabled={!isReqAvailable || checkingUpdates} isIconOnly>
               <AltArrow_Icon className="size-4" />
             </Button>
           </DropdownTrigger>
