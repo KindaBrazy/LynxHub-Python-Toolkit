@@ -7,14 +7,29 @@ import {PackageInfo, pythonChannels, SitePackages_Info} from '../../../cross/Cro
 import {getAppManager, getStorage} from '../../DataHolder';
 import {readRequirements} from '../Requirements/PythonRequirements';
 
-export async function getLatestPipPackageVersion(packageName: string, maxRetries: number = 5): Promise<string | null> {
+let currentUpdateController: AbortController | null = null;
+
+// Cancels any ongoing package update check
+export function cancelPackagesUpdateCheck() {
+  if (currentUpdateController) {
+    console.log('Cancelling ongoing package update check...');
+    currentUpdateController.abort();
+    currentUpdateController = null;
+  }
+}
+
+export async function getLatestPipPackageVersion(
+  packageName: string,
+  maxRetries: number = 5,
+  signal?: AbortSignal,
+): Promise<string | null> {
   const url = `https://pypi.org/pypi/${packageName}/json`;
   const window = getAppManager()?.getMainWindow();
 
   try {
     for (let attempt = 1; attempt <= maxRetries; attempt++) {
       try {
-        const response = await axios.get(url, {timeout: 15000});
+        const response = await axios.get(url, {timeout: 15000, signal});
         const data = response.data;
         if (data?.info?.version) {
           return semver.coerce(data.info.version)?.version || null;
@@ -23,6 +38,11 @@ export async function getLatestPipPackageVersion(packageName: string, maxRetries
           return null;
         }
       } catch (error: any) {
+        if (axios.isCancel(error)) {
+          console.log(`Request for ${packageName} was cancelled.`);
+          return null;
+        }
+
         if (attempt === maxRetries) {
           if (axios.isAxiosError(error)) {
             if (error.response?.status === 404) {
@@ -47,7 +67,7 @@ export async function getLatestPipPackageVersion(packageName: string, maxRetries
 
     return null;
   } finally {
-    if (window) {
+    if (window && !signal?.aborted) {
       window.webContents.send(pythonChannels.updateCheckProgress, packageName);
     }
   }
@@ -57,80 +77,96 @@ export async function getPackagesUpdateByReq(
   reqPath: string,
   packages: SitePackages_Info[],
 ): Promise<SitePackages_Info[]> {
-  const maxRetriesConfig = getStorage()?.getCustomData(MaxRetry_StorageID) as number | undefined;
-
-  const reqData = await readRequirements(reqPath);
-
-  const result = reqData.map(async req => {
-    const targetInPackage = packages.find(
-      item => item.name.toLowerCase().replaceAll('_', '-') === req.name.toLowerCase().replaceAll('_', '-'),
-    );
-
-    const latestVersion = await getLatestPipPackageVersion(req.name, maxRetriesConfig);
-    const reqVersion = targetInPackage?.version;
-    const currentVersion = semver.coerce(reqVersion)?.version;
-
-    if (!latestVersion || !packages || !currentVersion) return null;
-
-    let canUpdate: boolean = false;
-    let targetVersion: string = currentVersion || '';
-
-    switch (req.versionOperator) {
-      case '>=':
-      case '>':
-      case '!=':
-        if (!req.version) break;
-
-        canUpdate = satisfies(latestVersion, `${req.versionOperator}${req.version}`);
-        if (canUpdate) targetVersion = latestVersion;
-
-        break;
-      case '<':
-      case '<=': {
-        if (!req.version) break;
-
-        canUpdate = lt(currentVersion, req.version);
-        if (canUpdate) targetVersion = req.version;
-
-        break;
-      }
-      case '==': {
-        if (!req.version) break;
-
-        canUpdate = currentVersion !== req.version;
-        if (canUpdate) targetVersion = req.version;
-
-        break;
-      }
-      case '~=': {
-        if (!req.version) break;
-        const latestParts = latestVersion.split('.');
-        const reqParts = req.version.split('.');
-        canUpdate = latestParts[0] === reqParts[0] && satisfies(latestVersion, `>${req.version}`);
-        targetVersion = latestVersion;
-        break;
-      }
-      default:
-        // console.warn(`Unsupported operator: ${req.versionOperator}`);
-        canUpdate = true;
-        targetVersion = latestVersion;
-    }
-
-    if (canUpdate && targetVersion !== currentVersion)
-      return {name: targetInPackage?.name || req.name, version: targetVersion};
-
-    return null;
-  });
-
-  return compact(await Promise.all(result));
-}
-export async function getPackagesUpdate(packages: PackageInfo[]): Promise<SitePackages_Info[]> {
-  const maxRetriesConfig = getStorage()?.getCustomData(MaxRetry_StorageID) as number | undefined;
+  cancelPackagesUpdateCheck();
+  currentUpdateController = new AbortController();
+  const signal = currentUpdateController.signal;
 
   try {
+    const maxRetriesConfig = getStorage()?.getCustomData(MaxRetry_StorageID) as number | undefined;
+
+    const reqData = await readRequirements(reqPath);
+
+    const result = reqData.map(async req => {
+      if (signal.aborted) return null;
+
+      const targetInPackage = packages.find(
+        item => item.name.toLowerCase().replaceAll('_', '-') === req.name.toLowerCase().replaceAll('_', '-'),
+      );
+
+      const latestVersion = await getLatestPipPackageVersion(req.name, maxRetriesConfig, signal);
+      const reqVersion = targetInPackage?.version;
+      const currentVersion = semver.coerce(reqVersion)?.version;
+
+      if (!latestVersion || !packages || !currentVersion) return null;
+
+      let canUpdate: boolean = false;
+      let targetVersion: string = currentVersion || '';
+
+      switch (req.versionOperator) {
+        case '>=':
+        case '>':
+        case '!=':
+          if (!req.version) break;
+
+          canUpdate = satisfies(latestVersion, `${req.versionOperator}${req.version}`);
+          if (canUpdate) targetVersion = latestVersion;
+
+          break;
+        case '<':
+        case '<=': {
+          if (!req.version) break;
+
+          canUpdate = lt(currentVersion, req.version);
+          if (canUpdate) targetVersion = req.version;
+
+          break;
+        }
+        case '==': {
+          if (!req.version) break;
+
+          canUpdate = currentVersion !== req.version;
+          if (canUpdate) targetVersion = req.version;
+
+          break;
+        }
+        case '~=': {
+          if (!req.version) break;
+          const latestParts = latestVersion.split('.');
+          const reqParts = req.version.split('.');
+          canUpdate = latestParts[0] === reqParts[0] && satisfies(latestVersion, `>${req.version}`);
+          targetVersion = latestVersion;
+          break;
+        }
+        default:
+          // console.warn(`Unsupported operator: ${req.versionOperator}`);
+          canUpdate = true;
+          targetVersion = latestVersion;
+      }
+
+      if (canUpdate && targetVersion !== currentVersion)
+        return {name: targetInPackage?.name || req.name, version: targetVersion};
+
+      return null;
+    });
+
+    return compact(await Promise.all(result));
+  } finally {
+    currentUpdateController = null;
+  }
+}
+export async function getPackagesUpdate(packages: PackageInfo[]): Promise<SitePackages_Info[]> {
+  cancelPackagesUpdateCheck();
+  currentUpdateController = new AbortController();
+  const signal = currentUpdateController.signal;
+
+  try {
+    const maxRetriesConfig = getStorage()?.getCustomData(MaxRetry_StorageID) as number | undefined;
+
     const getLatest = packages.map(async pkg => {
       try {
-        const latestVersion = await getLatestPipPackageVersion(pkg.name, maxRetriesConfig);
+        if (signal.aborted) return null;
+
+        const latestVersion = await getLatestPipPackageVersion(pkg.name, maxRetriesConfig, signal);
         const currentVersion = semver.coerce(pkg.version)?.version;
 
         if (!latestVersion || !currentVersion || compare(currentVersion, latestVersion) !== -1) return null;
@@ -145,5 +181,7 @@ export async function getPackagesUpdate(packages: PackageInfo[]): Promise<SitePa
   } catch (e) {
     console.error(e);
     return [];
+  } finally {
+    currentUpdateController = null;
   }
 }
