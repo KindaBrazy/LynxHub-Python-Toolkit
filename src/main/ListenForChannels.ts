@@ -36,14 +36,13 @@ import {createCondaEnv, isCondaInstalled, listAvailablePythons} from './Utils/In
 import downloadPython from './Utils/Installer/Installer_Official';
 import {
   getSitePackagesInfo,
-  getSitePackagesUpdates,
   installPythonPackage,
   uninstallPythonPackage,
   updateAllPythonPackages,
   updatePythonPackage,
 } from './Utils/PackageManager/PackageManager';
 import {changePythonPackageVersion} from './Utils/PackageManager/PackageManagerUtil';
-import {checkPackageUpdates} from './Utils/PackageManager/PipToolsManager';
+import {getPackagesUpdate, getPackagesUpdateByReq} from './Utils/PackageManager/PipToolsManager';
 import {
   findValidRequirementsFiles,
   getReqPath,
@@ -92,9 +91,7 @@ export default function ListenForChannels(nodePty: any) {
     installPythonPackage(pythonPath, command),
   );
 
-  ipcMain.handle(pythonChannels.getPackagesUpdateInfo, (_, packages: PackageInfo[]) =>
-    getSitePackagesUpdates(packages),
-  );
+  ipcMain.handle(pythonChannels.getPackagesUpdateInfo, (_, packages: PackageInfo[]) => getPackagesUpdate(packages));
 
   ipcMain.handle(pythonChannels.updatePackage, (_, pythonPath: string, packageName: string, version?: string) =>
     updatePythonPackage(pythonPath, packageName, version),
@@ -119,7 +116,7 @@ export default function ListenForChannels(nodePty: any) {
   ipcMain.handle(pythonChannels.findAIVenv, (_, id: string, folder: string | undefined) => findAIVenv(id, folder));
 
   ipcMain.handle(pythonChannels.getUpdatesReq, (_, reqFile: string, currentPackages: SitePackages_Info[]) =>
-    checkPackageUpdates(reqFile, currentPackages),
+    getPackagesUpdateByReq(reqFile, currentPackages),
   );
 
   ipcMain.handle(pythonChannels.getMaxRetry, () => {

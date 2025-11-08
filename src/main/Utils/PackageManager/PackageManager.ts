@@ -1,12 +1,6 @@
 import {exec} from 'node:child_process';
 
-import {compact} from 'lodash';
-import semver, {compare} from 'semver';
-
-import {MaxRetry_StorageID} from '../../../cross/CrossExtConstants';
-import {PackageInfo, PackageUpdate, SitePackages_Info} from '../../../cross/CrossExtTypes';
-import {getStorage} from '../../DataHolder';
-import {getLatestPipPackageVersion} from './PipToolsManager';
+import {PackageUpdate, SitePackages_Info} from '../../../cross/CrossExtTypes';
 
 export async function getSitePackagesInfo(pythonExePath: string): Promise<SitePackages_Info[]> {
   return new Promise((resolve, reject) => {
@@ -33,30 +27,6 @@ export async function getSitePackagesInfo(pythonExePath: string): Promise<SitePa
       }
     });
   });
-}
-
-export async function getSitePackagesUpdates(packages: PackageInfo[]): Promise<SitePackages_Info[]> {
-  const maxRetriesConfig = getStorage()?.getCustomData(MaxRetry_StorageID) as number | undefined;
-
-  try {
-    const getLatest = packages.map(async pkg => {
-      try {
-        const latestVersion = await getLatestPipPackageVersion(pkg.name, maxRetriesConfig);
-        const currentVersion = semver.coerce(pkg.version)?.version;
-
-        if (!latestVersion || !currentVersion || compare(currentVersion, latestVersion) !== -1) return null;
-
-        return {name: pkg.name, version: latestVersion};
-      } catch (e) {
-        return null;
-      }
-    });
-
-    return compact(await Promise.all(getLatest));
-  } catch (e) {
-    console.error(e);
-    return [];
-  }
 }
 
 export async function installPythonPackage(pythonExePath: string, commands: string): Promise<string> {

@@ -1,9 +1,9 @@
 import axios from 'axios';
 import {compact} from 'lodash';
-import semver, {lt, satisfies} from 'semver';
+import semver, {compare, lt, satisfies} from 'semver';
 
 import {MaxRetry_StorageID} from '../../../cross/CrossExtConstants';
-import {pythonChannels, SitePackages_Info} from '../../../cross/CrossExtTypes';
+import {PackageInfo, pythonChannels, SitePackages_Info} from '../../../cross/CrossExtTypes';
 import {getAppManager, getStorage} from '../../DataHolder';
 import {readRequirements} from '../Requirements/PythonRequirements';
 
@@ -53,7 +53,7 @@ export async function getLatestPipPackageVersion(packageName: string, maxRetries
   }
 }
 
-export async function checkPackageUpdates(
+export async function getPackagesUpdateByReq(
   reqPath: string,
   packages: SitePackages_Info[],
 ): Promise<SitePackages_Info[]> {
@@ -123,4 +123,27 @@ export async function checkPackageUpdates(
   });
 
   return compact(await Promise.all(result));
+}
+export async function getPackagesUpdate(packages: PackageInfo[]): Promise<SitePackages_Info[]> {
+  const maxRetriesConfig = getStorage()?.getCustomData(MaxRetry_StorageID) as number | undefined;
+
+  try {
+    const getLatest = packages.map(async pkg => {
+      try {
+        const latestVersion = await getLatestPipPackageVersion(pkg.name, maxRetriesConfig);
+        const currentVersion = semver.coerce(pkg.version)?.version;
+
+        if (!latestVersion || !currentVersion || compare(currentVersion, latestVersion) !== -1) return null;
+
+        return {name: pkg.name, version: latestVersion};
+      } catch (e) {
+        return null;
+      }
+    });
+
+    return compact(await Promise.all(getLatest));
+  } catch (e) {
+    console.error(e);
+    return [];
+  }
 }
