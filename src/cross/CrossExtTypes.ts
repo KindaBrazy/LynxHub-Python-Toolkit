@@ -162,7 +162,13 @@ export type PkgDisplayType = 'capitalize' | 'startCase' | 'default' | string;
 export type CachedUsage = {id: string; usage: number};
 export type CustomTitle = {title: string; path: string};
 
-export type PythonVenvSelectItem = {label: string; dir: string; type: 'python' | 'venv' | 'conda'; condaName?: string};
+export type PythonVenvSelectItem = {
+  version: string;
+  dir: string;
+  type: 'python' | 'venv' | 'conda';
+  condaName?: string;
+  isDefault?: 'lynx' | 'system';
+};
 export type AssociateItem = {id: string; dir: string; type: 'python' | 'venv' | 'conda'; condaName?: string};
 export type AssociateAction = 'add' | 'remove' | 'init';
 export type ParsedPythonVersion = {major: number; minor: number; patch: number};

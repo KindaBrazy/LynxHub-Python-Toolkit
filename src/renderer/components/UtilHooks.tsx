@@ -10,12 +10,14 @@ export function fetchAndSetPythonVenvs(
     .then(([pythons, venvs]) => {
       const pythonItems: PythonVenvSelectItem[] = pythons.map(python => ({
         condaName: python.installationType === 'conda' ? python.condaName : undefined,
-        label: python.installationType === 'conda' ? `${python.version}  |  ${python.condaName}` : python.version,
+        version: python.version,
         dir: python.installFolder,
         type: python.installationType === 'conda' ? 'conda' : 'python',
+        isDefault: python.isLynxHubDefault ? 'lynx' : python.isDefault ? 'system' : undefined,
       }));
       const venvItems: PythonVenvSelectItem[] = venvs.map(venv => ({
-        label: `${venv.pythonVersion}  |  ${venv.name}`,
+        condaName: venv.name,
+        version: venv.pythonVersion,
         dir: venv.folder,
         type: 'venv',
       }));

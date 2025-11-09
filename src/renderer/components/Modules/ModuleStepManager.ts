@@ -3,9 +3,11 @@ import {PythonVenvSelectItem} from '../../../cross/CrossExtTypes';
 import pIpc from '../../PIpc';
 import {Installer_PythonSelector} from './Installer_PythonSelector';
 
-function addAssociate(id: string, item: PythonVenvSelectItem) {
-  if (ModulesThatSupportPython.includes(id)) {
+function associate(id: string, type: 'add' | 'remove', item?: PythonVenvSelectItem) {
+  if (type === 'add' && item && ModulesThatSupportPython.includes(id)) {
     pIpc.addAssociate({id, dir: item.dir, type: item.type, condaName: item.condaName});
+  } else if (type === 'remove') {
+    pIpc.removeAssociate(id);
   }
 }
 
@@ -38,6 +40,6 @@ export const getStep = (id: string) => {
   return {
     index,
     title: 'Python',
-    content: Installer_PythonSelector(id, addAssociate),
+    content: Installer_PythonSelector(id, associate),
   };
 };
