@@ -69,7 +69,7 @@ export async function updatePythonPackage(
   });
 }
 
-export async function updateAllPythonPackages(pythonExePath: string, packages: PackageUpdate[]): Promise<string> {
+export async function updatePackages(pythonExePath: string, packages: PackageUpdate[]): Promise<string> {
   return new Promise((resolve, reject) => {
     if (packages.length === 0) {
       resolve('No packages selected for update.');

@@ -39,7 +39,7 @@ import {
   getSitePackagesInfo,
   installPythonPackage,
   uninstallPythonPackage,
-  updateAllPythonPackages,
+  updatePackages,
   updatePythonPackage,
 } from './Utils/PackageManager/PackageManager';
 import {changePythonPackageVersion} from './Utils/PackageManager/PackageManagerUtil';
@@ -106,7 +106,7 @@ export default function ListenForChannels(nodePty: any) {
     updatePythonPackage(pythonPath, packageName, version),
   );
   ipcMain.handle(pythonChannels.updatePackages, (_, pythonPath: string, packages: PackageUpdate[]) =>
-    updateAllPythonPackages(pythonPath, packages),
+    updatePackages(pythonPath, packages),
   );
 
   ipcMain.handle(pythonChannels.readReqs, (_, filePath: string) => readRequirements(filePath));
