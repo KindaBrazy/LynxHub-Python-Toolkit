@@ -287,16 +287,17 @@ export default function InstalledCard({python, diskUsage, maxDiskValue, updateDe
                 <div className="p-2 gap-y-3 flex flex-col">
                   {/* Option 1: Full Uninstall */}
                   <div>
-                    <strong className="text-sm">Uninstall completely</strong>
+                    <strong className="text-sm">Complete Uninstall</strong>
                     {python.installationType === 'conda' ? (
                       <p className="text-xs text-default-600 mt-1">
-                        {`Deletes the entire Conda environment "${python.condaName}" and all
-                         its packages. This action is irreversible.`}
+                        {`Permanently deletes the entire Conda environment "${python.condaName}" and all
+                         its packages from your computer. Any AI using this environment will be
+                          disconnected.`}
                       </p>
                     ) : (
                       <p className="text-xs text-default-600 mt-1">
-                        {`Uninstalls Python version ${python.version} and deletes all associated
-                         packages. This action is irreversible.`}
+                        {`Permanently uninstalls Python version ${python.version} and all its packages
+                         from your computer. Any AI using this installation will be disconnected.`}
                       </p>
                     )}
                     <Button
@@ -306,7 +307,7 @@ export default function InstalledCard({python, diskUsage, maxDiskValue, updateDe
                       onPress={uninstall}
                       startContent={<TrashDuo_Icon />}
                       fullWidth>
-                      Uninstall
+                      Uninstall Permanently
                     </Button>
                   </div>
 
@@ -315,10 +316,11 @@ export default function InstalledCard({python, diskUsage, maxDiskValue, updateDe
 
                   {/* Option 2: Remove from List */}
                   <div>
-                    <strong className="text-sm">Remove from list</strong>
+                    <strong className="text-sm">Remove From List Only</strong>
                     <p className="text-xs text-default-600 mt-1">
-                      Only removes this entry from the list. The Python installation on your system will not be
-                      affected.
+                      Removes this entry from the list but does not delete the actual Python installation from your
+                      system. Any associated AI will be disconnected, but you can re-link them if you add this
+                      installation back later.
                     </p>
                     <Button
                       size="sm"

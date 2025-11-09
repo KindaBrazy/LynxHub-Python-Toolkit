@@ -12,7 +12,7 @@ import {
   PopoverContent,
   PopoverTrigger,
 } from '@heroui/react';
-import {message, Spin} from 'antd';
+import {Divider, message, Spin} from 'antd';
 import {SHA256} from 'crypto-js';
 import {isNil} from 'lodash';
 import {FormEvent, useCallback, useEffect, useMemo, useState} from 'react';
@@ -179,9 +179,10 @@ export default function VenvCard({
                 <div className="p-2 gap-y-3 flex flex-col">
                   {/* Option 1: Permanent Deletion */}
                   <div>
-                    <strong className="text-sm">Delete permanently</strong>
+                    <strong className="text-sm">Delete Environment</strong>
                     <p className="text-xs text-default-600 mt-1">
-                      {`This will permanently delete '${title}' and all its contents. This action cannot be undone.`}
+                      {`Permanently deletes the '${title}' environment folder and all its contents from your computer.
+                       Any AI using this environment will be disconnected.`}
                     </p>
                     <Button
                       size="sm"
@@ -190,18 +191,20 @@ export default function VenvCard({
                       onPress={remove}
                       startContent={<TrashDuo_Icon />}
                       fullWidth>
-                      Delete
+                      Delete Permanently
                     </Button>
                   </div>
 
                   {/* Visual separator */}
-                  <div className="border-t border-divider" />
+                  <Divider className="my-0" />
 
                   {/* Option 2: Remove from List */}
                   <div>
-                    <strong className="text-sm">Remove from list</strong>
+                    <strong className="text-sm">Remove From List Only</strong>
                     <p className="text-xs text-default-600 mt-1">
-                      {`Only removes '${title}' from this view. The item itself will not be deleted.`}
+                      {`Removes '${title}' from the list but does not delete the environment's files from your system.
+                       Any associated AI will be disconnected, but you can re-link them if you add this
+                        environment back later.`}
                     </p>
                     <Button
                       size="sm"
