@@ -18,7 +18,11 @@ import {isNil} from 'lodash';
 import {FormEvent, useEffect, useMemo, useState} from 'react';
 
 import rendererIpc from '../../../../../../src/renderer/src/App/RendererIpc';
-import {MenuDots_Icon, OpenFolder_Icon} from '../../../../../../src/renderer/src/assets/icons/SvgIcons/SvgIcons';
+import {
+  Close_Icon,
+  MenuDots_Icon,
+  OpenFolder_Icon,
+} from '../../../../../../src/renderer/src/assets/icons/SvgIcons/SvgIcons';
 import {formatSizeMB} from '../../../../cross/CrossExtUtils';
 import pIpc from '../../../PIpc';
 import {Env_Icon, HardDrive_Icon, Packages_Icon, TrashDuo_Icon} from '../../SvgIcons';
@@ -156,24 +160,48 @@ export default function VenvCard({
             </Dropdown>
 
             <Popover
-              size="sm"
-              color="danger"
               placement="left"
-              className="max-w-[15rem]"
               isOpen={popoverUninstaller}
               onOpenChange={setPopoverUninstaller}
+              className="max-w-sm before:bg-foreground-100"
               showArrow>
               <PopoverTrigger>
                 <Button size="sm" color="danger" variant="light" isLoading={isRemoving} isIconOnly>
                   <TrashDuo_Icon className="size-[50%]" />
                 </Button>
               </PopoverTrigger>
-              <PopoverContent>
-                <div className="p-2 space-y-2">
-                  <span>{`Permanently delete '${title}' and all its contents? This action cannot be undone.`}</span>
-                  <Button size="sm" onPress={remove} fullWidth>
-                    Yes, Delete
-                  </Button>
+              <PopoverContent className="border border-foreground-100 dark:bg-DarkGray">
+                <div className="p-2 gap-y-3 flex flex-col">
+                  {/* Option 1: Permanent Deletion */}
+                  <div>
+                    <strong className="text-sm">Delete permanently</strong>
+                    <p className="text-xs text-default-600 mt-1">
+                      {`This will permanently delete '${title}' and all its contents. This action cannot be undone.`}
+                    </p>
+                    <Button
+                      size="sm"
+                      color="danger"
+                      className="mt-2"
+                      onPress={remove}
+                      startContent={<TrashDuo_Icon />}
+                      fullWidth>
+                      Delete
+                    </Button>
+                  </div>
+
+                  {/* Visual separator */}
+                  <div className="border-t border-divider" />
+
+                  {/* Option 2: Remove from List */}
+                  <div>
+                    <strong className="text-sm">Remove from list</strong>
+                    <p className="text-xs text-default-600 mt-1">
+                      {`Only removes '${title}' from this view. The item itself will not be deleted.`}
+                    </p>
+                    <Button size="sm" color="warning" className="mt-2" startContent={<Close_Icon />} fullWidth>
+                      Remove from List
+                    </Button>
+                  </div>
                 </div>
               </PopoverContent>
             </Popover>
