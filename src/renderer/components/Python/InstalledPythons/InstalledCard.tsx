@@ -16,7 +16,7 @@ import {
 } from '@heroui/react';
 import {Divider, Spin} from 'antd';
 import {isNil, startCase} from 'lodash';
-import {useMemo, useState} from 'react';
+import {useCallback, useMemo, useState} from 'react';
 import {useDispatch} from 'react-redux';
 
 import rendererIpc from '../../../../../../src/renderer/src/App/RendererIpc';
@@ -100,6 +100,7 @@ export default function InstalledCard({python, diskUsage, maxDiskValue, updateDe
         console.error(err);
       })
       .finally(() => {
+        pIpc.removeAssociatePath(python.installPath);
         pIpc.removeSavedPython(python.installPath);
         refresh(false);
         setIsUninstalling(false);
@@ -183,6 +184,11 @@ export default function InstalledCard({python, diskUsage, maxDiskValue, updateDe
     }
 
     return null;
+  }, [python]);
+
+  const removeFromList = useCallback(() => {
+    pIpc.removeAssociatePath(python.installPath);
+    pIpc.removeSavedPython(python.installPath);
   }, [python]);
 
   return (
@@ -314,7 +320,13 @@ export default function InstalledCard({python, diskUsage, maxDiskValue, updateDe
                       Only removes this entry from the list. The Python installation on your system will not be
                       affected.
                     </p>
-                    <Button size="sm" color="warning" className="mt-2" startContent={<Close_Icon />} fullWidth>
+                    <Button
+                      size="sm"
+                      color="warning"
+                      className="mt-2"
+                      onPress={removeFromList}
+                      startContent={<Close_Icon />}
+                      fullWidth>
                       Remove from List
                     </Button>
                   </div>

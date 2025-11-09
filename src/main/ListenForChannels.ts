@@ -57,13 +57,14 @@ import {
   setReqPath,
 } from './Utils/Requirements/PythonRequirements';
 import uninstallPython from './Utils/Uninstaller/Uninstaller';
-import createPythonVenv, {getVenvs, locateVenv} from './Utils/VirtualEnv/CreateVenv';
+import createPythonVenv, {getVenvs, locateVenv, removeVenvStorage} from './Utils/VirtualEnv/CreateVenv';
 import {findAIVenv} from './Utils/VirtualEnv/VenvUtils';
 
 export default function ListenForChannels(nodePty: any) {
   const storageManager = getStorage();
 
   ipcMain.on(pythonChannels.removeSavedPython, (_, pPath: string) => removeSavedPython(pPath));
+  ipcMain.on(pythonChannels.removeSavedVenv, (_, venvPath: string) => removeVenvStorage(venvPath));
   ipcMain.on(pythonChannels.addSavedPython, (_, pPath: string) => addSavedPython(pPath));
 
   ipcMain.handle(pythonChannels.locatePython, (_, pPath: string) => locatePythonInstallation(pPath));

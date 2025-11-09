@@ -39,7 +39,7 @@ export function updateVenvStorage(newVenvPath: string) {
   }
 }
 
-function removeVenvStorage(venvPath: string) {
+export function removeVenvStorage(venvPath: string) {
   const storageManager = getStorage();
   const existVenvs = storageManager?.getCustomData(STORE_VENVS_ID) as string[];
   if (existVenvs) {

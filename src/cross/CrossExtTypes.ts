@@ -66,6 +66,7 @@ export type DlProgressOfficial = {percentage: number; downloaded: number; total:
 export type FilterKeys = 'all' | 'updates' | 'prerelease' | 'major' | 'minor' | 'patch' | 'others';
 export const pythonChannels = {
   removeSavedPython: 'remove-saved-python',
+  removeSavedVenv: 'remove-saved-venv',
   addSavedPython: 'add-saved-python',
 
   locatePython: 'ptoolkit-locate-python',

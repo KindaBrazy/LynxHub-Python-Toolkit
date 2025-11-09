@@ -15,7 +15,7 @@ import {
 import {message, Spin} from 'antd';
 import {SHA256} from 'crypto-js';
 import {isNil} from 'lodash';
-import {FormEvent, useEffect, useMemo, useState} from 'react';
+import {FormEvent, useCallback, useEffect, useMemo, useState} from 'react';
 
 import rendererIpc from '../../../../../../src/renderer/src/App/RendererIpc';
 import {
@@ -111,6 +111,11 @@ export default function VenvCard({
     setPackageManagerOpen(true);
   };
 
+  const removeFromList = useCallback(() => {
+    pIpc.removeAssociatePath(pythonPath);
+    pIpc.removeSavedVenv(folder);
+  }, [pythonPath]);
+
   return (
     <>
       <PackageManagerModal
@@ -198,7 +203,13 @@ export default function VenvCard({
                     <p className="text-xs text-default-600 mt-1">
                       {`Only removes '${title}' from this view. The item itself will not be deleted.`}
                     </p>
-                    <Button size="sm" color="warning" className="mt-2" startContent={<Close_Icon />} fullWidth>
+                    <Button
+                      size="sm"
+                      color="warning"
+                      className="mt-2"
+                      onPress={removeFromList}
+                      startContent={<Close_Icon />}
+                      fullWidth>
                       Remove from List
                     </Button>
                   </div>
