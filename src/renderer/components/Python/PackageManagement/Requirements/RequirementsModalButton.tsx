@@ -184,6 +184,7 @@ export default function RequirementsBtn({id, projectPath, setIsReqAvailable, sho
                       Choose or Create requirements file
                     </Button>
                   }
+                  className="gap-y-4 flex flex-col"
                   title="Select or create a requirements file to continue."
                 />
               </div>
@@ -203,30 +204,21 @@ export default function RequirementsBtn({id, projectPath, setIsReqAvailable, sho
             )}
           </ModalBody>
           <ModalFooter className="py-3">
-            <div>
-              <Button
-                size="md"
-                variant="flat"
-                color="success"
-                isLoading={isSaving}
-                onPress={handleSaveRequirements}
-                startContent={!isSaving && <Save_Icon className="size-3.5" />}>
-                {!isSaving && 'Save'}
-              </Button>
-            </div>
-            <div>
-              <Button size="md" color="warning" variant="light" className="w-fit" onPress={() => setIsOpen(false)}>
-                Close
-              </Button>
-            </div>
+            <Button
+              variant="flat"
+              color="success"
+              isLoading={isSaving}
+              onPress={handleSaveRequirements}
+              startContent={!isSaving && <Save_Icon className="size-3.5" />}>
+              {!isSaving && 'Save'}
+            </Button>
+            <Button color="warning" variant="light" className="w-fit" onPress={() => setIsOpen(false)}>
+              Close
+            </Button>
           </ModalFooter>
         </ModalContent>
       </Modal>
-      <Button
-        size="sm"
-        variant="solid"
-        onPress={() => setIsOpen(true)}
-        startContent={<Checklist_Icon className="size-3.5" />}>
+      <Button variant="solid" onPress={() => setIsOpen(true)} startContent={<Checklist_Icon className="size-3.5" />}>
         Manage Requirements
       </Button>
     </>

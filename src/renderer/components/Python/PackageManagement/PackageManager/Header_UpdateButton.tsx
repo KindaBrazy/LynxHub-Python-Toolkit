@@ -105,52 +105,47 @@ export default function Header_UpdateButton({
         ? packagesUpdate.length
         : visibleItems.length
       : selectedKeys.size;
-  }, []);
+  }, [selectedKeys, selectedFilter, packagesUpdate, visibleItems]);
 
   return !isEmpty(packagesUpdate) ? (
     <Button
-      size="sm"
-      radius="sm"
       variant="flat"
       color="success"
       onPress={update}
-      className="!min-w-40"
       isLoading={isUpdating}
       startContent={!isUpdating && <Download2_Icon />}
       isDisabled={selectedKeys !== 'all' && selectedKeys.size === 0}>
       {isUpdating ? <span>Updating ({selectedCount})...</span> : <span>Update {selectedCount}</span>}
     </Button>
   ) : (
-    <div className="flex flex-col">
-      <ButtonGroup size="sm" variant="solid">
-        <Button
-          onPress={checkForUpdate}
-          isLoading={checkingUpdates}
-          startContent={!checkingUpdates && <Magnifier_Icon />}>
-          {labelsMap[selectedOptionValue]}
-        </Button>
-        <Dropdown placement="bottom-end">
-          <DropdownTrigger>
-            <Button variant="flat" color="default" isDisabled={!isReqAvailable || checkingUpdates} isIconOnly>
-              <AltArrow_Icon className="size-4" />
-            </Button>
-          </DropdownTrigger>
-          <DropdownMenu
-            selectionMode="single"
-            aria-label="Merge options"
-            selectedKeys={selectedOption}
-            // @ts-ignore-next-line
-            onSelectionChange={setSelectedOption}
-            disallowEmptySelection>
-            <DropdownItem key="all" description={descriptionsMap['all']}>
-              {labelsMap['all']}
-            </DropdownItem>
-            <DropdownItem key="req" description={descriptionsMap['req']}>
-              {labelsMap['req']}
-            </DropdownItem>
-          </DropdownMenu>
-        </Dropdown>
-      </ButtonGroup>
-    </div>
+    <ButtonGroup variant="solid">
+      <Button
+        onPress={checkForUpdate}
+        isLoading={checkingUpdates}
+        startContent={!checkingUpdates && <Magnifier_Icon />}>
+        {labelsMap[selectedOptionValue]}
+      </Button>
+      <Dropdown placement="bottom-end">
+        <DropdownTrigger>
+          <Button variant="flat" color="default" isDisabled={!isReqAvailable || checkingUpdates} isIconOnly>
+            <AltArrow_Icon className="size-4" />
+          </Button>
+        </DropdownTrigger>
+        <DropdownMenu
+          selectionMode="single"
+          aria-label="Merge options"
+          selectedKeys={selectedOption}
+          // @ts-ignore-next-line
+          onSelectionChange={setSelectedOption}
+          disallowEmptySelection>
+          <DropdownItem key="all" description={descriptionsMap['all']}>
+            {labelsMap['all']}
+          </DropdownItem>
+          <DropdownItem key="req" description={descriptionsMap['req']}>
+            {labelsMap['req']}
+          </DropdownItem>
+        </DropdownMenu>
+      </Dropdown>
+    </ButtonGroup>
   );
 }

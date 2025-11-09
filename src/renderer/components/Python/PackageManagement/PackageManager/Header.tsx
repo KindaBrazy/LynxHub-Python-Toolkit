@@ -1,4 +1,4 @@
-import {Avatar, ButtonGroup, Chip, Input, ModalHeader, Progress, Selection} from '@heroui/react';
+import {Avatar, Chip, Input, ModalHeader, Progress, Selection} from '@heroui/react';
 import {message} from 'antd';
 import {compact, isEmpty} from 'lodash';
 import {Dispatch, ReactNode, SetStateAction, useEffect, useState} from 'react';
@@ -161,7 +161,7 @@ export default function PackageManagerHeader({
           placeholder="Search for packages..."
         />
       )}
-      <div className="gap-x-2 flex items-center w-full mt-2">
+      <div className="gap-x-2 flex justify-between items-center w-full mt-2">
         {isValidPython && (
           <Header_UpdateButton
             update={update}
@@ -178,21 +178,19 @@ export default function PackageManagerHeader({
             setProgressValue={setProgressValue}
           />
         )}
-        <ButtonGroup size="sm" fullWidth>
-          {isValidPython && (
-            <>
-              <Header_InstallerModal show={show} refresh={refresh} pythonPath={pythonPath} />
+        {isValidPython && (
+          <>
+            <Header_InstallerModal show={show} refresh={refresh} pythonPath={pythonPath} />
 
-              <RequirementsBtn
-                id={id}
-                show={show}
-                projectPath={projectPath}
-                setIsReqAvailable={setIsReqAvailable}
-                setReqPackageCount={setReqPackageCount}
-              />
-            </>
-          )}
-        </ButtonGroup>
+            <RequirementsBtn
+              id={id}
+              show={show}
+              projectPath={projectPath}
+              setIsReqAvailable={setIsReqAvailable}
+              setReqPackageCount={setReqPackageCount}
+            />
+          </>
+        )}
 
         {isValidPython && actionButtons?.map(ActionButton => ActionButton)}
       </div>
