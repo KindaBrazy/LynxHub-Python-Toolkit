@@ -22,6 +22,7 @@ import {useDispatch} from 'react-redux';
 import rendererIpc from '../../../../../../src/renderer/src/App/RendererIpc';
 import {lynxTopToast} from '../../../../../../src/renderer/src/App/Utils/UtilHooks';
 import {
+  Close_Icon,
   MenuDots_Icon,
   OpenFolder_Icon,
   RefreshDuo_Icon,
@@ -266,34 +267,57 @@ export default function InstalledCard({python, diskUsage, maxDiskValue, updateDe
             </Dropdown>
 
             <Popover
-              size="sm"
-              color="danger"
               placement="left"
-              className="max-w-[15rem]"
               isOpen={popoverUninstaller}
               onOpenChange={setPopoverUninstaller}
+              className="max-w-sm before:bg-foreground-100"
               showArrow>
               <PopoverTrigger>
                 <Button size="sm" color="danger" variant="light" isIconOnly>
                   <TrashDuo_Icon className="size-[50%]" />
                 </Button>
               </PopoverTrigger>
-              <PopoverContent>
-                <div className="p-2 space-y-2">
-                  {python.installationType === 'conda' ? (
-                    <span>
-                      {`Confirm deletion of the entire Conda environment "${python.condaName}" and` +
-                        ` all associated packages. This action is irreversible.`}
-                    </span>
-                  ) : (
-                    <span>
-                      {`Confirm uninstallation of Python version ${python.version} and deletion of all` +
-                        ` associated packages. This action is irreversible.`}
-                    </span>
-                  )}
-                  <Button size="sm" onPress={uninstall} fullWidth>
-                    Uninstall
-                  </Button>
+              <PopoverContent className="border border-foreground-100 dark:bg-DarkGray">
+                <div className="p-2 gap-y-3 flex flex-col">
+                  {/* Option 1: Full Uninstall */}
+                  <div>
+                    <strong className="text-sm">Uninstall completely</strong>
+                    {python.installationType === 'conda' ? (
+                      <p className="text-xs text-default-600 mt-1">
+                        {`Deletes the entire Conda environment "${python.condaName}" and all
+                         its packages. This action is irreversible.`}
+                      </p>
+                    ) : (
+                      <p className="text-xs text-default-600 mt-1">
+                        {`Uninstalls Python version ${python.version} and deletes all associated
+                         packages. This action is irreversible.`}
+                      </p>
+                    )}
+                    <Button
+                      size="sm"
+                      color="danger"
+                      className="mt-2"
+                      onPress={uninstall}
+                      startContent={<TrashDuo_Icon />}
+                      fullWidth>
+                      Uninstall
+                    </Button>
+                  </div>
+
+                  {/* A visual separator between the two distinct options */}
+                  <Divider className="my-0" />
+
+                  {/* Option 2: Remove from List */}
+                  <div>
+                    <strong className="text-sm">Remove from list</strong>
+                    <p className="text-xs text-default-600 mt-1">
+                      Only removes this entry from the list. The Python installation on your system will not be
+                      affected.
+                    </p>
+                    <Button size="sm" color="warning" className="mt-2" startContent={<Close_Icon />} fullWidth>
+                      Remove from List
+                    </Button>
+                  </div>
                 </div>
               </PopoverContent>
             </Popover>
