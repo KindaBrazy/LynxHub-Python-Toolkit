@@ -218,6 +218,8 @@ export default function PackageManagerModal({
         return pkg;
       }),
     );
+
+    setSelectedKeys(new Set([]));
   };
 
   const removed = (name: string) => {
