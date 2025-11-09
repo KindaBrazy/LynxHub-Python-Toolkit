@@ -49,10 +49,11 @@ export default function Venv({visible, installedPythons, isLoadingPythons, show}
     pIpc
       .getVenvs()
       .then((venvs: VenvInfo[]) => {
-        const resultVenvs: VenvInfo[] = [
+        const resultVenvs: (VenvInfo & {isInstallation?: boolean})[] = [
           ...venvs,
           ...condaVenvs.map(venv => {
             return {
+              isInstallation: true,
               pythonVersion: venv.version,
               pythonPath: venv.installPath,
               folder: venv.installFolder,
@@ -64,6 +65,7 @@ export default function Venv({visible, installedPythons, isLoadingPythons, show}
         setPythonVenvs(
           resultVenvs.map(venv => {
             return {
+              isFromInstallation: venv.isInstallation,
               pythonVersion: venv.pythonVersion,
               pythonPath: venv.pythonPath,
               title: venv.name,
@@ -154,6 +156,7 @@ export default function Venv({visible, installedPythons, isLoadingPythons, show}
                 pythonPath={venv.pythonPath}
                 pythonVersion={venv.pythonVersion}
                 key={`${venv.title}_${index}_card`}
+                isInstallation={venv.isFromInstallation}
                 installedPackages={venv.installedPackages}
               />
             ))}

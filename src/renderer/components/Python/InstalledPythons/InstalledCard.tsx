@@ -189,6 +189,8 @@ export default function InstalledCard({python, diskUsage, maxDiskValue, updateDe
   const removeFromList = useCallback(() => {
     pIpc.removeAssociatePath(python.installPath);
     pIpc.removeSavedPython(python.installPath);
+    setPopoverUninstaller(false);
+    refresh(false);
   }, [python]);
 
   return (

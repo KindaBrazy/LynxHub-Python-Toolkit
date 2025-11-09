@@ -38,6 +38,7 @@ type Props = {
   diskUsage: {path: string; value: number | undefined}[];
   refresh: () => void;
   show: string;
+  isInstallation?: boolean;
 };
 
 export default function VenvCard({
@@ -49,6 +50,7 @@ export default function VenvCard({
   pythonPath,
   refresh,
   show,
+  isInstallation,
 }: Props) {
   const [popoverUninstaller, setPopoverUninstaller] = useState<boolean>(false);
   const [editedTitle, setEditedTitle] = useState<string>(title);
@@ -114,7 +116,9 @@ export default function VenvCard({
   const removeFromList = useCallback(() => {
     pIpc.removeAssociatePath(pythonPath);
     pIpc.removeSavedVenv(folder);
-  }, [pythonPath]);
+    setPopoverUninstaller(false);
+    refresh();
+  }, [pythonPath, folder]);
 
   return (
     <>
@@ -164,61 +168,63 @@ export default function VenvCard({
               </DropdownMenu>
             </Dropdown>
 
-            <Popover
-              placement="left"
-              isOpen={popoverUninstaller}
-              onOpenChange={setPopoverUninstaller}
-              className="max-w-sm before:bg-foreground-100"
-              showArrow>
-              <PopoverTrigger>
-                <Button size="sm" color="danger" variant="light" isLoading={isRemoving} isIconOnly>
-                  <TrashDuo_Icon className="size-[50%]" />
-                </Button>
-              </PopoverTrigger>
-              <PopoverContent className="border border-foreground-100 dark:bg-DarkGray">
-                <div className="p-2 gap-y-3 flex flex-col">
-                  {/* Option 1: Permanent Deletion */}
-                  <div>
-                    <strong className="text-sm">Delete Environment</strong>
-                    <p className="text-xs text-default-600 mt-1">
-                      {`Permanently deletes the '${title}' environment folder and all its contents from your computer.
+            {!isInstallation && (
+              <Popover
+                placement="left"
+                isOpen={popoverUninstaller}
+                onOpenChange={setPopoverUninstaller}
+                className="max-w-sm before:bg-foreground-100"
+                showArrow>
+                <PopoverTrigger>
+                  <Button size="sm" color="danger" variant="light" isLoading={isRemoving} isIconOnly>
+                    <TrashDuo_Icon className="size-[50%]" />
+                  </Button>
+                </PopoverTrigger>
+                <PopoverContent className="border border-foreground-100 dark:bg-DarkGray">
+                  <div className="p-2 gap-y-3 flex flex-col">
+                    {/* Option 1: Permanent Deletion */}
+                    <div>
+                      <strong className="text-sm">Delete Environment</strong>
+                      <p className="text-xs text-default-600 mt-1">
+                        {`Permanently deletes the '${title}' environment folder and all its contents from your computer.
                        Any AI using this environment will be disconnected.`}
-                    </p>
-                    <Button
-                      size="sm"
-                      color="danger"
-                      className="mt-2"
-                      onPress={remove}
-                      startContent={<TrashDuo_Icon />}
-                      fullWidth>
-                      Delete Permanently
-                    </Button>
-                  </div>
+                      </p>
+                      <Button
+                        size="sm"
+                        color="danger"
+                        className="mt-2"
+                        onPress={remove}
+                        startContent={<TrashDuo_Icon />}
+                        fullWidth>
+                        Delete Permanently
+                      </Button>
+                    </div>
 
-                  {/* Visual separator */}
-                  <Divider className="my-0" />
+                    {/* Visual separator */}
+                    <Divider className="my-0" />
 
-                  {/* Option 2: Remove from List */}
-                  <div>
-                    <strong className="text-sm">Remove From List Only</strong>
-                    <p className="text-xs text-default-600 mt-1">
-                      {`Removes '${title}' from the list but does not delete the environment's files from your system.
+                    {/* Option 2: Remove from List */}
+                    <div>
+                      <strong className="text-sm">Remove From List Only</strong>
+                      <p className="text-xs text-default-600 mt-1">
+                        {`Removes '${title}' from the list but does not delete the environment's files from your system.
                        Any associated AI will be disconnected, but you can re-link them if you add this
                         environment back later.`}
-                    </p>
-                    <Button
-                      size="sm"
-                      color="warning"
-                      className="mt-2"
-                      onPress={removeFromList}
-                      startContent={<Close_Icon />}
-                      fullWidth>
-                      Remove from List
-                    </Button>
+                      </p>
+                      <Button
+                        size="sm"
+                        color="warning"
+                        className="mt-2"
+                        onPress={removeFromList}
+                        startContent={<Close_Icon />}
+                        fullWidth>
+                        Remove from List
+                      </Button>
+                    </div>
                   </div>
-                </div>
-              </PopoverContent>
-            </Popover>
+                </PopoverContent>
+              </Popover>
+            )}
           </div>
         </CardHeader>
 

@@ -19,6 +19,7 @@ export type PythonVenvs = {
   installedPackages: number;
   pythonPath: string;
   folder: string;
+  isFromInstallation?: boolean;
 };
 
 export type PythonVersion = {
