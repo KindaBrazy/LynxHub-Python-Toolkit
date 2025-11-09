@@ -302,7 +302,6 @@ function removeDuplicateInstallations(installations: PythonInstallation[]): Pyth
 async function analyzePythonPath(pythonPath: string): Promise<PythonInstallation | null> {
   try {
     const isValid = await isPythonPathValid(pythonPath);
-    console.log('is valid: ', pythonPath, isValid);
     if (!isValid) return null;
 
     const [
