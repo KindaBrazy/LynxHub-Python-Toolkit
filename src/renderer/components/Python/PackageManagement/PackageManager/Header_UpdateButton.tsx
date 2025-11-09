@@ -99,6 +99,14 @@ export default function Header_UpdateButton({
     }
   }, [selectedOptionValue, checkedCount, allPackageCount, reqPackageCount, checkingUpdates]);
 
+  const selectedCount = useMemo(() => {
+    return selectedKeys === 'all'
+      ? selectedFilter === 'all'
+        ? packagesUpdate.length
+        : visibleItems.length
+      : selectedKeys.size;
+  }, []);
+
   return !isEmpty(packagesUpdate) ? (
     <Button
       size="sm"
@@ -110,18 +118,7 @@ export default function Header_UpdateButton({
       isLoading={isUpdating}
       startContent={!isUpdating && <Download2_Icon />}
       isDisabled={selectedKeys !== 'all' && selectedKeys.size === 0}>
-      {isUpdating ? (
-        <span>Updating...</span>
-      ) : (
-        <span>
-          Update{' '}
-          {selectedKeys === 'all' ? (
-            <span>All ({selectedFilter === 'all' ? packagesUpdate.length : visibleItems.length})</span>
-          ) : (
-            <span>Selected ({selectedKeys.size})</span>
-          )}
-        </span>
-      )}
+      {isUpdating ? <span>Updating ({selectedCount})...</span> : <span>Update {selectedCount}</span>}
     </Button>
   ) : (
     <div className="flex flex-col">
