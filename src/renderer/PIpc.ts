@@ -39,12 +39,12 @@ const pIpc = {
     ipc.invoke(pythonChannels.getPackagesInfo, pythonPath),
   getPackagesUpdateInfo: (packages: PackageInfo[]): Promise<SitePackages_Info[]> =>
     ipc.invoke(pythonChannels.getPackagesUpdateInfo, packages),
-  updateAllPackages: (pythonPath: string, packages: PackageUpdate[]): Promise<string> =>
-    ipc.invoke(pythonChannels.updateAllPackages, pythonPath, packages),
-  installPackage: (pythonPath: string, command: string): Promise<string> =>
-    ipc.invoke(pythonChannels.installPackage, pythonPath, command),
+  updatePackages: (pythonPath: string, packages: PackageUpdate[]): Promise<string> =>
+    ipc.invoke(pythonChannels.updatePackages, pythonPath, packages),
   updatePackage: (pythonPath: string, packageName: string, version?: string): Promise<string> =>
     ipc.invoke(pythonChannels.updatePackage, pythonPath, packageName, version),
+  installPackage: (pythonPath: string, command: string): Promise<string> =>
+    ipc.invoke(pythonChannels.installPackage, pythonPath, command),
   uninstallPackage: (pythonPath: string, packageName: string): Promise<string> =>
     ipc.invoke(pythonChannels.uninstallPackage, pythonPath, packageName),
 

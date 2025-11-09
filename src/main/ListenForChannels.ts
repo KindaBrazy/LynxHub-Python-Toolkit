@@ -105,7 +105,7 @@ export default function ListenForChannels(nodePty: any) {
   ipcMain.handle(pythonChannels.updatePackage, (_, pythonPath: string, packageName: string, version?: string) =>
     updatePythonPackage(pythonPath, packageName, version),
   );
-  ipcMain.handle(pythonChannels.updateAllPackages, (_, pythonPath: string, packages: PackageUpdate[]) =>
+  ipcMain.handle(pythonChannels.updatePackages, (_, pythonPath: string, packages: PackageUpdate[]) =>
     updateAllPythonPackages(pythonPath, packages),
   );
 

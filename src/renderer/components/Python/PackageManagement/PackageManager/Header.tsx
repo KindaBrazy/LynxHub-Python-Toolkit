@@ -105,7 +105,7 @@ export default function PackageManagerHeader({
       );
     }
     pIpc
-      .updateAllPackages(pythonPath, updateList)
+      .updatePackages(pythonPath, updateList)
       .then(() => {
         message.success(`Successfully updated all selected packages (${updateList.length} total).`);
         updated(updateList);

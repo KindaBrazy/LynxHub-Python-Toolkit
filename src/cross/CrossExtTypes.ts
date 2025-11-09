@@ -98,7 +98,7 @@ export const pythonChannels = {
   getPackagesUpdateInfo: 'get-packages-update-info',
   getUpdatesReq: 'get-updates-req',
   updatePackage: 'update-package',
-  updateAllPackages: 'update-all-packages',
+  updatePackages: 'update-packages',
 
   saveReqs: 'save-requirements',
   readReqs: 'read-requirements',
