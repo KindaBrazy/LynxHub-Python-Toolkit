@@ -4,7 +4,7 @@ import {Dispatch, ReactNode, SetStateAction, useEffect, useState} from 'react';
 
 import {modalMotionProps} from '../../../../../../../src/renderer/src/App/Utils/Constants';
 import {searchInStrings} from '../../../../../../../src/renderer/src/App/Utils/UtilFunctions';
-import {FilterKeys, PackageInfo, SitePackages_Info} from '../../../../../cross/CrossExtTypes';
+import {FilterKeys, PackageInfo, PackageUpdate, SitePackages_Info} from '../../../../../cross/CrossExtTypes';
 import {getUpdateType} from '../../../../../cross/CrossExtUtils';
 import pIpc from '../../../../PIpc';
 import PackageManagerBody from './Body';
@@ -194,26 +194,35 @@ export default function PackageManagerModal({
     }
   }, [pythonPath, isOpen]);
 
-  const updated = (name: string, newVersion: string) => {
-    setPackagesUpdate(prevState => prevState.filter(item => item.name !== name));
-    setPackages(prevState =>
-      prevState.map(item => (item.name === name ? {name, updateVersion: undefined, version: newVersion} : item)),
+  const updated = (updates: PackageUpdate | PackageUpdate[]) => {
+    const updatesArray = Array.isArray(updates) ? updates : [updates];
+
+    if (updatesArray.length === 0) {
+      return;
+    }
+
+    const updatesMap = new Map(updatesArray.map(item => [item.name, item.targetVersion]));
+
+    setPackagesUpdate(prevUpdates => prevUpdates.filter(item => !updatesMap.has(item.name)));
+
+    setPackages(prevPackages =>
+      prevPackages.map(pkg => {
+        if (updatesMap.has(pkg.name)) {
+          return {
+            ...pkg,
+            version: updatesMap.get(pkg.name)!,
+            updateVersion: undefined,
+          };
+        }
+
+        return pkg;
+      }),
     );
   };
 
   const removed = (name: string) => {
     setPackagesUpdate(prevState => prevState.filter(item => item.name !== name));
     setPackages(prevState => prevState.filter(item => item.name !== name));
-  };
-
-  const allUpdated = () => {
-    setPackages(prevState =>
-      prevState.map(item => {
-        const newVersion = packagesUpdate.find(update => update.name === item.name)?.version;
-        return newVersion ? {name: item.name, updateVersion: undefined, version: newVersion} : item;
-      }),
-    );
-    setPackagesUpdate([]);
   };
 
   return (
@@ -232,9 +241,9 @@ export default function PackageManagerModal({
           id={id}
           show={show}
           title={title}
+          updated={updated}
           packages={packages}
           visibleItems={items}
-          allUpdated={allUpdated}
           pythonPath={pythonPath}
           refresh={getPackageList}
           projectPath={projectPath}

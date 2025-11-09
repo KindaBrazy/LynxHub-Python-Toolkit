@@ -22,7 +22,7 @@ type Props = {
   packagesUpdate: SitePackages_Info[];
   checkingUpdates: boolean;
   pythonPath: string;
-  allUpdated: () => void;
+  updated: (list: PackageUpdate | PackageUpdate[]) => void;
   refresh: () => void;
   isValidPython: boolean;
   checkForUpdates: (type: 'req' | 'normal') => void;
@@ -44,7 +44,7 @@ export default function PackageManagerHeader({
   packagesUpdate,
   checkingUpdates,
   pythonPath,
-  allUpdated,
+  updated,
   refresh,
   title,
   actionButtons,
@@ -108,7 +108,7 @@ export default function PackageManagerHeader({
       .updateAllPackages(pythonPath, updateList)
       .then(() => {
         message.success(`Successfully updated all selected packages (${updateList.length} total).`);
-        allUpdated();
+        updated(updateList);
       })
       .catch(() => {
         message.error(`Failed to update packages.`);

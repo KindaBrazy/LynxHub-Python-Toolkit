@@ -4,13 +4,13 @@ import {isEmpty} from 'lodash';
 import {Dispatch, SetStateAction, useCallback, useEffect, useMemo, useState} from 'react';
 import semver, {compare, valid} from 'semver';
 
-import {PackageInfo} from '../../../../../cross/CrossExtTypes';
+import {PackageInfo, PackageUpdate} from '../../../../../cross/CrossExtTypes';
 import pIpc from '../../../../PIpc';
 import {SolarBoxMinimalisticBoldDuotone, TrashDuo_Icon} from '../../../SvgIcons';
 
 type Props = {
   item: PackageInfo;
-  updated: (name: string, newVersion: string) => void;
+  updated: (list: PackageUpdate | PackageUpdate[]) => void;
   removed: (name: string) => void;
   pythonPath: string;
   isUninstalling: boolean;
@@ -53,7 +53,7 @@ export default function ActionButtons({item, removed, pythonPath, isUninstalling
     pIpc
       .changePackageVersion(pythonPath, item.name, item.version, versionValue)
       .then(() => {
-        updated(item.name, versionValue);
+        updated({name: item.name, targetVersion: versionValue});
         message.success(`${item.name} package changed to ${versionValue}`);
       })
       .catch(e => {

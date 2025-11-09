@@ -15,7 +15,7 @@ import {OverlayScrollbarsComponent} from 'overlayscrollbars-react';
 import {Dispatch, SetStateAction, useMemo} from 'react';
 
 import {useAppState} from '../../../../../../../src/renderer/src/App/Redux/Reducer/AppReducer';
-import {PackageInfo, SitePackages_Info} from '../../../../../cross/CrossExtTypes';
+import {PackageInfo, PackageUpdate, SitePackages_Info} from '../../../../../cross/CrossExtTypes';
 import Body_SelectEnv from './Body_SelectEnv';
 import Body_TableItem from './Body_TableItem';
 
@@ -24,7 +24,7 @@ type Props = {
   items: PackageInfo[];
   isLoading: boolean;
   pythonPath: string;
-  updated: (name: string, newVersion: string) => void;
+  updated: (list: PackageUpdate | PackageUpdate[]) => void;
   removed: (name: string) => void;
   isValidPython: boolean;
   packagesUpdate: SitePackages_Info[];

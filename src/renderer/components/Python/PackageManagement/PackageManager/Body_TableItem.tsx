@@ -3,7 +3,7 @@ import {message} from 'antd';
 import {capitalize, startCase} from 'lodash';
 import {useCallback, useMemo, useState} from 'react';
 
-import {PackageInfo} from '../../../../../cross/CrossExtTypes';
+import {PackageInfo, PackageUpdate} from '../../../../../cross/CrossExtTypes';
 import {getUpdateVersionColor} from '../../../../../cross/CrossExtUtils';
 import pIpc from '../../../../PIpc';
 import {usePythonToolkitState} from '../../../../reducer';
@@ -13,7 +13,7 @@ import ActionButtons from './ActionButtons';
 type Props = {
   item: PackageInfo;
   pythonPath: string;
-  updated: (name: string, newVersion: string) => void;
+  updated: (list: PackageUpdate | PackageUpdate[]) => void;
   removed: (name: string) => void;
   columnKey: string;
   isSelected: boolean;
@@ -41,7 +41,7 @@ export default function Body_TableItem({item, pythonPath, updated, removed, colu
     pIpc
       .updatePackage(pythonPath, item.name, item.updateVersion)
       .then(() => {
-        updated(item.name, item.updateVersion!);
+        updated(item);
         message.success(`Package "${item.name}" updated successfully.`);
       })
       .catch(() => {
