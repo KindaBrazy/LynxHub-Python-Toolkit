@@ -78,9 +78,19 @@ export function isFirstPythonPath(envPath: string, targetPythonBase: string): bo
   const pathExists = validatePath(targetPath);
 
   if (!pathExists) {
-    throw new Error(`Python path does not exist: ${targetPath}`);
+    return false;
   }
 
   const paths = envPath.split(';').filter(Boolean);
-  return paths.some(item => item === targetPath);
+
+  const firstPythonLikePath = paths.find(p => {
+    const lowerP = p.toLowerCase();
+    return lowerP.includes('python') || lowerP.includes('conda');
+  });
+
+  if (!firstPythonLikePath) {
+    return false;
+  }
+
+  return resolve(firstPythonLikePath).toLowerCase() === targetPath.toLowerCase();
 }
