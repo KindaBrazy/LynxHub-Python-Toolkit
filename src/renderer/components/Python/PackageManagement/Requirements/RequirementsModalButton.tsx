@@ -222,7 +222,11 @@ export default function RequirementsBtn({id, projectPath, setIsReqAvailable, sho
           </ModalFooter>
         </ModalContent>
       </Modal>
-      <Button variant="solid" onPress={() => setIsOpen(true)} startContent={<Checklist_Icon className="size-3.5" />}>
+      <Button
+        size="sm"
+        variant="solid"
+        onPress={() => setIsOpen(true)}
+        startContent={<Checklist_Icon className="size-3.5" />}>
         Manage Requirements
       </Button>
     </>

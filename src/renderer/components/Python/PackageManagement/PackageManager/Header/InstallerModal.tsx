@@ -23,7 +23,7 @@ export default function InstallerModal({refresh, pythonPath, show}: Props) {
 
   return (
     <>
-      <Button variant="solid" startContent={<Add_Icon />} onPress={() => setIsOpen(true)}>
+      <Button size="sm" variant="solid" startContent={<Add_Icon />} onPress={() => setIsOpen(true)}>
         Install Package
       </Button>
       <Modal

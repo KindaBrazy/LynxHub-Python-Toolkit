@@ -109,6 +109,7 @@ export default function UpdateButton({
 
   return !isEmpty(packagesUpdate) ? (
     <Button
+      size="sm"
       variant="flat"
       color="success"
       onPress={update}
@@ -118,8 +119,9 @@ export default function UpdateButton({
       {isUpdating ? <span>Updating ({selectedCount})...</span> : <span>Update {selectedCount}</span>}
     </Button>
   ) : (
-    <ButtonGroup variant="solid">
+    <ButtonGroup>
       <Button
+        size="sm"
         onPress={checkForUpdate}
         isLoading={checkingUpdates}
         startContent={!checkingUpdates && <Magnifier_Icon />}>
@@ -127,7 +129,7 @@ export default function UpdateButton({
       </Button>
       <Dropdown placement="bottom-end">
         <DropdownTrigger>
-          <Button variant="flat" color="default" isDisabled={!isReqAvailable || checkingUpdates} isIconOnly>
+          <Button size="sm" variant="flat" color="default" isDisabled={!isReqAvailable || checkingUpdates} isIconOnly>
             <AltArrow_Icon className="size-4" />
           </Button>
         </DropdownTrigger>
