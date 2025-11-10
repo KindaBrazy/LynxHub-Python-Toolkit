@@ -23,7 +23,7 @@ export default function Body_SelectEnv({id, setPythonPath}: Props) {
       .then(exePath => {
         if (setPythonPath && exePath) {
           setPythonPath(exePath);
-          lynxTopToast(dispatch).success(`${python.label} associated successfully!`);
+          lynxTopToast(dispatch).success(`${python.condaName || python.version} associated successfully!`);
         } else {
           console.warn('PythonToolkit: Exe path or setPythonPath is not defined.');
         }
@@ -53,15 +53,15 @@ export default function Body_SelectEnv({id, setPythonPath}: Props) {
       </DropdownTrigger>
       <DropdownMenu items={list}>
         {item => (
-          <DropdownItem onPress={() => onPress(item)} key={`${item.label}_${item.dir}`}>
+          <DropdownItem onPress={() => onPress(item)} key={`${item.version}_${item.dir}`}>
             <div className="flex flex-row gap-x-1 items-end">
               {item.type === 'python' ? (
                 <span className="flex flex-row items-center gap-x-2">
-                  <Python_Icon className="text-yellow-300" /> {item.label}
+                  <Python_Icon className="text-yellow-300" /> {item.version}
                 </span>
               ) : (
                 <span className="flex flex-row items-center gap-x-2">
-                  <Env_Icon className="text-yellow-300" /> {item.label}
+                  <Env_Icon className="text-green-300" /> {item.version}
                 </span>
               )}
             </div>

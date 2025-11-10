@@ -34,7 +34,7 @@ const initialState: PythonToolkitState = {
   pkgNameDisplay: 'default',
   pythonVenvSelected: {
     id: '',
-    label: '',
+    version: '',
     type: 'python',
     dir: '',
   },
