@@ -139,6 +139,8 @@ export const pythonChannels = {
   updateCheckProgress: 'ptoolkit-update-check-progress',
 
   abortUpdateCheck: 'ptoolkit-abort-update-check',
+  abortUpdating: 'ptoolkit-abort-updating',
+
   getPythonVersion: 'ptoolkit-get-python-version',
 };
 

@@ -121,6 +121,8 @@ const pIpc = {
     ipc.on(pythonChannels.updateCheckProgress, result),
 
   abortUpdateCheck: () => ipc.send(pythonChannels.abortUpdateCheck),
+  abortUpdating: () => ipc.send(pythonChannels.abortUpdating),
+
   getPythonVersion: (pythonPath: string): Promise<ParsedPythonVersion> =>
     ipc.invoke(pythonChannels.getPythonVersion, pythonPath),
 

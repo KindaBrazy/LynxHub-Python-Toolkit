@@ -41,6 +41,7 @@ export default function PackageManagerModal({
 }: Props) {
   const [isLoadingPackages, setIsLoadingPackages] = useState<boolean>(false);
   const [isCheckingUpdates, setIsCheckingUpdates] = useState<boolean>(false);
+  const [isUpdating, setIsUpdating] = useState<boolean>(false);
 
   const [packages, setPackages] = useState<PackageInfo[]>([]);
   const [filteredPackages, setFilteredPackages] = useState<PackageInfo[]>([]);
@@ -246,11 +247,13 @@ export default function PackageManagerModal({
           updated={updated}
           packages={packages}
           visibleItems={items}
+          isUpdating={isUpdating}
           pythonPath={pythonPath}
           refresh={getPackageList}
           projectPath={projectPath}
           searchValue={searchValue}
           selectedKeys={selectedKeys}
+          setIsUpdating={setIsUpdating}
           isValidPython={isValidPython}
           actionButtons={actionButtons}
           selectedFilter={selectedFilter}
@@ -275,7 +278,11 @@ export default function PackageManagerModal({
         />
         <ModalFooter className="items-center py-3">
           <Footer_TablePage setItems={setItems} searchData={searchData} />
-          <Footer_Close isCheckingUpdates={isCheckingUpdates} closePackageManager={closePackageManager} />
+          <Footer_Close
+            isUpdating={isUpdating}
+            isCheckingUpdates={isCheckingUpdates}
+            closePackageManager={closePackageManager}
+          />
         </ModalFooter>
       </ModalContent>
     </Modal>

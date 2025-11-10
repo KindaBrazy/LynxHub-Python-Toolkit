@@ -36,6 +36,7 @@ import {replacePythonPath} from './Utils/ExtMainUtils';
 import {createCondaEnv, isCondaInstalled, listAvailablePythons} from './Utils/Installer/Installer_Conda';
 import downloadPython from './Utils/Installer/Installer_Official';
 import {
+  abortOngoingUpdate,
   getSitePackagesInfo,
   installPythonPackage,
   uninstallPythonPackage,
@@ -217,6 +218,8 @@ export default function ListenForChannels(nodePty: any) {
   });
 
   ipcMain.on(pythonChannels.abortUpdateCheck, () => cancelPackagesUpdateCheck());
+  ipcMain.on(pythonChannels.abortUpdating, () => abortOngoingUpdate());
+
   ipcMain.handle(pythonChannels.getPythonVersion, (_, pythonPath: string) => parseVersion(pythonPath));
 
   ListenForStorage(storageManager);
