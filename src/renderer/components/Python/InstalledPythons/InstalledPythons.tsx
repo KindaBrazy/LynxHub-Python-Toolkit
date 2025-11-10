@@ -1,9 +1,11 @@
 import {Button, Spinner} from '@heroui/react';
-import {Empty, message} from 'antd';
+import {Empty} from 'antd';
 import {cloneDeep, isEmpty} from 'lodash';
 import {Dispatch, SetStateAction, useCallback, useEffect, useState} from 'react';
+import {useDispatch} from 'react-redux';
 
 import rendererIpc from '../../../../../../src/renderer/src/App/RendererIpc';
+import {lynxTopToast} from '../../../../../../src/renderer/src/App/Utils/UtilHooks';
 import {
   Add_Icon,
   FolderDuo_Icon,
@@ -35,6 +37,7 @@ export default function InstalledPythons({
 }: Props) {
   const [isLocating, setIsLocating] = useState<boolean>(false);
 
+  const dispatch = useDispatch();
   const cacheStorageUsage = usePythonToolkitState('cacheStorageUsage');
   const [diskUsage, setDiskUsage] = useState<{path: string; value: number | undefined}[]>([]);
   const [maxDiskValue, setMaxDiskValue] = useState<number>(0);
@@ -140,16 +143,16 @@ export default function InstalledPythons({
             .locatePython(pPath)
             .then(installation => {
               if (installation) {
-                message.success('Selected Python validated successfully.');
+                lynxTopToast(dispatch).success('Selected Python validated successfully.');
                 getInstalledPythons(false);
               } else {
-                message.error('Failed to validate selected python.');
+                lynxTopToast(dispatch).error('Failed to validate selected python.');
               }
               setIsLocating(false);
             })
             .catch(e => {
               console.warn(e);
-              message.error('Failed to validate selected python.');
+              lynxTopToast(dispatch).success('Failed to validate selected python.');
               setIsLocating(false);
             });
         } else {

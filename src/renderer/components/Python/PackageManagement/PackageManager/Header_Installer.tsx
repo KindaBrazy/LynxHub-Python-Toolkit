@@ -1,9 +1,11 @@
 import {Alert, Button, Code, Input} from '@heroui/react';
-import {Divider, message} from 'antd';
+import {Divider} from 'antd';
 import {compact, isEmpty} from 'lodash';
 import {KeyboardEvent, useState} from 'react';
+import {useDispatch} from 'react-redux';
 
 import rendererIpc from '../../../../../../../src/renderer/src/App/RendererIpc';
+import {lynxTopToast} from '../../../../../../../src/renderer/src/App/Utils/UtilHooks';
 import {Close_Icon, Trash_Icon} from '../../../../../../../src/renderer/src/assets/icons/SvgIcons/SvgIcons';
 import pIpc from '../../../../PIpc';
 import {Checklist_Icon} from '../../../SvgIcons';
@@ -22,6 +24,8 @@ export default function Header_Installer({pythonPath, refresh, close}: Props) {
   const [indexUrl, setIndexUrl] = useState<string>('');
   const [extraOptions, setExtraOptions] = useState<string>('');
   const [installing, setInstalling] = useState<boolean>(false);
+
+  const dispatch = useDispatch();
 
   const handlePackageStringChange = (value: string) => {
     setPackageString(value);
@@ -81,12 +85,12 @@ export default function Header_Installer({pythonPath, refresh, close}: Props) {
                 return {name: item.name, version: item.version || ''};
               }),
             );
-            message.success('Requirements file loaded successfully');
+            lynxTopToast(dispatch).success('Requirements file loaded successfully');
           });
         }
       })
       .catch(() => {
-        message.error('Error reading requirements file');
+        lynxTopToast(dispatch).error('Error reading requirements file');
       });
   };
 
@@ -116,15 +120,15 @@ export default function Header_Installer({pythonPath, refresh, close}: Props) {
       .installPackage(pythonPath, generateInstallCommand())
       .then(result => {
         if (result) {
-          message.success('Packages installed successfully!');
+          lynxTopToast(dispatch).success('Packages installed successfully!');
         } else {
-          message.error('Failed to install packages. Please check your inputs and try again.');
+          lynxTopToast(dispatch).error('Failed to install packages. Please check your inputs and try again.');
         }
         close();
         refresh();
       })
       .catch(err => {
-        message.error('Failed to install packages. Please check your inputs and try again.');
+        lynxTopToast(dispatch).error('Failed to install packages. Please check your inputs and try again.');
         console.error(err);
       })
       .finally(() => {

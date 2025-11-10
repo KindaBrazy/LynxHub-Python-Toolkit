@@ -1,12 +1,14 @@
 import {Button, Chip, Input, Modal, ModalBody, ModalContent, ModalFooter, ModalHeader} from '@heroui/react';
-import {Empty, message, Result} from 'antd';
+import {Empty, Result} from 'antd';
 import {isEmpty} from 'lodash';
 import {OverlayScrollbarsComponentRef} from 'overlayscrollbars-react';
 import {Dispatch, SetStateAction, useEffect, useRef, useState} from 'react';
+import {useDispatch} from 'react-redux';
 
 import rendererIpc from '../../../../../../../src/renderer/src/App/RendererIpc';
 import {modalMotionProps} from '../../../../../../../src/renderer/src/App/Utils/Constants';
 import {searchInStrings} from '../../../../../../../src/renderer/src/App/Utils/UtilFunctions';
+import {lynxTopToast} from '../../../../../../../src/renderer/src/App/Utils/UtilHooks';
 import {
   Add_Icon,
   Circle_Icon,
@@ -33,6 +35,8 @@ export default function RequirementsBtn({id, projectPath, setIsReqAvailable, sho
   const [searchValue, setSearchValue] = useState<string>('');
 
   const [searchReqs, setSearchReqs] = useState<RequirementData[]>([]);
+
+  const dispatch = useDispatch();
 
   useEffect(() => {
     setIsReqAvailable(!!filePath);
@@ -103,9 +107,9 @@ export default function RequirementsBtn({id, projectPath, setIsReqAvailable, sho
       setIsSaving(true);
       pIpc.saveReqs(filePath, requirements).then(success => {
         if (success) {
-          message.success('Requirements saved successfully!');
+          lynxTopToast(dispatch).success('Requirements saved successfully!');
         } else {
-          message.error('Failed to save requirements.');
+          lynxTopToast(dispatch).error('Failed to save requirements.');
         }
         setIsSaving(false);
       });

@@ -1,11 +1,13 @@
 import {Button, CircularProgress, Input, Link, Progress} from '@heroui/react';
-import {List, message, Tooltip} from 'antd';
+import {List, Tooltip} from 'antd';
 import {isEmpty, isNil, isString} from 'lodash';
 import {OverlayScrollbarsComponent} from 'overlayscrollbars-react';
 import {Dispatch, SetStateAction, useEffect, useState} from 'react';
+import {useDispatch} from 'react-redux';
 
 import {formatSize} from '../../../../../../../src/cross/CrossUtils';
 import {useAppState} from '../../../../../../../src/renderer/src/App/Redux/Reducer/AppReducer';
+import {lynxTopToast} from '../../../../../../../src/renderer/src/App/Utils/UtilHooks';
 import {Circle_Icon, Refresh_Icon} from '../../../../../../../src/renderer/src/assets/icons/SvgIcons/SvgIcons';
 import {DlProgressOfficial, PythonVersion} from '../../../../../cross/CrossExtTypes';
 import pIpc from '../../../../PIpc';
@@ -21,6 +23,7 @@ type Props = {
 
 export default function InstallerOfficial({refresh, installed, closeModal, isOpen, setCloseDisabled}: Props) {
   const isDarkMode = useAppState('darkMode');
+  const dispatch = useDispatch();
 
   const [versions, setVersions] = useState<PythonVersion[]>([]);
   const [searchVersions, setSearchVersions] = useState<PythonVersion[]>([]);
@@ -117,11 +120,11 @@ export default function InstallerOfficial({refresh, installed, closeModal, isOpe
         refresh(true);
         closeModal();
         console.log('installed', version);
-        message.success(`Python${version.version} installed successfully.`);
+        lynxTopToast(dispatch).success(`Python${version.version} installed successfully.`);
       })
       .catch(err => {
         console.log(err);
-        message.error(`Failed to install python${version.version}!`);
+        lynxTopToast(dispatch).error(`Failed to install python${version.version}!`);
       })
       .finally(() => {
         setInstallingVersion(undefined);

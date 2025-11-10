@@ -1,8 +1,9 @@
 import {Button} from '@heroui/react';
-import {message} from 'antd';
 import {capitalize, startCase} from 'lodash';
 import {useCallback, useMemo, useState} from 'react';
+import {useDispatch} from 'react-redux';
 
+import {lynxTopToast} from '../../../../../../../src/renderer/src/App/Utils/UtilHooks';
 import {PackageInfo, PackageUpdate} from '../../../../../cross/CrossExtTypes';
 import {getUpdateVersionColor} from '../../../../../cross/CrossExtUtils';
 import pIpc from '../../../../PIpc';
@@ -23,6 +24,7 @@ export default function Body_TableItem({item, pythonPath, updated, removed, colu
   const [isUpdating, setIsUpdating] = useState<boolean>(false);
   const [isUninstalling, setIsUninstalling] = useState<boolean>(false);
   const pkgNameDisplay = usePythonToolkitState('pkgNameDisplay');
+  const dispatch = useDispatch();
 
   const itemName = useMemo(() => {
     switch (pkgNameDisplay) {
@@ -42,10 +44,10 @@ export default function Body_TableItem({item, pythonPath, updated, removed, colu
       .updatePackage(pythonPath, item.name, item.updateVersion)
       .then(() => {
         updated(item);
-        message.success(`Package "${item.name}" updated successfully.`);
+        lynxTopToast(dispatch).success(`Package "${item.name}" updated successfully.`);
       })
       .catch(() => {
-        message.error(`Failed to update package "${item.name}".`);
+        lynxTopToast(dispatch).error(`Failed to update package "${item.name}".`);
       })
       .finally(() => {
         setIsUpdating(false);

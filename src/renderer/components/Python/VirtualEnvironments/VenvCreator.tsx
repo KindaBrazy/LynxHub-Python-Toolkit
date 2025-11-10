@@ -1,9 +1,10 @@
 import {Button, Divider, Input, Popover, PopoverContent, PopoverTrigger, Select, SelectItem} from '@heroui/react';
-import {message} from 'antd';
 import {capitalize, isEmpty} from 'lodash';
 import {useCallback, useEffect, useMemo, useState} from 'react';
+import {useDispatch} from 'react-redux';
 
 import rendererIpc from '../../../../../../src/renderer/src/App/RendererIpc';
+import {lynxTopToast} from '../../../../../../src/renderer/src/App/Utils/UtilHooks';
 import {
   Add_Icon,
   MenuDots_Icon,
@@ -23,6 +24,8 @@ export default function VenvCreator({installedPythons, refresh, isLoadingPythons
   const [isCreating, setIsCreating] = useState<boolean>(false);
 
   const [isOpen, setIsOpen] = useState<boolean>(false);
+
+  const dispatch = useDispatch();
 
   useEffect(() => {
     if (!isOpen) {
@@ -52,7 +55,7 @@ export default function VenvCreator({installedPythons, refresh, isLoadingPythons
     )?.installPath;
     if (!pythonPath) {
       setIsCreating(false);
-      message.error('Failed to find Python path. Please restart app and try again.');
+      lynxTopToast(dispatch).error('Failed to find Python path. Please restart app and try again.');
       return;
     }
     const options: VenvCreateOptions = {
@@ -65,9 +68,9 @@ export default function VenvCreator({installedPythons, refresh, isLoadingPythons
       if (result) {
         refresh();
         setIsOpen(false);
-        message.success(`Python environment "${envName}" created successfully.`);
+        lynxTopToast(dispatch).success(`Python environment "${envName}" created successfully.`);
       } else {
-        message.error('Failed to create Python environment. Please try again.');
+        lynxTopToast(dispatch).error('Failed to create Python environment. Please try again.');
       }
 
       setIsCreating(false);

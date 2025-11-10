@@ -1,9 +1,11 @@
 import {Button, Spinner} from '@heroui/react';
-import {Empty, message} from 'antd';
+import {Empty} from 'antd';
 import {isEmpty} from 'lodash';
 import {useCallback, useEffect, useState} from 'react';
+import {useDispatch} from 'react-redux';
 
 import rendererIpc from '../../../../../../src/renderer/src/App/RendererIpc';
+import {lynxTopToast} from '../../../../../../src/renderer/src/App/Utils/UtilHooks';
 import {FolderDuo_Icon} from '../../../../../../src/renderer/src/assets/icons/SvgIcons/SvgIcons';
 import {PythonInstallation, PythonVenvs, VenvInfo} from '../../../../cross/CrossExtTypes';
 import {bytesToMegabytes} from '../../../../cross/CrossExtUtils';
@@ -25,6 +27,7 @@ export default function Venv({visible, installedPythons, isLoadingPythons, show}
   const [isLoading, setIsLoading] = useState<boolean>(true);
 
   const [isLocating, setIsLocating] = useState<boolean>(false);
+  const dispatch = useDispatch();
 
   const [diskUsage, setDiskUsage] = useState<{path: string; value: number | undefined}[]>([]);
 
@@ -106,10 +109,10 @@ export default function Venv({visible, installedPythons, isLoadingPythons, show}
     setIsLocating(true);
     pIpc.locateVenv().then((isLocated: boolean) => {
       if (isLocated) {
-        message.success('Environment validated successfully.');
+        lynxTopToast(dispatch).success('Environment validated successfully.');
         getVenvs();
       } else {
-        message.error('Failed to validate environment.');
+        lynxTopToast(dispatch).error('Failed to validate environment.');
       }
       setIsLocating(false);
     });

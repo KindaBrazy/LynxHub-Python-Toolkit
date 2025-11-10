@@ -1,9 +1,10 @@
 import {Button, Input, Popover, PopoverContent, PopoverTrigger} from '@heroui/react';
-import {message} from 'antd';
 import {isEmpty} from 'lodash';
 import {Dispatch, SetStateAction, useCallback, useEffect, useMemo, useState} from 'react';
+import {useDispatch} from 'react-redux';
 import semver, {compare, valid} from 'semver';
 
+import {lynxTopToast} from '../../../../../../../src/renderer/src/App/Utils/UtilHooks';
 import {PackageInfo, PackageUpdate} from '../../../../../cross/CrossExtTypes';
 import pIpc from '../../../../PIpc';
 import {SolarBoxMinimalisticBoldDuotone, TrashDuo_Icon} from '../../../SvgIcons';
@@ -21,6 +22,7 @@ type UpgradePropType = {color: 'default' | 'success' | 'warning'; disabled: bool
 
 export default function ActionButtons({item, removed, pythonPath, isUninstalling, setIsUninstalling, updated}: Props) {
   const [isUninstallOpen, setIsUninstallOpen] = useState<boolean>(false);
+  const dispatch = useDispatch();
 
   const [isChangeItemOpen, setIsChangeItemOpen] = useState<boolean>(false);
   const [versionValue, setVersionValue] = useState<string>(item.version);
@@ -37,10 +39,10 @@ export default function ActionButtons({item, removed, pythonPath, isUninstalling
       .uninstallPackage(pythonPath, item.name)
       .then(() => {
         removed(item.name);
-        message.success(`Package "${item.name}" removed successfully.`);
+        lynxTopToast(dispatch).success(`Package "${item.name}" removed successfully.`);
       })
       .catch(() => {
-        message.error(`Failed to remove package "${item.name}".`);
+        lynxTopToast(dispatch).error(`Failed to remove package "${item.name}".`);
       })
       .finally(() => {
         setIsUninstalling(false);
@@ -54,10 +56,10 @@ export default function ActionButtons({item, removed, pythonPath, isUninstalling
       .changePackageVersion(pythonPath, item.name, item.version, versionValue)
       .then(() => {
         updated({name: item.name, targetVersion: versionValue});
-        message.success(`${item.name} package changed to ${versionValue}`);
+        lynxTopToast(dispatch).success(`${item.name} package changed to ${versionValue}`);
       })
       .catch(e => {
-        message.error(e);
+        lynxTopToast(dispatch).error(e);
       })
       .finally(() => {
         setIsChanging(false);

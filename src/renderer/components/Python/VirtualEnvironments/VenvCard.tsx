@@ -12,12 +12,14 @@ import {
   PopoverContent,
   PopoverTrigger,
 } from '@heroui/react';
-import {Divider, message, Spin} from 'antd';
+import {Divider, Spin} from 'antd';
 import {SHA256} from 'crypto-js';
 import {isNil} from 'lodash';
 import {FormEvent, useCallback, useEffect, useMemo, useState} from 'react';
+import {useDispatch} from 'react-redux';
 
 import rendererIpc from '../../../../../../src/renderer/src/App/RendererIpc';
+import {lynxTopToast} from '../../../../../../src/renderer/src/App/Utils/UtilHooks';
 import {
   Close_Icon,
   MenuDots_Icon,
@@ -55,6 +57,8 @@ export default function VenvCard({
   const [popoverUninstaller, setPopoverUninstaller] = useState<boolean>(false);
   const [editedTitle, setEditedTitle] = useState<string>(title);
 
+  const dispatch = useDispatch();
+
   useEffect(() => {
     pIpc.storage.getVenvCustomTitle().then(storedItems => {
       const existingTitle = storedItems.find(item => item.path === SHA256(folder).toString());
@@ -75,13 +79,13 @@ export default function VenvCard({
     rendererIpc.file
       .trashDir(folder)
       .then(() => {
-        message.success(`Environment "${title}" removed successfully.`);
+        lynxTopToast(dispatch).success(`Environment "${title}" removed successfully.`);
         pIpc.removeAssociatePath(pythonPath);
         refresh();
       })
       .catch(error => {
         console.error(error);
-        message.error(`Failed to remove environment "${title}".`);
+        lynxTopToast(dispatch).error(`Failed to remove environment "${title}".`);
       })
       .finally(() => {
         setIsRemoving(false);
