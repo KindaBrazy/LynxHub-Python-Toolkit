@@ -1,9 +1,12 @@
+import type Pty from 'node-pty';
+
 import type ElectronAppManager from '../../../src/main/Managements/ElectronAppManager';
 import type StorageManager from '../../../src/main/Managements/Storage/StorageManager';
 
 let storageManager: StorageManager | undefined = undefined;
 let appManager: ElectronAppManager | undefined = undefined;
 let defaultEnvPath = process.env.PATH;
+let nodePty: typeof Pty | undefined = undefined;
 
 export const setStorage = (storage: StorageManager) => (storageManager = storage);
 export const getStorage = () => storageManager;
@@ -13,3 +16,6 @@ export const getAppManager = () => appManager;
 
 export const setDefaultEnvPath = (path: string) => (defaultEnvPath = path);
 export const getDefaultEnvPath = () => defaultEnvPath;
+
+export const setNodePty = (pty: typeof Pty) => (nodePty = pty);
+export const getNodePty = () => nodePty;

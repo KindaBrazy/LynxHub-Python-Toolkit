@@ -10,7 +10,7 @@ import {
   MaxRetry_StorageID,
 } from '../cross/CrossExtConstants';
 import {AssociateItem, IdPathType} from '../cross/CrossExtTypes';
-import {getDefaultEnvPath, setAppManager, setStorage} from './DataHolder';
+import {getDefaultEnvPath, setAppManager, setNodePty, setStorage} from './DataHolder';
 import ListenForChannels from './ListenForChannels';
 import {replacePythonPath} from './Utils/ExtMainUtils';
 import {findAIVenv} from './Utils/VirtualEnv/VenvUtils';
@@ -19,6 +19,8 @@ export async function initialExtension(lynxApi: ExtensionMainApi, utils: MainExt
   utils.getAppManager().then(app => {
     setAppManager(app);
   });
+  setNodePty(utils.nodePty);
+
   utils.getStorageManager().then(storeManager => {
     setStorage(storeManager);
 
