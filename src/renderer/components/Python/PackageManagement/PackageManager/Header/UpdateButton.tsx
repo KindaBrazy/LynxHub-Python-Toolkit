@@ -2,10 +2,10 @@ import {Button, ButtonGroup, Dropdown, DropdownItem, DropdownMenu, DropdownTrigg
 import {isEmpty} from 'lodash';
 import {Dispatch, SetStateAction, useEffect, useMemo, useState} from 'react';
 
-import {Download2_Icon, Magnifier_Icon} from '../../../../../../../src/renderer/src/assets/icons/SvgIcons/SvgIcons';
-import {FilterKeys, PackageInfo, SitePackages_Info} from '../../../../../cross/CrossExtTypes';
-import pIpc from '../../../../PIpc';
-import {AltArrow_Icon} from '../../../SvgIcons';
+import {Download2_Icon, Magnifier_Icon} from '../../../../../../../../src/renderer/src/assets/icons/SvgIcons/SvgIcons';
+import {FilterKeys, PackageInfo, SitePackages_Info} from '../../../../../../cross/CrossExtTypes';
+import pIpc from '../../../../../PIpc';
+import {AltArrow_Icon} from '../../../../SvgIcons';
 
 type Props = {
   packagesUpdate: SitePackages_Info[];
@@ -23,7 +23,7 @@ type Props = {
   setProgressValue: Dispatch<SetStateAction<number>>;
 };
 
-export default function Header_UpdateButton({
+export default function UpdateButton({
   packagesUpdate,
   update,
   isUpdating,

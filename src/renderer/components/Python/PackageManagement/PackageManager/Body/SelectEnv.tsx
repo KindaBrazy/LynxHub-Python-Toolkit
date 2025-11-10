@@ -2,15 +2,15 @@ import {Button, CircularProgress, Dropdown, DropdownItem, DropdownMenu, Dropdown
 import {Dispatch, SetStateAction, useEffect, useState} from 'react';
 import {useDispatch} from 'react-redux';
 
-import {lynxTopToast} from '../../../../../../../src/renderer/src/App/Utils/UtilHooks';
-import {AssociateItem, PythonVenvSelectItem} from '../../../../../cross/CrossExtTypes';
-import pIpc from '../../../../PIpc';
-import {Env_Icon, Python_Icon} from '../../../SvgIcons';
-import {fetchAndSetPythonVenvs} from '../../../UtilHooks';
+import {lynxTopToast} from '../../../../../../../../src/renderer/src/App/Utils/UtilHooks';
+import {AssociateItem, PythonVenvSelectItem} from '../../../../../../cross/CrossExtTypes';
+import pIpc from '../../../../../PIpc';
+import {Env_Icon, Python_Icon} from '../../../../SvgIcons';
+import {fetchAndSetPythonVenvs} from '../../../../UtilHooks';
 
 type Props = {id: string; setPythonPath?: Dispatch<SetStateAction<string>>};
 
-export default function Body_SelectEnv({id, setPythonPath}: Props) {
+export default function SelectEnv({id, setPythonPath}: Props) {
   const [list, setList] = useState<PythonVenvSelectItem[]>([]);
   const [isLoading, setIsLoading] = useState<boolean>(true);
   const dispatch = useDispatch();

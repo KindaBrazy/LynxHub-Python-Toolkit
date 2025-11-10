@@ -4,11 +4,11 @@ import {compact, isEmpty} from 'lodash';
 import {KeyboardEvent, useState} from 'react';
 import {useDispatch} from 'react-redux';
 
-import rendererIpc from '../../../../../../../src/renderer/src/App/RendererIpc';
-import {lynxTopToast} from '../../../../../../../src/renderer/src/App/Utils/UtilHooks';
-import {Close_Icon, Trash_Icon} from '../../../../../../../src/renderer/src/assets/icons/SvgIcons/SvgIcons';
-import pIpc from '../../../../PIpc';
-import {Checklist_Icon} from '../../../SvgIcons';
+import rendererIpc from '../../../../../../../../src/renderer/src/App/RendererIpc';
+import {lynxTopToast} from '../../../../../../../../src/renderer/src/App/Utils/UtilHooks';
+import {Close_Icon, Trash_Icon} from '../../../../../../../../src/renderer/src/assets/icons/SvgIcons/SvgIcons';
+import pIpc from '../../../../../PIpc';
+import {Checklist_Icon} from '../../../../SvgIcons';
 
 type Package = {name: string; version: string};
 
@@ -18,7 +18,7 @@ type Props = {
   close: () => void;
 };
 
-export default function Header_Installer({pythonPath, refresh, close}: Props) {
+export default function Installer({pythonPath, refresh, close}: Props) {
   const [packageString, setPackageString] = useState<string>('');
   const [packages, setPackages] = useState<Package[]>([]);
   const [indexUrl, setIndexUrl] = useState<string>('');

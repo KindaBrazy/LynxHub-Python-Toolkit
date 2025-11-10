@@ -14,10 +14,10 @@ import {cloneDeep, isEmpty} from 'lodash';
 import {OverlayScrollbarsComponent} from 'overlayscrollbars-react';
 import {Dispatch, SetStateAction, useMemo} from 'react';
 
-import {useAppState} from '../../../../../../../src/renderer/src/App/Redux/Reducer/AppReducer';
-import {PackageInfo, PackageUpdate, SitePackages_Info} from '../../../../../cross/CrossExtTypes';
-import Body_SelectEnv from './Body_SelectEnv';
-import Body_TableItem from './Body_TableItem';
+import {useAppState} from '../../../../../../../../src/renderer/src/App/Redux/Reducer/AppReducer';
+import {PackageInfo, PackageUpdate, SitePackages_Info} from '../../../../../../cross/CrossExtTypes';
+import SelectEnv from './SelectEnv';
+import TableItem from './TableItem';
 
 type Props = {
   id: string;
@@ -108,7 +108,7 @@ export default function PackageManagerBody({
                     <TableRow key={item.name}>
                       {columnKey => (
                         <TableCell>
-                          <Body_TableItem
+                          <TableItem
                             item={item}
                             removed={removed}
                             updated={updated}
@@ -128,8 +128,8 @@ export default function PackageManagerBody({
             <Result
               status="404"
               title="Could not find a virtual environment."
+              extra={<SelectEnv id={id} setPythonPath={setPythonPath} />}
               subTitle={<span>Please select your desire environment.</span>}
-              extra={<Body_SelectEnv id={id} setPythonPath={setPythonPath} />}
             />
           )}
         </div>

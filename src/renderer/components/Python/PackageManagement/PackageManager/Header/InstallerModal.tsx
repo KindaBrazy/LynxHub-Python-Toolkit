@@ -2,9 +2,9 @@ import {Button, Modal, ModalBody, ModalContent, ModalHeader} from '@heroui/react
 import {OverlayScrollbarsComponent} from 'overlayscrollbars-react';
 import {useCallback, useState} from 'react';
 
-import {useAppState} from '../../../../../../../src/renderer/src/App/Redux/Reducer/AppReducer';
-import {Add_Icon} from '../../../../../../../src/renderer/src/assets/icons/SvgIcons/SvgIcons';
-import Header_Installer from './Header_Installer';
+import {useAppState} from '../../../../../../../../src/renderer/src/App/Redux/Reducer/AppReducer';
+import {Add_Icon} from '../../../../../../../../src/renderer/src/assets/icons/SvgIcons/SvgIcons';
+import Installer from './Installer';
 
 type Props = {
   pythonPath: string;
@@ -12,7 +12,7 @@ type Props = {
   show: string;
 };
 
-export default function Header_InstallerModal({refresh, pythonPath, show}: Props) {
+export default function InstallerModal({refresh, pythonPath, show}: Props) {
   const [isOpen, setIsOpen] = useState<boolean>(false);
 
   const isDarkMode = useAppState('darkMode');
@@ -46,7 +46,7 @@ export default function Header_InstallerModal({refresh, pythonPath, show}: Props
                   theme: isDarkMode ? 'os-theme-light' : 'os-theme-dark',
                 },
               }}>
-              <Header_Installer close={close} refresh={refresh} pythonPath={pythonPath} />
+              <Installer close={close} refresh={refresh} pythonPath={pythonPath} />
             </OverlayScrollbarsComponent>
           </ModalBody>
         </ModalContent>

@@ -1,11 +1,11 @@
 import {Button, Popover, PopoverContent, PopoverTrigger} from '@heroui/react';
 import {memo, useCallback, useState} from 'react';
 
-import pIpc from '../../../../PIpc';
+import pIpc from '../../../../../PIpc';
 
 type Props = {isCheckingUpdates: boolean; isUpdating: boolean; closePackageManager: () => void};
 
-const Footer_Close = ({isCheckingUpdates, isUpdating, closePackageManager}: Props) => {
+const CloseBtn = ({isCheckingUpdates, isUpdating, closePackageManager}: Props) => {
   const [isOpen, setIsOpen] = useState<boolean>(false);
 
   const closePopover = useCallback(() => {
@@ -63,4 +63,4 @@ const Footer_Close = ({isCheckingUpdates, isUpdating, closePackageManager}: Prop
   );
 };
 
-export default memo(Footer_Close);
+export default memo(CloseBtn);

@@ -7,10 +7,10 @@ import {searchInStrings} from '../../../../../../../src/renderer/src/App/Utils/U
 import {FilterKeys, PackageInfo, PackageUpdate, SitePackages_Info} from '../../../../../cross/CrossExtTypes';
 import {getUpdateType} from '../../../../../cross/CrossExtUtils';
 import pIpc from '../../../../PIpc';
-import PackageManagerBody from './Body';
-import Footer_Close from './Footer_Close';
-import Footer_TablePage from './Footer_TablePage';
-import PackageManagerHeader from './Header';
+import PackageManagerBody from './Body/Body';
+import Footer_Close from './Footer/CloseBtn';
+import TablePage from './Footer/TablePage';
+import PackageManagerHeader from './Header/Header';
 import UpdateModal from './Update-Modal';
 
 type Props = {
@@ -283,7 +283,7 @@ export default function PackageManagerModal({
             setIsUpdateTerminalOpen={setIsUpdateTerminalOpen}
           />
           <ModalFooter className="items-center py-3">
-            <Footer_TablePage setItems={setItems} searchData={searchData} />
+            <TablePage setItems={setItems} searchData={searchData} />
             <Footer_Close
               isUpdating={isUpdating}
               isCheckingUpdates={isCheckingUpdates}

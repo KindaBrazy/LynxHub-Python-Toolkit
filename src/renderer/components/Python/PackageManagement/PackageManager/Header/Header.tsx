@@ -3,16 +3,16 @@ import {compact, isEmpty} from 'lodash';
 import {Dispatch, ReactNode, SetStateAction, useEffect, useState} from 'react';
 import {useDispatch} from 'react-redux';
 
-import {extractGitUrl} from '../../../../../../../src/cross/CrossUtils';
-import {lynxTopToast} from '../../../../../../../src/renderer/src/App/Utils/UtilHooks';
-import {Circle_Icon} from '../../../../../../../src/renderer/src/assets/icons/SvgIcons/SvgIcons';
-import {FilterKeys, PackageInfo, PackageUpdate, SitePackages_Info} from '../../../../../cross/CrossExtTypes';
-import {allCardsExt} from '../../../../DataHolder';
-import pIpc from '../../../../PIpc';
-import RequirementsBtn from '../Requirements/RequirementsModalButton';
-import Header_FilterButton from './Header_FilterButton';
-import Header_InstallerModal from './Header_InstallerModal';
-import Header_UpdateButton from './Header_UpdateButton';
+import {extractGitUrl} from '../../../../../../../../src/cross/CrossUtils';
+import {lynxTopToast} from '../../../../../../../../src/renderer/src/App/Utils/UtilHooks';
+import {Circle_Icon} from '../../../../../../../../src/renderer/src/assets/icons/SvgIcons/SvgIcons';
+import {FilterKeys, PackageInfo, PackageUpdate, SitePackages_Info} from '../../../../../../cross/CrossExtTypes';
+import {allCardsExt} from '../../../../../DataHolder';
+import pIpc from '../../../../../PIpc';
+import RequirementsBtn from '../../Requirements/RequirementsModalButton';
+import FilterButton from './FilterButton';
+import InstallerModal from './InstallerModal';
+import UpdateButton from './UpdateButton';
 
 type Props = {
   title: string;
@@ -155,7 +155,7 @@ export default function PackageManagerHeader({
                 {packages.length}
               </Chip>
             </div>
-            <Header_FilterButton setSelectedFilter={setSelectedFilter} updateAvailable={!isEmpty(packagesUpdate)} />
+            <FilterButton setSelectedFilter={setSelectedFilter} updateAvailable={!isEmpty(packagesUpdate)} />
           </>
         ) : (
           <span>{title}</span>
@@ -173,7 +173,7 @@ export default function PackageManagerHeader({
       )}
       <div className="gap-x-2 flex justify-between items-center w-full mt-2">
         {isValidPython && (
-          <Header_UpdateButton
+          <UpdateButton
             update={update}
             isUpdating={isUpdating}
             visibleItems={visibleItems}
@@ -190,7 +190,7 @@ export default function PackageManagerHeader({
         )}
         {isValidPython && (
           <>
-            <Header_InstallerModal show={show} refresh={refresh} pythonPath={pythonPath} />
+            <InstallerModal show={show} refresh={refresh} pythonPath={pythonPath} />
 
             <RequirementsBtn
               id={id}

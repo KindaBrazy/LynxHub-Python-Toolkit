@@ -4,10 +4,10 @@ import {memo, useCallback, useEffect, useMemo, useState} from 'react';
 import {useDispatch} from 'react-redux';
 import semver, {compare, valid} from 'semver';
 
-import {lynxTopToast} from '../../../../../../../src/renderer/src/App/Utils/UtilHooks';
-import {PackageInfo, PackageUpdate} from '../../../../../cross/CrossExtTypes';
-import pIpc from '../../../../PIpc';
-import {SolarBoxMinimalisticBoldDuotone} from '../../../SvgIcons';
+import {lynxTopToast} from '../../../../../../../../src/renderer/src/App/Utils/UtilHooks';
+import {PackageInfo, PackageUpdate} from '../../../../../../cross/CrossExtTypes';
+import pIpc from '../../../../../PIpc';
+import {SolarBoxMinimalisticBoldDuotone} from '../../../../SvgIcons';
 
 type UpgradePropType = {color: 'default' | 'success' | 'warning'; disabled: boolean; title: string};
 type Props = {

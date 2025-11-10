@@ -2,14 +2,14 @@ import {Pagination} from '@heroui/react';
 import {isEmpty} from 'lodash';
 import {Dispatch, SetStateAction, useEffect, useMemo, useState} from 'react';
 
-import {PackageInfo} from '../../../../../cross/CrossExtTypes';
+import {PackageInfo} from '../../../../../../cross/CrossExtTypes';
 
 type Props = {
   searchData: PackageInfo[];
   setItems: Dispatch<SetStateAction<PackageInfo[]>>;
 };
 
-export default function Footer_TablePage({searchData, setItems}: Props) {
+export default function TablePage({searchData, setItems}: Props) {
   const [page, setPage] = useState<number>(1);
   const [rowsPerPage] = useState(50);
 

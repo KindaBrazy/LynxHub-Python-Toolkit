@@ -1,15 +1,15 @@
 import {Button, Dropdown, DropdownItem, DropdownMenu, DropdownSection, DropdownTrigger} from '@heroui/react';
 import {Dispatch, SetStateAction, useEffect, useState} from 'react';
 
-import {FilterDuo_Icon} from '../../../../../../../src/renderer/src/assets/icons/SvgIcons/SvgIcons';
-import {FilterKeys} from '../../../../../cross/CrossExtTypes';
+import {FilterDuo_Icon} from '../../../../../../../../src/renderer/src/assets/icons/SvgIcons/SvgIcons';
+import {FilterKeys} from '../../../../../../cross/CrossExtTypes';
 
 type Props = {
   setSelectedFilter: Dispatch<SetStateAction<FilterKeys>>;
   updateAvailable: boolean;
 };
 
-export default function Header_FilterButton({setSelectedFilter, updateAvailable}: Props) {
+export default function FilterButton({setSelectedFilter, updateAvailable}: Props) {
   const [selectedKeys, setSelectedKeys] = useState<Set<FilterKeys>>(new Set(['all']));
 
   useEffect(() => {

@@ -3,12 +3,12 @@ import {capitalize, startCase} from 'lodash';
 import {Dispatch, SetStateAction, useCallback, useMemo, useState} from 'react';
 import {useDispatch} from 'react-redux';
 
-import {lynxTopToast} from '../../../../../../../src/renderer/src/App/Utils/UtilHooks';
-import {PackageInfo, PackageUpdate} from '../../../../../cross/CrossExtTypes';
-import {getUpdateVersionColor} from '../../../../../cross/CrossExtUtils';
-import pIpc from '../../../../PIpc';
-import {usePythonToolkitState} from '../../../../reducer';
-import {Warn_Icon} from '../../../SvgIcons';
+import {lynxTopToast} from '../../../../../../../../src/renderer/src/App/Utils/UtilHooks';
+import {PackageInfo, PackageUpdate} from '../../../../../../cross/CrossExtTypes';
+import {getUpdateVersionColor} from '../../../../../../cross/CrossExtUtils';
+import pIpc from '../../../../../PIpc';
+import {usePythonToolkitState} from '../../../../../reducer';
+import {Warn_Icon} from '../../../../SvgIcons';
 import ActionButtons from './ActionButtons';
 
 type Props = {
@@ -21,7 +21,7 @@ type Props = {
   setIsUpdateTerminalOpen: Dispatch<SetStateAction<boolean>>;
 };
 
-export default function Body_TableItem({
+export default function TableItem({
   item,
   pythonPath,
   updated,
