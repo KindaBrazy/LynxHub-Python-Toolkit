@@ -11,6 +11,7 @@ import PackageManagerBody from './Body';
 import Footer_Close from './Footer_Close';
 import Footer_TablePage from './Footer_TablePage';
 import PackageManagerHeader from './Header';
+import UpdateModal from './Update-Modal';
 
 type Props = {
   isOpen: boolean;
@@ -55,6 +56,8 @@ export default function PackageManagerModal({
 
   const [items, setItems] = useState<PackageInfo[]>(searchData);
   const [selectedKeys, setSelectedKeys] = useState<Selection>(new Set([]));
+
+  const [isUpdateTerminalOpen, setIsUpdateTerminalOpen] = useState<boolean>(false);
 
   useEffect(() => {
     switch (selectedFilter) {
@@ -229,62 +232,67 @@ export default function PackageManagerModal({
   };
 
   return (
-    <Modal
-      size={size}
-      isOpen={isOpen}
-      placement="center"
-      isDismissable={false}
-      scrollBehavior="inside"
-      onClose={closePackageManager}
-      motionProps={modalMotionProps}
-      classNames={{backdrop: `!top-10 ${show}`, wrapper: `!top-10 pb-8 ${show}`}}
-      hideCloseButton>
-      <ModalContent className="overflow-hidden">
-        <PackageManagerHeader
-          id={id}
-          show={show}
-          title={title}
-          updated={updated}
-          packages={packages}
-          visibleItems={items}
-          isUpdating={isUpdating}
-          pythonPath={pythonPath}
-          refresh={getPackageList}
-          projectPath={projectPath}
-          searchValue={searchValue}
-          selectedKeys={selectedKeys}
-          setIsUpdating={setIsUpdating}
-          isValidPython={isValidPython}
-          actionButtons={actionButtons}
-          selectedFilter={selectedFilter}
-          packagesUpdate={packagesUpdate}
-          setSearchValue={setSearchValue}
-          checkForUpdates={checkForUpdates}
-          setSelectedFilter={setSelectedFilter}
-          checkingUpdates={!isLoadingPackages && isCheckingUpdates}
-        />
-        <PackageManagerBody
-          id={id}
-          items={items}
-          removed={removed}
-          updated={updated}
-          pythonPath={pythonPath}
-          selectedKeys={selectedKeys}
-          isLoading={isLoadingPackages}
-          setPythonPath={setPythonPath}
-          isValidPython={isValidPython}
-          packagesUpdate={packagesUpdate}
-          setSelectedKeys={setSelectedKeys}
-        />
-        <ModalFooter className="items-center py-3">
-          <Footer_TablePage setItems={setItems} searchData={searchData} />
-          <Footer_Close
+    <>
+      <Modal
+        size={size}
+        isOpen={isOpen}
+        placement="center"
+        isDismissable={false}
+        scrollBehavior="inside"
+        onClose={closePackageManager}
+        motionProps={modalMotionProps}
+        classNames={{backdrop: `!top-10 ${show}`, wrapper: `!top-10 pb-8 ${show}`}}
+        hideCloseButton>
+        <ModalContent className="overflow-hidden">
+          <PackageManagerHeader
+            id={id}
+            show={show}
+            title={title}
+            updated={updated}
+            packages={packages}
+            visibleItems={items}
             isUpdating={isUpdating}
-            isCheckingUpdates={isCheckingUpdates}
-            closePackageManager={closePackageManager}
+            pythonPath={pythonPath}
+            refresh={getPackageList}
+            projectPath={projectPath}
+            searchValue={searchValue}
+            selectedKeys={selectedKeys}
+            setIsUpdating={setIsUpdating}
+            isValidPython={isValidPython}
+            actionButtons={actionButtons}
+            selectedFilter={selectedFilter}
+            packagesUpdate={packagesUpdate}
+            setSearchValue={setSearchValue}
+            checkForUpdates={checkForUpdates}
+            setSelectedFilter={setSelectedFilter}
+            setIsUpdateTerminalOpen={setIsUpdateTerminalOpen}
+            checkingUpdates={!isLoadingPackages && isCheckingUpdates}
           />
-        </ModalFooter>
-      </ModalContent>
-    </Modal>
+          <PackageManagerBody
+            id={id}
+            items={items}
+            removed={removed}
+            updated={updated}
+            pythonPath={pythonPath}
+            selectedKeys={selectedKeys}
+            isLoading={isLoadingPackages}
+            setPythonPath={setPythonPath}
+            isValidPython={isValidPython}
+            packagesUpdate={packagesUpdate}
+            setSelectedKeys={setSelectedKeys}
+            setIsUpdateTerminalOpen={setIsUpdateTerminalOpen}
+          />
+          <ModalFooter className="items-center py-3">
+            <Footer_TablePage setItems={setItems} searchData={searchData} />
+            <Footer_Close
+              isUpdating={isUpdating}
+              isCheckingUpdates={isCheckingUpdates}
+              closePackageManager={closePackageManager}
+            />
+          </ModalFooter>
+        </ModalContent>
+      </Modal>
+      <UpdateModal show={show} isOpen={isUpdateTerminalOpen} setIsOpen={setIsUpdateTerminalOpen} />
+    </>
   );
 }

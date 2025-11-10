@@ -1,6 +1,6 @@
 import {Button} from '@heroui/react';
 import {capitalize, startCase} from 'lodash';
-import {useCallback, useMemo, useState} from 'react';
+import {Dispatch, SetStateAction, useCallback, useMemo, useState} from 'react';
 import {useDispatch} from 'react-redux';
 
 import {lynxTopToast} from '../../../../../../../src/renderer/src/App/Utils/UtilHooks';
@@ -18,9 +18,18 @@ type Props = {
   removed: (name: string) => void;
   columnKey: string;
   isSelected: boolean;
+  setIsUpdateTerminalOpen: Dispatch<SetStateAction<boolean>>;
 };
 
-export default function Body_TableItem({item, pythonPath, updated, removed, columnKey, isSelected}: Props) {
+export default function Body_TableItem({
+  item,
+  pythonPath,
+  updated,
+  removed,
+  columnKey,
+  isSelected,
+  setIsUpdateTerminalOpen,
+}: Props) {
   const [isUpdating, setIsUpdating] = useState<boolean>(false);
   const [isUninstalling, setIsUninstalling] = useState<boolean>(false);
   const pkgNameDisplay = usePythonToolkitState('pkgNameDisplay');
@@ -40,6 +49,7 @@ export default function Body_TableItem({item, pythonPath, updated, removed, colu
 
   const update = useCallback(() => {
     setIsUpdating(true);
+    setIsUpdateTerminalOpen(true);
     pIpc
       .updatePackage(pythonPath, item.name, item.updateVersion)
       .then(() => {

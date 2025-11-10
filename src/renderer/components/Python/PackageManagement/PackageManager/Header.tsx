@@ -36,6 +36,7 @@ type Props = {
   visibleItems: PackageInfo[];
 
   setIsUpdating: Dispatch<SetStateAction<boolean>>;
+  setIsUpdateTerminalOpen: Dispatch<SetStateAction<boolean>>;
   isUpdating: boolean;
 
   show: string;
@@ -56,6 +57,7 @@ export default function PackageManagerHeader({
   checkForUpdates,
   id,
   projectPath,
+  setIsUpdateTerminalOpen,
   setSelectedFilter,
   selectedFilter,
   selectedKeys,
@@ -122,6 +124,8 @@ export default function PackageManagerHeader({
       .finally(() => {
         setIsUpdating(false);
       });
+
+    setIsUpdateTerminalOpen(true);
   };
 
   return (

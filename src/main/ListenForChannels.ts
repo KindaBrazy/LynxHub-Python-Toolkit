@@ -35,20 +35,14 @@ import detectPythonInstallations, {addSavedPython, locatePythonInstallation, rem
 import {replacePythonPath} from './Utils/ExtMainUtils';
 import {createCondaEnv, isCondaInstalled, listAvailablePythons} from './Utils/Installer/Installer_Conda';
 import downloadPython from './Utils/Installer/Installer_Official';
-import {
-  abortOngoingUpdate,
-  getSitePackagesInfo,
-  installPythonPackage,
-  uninstallPythonPackage,
-  updatePackages,
-  updatePythonPackage,
-} from './Utils/PackageManager/PackageManager';
+import {getSitePackagesInfo, installPythonPackage, uninstallPythonPackage} from './Utils/PackageManager/PackageManager';
 import {changePythonPackageVersion} from './Utils/PackageManager/PackageManagerUtil';
 import {
   cancelPackagesUpdateCheck,
   getPackagesUpdate,
   getPackagesUpdateByReq,
 } from './Utils/PackageManager/PipToolsManager';
+import {abortOngoingUpdate, updatePackages, updatePythonPackage} from './Utils/PackageManager/Updater';
 import {parseVersion} from './Utils/PythonUtils';
 import {
   findValidRequirementsFiles,
