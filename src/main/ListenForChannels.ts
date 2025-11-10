@@ -41,6 +41,7 @@ import {
   cancelPackagesUpdateCheck,
   getPackagesUpdate,
   getPackagesUpdateByReq,
+  getPipPackageAllVersions,
 } from './Utils/PackageManager/PipToolsManager';
 import {abortOngoingUpdate, updatePackages, updatePythonPackage} from './Utils/PackageManager/Updater';
 import {parseVersion} from './Utils/PythonUtils';
@@ -63,6 +64,9 @@ export default function ListenForChannels(nodePty: any) {
   ipcMain.on(pythonChannels.addSavedPython, (_, pPath: string) => addSavedPython(pPath));
 
   ipcMain.handle(pythonChannels.locatePython, (_, pPath: string) => locatePythonInstallation(pPath));
+  ipcMain.handle(pythonChannels.getPackageAllVersions, (_, packageName: string) =>
+    getPipPackageAllVersions(packageName),
+  );
 
   ipcMain.handle(
     pythonChannels.changePythonVersion,

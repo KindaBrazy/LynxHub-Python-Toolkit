@@ -70,6 +70,8 @@ export const pythonChannels = {
   removeSavedVenv: 'remove-saved-venv',
   addSavedPython: 'add-saved-python',
 
+  getPackageAllVersions: 'ptoolkit:get-package-all-versions',
+
   locatePython: 'ptoolkit-locate-python',
 
   changePythonVersion: 'change-python-version',

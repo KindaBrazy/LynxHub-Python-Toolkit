@@ -115,6 +115,45 @@ export async function getLatestPipPackageVersion(
   }
 }
 
+export async function getPipPackageAllVersions(packageName: string): Promise<string[] | null> {
+  const url = `https://pypi.org/pypi/${packageName}/json`;
+
+  try {
+    const response = await axios.get(url, {timeout: 15000});
+    const data = response.data;
+
+    if (data?.releases) {
+      const versions = Object.keys(data.releases);
+
+      // Filter out versions that don't have any files (usually yanked versions)
+      const validVersions = versions.filter(version => data.releases[version].length > 0);
+
+      const semverVersions = validVersions
+        .map(v => semver.coerce(v)?.version)
+        .filter((v): v is string => v !== null && v !== undefined);
+
+      const versionsToSort = semverVersions.length > 0 ? semverVersions : validVersions;
+
+      return versionsToSort.sort((a, b) => semver.rcompare(a, b));
+    } else {
+      console.error(`Could not find releases information for ${packageName} in the response.`);
+      return null;
+    }
+  } catch (error: any) {
+    if (axios.isAxiosError(error)) {
+      if (error.response?.status === 404) {
+        console.error(`Package ${packageName} not found on PyPI.`);
+      } else {
+        console.error(`Error fetching package info for ${packageName}:`, error.message);
+      }
+    } else {
+      console.error(`An unexpected error occurred for ${packageName}:`, error);
+    }
+
+    return null;
+  }
+}
+
 export async function getPackagesUpdateByReq(
   reqPath: string,
   packages: SitePackages_Info[],

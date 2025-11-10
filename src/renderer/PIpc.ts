@@ -27,6 +27,8 @@ const pIpc = {
   removeSavedVenv: (venvPath: string) => ipc.send(pythonChannels.removeSavedVenv, venvPath),
   addSavedPython: (pPath: string) => ipc.send(pythonChannels.addSavedPython, pPath),
 
+  getPackageAllVersions: (packageName: string): Promise<string[] | null> =>
+    ipc.invoke(pythonChannels.getPackageAllVersions, packageName),
   locatePython: (pPath: string): Promise<PythonInstallation | null> => ipc.invoke(pythonChannels.locatePython, pPath),
 
   changePackageVersion: (pythonPath: string, packageName: string, currentVersion: string, targetVersion: string) =>
