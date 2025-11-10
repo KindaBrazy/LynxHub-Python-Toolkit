@@ -15,9 +15,18 @@ type Props = {
   pythonPath: string;
   isUninstalling: boolean;
   setIsUninstalling: Dispatch<SetStateAction<boolean>>;
+  show: string;
 };
 
-export default function ActionButtons({item, removed, pythonPath, isUninstalling, setIsUninstalling, updated}: Props) {
+export default function ActionButtons({
+  item,
+  removed,
+  pythonPath,
+  isUninstalling,
+  setIsUninstalling,
+  updated,
+  show,
+}: Props) {
   const [isUninstallOpen, setIsUninstallOpen] = useState<boolean>(false);
   const dispatch = useDispatch();
 
@@ -64,7 +73,7 @@ export default function ActionButtons({item, removed, pythonPath, isUninstalling
         </PopoverContent>
       </Popover>
 
-      <PkgVersions item={item} updated={updated} pythonPath={pythonPath} />
+      <PkgVersions show={show} item={item} updated={updated} pythonPath={pythonPath} />
     </div>
   );
 }

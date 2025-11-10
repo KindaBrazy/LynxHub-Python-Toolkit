@@ -19,6 +19,7 @@ type Props = {
   columnKey: string;
   isSelected: boolean;
   setIsUpdateTerminalOpen: Dispatch<SetStateAction<boolean>>;
+  show: string;
 };
 
 export default function TableItem({
@@ -29,6 +30,7 @@ export default function TableItem({
   columnKey,
   isSelected,
   setIsUpdateTerminalOpen,
+  show,
 }: Props) {
   const [isUpdating, setIsUpdating] = useState<boolean>(false);
   const [isUninstalling, setIsUninstalling] = useState<boolean>(false);
@@ -69,6 +71,7 @@ export default function TableItem({
       !isUpdating && (
         <ActionButtons
           item={item}
+          show={show}
           updated={updated}
           removed={removed}
           pythonPath={pythonPath}

@@ -270,6 +270,7 @@ export default function PackageManagerModal({
           />
           <PackageManagerBody
             id={id}
+            show={show}
             items={items}
             removed={removed}
             updated={updated}

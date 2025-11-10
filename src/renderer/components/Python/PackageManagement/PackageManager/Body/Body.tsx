@@ -32,6 +32,7 @@ type Props = {
   setSelectedKeys: Dispatch<SetStateAction<Selection>>;
   setPythonPath?: Dispatch<SetStateAction<string>>;
   setIsUpdateTerminalOpen: Dispatch<SetStateAction<boolean>>;
+  show: string;
 };
 
 export default function PackageManagerBody({
@@ -47,6 +48,7 @@ export default function PackageManagerBody({
   selectedKeys,
   setPythonPath,
   setIsUpdateTerminalOpen,
+  show,
 }: Props) {
   const isDarkMode = useAppState('darkMode');
   const anyUpdateAvailable = useMemo(() => packagesUpdate.length !== 0, [packagesUpdate]);
@@ -109,6 +111,7 @@ export default function PackageManagerBody({
                       {columnKey => (
                         <TableCell>
                           <TableItem
+                            show={show}
                             item={item}
                             removed={removed}
                             updated={updated}
