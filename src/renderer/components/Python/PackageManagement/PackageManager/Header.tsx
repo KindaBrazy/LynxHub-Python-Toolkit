@@ -1,9 +1,10 @@
 import {Avatar, Chip, Input, ModalHeader, Progress, Selection} from '@heroui/react';
-import {message} from 'antd';
 import {compact, isEmpty} from 'lodash';
 import {Dispatch, ReactNode, SetStateAction, useEffect, useState} from 'react';
+import {useDispatch} from 'react-redux';
 
 import {extractGitUrl} from '../../../../../../../src/cross/CrossUtils';
+import {lynxTopToast} from '../../../../../../../src/renderer/src/App/Utils/UtilHooks';
 import {Circle_Icon} from '../../../../../../../src/renderer/src/assets/icons/SvgIcons/SvgIcons';
 import {FilterKeys, PackageInfo, PackageUpdate, SitePackages_Info} from '../../../../../cross/CrossExtTypes';
 import {allCardsExt} from '../../../../DataHolder';
@@ -34,6 +35,9 @@ type Props = {
   selectedKeys: Selection;
   visibleItems: PackageInfo[];
 
+  setIsUpdating: Dispatch<SetStateAction<boolean>>;
+  isUpdating: boolean;
+
   show: string;
 };
 
@@ -56,15 +60,17 @@ export default function PackageManagerHeader({
   selectedFilter,
   selectedKeys,
   visibleItems,
+  setIsUpdating,
+  isUpdating,
   show,
 }: Props) {
-  const [isUpdating, setIsUpdating] = useState<boolean>(false);
-
   const [isReqAvailable, setIsReqAvailable] = useState<boolean>(false);
   const [reqPackageCount, setReqPackageCount] = useState<number>(0);
   const [progressValue, setProgressValue] = useState<number>(0);
   const [avatarUrl, setAvatarUrl] = useState<string | undefined>(undefined);
   const [pythonVersion, setPythonVersion] = useState<string>('');
+
+  const dispatch = useDispatch();
 
   useEffect(() => {
     const url = allCardsExt.find(item => item.id === id)?.repoUrl;
@@ -107,11 +113,11 @@ export default function PackageManagerHeader({
     pIpc
       .updatePackages(pythonPath, updateList)
       .then(() => {
-        message.success(`Successfully updated all selected packages (${updateList.length} total).`);
+        lynxTopToast(dispatch).success(`Successfully updated all selected packages (${updateList.length} total).`);
         updated(updateList);
       })
       .catch(() => {
-        message.error(`Failed to update packages.`);
+        lynxTopToast(dispatch).error(`Failed to update packages`);
       })
       .finally(() => {
         setIsUpdating(false);
