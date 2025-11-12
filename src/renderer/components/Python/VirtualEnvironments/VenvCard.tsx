@@ -21,13 +21,15 @@ import {useDispatch} from 'react-redux';
 import rendererIpc from '../../../../../../src/renderer/src/App/RendererIpc';
 import {lynxTopToast} from '../../../../../../src/renderer/src/App/Utils/UtilHooks';
 import {
+  BoxDuo_Icon,
   Close_Icon,
+  DiskDuo_Icon,
+  FolderDuo_Icon,
   MenuDots_Icon,
-  OpenFolder_Icon,
 } from '../../../../../../src/renderer/src/assets/icons/SvgIcons/SvgIcons';
 import {formatSizeMB} from '../../../../cross/CrossExtUtils';
 import pIpc from '../../../PIpc';
-import {Env_Icon, HardDrive_Icon, Packages_Icon, TrashDuo_Icon} from '../../SvgIcons';
+import {Env_Icon, Packages_Icon, TrashDuo_Icon} from '../../SvgIcons';
 import PackageManagerModal from '../PackageManagement/PackageManager/PackageManagerModal';
 import Venv_Associate from './Venv_Associate';
 
@@ -136,7 +138,8 @@ export default function VenvCard({
       />
       <Card
         className={
-          'min-w-[27rem] grow border-1 transition-all border-foreground/10 hover:border-foreground/20 cursor-default'
+          'min-w-[27rem] grow border-2 transition-all duration-300 border-foreground-100' +
+          ' hover:border-foreground-200 cursor-default'
         }
         as="div"
         isPressable>
@@ -234,19 +237,19 @@ export default function VenvCard({
 
         <CardBody className="gap-y-4 px-4 flex flex-col text-sm">
           <Button size="sm" variant="light" onPress={openPath} className="flex flex-row justify-start -ml-3 -mb-1.5">
-            <OpenFolder_Icon className="shrink-0" />
+            <FolderDuo_Icon className="shrink-0" />
             <span className="truncate">{folder}</span>
           </Button>
           <div className="w-full justify-between flex flex-row">
             <div className="flex flex-row gap-x-2 items-center">
-              <Packages_Icon className="size-3" />
+              <BoxDuo_Icon className="size-3" />
               <span>Installed Packages:</span>
             </div>
             <span>{installedPackages}</span>
           </div>
           <div className="w-full justify-between flex flex-row">
             <div className="flex flex-row gap-x-2 items-center">
-              <HardDrive_Icon className="size-3" />
+              <DiskDuo_Icon className="size-3" />
               <span>Disk Usage:</span>
             </div>
             {isNil(size) ? <Spin size="small" /> : <span>{formatSizeMB(size || 0)}</span>}

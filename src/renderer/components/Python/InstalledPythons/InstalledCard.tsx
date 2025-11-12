@@ -22,22 +22,17 @@ import {useDispatch} from 'react-redux';
 import rendererIpc from '../../../../../../src/renderer/src/App/RendererIpc';
 import {lynxTopToast} from '../../../../../../src/renderer/src/App/Utils/UtilHooks';
 import {
+  BoxDuo_Icon,
   Close_Icon,
+  DiskDuo_Icon,
+  FolderDuo_Icon,
   MenuDots_Icon,
-  OpenFolder_Icon,
   RefreshDuo_Icon,
 } from '../../../../../../src/renderer/src/assets/icons/SvgIcons/SvgIcons';
 import {PythonInstallation} from '../../../../cross/CrossExtTypes';
 import {formatSizeMB} from '../../../../cross/CrossExtUtils';
 import pIpc from '../../../PIpc';
-import {
-  CheckCircle_Icon,
-  DoubleCheck_Icon,
-  HardDrive_Icon,
-  Packages_Icon,
-  Python_Icon,
-  TrashDuo_Icon,
-} from '../../SvgIcons';
+import {CheckCircle_Icon, DoubleCheck_Icon, Packages_Icon, Python_Icon, TrashDuo_Icon} from '../../SvgIcons';
 import PackageManagerModal from '../PackageManagement/PackageManager/PackageManagerModal';
 import Venv_Associate from '../VirtualEnvironments/Venv_Associate';
 
@@ -134,10 +129,10 @@ export default function InstalledCard({python, diskUsage, maxDiskValue, updateDe
     return python.isDefault && python.isLynxHubDefault
       ? 'border-2 border-success/60 hover:border-success'
       : python.isDefault
-        ? 'border border-secondary/60 hover:border-secondary'
+        ? 'border-2 border-secondary/60 hover:border-secondary'
         : python.isLynxHubDefault
-          ? 'border border-primary/60 hover:border-primary'
-          : 'border border-foreground/10 hover:border-foreground/20';
+          ? 'border-2 border-primary/60 hover:border-primary'
+          : 'border-2 border-foreground-100 hover:border-foreground-200';
   }, [python]);
 
   const defaultChip = useMemo(() => {
@@ -211,7 +206,10 @@ export default function InstalledCard({python, diskUsage, maxDiskValue, updateDe
           </div>
         </div>
       )}
-      <Card as="div" className={`min-w-[27rem] grow transition-all cursor-default ${borderColor}`} isPressable>
+      <Card
+        as="div"
+        className={`min-w-[27rem] grow transition-all duration-300 cursor-default ${borderColor}`}
+        isPressable>
         <CardHeader className="flex flex-row justify-between items-center py-1 px-4">
           <div className="flex flex-col my-3">
             <div className="flex flex-row items-center gap-x-2">
@@ -342,12 +340,12 @@ export default function InstalledCard({python, diskUsage, maxDiskValue, updateDe
 
         <CardBody className="gap-y-4 px-4 flex flex-col text-sm">
           <Button size="sm" variant="light" onPress={openPath} className="flex flex-row justify-start -ml-3 -mb-1.5">
-            <OpenFolder_Icon className="shrink-0" />
+            <FolderDuo_Icon className="shrink-0" />
             <span className="truncate">{python.installFolder}</span>
           </Button>
           <div className="w-full justify-between flex flex-row">
             <div className="flex flex-row gap-x-2 items-center">
-              <Packages_Icon className="size-3" />
+              <BoxDuo_Icon className="size-3" />
               <span>Installed Packages:</span>
             </div>
             <span>{python.packages}</span>
@@ -355,7 +353,7 @@ export default function InstalledCard({python, diskUsage, maxDiskValue, updateDe
           <Progress
             label={
               <div className="flex flex-row gap-x-2 items-center">
-                <HardDrive_Icon className="size-3" />
+                <DiskDuo_Icon className="size-3" />
                 <span>Disk Usage:</span>
               </div>
             }
