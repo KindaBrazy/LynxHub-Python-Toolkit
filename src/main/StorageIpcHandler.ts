@@ -42,6 +42,11 @@ export default function ListenForStorage(storageManager: StorageManager | undefi
     return usageList?.find(item => item.id === id)?.usage || 0;
   });
 
+  ipcMain.on(pythonStorageChannels.clearCachedUsage, () => {
+    if (!storageManager) return;
+    storageManager.setCustomData(keys.cachedUsage, []);
+  });
+
   ipcMain.on(pythonStorageChannels.setCachedUsage, (_, id: string, value: number) => {
     if (storageManager) {
       const usageList = storageManager.getCustomData(keys.cachedUsage) as CachedUsage[] | undefined;
