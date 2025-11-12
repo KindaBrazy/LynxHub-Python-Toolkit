@@ -2,22 +2,75 @@
   "$schema": "https://raw.githubusercontent.com/KindaBrazy/LynxHub-Statics/refs/heads/schema/plugins/versioning.schema.json",
   "versions": [
     {
+      "version": "0.13.0",
+      "commit": "df55301",
+      "engines": {
+        "extensionApi": "^1.0.0"
+      },
+      "stage": "early_access",
+      "platforms": [
+        "win32",
+        "linux"
+      ]
+    },
+    {
       "version": "0.12.0",
       "commit": "4faf811",
       "engines": {
         "extensionApi": "^1.0.0"
       },
       "stage": "early_access",
-      "platforms": ["win32", "linux"]
+      "platforms": [
+        "win32",
+        "linux"
+      ]
     }
   ],
   "changes": [
+    {
+      "version": "0.13.0",
+      "date": "2025-11-12",
+      "items": [
+        {
+          "✨ New Features": [
+            "Added a progress bar and counter for package update checks.",
+            "You can now cancel ongoing package updates and checks.",
+            "Added a setting to limit how many packages can be checked for update at the same time.",
+            "Added the ability to locate a specific Python version on your system.",
+            "You can now remove a Python version or venv from the list without deleting it.",
+            "Added a 'Skip' option to the environment selector during AI installations.",
+            "Added a terminal output view for package updates.",
+            "The 'Change Version' dialog now shows all available package versions and also lets you select a custom one.",
+            "Added a confirmation dialog for closing updating or update check window.."
+          ],
+          "⚡ Improvements": [
+            "Updated the Tools page card design to match the new V3.3.0 style.",
+            "Improved overall performance.",
+            "The package manager header now shows the Python version and the AI's avatar.",
+            "The environment selector now displays Python names and indicates the default version."
+          ],
+          "🪲 Bug Fixes": [
+            "Fixed an issue where updating a package, updates to the latest version instead of the target version.",
+            "Fixed an issue where automatic Python detection would miss some installations.",
+            "Improved detection of the LynxHub and system default Python versions.",
+            "Fixed an issue where some features could break after updating a package."
+          ],
+          "📌 Minor Changes": [
+            "Added a maximum retry limit configuration to the requirements update checks.",
+            "The cursor is now a pointer when hovering over package pagination buttons.",
+            "Enhanced the overall UI layout, toast notifications, icons and etc."
+          ]
+        }
+      ]
+    },
     {
       "version": "0.12.0",
       "date": "2025-10-24",
       "items": [
         {
-          "⚡ Improvements": ["Support LynxHub Version 3.3.0"],
+          "⚡ Improvements": [
+            "Support LynxHub Version 3.3.0"
+          ],
           "📌 Minor Changes": [
             "Remove alltalk-tts Python environment selection (Alltalk-tts uses a self-managed Conda environment)"
           ]
@@ -45,7 +98,9 @@
         {
           "⚡ Improvements": [
             {
-              "UI": ["Refreshed design for Python versions and virtual environment cards."]
+              "UI": [
+                "Refreshed design for Python versions and virtual environment cards."
+              ]
             },
             {
               "Installer": [
@@ -84,7 +139,9 @@
           ]
         },
         {
-          "🪲 Bug Fixes": ["Fixed crash when requirements file path is empty."]
+          "🪲 Bug Fixes": [
+            "Fixed crash when requirements file path is empty."
+          ]
         },
         {
           "📌 Minor Changes": [
@@ -106,7 +163,9 @@
       "date": "2025-06-08",
       "items": [
         {
-          "⚡ Improvements": ["Redesign ToolsPage card layout"]
+          "⚡ Improvements": [
+            "Redesign ToolsPage card layout"
+          ]
         }
       ]
     },
@@ -115,7 +174,9 @@
       "date": "2025-05-22",
       "items": [
         {
-          "✨ New Features": ["Support LynxHub Version 3"]
+          "✨ New Features": [
+            "Support LynxHub Version 3"
+          ]
         }
       ]
     },
@@ -130,7 +191,9 @@
           ]
         },
         {
-          "🪲 Bug Fixes": ["Fixed issues with closing and reopening AI Dependencies window"]
+          "🪲 Bug Fixes": [
+            "Fixed issues with closing and reopening AI Dependencies window"
+          ]
         }
       ]
     },
@@ -139,7 +202,9 @@
       "date": "2025-03-23",
       "items": [
         {
-          "🪲 Bug Fixes": ["Fixed \"Set as System Default\" on windows might not work in some situations."]
+          "🪲 Bug Fixes": [
+            "Fixed \"Set as System Default\" on windows might not work in some situations."
+          ]
         }
       ]
     },
@@ -148,7 +213,9 @@
       "date": "2025-03-04",
       "items": [
         {
-          "🪲 Bug Fixes": ["Correct venv activation command for AI interfaces on Windows and Linux."]
+          "🪲 Bug Fixes": [
+            "Correct venv activation command for AI interfaces on Windows and Linux."
+          ]
         }
       ]
     },
