@@ -1,15 +1,15 @@
 "use strict";
 Object.defineProperty(exports, Symbol.toStringTag, { value: "Module" });
 const electron = require("electron");
-const node_child_process = require("node:child_process");
 const node_os = require("node:os");
 const path = require("node:path");
+const node_child_process = require("node:child_process");
+const node_util = require("node:util");
 const require$$0$3 = require("fs");
 const require$$0$2 = require("constants");
 const stream = require("stream");
 const require$$1 = require("util");
 const require$$5 = require("assert");
-const node_util = require("node:util");
 const child_process = require("child_process");
 const require$$1$1 = require("fs/promises");
 const require$$1$2 = require("path");
@@ -20,20 +20,37 @@ const require$$3 = require("http");
 const require$$4 = require("https");
 const require$$0$5 = require("url");
 const require$$8 = require("crypto");
+const http2 = require("http2");
 const require$$1$3 = require("tty");
 const zlib = require("zlib");
 const events = require("events");
 const AI_VENV_STORE_KEYS = "ai_venvs";
 const MaxRetry_StorageID = "pythonToolkit_MaxRetry";
+const MaxConcurrent_StorageID = "pythonToolkit_MaxConcurrent";
 const PkgDisplay_StorageID = "pythonToolkit_MpkgDisplay";
 const DefaultLynxPython_StorageID = "pythonToolkit_DefaultLynxPython";
 const CacheDirUsage_StorageID = "pythonToolkit_CacheDirUsage";
 const CardStartCommand_StorageID = "pythonToolkit_CardStartCommands";
 const Associates_StorageID = "pythonToolkit_associates";
 const IsAutoDetectedVenvs_StorageID = "pythonToolkit_IsAutoDetectedVenvs";
+let storageManager = void 0;
+let appManager = void 0;
+let defaultEnvPath = process.env.PATH;
+let nodePty = void 0;
+const setStorage = (storage) => storageManager = storage;
+const getStorage = () => storageManager;
+const setAppManager = (manager) => appManager = manager;
+const getAppManager = () => appManager;
+const setDefaultEnvPath = (path2) => defaultEnvPath = path2;
+const getDefaultEnvPath = () => defaultEnvPath;
+const setNodePty = (pty) => nodePty = pty;
+const getNodePty = () => nodePty;
 const pythonChannels = {
   removeSavedPython: "remove-saved-python",
+  removeSavedVenv: "remove-saved-venv",
   addSavedPython: "add-saved-python",
+  getPackageAllVersions: "ptoolkit:get-package-all-versions",
+  locatePython: "ptoolkit-locate-python",
   changePythonVersion: "change-python-version",
   getAvailableConda: "get-available-conda-pythons",
   downloadProgressConda: "download-conda-python-progress",
@@ -54,7 +71,7 @@ const pythonChannels = {
   getPackagesUpdateInfo: "get-packages-update-info",
   getUpdatesReq: "get-updates-req",
   updatePackage: "update-package",
-  updateAllPackages: "update-all-packages",
+  updatePackages: "update-packages",
   saveReqs: "save-requirements",
   readReqs: "read-requirements",
   setReqPath: "set-requirements-path",
@@ -69,6 +86,8 @@ const pythonChannels = {
   readFile: "read-file",
   getMaxRetry: "get-max-retry",
   setMaxRetry: "set-max-retry",
+  getMaxConcurrent: "get-max-concurrent",
+  setMaxConcurrent: "set-max-concurrent",
   getPkgDisplay: "get-pkg-display",
   setPkgDisplay: "set-pkg-display",
   getCacheStorageUsage: "get-cache-storage-usage",
@@ -76,8 +95,83 @@ const pythonChannels = {
   getCardStartCommand: "get-card-start-command",
   setCardStartCommand: "set-card-start-command",
   replacePythonPath: "ptoolkit-replace-python-path",
-  errorGetVenvInfo: "ptoolkit-errorGetVenvInfo"
+  errorGetVenvInfo: "ptoolkit-errorGetVenvInfo",
+  updateCheckProgress: "ptoolkit-update-check-progress",
+  abortUpdateCheck: "ptoolkit-abort-update-check",
+  abortUpdating: "ptoolkit-abort-updating",
+  getPythonVersion: "ptoolkit-get-python-version"
 };
+const pythonStorageChannels = {
+  getAvailableConda: "psc:getAvailableConda",
+  setAvailableConda: "psc:setAvailableConda",
+  getAvailableOfficial: "psc:getAvailableOfficial",
+  setAvailableOfficial: "psc:setAvailableOfficial",
+  getCachedUsage: "psc:getCachedUsage",
+  setCachedUsage: "psc:setCachedUsage",
+  clearCachedUsage: "psc:clearCachedUsage",
+  getVenvCustomTitle: "psc:getVenvCustomTitle",
+  setVenvCustomTitle: "psc:setVenvCustomTitle"
+};
+const keys = {
+  availableConda: "availableConda",
+  availableOfficial: "availableOfficial",
+  cachedUsage: "cachedUsage",
+  venvCustomTitle: "venvCustomTitle"
+};
+function ListenForStorage(storageManager2) {
+  electron.ipcMain.handle(pythonStorageChannels.getAvailableConda, () => {
+    if (!storageManager2) return [];
+    return storageManager2.getCustomData(keys.availableConda) || [];
+  });
+  electron.ipcMain.on(pythonStorageChannels.setAvailableConda, (_, data) => {
+    if (storageManager2) {
+      storageManager2.setCustomData(keys.availableConda, data);
+    }
+  });
+  electron.ipcMain.handle(pythonStorageChannels.getAvailableOfficial, () => {
+    if (!storageManager2) return [];
+    return storageManager2.getCustomData(keys.availableOfficial) || [];
+  });
+  electron.ipcMain.on(pythonStorageChannels.setAvailableOfficial, (_, data) => {
+    if (storageManager2) {
+      storageManager2.setCustomData(keys.availableOfficial, data);
+    }
+  });
+  electron.ipcMain.handle(pythonStorageChannels.getCachedUsage, (_, id) => {
+    if (!storageManager2) return 0;
+    const usageList = storageManager2.getCustomData(keys.cachedUsage);
+    return usageList?.find((item) => item.id === id)?.usage || 0;
+  });
+  electron.ipcMain.on(pythonStorageChannels.clearCachedUsage, () => {
+    if (!storageManager2) return;
+    storageManager2.setCustomData(keys.cachedUsage, []);
+  });
+  electron.ipcMain.on(pythonStorageChannels.setCachedUsage, (_, id, value) => {
+    if (storageManager2) {
+      const usageList = storageManager2.getCustomData(keys.cachedUsage);
+      if (usageList) {
+        const index = usageList.findIndex((item) => item.id === id);
+        if (index !== void 0 && index !== -1) {
+          usageList[index].usage = value;
+        } else {
+          usageList.push({ id, usage: value });
+        }
+        storageManager2.setCustomData(keys.cachedUsage, usageList);
+      } else {
+        storageManager2.setCustomData(keys.cachedUsage, []);
+      }
+    }
+  });
+  electron.ipcMain.handle(pythonStorageChannels.getVenvCustomTitle, () => {
+    if (!storageManager2) return [];
+    return storageManager2.getCustomData(keys.venvCustomTitle) || [];
+  });
+  electron.ipcMain.on(pythonStorageChannels.setVenvCustomTitle, (_, data) => {
+    if (storageManager2) {
+      storageManager2.setCustomData(keys.venvCustomTitle, data);
+    }
+  });
+}
 var commonjsGlobal = typeof globalThis !== "undefined" ? globalThis : typeof window !== "undefined" ? window : typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : {};
 function getDefaultExportFromCjs(x) {
   return x && x.__esModule && Object.prototype.hasOwnProperty.call(x, "default") ? x["default"] : x;
@@ -1191,7 +1285,7 @@ function requireLodash() {
           return accumulator;
         }
         function baseAssign(object, source) {
-          return object && copyObject(source, keys(source), object);
+          return object && copyObject(source, keys2(source), object);
         }
         function baseAssignIn(object, source) {
           return object && copyObject(source, keysIn(source), object);
@@ -1275,7 +1369,7 @@ function requireLodash() {
               result2.set(key2, baseClone(subValue, bitmask, customizer, key2, value, stack));
             });
           }
-          var keysFunc = isFull ? isFlat ? getAllKeysIn : getAllKeys : isFlat ? keysIn : keys;
+          var keysFunc = isFull ? isFlat ? getAllKeysIn : getAllKeys : isFlat ? keysIn : keys2;
           var props = isArr ? undefined$1 : keysFunc(value);
           arrayEach(props || value, function(subValue, key2) {
             if (props) {
@@ -1287,7 +1381,7 @@ function requireLodash() {
           return result2;
         }
         function baseConforms(source) {
-          var props = keys(source);
+          var props = keys2(source);
           return function(object) {
             return baseConformsTo(object, source, props);
           };
@@ -1414,10 +1508,10 @@ function requireLodash() {
         var baseFor = createBaseFor();
         var baseForRight = createBaseFor(true);
         function baseForOwn(object, iteratee2) {
-          return object && baseFor(object, iteratee2, keys);
+          return object && baseFor(object, iteratee2, keys2);
         }
         function baseForOwnRight(object, iteratee2) {
-          return object && baseForRight(object, iteratee2, keys);
+          return object && baseForRight(object, iteratee2, keys2);
         }
         function baseFunctions(object, props) {
           return arrayFilter(props, function(key) {
@@ -2345,7 +2439,7 @@ function requireLodash() {
             var iterable = Object2(collection);
             if (!isArrayLike(collection)) {
               var iteratee2 = getIteratee(predicate, 3);
-              collection = keys(collection);
+              collection = keys2(collection);
               predicate = function(key) {
                 return iteratee2(iterable[key], key, iterable);
               };
@@ -2791,7 +2885,7 @@ function requireLodash() {
           return setToString(overRest(func, undefined$1, flatten), func + "");
         }
         function getAllKeys(object) {
-          return baseGetAllKeys(object, keys, getSymbols);
+          return baseGetAllKeys(object, keys2, getSymbols);
         }
         function getAllKeysIn(object) {
           return baseGetAllKeys(object, keysIn, getSymbolsIn);
@@ -2823,7 +2917,7 @@ function requireLodash() {
           return isKeyable(key) ? data[typeof key == "string" ? "string" : "hash"] : data.map;
         }
         function getMatchData(object) {
-          var result2 = keys(object), length = result2.length;
+          var result2 = keys2(object), length = result2.length;
           while (length--) {
             var key = result2[length], value = object[key];
             result2[length] = [key, value, isStrictComparable(value)];
@@ -4126,7 +4220,7 @@ function requireLodash() {
           return baseClone(value, CLONE_DEEP_FLAG | CLONE_SYMBOLS_FLAG, customizer);
         }
         function conformsTo(object, source) {
-          return source == null || baseConformsTo(object, source, keys(source));
+          return source == null || baseConformsTo(object, source, keys2(source));
         }
         function eq(value, other) {
           return value === other || value !== value && other !== other;
@@ -4337,7 +4431,7 @@ function requireLodash() {
         }
         var assign = createAssigner(function(object, source) {
           if (isPrototype(source) || isArrayLike(source)) {
-            copyObject(source, keys(source), object);
+            copyObject(source, keys2(source), object);
             return;
           }
           for (var key in source) {
@@ -4353,7 +4447,7 @@ function requireLodash() {
           copyObject(source, keysIn(source), object, customizer);
         });
         var assignWith = createAssigner(function(object, source, srcIndex, customizer) {
-          copyObject(source, keys(source), object, customizer);
+          copyObject(source, keys2(source), object, customizer);
         });
         var at = flatRest(baseAt);
         function create(prototype2, properties) {
@@ -4406,7 +4500,7 @@ function requireLodash() {
           return object && baseForOwnRight(object, getIteratee(iteratee2, 3));
         }
         function functions(object) {
-          return object == null ? [] : baseFunctions(object, keys(object));
+          return object == null ? [] : baseFunctions(object, keys2(object));
         }
         function functionsIn(object) {
           return object == null ? [] : baseFunctions(object, keysIn(object));
@@ -4438,7 +4532,7 @@ function requireLodash() {
           }
         }, getIteratee);
         var invoke = baseRest(baseInvoke);
-        function keys(object) {
+        function keys2(object) {
           return isArrayLike(object) ? arrayLikeKeys(object) : baseKeys(object);
         }
         function keysIn(object) {
@@ -4529,7 +4623,7 @@ function requireLodash() {
           customizer = typeof customizer == "function" ? customizer : undefined$1;
           return object == null ? object : baseSet(object, path2, value, customizer);
         }
-        var toPairs = createToPairs(keys);
+        var toPairs = createToPairs(keys2);
         var toPairsIn = createToPairs(keysIn);
         function transform(object, iteratee2, accumulator) {
           var isArr = isArray2(object), isArrLike = isArr || isBuffer2(object) || isTypedArray2(object);
@@ -4560,7 +4654,7 @@ function requireLodash() {
           return object == null ? object : baseUpdate(object, path2, castFunction(updater), customizer);
         }
         function values(object) {
-          return object == null ? [] : baseValues(object, keys(object));
+          return object == null ? [] : baseValues(object, keys2(object));
         }
         function valuesIn(object) {
           return object == null ? [] : baseValues(object, keysIn(object));
@@ -4740,7 +4834,7 @@ function requireLodash() {
           }
           string = toString3(string);
           options2 = assignInWith({}, options2, settings, customDefaultsAssignIn);
-          var imports = assignInWith({}, options2.imports, settings.imports, customDefaultsAssignIn), importsKeys = keys(imports), importsValues = baseValues(imports, importsKeys);
+          var imports = assignInWith({}, options2.imports, settings.imports, customDefaultsAssignIn), importsKeys = keys2(imports), importsValues = baseValues(imports, importsKeys);
           var isEscaping, isEvaluating, index = 0, interpolate = options2.interpolate || reNoMatch, source = "__p += '";
           var reDelimiters = RegExp2(
             (options2.escape || reNoMatch).source + "|" + interpolate.source + "|" + (interpolate === reInterpolate ? reEsTemplate : reNoMatch).source + "|" + (options2.evaluate || reNoMatch).source + "|$",
@@ -4952,12 +5046,12 @@ function requireLodash() {
           };
         });
         function mixin(object, source, options2) {
-          var props = keys(source), methodNames = baseFunctions(source, props);
+          var props = keys2(source), methodNames = baseFunctions(source, props);
           if (options2 == null && !(isObject2(source) && (methodNames.length || !props.length))) {
             options2 = source;
             source = object;
             object = this;
-            methodNames = baseFunctions(source, keys(source));
+            methodNames = baseFunctions(source, keys2(source));
           }
           var chain2 = !(isObject2(options2) && "chain" in options2) || !!options2.chain, isFunc = isFunction2(object);
           arrayEach(methodNames, function(methodName) {
@@ -5142,7 +5236,7 @@ function requireLodash() {
         lodash2.invokeMap = invokeMap;
         lodash2.iteratee = iteratee;
         lodash2.keyBy = keyBy;
-        lodash2.keys = keys;
+        lodash2.keys = keys2;
         lodash2.keysIn = keysIn;
         lodash2.map = map;
         lodash2.mapKeys = mapKeys;
@@ -5882,9 +5976,9 @@ function requireLegacyStreams() {
       this.mode = 438;
       this.bufferSize = 64 * 1024;
       options2 = options2 || {};
-      var keys = Object.keys(options2);
-      for (var index = 0, length = keys.length; index < length; index++) {
-        var key = keys[index];
+      var keys2 = Object.keys(options2);
+      for (var index = 0, length = keys2.length; index < length; index++) {
+        var key = keys2[index];
         this[key] = options2[key];
       }
       if (this.encoding) this.setEncoding(this.encoding);
@@ -5930,9 +6024,9 @@ function requireLegacyStreams() {
       this.mode = 438;
       this.bytesWritten = 0;
       options2 = options2 || {};
-      var keys = Object.keys(options2);
-      for (var index = 0, length = keys.length; index < length; index++) {
-        var key = keys[index];
+      var keys2 = Object.keys(options2);
+      for (var index = 0, length = keys2.length; index < length; index++) {
+        var key = keys2[index];
         this[key] = options2[key];
       }
       if (this.start !== void 0) {
@@ -8395,7 +8489,7 @@ async function getSitePackagesCount(pythonPath) {
 }
 async function openDialogExt(options2) {
   try {
-    const window2 = exports.appManager?.getMainWindow();
+    const window2 = getAppManager()?.getMainWindow();
     if (!window2) {
       throw new Error("openDialogExt: No window found");
     }
@@ -8432,34 +8526,37 @@ function spawnAsync(command, args) {
 }
 const STORE_VENVS_ID = "python-venvs-locations";
 function validateVenvs() {
-  const venvs = exports.storageManager?.getCustomData(STORE_VENVS_ID);
+  const storageManager2 = getStorage();
+  const venvs = storageManager2?.getCustomData(STORE_VENVS_ID);
   let validEnvs;
   if (lodashExports.isNil(venvs)) {
     validEnvs = [];
   } else {
-    validEnvs = lodashExports.filter(venvs, isVenvDirectory);
+    validEnvs = lodashExports.filter(venvs, isVenvDirectory$1);
   }
-  exports.storageManager?.setCustomData(STORE_VENVS_ID, validEnvs);
+  storageManager2?.setCustomData(STORE_VENVS_ID, validEnvs);
   return validEnvs;
 }
 function updateVenvStorage(newVenvPath) {
-  const existVenvs = exports.storageManager?.getCustomData(STORE_VENVS_ID);
+  const storageManager2 = getStorage();
+  const existVenvs = storageManager2?.getCustomData(STORE_VENVS_ID);
   if (lodashExports.isEmpty(existVenvs)) {
-    exports.storageManager?.setCustomData(STORE_VENVS_ID, [newVenvPath]);
+    storageManager2?.setCustomData(STORE_VENVS_ID, [newVenvPath]);
   } else {
     const newVenvs = /* @__PURE__ */ new Set([...existVenvs, newVenvPath]);
-    exports.storageManager?.setCustomData(STORE_VENVS_ID, Array.from(newVenvs));
+    storageManager2?.setCustomData(STORE_VENVS_ID, Array.from(newVenvs));
   }
 }
 function removeVenvStorage(venvPath) {
-  const existVenvs = exports.storageManager?.getCustomData(STORE_VENVS_ID);
+  const storageManager2 = getStorage();
+  const existVenvs = storageManager2?.getCustomData(STORE_VENVS_ID);
   if (existVenvs) {
-    exports.storageManager?.setCustomData(STORE_VENVS_ID, Array.from(existVenvs.filter((venv) => venv !== venvPath)));
+    storageManager2?.setCustomData(STORE_VENVS_ID, Array.from(existVenvs.filter((venv) => venv !== venvPath)));
   }
 }
 async function getVenvs() {
   const venvs = validateVenvs();
-  const window2 = exports.appManager?.getMainWindow();
+  const window2 = getAppManager()?.getMainWindow();
   if (!window2) {
     throw new Error("getVenvs: No window found");
   }
@@ -8483,7 +8580,7 @@ async function locateVenv() {
     if (!selectedFolder) {
       return false;
     }
-    const isVenv = isVenvDirectory(selectedFolder);
+    const isVenv = isVenvDirectory$1(selectedFolder);
     if (isVenv) updateVenvStorage(selectedFolder);
     return isVenv;
   } catch (e) {
@@ -8524,7 +8621,7 @@ async function createPythonVenv(options2) {
 const execFileAsync = node_util.promisify(node_child_process.execFile);
 async function getPythonVersion(venvPath) {
   return new Promise((resolve, reject) => {
-    const pythonExecutable = getVenvPythonPath(venvPath);
+    const pythonExecutable = getVenvPythonPath$1(venvPath);
     node_child_process.exec(`"${pythonExecutable}" --version`, (error, stdout, stderr) => {
       if (error) {
         reject(error);
@@ -8570,7 +8667,7 @@ async function checkPipInstallation(exePath) {
 }
 async function getVenvInfo(venvPath) {
   const pythonVersion = await getPythonVersion(venvPath);
-  const pythonExecutable = getVenvPythonPath(venvPath);
+  const pythonExecutable = getVenvPythonPath$1(venvPath);
   await checkPipInstallation(pythonExecutable);
   const sitePackagesCount = await getSitePackagesCount(pythonExecutable);
   const folderName = path.basename(venvPath);
@@ -8582,15 +8679,15 @@ async function getVenvInfo(venvPath) {
     folder: venvPath
   };
 }
-function getVenvPythonPath(venvPath) {
+function getVenvPythonPath$1(venvPath) {
   return node_os.platform() === "win32" ? path.join(venvPath, "Scripts", "python.exe") : path.join(venvPath, "bin", "python");
 }
-function isVenvDirectory(dirPath) {
+function isVenvDirectory$1(dirPath) {
   try {
     if (!gracefulFsExports.existsSync(dirPath)) {
       return false;
     }
-    const pythonExePath = getVenvPythonPath(dirPath);
+    const pythonExePath = getVenvPythonPath$1(dirPath);
     if (!gracefulFsExports.existsSync(pythonExePath)) {
       return false;
     }
@@ -8601,17 +8698,17 @@ function isVenvDirectory(dirPath) {
     return false;
   }
 }
-function isVenvFolderName(folder) {
+function isVenvFolderName$1(folder) {
   return folder === "venv" || folder === ".venv" || folder === "env" || folder === ".env" || folder.startsWith("venv-") || folder.startsWith(".venv-") || folder.endsWith("-venv") || folder.endsWith("-env") || folder.toLowerCase().includes("virtualenv") || folder.toLowerCase().includes("virtualenvironment");
 }
-async function findVenvFolder(dirPath) {
+async function findVenvFolder$1(dirPath) {
   try {
     const items = await gracefulFsExports.promises.readdir(dirPath, { withFileTypes: true });
     for (const item of items) {
       if (item.isDirectory()) {
         const itemName = item.name;
         const fullPath = path.join(dirPath, itemName);
-        if (isVenvFolderName(itemName) && isVenvDirectory(fullPath)) {
+        if (isVenvFolderName$1(itemName) && isVenvDirectory$1(fullPath)) {
           return fullPath;
         }
       }
@@ -8622,12 +8719,12 @@ async function findVenvFolder(dirPath) {
     return null;
   }
 }
-async function findAIVenv(id, folder) {
+async function findAIVenv$1(id, folder) {
   try {
     if (!folder) throw "Provided folder is not correct.";
-    const venvFolder = await findVenvFolder(folder);
+    const venvFolder = await findVenvFolder$1(folder);
     if (venvFolder) {
-      const pythonExecutable = getVenvPythonPath(venvFolder);
+      const pythonExecutable = getVenvPythonPath$1(venvFolder);
       updateVenvStorage(venvFolder);
       addAssociate({ id, dir: venvFolder, type: "venv" });
       return pythonExecutable;
@@ -8653,10 +8750,11 @@ function getCommandByType(type2, dir, condaName) {
 }
 function removePreCommands(id) {
   try {
-    if (!exports.storageManager) return;
-    const prevCommands = exports.storageManager.getData("cards")?.cardTerminalPreCommands;
+    const storageManager2 = getStorage();
+    if (!storageManager2) return;
+    const prevCommands = storageManager2.getData("cards")?.cardTerminalPreCommands;
     if (!prevCommands) return;
-    exports.storageManager.updateData("cards", {
+    storageManager2.updateData("cards", {
       cardTerminalPreCommands: prevCommands.filter((item) => item.id !== id)
     });
   } catch (err) {
@@ -8665,7 +8763,7 @@ function removePreCommands(id) {
 }
 function getAssociates() {
   try {
-    return exports.storageManager?.getCustomData(Associates_StorageID);
+    return getStorage()?.getCustomData(Associates_StorageID);
   } catch (err) {
     console.warn("Failed to get associates:", err);
     return void 0;
@@ -8673,11 +8771,12 @@ function getAssociates() {
 }
 function updateAssociateStorage(data) {
   try {
-    if (!exports.storageManager) return;
+    const storageManager2 = getStorage();
+    if (!storageManager2) return;
     const existingData = getAssociates() || [];
     const exists = existingData.some((item) => item.id === data.id);
     const updated = exists ? existingData.map((item) => item.id === data.id ? data : item) : [...existingData, data];
-    exports.storageManager.setCustomData(Associates_StorageID, updated);
+    storageManager2.setCustomData(Associates_StorageID, updated);
   } catch (err) {
     console.error("Failed to update associate storage:", err);
   }
@@ -8687,7 +8786,7 @@ function getExePathAssociate(target) {
     const buildPath = (item) => {
       switch (item.type) {
         case "venv":
-          return path.resolve(getVenvPythonPath(item.dir));
+          return path.resolve(getVenvPythonPath$1(item.dir));
         case "python":
         case "conda":
         default:
@@ -8707,8 +8806,9 @@ function getExePathAssociate(target) {
 function addAssociate(data) {
   try {
     updateAssociateStorage(data);
-    if (exports.storageManager) {
-      exports.storageManager.setCardTerminalPreCommands(data.id, [getCommandByType(data.type, data.dir, data.condaName)]);
+    const storageManager2 = getStorage();
+    if (storageManager2) {
+      storageManager2.setCardTerminalPreCommands(data.id, [getCommandByType(data.type, data.dir, data.condaName)]);
     }
   } catch (err) {
     console.error("Error adding associate:", err);
@@ -8717,8 +8817,9 @@ function addAssociate(data) {
 function removeAssociate(id) {
   try {
     const existingData = getAssociates();
-    if (!existingData || !exports.storageManager) return;
-    exports.storageManager.setCustomData(
+    const storageManager2 = getStorage();
+    if (!existingData || !storageManager2) return;
+    storageManager2.setCustomData(
       Associates_StorageID,
       existingData.filter((item) => item.id !== id)
     );
@@ -8731,8 +8832,9 @@ function removeAssociatePath(pythonPath) {
   try {
     const existingData = getAssociates();
     const targetID = existingData?.find((item) => item.dir === pythonPath)?.id;
-    if (!existingData || !targetID || !exports.storageManager) return;
-    exports.storageManager.setCustomData(
+    const storageManager2 = getStorage();
+    if (!existingData || !targetID || !storageManager2) return;
+    storageManager2.setCustomData(
       Associates_StorageID,
       existingData.filter((item) => item.id !== targetID)
     );
@@ -9091,7 +9193,7 @@ function requireLib() {
 var libExports = requireLib();
 const which = /* @__PURE__ */ getDefaultExportFromCjs(libExports);
 const COMMAND_LINE_ENDING = node_os.platform() === "win32" ? "\r" : "\n";
-function getPowerShellVersion() {
+function getPowerShellVersion$1() {
   const command = "$PSVersionTable.PSVersion.Major";
   try {
     const pwshVersion = parseInt(
@@ -9115,7 +9217,7 @@ function getPowerShellVersion() {
     return 0;
   }
 }
-function determineShell() {
+function determineShell$1() {
   switch (node_os.platform()) {
     case "darwin":
       return "zsh";
@@ -9123,10 +9225,10 @@ function determineShell() {
       return "bash";
     case "win32":
     default:
-      return getPowerShellVersion() >= 5 ? "pwsh.exe" : "powershell.exe";
+      return getPowerShellVersion$1() >= 5 ? "pwsh.exe" : "powershell.exe";
   }
 }
-function validatePath$1(path2) {
+function validatePath$2(path2) {
   try {
     gracefulFsExports.accessSync(path2);
     return true;
@@ -9134,9 +9236,9 @@ function validatePath$1(path2) {
     return false;
   }
 }
-function replacePythonPath(envPath, newPythonBase) {
+function replacePythonPath$1(envPath, newPythonBase) {
   const targetPath = path.resolve(newPythonBase);
-  const pathExists = validatePath$1(targetPath);
+  const pathExists = validatePath$2(targetPath);
   if (!pathExists) {
     throw new Error(`Python path does not exist: ${targetPath}`);
   }
@@ -9147,14 +9249,21 @@ function replacePythonPath(envPath, newPythonBase) {
 }
 function isFirstPythonPath(envPath, targetPythonBase) {
   const targetPath = path.resolve(targetPythonBase);
-  const pathExists = validatePath$1(targetPath);
+  const pathExists = validatePath$2(targetPath);
   if (!pathExists) {
-    throw new Error(`Python path does not exist: ${targetPath}`);
+    return false;
   }
   const paths = envPath.split(";").filter(Boolean);
-  return paths.some((item) => item === targetPath);
+  const firstPythonLikePath = paths.find((p) => {
+    const lowerP = p.toLowerCase();
+    return lowerP.includes("python") || lowerP.includes("conda");
+  });
+  if (!firstPythonLikePath) {
+    return false;
+  }
+  return path.resolve(firstPythonLikePath).toLowerCase() === targetPath.toLowerCase();
 }
-async function validatePath(path2) {
+async function validatePath$1(path2) {
   try {
     await gracefulFsExports.promises.access(path2);
     return true;
@@ -9163,7 +9272,7 @@ async function validatePath(path2) {
   }
 }
 async function setDefaultPython(pythonPath) {
-  const pathExists = await validatePath(pythonPath);
+  const pathExists = await validatePath$1(pythonPath);
   if (!pathExists) {
     throw new Error(`Python path does not exist: ${pythonPath}`);
   }
@@ -9183,7 +9292,7 @@ async function setDefaultPython(pythonPath) {
 }
 async function isDefaultPython(pythonPath) {
   try {
-    const defaultPath = await which("python", { path: exports.defaultEnvPath });
+    const defaultPath = await which("python", { path: getDefaultEnvPath() });
     return defaultPath.toLowerCase() === pythonPath.toLowerCase();
   } catch (error) {
     return false;
@@ -9209,8 +9318,9 @@ async function setDefaultPythonWindows(pythonPath) {
         reject(new Error("Failed to retrieve current PATH"));
         return;
       }
-      const newPathValue = replacePythonPath(match[1], pythonPath);
-      if (exports.defaultEnvPath) setDefaultEnvPath(replacePythonPath(exports.defaultEnvPath, pythonPath));
+      const newPathValue = replacePythonPath$1(match[1], pythonPath);
+      const defaultEnvPath2 = getDefaultEnvPath();
+      if (defaultEnvPath2) setDefaultEnvPath(replacePythonPath$1(defaultEnvPath2, pythonPath));
       const regAdd = node_child_process.spawn(
         "reg",
         ["add", "HKEY_CURRENT_USER\\Environment", "/v", "Path", "/t", "REG_EXPAND_SZ", "/d", newPathValue, "/f"],
@@ -9237,11 +9347,11 @@ const execAsync$4 = node_util.promisify(node_child_process.exec);
 async function uninstallCondaPython(pythonPath, pty) {
   return new Promise(async (resolve) => {
     try {
-      const ptyProcess = pty.spawn(determineShell(), [], {});
+      const ptyProcess2 = pty.spawn(determineShell$1(), [], {});
       const envName = await getCondaEnvName(pythonPath);
-      ptyProcess.write(`conda env remove -n ${envName} -y${COMMAND_LINE_ENDING}`);
-      ptyProcess.write(`exit${COMMAND_LINE_ENDING}`);
-      ptyProcess.onExit(({ exitCode }) => {
+      ptyProcess2.write(`conda env remove -n ${envName} -y${COMMAND_LINE_ENDING}`);
+      ptyProcess2.write(`exit${COMMAND_LINE_ENDING}`);
+      ptyProcess2.onExit(({ exitCode }) => {
         if (exitCode === 0) {
           resolve({
             success: true,
@@ -9298,7 +9408,7 @@ const commonPaths = {
 };
 function matchPattern(file, pattern) {
   const regexPattern = pattern.replace(/\*/g, ".*");
-  const regex = new RegExp(`^${regexPattern}$`);
+  const regex = new RegExp(`^${regexPattern}$`, "i");
   return regex.test(file);
 }
 async function fileExists(filePath) {
@@ -9318,8 +9428,25 @@ async function isExecutable(filePath) {
   }
 }
 async function isPythonPathValid(pythonPath) {
+  if (!gracefulFsExports.existsSync(pythonPath)) {
+    return false;
+  }
+  const fileName = path.basename(pythonPath).toLowerCase();
+  const isWindows = require$$0$4.platform() === "win32";
+  if (isWindows) {
+    if (fileName !== "python.exe") {
+      return false;
+    }
+  } else {
+    if (!fileName.startsWith("python")) {
+      return false;
+    }
+    if (!await isExecutable(pythonPath)) {
+      return false;
+    }
+  }
   return new Promise((resolve) => {
-    child_process.exec(`${pythonPath} --version`, (error, stdout, stderr) => {
+    child_process.exec(`"${pythonPath}" --version`, (error, stdout, stderr) => {
       if (error) {
         resolve(false);
       } else {
@@ -9357,6 +9484,7 @@ async function findInCommonLocations() {
     const basePath = path.dirname(expandedPath);
     const pattern = path.basename(expandedPath);
     try {
+      if (!gracefulFsExports.existsSync(basePath)) continue;
       const files = await gracefulFsExports.promises.readdir(basePath);
       for (const file of files) {
         if (matchPattern(file, pattern)) {
@@ -9367,19 +9495,21 @@ async function findInCommonLocations() {
             const shouldAdd = os === "win32" ? await fileExists(pythonExecutable) : await fileExists(pythonExecutable) && await isExecutable(pythonExecutable) && await isPythonPathValid(pythonExecutable);
             if (shouldAdd) {
               expandedPaths.push(pythonExecutable);
-            } else {
+            }
+            try {
               const subFiles = await gracefulFsExports.promises.readdir(fullPath);
               for (const subFile of subFiles) {
                 const subPath = path.join(fullPath, subFile);
                 const subStats = await gracefulFsExports.promises.stat(subPath);
                 if (subStats.isDirectory()) {
                   const subPythonExecutable = os === "win32" ? path.join(subPath, "python.exe") : path.join(subPath, "bin", "python");
-                  const subShouldAdd = os === "win32" ? await fileExists(subPythonExecutable) : await fileExists(subPythonExecutable) && await isExecutable(subPythonExecutable) && await isPythonPathValid(pythonExecutable);
+                  const subShouldAdd = os === "win32" ? await fileExists(subPythonExecutable) : await fileExists(subPythonExecutable) && await isExecutable(subPythonExecutable) && await isPythonPathValid(subPythonExecutable);
                   if (subShouldAdd) {
                     expandedPaths.push(subPythonExecutable);
                   }
                 }
               }
+            } catch (subError) {
             }
           } else if (os === "linux") {
             if (await isExecutable(fullPath) && await isPythonPathValid(fullPath)) {
@@ -9435,22 +9565,24 @@ async function getSitePackagesPath(pythonPath) {
 }
 const STORAGE_INSTALLED_KEY = "installed_pythons";
 function removeSavedPython(pPath) {
-  const savedInstallations = exports.storageManager?.getCustomData(STORAGE_INSTALLED_KEY);
+  const storageManager2 = getStorage();
+  const savedInstallations = storageManager2?.getCustomData(STORAGE_INSTALLED_KEY);
   if (!lodashExports.isNil(savedInstallations)) {
-    exports.storageManager?.setCustomRun(
+    storageManager2?.setCustomData(
       STORAGE_INSTALLED_KEY,
       savedInstallations.filter((p) => p !== pPath)
     );
   }
 }
 function addSavedPython(pPath) {
-  const savedInstallations = exports.storageManager?.getCustomData(STORAGE_INSTALLED_KEY);
+  const storageManager2 = getStorage();
+  const savedInstallations = storageManager2?.getCustomData(STORAGE_INSTALLED_KEY);
   const paths = /* @__PURE__ */ new Set();
   if (!lodashExports.isNil(savedInstallations)) {
     savedInstallations.forEach((path2) => paths.add(path2));
   }
   paths.add(pPath);
-  exports.storageManager?.setCustomRun(STORAGE_INSTALLED_KEY, Array.from(paths));
+  storageManager2?.setCustomData(STORAGE_INSTALLED_KEY, Array.from(paths));
 }
 function removeDuplicateInstallations(installations) {
   const seenInstallations = /* @__PURE__ */ new Set();
@@ -9464,78 +9596,86 @@ function removeDuplicateInstallations(installations) {
   }
   return uniqueInstallations;
 }
+async function analyzePythonPath(pythonPath) {
+  try {
+    const isValid = await isPythonPathValid(pythonPath);
+    if (!isValid) return null;
+    const [
+      version,
+      isDefault,
+      installationType,
+      condaName,
+      packages,
+      architecture,
+      pipPath,
+      venvPaths,
+      sitePackagesPath
+    ] = await Promise.all([
+      parseVersion(pythonPath),
+      isDefaultPython(pythonPath),
+      detectInstallationType(pythonPath),
+      getCondaEnvName(pythonPath),
+      getSitePackagesCount(pythonPath),
+      detectArchitecture(pythonPath),
+      getPipPath(pythonPath),
+      getVenvPaths(pythonPath),
+      getSitePackagesPath(pythonPath)
+    ]);
+    const installFolder = path.dirname(pythonPath);
+    const isLynxHubDefault = process.env.PATH ? isFirstPythonPath(process.env.PATH, installFolder) : false;
+    return {
+      version: `${version.major}.${version.minor}.${version.patch}`,
+      packages,
+      installationType,
+      condaName,
+      architecture,
+      installPath: pythonPath,
+      installFolder,
+      pipPath,
+      venvPaths,
+      sitePackagesPath,
+      isDefault,
+      isLynxHubDefault
+    };
+  } catch (error) {
+    console.error(`Error analyzing Python installation at ${pythonPath}:`, error);
+    return null;
+  }
+}
+async function locatePythonInstallation(pythonPath) {
+  const installation = await analyzePythonPath(pythonPath);
+  if (installation) {
+    addSavedPython(installation.installPath);
+  }
+  return installation;
+}
 async function detectPythonInstallations(refresh) {
-  const savedInstallations = exports.storageManager?.getCustomData(STORAGE_INSTALLED_KEY);
+  const storageManager2 = getStorage();
+  const savedInstallations = storageManager2?.getCustomData(STORAGE_INSTALLED_KEY);
   const paths = /* @__PURE__ */ new Set();
   if (!refresh && !lodashExports.isNil(savedInstallations) && !lodashExports.isEmpty(savedInstallations)) {
     savedInstallations.forEach((path2) => paths.add(path2));
   } else {
-    const pathSources = await Promise.all([await findPythonInPath(), await findInCommonLocations()]);
+    const pathSources = await Promise.all([findPythonInPath(), findInCommonLocations()]);
     pathSources.flat().forEach((path2) => paths.add(path2));
-    exports.storageManager?.setCustomData(STORAGE_INSTALLED_KEY, Array.from(paths));
+    storageManager2?.setCustomData(STORAGE_INSTALLED_KEY, Array.from(paths));
   }
-  const installationPromises = Array.from(paths).map(async (pythonPath) => {
-    try {
-      const isValid = await isPythonPathValid(pythonPath);
-      if (!isValid) return null;
-      const [
-        version,
-        isDefault,
-        installationType,
-        condaName,
-        packages,
-        architecture,
-        pipPath,
-        venvPaths,
-        sitePackagesPath
-      ] = await Promise.all([
-        (async () => await parseVersion(pythonPath))(),
-        (async () => await isDefaultPython(pythonPath))(),
-        (async () => await detectInstallationType(pythonPath))(),
-        (async () => await getCondaEnvName(pythonPath))(),
-        (async () => await getSitePackagesCount(pythonPath))(),
-        (async () => await detectArchitecture(pythonPath))(),
-        (async () => await getPipPath(pythonPath))(),
-        (async () => await getVenvPaths(pythonPath))(),
-        (async () => await getSitePackagesPath(pythonPath))()
-      ]);
-      const installFolder = path.dirname(pythonPath);
-      const isLynxHubDefault = process.env.PATH ? isFirstPythonPath(process.env.PATH, installFolder) : false;
-      const installation = {
-        version: `${version.major}.${version.minor}.${version.patch}`,
-        packages,
-        installationType,
-        condaName,
-        architecture,
-        installPath: pythonPath,
-        installFolder,
-        pipPath,
-        venvPaths,
-        sitePackagesPath,
-        isDefault,
-        isLynxHubDefault
-      };
-      return installation;
-    } catch (error) {
-      console.error(`Error analyzing Python installation at ${pythonPath}:`, error);
-      return null;
-    }
-  });
+  const installationPromises = Array.from(paths).map((pythonPath) => analyzePythonPath(pythonPath));
   return removeDuplicateInstallations(lodashExports.compact(await Promise.all(installationPromises)));
 }
 async function listAvailablePythons(pty) {
   return new Promise((resolve, reject) => {
-    const ptyProcess = pty.spawn(determineShell(), [], {});
-    ptyProcess.write(`conda search python --info${COMMAND_LINE_ENDING}`);
-    ptyProcess.write(`exit${COMMAND_LINE_ENDING}`);
+    const ptyProcess2 = pty.spawn(determineShell$1(), [], {});
+    ptyProcess2.write(`conda search python --info${COMMAND_LINE_ENDING}`);
+    ptyProcess2.write(`exit${COMMAND_LINE_ENDING}`);
     let output = "";
-    ptyProcess.onData((data) => {
+    ptyProcess2.onData((data) => {
       output += data;
       if (data.toLowerCase().includes("(ToS)".toLowerCase())) {
-        ptyProcess.write(`a${COMMAND_LINE_ENDING}`);
+        ptyProcess2.write(`a${COMMAND_LINE_ENDING}`);
       }
     });
-    ptyProcess.onExit(({ exitCode }) => {
+    ptyProcess2.onExit(({ exitCode }) => {
       if (exitCode === 0) {
         const versions = [];
         const lines = output.split("\n");
@@ -9554,16 +9694,16 @@ async function listAvailablePythons(pty) {
 }
 const createCondaEnv = async (envName, pythonVersion, pty) => {
   return new Promise((resolve, reject) => {
-    const window2 = exports.appManager?.getMainWindow();
+    const window2 = getAppManager()?.getMainWindow();
     if (!window2) {
       reject("createCondaEnv: No window found");
       return;
     }
     const command = `conda create --name ${envName} python=${pythonVersion} -y`;
-    const ptyProcess = pty.spawn(determineShell(), [], {});
-    ptyProcess.write(`${command}${COMMAND_LINE_ENDING}`);
-    ptyProcess.write(`exit${COMMAND_LINE_ENDING}`);
-    ptyProcess.onData((data) => {
+    const ptyProcess2 = pty.spawn(determineShell$1(), [], {});
+    ptyProcess2.write(`${command}${COMMAND_LINE_ENDING}`);
+    ptyProcess2.write(`exit${COMMAND_LINE_ENDING}`);
+    ptyProcess2.onData((data) => {
       const progressMatch = data.match(/\|\s+\d{1,3}%/);
       if (progressMatch) {
         const progress = progressMatch[0].match(/\d{1,3}/);
@@ -9573,7 +9713,7 @@ const createCondaEnv = async (envName, pythonVersion, pty) => {
         }
       }
     });
-    ptyProcess.onExit(({ exitCode }) => {
+    ptyProcess2.onExit(({ exitCode }) => {
       if (exitCode === 0) {
         console.log("Environment creation completed successfully!");
         resolve();
@@ -9589,15 +9729,15 @@ function isCondaInstalled(pty) {
       console.warn("Timeout reached. Conda not found or process hung.");
       resolve(false);
     }, 1e4);
-    const ptyProcess = pty.spawn(determineShell(), [], {});
-    ptyProcess.write(`conda --version${COMMAND_LINE_ENDING}`);
-    ptyProcess.write(`exit${COMMAND_LINE_ENDING}`);
+    const ptyProcess2 = pty.spawn(determineShell$1(), [], {});
+    ptyProcess2.write(`conda --version${COMMAND_LINE_ENDING}`);
+    ptyProcess2.write(`exit${COMMAND_LINE_ENDING}`);
     let outData = "";
     const condaVersionRegex = /conda\s+(\d+\.\d+\.\d+)/;
-    ptyProcess.onData((data) => {
+    ptyProcess2.onData((data) => {
       outData += data;
     });
-    ptyProcess.onExit(() => {
+    ptyProcess2.onExit(() => {
       clearTimeout(timeout);
       if (condaVersionRegex.test(outData)) {
         resolve(true);
@@ -12339,11 +12479,11 @@ function requireSortKeys() {
         return seenOutput[seenIndex];
       }
       var ret = {};
-      var keys = Object.keys(x).sort(opts.compare);
+      var keys2 = Object.keys(x).sort(opts.compare);
       seenInput.push(x);
       seenOutput.push(ret);
-      for (var i = 0; i < keys.length; i++) {
-        var key = keys[i];
+      for (var i = 0; i < keys2.length; i++) {
+        var key = keys2[i];
         var val = x[key];
         ret[key] = deep && isPlainObj2(val) ? sortKeys2(val) : val;
       }
@@ -12566,7 +12706,7 @@ async function installPython(filePath, version) {
 }
 async function downloadPython(version) {
   return new Promise(async (resolve, reject) => {
-    const window2 = exports.appManager?.getMainWindow();
+    const window2 = getAppManager()?.getMainWindow();
     if (!window2) {
       reject("downloadPython: No window found");
       return;
@@ -12638,6 +12778,108 @@ async function installOnLinux(version) {
       reject(e);
     }
   });
+}
+async function getSitePackagesInfo(pythonExePath) {
+  return new Promise((resolve, reject) => {
+    const command = `"${pythonExePath}" -m pip list --format json`;
+    node_child_process.exec(command, (error, stdout, stderr) => {
+      if (error) {
+        reject(`Error getting site packages: ${error.message}`);
+        return;
+      }
+      if (stderr) {
+        console.warn(`stderr when getting site packages: ${stderr}`);
+      }
+      try {
+        const packages = JSON.parse(stdout);
+        const packagePromises = packages.map((pkg) => {
+          return { name: pkg.name, version: pkg.version };
+        });
+        resolve(packagePromises);
+      } catch (parseError) {
+        reject(`Error parsing pip output: ${parseError}`);
+      }
+    });
+  });
+}
+async function installPythonPackage(pythonExePath, commands) {
+  return new Promise((resolve, reject) => {
+    const command = `${pythonExePath} -m pip install ${commands} --disable-pip-version-check`;
+    node_child_process.exec(command, (error, stdout, stderr) => {
+      if (error) {
+        reject(new Error(`Error installing package: ${error.message}
+Stderr: ${stderr}`));
+        return;
+      }
+      if (stderr) {
+        console.warn(`pip stderr: ${stderr}`);
+      }
+      resolve(stdout);
+    });
+  });
+}
+async function uninstallPythonPackage(pythonExePath, packageName) {
+  return new Promise((resolve, reject) => {
+    const command = `"${pythonExePath}" -m pip uninstall -y "${packageName}"`;
+    node_child_process.exec(command, (error, stdout, stderr) => {
+      if (error) {
+        reject(`Error uninstalling package ${packageName}: ${error.message}
+stderr: ${stderr}`);
+        return;
+      }
+      resolve(stdout);
+    });
+  });
+}
+async function changePythonPackageVersion(pythonPath, packageName, cVersion, tVersion) {
+  const currentVersion = semver.coerce(cVersion)?.version;
+  const targetVersion = semver.coerce(tVersion)?.version;
+  return new Promise((resolve, reject) => {
+    if (lodashExports.isNil(currentVersion) || lodashExports.isNil(targetVersion)) {
+      reject("Invalid current or target version provided");
+      return;
+    }
+    if (!semver.valid(currentVersion)) {
+      reject(`Invalid current version provided: ${currentVersion}. Please use a valid semantic version.`);
+      return;
+    }
+    if (!semver.valid(targetVersion)) {
+      reject(`Invalid target version provided: ${targetVersion}. Please use a valid semantic version.`);
+      return;
+    }
+    const packageInfo = {
+      packageName,
+      currentVersion,
+      targetVersion
+    };
+    const changeVersionCommand = constructChangeVersionCommand(pythonPath, packageInfo);
+    child_process.exec(changeVersionCommand, (error, stdout, stderr) => {
+      if (error) {
+        reject(`Error changing version of ${packageName}: ${error.message}`);
+        return;
+      }
+      console.log(stdout);
+      if (stderr) {
+        console.error(stderr);
+      }
+      console.log(`Successfully changed ${packageName} to version ${targetVersion}`);
+      resolve();
+    });
+  });
+}
+function constructChangeVersionCommand(pythonExePath, packageInfo) {
+  const { packageName, currentVersion, targetVersion } = packageInfo;
+  const isInstall = !currentVersion;
+  const isUpgrade = !isInstall && semver.gt(targetVersion, currentVersion);
+  let command = `${pythonExePath} -m pip install`;
+  if (!isInstall) {
+    command += ` --force-reinstall`;
+  }
+  if (isUpgrade) {
+    command += ` --upgrade`;
+  }
+  command += ` ${packageName}==${targetVersion}`;
+  return command;
 }
 function bind(fn, thisArg) {
   return function wrap() {
@@ -12723,11 +12965,11 @@ function forEach(obj, fn, { allOwnKeys = false } = {}) {
     if (isBuffer(obj)) {
       return;
     }
-    const keys = allOwnKeys ? Object.getOwnPropertyNames(obj) : Object.keys(obj);
-    const len = keys.length;
+    const keys2 = allOwnKeys ? Object.getOwnPropertyNames(obj) : Object.keys(obj);
+    const len = keys2.length;
     let key;
     for (i = 0; i < len; i++) {
-      key = keys[i];
+      key = keys2[i];
       fn.call(null, obj[key], key, obj);
     }
   }
@@ -12737,11 +12979,11 @@ function findKey(obj, key) {
     return null;
   }
   key = key.toLowerCase();
-  const keys = Object.keys(obj);
-  let i = keys.length;
+  const keys2 = Object.keys(obj);
+  let i = keys2.length;
   let _key;
   while (i-- > 0) {
-    _key = keys[i];
+    _key = keys2[i];
     if (key === _key.toLowerCase()) {
       return _key;
     }
@@ -17347,7 +17589,7 @@ class InterceptorManager {
    *
    * @param {Number} id The ID that was returned by `use`
    *
-   * @returns {Boolean} `true` if the interceptor was removed, `false` otherwise
+   * @returns {void}
    */
   eject(id) {
     if (this.handlers[id]) {
@@ -17455,12 +17697,12 @@ function parsePropPath(name) {
 }
 function arrayToObject(arr) {
   const obj = {};
-  const keys = Object.keys(arr);
+  const keys2 = Object.keys(arr);
   let i;
-  const len = keys.length;
+  const len = keys2.length;
   let key;
   for (i = 0; i < len; i++) {
-    key = keys[i];
+    key = keys2[i];
     obj[key] = arr[key];
   }
   return obj;
@@ -17784,11 +18026,11 @@ let AxiosHeaders$1 = class AxiosHeaders {
     return deleted;
   }
   clear(matcher) {
-    const keys = Object.keys(this);
-    let i = keys.length;
+    const keys2 = Object.keys(this);
+    let i = keys2.length;
     let deleted = false;
     while (i--) {
-      const key = keys[i];
+      const key = keys2[i];
       if (!matcher || matchHeaderValue(this, this[key], key, matcher, true)) {
         delete this[key];
         deleted = true;
@@ -18737,9 +18979,9 @@ function requireNode() {
     }
     function init(debug) {
       debug.inspectOpts = {};
-      const keys = Object.keys(exports2.inspectOpts);
-      for (let i = 0; i < keys.length; i++) {
-        debug.inspectOpts[keys[i]] = exports2.inspectOpts[keys[i]];
+      const keys2 = Object.keys(exports2.inspectOpts);
+      for (let i = 0; i < keys2.length; i++) {
+        debug.inspectOpts[keys2[i]] = exports2.inspectOpts[keys2[i]];
       }
     }
     module2.exports = requireCommon()(exports2);
@@ -19285,7 +19527,7 @@ function requireFollowRedirects() {
 }
 var followRedirectsExports = requireFollowRedirects();
 const followRedirects = /* @__PURE__ */ getDefaultExportFromCjs(followRedirectsExports);
-const VERSION$1 = "1.12.2";
+const VERSION$1 = "1.13.1";
 function parseProtocol(url) {
   const match = /^([-+\w]{1,25})(:?\/\/|:)/.exec(url);
   return match && match[1] || "";
@@ -19701,6 +19943,12 @@ const brotliOptions = {
   flush: zlib.constants.BROTLI_OPERATION_FLUSH,
   finishFlush: zlib.constants.BROTLI_OPERATION_FLUSH
 };
+const {
+  HTTP2_HEADER_SCHEME,
+  HTTP2_HEADER_METHOD,
+  HTTP2_HEADER_PATH,
+  HTTP2_HEADER_STATUS
+} = http2.constants;
 const isBrotliSupported = utils$1.isFunction(zlib.createBrotliDecompress);
 const { http: httpFollow, https: httpsFollow } = followRedirects;
 const isHttps = /https:?/;
@@ -19711,6 +19959,75 @@ const flushOnFinish = (stream2, [throttled, flush]) => {
   stream2.on("end", flush).on("error", flush);
   return throttled;
 };
+class Http2Sessions {
+  constructor() {
+    this.sessions = /* @__PURE__ */ Object.create(null);
+  }
+  getSession(authority, options2) {
+    options2 = Object.assign({
+      sessionTimeout: 1e3
+    }, options2);
+    let authoritySessions;
+    if (authoritySessions = this.sessions[authority]) {
+      let len = authoritySessions.length;
+      for (let i = 0; i < len; i++) {
+        const [sessionHandle, sessionOptions] = authoritySessions[i];
+        if (!sessionHandle.destroyed && !sessionHandle.closed && require$$1.isDeepStrictEqual(sessionOptions, options2)) {
+          return sessionHandle;
+        }
+      }
+    }
+    const session = http2.connect(authority, options2);
+    let removed;
+    const removeSession = () => {
+      if (removed) {
+        return;
+      }
+      removed = true;
+      let entries2 = authoritySessions, len = entries2.length, i = len;
+      while (i--) {
+        if (entries2[i][0] === session) {
+          entries2.splice(i, 1);
+          if (len === 1) {
+            delete this.sessions[authority];
+            return;
+          }
+        }
+      }
+    };
+    const originalRequestFn = session.request;
+    const { sessionTimeout } = options2;
+    if (sessionTimeout != null) {
+      let timer;
+      let streamsCount = 0;
+      session.request = function() {
+        const stream2 = originalRequestFn.apply(this, arguments);
+        streamsCount++;
+        if (timer) {
+          clearTimeout(timer);
+          timer = null;
+        }
+        stream2.once("close", () => {
+          if (!--streamsCount) {
+            timer = setTimeout(() => {
+              timer = null;
+              removeSession();
+            }, sessionTimeout);
+          }
+        });
+        return stream2;
+      };
+    }
+    session.once("close", removeSession);
+    let entries = this.sessions[authority], entry = [
+      session,
+      options2
+    ];
+    entries ? this.sessions[authority].push(entry) : authoritySessions = this.sessions[authority] = [entry];
+    return session;
+  }
+}
+const http2Sessions = new Http2Sessions();
 function dispatchBeforeRedirect(options2, responseDetails) {
   if (options2.beforeRedirects.proxy) {
     options2.beforeRedirects.proxy(options2);
@@ -19783,14 +20100,48 @@ const resolveFamily = ({ address, family }) => {
   };
 };
 const buildAddressEntry = (address, family) => resolveFamily(utils$1.isObject(address) ? address : { address, family });
+const http2Transport = {
+  request(options2, cb) {
+    const authority = options2.protocol + "//" + options2.hostname + ":" + (options2.port || 80);
+    const { http2Options, headers } = options2;
+    const session = http2Sessions.getSession(authority, http2Options);
+    const http2Headers = {
+      [HTTP2_HEADER_SCHEME]: options2.protocol.replace(":", ""),
+      [HTTP2_HEADER_METHOD]: options2.method,
+      [HTTP2_HEADER_PATH]: options2.path
+    };
+    utils$1.forEach(headers, (header, name) => {
+      name.charAt(0) !== ":" && (http2Headers[name] = header);
+    });
+    const req = session.request(http2Headers);
+    req.once("response", (responseHeaders) => {
+      const response = req;
+      responseHeaders = Object.assign({}, responseHeaders);
+      const status = responseHeaders[HTTP2_HEADER_STATUS];
+      delete responseHeaders[HTTP2_HEADER_STATUS];
+      response.headers = responseHeaders;
+      response.statusCode = +status;
+      cb(response);
+    });
+    return req;
+  }
+};
 const httpAdapter = isHttpAdapterSupported && function httpAdapter2(config) {
   return wrapAsync(async function dispatchHttpRequest(resolve, reject, onDone) {
-    let { data, lookup, family } = config;
+    let { data, lookup, family, httpVersion = 1, http2Options } = config;
     const { responseType, responseEncoding } = config;
     const method = config.method.toUpperCase();
     let isDone;
     let rejected = false;
     let req;
+    httpVersion = +httpVersion;
+    if (Number.isNaN(httpVersion)) {
+      throw TypeError(`Invalid protocol version: '${config.httpVersion}' is not a number`);
+    }
+    if (httpVersion !== 1 && httpVersion !== 2) {
+      throw TypeError(`Unsupported protocol version '${httpVersion}'`);
+    }
+    const isHttp2 = httpVersion === 2;
     if (lookup) {
       const _lookup = callbackify(lookup, (value) => utils$1.isArray(value) ? value : [value]);
       lookup = (hostname, opt, cb) => {
@@ -19803,7 +20154,15 @@ const httpAdapter = isHttpAdapterSupported && function httpAdapter2(config) {
         });
       };
     }
-    const emitter = new events.EventEmitter();
+    const abortEmitter = new events.EventEmitter();
+    function abort(reason) {
+      try {
+        abortEmitter.emit("abort", !reason || reason.type ? new CanceledError$1(null, config, req) : reason);
+      } catch (err) {
+        console.warn("emit error", err);
+      }
+    }
+    abortEmitter.once("abort", reject);
     const onFinished = () => {
       if (config.cancelToken) {
         config.cancelToken.unsubscribe(abort);
@@ -19811,25 +20170,31 @@ const httpAdapter = isHttpAdapterSupported && function httpAdapter2(config) {
       if (config.signal) {
         config.signal.removeEventListener("abort", abort);
       }
-      emitter.removeAllListeners();
+      abortEmitter.removeAllListeners();
     };
-    onDone((value, isRejected) => {
-      isDone = true;
-      if (isRejected) {
-        rejected = true;
-        onFinished();
-      }
-    });
-    function abort(reason) {
-      emitter.emit("abort", !reason || reason.type ? new CanceledError$1(null, config, req) : reason);
-    }
-    emitter.once("abort", reject);
     if (config.cancelToken || config.signal) {
       config.cancelToken && config.cancelToken.subscribe(abort);
       if (config.signal) {
         config.signal.aborted ? abort() : config.signal.addEventListener("abort", abort);
       }
     }
+    onDone((response, isRejected) => {
+      isDone = true;
+      if (isRejected) {
+        rejected = true;
+        onFinished();
+        return;
+      }
+      const { data: data2 } = response;
+      if (data2 instanceof stream.Readable || data2 instanceof stream.Duplex) {
+        const offListeners = stream.finished(data2, () => {
+          offListeners();
+          onFinished();
+        });
+      } else {
+        onFinished();
+      }
+    });
     const fullPath = buildFullPath(config.baseURL, config.url, config.allowAbsoluteUrls);
     const parsed = new URL(fullPath, platform.hasBrowserEnv ? platform.origin : void 0);
     const protocol = parsed.protocol || supportedProtocols[0];
@@ -19995,7 +20360,8 @@ const httpAdapter = isHttpAdapterSupported && function httpAdapter2(config) {
       protocol,
       family,
       beforeRedirect: dispatchBeforeRedirect,
-      beforeRedirects: {}
+      beforeRedirects: {},
+      http2Options
     };
     !utils$1.isUndefined(lookup) && (options2.lookup = lookup);
     if (config.socketPath) {
@@ -20008,18 +20374,22 @@ const httpAdapter = isHttpAdapterSupported && function httpAdapter2(config) {
     let transport;
     const isHttpsRequest = isHttps.test(options2.protocol);
     options2.agent = isHttpsRequest ? config.httpsAgent : config.httpAgent;
-    if (config.transport) {
-      transport = config.transport;
-    } else if (config.maxRedirects === 0) {
-      transport = isHttpsRequest ? require$$4 : require$$3;
+    if (isHttp2) {
+      transport = http2Transport;
     } else {
-      if (config.maxRedirects) {
-        options2.maxRedirects = config.maxRedirects;
+      if (config.transport) {
+        transport = config.transport;
+      } else if (config.maxRedirects === 0) {
+        transport = isHttpsRequest ? require$$4 : require$$3;
+      } else {
+        if (config.maxRedirects) {
+          options2.maxRedirects = config.maxRedirects;
+        }
+        if (config.beforeRedirect) {
+          options2.beforeRedirects.config = config.beforeRedirect;
+        }
+        transport = isHttpsRequest ? httpsFollow : httpFollow;
       }
-      if (config.beforeRedirect) {
-        options2.beforeRedirects.config = config.beforeRedirect;
-      }
-      transport = isHttpsRequest ? httpsFollow : httpFollow;
     }
     if (config.maxBodyLength > -1) {
       options2.maxBodyLength = config.maxBodyLength;
@@ -20032,7 +20402,7 @@ const httpAdapter = isHttpAdapterSupported && function httpAdapter2(config) {
     req = transport.request(options2, function handleResponse(res) {
       if (req.destroyed) return;
       const streams = [res];
-      const responseLength = +res.headers["content-length"];
+      const responseLength = utils$1.toFiniteNumber(res.headers["content-length"]);
       if (onDownloadProgress || maxDownloadRate) {
         const transformStream = new AxiosTransformStream({
           maxRate: utils$1.toFiniteNumber(maxDownloadRate)
@@ -20074,10 +20444,6 @@ const httpAdapter = isHttpAdapterSupported && function httpAdapter2(config) {
         }
       }
       responseStream = streams.length > 1 ? stream.pipeline(streams, utils$1.noop) : streams[0];
-      const offListeners = stream.finished(responseStream, () => {
-        offListeners();
-        onFinished();
-      });
       const response = {
         status: res.statusCode,
         statusText: res.statusMessage,
@@ -20097,7 +20463,7 @@ const httpAdapter = isHttpAdapterSupported && function httpAdapter2(config) {
           if (config.maxContentLength > -1 && totalResponseBytes > config.maxContentLength) {
             rejected = true;
             responseStream.destroy();
-            reject(new AxiosError$1(
+            abort(new AxiosError$1(
               "maxContentLength size of " + config.maxContentLength + " exceeded",
               AxiosError$1.ERR_BAD_RESPONSE,
               config,
@@ -20138,16 +20504,19 @@ const httpAdapter = isHttpAdapterSupported && function httpAdapter2(config) {
           settle(resolve, reject, response);
         });
       }
-      emitter.once("abort", (err) => {
+      abortEmitter.once("abort", (err) => {
         if (!responseStream.destroyed) {
           responseStream.emit("error", err);
           responseStream.destroy();
         }
       });
     });
-    emitter.once("abort", (err) => {
-      reject(err);
-      req.destroy(err);
+    abortEmitter.once("abort", (err) => {
+      if (req.close) {
+        req.close();
+      } else {
+        req.destroy(err);
+      }
     });
     req.on("error", function handleRequestError(err) {
       reject(AxiosError$1.from(err, null, config, req));
@@ -20158,7 +20527,7 @@ const httpAdapter = isHttpAdapterSupported && function httpAdapter2(config) {
     if (config.timeout) {
       const timeout = parseInt(config.timeout, 10);
       if (Number.isNaN(timeout)) {
-        reject(new AxiosError$1(
+        abort(new AxiosError$1(
           "error trying to parse `config.timeout` to int",
           AxiosError$1.ERR_BAD_OPTION_VALUE,
           config,
@@ -20173,13 +20542,12 @@ const httpAdapter = isHttpAdapterSupported && function httpAdapter2(config) {
         if (config.timeoutErrorMessage) {
           timeoutErrorMessage = config.timeoutErrorMessage;
         }
-        reject(new AxiosError$1(
+        abort(new AxiosError$1(
           timeoutErrorMessage,
           transitional2.clarifyTimeoutError ? AxiosError$1.ETIMEDOUT : AxiosError$1.ECONNABORTED,
           config,
           req
         ));
-        abort();
       });
     }
     if (utils$1.isStream(data)) {
@@ -20199,7 +20567,8 @@ const httpAdapter = isHttpAdapterSupported && function httpAdapter2(config) {
       });
       data.pipe(req);
     } else {
-      req.end(data);
+      data && req.write(data);
+      req.end();
     }
   });
 };
@@ -20213,20 +20582,33 @@ const isURLSameOrigin = platform.hasStandardBrowserEnv ? /* @__PURE__ */ ((origi
 const cookies = platform.hasStandardBrowserEnv ? (
   // Standard browser envs support document.cookie
   {
-    write(name, value, expires, path2, domain, secure) {
-      const cookie = [name + "=" + encodeURIComponent(value)];
-      utils$1.isNumber(expires) && cookie.push("expires=" + new Date(expires).toGMTString());
-      utils$1.isString(path2) && cookie.push("path=" + path2);
-      utils$1.isString(domain) && cookie.push("domain=" + domain);
-      secure === true && cookie.push("secure");
+    write(name, value, expires, path2, domain, secure, sameSite) {
+      if (typeof document === "undefined") return;
+      const cookie = [`${name}=${encodeURIComponent(value)}`];
+      if (utils$1.isNumber(expires)) {
+        cookie.push(`expires=${new Date(expires).toUTCString()}`);
+      }
+      if (utils$1.isString(path2)) {
+        cookie.push(`path=${path2}`);
+      }
+      if (utils$1.isString(domain)) {
+        cookie.push(`domain=${domain}`);
+      }
+      if (secure === true) {
+        cookie.push("secure");
+      }
+      if (utils$1.isString(sameSite)) {
+        cookie.push(`SameSite=${sameSite}`);
+      }
       document.cookie = cookie.join("; ");
     },
     read(name) {
-      const match = document.cookie.match(new RegExp("(^|;\\s*)(" + name + ")=([^;]*)"));
-      return match ? decodeURIComponent(match[3]) : null;
+      if (typeof document === "undefined") return null;
+      const match = document.cookie.match(new RegExp("(?:^|; )" + name + "=([^;]*)"));
+      return match ? decodeURIComponent(match[1]) : null;
     },
     remove(name) {
-      this.write(name, "", Date.now() - 864e5);
+      this.write(name, "", Date.now() - 864e5, "/");
     }
   }
 ) : (
@@ -20780,7 +21162,7 @@ const factory = (env) => {
 };
 const seedCache = /* @__PURE__ */ new Map();
 const getFetch = (config) => {
-  let env = config ? config.env : {};
+  let env = config && config.env || {};
   const { fetch: fetch2, Request, Response } = env;
   const seeds = [
     Request,
@@ -20815,40 +21197,49 @@ utils$1.forEach(knownAdapters, (fn, value) => {
 });
 const renderReason = (reason) => `- ${reason}`;
 const isResolvedHandle = (adapter) => utils$1.isFunction(adapter) || adapter === null || adapter === false;
+function getAdapter$1(adapters2, config) {
+  adapters2 = utils$1.isArray(adapters2) ? adapters2 : [adapters2];
+  const { length } = adapters2;
+  let nameOrAdapter;
+  let adapter;
+  const rejectedReasons = {};
+  for (let i = 0; i < length; i++) {
+    nameOrAdapter = adapters2[i];
+    let id;
+    adapter = nameOrAdapter;
+    if (!isResolvedHandle(nameOrAdapter)) {
+      adapter = knownAdapters[(id = String(nameOrAdapter)).toLowerCase()];
+      if (adapter === void 0) {
+        throw new AxiosError$1(`Unknown adapter '${id}'`);
+      }
+    }
+    if (adapter && (utils$1.isFunction(adapter) || (adapter = adapter.get(config)))) {
+      break;
+    }
+    rejectedReasons[id || "#" + i] = adapter;
+  }
+  if (!adapter) {
+    const reasons = Object.entries(rejectedReasons).map(
+      ([id, state]) => `adapter ${id} ` + (state === false ? "is not supported by the environment" : "is not available in the build")
+    );
+    let s = length ? reasons.length > 1 ? "since :\n" + reasons.map(renderReason).join("\n") : " " + renderReason(reasons[0]) : "as no adapter specified";
+    throw new AxiosError$1(
+      `There is no suitable adapter to dispatch the request ` + s,
+      "ERR_NOT_SUPPORT"
+    );
+  }
+  return adapter;
+}
 const adapters = {
-  getAdapter: (adapters2, config) => {
-    adapters2 = utils$1.isArray(adapters2) ? adapters2 : [adapters2];
-    const { length } = adapters2;
-    let nameOrAdapter;
-    let adapter;
-    const rejectedReasons = {};
-    for (let i = 0; i < length; i++) {
-      nameOrAdapter = adapters2[i];
-      let id;
-      adapter = nameOrAdapter;
-      if (!isResolvedHandle(nameOrAdapter)) {
-        adapter = knownAdapters[(id = String(nameOrAdapter)).toLowerCase()];
-        if (adapter === void 0) {
-          throw new AxiosError$1(`Unknown adapter '${id}'`);
-        }
-      }
-      if (adapter && (utils$1.isFunction(adapter) || (adapter = adapter.get(config)))) {
-        break;
-      }
-      rejectedReasons[id || "#" + i] = adapter;
-    }
-    if (!adapter) {
-      const reasons = Object.entries(rejectedReasons).map(
-        ([id, state]) => `adapter ${id} ` + (state === false ? "is not supported by the environment" : "is not available in the build")
-      );
-      let s = length ? reasons.length > 1 ? "since :\n" + reasons.map(renderReason).join("\n") : " " + renderReason(reasons[0]) : "as no adapter specified";
-      throw new AxiosError$1(
-        `There is no suitable adapter to dispatch the request ` + s,
-        "ERR_NOT_SUPPORT"
-      );
-    }
-    return adapter;
-  },
+  /**
+   * Resolve an adapter from a list of adapter names or functions.
+   * @type {Function}
+   */
+  getAdapter: getAdapter$1,
+  /**
+   * Exposes all known adapters
+   * @type {Object<string, Function|Object>}
+   */
   adapters: knownAdapters
 };
 function throwIfCancellationRequested(config) {
@@ -20934,10 +21325,10 @@ function assertOptions(options2, schema, allowUnknown) {
   if (typeof options2 !== "object") {
     throw new AxiosError$1("options must be an object", AxiosError$1.ERR_BAD_OPTION_VALUE);
   }
-  const keys = Object.keys(options2);
-  let i = keys.length;
+  const keys2 = Object.keys(options2);
+  let i = keys2.length;
   while (i-- > 0) {
-    const opt = keys[i];
+    const opt = keys2[i];
     const validator2 = schema[opt];
     if (validator2) {
       const value = options2[opt];
@@ -21291,7 +21682,13 @@ const HttpStatusCode$1 = {
   InsufficientStorage: 507,
   LoopDetected: 508,
   NotExtended: 510,
-  NetworkAuthenticationRequired: 511
+  NetworkAuthenticationRequired: 511,
+  WebServerIsDown: 521,
+  ConnectionTimedOut: 522,
+  OriginIsUnreachable: 523,
+  TimeoutOccurred: 524,
+  SslHandshakeFailed: 525,
+  InvalidSslCertificate: 526
 };
 Object.entries(HttpStatusCode$1).forEach(([key, value]) => {
   HttpStatusCode$1[value] = key;
@@ -21441,7 +21838,8 @@ function calculatePriorityScore(filename) {
   return score;
 }
 function setReqPath(data) {
-  const existingData = exports.storageManager?.getCustomData(REQ_STORE_ID);
+  const storageManager2 = getStorage();
+  const existingData = storageManager2?.getCustomData(REQ_STORE_ID);
   let result = [];
   if (existingData) {
     const found = existingData.some((item) => item.id === data.id);
@@ -21455,246 +21853,286 @@ function setReqPath(data) {
   } else {
     result.push(data);
   }
-  exports.storageManager?.setCustomData(REQ_STORE_ID, result);
+  storageManager2?.setCustomData(REQ_STORE_ID, result);
 }
 function getReqPath(id) {
-  const data = exports.storageManager?.getCustomData(REQ_STORE_ID);
+  const data = getStorage()?.getCustomData(REQ_STORE_ID);
   return data?.find((item) => item.id === id)?.path;
 }
-let maxRetries = 5;
-async function getLatestPipPackageVersion(packageName) {
-  const url = `https://pypi.org/pypi/${packageName}/json`;
-  let attempt = 0;
-  while (attempt <= maxRetries) {
-    try {
-      const response = await axios.get(url);
-      const data = response.data;
-      if (data && data.info && data.info.version) {
-        return semver.coerce(data.info.version)?.version || null;
-      } else {
-        console.error(`Could not find version information for ${packageName} in the response.`);
-        return null;
-      }
-    } catch (error) {
-      attempt++;
-      if (attempt > maxRetries) {
-        if (axios.isAxiosError(error)) {
-          if (error.response?.status === 404) {
-            console.error(`Package ${packageName} not found on PyPI.`);
-          } else {
-            console.error(`Error fetching package information for ${packageName}:`, error.message);
-          }
-        } else {
-          console.error(`An unexpected error occurred while fetching package information:`, error);
-        }
-        return null;
-      }
-    }
+let currentUpdateController = null;
+async function runWithConcurrencyLimit(tasks, limit, signal) {
+  if (!limit || limit <= 0) {
+    const promises = tasks.map((task) => task());
+    return Promise.all(promises);
   }
-  return null;
-}
-async function checkPackageUpdates(reqPath, packages) {
-  const maxRetriesConfig = exports.storageManager?.getCustomData(MaxRetry_StorageID);
-  if (maxRetriesConfig) maxRetries = maxRetriesConfig;
-  const reqData = await readRequirements(reqPath);
-  const result = reqData.map(async (req) => {
-    const targetInPackage = packages.find(
-      (item) => item.name.toLowerCase().replaceAll("_", "-") === req.name.toLowerCase().replaceAll("_", "-")
-    );
-    const latestVersion = await getLatestPipPackageVersion(req.name);
-    const reqVersion = targetInPackage?.version;
-    const currentVersion = semver.coerce(reqVersion)?.version;
-    if (!latestVersion || !packages || !currentVersion) return null;
-    let canUpdate = false;
-    let targetVersion = currentVersion || "";
-    switch (req.versionOperator) {
-      case ">=":
-      case ">":
-      case "!=":
-        if (!req.version) break;
-        canUpdate = semverExports.satisfies(latestVersion, `${req.versionOperator}${req.version}`);
-        if (canUpdate) targetVersion = latestVersion;
-        break;
-      case "<":
-      case "<=": {
-        if (!req.version) break;
-        canUpdate = semverExports.lt(currentVersion, req.version);
-        if (canUpdate) targetVersion = req.version;
-        break;
-      }
-      case "==": {
-        if (!req.version) break;
-        canUpdate = currentVersion !== req.version;
-        if (canUpdate) targetVersion = req.version;
-        break;
-      }
-      case "~=": {
-        if (!req.version) break;
-        const latestParts = latestVersion.split(".");
-        const reqParts = req.version.split(".");
-        canUpdate = latestParts[0] === reqParts[0] && semverExports.satisfies(latestVersion, `>${req.version}`);
-        targetVersion = latestVersion;
-        break;
-      }
-      default:
-        canUpdate = true;
-        targetVersion = latestVersion;
-    }
-    if (canUpdate && targetVersion !== currentVersion)
-      return { name: targetInPackage?.name || req.name, version: targetVersion };
-    return null;
-  });
-  return lodashExports.compact(await Promise.all(result));
-}
-async function getSitePackagesInfo(pythonExePath) {
-  return new Promise((resolve, reject) => {
-    const command = `"${pythonExePath}" -m pip list --format json`;
-    node_child_process.exec(command, (error, stdout, stderr) => {
-      if (error) {
-        reject(`Error getting site packages: ${error.message}`);
+  const results = new Array(tasks.length);
+  const taskQueue = tasks.map((task, index) => ({ task, index }));
+  const workers = Array(limit).fill(null).map(async () => {
+    while (taskQueue.length > 0) {
+      if (signal?.aborted) {
         return;
       }
-      if (stderr) {
-        console.warn(`stderr when getting site packages: ${stderr}`);
+      const nextTask = taskQueue.shift();
+      if (nextTask) {
+        const { task, index } = nextTask;
+        const result = await task();
+        results[index] = result;
       }
-      try {
-        const packages = JSON.parse(stdout);
-        const packagePromises = packages.map((pkg) => {
-          return { name: pkg.name, version: pkg.version };
-        });
-        resolve(packagePromises);
-      } catch (parseError) {
-        reject(`Error parsing pip output: ${parseError}`);
-      }
-    });
+    }
   });
+  await Promise.all(workers);
+  return results;
 }
-async function getSitePackagesUpdates(packages) {
+function cancelPackagesUpdateCheck() {
+  if (currentUpdateController) {
+    console.log("Cancelling ongoing package update check...");
+    currentUpdateController.abort();
+    currentUpdateController = null;
+  }
+}
+async function getLatestPipPackageVersion(packageName, maxRetries = 5, signal) {
+  const url = `https://pypi.org/pypi/${packageName}/json`;
+  const window2 = getAppManager()?.getMainWindow();
   try {
-    const getLatest = packages.map(async (pkg) => {
+    for (let attempt = 1; attempt <= maxRetries; attempt++) {
       try {
-        const latestVersion = await getLatestPipPackageVersion(pkg.name);
-        const currentVersion = semver.coerce(pkg.version)?.version;
-        if (!latestVersion || !currentVersion || semverExports.compare(currentVersion, latestVersion) !== -1) return null;
-        return { name: pkg.name, version: latestVersion };
-      } catch (e) {
-        return null;
+        const response = await axios.get(url, { timeout: 15e3, signal });
+        const data = response.data;
+        if (data?.info?.version) {
+          return semver.coerce(data.info.version)?.version || null;
+        } else {
+          console.error(`Could not find version information for ${packageName} in the response.`);
+          return null;
+        }
+      } catch (error) {
+        if (axios.isCancel(error)) {
+          return null;
+        }
+        if (attempt === maxRetries) {
+          if (axios.isAxiosError(error)) {
+            if (error.response?.status === 404) {
+              console.error(`Package ${packageName} not found on PyPI after ${maxRetries} attempts.`);
+            } else {
+              console.error(
+                `Error fetching package info for ${packageName} after ${maxRetries} attempts:`,
+                error.message
+              );
+            }
+          } else {
+            console.error(`An unexpected error occurred for ${packageName} after ${maxRetries} attempts:`, error);
+          }
+          break;
+        }
+        const delay = Math.pow(2, attempt) * 100;
+        await new Promise((res) => setTimeout(res, delay));
       }
+    }
+    return null;
+  } finally {
+    if (window2 && !signal?.aborted) {
+      window2.webContents.send(pythonChannels.updateCheckProgress, packageName);
+    }
+  }
+}
+async function getPipPackageAllVersions(packageName) {
+  const url = `https://pypi.org/pypi/${packageName}/json`;
+  try {
+    const response = await axios.get(url, { timeout: 15e3 });
+    const data = response.data;
+    if (data?.releases) {
+      const versions = Object.keys(data.releases);
+      const validVersions = versions.filter((version) => data.releases[version].length > 0);
+      const semverVersions = validVersions.map((v) => semver.coerce(v)?.version).filter((v) => v !== null && v !== void 0);
+      const versionsToSort = semverVersions.length > 0 ? semverVersions : validVersions;
+      return versionsToSort.sort((a, b) => semver.rcompare(a, b));
+    } else {
+      console.error(`Could not find releases information for ${packageName} in the response.`);
+      return null;
+    }
+  } catch (error) {
+    if (axios.isAxiosError(error)) {
+      if (error.response?.status === 404) {
+        console.error(`Package ${packageName} not found on PyPI.`);
+      } else {
+        console.error(`Error fetching package info for ${packageName}:`, error.message);
+      }
+    } else {
+      console.error(`An unexpected error occurred for ${packageName}:`, error);
+    }
+    return null;
+  }
+}
+async function getPackagesUpdateByReq(reqPath, packages) {
+  cancelPackagesUpdateCheck();
+  currentUpdateController = new AbortController();
+  const signal = currentUpdateController.signal;
+  try {
+    const maxRetriesConfig = getStorage()?.getCustomData(MaxRetry_StorageID);
+    const maxConcurrentConfig = getStorage()?.getCustomData(MaxConcurrent_StorageID);
+    const reqData = await readRequirements(reqPath);
+    const tasks = reqData.map((req) => {
+      return async () => {
+        if (signal.aborted) return null;
+        const targetInPackage = packages.find(
+          (item) => item.name.toLowerCase().replaceAll("_", "-") === req.name.toLowerCase().replaceAll("_", "-")
+        );
+        const latestVersion = await getLatestPipPackageVersion(req.name, maxRetriesConfig, signal);
+        const reqVersion = targetInPackage?.version;
+        const currentVersion = semver.coerce(reqVersion)?.version;
+        if (!latestVersion || !packages || !currentVersion) return null;
+        let canUpdate = false;
+        let targetVersion = currentVersion || "";
+        switch (req.versionOperator) {
+          case ">=":
+          case ">":
+          case "!=":
+            if (!req.version) break;
+            canUpdate = semverExports.satisfies(latestVersion, `${req.versionOperator}${req.version}`);
+            if (canUpdate) targetVersion = latestVersion;
+            break;
+          case "<":
+          case "<=": {
+            if (!req.version) break;
+            canUpdate = semverExports.lt(currentVersion, req.version);
+            if (canUpdate) targetVersion = req.version;
+            break;
+          }
+          case "==": {
+            if (!req.version) break;
+            canUpdate = currentVersion !== req.version;
+            if (canUpdate) targetVersion = req.version;
+            break;
+          }
+          case "~=": {
+            if (!req.version) break;
+            const latestParts = latestVersion.split(".");
+            const reqParts = req.version.split(".");
+            canUpdate = latestParts[0] === reqParts[0] && semverExports.satisfies(latestVersion, `>${req.version}`);
+            targetVersion = latestVersion;
+            break;
+          }
+          default:
+            canUpdate = true;
+            targetVersion = latestVersion;
+        }
+        if (canUpdate && targetVersion !== currentVersion)
+          return { name: targetInPackage?.name || req.name, version: targetVersion };
+        return null;
+      };
     });
-    return lodashExports.compact(await Promise.all(getLatest));
+    const results = await runWithConcurrencyLimit(tasks, maxConcurrentConfig || 0, signal);
+    return lodashExports.compact(results);
+  } finally {
+    currentUpdateController = null;
+  }
+}
+async function getPackagesUpdate(packages) {
+  cancelPackagesUpdateCheck();
+  currentUpdateController = new AbortController();
+  const signal = currentUpdateController.signal;
+  try {
+    const maxRetriesConfig = getStorage()?.getCustomData(MaxRetry_StorageID);
+    const maxConcurrentConfig = getStorage()?.getCustomData(MaxConcurrent_StorageID);
+    const tasks = packages.map((pkg) => {
+      return async () => {
+        try {
+          if (signal.aborted) return null;
+          const latestVersion = await getLatestPipPackageVersion(pkg.name, maxRetriesConfig, signal);
+          const currentVersion = semver.coerce(pkg.version)?.version;
+          if (!latestVersion || !currentVersion || semverExports.compare(currentVersion, latestVersion) !== -1) return null;
+          return { name: pkg.name, version: latestVersion };
+        } catch (e) {
+          return null;
+        }
+      };
+    });
+    const results = await runWithConcurrencyLimit(tasks, maxConcurrentConfig || 0, signal);
+    return lodashExports.compact(results);
   } catch (e) {
     console.error(e);
     return [];
+  } finally {
+    currentUpdateController = null;
   }
 }
-async function installPythonPackage(pythonExePath, commands) {
-  return new Promise((resolve, reject) => {
-    const command = `${pythonExePath} -m pip install ${commands} --disable-pip-version-check`;
-    node_child_process.exec(command, (error, stdout, stderr) => {
-      if (error) {
-        reject(new Error(`Error installing package: ${error.message}
-Stderr: ${stderr}`));
-        return;
-      }
-      if (stderr) {
-        console.warn(`pip stderr: ${stderr}`);
-      }
-      resolve(stdout);
-    });
-  });
-}
-async function updatePythonPackage(pythonExePath, packageName) {
-  return new Promise((resolve, reject) => {
-    const command = `"${pythonExePath}" -m pip install --upgrade "${packageName}"`;
-    node_child_process.exec(command, (error, stdout, stderr) => {
-      if (error) {
-        reject(`Error updating package ${packageName}: ${error.message}
-stderr: ${stderr}`);
-        return;
-      }
-      resolve(stdout);
-    });
-  });
-}
-async function updateAllPythonPackages(pythonExePath, packages) {
-  return new Promise((resolve, reject) => {
-    if (packages.length === 0) {
-      resolve("All packages are up to date.");
-      return;
-    }
-    const updateCommand = `"${pythonExePath}" -m pip install --upgrade ${packages.join(" ")}`;
-    node_child_process.exec(updateCommand, (updateError, updateStdout, updateStderr) => {
-      if (updateError) {
-        reject(`Error updating packages: ${updateError.message}
-stderr: ${updateStderr}`);
-        return;
-      }
-      resolve(updateStdout);
-    });
-  });
-}
-async function uninstallPythonPackage(pythonExePath, packageName) {
-  return new Promise((resolve, reject) => {
-    const command = `"${pythonExePath}" -m pip uninstall -y "${packageName}"`;
-    node_child_process.exec(command, (error, stdout, stderr) => {
-      if (error) {
-        reject(`Error uninstalling package ${packageName}: ${error.message}
-stderr: ${stderr}`);
-        return;
-      }
-      resolve(stdout);
-    });
-  });
-}
-async function changePythonPackageVersion(pythonPath, packageName, cVersion, tVersion) {
-  const currentVersion = semver.coerce(cVersion)?.version;
-  const targetVersion = semver.coerce(tVersion)?.version;
-  return new Promise((resolve, reject) => {
-    if (lodashExports.isNil(currentVersion) || lodashExports.isNil(targetVersion)) {
-      reject("Invalid current or target version provided");
-      return;
-    }
-    if (!semver.valid(currentVersion)) {
-      reject(`Invalid current version provided: ${currentVersion}. Please use a valid semantic version.`);
-      return;
-    }
-    if (!semver.valid(targetVersion)) {
-      reject(`Invalid target version provided: ${targetVersion}. Please use a valid semantic version.`);
-      return;
-    }
-    const packageInfo = {
-      packageName,
-      currentVersion,
-      targetVersion
-    };
-    const changeVersionCommand = constructChangeVersionCommand(pythonPath, packageInfo);
-    child_process.exec(changeVersionCommand, (error, stdout, stderr) => {
-      if (error) {
-        reject(`Error changing version of ${packageName}: ${error.message}`);
-        return;
-      }
-      console.log(stdout);
-      if (stderr) {
-        console.error(stderr);
-      }
-      console.log(`Successfully changed ${packageName} to version ${targetVersion}`);
-      resolve();
-    });
-  });
-}
-function constructChangeVersionCommand(pythonExePath, packageInfo) {
-  const { packageName, currentVersion, targetVersion } = packageInfo;
-  const isInstall = !currentVersion;
-  const isUpgrade = !isInstall && semver.gt(targetVersion, currentVersion);
-  let command = `${pythonExePath} -m pip install`;
-  if (!isInstall) {
-    command += ` --force-reinstall`;
+const ptyChannels = {
+  onData: "pty-on-data",
+  onExit: "pty-on-exit-code"
+};
+function getPowerShellVersion() {
+  const command = "$PSVersionTable.PSVersion.Major";
+  try {
+    const pwshVersion = parseInt(
+      node_child_process.execSync(`pwsh.exe -NoProfile -Command "${command}"`, {
+        encoding: "utf8",
+        stdio: ["pipe", "pipe", "ignore"]
+      }).trim(),
+      10
+    );
+    if (pwshVersion >= 7) return pwshVersion;
+    const psVersion = parseInt(
+      node_child_process.execSync(`powershell.exe -NoProfile -Command "${command}"`, {
+        encoding: "utf8",
+        stdio: ["pipe", "pipe", "ignore"]
+      }).trim(),
+      10
+    );
+    return psVersion >= 5 ? psVersion : 0;
+  } catch (err) {
+    console.error("Error determining PowerShell version:", err);
+    return 0;
   }
-  if (isUpgrade) {
-    command += ` --upgrade`;
+}
+function determineShell() {
+  switch (node_os.platform()) {
+    case "darwin":
+      return "zsh";
+    case "linux":
+      return "bash";
+    case "win32":
+    default:
+      return getPowerShellVersion() >= 5 ? "pwsh.exe" : "powershell.exe";
   }
-  command += ` ${packageName}==${targetVersion}`;
-  return command;
+}
+const LINE_ENDING = node_os.platform() === "win32" ? "\r" : "\n";
+const platformOperator = node_os.platform() === "win32" ? "&" : "bash";
+let ptyProcess = void 0;
+function startPtyUpdate(pythonExePath, packageSpecs) {
+  return new Promise((resolve) => {
+    ptyProcess = getNodePty()?.spawn(determineShell(), [], {});
+    const webContent = getAppManager()?.getWebContent();
+    if (ptyProcess && webContent && !webContent.isDestroyed()) {
+      const updateCommand = `${platformOperator} "${pythonExePath}" -m pip install --upgrade ${packageSpecs}`;
+      ptyProcess.write(`${updateCommand}${LINE_ENDING}`);
+      ptyProcess.write(`exit${LINE_ENDING}`);
+      ptyProcess.onData((data) => {
+        webContent.send(ptyChannels.onData, "python-update", data);
+      });
+      ptyProcess.onExit(() => {
+        webContent.send(ptyChannels.onExit, "python-update");
+        ptyProcess?.kill();
+        ptyProcess = void 0;
+        resolve();
+      });
+    }
+  });
+}
+async function updatePythonPackage(pythonExePath, packageName, version) {
+  const packageSpecifier = version ? `${packageName}==${version}` : packageName;
+  return startPtyUpdate(pythonExePath, packageSpecifier);
+}
+async function updatePackages(pythonExePath, packages) {
+  if (ptyProcess || packages.length === 0) return;
+  const packageSpecs = packages.map((pkg) => pkg.targetVersion ? `${pkg.name}==${pkg.targetVersion}` : pkg.name).join(" ");
+  return startPtyUpdate(pythonExePath, packageSpecs);
+}
+function abortOngoingUpdate() {
+  if (ptyProcess) {
+    ptyProcess.kill();
+    console.log("Cancellation signal sent to package update process.");
+  } else {
+    console.log("No ongoing package update to cancel.");
+  }
 }
 const execAsync$1 = require$$1.promisify(child_process.exec);
 async function uninstallLinuxPython(pythonExecutablePath) {
@@ -21891,24 +22329,31 @@ async function uninstallPython(pythonPath, pty) {
     };
   }
 }
-function ListenForChannels(storageManager, nodePty) {
+function ListenForChannels(nodePty2) {
+  const storageManager2 = getStorage();
   electron.ipcMain.on(pythonChannels.removeSavedPython, (_, pPath) => removeSavedPython(pPath));
+  electron.ipcMain.on(pythonChannels.removeSavedVenv, (_, venvPath) => removeVenvStorage(venvPath));
   electron.ipcMain.on(pythonChannels.addSavedPython, (_, pPath) => addSavedPython(pPath));
+  electron.ipcMain.handle(pythonChannels.locatePython, (_, pPath) => locatePythonInstallation(pPath));
+  electron.ipcMain.handle(
+    pythonChannels.getPackageAllVersions,
+    (_, packageName) => getPipPackageAllVersions(packageName)
+  );
   electron.ipcMain.handle(
     pythonChannels.changePythonVersion,
     (_, pythonPath, packageName, currentVersion, targetVersion) => changePythonPackageVersion(pythonPath, packageName, currentVersion, targetVersion)
   );
   electron.ipcMain.handle(pythonChannels.getInstalledPythons, (_, refresh) => detectPythonInstallations(refresh));
-  electron.ipcMain.handle(pythonChannels.uninstallPython, (_, path2) => uninstallPython(path2, nodePty));
+  electron.ipcMain.handle(pythonChannels.uninstallPython, (_, path2) => uninstallPython(path2, nodePty2));
   electron.ipcMain.handle(pythonChannels.setDefaultPython, (_, pythonPath) => setDefaultPython(pythonPath));
   electron.ipcMain.handle(pythonChannels.getAvailableOfficial, () => getAvailablePythonVersions());
   electron.ipcMain.handle(pythonChannels.installOfficial, (_, version) => downloadPython(version));
-  electron.ipcMain.handle(pythonChannels.getAvailableConda, () => listAvailablePythons(nodePty));
+  electron.ipcMain.handle(pythonChannels.getAvailableConda, () => listAvailablePythons(nodePty2));
   electron.ipcMain.handle(
     pythonChannels.installConda,
-    (_, envName, version) => createCondaEnv(envName, version, nodePty)
+    (_, envName, version) => createCondaEnv(envName, version, nodePty2)
   );
-  electron.ipcMain.handle(pythonChannels.isCondaInstalled, () => isCondaInstalled(nodePty));
+  electron.ipcMain.handle(pythonChannels.isCondaInstalled, () => isCondaInstalled(nodePty2));
   electron.ipcMain.handle(pythonChannels.createVenv, (_, options2) => createPythonVenv(options2));
   electron.ipcMain.handle(pythonChannels.getVenvs, () => getVenvs());
   electron.ipcMain.handle(pythonChannels.locateVenv, () => locateVenv());
@@ -21921,17 +22366,14 @@ function ListenForChannels(storageManager, nodePty) {
     pythonChannels.installPackage,
     (_, pythonPath, command) => installPythonPackage(pythonPath, command)
   );
-  electron.ipcMain.handle(
-    pythonChannels.getPackagesUpdateInfo,
-    (_, packages) => getSitePackagesUpdates(packages)
-  );
+  electron.ipcMain.handle(pythonChannels.getPackagesUpdateInfo, (_, packages) => getPackagesUpdate(packages));
   electron.ipcMain.handle(
     pythonChannels.updatePackage,
-    (_, pythonPath, packageName) => updatePythonPackage(pythonPath, packageName)
+    (_, pythonPath, packageName, version) => updatePythonPackage(pythonPath, packageName, version)
   );
   electron.ipcMain.handle(
-    pythonChannels.updateAllPackages,
-    (_, pythonPath, packages) => updateAllPythonPackages(pythonPath, packages)
+    pythonChannels.updatePackages,
+    (_, pythonPath, packages) => updatePackages(pythonPath, packages)
   );
   electron.ipcMain.handle(pythonChannels.readReqs, (_, filePath) => readRequirements(filePath));
   electron.ipcMain.handle(pythonChannels.saveReqs, (_, filePath, data) => saveRequirements(filePath, data));
@@ -21943,47 +22385,58 @@ function ListenForChannels(storageManager, nodePty) {
   electron.ipcMain.on(pythonChannels.removeAssociate, (_, id) => removeAssociate(id));
   electron.ipcMain.on(pythonChannels.removeAssociatePath, (_, path2) => removeAssociatePath(path2));
   electron.ipcMain.handle(pythonChannels.getExePathAssociate, (_, item) => getExePathAssociate(item));
-  electron.ipcMain.handle(pythonChannels.findAIVenv, (_, id, folder) => findAIVenv(id, folder));
+  electron.ipcMain.handle(pythonChannels.findAIVenv, (_, id, folder) => findAIVenv$1(id, folder));
   electron.ipcMain.handle(
     pythonChannels.getUpdatesReq,
-    (_, reqFile, currentPackages) => checkPackageUpdates(reqFile, currentPackages)
+    (_, reqFile, currentPackages) => getPackagesUpdateByReq(reqFile, currentPackages)
   );
   electron.ipcMain.handle(pythonChannels.getMaxRetry, () => {
-    const result = storageManager?.getCustomData(MaxRetry_StorageID);
+    const result = storageManager2?.getCustomData(MaxRetry_StorageID);
     if (!result) {
-      storageManager?.setCustomData(MaxRetry_StorageID, 5);
+      storageManager2?.setCustomData(MaxRetry_StorageID, 5);
       return 5;
     }
     return result;
   });
   electron.ipcMain.on(pythonChannels.setMaxRetry, (_, value) => {
-    storageManager?.setCustomData(MaxRetry_StorageID, value);
+    storageManager2?.setCustomData(MaxRetry_StorageID, value);
+  });
+  electron.ipcMain.handle(pythonChannels.getMaxConcurrent, () => {
+    const result = storageManager2?.getCustomData(MaxConcurrent_StorageID);
+    if (!result) {
+      storageManager2?.setCustomData(MaxConcurrent_StorageID, 0);
+      return 0;
+    }
+    return result;
+  });
+  electron.ipcMain.on(pythonChannels.setMaxConcurrent, (_, value) => {
+    storageManager2?.setCustomData(MaxConcurrent_StorageID, value);
   });
   electron.ipcMain.handle(pythonChannels.getPkgDisplay, () => {
-    const result = storageManager?.getCustomData(PkgDisplay_StorageID);
+    const result = storageManager2?.getCustomData(PkgDisplay_StorageID);
     if (!result) {
-      storageManager?.setCustomData(PkgDisplay_StorageID, "default");
+      storageManager2?.setCustomData(PkgDisplay_StorageID, "default");
       return "default";
     }
     return result;
   });
   electron.ipcMain.on(pythonChannels.setPkgDisplay, (_, value) => {
-    storageManager?.setCustomData(PkgDisplay_StorageID, value);
+    storageManager2?.setCustomData(PkgDisplay_StorageID, value);
   });
   electron.ipcMain.handle(pythonChannels.getCacheStorageUsage, () => {
-    const result = storageManager?.getCustomData(CacheDirUsage_StorageID);
+    const result = storageManager2?.getCustomData(CacheDirUsage_StorageID);
     if (!result) {
-      storageManager?.setCustomData(CacheDirUsage_StorageID, true);
+      storageManager2?.setCustomData(CacheDirUsage_StorageID, true);
       return true;
     }
     return result;
   });
   electron.ipcMain.on(pythonChannels.setCacheStorageUsage, (_, value) => {
-    storageManager?.setCustomData(CacheDirUsage_StorageID, value);
+    storageManager2?.setCustomData(CacheDirUsage_StorageID, value);
   });
-  electron.ipcMain.handle(pythonChannels.getCardStartCommand, () => storageManager?.getCustomData(CardStartCommand_StorageID));
+  electron.ipcMain.handle(pythonChannels.getCardStartCommand, () => storageManager2?.getCustomData(CardStartCommand_StorageID));
   electron.ipcMain.on(pythonChannels.setCardStartCommand, (_, value) => {
-    const currentCommands = storageManager?.getCustomData(CardStartCommand_StorageID);
+    const currentCommands = storageManager2?.getCustomData(CardStartCommand_StorageID);
     if (currentCommands) {
       const existing = currentCommands.findIndex((item) => item.id === value.id);
       if (existing !== -1) {
@@ -21992,13 +22445,14 @@ function ListenForChannels(storageManager, nodePty) {
         currentCommands.push(value);
       }
     }
-    storageManager?.setCustomData(CardStartCommand_StorageID, currentCommands);
+    storageManager2?.setCustomData(CardStartCommand_StorageID, currentCommands);
   });
   electron.ipcMain.handle(pythonChannels.replacePythonPath, (_, pythonPath) => {
     try {
-      if (!exports.defaultEnvPath) return false;
-      const newPath = replacePythonPath(exports.defaultEnvPath, pythonPath);
-      storageManager?.setCustomData(DefaultLynxPython_StorageID, pythonPath);
+      const defaultEnvPath2 = getDefaultEnvPath();
+      if (!defaultEnvPath2) return false;
+      const newPath = replacePythonPath$1(defaultEnvPath2, pythonPath);
+      storageManager2?.setCustomData(DefaultLynxPython_StorageID, pythonPath);
       process.env.PATH = newPath;
       return true;
     } catch (e) {
@@ -22006,23 +22460,100 @@ function ListenForChannels(storageManager, nodePty) {
       return false;
     }
   });
+  electron.ipcMain.on(pythonChannels.abortUpdateCheck, () => cancelPackagesUpdateCheck());
+  electron.ipcMain.on(pythonChannels.abortUpdating, () => abortOngoingUpdate());
+  electron.ipcMain.handle(pythonChannels.getPythonVersion, (_, pythonPath) => parseVersion(pythonPath));
+  ListenForStorage(storageManager2);
 }
-exports.storageManager = void 0;
-exports.appManager = void 0;
-exports.defaultEnvPath = process.env.PATH;
-const setDefaultEnvPath = (path2) => {
-  exports.defaultEnvPath = path2;
-};
+node_os.platform() === "win32" ? "\r" : "\n";
+function validatePath(path2) {
+  try {
+    gracefulFsExports.accessSync(path2);
+    return true;
+  } catch {
+    return false;
+  }
+}
+function replacePythonPath(envPath, newPythonBase) {
+  const targetPath = path.resolve(newPythonBase);
+  const pathExists = validatePath(targetPath);
+  if (!pathExists) {
+    throw new Error(`Python path does not exist: ${targetPath}`);
+  }
+  const paths = envPath.split(";").filter(Boolean);
+  const nonPythonPaths = paths.filter((path2) => !path2.toLowerCase().includes("python"));
+  const newPaths = [targetPath, path.join(targetPath, "Scripts"), ...nonPythonPaths];
+  return newPaths.join(";");
+}
+node_util.promisify(node_child_process.execFile);
+function getVenvPythonPath(venvPath) {
+  return node_os.platform() === "win32" ? path.join(venvPath, "Scripts", "python.exe") : path.join(venvPath, "bin", "python");
+}
+function isVenvDirectory(dirPath) {
+  try {
+    if (!gracefulFsExports.existsSync(dirPath)) {
+      return false;
+    }
+    const pythonExePath = getVenvPythonPath(dirPath);
+    if (!gracefulFsExports.existsSync(pythonExePath)) {
+      return false;
+    }
+    const libPath = path.join(dirPath, "lib");
+    return gracefulFsExports.existsSync(libPath);
+  } catch (err) {
+    console.error(`Error checking if directory is a venv: ${err}`);
+    return false;
+  }
+}
+function isVenvFolderName(folder) {
+  return folder === "venv" || folder === ".venv" || folder === "env" || folder === ".env" || folder.startsWith("venv-") || folder.startsWith(".venv-") || folder.endsWith("-venv") || folder.endsWith("-env") || folder.toLowerCase().includes("virtualenv") || folder.toLowerCase().includes("virtualenvironment");
+}
+async function findVenvFolder(dirPath) {
+  try {
+    const items = await gracefulFsExports.promises.readdir(dirPath, { withFileTypes: true });
+    for (const item of items) {
+      if (item.isDirectory()) {
+        const itemName = item.name;
+        const fullPath = path.join(dirPath, itemName);
+        if (isVenvFolderName(itemName) && isVenvDirectory(fullPath)) {
+          return fullPath;
+        }
+      }
+    }
+    return null;
+  } catch (error) {
+    console.error(`Error searching for virtual environment in ${dirPath}:`, error);
+    return null;
+  }
+}
+async function findAIVenv(id, folder) {
+  try {
+    if (!folder) throw "Provided folder is not correct.";
+    const venvFolder = await findVenvFolder(folder);
+    if (venvFolder) {
+      const pythonExecutable = getVenvPythonPath(venvFolder);
+      updateVenvStorage(venvFolder);
+      addAssociate({ id, dir: venvFolder, type: "venv" });
+      return pythonExecutable;
+    }
+    throw "Venv folder not Found";
+  } catch (e) {
+    console.error(e);
+    throw e;
+  }
+}
 async function initialExtension(lynxApi, utils2) {
   utils2.getAppManager().then((app) => {
-    exports.appManager = app;
+    setAppManager(app);
   });
+  setNodePty(utils2.nodePty);
   utils2.getStorageManager().then((storeManager) => {
-    exports.storageManager = storeManager;
+    setStorage(storeManager);
     if (!storeManager.getCustomData(MaxRetry_StorageID)) storeManager.setCustomData(MaxRetry_StorageID, 5);
     const defaultLynxPython = storeManager.getCustomData(DefaultLynxPython_StorageID);
-    if (defaultLynxPython && exports.defaultEnvPath) {
-      process.env.PATH = replacePythonPath(exports.defaultEnvPath, defaultLynxPython);
+    const defaultEnvPath2 = getDefaultEnvPath();
+    if (defaultLynxPython && defaultEnvPath2) {
+      process.env.PATH = replacePythonPath(defaultEnvPath2, defaultLynxPython);
     }
     const associates = storeManager.getCustomData(Associates_StorageID);
     if (!associates) {
@@ -22040,7 +22571,6 @@ async function initialExtension(lynxApi, utils2) {
       storeManager.setCustomData(IsAutoDetectedVenvs_StorageID, true);
     }
   });
-  lynxApi.listenForChannels(() => ListenForChannels(exports.storageManager, utils2.nodePty));
+  lynxApi.listenForChannels(() => ListenForChannels(utils2.nodePty));
 }
 exports.initialExtension = initialExtension;
-exports.setDefaultEnvPath = setDefaultEnvPath;
