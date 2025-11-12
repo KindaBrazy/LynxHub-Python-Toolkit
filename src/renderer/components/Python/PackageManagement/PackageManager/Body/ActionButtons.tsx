@@ -64,8 +64,8 @@ export default function ActionButtons({
           </Button>
         </PopoverTrigger>
         <PopoverContent>
-          <div className="p-2 space-y-2">
-            <span>Are you sure you want to remove the package &#34;{item.name}&#34;?</span>
+          <div className="p-2 gap-y-3 flex flex-col">
+            <span>Are you sure you want to remove the package "{item.name}"?</span>
             <Button size="sm" onPress={remove} fullWidth>
               Remove
             </Button>
