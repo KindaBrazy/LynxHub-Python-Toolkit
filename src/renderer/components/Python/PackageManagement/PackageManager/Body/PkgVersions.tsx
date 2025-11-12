@@ -1,6 +1,7 @@
 import {
   Button,
   Chip,
+  Input,
   Modal,
   ModalBody,
   ModalContent,
@@ -38,6 +39,8 @@ const PkgVersions = memo(({updated, item, pythonPath, show}: Props) => {
   const [isLoadingVersions, setIsLoadingVersions] = useState<boolean>(false);
   const [isOpen, setIsOpen] = useState<boolean>(false);
 
+  const [customVersion, setCustomVersion] = useState<string>(item.version);
+
   useEffect(() => {
     if (isOpen) {
       setIsLoadingVersions(true);
@@ -70,7 +73,8 @@ const PkgVersions = memo(({updated, item, pythonPath, show}: Props) => {
           lynxTopToast(dispatch).success(`${item.name} package changed to ${targetVersion}`);
         })
         .catch(e => {
-          lynxTopToast(dispatch).error(e);
+          console.info(e);
+          lynxTopToast(dispatch).error(`Failed change version to ${targetVersion}!`);
         })
         .finally(() => {
           setChangingTo(undefined);
@@ -95,7 +99,7 @@ const PkgVersions = memo(({updated, item, pythonPath, show}: Props) => {
 
       const comparison = compare(currentVersion, targetVersion);
       if (comparison === 0) {
-        return {color: 'default', isUpgrade: false, disabled: true};
+        return {color: 'default', isUpgrade: undefined, disabled: true};
       }
 
       const isUpgrade = comparison === -1;
@@ -142,6 +146,17 @@ const PkgVersions = memo(({updated, item, pythonPath, show}: Props) => {
             ) : (
               <LynxScroll className="size-full px-2 py-4">
                 <div className="flex flex-row flex-wrap gap-2">
+                  <div className="flex flex-row items-center w-full gap-x-2 px-2">
+                    <Input value={customVersion} placeholder="Custom version" onValueChange={setCustomVersion} />
+                    {getUpdateType(customVersion).isUpgrade !== undefined && (
+                      <Button
+                        variant="flat"
+                        color={getUpdateType(customVersion).color}
+                        onPress={() => changeVersion(customVersion)}>
+                        {getUpdateType(customVersion).isUpgrade ? 'Upgrade' : 'Downgrade'}
+                      </Button>
+                    )}
+                  </div>
                   {availableVersion?.map(version => {
                     const updateType = getUpdateType(version);
                     const icon = updateType.disabled ? (
