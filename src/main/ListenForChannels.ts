@@ -28,33 +28,33 @@ import {
   getExePathAssociate,
   removeAssociate,
   removeAssociatePath,
-} from './Utils/AssociateManager';
-import {getAvailablePythonVersions} from './Utils/Available';
-import {setDefaultPython} from './Utils/DefaultPython';
-import detectPythonInstallations, {addSavedPython, locatePythonInstallation, removeSavedPython} from './Utils/Detector';
-import {replacePythonPath} from './Utils/ExtMainUtils';
-import {createCondaEnv, isCondaInstalled, listAvailablePythons} from './Utils/Installer/Installer_Conda';
-import downloadPython from './Utils/Installer/Installer_Official';
-import {getSitePackagesInfo, installPythonPackage, uninstallPythonPackage} from './Utils/PackageManager/PackageManager';
-import {changePythonPackageVersion} from './Utils/PackageManager/PackageManagerUtil';
+} from './utils/AssociateManager';
+import {getAvailablePythonVersions} from './utils/Available';
+import {setDefaultPython} from './utils/DefaultPython';
+import detectPythonInstallations, {addSavedPython, locatePythonInstallation, removeSavedPython} from './utils/Detector';
+import {replacePythonPath} from './utils/ExtMainUtils';
+import {createCondaEnv, isCondaInstalled, listAvailablePythons} from './utils/Installer/Installer_Conda';
+import downloadPython from './utils/Installer/Installer_Official';
+import {getSitePackagesInfo, installPythonPackage, uninstallPythonPackage} from './utils/PackageManager/PackageManager';
+import {changePythonPackageVersion} from './utils/PackageManager/PackageManagerUtil';
 import {
   cancelPackagesUpdateCheck,
   getPackagesUpdate,
   getPackagesUpdateByReq,
   getPipPackageAllVersions,
-} from './Utils/PackageManager/PipToolsManager';
-import {abortOngoingUpdate, updatePackages, updatePythonPackage} from './Utils/PackageManager/Updater';
-import {parseVersion} from './Utils/PythonUtils';
+} from './utils/PackageManager/PipToolsManager';
+import {abortOngoingUpdate, updatePackages, updatePythonPackage} from './utils/PackageManager/Updater';
+import {parseVersion} from './utils/PythonUtils';
 import {
   findValidRequirementsFiles,
   getReqPath,
   readRequirements,
   saveRequirements,
   setReqPath,
-} from './Utils/Requirements/PythonRequirements';
-import uninstallPython from './Utils/Uninstaller/Uninstaller';
-import createPythonVenv, {getVenvs, locateVenv, removeVenvStorage} from './Utils/VirtualEnv/CreateVenv';
-import {findAIVenv} from './Utils/VirtualEnv/VenvUtils';
+} from './utils/Requirements/PythonRequirements';
+import uninstallPython from './utils/Uninstaller/Uninstaller';
+import createPythonVenv, {getVenvs, locateVenv, removeVenvStorage} from './utils/VirtualEnv/CreateVenv';
+import {findAIVenv} from './utils/VirtualEnv/VenvUtils';
 
 export default function ListenForChannels(nodePty: any) {
   const storageManager = getStorage();
