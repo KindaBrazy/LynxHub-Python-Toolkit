@@ -142,6 +142,7 @@ async function findVenvFolder(dirPath: string): Promise<string | null> {
   }
 }
 
+// TODO: add try catch for all usage of this method
 export async function findAIVenv(id: string, folder: string | undefined) {
   try {
     if (!folder) throw 'Provided folder is not correct.';
