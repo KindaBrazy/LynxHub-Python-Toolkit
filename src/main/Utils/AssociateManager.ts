@@ -17,8 +17,14 @@ function getCommandByType(type: 'python' | 'venv' | 'conda', dir: string, condaN
   switch (type) {
     case 'python':
       return isWin ? `$env:Path = "${dir};${dir}\\Scripts" + $env:Path` : `export PATH="${dir}:${dir}/bin:$PATH"`;
-    case 'venv':
-      return isWin ? `${dir}\\Scripts\\activate.ps1` : `source ${dir}/bin/activate`;
+    case 'venv': {
+      if (isWin) {
+        return `${dir}\\Scripts\\activate.ps1`;
+      }
+      // On Linux, check if dir already ends with /bin to avoid /bin/bin/activate
+      const activatePath = dir.endsWith('/bin') ? `${dir}/activate` : `${dir}/bin/activate`;
+      return `source ${activatePath}`;
+    }
     case 'conda':
       return `conda activate ${condaName || `"${dir}"`}`;
     default:
