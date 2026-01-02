@@ -2,12 +2,24 @@
   "$schema": "https://raw.githubusercontent.com/KindaBrazy/LynxHub-Statics/refs/heads/schema/plugins/versioning.schema.json",
   "versions": [
     {
+      "version": "0.13.1",
+      "commit": "ce3568d",
+      "engines": {
+        "extensionApi": "^1.0.0"
+      },
+      "stage": "public",
+      "platforms": [
+        "win32",
+        "linux"
+      ]
+    },
+    {
       "version": "0.13.0",
       "commit": "df55301",
       "engines": {
         "extensionApi": "^1.0.0"
       },
-      "stage": "early_access",
+      "stage": "public",
       "platforms": [
         "win32",
         "linux"
@@ -27,6 +39,17 @@
     }
   ],
   "changes": [
+    {
+      "version": "0.13.1",
+      "date": "2026-01-02",
+      "items": [
+        {
+          "🪲 Bug Fixes": [
+            "Handle venv activation path correctly on Linux."
+          ]
+        }
+      ]
+    },
     {
       "version": "0.13.0",
       "date": "2025-11-12",
