@@ -177,20 +177,12 @@ function getDefaultExportFromCjs(x) {
   return x && x.__esModule && Object.prototype.hasOwnProperty.call(x, "default") ? x["default"] : x;
 }
 var lodash$1 = { exports: {} };
-/**
- * @license
- * Lodash <https://lodash.com/>
- * Copyright OpenJS Foundation and other contributors <https://openjsf.org/>
- * Released under MIT license <https://lodash.com/license>
- * Based on Underscore.js 1.8.3 <http://underscorejs.org/LICENSE>
- * Copyright Jeremy Ashkenas, DocumentCloud and Investigative Reporters & Editors
- */
 var lodash = lodash$1.exports;
 var hasRequiredLodash;
 function requireLodash() {
   if (hasRequiredLodash) return lodash$1.exports;
   hasRequiredLodash = 1;
-  (function(module2, exports2) {
+  (function(module2, exports$1) {
     (function() {
       var undefined$1;
       var VERSION2 = "4.17.21";
@@ -518,7 +510,7 @@ function requireLodash() {
       var freeGlobal = typeof commonjsGlobal == "object" && commonjsGlobal && commonjsGlobal.Object === Object && commonjsGlobal;
       var freeSelf = typeof self == "object" && self && self.Object === Object && self;
       var root = freeGlobal || freeSelf || Function("return this")();
-      var freeExports = exports2 && !exports2.nodeType && exports2;
+      var freeExports = exports$1 && !exports$1.nodeType && exports$1;
       var freeModule = freeExports && true && module2 && !module2.nodeType && module2;
       var moduleExports = freeModule && freeModule.exports === freeExports;
       var freeProcess = moduleExports && freeGlobal.process;
@@ -6085,8 +6077,8 @@ function requireGracefulFs() {
   var gracefulQueue;
   var previousSymbol;
   if (typeof Symbol === "function" && typeof Symbol.for === "function") {
-    gracefulQueue = Symbol.for("graceful-fs.queue");
-    previousSymbol = Symbol.for("graceful-fs.previous");
+    gracefulQueue = /* @__PURE__ */ Symbol.for("graceful-fs.queue");
+    previousSymbol = /* @__PURE__ */ Symbol.for("graceful-fs.previous");
   } else {
     gracefulQueue = "___graceful-fs.queue";
     previousSymbol = "___graceful-fs.previous";
@@ -6490,19 +6482,19 @@ var hasRequiredRe;
 function requireRe() {
   if (hasRequiredRe) return re.exports;
   hasRequiredRe = 1;
-  (function(module2, exports2) {
+  (function(module2, exports$1) {
     const {
       MAX_SAFE_COMPONENT_LENGTH,
       MAX_SAFE_BUILD_LENGTH,
       MAX_LENGTH
     } = requireConstants();
     const debug = requireDebug$1();
-    exports2 = module2.exports = {};
-    const re2 = exports2.re = [];
-    const safeRe = exports2.safeRe = [];
-    const src2 = exports2.src = [];
-    const safeSrc = exports2.safeSrc = [];
-    const t = exports2.t = {};
+    exports$1 = module2.exports = {};
+    const re2 = exports$1.re = [];
+    const safeRe = exports$1.safeRe = [];
+    const src2 = exports$1.src = [];
+    const safeSrc = exports$1.safeSrc = [];
+    const t = exports$1.t = {};
     let R = 0;
     const LETTERDASHNUMBER = "[a-zA-Z0-9-]";
     const safeRegexReplacements = [
@@ -6555,18 +6547,18 @@ function requireRe() {
     createToken("COERCERTLFULL", src2[t.COERCEFULL], true);
     createToken("LONETILDE", "(?:~>?)");
     createToken("TILDETRIM", `(\\s*)${src2[t.LONETILDE]}\\s+`, true);
-    exports2.tildeTrimReplace = "$1~";
+    exports$1.tildeTrimReplace = "$1~";
     createToken("TILDE", `^${src2[t.LONETILDE]}${src2[t.XRANGEPLAIN]}$`);
     createToken("TILDELOOSE", `^${src2[t.LONETILDE]}${src2[t.XRANGEPLAINLOOSE]}$`);
     createToken("LONECARET", "(?:\\^)");
     createToken("CARETTRIM", `(\\s*)${src2[t.LONECARET]}\\s+`, true);
-    exports2.caretTrimReplace = "$1^";
+    exports$1.caretTrimReplace = "$1^";
     createToken("CARET", `^${src2[t.LONECARET]}${src2[t.XRANGEPLAIN]}$`);
     createToken("CARETLOOSE", `^${src2[t.LONECARET]}${src2[t.XRANGEPLAINLOOSE]}$`);
     createToken("COMPARATORLOOSE", `^${src2[t.GTLT]}\\s*(${src2[t.LOOSEPLAIN]})$|^$`);
     createToken("COMPARATOR", `^${src2[t.GTLT]}\\s*(${src2[t.FULLPLAIN]})$|^$`);
     createToken("COMPARATORTRIM", `(\\s*)${src2[t.GTLT]}\\s*(${src2[t.LOOSEPLAIN]}|${src2[t.XRANGEPLAIN]})`, true);
-    exports2.comparatorTrimReplace = "$1$2$3";
+    exports$1.comparatorTrimReplace = "$1$2$3";
     createToken("HYPHENRANGE", `^\\s*(${src2[t.XRANGEPLAIN]})\\s+-\\s+(${src2[t.XRANGEPLAIN]})\\s*$`);
     createToken("HYPHENRANGELOOSE", `^\\s*(${src2[t.XRANGEPLAINLOOSE]})\\s+-\\s+(${src2[t.XRANGEPLAINLOOSE]})\\s*$`);
     createToken("STAR", "(<|>)?=?\\s*\\*");
@@ -7697,7 +7689,7 @@ var hasRequiredComparator;
 function requireComparator() {
   if (hasRequiredComparator) return comparator;
   hasRequiredComparator = 1;
-  const ANY = Symbol("SemVer ANY");
+  const ANY = /* @__PURE__ */ Symbol("SemVer ANY");
   class Comparator {
     static get ANY() {
       return ANY;
@@ -8532,7 +8524,7 @@ function validateVenvs() {
   if (lodashExports.isNil(venvs)) {
     validEnvs = [];
   } else {
-    validEnvs = lodashExports.filter(venvs, isVenvDirectory$1);
+    validEnvs = lodashExports.filter(venvs, isVenvDirectory);
   }
   storageManager2?.setCustomData(STORE_VENVS_ID, validEnvs);
   return validEnvs;
@@ -8580,7 +8572,7 @@ async function locateVenv() {
     if (!selectedFolder) {
       return false;
     }
-    const isVenv = isVenvDirectory$1(selectedFolder);
+    const isVenv = isVenvDirectory(selectedFolder);
     if (isVenv) updateVenvStorage(selectedFolder);
     return isVenv;
   } catch (e) {
@@ -8621,7 +8613,7 @@ async function createPythonVenv(options2) {
 const execFileAsync = node_util.promisify(node_child_process.execFile);
 async function getPythonVersion(venvPath) {
   return new Promise((resolve, reject) => {
-    const pythonExecutable = getVenvPythonPath$1(venvPath);
+    const pythonExecutable = getVenvPythonPath(venvPath);
     node_child_process.exec(`"${pythonExecutable}" --version`, (error, stdout, stderr) => {
       if (error) {
         reject(error);
@@ -8667,7 +8659,7 @@ async function checkPipInstallation(exePath) {
 }
 async function getVenvInfo(venvPath) {
   const pythonVersion = await getPythonVersion(venvPath);
-  const pythonExecutable = getVenvPythonPath$1(venvPath);
+  const pythonExecutable = getVenvPythonPath(venvPath);
   await checkPipInstallation(pythonExecutable);
   const sitePackagesCount = await getSitePackagesCount(pythonExecutable);
   const folderName = path.basename(venvPath);
@@ -8679,15 +8671,15 @@ async function getVenvInfo(venvPath) {
     folder: venvPath
   };
 }
-function getVenvPythonPath$1(venvPath) {
+function getVenvPythonPath(venvPath) {
   return node_os.platform() === "win32" ? path.join(venvPath, "Scripts", "python.exe") : path.join(venvPath, "bin", "python");
 }
-function isVenvDirectory$1(dirPath) {
+function isVenvDirectory(dirPath) {
   try {
     if (!gracefulFsExports.existsSync(dirPath)) {
       return false;
     }
-    const pythonExePath = getVenvPythonPath$1(dirPath);
+    const pythonExePath = getVenvPythonPath(dirPath);
     if (!gracefulFsExports.existsSync(pythonExePath)) {
       return false;
     }
@@ -8698,17 +8690,17 @@ function isVenvDirectory$1(dirPath) {
     return false;
   }
 }
-function isVenvFolderName$1(folder) {
+function isVenvFolderName(folder) {
   return folder === "venv" || folder === ".venv" || folder === "env" || folder === ".env" || folder.startsWith("venv-") || folder.startsWith(".venv-") || folder.endsWith("-venv") || folder.endsWith("-env") || folder.toLowerCase().includes("virtualenv") || folder.toLowerCase().includes("virtualenvironment");
 }
-async function findVenvFolder$1(dirPath) {
+async function findVenvFolder(dirPath) {
   try {
     const items = await gracefulFsExports.promises.readdir(dirPath, { withFileTypes: true });
     for (const item of items) {
       if (item.isDirectory()) {
         const itemName = item.name;
         const fullPath = path.join(dirPath, itemName);
-        if (isVenvFolderName$1(itemName) && isVenvDirectory$1(fullPath)) {
+        if (isVenvFolderName(itemName) && isVenvDirectory(fullPath)) {
           return fullPath;
         }
       }
@@ -8719,12 +8711,12 @@ async function findVenvFolder$1(dirPath) {
     return null;
   }
 }
-async function findAIVenv$1(id, folder) {
+async function findAIVenv(id, folder) {
   try {
     if (!folder) throw "Provided folder is not correct.";
-    const venvFolder = await findVenvFolder$1(folder);
+    const venvFolder = await findVenvFolder(folder);
     if (venvFolder) {
-      const pythonExecutable = getVenvPythonPath$1(venvFolder);
+      const pythonExecutable = getVenvPythonPath(venvFolder);
       updateVenvStorage(venvFolder);
       addAssociate({ id, dir: venvFolder, type: "venv" });
       return pythonExecutable;
@@ -8740,8 +8732,13 @@ function getCommandByType(type2, dir, condaName) {
   switch (type2) {
     case "python":
       return isWin ? `$env:Path = "${dir};${dir}\\Scripts" + $env:Path` : `export PATH="${dir}:${dir}/bin:$PATH"`;
-    case "venv":
-      return isWin ? `${dir}\\Scripts\\activate.ps1` : `source ${dir}/bin/activate`;
+    case "venv": {
+      if (isWin) {
+        return `${dir}\\Scripts\\activate.ps1`;
+      }
+      const activatePath = dir.endsWith("/bin") ? `${dir}/activate` : `${dir}/bin/activate`;
+      return `source ${activatePath}`;
+    }
     case "conda":
       return `conda activate ${condaName || `"${dir}"`}`;
     default:
@@ -8786,7 +8783,7 @@ function getExePathAssociate(target) {
     const buildPath = (item) => {
       switch (item.type) {
         case "venv":
-          return path.resolve(getVenvPythonPath$1(item.dir));
+          return path.resolve(getVenvPythonPath(item.dir));
         case "python":
         case "conda":
         default:
@@ -9056,7 +9053,7 @@ var hasRequiredCjs;
 function requireCjs() {
   if (hasRequiredCjs) return cjs;
   hasRequiredCjs = 1;
-  (function(exports2) {
+  (function(exports$1) {
     var __createBinding = cjs && cjs.__createBinding || (Object.create ? (function(o, m, k, k2) {
       if (k2 === void 0) k2 = k;
       var desc = Object.getOwnPropertyDescriptor(m, k);
@@ -9084,20 +9081,20 @@ function requireCjs() {
       __setModuleDefault(result, mod);
       return result;
     };
-    var __exportStar = cjs && cjs.__exportStar || function(m, exports22) {
-      for (var p in m) if (p !== "default" && !Object.prototype.hasOwnProperty.call(exports22, p)) __createBinding(exports22, m, p);
+    var __exportStar = cjs && cjs.__exportStar || function(m, exports2) {
+      for (var p in m) if (p !== "default" && !Object.prototype.hasOwnProperty.call(exports2, p)) __createBinding(exports2, m, p);
     };
-    Object.defineProperty(exports2, "__esModule", { value: true });
-    exports2.sync = exports2.isexe = exports2.posix = exports2.win32 = void 0;
+    Object.defineProperty(exports$1, "__esModule", { value: true });
+    exports$1.sync = exports$1.isexe = exports$1.posix = exports$1.win32 = void 0;
     const posix2 = __importStar(requirePosix());
-    exports2.posix = posix2;
+    exports$1.posix = posix2;
     const win322 = __importStar(requireWin32());
-    exports2.win32 = win322;
-    __exportStar(requireOptions(), exports2);
+    exports$1.win32 = win322;
+    __exportStar(requireOptions(), exports$1);
     const platform2 = process.env._ISEXE_TEST_PLATFORM_ || process.platform;
     const impl = platform2 === "win32" ? win322 : posix2;
-    exports2.isexe = impl.isexe;
-    exports2.sync = impl.sync;
+    exports$1.isexe = impl.isexe;
+    exports$1.sync = impl.sync;
   })(cjs);
   return cjs;
 }
@@ -9228,7 +9225,7 @@ function determineShell$1() {
       return getPowerShellVersion$1() >= 5 ? "pwsh.exe" : "powershell.exe";
   }
 }
-function validatePath$2(path2) {
+function validatePath$1(path2) {
   try {
     gracefulFsExports.accessSync(path2);
     return true;
@@ -9236,9 +9233,9 @@ function validatePath$2(path2) {
     return false;
   }
 }
-function replacePythonPath$1(envPath, newPythonBase) {
+function replacePythonPath(envPath, newPythonBase) {
   const targetPath = path.resolve(newPythonBase);
-  const pathExists = validatePath$2(targetPath);
+  const pathExists = validatePath$1(targetPath);
   if (!pathExists) {
     throw new Error(`Python path does not exist: ${targetPath}`);
   }
@@ -9249,7 +9246,7 @@ function replacePythonPath$1(envPath, newPythonBase) {
 }
 function isFirstPythonPath(envPath, targetPythonBase) {
   const targetPath = path.resolve(targetPythonBase);
-  const pathExists = validatePath$2(targetPath);
+  const pathExists = validatePath$1(targetPath);
   if (!pathExists) {
     return false;
   }
@@ -9263,7 +9260,7 @@ function isFirstPythonPath(envPath, targetPythonBase) {
   }
   return path.resolve(firstPythonLikePath).toLowerCase() === targetPath.toLowerCase();
 }
-async function validatePath$1(path2) {
+async function validatePath(path2) {
   try {
     await gracefulFsExports.promises.access(path2);
     return true;
@@ -9272,7 +9269,7 @@ async function validatePath$1(path2) {
   }
 }
 async function setDefaultPython(pythonPath) {
-  const pathExists = await validatePath$1(pythonPath);
+  const pathExists = await validatePath(pythonPath);
   if (!pathExists) {
     throw new Error(`Python path does not exist: ${pythonPath}`);
   }
@@ -9318,9 +9315,9 @@ async function setDefaultPythonWindows(pythonPath) {
         reject(new Error("Failed to retrieve current PATH"));
         return;
       }
-      const newPathValue = replacePythonPath$1(match[1], pythonPath);
+      const newPathValue = replacePythonPath(match[1], pythonPath);
       const defaultEnvPath2 = getDefaultEnvPath();
-      if (defaultEnvPath2) setDefaultEnvPath(replacePythonPath$1(defaultEnvPath2, pythonPath));
+      if (defaultEnvPath2) setDefaultEnvPath(replacePythonPath(defaultEnvPath2, pythonPath));
       const regAdd = node_child_process.spawn(
         "reg",
         ["add", "HKEY_CURRENT_USER\\Environment", "/v", "Path", "/t", "REG_EXPAND_SZ", "/d", newPathValue, "/f"],
@@ -12409,12 +12406,6 @@ const require$$0$1 = {
   "x-shader/x-fragment": { "compressible": true },
   "x-shader/x-vertex": { "compressible": true }
 };
-/*!
- * mime-db
- * Copyright(c) 2014 Jonathan Ong
- * Copyright(c) 2015-2022 Douglas Christopher Wilson
- * MIT Licensed
- */
 var mimeDb$1;
 var hasRequiredMimeDb$1;
 function requireMimeDb$1() {
@@ -15889,12 +15880,6 @@ const require$$0 = {
   "x-shader/x-fragment": { "compressible": true },
   "x-shader/x-vertex": { "compressible": true }
 };
-/*!
- * mime-db
- * Copyright(c) 2014 Jonathan Ong
- * Copyright(c) 2015-2022 Douglas Christopher Wilson
- * MIT Licensed
- */
 var mimeDb;
 var hasRequiredMimeDb;
 function requireMimeDb() {
@@ -15903,29 +15888,23 @@ function requireMimeDb() {
   mimeDb = require$$0;
   return mimeDb;
 }
-/*!
- * mime-types
- * Copyright(c) 2014 Jonathan Ong
- * Copyright(c) 2015 Douglas Christopher Wilson
- * MIT Licensed
- */
 var hasRequiredMimeTypes;
 function requireMimeTypes() {
   if (hasRequiredMimeTypes) return mimeTypes;
   hasRequiredMimeTypes = 1;
-  (function(exports2) {
+  (function(exports$1) {
     var db = requireMimeDb();
     var extname = require$$1$2.extname;
     var EXTRACT_TYPE_REGEXP = /^\s*([^;\s]*)(?:;|\s|$)/;
     var TEXT_TYPE_REGEXP = /^text\//i;
-    exports2.charset = charset;
-    exports2.charsets = { lookup: charset };
-    exports2.contentType = contentType;
-    exports2.extension = extension;
-    exports2.extensions = /* @__PURE__ */ Object.create(null);
-    exports2.lookup = lookup;
-    exports2.types = /* @__PURE__ */ Object.create(null);
-    populateMaps(exports2.extensions, exports2.types);
+    exports$1.charset = charset;
+    exports$1.charsets = { lookup: charset };
+    exports$1.contentType = contentType;
+    exports$1.extension = extension;
+    exports$1.extensions = /* @__PURE__ */ Object.create(null);
+    exports$1.lookup = lookup;
+    exports$1.types = /* @__PURE__ */ Object.create(null);
+    populateMaps(exports$1.extensions, exports$1.types);
     function charset(type2) {
       if (!type2 || typeof type2 !== "string") {
         return false;
@@ -15944,12 +15923,12 @@ function requireMimeTypes() {
       if (!str || typeof str !== "string") {
         return false;
       }
-      var mime = str.indexOf("/") === -1 ? exports2.lookup(str) : str;
+      var mime = str.indexOf("/") === -1 ? exports$1.lookup(str) : str;
       if (!mime) {
         return false;
       }
       if (mime.indexOf("charset") === -1) {
-        var charset2 = exports2.charset(mime);
+        var charset2 = exports$1.charset(mime);
         if (charset2) mime += "; charset=" + charset2.toLowerCase();
       }
       return mime;
@@ -15959,7 +15938,7 @@ function requireMimeTypes() {
         return false;
       }
       var match = EXTRACT_TYPE_REGEXP.exec(type2);
-      var exts = match && exports2.extensions[match[1].toLowerCase()];
+      var exts = match && exports$1.extensions[match[1].toLowerCase()];
       if (!exts || !exts.length) {
         return false;
       }
@@ -15973,7 +15952,7 @@ function requireMimeTypes() {
       if (!extension2) {
         return false;
       }
-      return exports2.types[extension2] || false;
+      return exports$1.types[extension2] || false;
     }
     function populateMaps(extensions, types) {
       var preference = ["nginx", "apache", void 0, "iana"];
@@ -16402,7 +16381,7 @@ function requireShams$1() {
       return true;
     }
     var obj = {};
-    var sym = Symbol("test");
+    var sym = /* @__PURE__ */ Symbol("test");
     var symObj = Object(sym);
     if (typeof sym === "string") {
       return false;
@@ -16461,7 +16440,7 @@ function requireHasSymbols() {
     if (typeof origSymbol("foo") !== "symbol") {
       return false;
     }
-    if (typeof Symbol("bar") !== "symbol") {
+    if (typeof /* @__PURE__ */ Symbol("bar") !== "symbol") {
       return false;
     }
     return hasSymbolSham();
@@ -17386,7 +17365,7 @@ function requireForm_data() {
   FormData2.prototype.toString = function() {
     return "[object FormData]";
   };
-  setToStringTag(FormData2, "FormData");
+  setToStringTag(FormData2.prototype, "FormData");
   form_data = FormData2;
   return form_data;
 }
@@ -17889,7 +17868,7 @@ const parseHeaders = (rawHeaders) => {
   });
   return parsed;
 };
-const $internals = Symbol("internals");
+const $internals = /* @__PURE__ */ Symbol("internals");
 function normalizeHeader(header) {
   return header && String(header).trim().toLowerCase();
 }
@@ -18537,13 +18516,13 @@ var hasRequiredBrowser;
 function requireBrowser() {
   if (hasRequiredBrowser) return browser.exports;
   hasRequiredBrowser = 1;
-  (function(module2, exports2) {
-    exports2.formatArgs = formatArgs;
-    exports2.save = save;
-    exports2.load = load;
-    exports2.useColors = useColors;
-    exports2.storage = localstorage();
-    exports2.destroy = /* @__PURE__ */ (() => {
+  (function(module2, exports$1) {
+    exports$1.formatArgs = formatArgs;
+    exports$1.save = save;
+    exports$1.load = load;
+    exports$1.useColors = useColors;
+    exports$1.storage = localstorage();
+    exports$1.destroy = /* @__PURE__ */ (() => {
       let warned = false;
       return () => {
         if (!warned) {
@@ -18552,7 +18531,7 @@ function requireBrowser() {
         }
       };
     })();
-    exports2.colors = [
+    exports$1.colors = [
       "#0000CC",
       "#0000FF",
       "#0033CC",
@@ -18664,14 +18643,14 @@ function requireBrowser() {
       });
       args.splice(lastC, 0, c);
     }
-    exports2.log = console.debug || console.log || (() => {
+    exports$1.log = console.debug || console.log || (() => {
     });
     function save(namespaces) {
       try {
         if (namespaces) {
-          exports2.storage.setItem("debug", namespaces);
+          exports$1.storage.setItem("debug", namespaces);
         } else {
-          exports2.storage.removeItem("debug");
+          exports$1.storage.removeItem("debug");
         }
       } catch (error) {
       }
@@ -18679,7 +18658,7 @@ function requireBrowser() {
     function load() {
       let r;
       try {
-        r = exports2.storage.getItem("debug") || exports2.storage.getItem("DEBUG");
+        r = exports$1.storage.getItem("debug") || exports$1.storage.getItem("DEBUG");
       } catch (error) {
       }
       if (!r && typeof process !== "undefined" && "env" in process) {
@@ -18693,7 +18672,7 @@ function requireBrowser() {
       } catch (error) {
       }
     }
-    module2.exports = requireCommon()(exports2);
+    module2.exports = requireCommon()(exports$1);
     const { formatters } = module2.exports;
     formatters.j = function(v) {
       try {
@@ -18825,25 +18804,25 @@ var hasRequiredNode;
 function requireNode() {
   if (hasRequiredNode) return node.exports;
   hasRequiredNode = 1;
-  (function(module2, exports2) {
+  (function(module2, exports$1) {
     const tty = require$$1$3;
     const util = require$$1;
-    exports2.init = init;
-    exports2.log = log;
-    exports2.formatArgs = formatArgs;
-    exports2.save = save;
-    exports2.load = load;
-    exports2.useColors = useColors;
-    exports2.destroy = util.deprecate(
+    exports$1.init = init;
+    exports$1.log = log;
+    exports$1.formatArgs = formatArgs;
+    exports$1.save = save;
+    exports$1.load = load;
+    exports$1.useColors = useColors;
+    exports$1.destroy = util.deprecate(
       () => {
       },
       "Instance method `debug.destroy()` is deprecated and no longer does anything. It will be removed in the next major version of `debug`."
     );
-    exports2.colors = [6, 2, 3, 4, 5, 1];
+    exports$1.colors = [6, 2, 3, 4, 5, 1];
     try {
       const supportsColor = requireSupportsColor();
       if (supportsColor && (supportsColor.stderr || supportsColor).level >= 2) {
-        exports2.colors = [
+        exports$1.colors = [
           20,
           21,
           26,
@@ -18924,7 +18903,7 @@ function requireNode() {
       }
     } catch (error) {
     }
-    exports2.inspectOpts = Object.keys(process.env).filter((key) => {
+    exports$1.inspectOpts = Object.keys(process.env).filter((key) => {
       return /^debug_/i.test(key);
     }).reduce((obj, key) => {
       const prop = key.substring(6).toLowerCase().replace(/_([a-z])/g, (_, k) => {
@@ -18944,7 +18923,7 @@ function requireNode() {
       return obj;
     }, {});
     function useColors() {
-      return "colors" in exports2.inspectOpts ? Boolean(exports2.inspectOpts.colors) : tty.isatty(process.stderr.fd);
+      return "colors" in exports$1.inspectOpts ? Boolean(exports$1.inspectOpts.colors) : tty.isatty(process.stderr.fd);
     }
     function formatArgs(args) {
       const { namespace: name, useColors: useColors2 } = this;
@@ -18959,13 +18938,13 @@ function requireNode() {
       }
     }
     function getDate() {
-      if (exports2.inspectOpts.hideDate) {
+      if (exports$1.inspectOpts.hideDate) {
         return "";
       }
       return (/* @__PURE__ */ new Date()).toISOString() + " ";
     }
     function log(...args) {
-      return process.stderr.write(util.formatWithOptions(exports2.inspectOpts, ...args) + "\n");
+      return process.stderr.write(util.formatWithOptions(exports$1.inspectOpts, ...args) + "\n");
     }
     function save(namespaces) {
       if (namespaces) {
@@ -18979,12 +18958,12 @@ function requireNode() {
     }
     function init(debug) {
       debug.inspectOpts = {};
-      const keys2 = Object.keys(exports2.inspectOpts);
+      const keys2 = Object.keys(exports$1.inspectOpts);
       for (let i = 0; i < keys2.length; i++) {
-        debug.inspectOpts[keys2[i]] = exports2.inspectOpts[keys2[i]];
+        debug.inspectOpts[keys2[i]] = exports$1.inspectOpts[keys2[i]];
       }
     }
-    module2.exports = requireCommon()(exports2);
+    module2.exports = requireCommon()(exports$1);
     const { formatters } = module2.exports;
     formatters.o = function(v) {
       this.inspectOpts.colors = this.useColors;
@@ -19378,7 +19357,7 @@ function requireFollowRedirects() {
     this._performRequest();
   };
   function wrap(protocols) {
-    var exports2 = {
+    var exports$1 = {
       maxRedirects: 21,
       maxBodyLength: 10 * 1024 * 1024
     };
@@ -19386,7 +19365,7 @@ function requireFollowRedirects() {
     Object.keys(protocols).forEach(function(scheme) {
       var protocol = scheme + ":";
       var nativeProtocol = nativeProtocols[protocol] = protocols[scheme];
-      var wrappedProtocol = exports2[scheme] = Object.create(nativeProtocol);
+      var wrappedProtocol = exports$1[scheme] = Object.create(nativeProtocol);
       function request(input, options2, callback) {
         if (isURL(input)) {
           input = spreadUrlObject(input);
@@ -19402,8 +19381,8 @@ function requireFollowRedirects() {
           options2 = null;
         }
         options2 = Object.assign({
-          maxRedirects: exports2.maxRedirects,
-          maxBodyLength: exports2.maxBodyLength
+          maxRedirects: exports$1.maxRedirects,
+          maxBodyLength: exports$1.maxBodyLength
         }, input, options2);
         options2.nativeProtocols = nativeProtocols;
         if (!isString2(options2.host) && !isString2(options2.hostname)) {
@@ -19423,7 +19402,7 @@ function requireFollowRedirects() {
         get: { value: get2, configurable: true, enumerable: true, writable: true }
       });
     });
-    return exports2;
+    return exports$1;
   }
   function noop2() {
   }
@@ -19527,7 +19506,7 @@ function requireFollowRedirects() {
 }
 var followRedirectsExports = requireFollowRedirects();
 const followRedirects = /* @__PURE__ */ getDefaultExportFromCjs(followRedirectsExports);
-const VERSION$1 = "1.13.1";
+const VERSION$1 = "1.13.2";
 function parseProtocol(url) {
   const match = /^([-+\w]{1,25})(:?\/\/|:)/.exec(url);
   return match && match[1] || "";
@@ -19559,7 +19538,7 @@ function fromDataURI(uri2, asBlob, options2) {
   }
   throw new AxiosError$1("Unsupported protocol " + protocol, AxiosError$1.ERR_NOT_SUPPORT);
 }
-const kInternals = Symbol("internals");
+const kInternals = /* @__PURE__ */ Symbol("internals");
 class AxiosTransformStream extends stream.Transform {
   constructor(options2) {
     options2 = utils$1.toFlatObject(options2, {
@@ -19943,12 +19922,6 @@ const brotliOptions = {
   flush: zlib.constants.BROTLI_OPERATION_FLUSH,
   finishFlush: zlib.constants.BROTLI_OPERATION_FLUSH
 };
-const {
-  HTTP2_HEADER_SCHEME,
-  HTTP2_HEADER_METHOD,
-  HTTP2_HEADER_PATH,
-  HTTP2_HEADER_STATUS
-} = http2.constants;
 const isBrotliSupported = utils$1.isFunction(zlib.createBrotliDecompress);
 const { http: httpFollow, https: httpsFollow } = followRedirects;
 const isHttps = /https:?/;
@@ -19967,8 +19940,8 @@ class Http2Sessions {
     options2 = Object.assign({
       sessionTimeout: 1e3
     }, options2);
-    let authoritySessions;
-    if (authoritySessions = this.sessions[authority]) {
+    let authoritySessions = this.sessions[authority];
+    if (authoritySessions) {
       let len = authoritySessions.length;
       for (let i = 0; i < len; i++) {
         const [sessionHandle, sessionOptions] = authoritySessions[i];
@@ -19984,14 +19957,15 @@ class Http2Sessions {
         return;
       }
       removed = true;
-      let entries2 = authoritySessions, len = entries2.length, i = len;
+      let entries = authoritySessions, len = entries.length, i = len;
       while (i--) {
-        if (entries2[i][0] === session) {
-          entries2.splice(i, 1);
+        if (entries[i][0] === session) {
           if (len === 1) {
             delete this.sessions[authority];
-            return;
+          } else {
+            entries.splice(i, 1);
           }
+          return;
         }
       }
     };
@@ -20019,11 +19993,11 @@ class Http2Sessions {
       };
     }
     session.once("close", removeSession);
-    let entries = this.sessions[authority], entry = [
+    let entry = [
       session,
       options2
     ];
-    entries ? this.sessions[authority].push(entry) : authoritySessions = this.sessions[authority] = [entry];
+    authoritySessions ? authoritySessions.push(entry) : authoritySessions = this.sessions[authority] = [entry];
     return session;
   }
 }
@@ -20105,6 +20079,12 @@ const http2Transport = {
     const authority = options2.protocol + "//" + options2.hostname + ":" + (options2.port || 80);
     const { http2Options, headers } = options2;
     const session = http2Sessions.getSession(authority, http2Options);
+    const {
+      HTTP2_HEADER_SCHEME,
+      HTTP2_HEADER_METHOD,
+      HTTP2_HEADER_PATH,
+      HTTP2_HEADER_STATUS
+    } = http2.constants;
     const http2Headers = {
       [HTTP2_HEADER_SCHEME]: options2.protocol.replace(":", ""),
       [HTTP2_HEADER_METHOD]: options2.method,
@@ -20549,6 +20529,8 @@ const httpAdapter = isHttpAdapterSupported && function httpAdapter2(config) {
           req
         ));
       });
+    } else {
+      req.setTimeout(0);
     }
     if (utils$1.isStream(data)) {
       let ended = false;
@@ -22385,7 +22367,7 @@ function ListenForChannels(nodePty2) {
   electron.ipcMain.on(pythonChannels.removeAssociate, (_, id) => removeAssociate(id));
   electron.ipcMain.on(pythonChannels.removeAssociatePath, (_, path2) => removeAssociatePath(path2));
   electron.ipcMain.handle(pythonChannels.getExePathAssociate, (_, item) => getExePathAssociate(item));
-  electron.ipcMain.handle(pythonChannels.findAIVenv, (_, id, folder) => findAIVenv$1(id, folder));
+  electron.ipcMain.handle(pythonChannels.findAIVenv, (_, id, folder) => findAIVenv(id, folder));
   electron.ipcMain.handle(
     pythonChannels.getUpdatesReq,
     (_, reqFile, currentPackages) => getPackagesUpdateByReq(reqFile, currentPackages)
@@ -22451,7 +22433,7 @@ function ListenForChannels(nodePty2) {
     try {
       const defaultEnvPath2 = getDefaultEnvPath();
       if (!defaultEnvPath2) return false;
-      const newPath = replacePythonPath$1(defaultEnvPath2, pythonPath);
+      const newPath = replacePythonPath(defaultEnvPath2, pythonPath);
       storageManager2?.setCustomData(DefaultLynxPython_StorageID, pythonPath);
       process.env.PATH = newPath;
       return true;
@@ -22464,83 +22446,6 @@ function ListenForChannels(nodePty2) {
   electron.ipcMain.on(pythonChannels.abortUpdating, () => abortOngoingUpdate());
   electron.ipcMain.handle(pythonChannels.getPythonVersion, (_, pythonPath) => parseVersion(pythonPath));
   ListenForStorage(storageManager2);
-}
-node_os.platform() === "win32" ? "\r" : "\n";
-function validatePath(path2) {
-  try {
-    gracefulFsExports.accessSync(path2);
-    return true;
-  } catch {
-    return false;
-  }
-}
-function replacePythonPath(envPath, newPythonBase) {
-  const targetPath = path.resolve(newPythonBase);
-  const pathExists = validatePath(targetPath);
-  if (!pathExists) {
-    throw new Error(`Python path does not exist: ${targetPath}`);
-  }
-  const paths = envPath.split(";").filter(Boolean);
-  const nonPythonPaths = paths.filter((path2) => !path2.toLowerCase().includes("python"));
-  const newPaths = [targetPath, path.join(targetPath, "Scripts"), ...nonPythonPaths];
-  return newPaths.join(";");
-}
-node_util.promisify(node_child_process.execFile);
-function getVenvPythonPath(venvPath) {
-  return node_os.platform() === "win32" ? path.join(venvPath, "Scripts", "python.exe") : path.join(venvPath, "bin", "python");
-}
-function isVenvDirectory(dirPath) {
-  try {
-    if (!gracefulFsExports.existsSync(dirPath)) {
-      return false;
-    }
-    const pythonExePath = getVenvPythonPath(dirPath);
-    if (!gracefulFsExports.existsSync(pythonExePath)) {
-      return false;
-    }
-    const libPath = path.join(dirPath, "lib");
-    return gracefulFsExports.existsSync(libPath);
-  } catch (err) {
-    console.error(`Error checking if directory is a venv: ${err}`);
-    return false;
-  }
-}
-function isVenvFolderName(folder) {
-  return folder === "venv" || folder === ".venv" || folder === "env" || folder === ".env" || folder.startsWith("venv-") || folder.startsWith(".venv-") || folder.endsWith("-venv") || folder.endsWith("-env") || folder.toLowerCase().includes("virtualenv") || folder.toLowerCase().includes("virtualenvironment");
-}
-async function findVenvFolder(dirPath) {
-  try {
-    const items = await gracefulFsExports.promises.readdir(dirPath, { withFileTypes: true });
-    for (const item of items) {
-      if (item.isDirectory()) {
-        const itemName = item.name;
-        const fullPath = path.join(dirPath, itemName);
-        if (isVenvFolderName(itemName) && isVenvDirectory(fullPath)) {
-          return fullPath;
-        }
-      }
-    }
-    return null;
-  } catch (error) {
-    console.error(`Error searching for virtual environment in ${dirPath}:`, error);
-    return null;
-  }
-}
-async function findAIVenv(id, folder) {
-  try {
-    if (!folder) throw "Provided folder is not correct.";
-    const venvFolder = await findVenvFolder(folder);
-    if (venvFolder) {
-      const pythonExecutable = getVenvPythonPath(venvFolder);
-      updateVenvStorage(venvFolder);
-      addAssociate({ id, dir: venvFolder, type: "venv" });
-      return pythonExecutable;
-    }
-    throw "Venv folder not Found";
-  } catch (e) {
-    console.error(e);
-    throw e;
-  }
 }
 async function initialExtension(lynxApi, utils2) {
   utils2.getAppManager().then((app) => {

@@ -3649,7 +3649,91 @@ function isVariantNode(props) {
     return Boolean(isControllingVariants(props) || props.variants);
 }
 
-const scaleCorrectors = {};
+function pixelsToPercent(pixels, axis) {
+    if (axis.max === axis.min)
+        return 0;
+    return (pixels / (axis.max - axis.min)) * 100;
+}
+/**
+ * We always correct borderRadius as a percentage rather than pixels to reduce paints.
+ * For example, if you are projecting a box that is 100px wide with a 10px borderRadius
+ * into a box that is 200px wide with a 20px borderRadius, that is actually a 10%
+ * borderRadius in both states. If we animate between the two in pixels that will trigger
+ * a paint each time. If we animate between the two in percentage we'll avoid a paint.
+ */
+const correctBorderRadius = {
+    correct: (latest, node) => {
+        if (!node.target)
+            return latest;
+        /**
+         * If latest is a string, if it's a percentage we can return immediately as it's
+         * going to be stretched appropriately. Otherwise, if it's a pixel, convert it to a number.
+         */
+        if (typeof latest === "string") {
+            if (px.test(latest)) {
+                latest = parseFloat(latest);
+            }
+            else {
+                return latest;
+            }
+        }
+        /**
+         * If latest is a number, it's a pixel value. We use the current viewportBox to calculate that
+         * pixel value as a percentage of each axis
+         */
+        const x = pixelsToPercent(latest, node.target.x);
+        const y = pixelsToPercent(latest, node.target.y);
+        return `${x}% ${y}%`;
+    },
+};
+
+const correctBoxShadow = {
+    correct: (latest, { treeScale, projectionDelta }) => {
+        const original = latest;
+        const shadow = complex.parse(latest);
+        // TODO: Doesn't support multiple shadows
+        if (shadow.length > 5)
+            return original;
+        const template = complex.createTransformer(latest);
+        const offset = typeof shadow[0] !== "number" ? 1 : 0;
+        // Calculate the overall context scale
+        const xScale = projectionDelta.x.scale * treeScale.x;
+        const yScale = projectionDelta.y.scale * treeScale.y;
+        shadow[0 + offset] /= xScale;
+        shadow[1 + offset] /= yScale;
+        /**
+         * Ideally we'd correct x and y scales individually, but because blur and
+         * spread apply to both we have to take a scale average and apply that instead.
+         * We could potentially improve the outcome of this by incorporating the ratio between
+         * the two scales.
+         */
+        const averageScale = mixNumber$1(xScale, yScale, 0.5);
+        // Blur
+        if (typeof shadow[2 + offset] === "number")
+            shadow[2 + offset] /= averageScale;
+        // Spread
+        if (typeof shadow[3 + offset] === "number")
+            shadow[3 + offset] /= averageScale;
+        return template(shadow);
+    },
+};
+
+const scaleCorrectors = {
+    borderRadius: {
+        ...correctBorderRadius,
+        applyTo: [
+            "borderTopLeftRadius",
+            "borderTopRightRadius",
+            "borderBottomLeftRadius",
+            "borderBottomRightRadius",
+        ],
+    },
+    borderTopLeftRadius: correctBorderRadius,
+    borderTopRightRadius: correctBorderRadius,
+    borderBottomLeftRadius: correctBorderRadius,
+    borderBottomRightRadius: correctBorderRadius,
+    boxShadow: correctBoxShadow,
+};
 function addScaleCorrector(correctors) {
     for (const key in correctors) {
         scaleCorrectors[key] = correctors[key];
@@ -5876,4 +5960,4 @@ const domAnimation = {
     ...gestureAnimations,
 };
 
-export { percent as $, motionValue as A, isMotionValue as B, getValueTransition as C, secondsToMilliseconds as D, applyGeneratorOptions as E, mapEasingToNativeEasing as F, microtask as G, removeItem as H, noop as I, JSAnimation as J, stepsOrder as K, addDomEvent as L, MotionGlobalConfig as M, NativeAnimation as N, addPointerInfo as O, mixNumber$1 as P, isPrimaryPointer as Q, extractEventInfo as R, pipe as S, millisecondsToSeconds as T, progress as U, createBox as V, measurePageBox as W, convertBoxToBoundingBox as X, convertBoundingBoxToBox as Y, addValueToWillChange as Z, animateMotionValue as _, supportedWaapiEasing as a, animateValue as a$, Feature as a0, complex as a1, addScaleCorrector as a2, addUniqueItem as a3, time as a4, circOut as a5, scalePoint as a6, SubscriptionManager as a7, frameSteps as a8, hasTransform as a9, HTMLVisualElement as aA, visualElementStore as aB, animateTarget as aC, spring as aD, fillWildcards as aE, optimizedAppearDataId as aF, startWaapiAnimation as aG, moveItem as aH, isBrowser as aI, buildTransform as aJ, optimizedAppearDataAttribute as aK, warning as aL, isNumericalString as aM, isZeroValueString as aN, anticipate as aO, backIn as aP, backInOut as aQ, backOut as aR, circIn as aS, circInOut as aT, cubicBezier as aU, easeIn as aV, easeInOut as aW, easeOut as aX, mirrorEasing as aY, reverseEasing as aZ, AsyncMotionValueAnimation as a_, translateAxis as aa, transformBox as ab, hasScale as ac, applyBoxDelta as ad, has2DTranslate as ae, applyTreeDeltas as af, createDelta as ag, scaleCorrectors as ah, getOptimisedAppearId as ai, gestureAnimations as aj, animations as ak, createDomVisualElement as al, velocityPerSecond as am, defaultOffset as an, supportsScrollTimeline as ao, invariant as ap, hasReducedMotionListener as aq, initPrefersReducedMotion as ar, prefersReducedMotion as as, animateVisualElement as at, setTarget as au, createGeneratorEasing as av, fillOffset as aw, isGenerator as ax, VisualElement as ay, SVGVisualElement as az, isBezierDefinition as b, isControllingVariants as b$, NativeAnimationExtended as b0, getVariableValue as b1, parseCSSVariable as b2, isCSSVariableName as b3, isCSSVariableToken as b4, makeAnimationInstant as b5, inertia as b6, defaultEasing as b7, keyframes as b8, calcGeneratorDuration as b9, mixImmediate as bA, invisibleValues as bB, mixVisibility as bC, supportsFlags as bD, color as bE, hex as bF, hsla as bG, hslaToRgba as bH, rgbUnit as bI, rgba as bJ, analyseComplexValue as bK, dimensionValueTypes as bL, findDimensionValueType as bM, defaultValueTypes as bN, getDefaultValueType as bO, transformValueTypes as bP, alpha as bQ, number as bR, scale as bS, degrees as bT, progressPercentage as bU, vh as bV, vw as bW, testValueType as bX, getAnimatableNone as bY, findValueType as bZ, featureDefinitions as b_, maxGeneratorDuration as ba, DOMKeyframesResolver as bb, KeyframeResolver as bc, flushKeyframeResolvers as bd, convertOffsetToTimes as be, cubicBezierAsString as bf, supportsBrowserAnimation as bg, generateLinearEasing as bh, createRenderBatcher as bi, cancelMicrotask as bj, isDragActive as bk, hover as bl, press as bm, isNodeOrChild as bn, defaultTransformValue as bo, parseValueFromTransform as bp, readTransformValue as bq, setStyle as br, positionalKeys as bs, mix as bt, mixColor as bu, mixLinearColor as bv, getMixer as bw, mixArray as bx, mixComplex as by, mixObject as bz, clamp as c, isVariantLabel as c0, isForcedMotionValue as c1, buildHTMLStyles as c2, buildSVGAttrs as c3, isSVGTag as c4, isSVGComponent as c5, isVariantNode as c6, isAnimationControls as c7, resolveVariantFromProps as c8, scrapeMotionValuesFromProps$1 as c9, scrapeMotionValuesFromProps as ca, domAnimation as d, cancelFrame as e, frame as f, getValueAsType as g, transformProps as h, isEasingArray as i, isHTMLElement as j, MotionValue as k, isCSSVar as l, memo as m, numberValueTypes as n, isDragging as o, px as p, isObject as q, resolveElements as r, supportsLinearEasing as s, transformPropOrder as t, statsBuffer as u, frameData as v, activeAnimations as w, easingDefinitionToFunction as x, interpolate as y, collectMotionValues as z };
+export { percent as $, motionValue as A, isMotionValue as B, getValueTransition as C, secondsToMilliseconds as D, applyGeneratorOptions as E, mapEasingToNativeEasing as F, microtask as G, removeItem as H, noop as I, JSAnimation as J, stepsOrder as K, addDomEvent as L, MotionGlobalConfig as M, NativeAnimation as N, addPointerInfo as O, mixNumber$1 as P, isPrimaryPointer as Q, extractEventInfo as R, pipe as S, millisecondsToSeconds as T, progress as U, createBox as V, measurePageBox as W, convertBoxToBoundingBox as X, convertBoundingBoxToBox as Y, addValueToWillChange as Z, animateMotionValue as _, supportedWaapiEasing as a, NativeAnimationExtended as a$, Feature as a0, addUniqueItem as a1, time as a2, circOut as a3, scalePoint as a4, SubscriptionManager as a5, frameSteps as a6, hasTransform as a7, translateAxis as a8, transformBox as a9, animateTarget as aA, spring as aB, fillWildcards as aC, optimizedAppearDataId as aD, startWaapiAnimation as aE, moveItem as aF, isBrowser as aG, addScaleCorrector as aH, buildTransform as aI, optimizedAppearDataAttribute as aJ, warning as aK, isNumericalString as aL, isZeroValueString as aM, anticipate as aN, backIn as aO, backInOut as aP, backOut as aQ, circIn as aR, circInOut as aS, cubicBezier as aT, easeIn as aU, easeInOut as aV, easeOut as aW, mirrorEasing as aX, reverseEasing as aY, AsyncMotionValueAnimation as aZ, animateValue as a_, hasScale as aa, applyBoxDelta as ab, has2DTranslate as ac, applyTreeDeltas as ad, createDelta as ae, scaleCorrectors as af, getOptimisedAppearId as ag, gestureAnimations as ah, animations as ai, createDomVisualElement as aj, velocityPerSecond as ak, defaultOffset as al, supportsScrollTimeline as am, invariant as an, hasReducedMotionListener as ao, initPrefersReducedMotion as ap, prefersReducedMotion as aq, animateVisualElement as ar, setTarget as as, createGeneratorEasing as at, fillOffset as au, isGenerator as av, VisualElement as aw, SVGVisualElement as ax, HTMLVisualElement as ay, visualElementStore as az, isBezierDefinition as b, isControllingVariants as b$, getVariableValue as b0, parseCSSVariable as b1, isCSSVariableName as b2, isCSSVariableToken as b3, makeAnimationInstant as b4, inertia as b5, defaultEasing as b6, keyframes as b7, calcGeneratorDuration as b8, maxGeneratorDuration as b9, invisibleValues as bA, mixVisibility as bB, supportsFlags as bC, color as bD, hex as bE, hsla as bF, hslaToRgba as bG, rgbUnit as bH, rgba as bI, analyseComplexValue as bJ, complex as bK, dimensionValueTypes as bL, findDimensionValueType as bM, defaultValueTypes as bN, getDefaultValueType as bO, transformValueTypes as bP, alpha as bQ, number as bR, scale as bS, degrees as bT, progressPercentage as bU, vh as bV, vw as bW, testValueType as bX, getAnimatableNone as bY, findValueType as bZ, featureDefinitions as b_, DOMKeyframesResolver as ba, KeyframeResolver as bb, flushKeyframeResolvers as bc, convertOffsetToTimes as bd, cubicBezierAsString as be, supportsBrowserAnimation as bf, generateLinearEasing as bg, createRenderBatcher as bh, cancelMicrotask as bi, isDragActive as bj, hover as bk, press as bl, isNodeOrChild as bm, defaultTransformValue as bn, parseValueFromTransform as bo, readTransformValue as bp, setStyle as bq, positionalKeys as br, mix as bs, mixColor as bt, mixLinearColor as bu, getMixer as bv, mixArray as bw, mixComplex as bx, mixObject as by, mixImmediate as bz, clamp as c, isVariantLabel as c0, isForcedMotionValue as c1, buildHTMLStyles as c2, buildSVGAttrs as c3, isSVGTag as c4, isSVGComponent as c5, isVariantNode as c6, isAnimationControls as c7, resolveVariantFromProps as c8, scrapeMotionValuesFromProps$1 as c9, scrapeMotionValuesFromProps as ca, domAnimation as d, cancelFrame as e, frame as f, getValueAsType as g, transformProps as h, isEasingArray as i, isHTMLElement as j, MotionValue as k, isCSSVar as l, memo as m, numberValueTypes as n, isDragging as o, px as p, isObject as q, resolveElements as r, supportsLinearEasing as s, transformPropOrder as t, statsBuffer as u, frameData as v, activeAnimations as w, easingDefinitionToFunction as x, interpolate as y, collectMotionValues as z };

@@ -1,7 +1,7 @@
-import { i as isRefObject, b as usePresence, c as LayoutGroupContext, S as SwitchLayoutGroupContext, r as resolveMotionValue, d as createMotionProxy, e as useConstant, f as useIsomorphicLayoutEffect, g as MotionConfigContext, P as PresenceContext, h as motionComponentSymbol, j as useForceUpdate, k as makeUseVisualState, a as LayoutGroup, l as MotionContext } from './index-C_4KmoXj.js';
-export { A as AnimatePresence, D as DeprecatedLayoutGroupContext, L as LazyMotion, M as MotionConfig, n as PopChild, o as PresenceChild, W as WillChangeMotionValue, v as acceleratedValues, p as filterProps, t as isValidMotionProp, m, q as useComposedRefs, s as useIsPresent, u as useWillChange } from './index-C_4KmoXj.js';
-import { c as clamp, i as isEasingArray, N as NativeAnimation, s as supportsLinearEasing, a as supportedWaapiEasing, b as isBezierDefinition, m as memo, r as resolveElements, g as getValueAsType, n as numberValueTypes, f as frame, e as cancelFrame, t as transformPropOrder, h as transformProps, j as isHTMLElement, k as MotionValue, l as isCSSVar, p as px, o as isDragging, q as isObject, u as statsBuffer, v as frameData, w as activeAnimations, x as easingDefinitionToFunction, y as interpolate, z as collectMotionValues, A as motionValue, B as isMotionValue, J as JSAnimation, C as getValueTransition$1, D as secondsToMilliseconds, E as applyGeneratorOptions, F as mapEasingToNativeEasing, G as microtask, H as removeItem, I as noop, K as stepsOrder, L as addDomEvent, O as addPointerInfo, P as mixNumber, Q as isPrimaryPointer, R as extractEventInfo, S as pipe, T as millisecondsToSeconds, U as progress, V as createBox, W as measurePageBox, X as convertBoxToBoundingBox, Y as convertBoundingBoxToBox, Z as addValueToWillChange, _ as animateMotionValue, $ as percent, a0 as Feature, a1 as complex, a2 as addScaleCorrector, a3 as addUniqueItem, a4 as time, a5 as circOut, a6 as scalePoint, a7 as SubscriptionManager, a8 as frameSteps, a9 as hasTransform, aa as translateAxis, ab as transformBox, ac as hasScale, ad as applyBoxDelta, ae as has2DTranslate, af as applyTreeDeltas, ag as createDelta, ah as scaleCorrectors, ai as getOptimisedAppearId, aj as gestureAnimations, ak as animations, al as createDomVisualElement, d as domAnimation, am as velocityPerSecond, an as defaultOffset$1, ao as supportsScrollTimeline, ap as invariant, aq as hasReducedMotionListener, ar as initPrefersReducedMotion, as as prefersReducedMotion, at as animateVisualElement, au as setTarget, av as createGeneratorEasing, aw as fillOffset, ax as isGenerator, ay as VisualElement, az as SVGVisualElement, aA as HTMLVisualElement, aB as visualElementStore, aC as animateTarget, aD as spring, aE as fillWildcards, M as MotionGlobalConfig, aF as optimizedAppearDataId, aG as startWaapiAnimation, aH as moveItem } from './features-animation-BzRKjcON.js';
-export { a_ as AsyncMotionValueAnimation, bb as DOMKeyframesResolver, bc as KeyframeResolver, b0 as NativeAnimationExtended, bQ as alpha, bK as analyseComplexValue, a$ as animateValue, aO as anticipate, aP as backIn, aQ as backInOut, aR as backOut, aJ as buildTransform, b9 as calcGeneratorDuration, bj as cancelMicrotask, aS as circIn, aT as circInOut, bE as color, be as convertOffsetToTimes, bi as createRenderBatcher, aU as cubicBezier, bf as cubicBezierAsString, b7 as defaultEasing, bo as defaultTransformValue, bN as defaultValueTypes, bT as degrees, bL as dimensionValueTypes, aV as easeIn, aW as easeInOut, aX as easeOut, bM as findDimensionValueType, bZ as findValueType, bd as flushKeyframeResolvers, bh as generateLinearEasing, bY as getAnimatableNone, bO as getDefaultValueType, bw as getMixer, b1 as getVariableValue, bF as hex, bl as hover, bG as hsla, bH as hslaToRgba, b6 as inertia, bB as invisibleValues, aI as isBrowser, b3 as isCSSVariableName, b4 as isCSSVariableToken, bk as isDragActive, bn as isNodeOrChild, aM as isNumericalString, aN as isZeroValueString, b8 as keyframes, b5 as makeAnimationInstant, ba as maxGeneratorDuration, aY as mirrorEasing, bt as mix, bx as mixArray, bu as mixColor, by as mixComplex, bA as mixImmediate, bv as mixLinearColor, bz as mixObject, bC as mixVisibility, bR as number, aK as optimizedAppearDataAttribute, b2 as parseCSSVariable, bp as parseValueFromTransform, bs as positionalKeys, bm as press, bU as progressPercentage, bq as readTransformValue, aZ as reverseEasing, bI as rgbUnit, bJ as rgba, bS as scale, br as setStyle, bg as supportsBrowserAnimation, bD as supportsFlags, bX as testValueType, bP as transformValueTypes, bV as vh, bW as vw, aL as warning } from './features-animation-BzRKjcON.js';
+import { i as isRefObject, b as usePresence, c as LayoutGroupContext, S as SwitchLayoutGroupContext, r as resolveMotionValue, d as createMotionProxy, e as useConstant, f as useIsomorphicLayoutEffect, g as MotionConfigContext, P as PresenceContext, h as motionComponentSymbol, j as useForceUpdate, k as makeUseVisualState, a as LayoutGroup, l as MotionContext } from './index-Bw7D0jMI.js';
+export { A as AnimatePresence, D as DeprecatedLayoutGroupContext, L as LazyMotion, M as MotionConfig, n as PopChild, o as PresenceChild, W as WillChangeMotionValue, v as acceleratedValues, p as filterProps, t as isValidMotionProp, m, q as useComposedRefs, s as useIsPresent, u as useWillChange } from './index-Bw7D0jMI.js';
+import { c as clamp, i as isEasingArray, N as NativeAnimation, s as supportsLinearEasing, a as supportedWaapiEasing, b as isBezierDefinition, m as memo, r as resolveElements, g as getValueAsType, n as numberValueTypes, f as frame, e as cancelFrame, t as transformPropOrder, h as transformProps, j as isHTMLElement, k as MotionValue, l as isCSSVar, p as px, o as isDragging, q as isObject, u as statsBuffer, v as frameData, w as activeAnimations, x as easingDefinitionToFunction, y as interpolate, z as collectMotionValues, A as motionValue, B as isMotionValue, J as JSAnimation, C as getValueTransition$1, D as secondsToMilliseconds, E as applyGeneratorOptions, F as mapEasingToNativeEasing, G as microtask, H as removeItem, I as noop, K as stepsOrder, L as addDomEvent, O as addPointerInfo, P as mixNumber, Q as isPrimaryPointer, R as extractEventInfo, S as pipe, T as millisecondsToSeconds, U as progress, V as createBox, W as measurePageBox, X as convertBoxToBoundingBox, Y as convertBoundingBoxToBox, Z as addValueToWillChange, _ as animateMotionValue, $ as percent, a0 as Feature, a1 as addUniqueItem, a2 as time, a3 as circOut, a4 as scalePoint, a5 as SubscriptionManager, a6 as frameSteps, a7 as hasTransform, a8 as translateAxis, a9 as transformBox, aa as hasScale, ab as applyBoxDelta, ac as has2DTranslate, ad as applyTreeDeltas, ae as createDelta, af as scaleCorrectors, ag as getOptimisedAppearId, ah as gestureAnimations, ai as animations, aj as createDomVisualElement, d as domAnimation, ak as velocityPerSecond, al as defaultOffset$1, am as supportsScrollTimeline, an as invariant, ao as hasReducedMotionListener, ap as initPrefersReducedMotion, aq as prefersReducedMotion, ar as animateVisualElement, as as setTarget, at as createGeneratorEasing, au as fillOffset, av as isGenerator, aw as VisualElement, ax as SVGVisualElement, ay as HTMLVisualElement, az as visualElementStore, aA as animateTarget, aB as spring, aC as fillWildcards, M as MotionGlobalConfig, aD as optimizedAppearDataId, aE as startWaapiAnimation, aF as moveItem } from './features-animation-BMC94mcX.js';
+export { aZ as AsyncMotionValueAnimation, ba as DOMKeyframesResolver, bb as KeyframeResolver, a$ as NativeAnimationExtended, aH as addScaleCorrector, bQ as alpha, bJ as analyseComplexValue, a_ as animateValue, aN as anticipate, aO as backIn, aP as backInOut, aQ as backOut, aI as buildTransform, b8 as calcGeneratorDuration, bi as cancelMicrotask, aR as circIn, aS as circInOut, bD as color, bK as complex, bd as convertOffsetToTimes, bh as createRenderBatcher, aT as cubicBezier, be as cubicBezierAsString, b6 as defaultEasing, bn as defaultTransformValue, bN as defaultValueTypes, bT as degrees, bL as dimensionValueTypes, aU as easeIn, aV as easeInOut, aW as easeOut, bM as findDimensionValueType, bZ as findValueType, bc as flushKeyframeResolvers, bg as generateLinearEasing, bY as getAnimatableNone, bO as getDefaultValueType, bv as getMixer, b0 as getVariableValue, bE as hex, bk as hover, bF as hsla, bG as hslaToRgba, b5 as inertia, bA as invisibleValues, aG as isBrowser, b2 as isCSSVariableName, b3 as isCSSVariableToken, bj as isDragActive, bm as isNodeOrChild, aL as isNumericalString, aM as isZeroValueString, b7 as keyframes, b4 as makeAnimationInstant, b9 as maxGeneratorDuration, aX as mirrorEasing, bs as mix, bw as mixArray, bt as mixColor, bx as mixComplex, bz as mixImmediate, bu as mixLinearColor, by as mixObject, bB as mixVisibility, bR as number, aJ as optimizedAppearDataAttribute, b1 as parseCSSVariable, bo as parseValueFromTransform, br as positionalKeys, bl as press, bU as progressPercentage, bp as readTransformValue, aY as reverseEasing, bH as rgbUnit, bI as rgba, bS as scale, bq as setStyle, bf as supportsBrowserAnimation, bC as supportsFlags, bX as testValueType, bP as transformValueTypes, bV as vh, bW as vw, aK as warning } from './features-animation-BMC94mcX.js';
 import { importShared } from './__federation_fn_import-JrT3xvdd.js';
 import { j as jsxRuntimeExports } from './jsx-runtime-BA-u0cS_.js';
 
@@ -2126,75 +2126,6 @@ const globalProjectionState = {
     hasEverUpdated: false,
 };
 
-function pixelsToPercent(pixels, axis) {
-    if (axis.max === axis.min)
-        return 0;
-    return (pixels / (axis.max - axis.min)) * 100;
-}
-/**
- * We always correct borderRadius as a percentage rather than pixels to reduce paints.
- * For example, if you are projecting a box that is 100px wide with a 10px borderRadius
- * into a box that is 200px wide with a 20px borderRadius, that is actually a 10%
- * borderRadius in both states. If we animate between the two in pixels that will trigger
- * a paint each time. If we animate between the two in percentage we'll avoid a paint.
- */
-const correctBorderRadius = {
-    correct: (latest, node) => {
-        if (!node.target)
-            return latest;
-        /**
-         * If latest is a string, if it's a percentage we can return immediately as it's
-         * going to be stretched appropriately. Otherwise, if it's a pixel, convert it to a number.
-         */
-        if (typeof latest === "string") {
-            if (px.test(latest)) {
-                latest = parseFloat(latest);
-            }
-            else {
-                return latest;
-            }
-        }
-        /**
-         * If latest is a number, it's a pixel value. We use the current viewportBox to calculate that
-         * pixel value as a percentage of each axis
-         */
-        const x = pixelsToPercent(latest, node.target.x);
-        const y = pixelsToPercent(latest, node.target.y);
-        return `${x}% ${y}%`;
-    },
-};
-
-const correctBoxShadow = {
-    correct: (latest, { treeScale, projectionDelta }) => {
-        const original = latest;
-        const shadow = complex.parse(latest);
-        // TODO: Doesn't support multiple shadows
-        if (shadow.length > 5)
-            return original;
-        const template = complex.createTransformer(latest);
-        const offset = typeof shadow[0] !== "number" ? 1 : 0;
-        // Calculate the overall context scale
-        const xScale = projectionDelta.x.scale * treeScale.x;
-        const yScale = projectionDelta.y.scale * treeScale.y;
-        shadow[0 + offset] /= xScale;
-        shadow[1 + offset] /= yScale;
-        /**
-         * Ideally we'd correct x and y scales individually, but because blur and
-         * spread apply to both we have to take a scale average and apply that instead.
-         * We could potentially improve the outcome of this by incorporating the ratio between
-         * the two scales.
-         */
-        const averageScale = mixNumber(xScale, yScale, 0.5);
-        // Blur
-        if (typeof shadow[2 + offset] === "number")
-            shadow[2 + offset] /= averageScale;
-        // Spread
-        if (typeof shadow[3 + offset] === "number")
-            shadow[3 + offset] /= averageScale;
-        return template(shadow);
-    },
-};
-
 const {useContext: useContext$7,Component} = await importShared('react');
 
 /**
@@ -2215,7 +2146,6 @@ class MeasureLayoutWithContext extends Component {
     componentDidMount() {
         const { visualElement, layoutGroup, switchLayoutGroup, layoutId } = this.props;
         const { projection } = visualElement;
-        addScaleCorrector(defaultScaleCorrectors);
         if (projection) {
             if (layoutGroup.group)
                 layoutGroup.group.add(projection);
@@ -2314,22 +2244,6 @@ function MeasureLayout(props) {
     const layoutGroup = useContext$7(LayoutGroupContext);
     return (jsxRuntimeExports.jsx(MeasureLayoutWithContext, { ...props, layoutGroup: layoutGroup, switchLayoutGroup: useContext$7(SwitchLayoutGroupContext), isPresent: isPresent, safeToRemove: safeToRemove }));
 }
-const defaultScaleCorrectors = {
-    borderRadius: {
-        ...correctBorderRadius,
-        applyTo: [
-            "borderTopLeftRadius",
-            "borderTopRightRadius",
-            "borderBottomLeftRadius",
-            "borderBottomRightRadius",
-        ],
-    },
-    borderTopLeftRadius: correctBorderRadius,
-    borderTopRightRadius: correctBorderRadius,
-    borderBottomLeftRadius: correctBorderRadius,
-    borderBottomRightRadius: correctBorderRadius,
-    boxShadow: correctBoxShadow,
-};
 
 function animateSingleValue(value, keyframes, options) {
     const motionValue$1 = isMotionValue(value) ? value : motionValue(value);
@@ -2860,6 +2774,7 @@ function createProjectionNode({ attachResizeListener, defaultParent, measureScro
              */
             this.eventHandlers = new Map();
             this.hasTreeAnimated = false;
+            this.layoutVersion = 0;
             // Note: Currently only running on root node
             this.updateScheduled = false;
             this.scheduleUpdate = () => this.update();
@@ -2899,6 +2814,7 @@ function createProjectionNode({ attachResizeListener, defaultParent, measureScro
              * Frame calculations
              */
             this.resolvedRelativeTargetAt = 0.0;
+            this.linkedParentVersion = 0;
             this.hasProjected = false;
             this.isVisible = true;
             this.animationProgress = 0;
@@ -3252,6 +3168,7 @@ function createProjectionNode({ attachResizeListener, defaultParent, measureScro
             }
             const prevLayout = this.layout;
             this.layout = this.measure(false);
+            this.layoutVersion++;
             this.layoutCorrected = createBox();
             this.isLayoutDirty = false;
             this.projectionDelta = undefined;
@@ -3471,25 +3388,23 @@ function createProjectionNode({ attachResizeListener, defaultParent, measureScro
             if (!this.layout || !(layout || layoutId))
                 return;
             this.resolvedRelativeTargetAt = frameData.timestamp;
+            const relativeParent = this.getClosestProjectingParent();
+            if (relativeParent &&
+                this.linkedParentVersion !== relativeParent.layoutVersion &&
+                !relativeParent.options.layoutRoot) {
+                this.removeRelativeTarget();
+            }
             /**
              * If we don't have a targetDelta but do have a layout, we can attempt to resolve
              * a relativeParent. This will allow a component to perform scale correction
              * even if no animation has started.
              */
             if (!this.targetDelta && !this.relativeTarget) {
-                const relativeParent = this.getClosestProjectingParent();
-                if (relativeParent &&
-                    relativeParent.layout &&
-                    this.animationProgress !== 1) {
-                    this.relativeParent = relativeParent;
-                    this.forceRelativeParentToResolveTarget();
-                    this.relativeTarget = createBox();
-                    this.relativeTargetOrigin = createBox();
-                    calcRelativePosition(this.relativeTargetOrigin, this.layout.layoutBox, relativeParent.layout.layoutBox);
-                    copyBoxInto(this.relativeTarget, this.relativeTargetOrigin);
+                if (relativeParent && relativeParent.layout) {
+                    this.createRelativeTarget(relativeParent, this.layout.layoutBox, relativeParent.layout.layoutBox);
                 }
                 else {
-                    this.relativeParent = this.relativeTarget = undefined;
+                    this.removeRelativeTarget();
                 }
             }
             /**
@@ -3539,19 +3454,13 @@ function createProjectionNode({ attachResizeListener, defaultParent, measureScro
              */
             if (this.attemptToResolveRelativeTarget) {
                 this.attemptToResolveRelativeTarget = false;
-                const relativeParent = this.getClosestProjectingParent();
                 if (relativeParent &&
                     Boolean(relativeParent.resumingFrom) ===
                         Boolean(this.resumingFrom) &&
                     !relativeParent.options.layoutScroll &&
                     relativeParent.target &&
                     this.animationProgress !== 1) {
-                    this.relativeParent = relativeParent;
-                    this.forceRelativeParentToResolveTarget();
-                    this.relativeTarget = createBox();
-                    this.relativeTargetOrigin = createBox();
-                    calcRelativePosition(this.relativeTargetOrigin, this.target, relativeParent.target);
-                    copyBoxInto(this.relativeTarget, this.relativeTargetOrigin);
+                    this.createRelativeTarget(relativeParent, this.target, relativeParent.target);
                 }
                 else {
                     this.relativeParent = this.relativeTarget = undefined;
@@ -3582,6 +3491,18 @@ function createProjectionNode({ attachResizeListener, defaultParent, measureScro
                 this.targetDelta ||
                 this.options.layoutRoot) &&
                 this.layout);
+        }
+        createRelativeTarget(relativeParent, layout, parentLayout) {
+            this.relativeParent = relativeParent;
+            this.linkedParentVersion = relativeParent.layoutVersion;
+            this.forceRelativeParentToResolveTarget();
+            this.relativeTarget = createBox();
+            this.relativeTargetOrigin = createBox();
+            calcRelativePosition(this.relativeTargetOrigin, layout, parentLayout);
+            copyBoxInto(this.relativeTarget, this.relativeTargetOrigin);
+        }
+        removeRelativeTarget() {
+            this.relativeParent = this.relativeTarget = undefined;
         }
         calcProjection() {
             const lead = this.getLead();
@@ -6615,4 +6536,4 @@ const namespace = /*#__PURE__*/Object.freeze(/*#__PURE__*/Object.defineProperty(
     Item: ReorderItem
 }, Symbol.toStringTag, { value: 'Module' }));
 
-export { AnimateSharedLayout, DragControls, GroupAnimation, GroupAnimationWithThen, JSAnimation, LayoutGroup, LayoutGroupContext, MotionConfigContext, MotionContext, MotionGlobalConfig, MotionValue, NativeAnimation, NativeAnimationWrapper, PresenceContext, namespace as Reorder, SubscriptionManager, SwitchLayoutGroupContext, ViewTransitionBuilder, VisualElement, activeAnimations, addAttrValue, addPointerEvent, addPointerInfo, addScaleCorrector, addStyleValue, addUniqueItem, animate, animateMini, animateView, animateVisualElement, animationControls, animationMapKey, animations, applyGeneratorOptions, applyPxDefaults, attachSpring, attrEffect, calcLength, cancelFrame, cancelSync, circOut, clamp, collectMotionValues, complex, createBox, createGeneratorEasing, createScopedAnimate, defaultOffset$1 as defaultOffset, delay, disableInstantTransitions, distance, distance2D, domAnimation, domMax, domMin, easingDefinitionToFunction, fillOffset, fillWildcards, frame, frameData, frameSteps, getAnimationMap, getComputedStyle$1 as getComputedStyle, getEasingForSegment, getOriginIndex, getValueAsType, getValueTransition$1 as getValueTransition, getViewAnimationLayerInfo, getViewAnimations, hasWarned, inView, interpolate, invariant, isBezierDefinition, isDragging, isEasingArray, isGenerator, isHTMLElement, isMotionComponent, isMotionValue, isObject, isPrimaryPointer, isSVGElement, isSVGSVGElement, isWaapiSupportedEasing, makeUseVisualState, mapEasingToNativeEasing, mapValue, memo, microtask, millisecondsToSeconds, mixNumber, motion, motionValue, moveItem, noop, numberValueTypes, observeTimeline, percent, pipe, progress, propEffect, px, recordStats, removeItem, resize, resolveElements, resolveMotionValue, scroll, scrollInfo, secondsToMilliseconds, setDragLock, spring, springValue, stagger, startOptimizedAppearAnimation, startWaapiAnimation, statsBuffer, steps, styleEffect, supportedWaapiEasing, supportsLinearEasing, supportsPartialKeyframes, supportsScrollTimeline, svgEffect, sync, time, transform, transformPropOrder, transformProps, transformValue, unwrapMotionComponent, useAnimate, useAnimateMini, useAnimation, useAnimationControls, useAnimationFrame, useCycle, useAnimatedState as useDeprecatedAnimatedState, useInvertedScale as useDeprecatedInvertedScale, useDomEvent, useDragControls, useElementScroll, useForceUpdate, useInView, useInstantLayoutTransition, useInstantTransition, useIsomorphicLayoutEffect, useMotionTemplate, useMotionValue, useMotionValueEvent, usePageInView, usePresence, usePresenceData, useReducedMotion, useReducedMotionConfig, useResetProjection, useScroll, useSpring, useTime, useTransform, useUnmountEffect, useVelocity, useViewportScroll, velocityPerSecond, visualElementStore, warnOnce, wrap };
+export { AnimateSharedLayout, DragControls, GroupAnimation, GroupAnimationWithThen, JSAnimation, LayoutGroup, LayoutGroupContext, MotionConfigContext, MotionContext, MotionGlobalConfig, MotionValue, NativeAnimation, NativeAnimationWrapper, PresenceContext, namespace as Reorder, SubscriptionManager, SwitchLayoutGroupContext, ViewTransitionBuilder, VisualElement, activeAnimations, addAttrValue, addPointerEvent, addPointerInfo, addStyleValue, addUniqueItem, animate, animateMini, animateView, animateVisualElement, animationControls, animationMapKey, animations, applyGeneratorOptions, applyPxDefaults, attachSpring, attrEffect, calcLength, cancelFrame, cancelSync, circOut, clamp, collectMotionValues, createBox, createGeneratorEasing, createScopedAnimate, defaultOffset$1 as defaultOffset, delay, disableInstantTransitions, distance, distance2D, domAnimation, domMax, domMin, easingDefinitionToFunction, fillOffset, fillWildcards, frame, frameData, frameSteps, getAnimationMap, getComputedStyle$1 as getComputedStyle, getEasingForSegment, getOriginIndex, getValueAsType, getValueTransition$1 as getValueTransition, getViewAnimationLayerInfo, getViewAnimations, hasWarned, inView, interpolate, invariant, isBezierDefinition, isDragging, isEasingArray, isGenerator, isHTMLElement, isMotionComponent, isMotionValue, isObject, isPrimaryPointer, isSVGElement, isSVGSVGElement, isWaapiSupportedEasing, makeUseVisualState, mapEasingToNativeEasing, mapValue, memo, microtask, millisecondsToSeconds, mixNumber, motion, motionValue, moveItem, noop, numberValueTypes, observeTimeline, percent, pipe, progress, propEffect, px, recordStats, removeItem, resize, resolveElements, resolveMotionValue, scroll, scrollInfo, secondsToMilliseconds, setDragLock, spring, springValue, stagger, startOptimizedAppearAnimation, startWaapiAnimation, statsBuffer, steps, styleEffect, supportedWaapiEasing, supportsLinearEasing, supportsPartialKeyframes, supportsScrollTimeline, svgEffect, sync, time, transform, transformPropOrder, transformProps, transformValue, unwrapMotionComponent, useAnimate, useAnimateMini, useAnimation, useAnimationControls, useAnimationFrame, useCycle, useAnimatedState as useDeprecatedAnimatedState, useInvertedScale as useDeprecatedInvertedScale, useDomEvent, useDragControls, useElementScroll, useForceUpdate, useInView, useInstantLayoutTransition, useInstantTransition, useIsomorphicLayoutEffect, useMotionTemplate, useMotionValue, useMotionValueEvent, usePageInView, usePresence, usePresenceData, useReducedMotion, useReducedMotionConfig, useResetProjection, useScroll, useSpring, useTime, useTransform, useUnmountEffect, useVelocity, useViewportScroll, velocityPerSecond, visualElementStore, warnOnce, wrap };

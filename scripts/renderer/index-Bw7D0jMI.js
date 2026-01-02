@@ -1,6 +1,6 @@
 import { importShared } from './__federation_fn_import-JrT3xvdd.js';
 import { j as jsxRuntimeExports } from './jsx-runtime-BA-u0cS_.js';
-import { aI as isBrowser, j as isHTMLElement, f as frame, b_ as featureDefinitions, b$ as isControllingVariants, c0 as isVariantLabel, B as isMotionValue, c1 as isForcedMotionValue, c2 as buildHTMLStyles, c3 as buildSVGAttrs, c4 as isSVGTag, c5 as isSVGComponent, c6 as isVariantNode, c7 as isAnimationControls, c8 as resolveVariantFromProps, c9 as scrapeMotionValuesFromProps, ca as scrapeMotionValuesFromProps$1, aK as optimizedAppearDataAttribute, k as MotionValue, h as transformProps } from './features-animation-BzRKjcON.js';
+import { aG as isBrowser, j as isHTMLElement, f as frame, b_ as featureDefinitions, b$ as isControllingVariants, c0 as isVariantLabel, B as isMotionValue, c1 as isForcedMotionValue, c2 as buildHTMLStyles, c3 as buildSVGAttrs, c4 as isSVGTag, c5 as isSVGComponent, c6 as isVariantNode, c7 as isAnimationControls, c8 as resolveVariantFromProps, c9 as scrapeMotionValuesFromProps, ca as scrapeMotionValuesFromProps$1, aJ as optimizedAppearDataAttribute, k as MotionValue, h as transformProps } from './features-animation-BMC94mcX.js';
 
 const {createContext: createContext$6} = await importShared('react');
 
