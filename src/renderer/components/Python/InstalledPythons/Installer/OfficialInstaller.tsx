@@ -101,6 +101,8 @@ export default function InstallerOfficial({refresh, installed, closeModal, isOpe
 
     switch (osPlatform) {
       case 'win32':
+      case 'darwin':
+        // Windows and macOS both download installer files (.exe/.pkg) then install
         pIpc.off_DlProgressOfficial();
         pIpc.on_DlProgressOfficial((_, stage, progress) => {
           setInstallStage(stage);
@@ -110,6 +112,7 @@ export default function InstallerOfficial({refresh, installed, closeModal, isOpe
         });
         break;
       case 'linux':
+        // Linux installs via apt, no download progress
         setInstallStage('installing');
         break;
     }
