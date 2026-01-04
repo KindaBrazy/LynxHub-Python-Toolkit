@@ -237,32 +237,24 @@ export default function InstalledCard({python, diskUsage, maxDiskValue, updateDe
                 </Button>
               </DropdownTrigger>
               <DropdownMenu>
-                {window.osPlatform === 'win32' ? (
-                  <>
-                    <DropdownItem
-                      variant="flat"
-                      color="secondary"
-                      key="system-default"
-                      onPress={makeDefault}
-                      textValue="Set as System Default"
-                      startContent={python.isDefault ? <RefreshDuo_Icon className="size-4" /> : <DoubleCheck_Icon />}>
-                      Set as <span className="font-bold text-secondary">System Default</span>
-                    </DropdownItem>
-                    <DropdownItem
-                      startContent={
-                        python.isLynxHubDefault ? <RefreshDuo_Icon className="size-4" /> : <DoubleCheck_Icon />
-                      }
-                      variant="flat"
-                      color="success"
-                      key="lynxhub-default"
-                      onPress={makeLynxDefault}
-                      textValue="Set as LynxHub Default">
-                      Set as <span className="font-bold text-primary">LynxHub Default</span>
-                    </DropdownItem>
-                  </>
-                ) : (
-                  <DropdownItem className="hidden" key="system-default" textValue="system_default" />
-                )}
+                <DropdownItem
+                  variant="flat"
+                  color="secondary"
+                  key="system-default"
+                  onPress={makeDefault}
+                  textValue="Set as System Default"
+                  startContent={python.isDefault ? <RefreshDuo_Icon className="size-4" /> : <DoubleCheck_Icon />}>
+                  Set as <span className="font-bold text-secondary">System Default</span>
+                </DropdownItem>
+                <DropdownItem
+                  startContent={python.isLynxHubDefault ? <RefreshDuo_Icon className="size-4" /> : <DoubleCheck_Icon />}
+                  variant="flat"
+                  color="success"
+                  key="lynxhub-default"
+                  onPress={makeLynxDefault}
+                  textValue="Set as LynxHub Default">
+                  Set as <span className="font-bold text-primary">LynxHub Default</span>
+                </DropdownItem>
                 <DropdownItem
                   key="package-manager"
                   onPress={packageManager}
