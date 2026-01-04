@@ -132,6 +132,7 @@ export default function InstalledPythons({
 
   const locateVenv = () => {
     setIsLocating(true);
+    // Windows: filter for .exe files; macOS/Linux: use wildcard since executables have no extension
     rIpc.file
       .openDlg({
         properties: ['openFile'],

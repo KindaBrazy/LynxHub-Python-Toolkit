@@ -65,6 +65,8 @@ export default function TerminalView() {
       const JetBrainsMono = new FontFaceObserver(FONT_FAMILY);
 
       const sysInfo = await rIpc.win.getSystemInfo();
+      // Windows requires PTY backend config (conpty for Win10 1809+, winpty for older)
+      // macOS/Linux use native PTY and don't need this configuration
       const windowsPty: IWindowsPty | undefined =
         sysInfo.os === 'win32'
           ? {
