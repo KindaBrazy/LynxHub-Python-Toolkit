@@ -41,7 +41,8 @@ export async function uninstallCondaPython(pythonPath: string, pty): Promise<{su
 
 export async function getCondaEnvName(pythonPath: string): Promise<string> {
   try {
-    const {stdout} = await execAsync(`"${pythonPath}" -c "import sys; print(sys.prefix.split('/')[-1])"`);
+    // Use os.path.basename which is cross-platform (works on Windows, Linux, and macOS)
+    const {stdout} = await execAsync(`"${pythonPath}" -c "import os, sys; print(os.path.basename(sys.prefix))"`);
     return basename(stdout.trim());
   } catch (err: any) {
     throw new Error(`Failed to get conda environment name: ${err.message}`);
