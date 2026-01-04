@@ -286,6 +286,18 @@ export default function InstalledCard({python, diskUsage, maxDiskValue, updateDe
                          its packages from your computer. Any AI using this environment will be
                           disconnected.`}
                       </p>
+                    ) : window.osPlatform === 'darwin' ? (
+                      <p className="text-xs text-default-600 mt-1">
+                        {python.installPath.includes('/Library/Frameworks/Python.framework')
+                          ? `Removes Python ${python.version} from /Library/Frameworks and cleans up symlinks.
+                             Admin password will be required.`
+                          : python.installPath.includes('/opt/homebrew') ||
+                              python.installPath.includes('/usr/local/Cellar')
+                            ? `Uninstalls Python ${python.version} via Homebrew (brew uninstall).
+                               Any AI using this installation will be disconnected.`
+                            : `Permanently uninstalls Python ${python.version} and all its packages.
+                               Any AI using this installation will be disconnected.`}
+                      </p>
                     ) : (
                       <p className="text-xs text-default-600 mt-1">
                         {`Permanently uninstalls Python version ${python.version} and all its packages
