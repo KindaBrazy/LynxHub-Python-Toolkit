@@ -6,10 +6,12 @@ import {accessSync} from 'graceful-fs';
 
 export const COMMAND_LINE_ENDING = platform() === 'win32' ? '\r' : '\n';
 
+/** Returns PowerShell version, or -1 if PowerShell is not available */
 function getPowerShellVersion(): number {
   const command = '$PSVersionTable.PSVersion.Major';
 
   try {
+    // Try PowerShell Core (pwsh.exe) first
     const pwshVersion = parseInt(
       execSync(`pwsh.exe -NoProfile -Command "${command}"`, {
         encoding: 'utf8' as const,
@@ -18,7 +20,12 @@ function getPowerShellVersion(): number {
       10,
     );
     if (pwshVersion >= 7) return pwshVersion;
+  } catch {
+    // pwsh.exe not available, try Windows PowerShell
+  }
 
+  try {
+    // Fall back to Windows PowerShell (powershell.exe)
     const psVersion = parseInt(
       execSync(`powershell.exe -NoProfile -Command "${command}"`, {
         encoding: 'utf8' as const,
@@ -26,10 +33,10 @@ function getPowerShellVersion(): number {
       }).trim(),
       10,
     );
-    return psVersion >= 5 ? psVersion : 0;
-  } catch (err) {
-    console.error('Error determining PowerShell version:', err);
-    return 0;
+    return psVersion >= 5 ? psVersion : -1;
+  } catch {
+    // Neither PowerShell is available
+    return -1;
   }
 }
 
@@ -40,8 +47,13 @@ export function determineShell(): string {
     case 'linux':
       return 'bash';
     case 'win32':
-    default:
-      return getPowerShellVersion() >= 5 ? 'pwsh.exe' : 'powershell.exe';
+    default: {
+      const psVersion = getPowerShellVersion();
+      if (psVersion >= 7) return 'pwsh.exe';
+      if (psVersion >= 5) return 'powershell.exe';
+      // Fallback to cmd.exe if PowerShell is not available
+      return 'cmd.exe';
+    }
   }
 }
 
