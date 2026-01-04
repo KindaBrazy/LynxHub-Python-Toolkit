@@ -49,7 +49,6 @@ function determineShell(): string {
 }
 
 const LINE_ENDING = platform() === 'win32' ? '\r' : '\n';
-const platformOperator = platform() === 'win32' ? '&' : 'bash';
 let ptyProcess: IPty | undefined = undefined;
 
 function startPtyUpdate(pythonExePath: string, packageSpecs: string): Promise<void> {
@@ -58,7 +57,11 @@ function startPtyUpdate(pythonExePath: string, packageSpecs: string): Promise<vo
     const webContent = getAppManager()?.getWebContent();
 
     if (ptyProcess && webContent && !webContent.isDestroyed()) {
-      const updateCommand = `${platformOperator} "${pythonExePath}" -m pip install --upgrade ${packageSpecs}`;
+      // On Windows use '&' operator, on Unix systems run command directly in the spawned shell
+      const updateCommand =
+        platform() === 'win32'
+          ? `& "${pythonExePath}" -m pip install --upgrade ${packageSpecs}`
+          : `"${pythonExePath}" -m pip install --upgrade ${packageSpecs}`;
 
       ptyProcess.write(`${updateCommand}${LINE_ENDING}`);
       ptyProcess.write(`exit${LINE_ENDING}`);
