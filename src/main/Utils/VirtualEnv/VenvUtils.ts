@@ -98,7 +98,8 @@ export function isVenvDirectory(dirPath: string): boolean {
       return false;
     }
 
-    const libPath = join(dirPath, 'lib');
+    // Windows uses 'Lib', Unix uses 'lib'
+    const libPath = platform() === 'win32' ? join(dirPath, 'Lib') : join(dirPath, 'lib');
     return existsSync(libPath);
   } catch (err) {
     console.error(`Error checking if directory is a venv: ${err}`);
