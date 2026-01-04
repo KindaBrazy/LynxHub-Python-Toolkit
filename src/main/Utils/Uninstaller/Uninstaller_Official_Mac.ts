@@ -1,10 +1,14 @@
 import {exec} from 'child_process';
-import {dirname} from 'node:path';
 import {promisify} from 'util';
 
-import {existsSync, promises} from 'graceful-fs';
+import {existsSync} from 'graceful-fs';
 
 const execAsync = promisify(exec);
+
+/** Escapes single quotes in a string for safe use in shell commands */
+function escapeForShell(str: string): string {
+  return str.replace(/'/g, "'\\''");
+}
 
 /**
  * Uninstalls Python on macOS.
@@ -65,8 +69,8 @@ async function uninstallOfficialMacPython(
 
     // Remove framework directory and Applications folder using osascript for admin privileges
     const removeCommands = [
-      `rm -rf '${frameworkPath}'`,
-      `rm -rf '${applicationsPath}'`,
+      `rm -rf '${escapeForShell(frameworkPath)}'`,
+      `rm -rf '${escapeForShell(applicationsPath)}'`,
       // Remove symlinks from /usr/local/bin
       `find /usr/local/bin -lname '*Python.framework/Versions/${version}*' -delete 2>/dev/null || true`,
     ].join(' && ');
