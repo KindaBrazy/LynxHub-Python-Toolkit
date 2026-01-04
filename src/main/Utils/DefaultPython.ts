@@ -1,6 +1,8 @@
 import {spawn} from 'node:child_process';
+import {dirname} from 'node:path';
 import {platform} from 'node:os';
 
+import {homedir} from 'os';
 import {promises} from 'graceful-fs';
 import which from 'which';
 
@@ -27,7 +29,10 @@ export async function setDefaultPython(pythonPath: string): Promise<void> {
         await setDefaultPythonWindows(pythonPath);
         break;
       case 'darwin':
+        await setDefaultPythonMacOS(pythonPath);
+        break;
       case 'linux':
+        await setDefaultPythonLinux(pythonPath);
         break;
     }
     console.log(`Python ${pythonPath} set as default`);
@@ -99,4 +104,63 @@ async function setDefaultPythonWindows(pythonPath: string): Promise<void> {
       });
     });
   });
+}
+
+const LYNXHUB_PATH_MARKER = '# LynxHub Python Path';
+
+async function setDefaultPythonUnix(pythonPath: string, shellConfigFile: string): Promise<void> {
+  const pythonBinDir = dirname(pythonPath);
+
+  try {
+    let content = '';
+    try {
+      content = await promises.readFile(shellConfigFile, 'utf-8');
+    } catch {
+      // File doesn't exist, will create it
+    }
+
+    // Remove existing LynxHub PATH entry if present
+    const lines = content.split('\n');
+    const filteredLines: string[] = [];
+    let skipNext = false;
+
+    for (const line of lines) {
+      if (line.includes(LYNXHUB_PATH_MARKER)) {
+        skipNext = true;
+        continue;
+      }
+      if (skipNext) {
+        skipNext = false;
+        continue;
+      }
+      filteredLines.push(line);
+    }
+
+    // Add new PATH entry at the beginning (after shebang if present)
+    const pathEntry = `${LYNXHUB_PATH_MARKER}\nexport PATH="${pythonBinDir}:$PATH"`;
+
+    let insertIndex = 0;
+    if (filteredLines.length > 0 && filteredLines[0].startsWith('#!')) {
+      insertIndex = 1;
+    }
+
+    filteredLines.splice(insertIndex, 0, pathEntry);
+
+    await promises.writeFile(shellConfigFile, filteredLines.join('\n'), 'utf-8');
+
+    // Update current process PATH
+    process.env.PATH = `${pythonBinDir}:${process.env.PATH}`;
+  } catch (err: any) {
+    throw new Error(`Failed to update shell config: ${err.message}`);
+  }
+}
+
+async function setDefaultPythonMacOS(pythonPath: string): Promise<void> {
+  const zshrcPath = `${homedir()}/.zshrc`;
+  return setDefaultPythonUnix(pythonPath, zshrcPath);
+}
+
+async function setDefaultPythonLinux(pythonPath: string): Promise<void> {
+  const bashrcPath = `${homedir()}/.bashrc`;
+  return setDefaultPythonUnix(pythonPath, bashrcPath);
 }
