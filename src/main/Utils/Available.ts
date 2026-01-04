@@ -1,4 +1,4 @@
-import {platform} from 'node:os';
+import {arch, platform} from 'node:os';
 
 import {exec} from 'child_process';
 import {promisify} from 'util';
@@ -6,6 +6,11 @@ import {promisify} from 'util';
 import {PythonVersion} from '../../cross/CrossExtTypes';
 
 const execAsync = promisify(exec);
+
+/** Checks if running on Apple Silicon (arm64) Mac */
+function isAppleSilicon(): boolean {
+  return platform() === 'darwin' && arch() === 'arm64';
+}
 
 function removeDuplicateUrls(versions: PythonVersion[]): PythonVersion[] {
   const seenUrls = new Set();
@@ -113,6 +118,32 @@ export async function getAvailablePythonVersions(): Promise<PythonVersion[]> {
         .map(version => ({version, url: getPythonDownloadUrl(version)}));
 
       return removeDuplicateUrls(versions);
+    } else if (platform() === 'darwin') {
+      // macOS: Fetch available versions from python.org (same as Windows)
+      const response = await fetch('https://www.python.org/downloads/');
+      const text = await response.text();
+
+      const versionRegex = /Python\s+(\d+\.\d+\.\d+)/g;
+      const matches = [...text.matchAll(versionRegex)];
+
+      const result = matches.map(match => ({
+        version: match[1],
+        url: getPythonDownloadUrl(match[1]),
+      }));
+
+      // Validate URLs exist (macOS universal2 packages available from Python 3.9.1+)
+      const validVersions = await Promise.all(
+        result.map(async version => {
+          try {
+            const response = await fetch(version.url, {method: 'HEAD'});
+            return response.ok ? version : null;
+          } catch {
+            return null;
+          }
+        }),
+      );
+
+      return removeDuplicateUrls(validVersions.filter((v): v is PythonVersion => v !== null));
     } else {
       return [];
     }
@@ -131,7 +162,15 @@ function getPythonDownloadUrl(version: string): string {
         : `${baseUrl}/${version}/python-${version}-amd64.exe`;
     case 'linux':
       return `https://launchpad.net/~deadsnakes/+archive/ubuntu/ppa/+packages?field.name_filter=python${version}`;
-    case 'darwin':
+    case 'darwin': {
+      // Python 3.9.1+ provides universal2 packages (works on both Intel and Apple Silicon)
+      // For older versions, fall back to macos11.pkg (Intel only)
+      const [major, minor, patch] = version.split('.').map(Number);
+      const hasUniversal2 = major >= 3 && (minor > 9 || (minor === 9 && patch >= 1));
+      return hasUniversal2
+        ? `${baseUrl}/${version}/python-${version}-macos11.pkg`
+        : `${baseUrl}/${version}/python-${version}-macosx10.9.pkg`;
+    }
     default:
       return `${baseUrl}/${version}/python-${version}-macos11.pkg`;
   }
