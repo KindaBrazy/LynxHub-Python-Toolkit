@@ -1,4 +1,3 @@
-import {execSync} from 'node:child_process';
 import {platform} from 'node:os';
 
 import {IPty} from 'node-pty';
@@ -6,49 +5,8 @@ import {IPty} from 'node-pty';
 import {ptyChannels} from '../../../../../src/cross/IpcChannelAndTypes';
 import {PackageUpdate} from '../../../cross/CrossExtTypes';
 import {getAppManager, getNodePty} from '../../DataHolder';
+import {COMMAND_LINE_ENDING, determineShell} from '../ExtMainUtils';
 
-function getPowerShellVersion(): number {
-  const command = '$PSVersionTable.PSVersion.Major';
-
-  try {
-    // Try PowerShell Core (pwsh.exe) first
-    const pwshVersion = parseInt(
-      execSync(`pwsh.exe -NoProfile -Command "${command}"`, {
-        encoding: 'utf8' as const,
-        stdio: ['pipe', 'pipe', 'ignore'],
-      }).trim(),
-      10,
-    );
-    if (pwshVersion >= 7) return pwshVersion;
-
-    // Fall back to Windows PowerShell (powershell.exe)
-    const psVersion = parseInt(
-      execSync(`powershell.exe -NoProfile -Command "${command}"`, {
-        encoding: 'utf8' as const,
-        stdio: ['pipe', 'pipe', 'ignore'],
-      }).trim(),
-      10,
-    );
-    return psVersion >= 5 ? psVersion : 0;
-  } catch (err) {
-    console.error('Error determining PowerShell version:', err);
-    return 0;
-  }
-}
-
-function determineShell(): string {
-  switch (platform()) {
-    case 'darwin':
-      return 'zsh';
-    case 'linux':
-      return 'bash';
-    case 'win32':
-    default:
-      return getPowerShellVersion() >= 5 ? 'pwsh.exe' : 'powershell.exe';
-  }
-}
-
-const LINE_ENDING = platform() === 'win32' ? '\r' : '\n';
 let ptyProcess: IPty | undefined = undefined;
 
 function startPtyUpdate(pythonExePath: string, packageSpecs: string): Promise<void> {
@@ -63,8 +21,8 @@ function startPtyUpdate(pythonExePath: string, packageSpecs: string): Promise<vo
           ? `& "${pythonExePath}" -m pip install --upgrade ${packageSpecs}`
           : `"${pythonExePath}" -m pip install --upgrade ${packageSpecs}`;
 
-      ptyProcess.write(`${updateCommand}${LINE_ENDING}`);
-      ptyProcess.write(`exit${LINE_ENDING}`);
+      ptyProcess.write(`${updateCommand}${COMMAND_LINE_ENDING}`);
+      ptyProcess.write(`exit${COMMAND_LINE_ENDING}`);
 
       ptyProcess.onData(data => {
         webContent.send(ptyChannels.onData, 'python-update', data);
