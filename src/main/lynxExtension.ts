@@ -12,8 +12,8 @@ import {
 import {AssociateItem, IdPathType} from '../cross/CrossExtTypes';
 import {getDefaultEnvPath, setAppManager, setNodePty, setStorage} from './DataHolder';
 import ListenForChannels from './ListenForChannels';
-import {replacePythonPath} from './utils/ExtMainUtils';
-import {findAIVenv} from './utils/VirtualEnv/VenvUtils';
+import {replacePythonPath} from './Utils/ExtMainUtils';
+import {findAIVenv} from './Utils/VirtualEnv/VenvUtils';
 
 export async function initialExtension(lynxApi: ExtensionMainApi, utils: MainExtensionUtils) {
   utils.getAppManager().then(app => {

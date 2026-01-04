@@ -1,9 +1,9 @@
 import {spawn} from 'node:child_process';
-import {dirname} from 'node:path';
 import {platform} from 'node:os';
+import {dirname} from 'node:path';
 
-import {homedir} from 'os';
 import {promises} from 'graceful-fs';
+import {homedir} from 'os';
 import which from 'which';
 
 import {getDefaultEnvPath, setDefaultEnvPath} from '../DataHolder';
