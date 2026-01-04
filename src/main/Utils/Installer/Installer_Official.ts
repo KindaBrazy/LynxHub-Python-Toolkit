@@ -125,7 +125,9 @@ async function installOnLinux(version: string): Promise<void> {
 async function installOnMacOS(installerPath: string): Promise<void> {
   // macOS .pkg files require admin privileges to install to /Library/Frameworks
   // Using osascript to prompt for admin password via GUI
-  const script = `do shell script "installer -pkg '${installerPath}' -target /" with administrator privileges`;
+  // Escape single quotes in path for shell safety
+  const escapedPath = installerPath.replace(/'/g, "'\\''");
+  const script = `do shell script "installer -pkg '${escapedPath}' -target /" with administrator privileges`;
   const command = `osascript -e '${script}'`;
 
   return new Promise((resolve, reject) => {
