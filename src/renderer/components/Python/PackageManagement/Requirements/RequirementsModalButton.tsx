@@ -197,7 +197,7 @@ export default function RequirementsBtn({id, projectPath, setIsReqAvailable, sho
                 <Empty
                   description={
                     <span>
-                      The file &#34;{filePath.split('\\').pop()}&#34; is empty. Add requirements using the &#34;Add&#34;
+                      The file &#34;{filePath.split(/[/\\]/).pop()}&#34; is empty. Add requirements using the &#34;Add&#34;
                       button.
                     </span>
                   }
