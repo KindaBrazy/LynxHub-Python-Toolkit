@@ -41,6 +41,31 @@ const commonPaths: {[key: string]: string[]} = {
     '/opt/conda/*',
     '/snap/bin/python*',
   ],
+  darwin: [
+    // Official Python installer location
+    '/Library/Frameworks/Python.framework/Versions/*/bin/python*',
+    // Homebrew on Apple Silicon
+    '/opt/homebrew/bin/python*',
+    '/opt/homebrew/opt/python*/bin/python*',
+    '/opt/homebrew/Cellar/python*/*/bin/python*',
+    // Homebrew on Intel
+    '/usr/local/bin/python*',
+    '/usr/local/opt/python*/bin/python*',
+    '/usr/local/Cellar/python*/*/bin/python*',
+    // pyenv
+    '~/.pyenv/versions/*',
+    // Conda
+    '~/anaconda3',
+    '~/anaconda3/envs/*',
+    '~/miniconda3',
+    '~/miniconda3/envs/*',
+    '/opt/anaconda3',
+    '/opt/anaconda3/envs/*',
+    '/opt/miniconda3',
+    '/opt/miniconda3/envs/*',
+    // MacPorts
+    '/opt/local/bin/python*',
+  ],
 };
 
 function matchPattern(file: string, pattern: string) {
@@ -190,8 +215,8 @@ async function findInCommonLocations(): Promise<string[]> {
             } catch (subError) {
               // Ignore if we can't read a subdirectory (e.g., envs doesn't exist)
             }
-          } else if (os === 'linux') {
-            // Check if file is executable
+          } else if (os !== 'win32') {
+            // On Linux/macOS, check if file is executable
             if ((await isExecutable(fullPath)) && (await isPythonPathValid(fullPath))) {
               expandedPaths.push(fullPath);
             }
