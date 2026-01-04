@@ -49,6 +49,16 @@ export function isWin() {
   return platform() === 'win32';
 }
 
+/** Returns the PATH separator for the current platform (';' for Windows, ':' for Unix) */
+function getPathSeparator(): string {
+  return platform() === 'win32' ? ';' : ':';
+}
+
+/** Returns the Python scripts subdirectory name for the current platform */
+function getPythonScriptsDir(): string {
+  return platform() === 'win32' ? 'Scripts' : 'bin';
+}
+
 function validatePath(path: string): boolean {
   try {
     accessSync(path);
@@ -66,11 +76,12 @@ export function replacePythonPath(envPath: string, newPythonBase: string): strin
     throw new Error(`Python path does not exist: ${targetPath}`);
   }
 
-  const paths = envPath.split(';').filter(Boolean);
+  const separator = getPathSeparator();
+  const paths = envPath.split(separator).filter(Boolean);
   const nonPythonPaths = paths.filter(path => !path.toLowerCase().includes('python'));
-  const newPaths = [targetPath, join(targetPath, 'Scripts'), ...nonPythonPaths];
+  const newPaths = [targetPath, join(targetPath, getPythonScriptsDir()), ...nonPythonPaths];
 
-  return newPaths.join(';');
+  return newPaths.join(separator);
 }
 
 export function isFirstPythonPath(envPath: string, targetPythonBase: string): boolean {
@@ -81,7 +92,8 @@ export function isFirstPythonPath(envPath: string, targetPythonBase: string): bo
     return false;
   }
 
-  const paths = envPath.split(';').filter(Boolean);
+  const separator = getPathSeparator();
+  const paths = envPath.split(separator).filter(Boolean);
 
   const firstPythonLikePath = paths.find(p => {
     const lowerP = p.toLowerCase();
