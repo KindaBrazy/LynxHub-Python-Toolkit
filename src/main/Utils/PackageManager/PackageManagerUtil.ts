@@ -63,7 +63,7 @@ function constructChangeVersionCommand(pythonExePath: string, packageInfo: Packa
   const isInstall = !currentVersion;
   const isUpgrade = !isInstall && semver.gt(targetVersion, currentVersion);
 
-  let command = `${pythonExePath} -m pip install`;
+  let command = `"${pythonExePath}" -m pip install`;
 
   if (!isInstall) {
     command += ` --force-reinstall`;

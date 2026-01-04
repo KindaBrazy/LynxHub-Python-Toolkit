@@ -12,7 +12,7 @@ export async function uninstallLinuxPython(pythonExecutablePath: string) {
       };
     }
 
-    const {stdout} = await execAsync(`${pythonExecutablePath} --version`);
+    const {stdout} = await execAsync(`"${pythonExecutablePath}" --version`);
     const versionMatch = stdout.match(/Python (\d+\.\d+)/);
     if (!versionMatch) {
       return {

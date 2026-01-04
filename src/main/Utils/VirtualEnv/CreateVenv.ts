@@ -93,7 +93,7 @@ export default async function createPythonVenv(options: VenvCreateOptions): Prom
   const {pythonPath, destinationFolder, venvName} = options;
 
   const venvPath = join(destinationFolder, venvName);
-  const command = `${pythonPath} -m venv ${venvPath}`;
+  const command = `"${pythonPath}" -m venv "${venvPath}"`;
 
   return new Promise(resolve => {
     exec(command, (error, stdout, stderr) => {

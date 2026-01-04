@@ -31,7 +31,7 @@ export async function getSitePackagesInfo(pythonExePath: string): Promise<SitePa
 
 export async function installPythonPackage(pythonExePath: string, commands: string): Promise<string> {
   return new Promise((resolve, reject) => {
-    const command = `${pythonExePath} -m pip install ${commands} --disable-pip-version-check`;
+    const command = `"${pythonExePath}" -m pip install ${commands} --disable-pip-version-check`;
 
     exec(command, (error, stdout, stderr) => {
       if (error) {
