@@ -1,6 +1,7 @@
 import {Button} from '@heroui/react';
 import {useEffect, useMemo, useState} from 'react';
 import {useDispatch} from 'react-redux';
+import {gte} from 'semver';
 
 import {ToolsCard} from '../../../../src/renderer/src/App/Components/Reusable/ToolsCard';
 import {tabsActions, useTabsState} from '../../../../src/renderer/src/App/Redux/Reducer/TabsReducer';
@@ -18,6 +19,7 @@ const iconUrl: string =
 
 export default function ToolsPage() {
   const dispatch = useDispatch<AppDispatch>();
+  const [icon, setIcon] = useState<undefined | string>(undefined);
 
   const activeTab = useTabsState('activeTab');
   const tabs = useTabsState('tabs');
@@ -26,6 +28,25 @@ export default function ToolsPage() {
 
   const [isOpen, setIsOpen] = useState(false);
   const [tabID, setTabID] = useState<string>('');
+
+  useEffect(() => {
+    pIpc
+      .getAppVersion()
+      .then(v => {
+        console.log(v);
+        if (gte(v, '3.4.0')) {
+          console.log('ssss');
+          setIcon(`lynxcache://fetch/${encodeURIComponent(iconUrl)}`);
+        } else {
+          console.log('sss123123123s');
+          setIcon(iconUrl);
+        }
+      })
+      .catch(() => {
+        console.log("Can't get the app version.");
+        setIcon(iconUrl);
+      });
+  }, []);
 
   useEffect(() => {
     if (isOpen && tabID === activeTab) dispatch(tabsActions.setTabTitle({tabID, title}));
@@ -63,8 +84,9 @@ export default function ToolsPage() {
             <SettingsMinimal_Icon className="size-4" />
           </Button>
         }
+        // @ts-expect-error Them image url can be undefined
+        icon={icon}
         title={title}
-        icon={iconUrl}
         description={desc}
         onPress={openModal}
       />
