@@ -1,7 +1,6 @@
 import {exec} from 'child_process';
-import {promisify} from 'util';
-
 import {existsSync} from 'graceful-fs';
+import {promisify} from 'util';
 
 const execAsync = promisify(exec);
 
@@ -42,9 +41,7 @@ export async function uninstallMacPython(pythonExecutablePath: string): Promise<
   }
 }
 
-async function uninstallOfficialMacPython(
-  pythonExecutablePath: string,
-): Promise<{success: boolean; message: string}> {
+async function uninstallOfficialMacPython(pythonExecutablePath: string): Promise<{success: boolean; message: string}> {
   try {
     // Get Python version from path (e.g., /Library/Frameworks/Python.framework/Versions/3.11/bin/python3)
     const versionMatch = pythonExecutablePath.match(/Versions\/(\d+\.\d+)/);
@@ -90,9 +87,7 @@ async function uninstallOfficialMacPython(
   }
 }
 
-async function uninstallHomebrewPython(
-  pythonExecutablePath: string,
-): Promise<{success: boolean; message: string}> {
+async function uninstallHomebrewPython(pythonExecutablePath: string): Promise<{success: boolean; message: string}> {
   try {
     // Get the formula name from the path
     // e.g., /opt/homebrew/opt/python@3.11/bin/python3 -> python@3.11
