@@ -1,6 +1,7 @@
 import {platform} from 'os';
 
 import {uninstallLinuxPython} from './Uninstaller_Official_Linux';
+import {uninstallMacPython} from './Uninstaller_Official_Mac';
 import {uninstallWindowsPython} from './Uninstaller_Official_Win';
 
 export async function uninstallOfficialPython(pythonPath: string): Promise<{success: boolean; message: string}> {
@@ -11,6 +12,7 @@ export async function uninstallOfficialPython(pythonPath: string): Promise<{succ
       case 'win32':
         return await uninstallWindowsPython(pythonPath);
       case 'darwin':
+        return await uninstallMacPython(pythonPath);
       case 'linux':
         return await uninstallLinuxPython(pythonPath);
       default:
