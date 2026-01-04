@@ -1,4 +1,4 @@
-import {arch, platform} from 'node:os';
+import {platform} from 'node:os';
 
 import {exec} from 'child_process';
 import {promisify} from 'util';
@@ -6,11 +6,6 @@ import {promisify} from 'util';
 import {PythonVersion} from '../../cross/CrossExtTypes';
 
 const execAsync = promisify(exec);
-
-/** Checks if running on Apple Silicon (arm64) Mac */
-function isAppleSilicon(): boolean {
-  return platform() === 'darwin' && arch() === 'arm64';
-}
 
 function removeDuplicateUrls(versions: PythonVersion[]): PythonVersion[] {
   const seenUrls = new Set();
