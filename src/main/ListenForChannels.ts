@@ -1,4 +1,4 @@
-import {ipcMain} from 'electron';
+import {app, ipcMain} from 'electron';
 
 import {OnPreCommands} from '../../../src/cross/IpcChannelAndTypes';
 import {
@@ -219,6 +219,8 @@ export default function ListenForChannels(nodePty: any) {
   ipcMain.on(pythonChannels.abortUpdating, () => abortOngoingUpdate());
 
   ipcMain.handle(pythonChannels.getPythonVersion, (_, pythonPath: string) => parseVersion(pythonPath));
+
+  ipcMain.handle(pythonChannels.getAppVersion, () => app.getVersion());
 
   ListenForStorage(storageManager);
 }

@@ -144,6 +144,8 @@ export const pythonChannels = {
   abortUpdating: 'ptoolkit-abort-updating',
 
   getPythonVersion: 'ptoolkit-get-python-version',
+
+  getAppVersion: 'ptoolkit-get-app-version',
 };
 
 export const pythonStorageChannels = {

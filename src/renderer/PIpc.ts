@@ -128,6 +128,8 @@ const pIpc = {
   getPythonVersion: (pythonPath: string): Promise<ParsedPythonVersion> =>
     ipc.invoke(pythonChannels.getPythonVersion, pythonPath),
 
+  getAppVersion: (): Promise<string> => ipc.invoke(pythonChannels.getAppVersion),
+
   storage: {
     getAvailableConda: (): Promise<string[]> => ipc.invoke(pythonStorageChannels.getAvailableConda),
     setAvailableConda: (value: string[]) => ipc.send(pythonStorageChannels.setAvailableConda, value),
