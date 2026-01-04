@@ -107,6 +107,17 @@ export function isFirstPythonPath(envPath: string, targetPythonBase: string): bo
   const separator = getPathSeparator();
   const paths = envPath.split(separator).filter(Boolean);
 
+  // On Unix, Python might be in paths like /usr/local/bin which don't contain "python" in the name
+  // Check if the target path is the first path in PATH, or the first python-like path
+  const firstPath = paths[0];
+  if (firstPath) {
+    const resolvedFirst = resolve(firstPath);
+    const isWindows = platform() === 'win32';
+    const matches = isWindows ? resolvedFirst.toLowerCase() === targetPath.toLowerCase() : resolvedFirst === targetPath;
+    if (matches) return true;
+  }
+
+  // Also check for first python-like path for backward compatibility
   const firstPythonLikePath = paths.find(p => {
     const lowerP = p.toLowerCase();
     return lowerP.includes('python') || lowerP.includes('conda');
@@ -116,5 +127,8 @@ export function isFirstPythonPath(envPath: string, targetPythonBase: string): bo
     return false;
   }
 
-  return resolve(firstPythonLikePath).toLowerCase() === targetPath.toLowerCase();
+  const isWindows = platform() === 'win32';
+  return isWindows
+    ? resolve(firstPythonLikePath).toLowerCase() === targetPath.toLowerCase()
+    : resolve(firstPythonLikePath) === targetPath;
 }

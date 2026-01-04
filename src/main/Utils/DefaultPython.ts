@@ -1,6 +1,5 @@
 import {spawn} from 'node:child_process';
 import {platform} from 'node:os';
-import {dirname} from 'node:path';
 
 import {promises} from 'graceful-fs';
 import {homedir} from 'os';
@@ -44,7 +43,9 @@ export async function setDefaultPython(pythonPath: string): Promise<void> {
 export async function isDefaultPython(pythonPath: string): Promise<boolean> {
   try {
     const defaultPath = await which('python', {path: getDefaultEnvPath()});
-    return defaultPath.toLowerCase() === pythonPath.toLowerCase();
+    // Use case-insensitive comparison on Windows, case-sensitive on Unix
+    const isWindows = platform() === 'win32';
+    return isWindows ? defaultPath.toLowerCase() === pythonPath.toLowerCase() : defaultPath === pythonPath;
   } catch (error) {
     return false;
   }
@@ -109,7 +110,8 @@ async function setDefaultPythonWindows(pythonPath: string): Promise<void> {
 const LYNXHUB_PATH_MARKER = '# LynxHub Python Path';
 
 async function setDefaultPythonUnix(pythonPath: string, shellConfigFile: string): Promise<void> {
-  const pythonBinDir = dirname(pythonPath);
+  // pythonPath is the installFolder (e.g., /usr/local/bin), use it directly
+  const pythonBinDir = pythonPath;
 
   try {
     let content = '';
@@ -150,6 +152,12 @@ async function setDefaultPythonUnix(pythonPath: string, shellConfigFile: string)
 
     // Update current process PATH
     process.env.PATH = `${pythonBinDir}:${process.env.PATH}`;
+
+    // Also update the default env path used by the extension
+    const defaultEnvPath = getDefaultEnvPath();
+    if (defaultEnvPath) {
+      setDefaultEnvPath(`${pythonBinDir}:${defaultEnvPath}`);
+    }
   } catch (err: any) {
     throw new Error(`Failed to update shell config: ${err.message}`);
   }
