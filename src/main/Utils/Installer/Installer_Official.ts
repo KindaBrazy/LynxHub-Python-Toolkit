@@ -22,6 +22,8 @@ async function installPython(filePath: string, version: PythonVersion): Promise<
         await installOnLinux(version.version);
         break;
       case 'darwin':
+        await installOnMacOS(filePath);
+        break;
       default:
         break;
     }
@@ -117,5 +119,26 @@ async function installOnLinux(version: string): Promise<void> {
     } catch (e) {
       reject(e);
     }
+  });
+}
+
+async function installOnMacOS(installerPath: string): Promise<void> {
+  // macOS .pkg files require admin privileges to install to /Library/Frameworks
+  // Using osascript to prompt for admin password via GUI
+  const script = `do shell script "installer -pkg '${installerPath}' -target /" with administrator privileges`;
+  const command = `osascript -e '${script}'`;
+
+  return new Promise((resolve, reject) => {
+    exec(command, (error, stdout, stderr) => {
+      if (error) {
+        console.error(`Error installing Python on macOS: ${error.message}`);
+        console.error(stderr);
+        reject(error);
+      } else {
+        console.log('Python installed successfully on macOS');
+        console.log(stdout);
+        resolve();
+      }
+    });
   });
 }
