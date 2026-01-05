@@ -220,11 +220,11 @@ export default function InstalledCard({python, diskUsage, maxDiskValue, updateDe
             </div>
             <div>
               <span className="text-tiny text-foreground-500">{python.architecture}</span>
-              <Divider type="vertical" />
+              <Divider orientation="vertical" />
               <span className={'text-tiny ' + installTypeColor}>{startCase(python.installationType)}</span>
               {python.installationType === 'conda' && (
                 <>
-                  <Divider type="vertical" />
+                  <Divider orientation="vertical" />
                   <span className={'text-tiny text-cyan-500'}>{python.condaName}</span>
                 </>
               )}
@@ -253,6 +253,7 @@ export default function InstalledCard({python, diskUsage, maxDiskValue, updateDe
                   key="lynxhub-default"
                   onPress={makeLynxDefault}
                   textValue="Set as LynxHub Default"
+                  // eslint-disable-next-line perfectionist/sort-jsx-props
                   startContent={
                     python.isLynxHubDefault ? <RefreshDuo_Icon className="size-4" /> : <DoubleCheck_Icon />
                   }>
