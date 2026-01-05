@@ -26,6 +26,7 @@ type Props = {
   projectPath?: string;
   setPythonPath?: Dispatch<SetStateAction<string>>;
   show: string;
+  onPackagesChanged?: () => void;
 };
 
 export default function PackageManagerModal({
@@ -39,10 +40,12 @@ export default function PackageManagerModal({
   projectPath,
   setPythonPath,
   show,
+  onPackagesChanged,
 }: Props) {
   const [isLoadingPackages, setIsLoadingPackages] = useState<boolean>(false);
   const [isCheckingUpdates, setIsCheckingUpdates] = useState<boolean>(false);
   const [isUpdating, setIsUpdating] = useState<boolean>(false);
+  const [packagesChanged, setPackagesChanged] = useState<boolean>(false);
 
   const [packages, setPackages] = useState<PackageInfo[]>([]);
   const [filteredPackages, setFilteredPackages] = useState<PackageInfo[]>([]);
@@ -126,6 +129,10 @@ export default function PackageManagerModal({
   const closePackageManager = () => {
     setIsOpen(false);
     setPackagesUpdate([]);
+    if (packagesChanged && onPackagesChanged) {
+      onPackagesChanged();
+      setPackagesChanged(false);
+    }
   };
 
   const checkForUpdates = (type: 'req' | 'normal') => {
@@ -205,6 +212,7 @@ export default function PackageManagerModal({
       return;
     }
 
+    setPackagesChanged(true);
     const updatesMap = new Map(updatesArray.map(item => [item.name, item.targetVersion]));
 
     setPackagesUpdate(prevUpdates => prevUpdates.filter(item => !updatesMap.has(item.name)));
@@ -227,8 +235,14 @@ export default function PackageManagerModal({
   };
 
   const removed = (name: string) => {
+    setPackagesChanged(true);
     setPackagesUpdate(prevState => prevState.filter(item => item.name !== name));
     setPackages(prevState => prevState.filter(item => item.name !== name));
+  };
+
+  const refreshAfterInstall = () => {
+    setPackagesChanged(true);
+    getPackageList();
   };
 
   return (
@@ -253,10 +267,10 @@ export default function PackageManagerModal({
             visibleItems={items}
             isUpdating={isUpdating}
             pythonPath={pythonPath}
-            refresh={getPackageList}
             projectPath={projectPath}
             searchValue={searchValue}
             selectedKeys={selectedKeys}
+            refresh={refreshAfterInstall}
             setIsUpdating={setIsUpdating}
             isValidPython={isValidPython}
             actionButtons={actionButtons}

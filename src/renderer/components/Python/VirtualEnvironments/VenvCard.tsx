@@ -134,6 +134,7 @@ export default function VenvCard({
         id={pythonPath}
         pythonPath={pythonPath}
         isOpen={packageManagerOpen}
+        onPackagesChanged={refresh}
         setIsOpen={setPackageManagerOpen}
       />
       <Card

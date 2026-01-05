@@ -197,6 +197,7 @@ export default function InstalledCard({python, diskUsage, maxDiskValue, updateDe
         isOpen={packageManagerOpen}
         pythonPath={python.installPath}
         setIsOpen={setPackageManagerOpen}
+        onPackagesChanged={() => refresh(false)}
       />
       {isUninstalling && (
         <div className="absolute size-full dark:bg-black/50 bg-white/50 z-10 flex justify-center items-center">
@@ -247,12 +248,14 @@ export default function InstalledCard({python, diskUsage, maxDiskValue, updateDe
                   Set as <span className="font-bold text-secondary">System Default</span>
                 </DropdownItem>
                 <DropdownItem
-                  startContent={python.isLynxHubDefault ? <RefreshDuo_Icon className="size-4" /> : <DoubleCheck_Icon />}
                   variant="flat"
                   color="success"
                   key="lynxhub-default"
                   onPress={makeLynxDefault}
-                  textValue="Set as LynxHub Default">
+                  textValue="Set as LynxHub Default"
+                  startContent={
+                    python.isLynxHubDefault ? <RefreshDuo_Icon className="size-4" /> : <DoubleCheck_Icon />
+                  }>
                   Set as <span className="font-bold text-primary">LynxHub Default</span>
                 </DropdownItem>
                 <DropdownItem
