@@ -1,20 +1,14 @@
 import federation from '@originjs/vite-plugin-federation';
 import tailwindcss from '@tailwindcss/vite';
 import react from '@vitejs/plugin-react';
-import {defineConfig, externalizeDepsPlugin} from 'electron-vite';
+import {defineConfig} from 'electron-vite';
 import {resolve} from 'path';
-
-// import packageJson from './package.json';
 
 export default defineConfig({
   main: {
     root: resolve('extension/src/main'),
-    plugins: [
-      externalizeDepsPlugin({
-        exclude: ['which', 'graceful-fs', 'electron-dl', 'semver', 'axios'],
-      }),
-    ],
     build: {
+      externalizeDeps: {exclude: ['which', 'graceful-fs', 'electron-dl', 'semver', 'axios']},
       emptyOutDir: true,
       outDir: resolve('extension_out/main'),
       rollupOptions: {
@@ -48,7 +42,6 @@ export default defineConfig({
       outDir: resolve('extension_out/renderer'),
       rollupOptions: {
         input: resolve('extension/src/renderer/index.html'),
-        // external: Object.keys(packageJson.devDependencies),
         treeshake: {moduleSideEffects: false},
       },
       assetsDir: '',
