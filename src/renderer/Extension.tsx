@@ -8,6 +8,7 @@ import ToolsPage from './components/ToolsPage';
 import CustomHook from './CustomHook';
 import {setCards, setRendererIpc} from './DataHolder';
 import listenForEvents from './ListenForEvents';
+import pIpc from './PIpc';
 import pythonToolkitReducer from './reducer';
 
 export function InitialExtensions(lynxAPI: ExtensionRendererApi) {
@@ -22,4 +23,13 @@ export function InitialExtensions(lynxAPI: ExtensionRendererApi) {
   lynxAPI.customizePages.tools.addComponent(ToolsPage);
   lynxAPI.cards.customize.menu.addSection([{index: 1, components: [CardMenu]}]);
   lynxAPI.addCustomHook(CustomHook);
+
+  pIpc
+    .getAppVersion()
+    .then(version => {
+      window.lynxVersion = version;
+    })
+    .catch(() => {
+      console.log("Can't get the app version.");
+    });
 }

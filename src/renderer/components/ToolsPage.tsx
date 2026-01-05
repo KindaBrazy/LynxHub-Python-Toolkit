@@ -19,7 +19,9 @@ const iconUrl: string =
 
 export default function ToolsPage() {
   const dispatch = useDispatch<AppDispatch>();
-  const [icon, setIcon] = useState<undefined | string>(undefined);
+  const [icon] = useState(
+    gte(window.lynxVersion || '3.3.0', '3.4.0') ? `lynxcache://fetch/${encodeURIComponent(iconUrl)}` : iconUrl,
+  );
 
   const activeTab = useTabsState('activeTab');
   const tabs = useTabsState('tabs');
@@ -28,25 +30,6 @@ export default function ToolsPage() {
 
   const [isOpen, setIsOpen] = useState(false);
   const [tabID, setTabID] = useState<string>('');
-
-  useEffect(() => {
-    pIpc
-      .getAppVersion()
-      .then(v => {
-        console.log(v);
-        if (gte(v, '3.4.0')) {
-          console.log('ssss');
-          setIcon(`lynxcache://fetch/${encodeURIComponent(iconUrl)}`);
-        } else {
-          console.log('sss123123123s');
-          setIcon(iconUrl);
-        }
-      })
-      .catch(() => {
-        console.log("Can't get the app version.");
-        setIcon(iconUrl);
-      });
-  }, []);
 
   useEffect(() => {
     if (isOpen && tabID === activeTab) dispatch(tabsActions.setTabTitle({tabID, title}));
@@ -84,7 +67,6 @@ export default function ToolsPage() {
             <SettingsMinimal_Icon className="size-4" />
           </Button>
         }
-        // @ts-expect-error Them image url can be undefined
         icon={icon}
         title={title}
         description={desc}
