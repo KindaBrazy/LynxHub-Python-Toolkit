@@ -25,20 +25,27 @@ function getCommandByType(type: 'python' | 'venv' | 'conda', dir: string, condaN
     }
     case 'venv': {
       if (isWin) {
-        return `${dir}\\Scripts\\activate.ps1`;
+        return `& "${dir}\\Scripts\\Activate.ps1"`;
       }
       // On Unix, check if dir already ends with /bin to avoid /bin/bin/activate
       const activatePath = dir.endsWith('/bin') ? `${dir}/activate` : `${dir}/bin/activate`;
-      return `source ${activatePath}`;
+      return `source "${activatePath}"`;
     }
     case 'conda': {
-      // If condaName is provided, use it directly
+      if (isWin) {
+        // On Windows, use conda activate with the environment name or path
+        if (condaName) {
+          return `conda activate ${condaName}`;
+        }
+        // For base conda or when no name is provided, activate using the path
+        return `conda activate "${dir}"`;
+      }
+      // On Unix
       if (condaName) {
         return `conda activate ${condaName}`;
       }
       // On Unix, dir is the bin folder, we need the parent for conda activate
-      // On Windows, dir is the base folder
-      const condaPath = !isWin && dir.endsWith('/bin') ? dir.slice(0, -4) : dir;
+      const condaPath = dir.endsWith('/bin') ? dir.slice(0, -4) : dir;
       return `source "${condaPath}/bin/activate"`;
     }
     default:
@@ -107,11 +114,18 @@ export function getExePathAssociate(target: AssociateItem | string): string | un
       switch (item.type) {
         case 'venv':
           return resolve(getVenvPythonPath(item.dir));
+        case 'conda': {
+          // Conda python.exe is in the base folder on Windows, bin folder on Unix
+          if (isWin) {
+            return resolve(join(item.dir, 'python.exe'));
+          }
+          // On Unix, dir is the bin folder
+          const pythonPath = item.dir.endsWith('/bin') ? join(item.dir, 'python') : join(item.dir, 'bin', 'python');
+          return resolve(pythonPath);
+        }
         case 'python':
-        case 'conda':
         default: {
-          // On Windows, dir is the base folder (e.g., C:\Python312)
-          // On Unix, dir is already the bin folder (e.g., /usr/local/bin)
+          // Official Python: on Windows dir is base folder, on Unix dir is bin folder
           if (isWin) {
             return resolve(join(item.dir, 'python.exe'));
           }
