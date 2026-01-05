@@ -247,14 +247,12 @@ export default function InstalledCard({python, diskUsage, maxDiskValue, updateDe
                   Set as <span className="font-bold text-secondary">System Default</span>
                 </DropdownItem>
                 <DropdownItem
+                  startContent={python.isLynxHubDefault ? <RefreshDuo_Icon className="size-4" /> : <DoubleCheck_Icon />}
                   variant="flat"
                   color="success"
                   key="lynxhub-default"
                   onPress={makeLynxDefault}
-                  textValue="Set as LynxHub Default"
-                  startContent={
-                    python.isLynxHubDefault ? <RefreshDuo_Icon className="size-4" /> : <DoubleCheck_Icon />
-                  }>
+                  textValue="Set as LynxHub Default">
                   Set as <span className="font-bold text-primary">LynxHub Default</span>
                 </DropdownItem>
                 <DropdownItem

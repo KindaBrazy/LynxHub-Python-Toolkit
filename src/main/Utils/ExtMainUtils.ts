@@ -90,8 +90,19 @@ export function replacePythonPath(envPath: string, newPythonBase: string): strin
 
   const separator = getPathSeparator();
   const paths = envPath.split(separator).filter(Boolean);
-  const nonPythonPaths = paths.filter(path => !path.toLowerCase().includes('python'));
-  const newPaths = [targetPath, join(targetPath, getPythonScriptsDir()), ...nonPythonPaths];
+
+  // Filter out existing Python and Conda paths to avoid conflicts
+  const nonPythonPaths = paths.filter(p => {
+    const lowerPath = p.toLowerCase();
+    return !lowerPath.includes('python') && !lowerPath.includes('conda') && !lowerPath.includes('miniconda');
+  });
+
+  // On Windows, installFolder is the base (e.g., C:\Python312) and Scripts is a subdirectory
+  // On Unix, installFolder is already the bin directory (e.g., /usr/local/bin)
+  const isWindows = platform() === 'win32';
+  const newPaths = isWindows
+    ? [targetPath, join(targetPath, getPythonScriptsDir()), ...nonPythonPaths]
+    : [targetPath, ...nonPythonPaths];
 
   return newPaths.join(separator);
 }

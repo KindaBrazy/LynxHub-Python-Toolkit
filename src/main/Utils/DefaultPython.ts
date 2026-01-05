@@ -1,5 +1,6 @@
 import {spawn} from 'node:child_process';
 import {platform} from 'node:os';
+import {dirname} from 'node:path';
 
 import {promises} from 'graceful-fs';
 import {homedir} from 'os';
@@ -43,9 +44,13 @@ export async function setDefaultPython(pythonPath: string): Promise<void> {
 export async function isDefaultPython(pythonPath: string): Promise<boolean> {
   try {
     const defaultPath = await which('python', {path: getDefaultEnvPath()});
-    // Use case-insensitive comparison on Windows, case-sensitive on Unix
     const isWindows = platform() === 'win32';
-    return isWindows ? defaultPath.toLowerCase() === pythonPath.toLowerCase() : defaultPath === pythonPath;
+
+    // Compare the directories since python executable names can vary (python, python3, python3.12, etc.)
+    const defaultDir = dirname(defaultPath);
+    const targetDir = dirname(pythonPath);
+
+    return isWindows ? defaultDir.toLowerCase() === targetDir.toLowerCase() : defaultDir === targetDir;
   } catch (error) {
     return false;
   }
