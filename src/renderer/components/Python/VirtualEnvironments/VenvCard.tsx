@@ -258,7 +258,7 @@ export default function VenvCard({
         </CardBody>
 
         <CardFooter className="flex-col gap-y-3">
-          <Venv_Associate type="venv" folder={folder} />
+          <Venv_Associate folder={folder} type={isInstallation ? 'conda' : 'venv'} />
         </CardFooter>
       </Card>
     </>
