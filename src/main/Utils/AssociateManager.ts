@@ -15,18 +15,32 @@ function getCommandByType(type: 'python' | 'venv' | 'conda', dir: string, condaN
   const isWin = platform() === 'win32';
 
   switch (type) {
-    case 'python':
-      return isWin ? `$env:Path = "${dir};${dir}\\Scripts" + $env:Path` : `export PATH="${dir}:${dir}/bin:$PATH"`;
+    case 'python': {
+      if (isWin) {
+        // On Windows, dir is the base folder (e.g., C:\Python312), Scripts is a subdirectory
+        return `$env:Path = "${dir};${dir}\\Scripts;" + $env:Path`;
+      }
+      // On Unix, dir is already the bin folder (e.g., /usr/local/bin), just add it to PATH
+      return `export PATH="${dir}:$PATH"`;
+    }
     case 'venv': {
       if (isWin) {
         return `${dir}\\Scripts\\activate.ps1`;
       }
-      // On Linux, check if dir already ends with /bin to avoid /bin/bin/activate
+      // On Unix, check if dir already ends with /bin to avoid /bin/bin/activate
       const activatePath = dir.endsWith('/bin') ? `${dir}/activate` : `${dir}/bin/activate`;
       return `source ${activatePath}`;
     }
-    case 'conda':
-      return `conda activate ${condaName || `"${dir}"`}`;
+    case 'conda': {
+      // If condaName is provided, use it directly
+      if (condaName) {
+        return `conda activate ${condaName}`;
+      }
+      // On Unix, dir is the bin folder, we need the parent for conda activate
+      // On Windows, dir is the base folder
+      const condaPath = !isWin && dir.endsWith('/bin') ? dir.slice(0, -4) : dir;
+      return `source "${condaPath}/bin/activate"`;
+    }
     default:
       throw new Error(`Unsupported environment type: ${type}`);
   }
@@ -88,13 +102,23 @@ function updateAssociateStorage(data: AssociateItem): void {
 export function getExePathAssociate(target: AssociateItem | string): string | undefined {
   try {
     const buildPath = (item: AssociateItem) => {
+      const isWin = platform() === 'win32';
+
       switch (item.type) {
         case 'venv':
           return resolve(getVenvPythonPath(item.dir));
         case 'python':
         case 'conda':
-        default:
-          return resolve(platform() === 'win32' ? join(item.dir, 'python.exe') : join(item.dir, 'bin', 'python'));
+        default: {
+          // On Windows, dir is the base folder (e.g., C:\Python312)
+          // On Unix, dir is already the bin folder (e.g., /usr/local/bin)
+          if (isWin) {
+            return resolve(join(item.dir, 'python.exe'));
+          }
+          // On Unix, check if dir ends with /bin
+          const pythonPath = item.dir.endsWith('/bin') ? join(item.dir, 'python') : join(item.dir, 'bin', 'python');
+          return resolve(pythonPath);
+        }
       }
     };
 
