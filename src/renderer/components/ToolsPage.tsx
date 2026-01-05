@@ -1,7 +1,6 @@
 import {Button} from '@heroui/react';
 import {useEffect, useMemo, useState} from 'react';
 import {useDispatch} from 'react-redux';
-import {gte} from 'semver';
 
 import {ToolsCard} from '../../../../src/renderer/src/App/Components/Reusable/ToolsCard';
 import {tabsActions, useTabsState} from '../../../../src/renderer/src/App/Redux/Reducer/TabsReducer';
@@ -9,6 +8,7 @@ import {AppDispatch} from '../../../../src/renderer/src/App/Redux/Store';
 import {SettingsMinimal_Icon} from '../../../../src/renderer/src/assets/icons/SvgIcons/SvgIcons';
 import pIpc from '../PIpc';
 import {PythonToolkitActions} from '../reducer';
+import {cacheUrl} from '../Utils';
 import PythonToolkitModal from './Python/PythonToolkitModal';
 import UIProvider from './UIProvider';
 
@@ -19,9 +19,7 @@ const iconUrl: string =
 
 export default function ToolsPage() {
   const dispatch = useDispatch<AppDispatch>();
-  const [icon] = useState(
-    gte(window.lynxVersion || '3.3.0', '3.4.0') ? `lynxcache://fetch/${encodeURIComponent(iconUrl)}` : iconUrl,
-  );
+  const icon = cacheUrl(iconUrl);
 
   const activeTab = useTabsState('activeTab');
   const tabs = useTabsState('tabs');
@@ -67,6 +65,7 @@ export default function ToolsPage() {
             <SettingsMinimal_Icon className="size-4" />
           </Button>
         }
+        // @ts-expect-error Them image url can be undefined
         icon={icon}
         title={title}
         description={desc}
