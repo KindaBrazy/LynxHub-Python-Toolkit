@@ -10,8 +10,7 @@ import which from 'which';
 
 import {PythonInstallation} from '../../cross/CrossExtTypes';
 import {getStorage} from '../DataHolder';
-import {isDefaultPython} from './DefaultPython';
-import {isFirstPythonPath} from './ExtMainUtils';
+import {isDefaultPython, isLynxHubDefaultPython} from './DefaultPython';
 import {detectInstallationType, getSitePackagesCount, parseVersion} from './PythonUtils';
 import {getCondaEnvName} from './Uninstaller/Uninstaller_Conda';
 
@@ -352,7 +351,9 @@ async function analyzePythonPath(pythonPath: string): Promise<PythonInstallation
     ]);
 
     const installFolder = dirname(pythonPath);
-    const isLynxHubDefault = process.env.PATH ? isFirstPythonPath(process.env.PATH, installFolder) : false;
+    // Use stored selection for LynxHub default instead of PATH inspection
+    // This correctly handles Conda environments where shell auto-activation affects PATH
+    const isLynxHubDefault = isLynxHubDefaultPython(pythonPath);
 
     return {
       version: `${version.major}.${version.minor}.${version.patch}`,

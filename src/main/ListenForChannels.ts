@@ -4,7 +4,6 @@ import {OnPreCommands} from '../../../src/cross/IpcChannelAndTypes';
 import {
   CacheDirUsage_StorageID,
   CardStartCommand_StorageID,
-  DefaultLynxPython_StorageID,
   MaxConcurrent_StorageID,
   MaxRetry_StorageID,
   PkgDisplay_StorageID,
@@ -20,7 +19,7 @@ import {
   SitePackages_Info,
   VenvCreateOptions,
 } from '../cross/CrossExtTypes';
-import {getDefaultEnvPath, getStorage} from './DataHolder';
+import {getDefaultEnvPath, getStorage, setStoredLynxHubDefaultPython} from './DataHolder';
 import ListenForStorage from './StorageIpcHandler';
 import {
   addAssociate,
@@ -205,7 +204,8 @@ export default function ListenForChannels(nodePty: any) {
       if (!defaultEnvPath) return false;
 
       const newPath = replacePythonPath(defaultEnvPath, pythonPath);
-      storageManager?.setCustomData(DefaultLynxPython_StorageID, pythonPath);
+      // Store the selection using the centralized function (also updates storage)
+      setStoredLynxHubDefaultPython(pythonPath);
 
       process.env.PATH = newPath;
       return true;
