@@ -2,7 +2,7 @@ import {execSync} from 'node:child_process';
 import {platform} from 'node:os';
 import {join, resolve} from 'node:path';
 
-import {accessSync} from 'graceful-fs';
+import {accessSync, realpathSync} from 'graceful-fs';
 
 export const COMMAND_LINE_ENDING = platform() === 'win32' ? '\r' : '\n';
 
@@ -115,17 +115,63 @@ export function isFirstPythonPath(envPath: string, targetPythonBase: string): bo
     return false;
   }
 
+  const isWindows = platform() === 'win32';
   const separator = getPathSeparator();
   const paths = envPath.split(separator).filter(Boolean);
 
-  // On Unix, Python might be in paths like /usr/local/bin which don't contain "python" in the name
-  // Check if the target path is the first path in PATH, or the first python-like path
+  // On Windows, compare directories directly
+  if (isWindows) {
+    const firstPath = paths[0];
+    if (firstPath) {
+      const resolvedFirst = resolve(firstPath);
+      if (resolvedFirst.toLowerCase() === targetPath.toLowerCase()) return true;
+    }
+
+    // Also check for first python-like path for backward compatibility
+    const firstPythonLikePath = paths.find(p => {
+      const lowerP = p.toLowerCase();
+      return lowerP.includes('python') || lowerP.includes('conda');
+    });
+
+    if (!firstPythonLikePath) return false;
+    return resolve(firstPythonLikePath).toLowerCase() === targetPath.toLowerCase();
+  }
+
+  // On macOS/Linux, we need to resolve symlinks to compare actual paths
+  // because multiple Python versions may be symlinked to the same directory (e.g., /usr/local/bin)
+  const pythonExe = join(targetPath, 'python');
+  const python3Exe = join(targetPath, 'python3');
+
+  // Find the actual target executable and resolve its symlink
+  let targetRealPath: string | null = null;
+  try {
+    if (validatePath(pythonExe)) {
+      targetRealPath = realpathSync(pythonExe);
+    } else if (validatePath(python3Exe)) {
+      targetRealPath = realpathSync(python3Exe);
+    }
+  } catch {
+    // If we can't resolve, fall back to directory comparison
+    targetRealPath = null;
+  }
+
+  // Check the first path in PATH
   const firstPath = paths[0];
   if (firstPath) {
     const resolvedFirst = resolve(firstPath);
-    const isWindows = platform() === 'win32';
-    const matches = isWindows ? resolvedFirst.toLowerCase() === targetPath.toLowerCase() : resolvedFirst === targetPath;
-    if (matches) return true;
+    if (resolvedFirst === targetPath) return true;
+
+    // If we have a resolved target, check if the first path's python resolves to the same
+    if (targetRealPath) {
+      const firstPythonExe = join(resolvedFirst, 'python');
+      const firstPython3Exe = join(resolvedFirst, 'python3');
+      try {
+        if (validatePath(firstPythonExe) && realpathSync(firstPythonExe) === targetRealPath) return true;
+        if (validatePath(firstPython3Exe) && realpathSync(firstPython3Exe) === targetRealPath) return true;
+      } catch {
+        // Ignore resolution errors
+      }
+    }
   }
 
   // Also check for first python-like path for backward compatibility
@@ -134,12 +180,22 @@ export function isFirstPythonPath(envPath: string, targetPythonBase: string): bo
     return lowerP.includes('python') || lowerP.includes('conda');
   });
 
-  if (!firstPythonLikePath) {
-    return false;
+  if (!firstPythonLikePath) return false;
+
+  const resolvedPythonPath = resolve(firstPythonLikePath);
+  if (resolvedPythonPath === targetPath) return true;
+
+  // Check symlink resolution for python-like paths
+  if (targetRealPath) {
+    const pythonLikeExe = join(resolvedPythonPath, 'python');
+    const pythonLike3Exe = join(resolvedPythonPath, 'python3');
+    try {
+      if (validatePath(pythonLikeExe) && realpathSync(pythonLikeExe) === targetRealPath) return true;
+      if (validatePath(pythonLike3Exe) && realpathSync(pythonLike3Exe) === targetRealPath) return true;
+    } catch {
+      // Ignore resolution errors
+    }
   }
 
-  const isWindows = platform() === 'win32';
-  return isWindows
-    ? resolve(firstPythonLikePath).toLowerCase() === targetPath.toLowerCase()
-    : resolve(firstPythonLikePath) === targetPath;
+  return false;
 }

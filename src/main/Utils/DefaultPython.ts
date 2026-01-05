@@ -46,11 +46,21 @@ export async function isDefaultPython(pythonPath: string): Promise<boolean> {
     const defaultPath = await which('python', {path: getDefaultEnvPath()});
     const isWindows = platform() === 'win32';
 
-    // Compare the directories since python executable names can vary (python, python3, python3.12, etc.)
-    const defaultDir = dirname(defaultPath);
-    const targetDir = dirname(pythonPath);
+    if (isWindows) {
+      // On Windows, compare directories since executables are in the same folder
+      const defaultDir = dirname(defaultPath);
+      const targetDir = dirname(pythonPath);
+      return defaultDir.toLowerCase() === targetDir.toLowerCase();
+    }
 
-    return isWindows ? defaultDir.toLowerCase() === targetDir.toLowerCase() : defaultDir === targetDir;
+    // On macOS/Linux, resolve symlinks to compare actual executables
+    // This handles cases where multiple Python versions are symlinked to the same directory (e.g., /usr/local/bin)
+    const [resolvedDefault, resolvedTarget] = await Promise.all([
+      promises.realpath(defaultPath).catch(() => defaultPath),
+      promises.realpath(pythonPath).catch(() => pythonPath),
+    ]);
+
+    return resolvedDefault === resolvedTarget;
   } catch (error) {
     return false;
   }
