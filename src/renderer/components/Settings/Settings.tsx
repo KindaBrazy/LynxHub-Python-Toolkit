@@ -1,8 +1,8 @@
 import {useEffect} from 'react';
 import {useDispatch} from 'react-redux';
 
-import {useTabsState} from '../../../../../src/renderer/src/App/Redux/Reducer/TabsReducer';
-import {AppDispatch} from '../../../../../src/renderer/src/App/Redux/Store';
+import {useTabsState} from '../../../../../src/renderer/main_window/redux/reducers/tabs';
+import {AppDispatch} from '../../../../../src/renderer/main_window/redux/store';
 import {PythonToolkitActions, usePythonToolkitState} from '../../reducer';
 import Modals from './Modals';
 

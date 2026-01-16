@@ -3,7 +3,7 @@ import {capitalize, startCase} from 'lodash';
 import {useEffect, useState} from 'react';
 import {useDispatch} from 'react-redux';
 
-import {AppDispatch} from '../../../../../src/renderer/src/App/Redux/Store';
+import {AppDispatch} from '../../../../../src/renderer/main_window/redux/store';
 import {PkgDisplayType} from '../../../cross/CrossExtTypes';
 import pIpc from '../../PIpc';
 import {PythonToolkitActions} from '../../reducer';

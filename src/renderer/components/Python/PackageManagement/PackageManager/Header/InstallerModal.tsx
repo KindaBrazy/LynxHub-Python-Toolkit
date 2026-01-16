@@ -2,8 +2,8 @@ import {Button, Modal, ModalBody, ModalContent, ModalHeader} from '@heroui/react
 import {OverlayScrollbarsComponent} from 'overlayscrollbars-react';
 import {useCallback, useState} from 'react';
 
-import {useAppState} from '../../../../../../../../src/renderer/src/App/Redux/Reducer/AppReducer';
-import {Add_Icon} from '../../../../../../../../src/renderer/src/assets/icons/SvgIcons/SvgIcons';
+import {useAppState} from '../../../../../../../../src/renderer/main_window/redux/reducers/app';
+import {Add_Icon} from '../../../../../../../../src/renderer/shared/assets/icons';
 import Installer from './Installer';
 
 type Props = {

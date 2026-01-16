@@ -18,15 +18,15 @@ import {isNil} from 'lodash';
 import {FormEvent, useCallback, useEffect, useMemo, useState} from 'react';
 import {useDispatch} from 'react-redux';
 
-import rendererIpc from '../../../../../../src/renderer/src/App/RendererIpc';
-import {lynxTopToast} from '../../../../../../src/renderer/src/App/Utils/UtilHooks';
+import {lynxTopToast} from '../../../../../../src/renderer/main_window/hooks/utils';
+import rendererIpc from '../../../../../../src/renderer/main_window/services/RendererIpc';
 import {
   BoxDuo_Icon,
   Close_Icon,
   DiskDuo_Icon,
   FolderDuo_Icon,
   MenuDots_Icon,
-} from '../../../../../../src/renderer/src/assets/icons/SvgIcons/SvgIcons';
+} from '../../../../../../src/renderer/shared/assets/icons';
 import {formatSizeMB} from '../../../../cross/CrossExtUtils';
 import pIpc from '../../../PIpc';
 import {Env_Icon, Packages_Icon, TrashDuo_Icon} from '../../SvgIcons';

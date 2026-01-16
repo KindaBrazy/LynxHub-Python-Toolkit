@@ -4,9 +4,9 @@ import {isEmpty} from 'lodash';
 import {useCallback, useEffect, useState} from 'react';
 import {useDispatch} from 'react-redux';
 
-import rendererIpc from '../../../../../../src/renderer/src/App/RendererIpc';
-import {lynxTopToast} from '../../../../../../src/renderer/src/App/Utils/UtilHooks';
-import {FolderDuo_Icon} from '../../../../../../src/renderer/src/assets/icons/SvgIcons/SvgIcons';
+import {lynxTopToast} from '../../../../../../src/renderer/main_window/hooks/utils';
+import rendererIpc from '../../../../../../src/renderer/main_window/services/RendererIpc';
+import {FolderDuo_Icon} from '../../../../../../src/renderer/shared/assets/icons';
 import {PythonInstallation, PythonVenvs, VenvInfo} from '../../../../cross/CrossExtTypes';
 import {bytesToMegabytes} from '../../../../cross/CrossExtUtils';
 import pIpc from '../../../PIpc';

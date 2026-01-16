@@ -2,7 +2,7 @@ import {Button, Popover, PopoverContent, PopoverTrigger} from '@heroui/react';
 import {Dispatch, SetStateAction, useCallback, useState} from 'react';
 import {useDispatch} from 'react-redux';
 
-import {lynxTopToast} from '../../../../../../../../src/renderer/src/App/Utils/UtilHooks';
+import {lynxTopToast} from '../../../../../../../../src/renderer/main_window/hooks/utils';
 import {PackageInfo, PackageUpdate} from '../../../../../../cross/CrossExtTypes';
 import pIpc from '../../../../../PIpc';
 import {TrashDuo_Icon} from '../../../../SvgIcons';

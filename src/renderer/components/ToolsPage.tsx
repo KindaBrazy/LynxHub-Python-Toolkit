@@ -2,10 +2,10 @@ import {Button} from '@heroui/react';
 import {useEffect, useMemo, useState} from 'react';
 import {useDispatch} from 'react-redux';
 
-import {ToolsCard} from '../../../../src/renderer/src/App/Components/Reusable/ToolsCard';
-import {tabsActions, useTabsState} from '../../../../src/renderer/src/App/Redux/Reducer/TabsReducer';
-import {AppDispatch} from '../../../../src/renderer/src/App/Redux/Store';
-import {SettingsMinimal_Icon} from '../../../../src/renderer/src/assets/icons/SvgIcons/SvgIcons';
+import {ToolsCard} from '../../../../src/renderer/main_window/components/ToolsCard';
+import {tabsActions, useTabsState} from '../../../../src/renderer/main_window/redux/reducers/tabs';
+import {AppDispatch} from '../../../../src/renderer/main_window/redux/store';
+import {SettingsMinimal_Icon} from '../../../../src/renderer/shared/assets/icons';
 import pIpc from '../PIpc';
 import {PythonToolkitActions} from '../reducer';
 import {cacheUrl} from '../Utils';

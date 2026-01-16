@@ -6,9 +6,9 @@ import {Dispatch, SetStateAction, useEffect, useState} from 'react';
 import {useDispatch} from 'react-redux';
 
 import {formatSize} from '../../../../../../../src/cross/CrossUtils';
-import {useAppState} from '../../../../../../../src/renderer/src/App/Redux/Reducer/AppReducer';
-import {lynxTopToast} from '../../../../../../../src/renderer/src/App/Utils/UtilHooks';
-import {Circle_Icon, Refresh_Icon} from '../../../../../../../src/renderer/src/assets/icons/SvgIcons/SvgIcons';
+import {lynxTopToast} from '../../../../../../../src/renderer/main_window/hooks/utils';
+import {useAppState} from '../../../../../../../src/renderer/main_window/redux/reducers/app';
+import {Circle_Icon, Refresh_Icon} from '../../../../../../../src/renderer/shared/assets/icons';
 import {DlProgressOfficial, PythonVersion} from '../../../../../cross/CrossExtTypes';
 import pIpc from '../../../../PIpc';
 import {Warn_Icon} from '../../../SvgIcons';

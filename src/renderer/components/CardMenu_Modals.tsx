@@ -2,8 +2,8 @@ import {Button} from '@heroui/react';
 import {useEffect, useMemo, useState} from 'react';
 import {useDispatch} from 'react-redux';
 
-import {tabsActions, useTabsState} from '../../../../src/renderer/src/App/Redux/Reducer/TabsReducer';
-import {useInstalledCard} from '../../../../src/renderer/src/App/Utils/UtilHooks';
+import {useInstalledCard} from '../../../../src/renderer/main_window/hooks/utils';
+import {tabsActions, useTabsState} from '../../../../src/renderer/main_window/redux/reducers/tabs';
 import pIpc from '../PIpc';
 import {ContextType, PythonToolkitActions} from '../reducer';
 import PackageManagerModal from './Python/PackageManagement/PackageManager/PackageManagerModal';

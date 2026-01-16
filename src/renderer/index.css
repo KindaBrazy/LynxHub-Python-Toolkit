@@ -2,12 +2,12 @@
 
 @import 'tailwindcss';
 
-@plugin '../../../src/renderer/HeroUiConfig.ts';
+@plugin '../../../src/renderer/shared/heroUIConfig.ts';
 
 @source '../../../node_modules/@heroui/theme/dist/**/*.{js,ts,jsx,tsx}';
-@source '../renderer/**/*.{js,ts,jsx,tsx}';
-@source '../../../src/renderer/src/App/Components/Reusable/SpotlightCard.tsx';
-@source '../../../src/renderer/src/App/Components/Reusable/ToolsCard.tsx';
+@source '../**/*.{js,ts,jsx,tsx}';
+@source '../../../src/renderer/main_window/components/SpotlightCard.tsx';
+@source '../../../src/renderer/main_window/components/ToolsCard.tsx';
 
 @custom-variant dark (&:is(.dark *));
 

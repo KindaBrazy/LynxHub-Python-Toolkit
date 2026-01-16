@@ -2,7 +2,7 @@ import {StyleProvider} from '@ant-design/cssinjs';
 import {ConfigProvider, theme} from 'antd';
 import {ReactNode, useMemo} from 'react';
 
-import {useAppState} from '../../../../src/renderer/src/App/Redux/Reducer/AppReducer';
+import {useAppState} from '../../../../src/renderer/main_window/redux/reducers/app';
 
 export default function UIProvider({children}: {children: ReactNode}) {
   const darkMode = useAppState('darkMode');

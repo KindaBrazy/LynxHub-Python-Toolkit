@@ -2,9 +2,9 @@ import {Button} from '@heroui/react';
 import {useEffect, useState} from 'react';
 import {useDispatch} from 'react-redux';
 
-import LynxSwitch from '../../../../../src/renderer/src/App/Components/Reusable/LynxSwitch';
-import {lynxTopToast} from '../../../../../src/renderer/src/App/Utils/UtilHooks';
-import {BroomDuo_Icon} from '../../../../../src/renderer/src/assets/icons/SvgIcons/SvgIcons';
+import LynxSwitch from '../../../../../src/renderer/main_window/components/LynxSwitch';
+import {lynxTopToast} from '../../../../../src/renderer/main_window/hooks/utils';
+import {BroomDuo_Icon} from '../../../../../src/renderer/shared/assets/icons';
 import pIpc from '../../PIpc';
 import {PythonToolkitActions, usePythonToolkitState} from '../../reducer';
 

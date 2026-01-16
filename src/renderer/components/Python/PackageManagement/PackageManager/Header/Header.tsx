@@ -4,8 +4,8 @@ import {Dispatch, ReactNode, SetStateAction, useEffect, useState} from 'react';
 import {useDispatch} from 'react-redux';
 
 import {extractGitUrl} from '../../../../../../../../src/cross/CrossUtils';
-import {lynxTopToast} from '../../../../../../../../src/renderer/src/App/Utils/UtilHooks';
-import {Circle_Icon} from '../../../../../../../../src/renderer/src/assets/icons/SvgIcons/SvgIcons';
+import {lynxTopToast} from '../../../../../../../../src/renderer/main_window/hooks/utils';
+import {Circle_Icon} from '../../../../../../../../src/renderer/shared/assets/icons';
 import {FilterKeys, PackageInfo, PackageUpdate, SitePackages_Info} from '../../../../../../cross/CrossExtTypes';
 import {allCardsExt} from '../../../../../DataHolder';
 import pIpc from '../../../../../PIpc';

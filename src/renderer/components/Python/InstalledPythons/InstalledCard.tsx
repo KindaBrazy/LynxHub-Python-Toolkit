@@ -19,8 +19,8 @@ import {isNil, startCase} from 'lodash';
 import {useCallback, useMemo, useState} from 'react';
 import {useDispatch} from 'react-redux';
 
-import rendererIpc from '../../../../../../src/renderer/src/App/RendererIpc';
-import {lynxTopToast} from '../../../../../../src/renderer/src/App/Utils/UtilHooks';
+import {lynxTopToast} from '../../../../../../src/renderer/main_window/hooks/utils';
+import rendererIpc from '../../../../../../src/renderer/main_window/services/RendererIpc';
 import {
   BoxDuo_Icon,
   Close_Icon,
@@ -28,7 +28,7 @@ import {
   FolderDuo_Icon,
   MenuDots_Icon,
   RefreshDuo_Icon,
-} from '../../../../../../src/renderer/src/assets/icons/SvgIcons/SvgIcons';
+} from '../../../../../../src/renderer/shared/assets/icons';
 import {PythonInstallation} from '../../../../cross/CrossExtTypes';
 import {formatSizeMB} from '../../../../cross/CrossExtUtils';
 import pIpc from '../../../PIpc';

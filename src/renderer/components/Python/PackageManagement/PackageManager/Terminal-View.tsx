@@ -8,13 +8,13 @@ import FontFaceObserver from 'fontfaceobserver';
 import {useCallback, useEffect, useRef} from 'react';
 import {useDispatch} from 'react-redux';
 
+import {lynxTopToast} from '../../../../../../../src/renderer/main_window/hooks/utils';
 // eslint-disable-next-line
-import parseTerminalColors from '../../../../../../../src/renderer/src/App/Components/Browser_Terminal/Terminal/TerminalColorHandler';
-import {useAppState} from '../../../../../../../src/renderer/src/App/Redux/Reducer/AppReducer';
-import {useTerminalState} from '../../../../../../../src/renderer/src/App/Redux/Reducer/TerminalReducer';
-import {getColor} from '../../../../../../../src/renderer/src/App/Utils/Constants';
-import {isWebgl2Supported} from '../../../../../../../src/renderer/src/App/Utils/UtilFunctions';
-import {lynxTopToast} from '../../../../../../../src/renderer/src/App/Utils/UtilHooks';
+import parseTerminalColors from '../../../../../../../src/renderer/main_window/layouts/browser_terminal/terminal/colorHandler';
+import {useAppState} from '../../../../../../../src/renderer/main_window/redux/reducers/app';
+import {useTerminalState} from '../../../../../../../src/renderer/main_window/redux/reducers/terminal';
+import {isWebgl2Supported} from '../../../../../../../src/renderer/main_window/utils';
+import {getColor} from '../../../../../../../src/renderer/main_window/utils/constants';
 import {rIpc} from '../../../../DataHolder';
 
 const id = 'python-update';

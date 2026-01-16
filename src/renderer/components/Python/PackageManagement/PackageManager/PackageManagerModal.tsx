@@ -2,8 +2,8 @@ import {Modal, ModalContent, ModalFooter, Selection} from '@heroui/react';
 import {isEmpty} from 'lodash';
 import {Dispatch, ReactNode, SetStateAction, useEffect, useState} from 'react';
 
-import {modalMotionProps} from '../../../../../../../src/renderer/src/App/Utils/Constants';
-import {searchInStrings} from '../../../../../../../src/renderer/src/App/Utils/UtilFunctions';
+import {searchInStrings} from '../../../../../../../src/renderer/main_window/utils';
+import {modalMotionProps} from '../../../../../../../src/renderer/main_window/utils/constants';
 import {FilterKeys, PackageInfo, PackageUpdate, SitePackages_Info} from '../../../../../cross/CrossExtTypes';
 import {getUpdateType} from '../../../../../cross/CrossExtUtils';
 import pIpc from '../../../../PIpc';

@@ -5,15 +5,11 @@ import {OverlayScrollbarsComponentRef} from 'overlayscrollbars-react';
 import {Dispatch, SetStateAction, useEffect, useRef, useState} from 'react';
 import {useDispatch} from 'react-redux';
 
-import rendererIpc from '../../../../../../../src/renderer/src/App/RendererIpc';
-import {modalMotionProps} from '../../../../../../../src/renderer/src/App/Utils/Constants';
-import {searchInStrings} from '../../../../../../../src/renderer/src/App/Utils/UtilFunctions';
-import {lynxTopToast} from '../../../../../../../src/renderer/src/App/Utils/UtilHooks';
-import {
-  Add_Icon,
-  Circle_Icon,
-  FileDuo_Icon,
-} from '../../../../../../../src/renderer/src/assets/icons/SvgIcons/SvgIcons';
+import {lynxTopToast} from '../../../../../../../src/renderer/main_window/hooks/utils';
+import rendererIpc from '../../../../../../../src/renderer/main_window/services/RendererIpc';
+import {searchInStrings} from '../../../../../../../src/renderer/main_window/utils';
+import {modalMotionProps} from '../../../../../../../src/renderer/main_window/utils/constants';
+import {Add_Icon, Circle_Icon, FileDuo_Icon} from '../../../../../../../src/renderer/shared/assets/icons';
 import {RequirementData} from '../../../../../cross/CrossExtTypes';
 import pIpc from '../../../../PIpc';
 import {Checklist_Icon, Save_Icon} from '../../../SvgIcons';

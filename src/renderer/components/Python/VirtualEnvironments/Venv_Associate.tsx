@@ -4,8 +4,8 @@ import {useCallback, useEffect, useState} from 'react';
 import {useDispatch} from 'react-redux';
 
 import {extractGitUrl} from '../../../../../../src/cross/CrossUtils';
-import {useCardsState} from '../../../../../../src/renderer/src/App/Redux/Reducer/CardsReducer';
-import {Add_Icon} from '../../../../../../src/renderer/src/assets/icons/SvgIcons/SvgIcons';
+import {useCardsState} from '../../../../../../src/renderer/main_window/redux/reducers/cards';
+import {Add_Icon} from '../../../../../../src/renderer/shared/assets/icons';
 import {ModulesThatSupportPython} from '../../../../cross/CrossExtConstants';
 import {allCardsExt} from '../../../DataHolder';
 import pIpc from '../../../PIpc';

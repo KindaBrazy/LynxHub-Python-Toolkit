@@ -17,9 +17,9 @@ import {memo, useCallback, useEffect, useState} from 'react';
 import {useDispatch} from 'react-redux';
 import semver, {compare, valid} from 'semver';
 
-import LynxScroll from '../../../../../../../../src/renderer/src/App/Components/Reusable/LynxScroll';
-import {lynxTopToast} from '../../../../../../../../src/renderer/src/App/Utils/UtilHooks';
-import {Circle_Icon} from '../../../../../../../../src/renderer/src/assets/icons/SvgIcons/SvgIcons';
+import LynxScroll from '../../../../../../../../src/renderer/main_window/components/LynxScroll';
+import {lynxTopToast} from '../../../../../../../../src/renderer/main_window/hooks/utils';
+import {Circle_Icon} from '../../../../../../../../src/renderer/shared/assets/icons';
 import {PackageInfo, PackageUpdate} from '../../../../../../cross/CrossExtTypes';
 import pIpc from '../../../../../PIpc';
 import {AltArrow_Icon, SolarBoxMinimalisticBoldDuotone} from '../../../../SvgIcons';

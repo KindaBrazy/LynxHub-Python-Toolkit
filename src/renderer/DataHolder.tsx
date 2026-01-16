@@ -1,5 +1,5 @@
 import {CardData} from '../../../src/cross/plugin/ModuleTypes';
-import type rendererIpc from '../../../src/renderer/src/App/RendererIpc';
+import rendererIpc from '../../../src/renderer/main_window/services/RendererIpc';
 
 export let allCardsExt: CardData[] = [];
 export let rIpc: typeof rendererIpc;

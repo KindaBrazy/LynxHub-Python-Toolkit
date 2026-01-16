@@ -4,9 +4,9 @@ import {compact, isEmpty} from 'lodash';
 import {KeyboardEvent, useState} from 'react';
 import {useDispatch} from 'react-redux';
 
-import rendererIpc from '../../../../../../../../src/renderer/src/App/RendererIpc';
-import {lynxTopToast} from '../../../../../../../../src/renderer/src/App/Utils/UtilHooks';
-import {Close_Icon, Trash_Icon} from '../../../../../../../../src/renderer/src/assets/icons/SvgIcons/SvgIcons';
+import {lynxTopToast} from '../../../../../../../../src/renderer/main_window/hooks/utils';
+import rendererIpc from '../../../../../../../../src/renderer/main_window/services/RendererIpc';
+import {Close_Icon, Trash_Icon} from '../../../../../../../../src/renderer/shared/assets/icons';
 import pIpc from '../../../../../PIpc';
 import {Checklist_Icon} from '../../../../SvgIcons';
 

@@ -3,7 +3,7 @@ import {useCallback} from 'react';
 import {useDispatch} from 'react-redux';
 
 import {UseCardStoreType} from '../../../../src/cross/plugin/ExtensionTypes_Renderer';
-import {useTabsState} from '../../../../src/renderer/src/App/Redux/Reducer/TabsReducer';
+import {useTabsState} from '../../../../src/renderer/main_window/redux/reducers/tabs';
 import {ModulesThatSupportPython} from '../../cross/CrossExtConstants';
 import {PythonToolkitActions} from '../reducer';
 import {Python_Icon} from './SvgIcons';

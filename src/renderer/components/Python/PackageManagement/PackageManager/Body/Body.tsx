@@ -14,7 +14,7 @@ import {cloneDeep, isEmpty} from 'lodash';
 import {OverlayScrollbarsComponent} from 'overlayscrollbars-react';
 import {Dispatch, SetStateAction, useMemo} from 'react';
 
-import {useAppState} from '../../../../../../../../src/renderer/src/App/Redux/Reducer/AppReducer';
+import {useAppState} from '../../../../../../../../src/renderer/main_window/redux/reducers/app';
 import {PackageInfo, PackageUpdate, SitePackages_Info} from '../../../../../../cross/CrossExtTypes';
 import SelectEnv from './SelectEnv';
 import TableItem from './TableItem';
