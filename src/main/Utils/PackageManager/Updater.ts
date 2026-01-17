@@ -1,8 +1,8 @@
 import {platform} from 'node:os';
 
+import {ptyChannels} from '@lynx_cross/consts/ipc';
 import {IPty} from 'node-pty';
 
-import {ptyChannels} from '../../../../../src/cross/IpcChannelAndTypes';
 import {PackageUpdate} from '../../../cross/CrossExtTypes';
 import {getAppManager, getNodePty} from '../../DataHolder';
 import {COMMAND_LINE_ENDING, determineShell} from '../ExtMainUtils';

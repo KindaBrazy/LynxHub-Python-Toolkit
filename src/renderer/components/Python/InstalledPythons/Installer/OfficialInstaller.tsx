@@ -1,11 +1,11 @@
 import {Button, CircularProgress, Input, Link, Progress} from '@heroui/react';
+import {formatSize} from '@lynx_cross/utils';
 import {List, Tooltip} from 'antd';
 import {isEmpty, isNil, isString} from 'lodash';
 import {OverlayScrollbarsComponent} from 'overlayscrollbars-react';
 import {Dispatch, SetStateAction, useEffect, useState} from 'react';
 import {useDispatch} from 'react-redux';
 
-import {formatSize} from '../../../../../../../src/cross/CrossUtils';
 import {lynxTopToast} from '../../../../../../../src/renderer/main_window/hooks/utils';
 import {useAppState} from '../../../../../../../src/renderer/main_window/redux/reducers/app';
 import {Circle_Icon, Refresh_Icon} from '../../../../../../../src/renderer/shared/assets/icons';

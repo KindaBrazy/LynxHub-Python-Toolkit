@@ -6,7 +6,7 @@ import {Dispatch, SetStateAction, useEffect, useRef, useState} from 'react';
 import {useDispatch} from 'react-redux';
 
 import {lynxTopToast} from '../../../../../../../src/renderer/main_window/hooks/utils';
-import rendererIpc from '../../../../../../../src/renderer/main_window/services/RendererIpc';
+import rendererIpc from '../../../../../../../src/renderer/main_window/ipc';
 import {searchInStrings} from '../../../../../../../src/renderer/main_window/utils';
 import {modalMotionProps} from '../../../../../../../src/renderer/main_window/utils/constants';
 import {Add_Icon, Circle_Icon, FileDuo_Icon} from '../../../../../../../src/renderer/shared/assets/icons';

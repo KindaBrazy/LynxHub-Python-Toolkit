@@ -1,4 +1,4 @@
-import {ExtensionRendererApi} from '../../../src/cross/plugin/ExtensionTypes_Renderer_Api';
+import {ExtensionRendererApi} from '../../../src/main/types/extensions/api';
 import {ModulesThatSupportPython} from '../cross/CrossExtConstants';
 import {getStep} from './components/Modules/ModuleStepManager';
 import pIpc from './PIpc';

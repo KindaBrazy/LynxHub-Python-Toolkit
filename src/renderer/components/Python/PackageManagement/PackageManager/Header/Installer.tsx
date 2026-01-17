@@ -5,7 +5,7 @@ import {KeyboardEvent, useState} from 'react';
 import {useDispatch} from 'react-redux';
 
 import {lynxTopToast} from '../../../../../../../../src/renderer/main_window/hooks/utils';
-import rendererIpc from '../../../../../../../../src/renderer/main_window/services/RendererIpc';
+import rendererIpc from '../../../../../../../../src/renderer/main_window/ipc';
 import {Close_Icon, Trash_Icon} from '../../../../../../../../src/renderer/shared/assets/icons';
 import pIpc from '../../../../../PIpc';
 import {Checklist_Icon} from '../../../../SvgIcons';

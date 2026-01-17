@@ -1,6 +1,6 @@
 import './index.css';
 
-import {ExtensionRendererApi} from '../../../src/cross/plugin/ExtensionTypes_Renderer_Api';
+import {ExtensionRendererApi} from '../../../src/main/types/extensions/api';
 import CardMenu from './components/CardMenu';
 import CardMenuModal from './components/CardMenuModal';
 import Settings from './components/Settings/Settings';

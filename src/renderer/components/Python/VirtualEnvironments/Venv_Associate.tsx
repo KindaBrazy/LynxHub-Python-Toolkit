@@ -1,9 +1,9 @@
 import {Avatar, Button, Chip, Dropdown, DropdownItem, DropdownMenu, DropdownTrigger} from '@heroui/react';
+import {extractGitUrl} from '@lynx_cross/utils';
 import {isEmpty} from 'lodash';
 import {useCallback, useEffect, useState} from 'react';
 import {useDispatch} from 'react-redux';
 
-import {extractGitUrl} from '../../../../../../src/cross/CrossUtils';
 import {useCardsState} from '../../../../../../src/renderer/main_window/redux/reducers/cards';
 import {Add_Icon} from '../../../../../../src/renderer/shared/assets/icons';
 import {ModulesThatSupportPython} from '../../../../cross/CrossExtConstants';

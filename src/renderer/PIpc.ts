@@ -1,6 +1,6 @@
+import {OnPreCommands} from '@lynx_cross/types/ipc';
 import {IpcRendererEvent} from 'electron';
 
-import {OnPreCommands} from '../../../src/cross/IpcChannelAndTypes';
 import {
   AssociateItem,
   CustomTitle,

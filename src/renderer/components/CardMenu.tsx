@@ -2,7 +2,7 @@ import {DropdownItem, DropdownSection} from '@heroui/react';
 import {useCallback} from 'react';
 import {useDispatch} from 'react-redux';
 
-import {UseCardStoreType} from '../../../../src/cross/plugin/ExtensionTypes_Renderer';
+import {UseCardStoreType} from '../../../../src/main/types/extensions';
 import {useTabsState} from '../../../../src/renderer/main_window/redux/reducers/tabs';
 import {ModulesThatSupportPython} from '../../cross/CrossExtConstants';
 import {PythonToolkitActions} from '../reducer';

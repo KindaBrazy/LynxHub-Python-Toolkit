@@ -1,6 +1,6 @@
 import {app, ipcMain} from 'electron';
 
-import {OnPreCommands} from '../../../src/cross/IpcChannelAndTypes';
+import {OnPreCommands} from '../../../src/cross/types/ipc';
 import {
   CacheDirUsage_StorageID,
   CardStartCommand_StorageID,

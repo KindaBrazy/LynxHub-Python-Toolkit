@@ -4,7 +4,7 @@ import {useCallback, useEffect, useMemo, useState} from 'react';
 import {useDispatch} from 'react-redux';
 
 import {lynxTopToast} from '../../../../../../src/renderer/main_window/hooks/utils';
-import rendererIpc from '../../../../../../src/renderer/main_window/services/RendererIpc';
+import rendererIpc from '../../../../../../src/renderer/main_window/ipc';
 import {Add_Icon, MenuDots_Icon, OpenFolder_Icon} from '../../../../../../src/renderer/shared/assets/icons';
 import {PythonInstallation, VenvCreateOptions} from '../../../../cross/CrossExtTypes';
 import pIpc from '../../../PIpc';
