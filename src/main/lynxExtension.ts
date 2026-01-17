@@ -1,7 +1,4 @@
-import {
-  ExtensionMainApi,
-  MainExtensionUtils,
-} from '../../../src/main/Managements/Plugin/Extensions/ExtensionTypes_Main';
+import {ExtensionMainApi, MainExtensionUtils} from '../../../src/main/plugins/extensions/types';
 import {
   AI_VENV_STORE_KEYS,
   Associates_StorageID,

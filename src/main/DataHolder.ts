@@ -1,7 +1,7 @@
 import type Pty from 'node-pty';
 
-import type ElectronAppManager from '../../../src/main/Managements/ElectronAppManager';
-import type StorageManager from '../../../src/main/Managements/Storage/StorageManager';
+import type ElectronAppManager from '../../../src/main/main_window';
+import type StorageManager from '../../../src/main/storage/helper';
 import {DefaultLynxPython_StorageID} from '../cross/CrossExtConstants';
 
 let storageManager: StorageManager | undefined = undefined;
