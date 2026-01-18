@@ -14,13 +14,13 @@ import {
   PopoverTrigger,
   Progress,
 } from '@heroui/react';
+import rendererIpc from '@lynx_shared/ipc';
 import {Divider, Spin} from 'antd';
 import {isNil, startCase} from 'lodash';
 import {useCallback, useMemo, useState} from 'react';
 import {useDispatch} from 'react-redux';
 
 import {lynxTopToast} from '../../../../../../src/renderer/main_window/hooks/utils';
-import rendererIpc from '../../../../../../src/renderer/main_window/ipc';
 import {
   BoxDuo_Icon,
   Close_Icon,

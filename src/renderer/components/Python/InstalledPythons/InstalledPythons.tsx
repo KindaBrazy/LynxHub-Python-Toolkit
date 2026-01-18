@@ -1,11 +1,11 @@
 import {Button, Spinner} from '@heroui/react';
+import rendererIpc from '@lynx_shared/ipc';
 import {Empty} from 'antd';
 import {cloneDeep, isEmpty} from 'lodash';
 import {Dispatch, SetStateAction, useCallback, useEffect, useState} from 'react';
 import {useDispatch} from 'react-redux';
 
 import {lynxTopToast} from '../../../../../../src/renderer/main_window/hooks/utils';
-import rendererIpc from '../../../../../../src/renderer/main_window/ipc';
 import {Add_Icon, FolderDuo_Icon, RefreshDuo_Icon} from '../../../../../../src/renderer/shared/assets/icons';
 import {PythonInstallation} from '../../../../cross/CrossExtTypes';
 import {bytesToMegabytes} from '../../../../cross/CrossExtUtils';

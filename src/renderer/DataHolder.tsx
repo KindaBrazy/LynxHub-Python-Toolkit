@@ -1,6 +1,5 @@
 import {CardData} from '@lynx_cross/types/plugins/module';
-
-import rendererIpc from '../../../src/renderer/main_window/ipc';
+import rendererIpc from '@lynx_shared/ipc';
 
 export let allCardsExt: CardData[] = [];
 export let rIpc: typeof rendererIpc;
