@@ -1,3 +1,5 @@
+import applicationIpc from '@lynx_shared/ipc/application';
+import ptyIpc from '@lynx_shared/ipc/pty';
 import {CanvasAddon} from '@xterm/addon-canvas';
 import {ClipboardAddon} from '@xterm/addon-clipboard';
 import {FitAddon} from '@xterm/addon-fit';
@@ -15,7 +17,6 @@ import {useAppState} from '../../../../../../../src/renderer/main_window/redux/r
 import {useTerminalState} from '../../../../../../../src/renderer/main_window/redux/reducers/terminal';
 import {isWebgl2Supported} from '../../../../../../../src/renderer/main_window/utils';
 import {getColor} from '../../../../../../../src/renderer/main_window/utils/constants';
-import {rIpc} from '../../../../DataHolder';
 
 const id = 'python-update';
 
@@ -64,7 +65,7 @@ export default function TerminalView() {
     async function loadTerminal() {
       const JetBrainsMono = new FontFaceObserver(FONT_FAMILY);
 
-      const sysInfo = await rIpc.win.getSystemInfo();
+      const sysInfo = await applicationIpc.invoke.getSystemInfo();
       // Windows requires PTY backend config (conpty for Win10 1809+, winpty for older)
       // macOS/Linux use native PTY and don't need this configuration
       const windowsPty: IWindowsPty | undefined =
@@ -143,7 +144,7 @@ export default function TerminalView() {
       loadTerminal();
     }
 
-    const offData = rIpc.pty.onData((_, dataID, data) => {
+    const offData = ptyIpc.onData((dataID, data) => {
       if (dataID === id) writeData(data);
     });
 

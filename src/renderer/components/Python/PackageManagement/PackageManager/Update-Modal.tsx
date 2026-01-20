@@ -9,9 +9,9 @@ import {
   PopoverContent,
   PopoverTrigger,
 } from '@heroui/react';
+import ptyIpc from '@lynx_shared/ipc/pty';
 import {Dispatch, memo, SetStateAction, useEffect, useState} from 'react';
 
-import {rIpc} from '../../../../DataHolder';
 import TerminalView from './Terminal-View';
 
 type Props = {isOpen: boolean; setIsOpen: Dispatch<SetStateAction<boolean>>; show: string};
@@ -21,7 +21,7 @@ const UpdateModal = memo(({isOpen, setIsOpen, show}: Props) => {
   const [isDone, setIsDone] = useState<boolean>(false);
 
   useEffect(() => {
-    const offExit = rIpc.pty.onExit((_, id) => {
+    const offExit = ptyIpc.onExit(id => {
       if (id === 'python-update') {
         setIsPopoverOpen(true);
         setIsDone(true);

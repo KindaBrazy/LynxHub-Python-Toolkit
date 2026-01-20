@@ -1,6 +1,6 @@
 import {platform} from 'node:os';
 
-import {ptyChannels} from '@lynx_cross/consts/ipc';
+import ptyChannels from '@lynx_cross/consts/ipc_channels/pty';
 import {IPty} from 'node-pty';
 
 import {PackageUpdate} from '../../../cross/CrossExtTypes';
