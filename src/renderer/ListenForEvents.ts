@@ -1,4 +1,5 @@
-import {ExtensionRendererApi} from '../../../src/main/types/extensions/api';
+import {ExtensionRendererApi} from '@lynx_cross/types/plugins/extensions/api';
+
 import {ModulesThatSupportPython} from '../cross/CrossExtConstants';
 import {getStep} from './components/Modules/ModuleStepManager';
 import pIpc from './PIpc';

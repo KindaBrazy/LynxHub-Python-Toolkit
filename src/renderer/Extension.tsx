@@ -1,6 +1,7 @@
 import './index.css';
 
-import {ExtensionRendererApi} from '../../../src/main/types/extensions/api';
+import {ExtensionRendererApi} from '@lynx_cross/types/plugins/extensions/api';
+
 import CardMenu from './components/CardMenu';
 import CardMenuModal from './components/CardMenuModal';
 import Settings from './components/Settings/Settings';
