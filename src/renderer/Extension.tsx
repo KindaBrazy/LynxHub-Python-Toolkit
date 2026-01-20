@@ -7,7 +7,7 @@ import CardMenuModal from './components/CardMenuModal';
 import Settings from './components/Settings/Settings';
 import ToolsPage from './components/ToolsPage';
 import CustomHook from './CustomHook';
-import {setCards, setRendererIpc} from './DataHolder';
+import {setCards} from './DataHolder';
 import listenForEvents from './ListenForEvents';
 import pIpc from './PIpc';
 import pythonToolkitReducer from './reducer';
@@ -15,7 +15,6 @@ import pythonToolkitReducer from './reducer';
 export function InitialExtensions(lynxAPI: ExtensionRendererApi) {
   listenForEvents(lynxAPI);
   setCards(lynxAPI.modulesData?.allCards || []);
-  setRendererIpc(lynxAPI.rendererIpc);
 
   lynxAPI.addReducer([{name: 'pythonToolkit', reducer: pythonToolkitReducer}]);
   lynxAPI.addModal(CardMenuModal);
