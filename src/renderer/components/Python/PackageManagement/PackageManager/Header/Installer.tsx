@@ -1,5 +1,5 @@
 import {Alert, Button, Code, Input} from '@heroui/react';
-import rendererIpc from '@lynx_shared/ipc';
+import filesIpc from '@lynx_shared/ipc/files';
 import {Divider} from 'antd';
 import {compact, isEmpty} from 'lodash';
 import {KeyboardEvent, useState} from 'react';
@@ -75,7 +75,7 @@ export default function Installer({pythonPath, refresh, close}: Props) {
   };
 
   const handleFileSelect = () => {
-    rendererIpc.file
+    filesIpc
       .openDlg({properties: ['openFile']})
       .then(file => {
         if (file) {

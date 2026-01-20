@@ -1,5 +1,5 @@
 import {Button, Chip, Input, Modal, ModalBody, ModalContent, ModalFooter, ModalHeader} from '@heroui/react';
-import rendererIpc from '@lynx_shared/ipc';
+import filesIpc from '@lynx_shared/ipc/files';
 import {Empty, Result} from 'antd';
 import {isEmpty} from 'lodash';
 import {OverlayScrollbarsComponentRef} from 'overlayscrollbars-react';
@@ -113,7 +113,7 @@ export default function RequirementsBtn({id, projectPath, setIsReqAvailable, sho
   };
 
   const openFilePath = () => {
-    rendererIpc.file
+    filesIpc
       .openDlg({
         properties: ['openFile'],
         filters: [{name: 'Text', extensions: ['txt']}],

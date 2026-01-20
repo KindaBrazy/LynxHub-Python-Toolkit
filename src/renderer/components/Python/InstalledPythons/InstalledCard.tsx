@@ -14,7 +14,7 @@ import {
   PopoverTrigger,
   Progress,
 } from '@heroui/react';
-import rendererIpc from '@lynx_shared/ipc';
+import filesIpc from '@lynx_shared/ipc/files';
 import {Divider, Spin} from 'antd';
 import {isNil, startCase} from 'lodash';
 import {useCallback, useMemo, useState} from 'react';
@@ -103,7 +103,7 @@ export default function InstalledCard({python, diskUsage, maxDiskValue, updateDe
   };
 
   const openPath = () => {
-    rendererIpc.file.openPath(python.installFolder);
+    filesIpc.openPath(python.installFolder);
   };
 
   const installTypeColor = useMemo(() => {

@@ -1,5 +1,5 @@
 import {Button, Divider, Input, Popover, PopoverContent, PopoverTrigger, Select, SelectItem} from '@heroui/react';
-import rendererIpc from '@lynx_shared/ipc';
+import filesIpc from '@lynx_shared/ipc/files';
 import {capitalize, isEmpty} from 'lodash';
 import {useCallback, useEffect, useMemo, useState} from 'react';
 import {useDispatch} from 'react-redux';
@@ -35,7 +35,7 @@ export default function VenvCreator({installedPythons, refresh, isLoadingPythons
   }, [targetFolder, envName, selectedVersion]);
 
   const selectFolder = useCallback(() => {
-    rendererIpc.file.openDlg({properties: ['openDirectory']}).then(folder => {
+    filesIpc.openDlg({properties: ['openDirectory']}).then(folder => {
       setTargetFolder(folder || '');
     });
   }, []);

@@ -12,7 +12,7 @@ import {
   PopoverContent,
   PopoverTrigger,
 } from '@heroui/react';
-import rendererIpc from '@lynx_shared/ipc';
+import filesIpc from '@lynx_shared/ipc/files';
 import {Divider, Spin} from 'antd';
 import {SHA256} from 'crypto-js';
 import {isNil} from 'lodash';
@@ -78,7 +78,7 @@ export default function VenvCard({
   const remove = () => {
     setPopoverUninstaller(false);
     setIsRemoving(true);
-    rendererIpc.file
+    filesIpc
       .trashDir(folder)
       .then(() => {
         lynxTopToast(dispatch).success(`Environment "${title}" removed successfully.`);
@@ -95,7 +95,7 @@ export default function VenvCard({
   };
 
   const openPath = () => {
-    rendererIpc.file.openPath(folder);
+    filesIpc.openPath(folder);
   };
 
   const onTitleChange = (event: FormEvent<HTMLSpanElement>) => {

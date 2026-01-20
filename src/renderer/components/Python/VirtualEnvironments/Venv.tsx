@@ -1,5 +1,5 @@
 import {Button, Spinner} from '@heroui/react';
-import rendererIpc from '@lynx_shared/ipc';
+import filesIpc from '@lynx_shared/ipc/files';
 import {Empty} from 'antd';
 import {isEmpty} from 'lodash';
 import {useCallback, useEffect, useState} from 'react';
@@ -32,7 +32,7 @@ export default function Venv({visible, installedPythons, isLoadingPythons, show}
   const [diskUsage, setDiskUsage] = useState<{path: string; value: number | undefined}[]>([]);
 
   const calcDiskUsage = useCallback((venv: VenvInfo) => {
-    rendererIpc.file.calcFolderSize(venv.folder).then(value => {
+    filesIpc.calcFolderSize(venv.folder).then(value => {
       if (value) {
         pIpc.storage.setCachedUsage(venv.folder, bytesToMegabytes(value));
         setDiskUsage(prevState => [

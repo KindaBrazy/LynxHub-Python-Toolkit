@@ -1,5 +1,5 @@
 import {Button, Spinner} from '@heroui/react';
-import rendererIpc from '@lynx_shared/ipc';
+import filesIpc from '@lynx_shared/ipc/files';
 import {Empty} from 'antd';
 import {cloneDeep, isEmpty} from 'lodash';
 import {Dispatch, SetStateAction, useCallback, useEffect, useState} from 'react';
@@ -9,7 +9,6 @@ import {lynxTopToast} from '../../../../../../src/renderer/main_window/hooks/uti
 import {Add_Icon, FolderDuo_Icon, RefreshDuo_Icon} from '../../../../../../src/renderer/shared/assets/icons';
 import {PythonInstallation} from '../../../../cross/CrossExtTypes';
 import {bytesToMegabytes} from '../../../../cross/CrossExtUtils';
-import {rIpc} from '../../../DataHolder';
 import pIpc from '../../../PIpc';
 import {usePythonToolkitState} from '../../../reducer';
 import InstalledCard from './InstalledCard';
@@ -53,7 +52,7 @@ export default function InstalledPythons({
 
   const calcDiskUsage = useCallback(
     (python: PythonInstallation) => {
-      rendererIpc.file.calcFolderSize(python.sitePackagesPath).then((value: number) => {
+      filesIpc.calcFolderSize(python.sitePackagesPath).then((value: number) => {
         if (value) {
           pIpc.storage.setCachedUsage(python.installFolder, bytesToMegabytes(value));
           setDiskUsage(prevState => [
@@ -129,7 +128,7 @@ export default function InstalledPythons({
   const locateVenv = () => {
     setIsLocating(true);
     // Windows: filter for .exe files; macOS/Linux: use wildcard since executables have no extension
-    rIpc.file
+    filesIpc
       .openDlg({
         properties: ['openFile'],
         filters: [{name: 'Executable Python', extensions: [window.osPlatform === 'win32' ? 'exe' : '*']}],
