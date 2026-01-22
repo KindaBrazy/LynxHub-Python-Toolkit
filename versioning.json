@@ -2,6 +2,19 @@
   "$schema": "https://raw.githubusercontent.com/KindaBrazy/LynxHub-Statics/refs/heads/schema/plugins/versioning.schema.json",
   "versions": [
     {
+      "version": "0.14.0",
+      "commit": "b14e95e9",
+      "engines": {
+        "extensionApi": "^1.0.0"
+      },
+      "stage": "early_access",
+      "platforms": [
+        "win32",
+        "linux",
+        "darwin"
+      ]
+    },
+    {
       "version": "0.13.1",
       "commit": "ce3568d",
       "engines": {
@@ -39,6 +52,32 @@
     }
   ],
   "changes": [
+    {
+      "version": "0.14.0",
+      "date": "2026-01-22",
+      "items": [
+        {
+          "✨ New Features": [
+            "Added macOS Support"
+          ],
+          "⚡ Improvements": [
+            "Improved cross-platform shell command handling for updater and package manager",
+            "Improved cross-platform environment detection",
+            "Improved cross-platform associating command"
+          ],
+          "🪲 Bug Fixes": [
+            "Fixed cross-platform VENV detection",
+            "Fixed PowerShell detection and fallback to cmd on windows",
+            "Fixed packages changes not refreshing"
+          ],
+          "📌 Minor Changes": [
+            "Fixed requirements empty modal file path in Unix systems",
+            "Updated uninstall python version warning message for macOS",
+            "Caching icons if LynxHub version is above 3.4.0"
+          ]
+        }
+      ]
+    },
     {
       "version": "0.13.1",
       "date": "2026-01-02",
