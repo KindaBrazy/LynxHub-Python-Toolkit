@@ -1,8 +1,8 @@
 import {platform} from 'node:os';
 
-import ptyChannels from '@lynx_cross/consts/ipc_channels/pty';
 import {IPty} from 'node-pty';
 
+import {ptyIpc} from '../../../../../src/main/ipc/pty';
 import {PackageUpdate} from '../../../cross/CrossExtTypes';
 import {getAppManager, getNodePty} from '../../DataHolder';
 import {COMMAND_LINE_ENDING, determineShell} from '../ExtMainUtils';
@@ -25,11 +25,11 @@ function startPtyUpdate(pythonExePath: string, packageSpecs: string): Promise<vo
       ptyProcess.write(`exit${COMMAND_LINE_ENDING}`);
 
       ptyProcess.onData(data => {
-        webContent.send(ptyChannels.onData, 'python-update', data);
+        ptyIpc.send.onData('python-update', data);
       });
 
       ptyProcess.onExit(() => {
-        webContent.send(ptyChannels.onExit, 'python-update');
+        ptyIpc.send.onExit('python-update');
         ptyProcess?.kill();
         ptyProcess = undefined;
         resolve();
