@@ -8389,7 +8389,8 @@ const pythonChannels = {
   updateCheckProgress: "ptoolkit-update-check-progress",
   abortUpdateCheck: "ptoolkit-abort-update-check",
   abortUpdating: "ptoolkit-abort-updating",
-  getPythonVersion: "ptoolkit-get-python-version"
+  getPythonVersion: "ptoolkit-get-python-version",
+  getAppVersion: "ptoolkit-get-app-version"
 };
 const pythonStorageChannels = {
   getAvailableConda: "psc:getAvailableConda",
@@ -8462,6 +8463,7 @@ const pIpc = {
   abortUpdateCheck: () => ipc.send(pythonChannels.abortUpdateCheck),
   abortUpdating: () => ipc.send(pythonChannels.abortUpdating),
   getPythonVersion: (pythonPath) => ipc.invoke(pythonChannels.getPythonVersion, pythonPath),
+  getAppVersion: () => ipc.invoke(pythonChannels.getAppVersion),
   storage: {
     getAvailableConda: () => ipc.invoke(pythonStorageChannels.getAvailableConda),
     setAvailableConda: (value) => ipc.send(pythonStorageChannels.setAvailableConda, value),
@@ -12024,7 +12026,7 @@ function RequirementsBtn({ id, projectPath, setIsReqAvailable, show, setReqPacka
             {
               description: /* @__PURE__ */ jsxRuntimeExports.jsxs("span", { children: [
                 'The file "',
-                filePath.split("\\").pop(),
+                filePath.split(/[/\\]/).pop(),
                 '" is empty. Add requirements using the "Add" button.'
               ] })
             }
@@ -13040,11 +13042,13 @@ function PackageManagerModal({
   id,
   projectPath,
   setPythonPath,
-  show
+  show,
+  onPackagesChanged
 }) {
   const [isLoadingPackages, setIsLoadingPackages] = useState$i(false);
   const [isCheckingUpdates, setIsCheckingUpdates] = useState$i(false);
   const [isUpdating, setIsUpdating] = useState$i(false);
+  const [packagesChanged, setPackagesChanged] = useState$i(false);
   const [packages, setPackages] = useState$i([]);
   const [filteredPackages, setFilteredPackages] = useState$i([]);
   const [packagesUpdate, setPackagesUpdate] = useState$i([]);
@@ -13119,6 +13123,10 @@ function PackageManagerModal({
   const closePackageManager = () => {
     setIsOpen(false);
     setPackagesUpdate([]);
+    if (packagesChanged && onPackagesChanged) {
+      onPackagesChanged();
+      setPackagesChanged(false);
+    }
   };
   const checkForUpdates = (type) => {
     setIsCheckingUpdates(true);
@@ -13176,6 +13184,7 @@ function PackageManagerModal({
     if (updatesArray.length === 0) {
       return;
     }
+    setPackagesChanged(true);
     const updatesMap = new Map(updatesArray.map((item) => [item.name, item.targetVersion]));
     setPackagesUpdate((prevUpdates) => prevUpdates.filter((item) => !updatesMap.has(item.name)));
     setPackages(
@@ -13193,8 +13202,13 @@ function PackageManagerModal({
     setSelectedKeys(/* @__PURE__ */ new Set([]));
   };
   const removed = (name) => {
+    setPackagesChanged(true);
     setPackagesUpdate((prevState) => prevState.filter((item) => item.name !== name));
     setPackages((prevState) => prevState.filter((item) => item.name !== name));
+  };
+  const refreshAfterInstall = () => {
+    setPackagesChanged(true);
+    getPackageList();
   };
   return /* @__PURE__ */ jsxRuntimeExports.jsxs(jsxRuntimeExports.Fragment, { children: [
     /* @__PURE__ */ jsxRuntimeExports.jsx(
@@ -13221,10 +13235,10 @@ function PackageManagerModal({
               visibleItems: items,
               isUpdating,
               pythonPath,
-              refresh: getPackageList,
               projectPath,
               searchValue,
               selectedKeys,
+              refresh: refreshAfterInstall,
               setIsUpdating,
               isValidPython,
               actionButtons,
@@ -13744,6 +13758,11 @@ function ToolsCard({ title, description, icon, onPress, footer }) {
   );
 }
 
+const cacheUrl = (url) => {
+  if (!url) return void 0;
+  return semverExports.gte(window.lynxVersion || "3.3.0", "3.4.0") ? `lynxcache://fetch/${encodeURIComponent(url)}` : url;
+};
+
 const {Avatar,Button: Button$a,Chip: Chip$1,Dropdown: Dropdown$2,DropdownItem: DropdownItem$2,DropdownMenu: DropdownMenu$2,DropdownTrigger: DropdownTrigger$2} = await importShared('@heroui/react');
 
 const {isEmpty: isEmpty$5} = await importShared('lodash');
@@ -13759,7 +13778,7 @@ function Venv_Associate({ folder, type }) {
   const dispatch = useDispatch$9();
   useEffect$9(() => {
     const cardTitleMap = new Map(allCardsExt.map((card) => [card.id, card.title]));
-    const cardAvatarMap = new Map(allCardsExt.map((card) => [card.id, extractGitUrl(card.repoUrl).avatarUrl]));
+    const cardAvatarMap = new Map(allCardsExt.map((card) => [card.id, cacheUrl(extractGitUrl(card.repoUrl).avatarUrl)]));
     const installedCardsWithTitles = installedCards.filter((card) => cardTitleMap.has(card.id)).map((card) => {
       const id = card.id;
       const avatarUrl = cardAvatarMap.get(id);
@@ -13959,7 +13978,8 @@ function InstalledCard({ python, diskUsage, maxDiskValue, updateDefault, refresh
         id: python.installPath,
         isOpen: packageManagerOpen,
         pythonPath: python.installPath,
-        setIsOpen: setPackageManagerOpen
+        setIsOpen: setPackageManagerOpen,
+        onPackagesChanged: () => refresh(false)
       }
     ),
     isUninstalling && /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "absolute size-full dark:bg-black/50 bg-white/50 z-10 flex justify-center items-center", children: /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: " dark:bg-black/80 bg-white/80 p-4 rounded-lg flex flex-col space-y-2", children: [
@@ -13983,10 +14003,10 @@ function InstalledCard({ python, diskUsage, maxDiskValue, updateDefault, refresh
               ] }),
               /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { children: [
                 /* @__PURE__ */ jsxRuntimeExports.jsx("span", { className: "text-tiny text-foreground-500", children: python.architecture }),
-                /* @__PURE__ */ jsxRuntimeExports.jsx(Divider$2, { type: "vertical" }),
+                /* @__PURE__ */ jsxRuntimeExports.jsx(Divider$2, { orientation: "vertical" }),
                 /* @__PURE__ */ jsxRuntimeExports.jsx("span", { className: "text-tiny " + installTypeColor, children: startCase(python.installationType) }),
                 python.installationType === "conda" && /* @__PURE__ */ jsxRuntimeExports.jsxs(jsxRuntimeExports.Fragment, { children: [
-                  /* @__PURE__ */ jsxRuntimeExports.jsx(Divider$2, { type: "vertical" }),
+                  /* @__PURE__ */ jsxRuntimeExports.jsx(Divider$2, { orientation: "vertical" }),
                   /* @__PURE__ */ jsxRuntimeExports.jsx("span", { className: "text-tiny text-cyan-500", children: python.condaName })
                 ] })
               ] })
@@ -14014,11 +14034,11 @@ function InstalledCard({ python, diskUsage, maxDiskValue, updateDefault, refresh
                     /* @__PURE__ */ jsxRuntimeExports.jsxs(
                       DropdownItem$1,
                       {
-                        startContent: python.isLynxHubDefault ? /* @__PURE__ */ jsxRuntimeExports.jsx(RefreshDuo_Icon, { className: "size-4" }) : /* @__PURE__ */ jsxRuntimeExports.jsx(DoubleCheck_Icon, {}),
                         variant: "flat",
                         color: "success",
                         onPress: makeLynxDefault,
                         textValue: "Set as LynxHub Default",
+                        startContent: python.isLynxHubDefault ? /* @__PURE__ */ jsxRuntimeExports.jsx(RefreshDuo_Icon, { className: "size-4" }) : /* @__PURE__ */ jsxRuntimeExports.jsx(DoubleCheck_Icon, {}),
                         children: [
                           "Set as ",
                           /* @__PURE__ */ jsxRuntimeExports.jsx("span", { className: "font-bold text-primary", children: "LynxHub Default" })
@@ -14026,7 +14046,7 @@ function InstalledCard({ python, diskUsage, maxDiskValue, updateDefault, refresh
                       },
                       "lynxhub-default"
                     )
-                  ] }) : /* @__PURE__ */ jsxRuntimeExports.jsx(DropdownItem$1, { className: "hidden", textValue: "system_default" }, "system-default"),
+                  ] }) : /* @__PURE__ */ jsxRuntimeExports.jsx(DropdownItem$1, { className: "hidden" }, "hidden_set"),
                   /* @__PURE__ */ jsxRuntimeExports.jsx(
                     DropdownItem$1,
                     {
@@ -14053,7 +14073,10 @@ function InstalledCard({ python, diskUsage, maxDiskValue, updateDefault, refresh
                         /* @__PURE__ */ jsxRuntimeExports.jsx("strong", { className: "text-sm", children: "Complete Uninstall" }),
                         python.installationType === "conda" ? /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "text-xs text-default-600 mt-1", children: `Permanently deletes the entire Conda environment "${python.condaName}" and all
                          its packages from your computer. Any AI using this environment will be
-                          disconnected.` }) : /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "text-xs text-default-600 mt-1", children: `Permanently uninstalls Python version ${python.version} and all its packages
+                          disconnected.` }) : window.osPlatform === "darwin" ? /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "text-xs text-default-600 mt-1", children: python.installPath.includes("/Library/Frameworks/Python.framework") ? `Removes Python ${python.version} from /Library/Frameworks and cleans up symlinks.
+                             Admin password will be required.` : python.installPath.includes("/opt/homebrew") || python.installPath.includes("/usr/local/Cellar") ? `Uninstalls Python ${python.version} via Homebrew (brew uninstall).
+                               Any AI using this installation will be disconnected.` : `Permanently uninstalls Python ${python.version} and all its packages.
+                               Any AI using this installation will be disconnected.` }) : /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "text-xs text-default-600 mt-1", children: `Permanently uninstalls Python version ${python.version} and all its packages
                          from your computer. Any AI using this installation will be disconnected.` }),
                         /* @__PURE__ */ jsxRuntimeExports.jsx(
                           Button$9,
@@ -14423,6 +14446,7 @@ function InstallerOfficial({ refresh, installed, closeModal, isOpen, setCloseDis
     const osPlatform = window.osPlatform;
     switch (osPlatform) {
       case "win32":
+      case "darwin":
         pIpc.off_DlProgressOfficial();
         pIpc.on_DlProgressOfficial((_, stage, progress) => {
           setInstallStage(stage);
@@ -22385,6 +22409,7 @@ function VenvCard({
         id: pythonPath,
         pythonPath,
         isOpen: packageManagerOpen,
+        onPackagesChanged: refresh,
         setIsOpen: setPackageManagerOpen
       }
     ),
@@ -22502,7 +22527,7 @@ function VenvCard({
               isNil(size) ? /* @__PURE__ */ jsxRuntimeExports.jsx(Spin, { size: "small" }) : /* @__PURE__ */ jsxRuntimeExports.jsx("span", { children: formatSizeMB(size || 0) })
             ] })
           ] }),
-          /* @__PURE__ */ jsxRuntimeExports.jsx(CardFooter, { className: "flex-col gap-y-3", children: /* @__PURE__ */ jsxRuntimeExports.jsx(Venv_Associate, { type: "venv", folder }) })
+          /* @__PURE__ */ jsxRuntimeExports.jsx(CardFooter, { className: "flex-col gap-y-3", children: /* @__PURE__ */ jsxRuntimeExports.jsx(Venv_Associate, { folder, type: isInstallation ? "conda" : "venv" }) })
         ]
       }
     )
@@ -22850,6 +22875,7 @@ const desc = "Manage Python versions, virtual environments, packages, requiremen
 const iconUrl = "https://raw.githubusercontent.com/KindaBrazy/LynxHub-Python-Toolkit/refs/heads/metadata/icon.png";
 function ToolsPage() {
   const dispatch = useDispatch$2();
+  const icon = cacheUrl(iconUrl);
   const activeTab = useTabsState("activeTab");
   const tabs = useTabsState("tabs");
   const [prevTabTitle, setPrevTabTitle] = useState$1(tabs.find((tab) => tab.id === activeTab)?.title);
@@ -22882,8 +22908,8 @@ function ToolsPage() {
       ToolsCard,
       {
         footer: /* @__PURE__ */ jsxRuntimeExports.jsx(Button, { as: "div", variant: "flat", color: "primary", onPress: openSettings, isIconOnly: true, children: /* @__PURE__ */ jsxRuntimeExports.jsx(SettingsMinimal_Icon, { className: "size-4" }) }),
+        icon,
         title,
-        icon: iconUrl,
         description: desc,
         onPress: openModal
       }
@@ -23092,6 +23118,11 @@ function InitialExtensions(lynxAPI) {
   lynxAPI.customizePages.tools.addComponent(ToolsPage);
   lynxAPI.cards.customize.menu.addSection([{ index: 1, components: [CardMenu] }]);
   lynxAPI.addCustomHook(CustomHook);
+  pIpc.getAppVersion().then((version) => {
+    window.lynxVersion = version;
+  }).catch(() => {
+    console.log("Can't get the app version.");
+  });
 }
 
 export { InitialExtensions };

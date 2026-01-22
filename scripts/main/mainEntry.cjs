@@ -11,9 +11,9 @@ const stream = require("stream");
 const require$$1 = require("util");
 const require$$5 = require("assert");
 const child_process = require("child_process");
+const require$$0$4 = require("os");
 const require$$1$1 = require("fs/promises");
 const require$$1$2 = require("path");
-const require$$0$4 = require("os");
 const process$1 = require("node:process");
 const fs = require("node:fs");
 const require$$3 = require("http");
@@ -37,6 +37,7 @@ let storageManager = void 0;
 let appManager = void 0;
 let defaultEnvPath = process.env.PATH;
 let nodePty = void 0;
+const SystemDefaultPython_StorageID = "pythonToolkit_SystemDefaultPython";
 const setStorage = (storage) => storageManager = storage;
 const getStorage = () => storageManager;
 const setAppManager = (manager) => appManager = manager;
@@ -45,6 +46,18 @@ const setDefaultEnvPath = (path2) => defaultEnvPath = path2;
 const getDefaultEnvPath = () => defaultEnvPath;
 const setNodePty = (pty) => nodePty = pty;
 const getNodePty = () => nodePty;
+const getStoredSystemDefaultPython = () => {
+  return storageManager?.getCustomData(SystemDefaultPython_StorageID);
+};
+const setStoredSystemDefaultPython = (pythonPath) => {
+  storageManager?.setCustomData(SystemDefaultPython_StorageID, pythonPath);
+};
+const getStoredLynxHubDefaultPython = () => {
+  return storageManager?.getCustomData(DefaultLynxPython_StorageID);
+};
+const setStoredLynxHubDefaultPython = (pythonPath) => {
+  storageManager?.setCustomData(DefaultLynxPython_StorageID, pythonPath);
+};
 const pythonChannels = {
   removeSavedPython: "remove-saved-python",
   removeSavedVenv: "remove-saved-venv",
@@ -99,7 +112,8 @@ const pythonChannels = {
   updateCheckProgress: "ptoolkit-update-check-progress",
   abortUpdateCheck: "ptoolkit-abort-update-check",
   abortUpdating: "ptoolkit-abort-updating",
-  getPythonVersion: "ptoolkit-get-python-version"
+  getPythonVersion: "ptoolkit-get-python-version",
+  getAppVersion: "ptoolkit-get-app-version"
 };
 const pythonStorageChannels = {
   getAvailableConda: "psc:getAvailableConda",
@@ -8583,7 +8597,7 @@ async function locateVenv() {
 async function createPythonVenv(options2) {
   const { pythonPath, destinationFolder, venvName } = options2;
   const venvPath = path.join(destinationFolder, venvName);
-  const command = `${pythonPath} -m venv ${venvPath}`;
+  const command = `"${pythonPath}" -m venv "${venvPath}"`;
   return new Promise((resolve) => {
     child_process.exec(command, (error, stdout, stderr) => {
       if (error) {
@@ -8683,7 +8697,7 @@ function isVenvDirectory(dirPath) {
     if (!gracefulFsExports.existsSync(pythonExePath)) {
       return false;
     }
-    const libPath = path.join(dirPath, "lib");
+    const libPath = node_os.platform() === "win32" ? path.join(dirPath, "Lib") : path.join(dirPath, "lib");
     return gracefulFsExports.existsSync(libPath);
   } catch (err) {
     console.error(`Error checking if directory is a venv: ${err}`);
@@ -8730,17 +8744,32 @@ async function findAIVenv(id, folder) {
 function getCommandByType(type2, dir, condaName) {
   const isWin = node_os.platform() === "win32";
   switch (type2) {
-    case "python":
-      return isWin ? `$env:Path = "${dir};${dir}\\Scripts" + $env:Path` : `export PATH="${dir}:${dir}/bin:$PATH"`;
+    case "python": {
+      if (isWin) {
+        return `$env:Path = "${dir};${dir}\\Scripts;" + $env:Path`;
+      }
+      return `export PATH="${dir}:$PATH"`;
+    }
     case "venv": {
       if (isWin) {
-        return `${dir}\\Scripts\\activate.ps1`;
+        return `& "${dir}\\Scripts\\Activate.ps1"`;
       }
       const activatePath = dir.endsWith("/bin") ? `${dir}/activate` : `${dir}/bin/activate`;
-      return `source ${activatePath}`;
+      return `source "${activatePath}"`;
     }
-    case "conda":
-      return `conda activate ${condaName || `"${dir}"`}`;
+    case "conda": {
+      if (isWin) {
+        if (condaName) {
+          return `conda activate ${condaName}`;
+        }
+        return `conda activate "${dir}"`;
+      }
+      if (condaName) {
+        return `conda activate ${condaName}`;
+      }
+      const condaPath = dir.endsWith("/bin") ? dir.slice(0, -4) : dir;
+      return `source "${condaPath}/bin/activate"`;
+    }
     default:
       throw new Error(`Unsupported environment type: ${type2}`);
   }
@@ -8781,13 +8810,25 @@ function updateAssociateStorage(data) {
 function getExePathAssociate(target) {
   try {
     const buildPath = (item) => {
+      const isWin = node_os.platform() === "win32";
       switch (item.type) {
         case "venv":
           return path.resolve(getVenvPythonPath(item.dir));
+        case "conda": {
+          if (isWin) {
+            return path.resolve(path.join(item.dir, "python.exe"));
+          }
+          const pythonPath = item.dir.endsWith("/bin") ? path.join(item.dir, "python") : path.join(item.dir, "bin", "python");
+          return path.resolve(pythonPath);
+        }
         case "python":
-        case "conda":
-        default:
-          return path.resolve(node_os.platform() === "win32" ? path.join(item.dir, "python.exe") : path.join(item.dir, "bin", "python"));
+        default: {
+          if (isWin) {
+            return path.resolve(path.join(item.dir, "python.exe"));
+          }
+          const pythonPath = item.dir.endsWith("/bin") ? path.join(item.dir, "python") : path.join(item.dir, "bin", "python");
+          return path.resolve(pythonPath);
+        }
       }
     };
     if (lodashExports.isString(target)) {
@@ -8840,7 +8881,7 @@ function removeAssociatePath(pythonPath) {
     console.warn(`Error removing associate by path: ${pythonPath}`, err);
   }
 }
-const execAsync$5 = require$$1.promisify(child_process.exec);
+const execAsync$6 = require$$1.promisify(child_process.exec);
 function removeDuplicateUrls(versions) {
   const seenUrls = /* @__PURE__ */ new Set();
   return versions.filter((version) => {
@@ -8865,11 +8906,11 @@ function removeDuplicateUrls(versions) {
 }
 async function ensureSoftwarePropertiesCommon() {
   try {
-    const { stdout } = await execAsync$5("apt-cache policy software-properties-common");
+    const { stdout } = await execAsync$6("apt-cache policy software-properties-common");
     if (!stdout.includes("Installed: (none)")) {
       return;
     }
-    const { stderr } = await execAsync$5("pkexec apt install -y software-properties-common");
+    const { stderr } = await execAsync$6("pkexec apt install -y software-properties-common");
     if (stderr) {
       throw new Error(`Failed to install software-properties-common: ${stderr}`);
     }
@@ -8879,12 +8920,12 @@ async function ensureSoftwarePropertiesCommon() {
 }
 async function ensureDeadsnakesPPA() {
   try {
-    const { stdout } = await execAsync$5("apt-cache policy | grep deadsnakes");
+    const { stdout } = await execAsync$6("apt-cache policy | grep deadsnakes");
     if (stdout.includes("deadsnakes")) {
       return;
     }
-    await execAsync$5("pkexec add-apt-repository -y ppa:deadsnakes/ppa");
-    await execAsync$5("pkexec apt update");
+    await execAsync$6("pkexec add-apt-repository -y ppa:deadsnakes/ppa");
+    await execAsync$6("pkexec apt update");
   } catch (err) {
     throw new Error(`Error ensuring Deadsnakes PPA is added: ${err.message}`);
   }
@@ -8914,9 +8955,29 @@ async function getAvailablePythonVersions() {
     } else if (node_os.platform() === "linux") {
       await ensureSoftwarePropertiesCommon();
       await ensureDeadsnakesPPA();
-      const { stdout } = await execAsync$5("apt-cache search ^python3\\.[0-9]+$");
+      const { stdout } = await execAsync$6("apt-cache search ^python3\\.[0-9]+$");
       const versions = stdout.split("\n").filter((line) => line.startsWith("python3")).map((line) => line.split(" ")[0].replace("python", "")).map((version) => ({ version, url: getPythonDownloadUrl(version) }));
       return removeDuplicateUrls(versions);
+    } else if (node_os.platform() === "darwin") {
+      const response = await fetch("https://www.python.org/downloads/");
+      const text = await response.text();
+      const versionRegex = /Python\s+(\d+\.\d+\.\d+)/g;
+      const matches = [...text.matchAll(versionRegex)];
+      const result = matches.map((match) => ({
+        version: match[1],
+        url: getPythonDownloadUrl(match[1])
+      }));
+      const validVersions = await Promise.all(
+        result.map(async (version) => {
+          try {
+            const response2 = await fetch(version.url, { method: "HEAD" });
+            return response2.ok ? version : null;
+          } catch {
+            return null;
+          }
+        })
+      );
+      return removeDuplicateUrls(validVersions.filter((v) => v !== null));
     } else {
       return [];
     }
@@ -8931,7 +8992,11 @@ function getPythonDownloadUrl(version) {
       return version.startsWith("2") ? `${baseUrl}/${version}/python-${version}.amd64.msi` : `${baseUrl}/${version}/python-${version}-amd64.exe`;
     case "linux":
       return `https://launchpad.net/~deadsnakes/+archive/ubuntu/ppa/+packages?field.name_filter=python${version}`;
-    case "darwin":
+    case "darwin": {
+      const [major, minor, patch] = version.split(".").map(Number);
+      const hasUniversal2 = major >= 3 && (minor > 9 || minor === 9 && patch >= 1);
+      return hasUniversal2 ? `${baseUrl}/${version}/python-${version}-macos11.pkg` : `${baseUrl}/${version}/python-${version}-macosx10.9.pkg`;
+    }
     default:
       return `${baseUrl}/${version}/python-${version}-macos11.pkg`;
   }
@@ -9190,7 +9255,7 @@ function requireLib() {
 var libExports = requireLib();
 const which = /* @__PURE__ */ getDefaultExportFromCjs(libExports);
 const COMMAND_LINE_ENDING = node_os.platform() === "win32" ? "\r" : "\n";
-function getPowerShellVersion$1() {
+function getPowerShellVersion() {
   const command = "$PSVersionTable.PSVersion.Major";
   try {
     const pwshVersion = parseInt(
@@ -9201,6 +9266,9 @@ function getPowerShellVersion$1() {
       10
     );
     if (pwshVersion >= 7) return pwshVersion;
+  } catch {
+  }
+  try {
     const psVersion = parseInt(
       node_child_process.execSync(`powershell.exe -NoProfile -Command "${command}"`, {
         encoding: "utf8",
@@ -9208,22 +9276,31 @@ function getPowerShellVersion$1() {
       }).trim(),
       10
     );
-    return psVersion >= 5 ? psVersion : 0;
-  } catch (err) {
-    console.error("Error determining PowerShell version:", err);
-    return 0;
+    return psVersion >= 5 ? psVersion : -1;
+  } catch {
+    return -1;
   }
 }
-function determineShell$1() {
+function determineShell() {
   switch (node_os.platform()) {
     case "darwin":
       return "zsh";
     case "linux":
       return "bash";
     case "win32":
-    default:
-      return getPowerShellVersion$1() >= 5 ? "pwsh.exe" : "powershell.exe";
+    default: {
+      const psVersion = getPowerShellVersion();
+      if (psVersion >= 7) return "pwsh.exe";
+      if (psVersion >= 5) return "powershell.exe";
+      return "cmd.exe";
+    }
   }
+}
+function getPathSeparator() {
+  return node_os.platform() === "win32" ? ";" : ":";
+}
+function getPythonScriptsDir() {
+  return node_os.platform() === "win32" ? "Scripts" : "bin";
 }
 function validatePath$1(path2) {
   try {
@@ -9239,26 +9316,15 @@ function replacePythonPath(envPath, newPythonBase) {
   if (!pathExists) {
     throw new Error(`Python path does not exist: ${targetPath}`);
   }
-  const paths = envPath.split(";").filter(Boolean);
-  const nonPythonPaths = paths.filter((path2) => !path2.toLowerCase().includes("python"));
-  const newPaths = [targetPath, path.join(targetPath, "Scripts"), ...nonPythonPaths];
-  return newPaths.join(";");
-}
-function isFirstPythonPath(envPath, targetPythonBase) {
-  const targetPath = path.resolve(targetPythonBase);
-  const pathExists = validatePath$1(targetPath);
-  if (!pathExists) {
-    return false;
-  }
-  const paths = envPath.split(";").filter(Boolean);
-  const firstPythonLikePath = paths.find((p) => {
-    const lowerP = p.toLowerCase();
-    return lowerP.includes("python") || lowerP.includes("conda");
+  const separator = getPathSeparator();
+  const paths = envPath.split(separator).filter(Boolean);
+  const nonPythonPaths = paths.filter((p) => {
+    const lowerPath = p.toLowerCase();
+    return !lowerPath.includes("python") && !lowerPath.includes("conda") && !lowerPath.includes("miniconda");
   });
-  if (!firstPythonLikePath) {
-    return false;
-  }
-  return path.resolve(firstPythonLikePath).toLowerCase() === targetPath.toLowerCase();
+  const isWindows = node_os.platform() === "win32";
+  const newPaths = isWindows ? [targetPath, path.join(targetPath, getPythonScriptsDir()), ...nonPythonPaths] : [targetPath, ...nonPythonPaths];
+  return newPaths.join(separator);
 }
 async function validatePath(path2) {
   try {
@@ -9279,9 +9345,13 @@ async function setDefaultPython(pythonPath) {
         await setDefaultPythonWindows(pythonPath);
         break;
       case "darwin":
+        await setDefaultPythonMacOS(pythonPath);
+        break;
       case "linux":
+        await setDefaultPythonLinux(pythonPath);
         break;
     }
+    setStoredSystemDefaultPython(pythonPath);
     console.log(`Python ${pythonPath} set as default`);
   } catch (err) {
     throw new Error(`Failed to set Python ${pythonPath} as default: ${err.message}`);
@@ -9289,14 +9359,64 @@ async function setDefaultPython(pythonPath) {
 }
 async function isDefaultPython(pythonPath) {
   try {
-    const defaultPath = await which("python", { path: getDefaultEnvPath() });
-    return defaultPath.toLowerCase() === pythonPath.toLowerCase();
+    const storedDefault = getStoredSystemDefaultPython();
+    if (storedDefault) {
+      return await comparePythonPaths(storedDefault, pythonPath);
+    }
+    const detectedDefault = await detectSystemDefaultPython();
+    if (detectedDefault) {
+      return await comparePythonPaths(detectedDefault, pythonPath);
+    }
+    return false;
   } catch (error) {
     return false;
   }
 }
+async function detectSystemDefaultPython() {
+  try {
+    const pythonPath = await which("python", { path: getDefaultEnvPath() }).catch(() => null);
+    if (pythonPath) return pythonPath;
+    const python3Path = await which("python3", { path: getDefaultEnvPath() }).catch(() => null);
+    return python3Path || void 0;
+  } catch {
+    return void 0;
+  }
+}
+function isLynxHubDefaultPython(pythonPath) {
+  const storedDefault = getStoredLynxHubDefaultPython();
+  if (!storedDefault) return false;
+  const isWindows = node_os.platform() === "win32";
+  const targetPath = path.resolve(path.dirname(pythonPath));
+  const storedPath = path.resolve(storedDefault);
+  return isWindows ? targetPath.toLowerCase() === storedPath.toLowerCase() : targetPath === storedPath;
+}
+async function comparePythonPaths(path1, path2) {
+  const isWindows = node_os.platform() === "win32";
+  const dir1 = path.resolve(path.dirname(path1));
+  const dir2 = path.resolve(path.dirname(path2));
+  if (isWindows ? dir1.toLowerCase() === dir2.toLowerCase() : dir1 === dir2) {
+    return true;
+  }
+  if (!isWindows) {
+    const isConda1 = path1.toLowerCase().includes("conda");
+    const isConda2 = path2.toLowerCase().includes("conda");
+    if (isConda1 || isConda2) {
+      return false;
+    }
+    try {
+      const [resolved1, resolved2] = await Promise.all([
+        gracefulFsExports.promises.realpath(path1).catch(() => path1),
+        gracefulFsExports.promises.realpath(path2).catch(() => path2)
+      ]);
+      return resolved1 === resolved2;
+    } catch {
+      return false;
+    }
+  }
+  return false;
+}
 async function setDefaultPythonWindows(pythonPath) {
-  return new Promise((resolve, reject) => {
+  return new Promise((resolve2, reject) => {
     const regQuery = node_child_process.spawn("reg", ["query", "HKEY_CURRENT_USER\\Environment", "/v", "Path"]);
     let queryOutput = "";
     regQuery.stdout.on("data", (data) => {
@@ -9335,16 +9455,64 @@ async function setDefaultPythonWindows(pythonPath) {
           return;
         }
         process.env.PATH = newPathValue;
-        resolve();
+        resolve2();
       });
     });
   });
 }
-const execAsync$4 = node_util.promisify(node_child_process.exec);
+const LYNXHUB_PATH_MARKER = "# LynxHub Python Path";
+async function setDefaultPythonUnix(pythonPath, shellConfigFile) {
+  const pythonBinDir = pythonPath;
+  try {
+    let content = "";
+    try {
+      content = await gracefulFsExports.promises.readFile(shellConfigFile, "utf-8");
+    } catch {
+    }
+    const lines = content.split("\n");
+    const filteredLines = [];
+    let skipNext = false;
+    for (const line of lines) {
+      if (line.includes(LYNXHUB_PATH_MARKER)) {
+        skipNext = true;
+        continue;
+      }
+      if (skipNext) {
+        skipNext = false;
+        continue;
+      }
+      filteredLines.push(line);
+    }
+    const pathEntry = `${LYNXHUB_PATH_MARKER}
+export PATH="${pythonBinDir}:$PATH"`;
+    let insertIndex = 0;
+    if (filteredLines.length > 0 && filteredLines[0].startsWith("#!")) {
+      insertIndex = 1;
+    }
+    filteredLines.splice(insertIndex, 0, pathEntry);
+    await gracefulFsExports.promises.writeFile(shellConfigFile, filteredLines.join("\n"), "utf-8");
+    process.env.PATH = `${pythonBinDir}:${process.env.PATH}`;
+    const defaultEnvPath2 = getDefaultEnvPath();
+    if (defaultEnvPath2) {
+      setDefaultEnvPath(`${pythonBinDir}:${defaultEnvPath2}`);
+    }
+  } catch (err) {
+    throw new Error(`Failed to update shell config: ${err.message}`);
+  }
+}
+async function setDefaultPythonMacOS(pythonPath) {
+  const zshrcPath = `${require$$0$4.homedir()}/.zshrc`;
+  return setDefaultPythonUnix(pythonPath, zshrcPath);
+}
+async function setDefaultPythonLinux(pythonPath) {
+  const bashrcPath = `${require$$0$4.homedir()}/.bashrc`;
+  return setDefaultPythonUnix(pythonPath, bashrcPath);
+}
+const execAsync$5 = node_util.promisify(node_child_process.exec);
 async function uninstallCondaPython(pythonPath, pty) {
   return new Promise(async (resolve) => {
     try {
-      const ptyProcess2 = pty.spawn(determineShell$1(), [], {});
+      const ptyProcess2 = pty.spawn(determineShell(), [], {});
       const envName = await getCondaEnvName(pythonPath);
       ptyProcess2.write(`conda env remove -n ${envName} -y${COMMAND_LINE_ENDING}`);
       ptyProcess2.write(`exit${COMMAND_LINE_ENDING}`);
@@ -9371,13 +9539,13 @@ async function uninstallCondaPython(pythonPath, pty) {
 }
 async function getCondaEnvName(pythonPath) {
   try {
-    const { stdout } = await execAsync$4(`"${pythonPath}" -c "import sys; print(sys.prefix.split('/')[-1])"`);
+    const { stdout } = await execAsync$5(`"${pythonPath}" -c "import os, sys; print(os.path.basename(sys.prefix))"`);
     return path.basename(stdout.trim());
   } catch (err) {
     throw new Error(`Failed to get conda environment name: ${err.message}`);
   }
 }
-const execAsync$3 = require$$1.promisify(child_process.exec);
+const execAsync$4 = require$$1.promisify(child_process.exec);
 const commonPaths = {
   win32: [
     "C:\\Python*",
@@ -9401,6 +9569,31 @@ const commonPaths = {
     "/opt/python/*",
     "/opt/conda/*",
     "/snap/bin/python*"
+  ],
+  darwin: [
+    // Official Python installer location
+    "/Library/Frameworks/Python.framework/Versions/*/bin/python*",
+    // Homebrew on Apple Silicon
+    "/opt/homebrew/bin/python*",
+    "/opt/homebrew/opt/python*/bin/python*",
+    "/opt/homebrew/Cellar/python*/*/bin/python*",
+    // Homebrew on Intel
+    "/usr/local/bin/python*",
+    "/usr/local/opt/python*/bin/python*",
+    "/usr/local/Cellar/python*/*/bin/python*",
+    // pyenv
+    "~/.pyenv/versions/*",
+    // Conda
+    "~/anaconda3",
+    "~/anaconda3/envs/*",
+    "~/miniconda3",
+    "~/miniconda3/envs/*",
+    "/opt/anaconda3",
+    "/opt/anaconda3/envs/*",
+    "/opt/miniconda3",
+    "/opt/miniconda3/envs/*",
+    // MacPorts
+    "/opt/local/bin/python*"
   ]
 };
 function matchPattern(file, pattern) {
@@ -9508,7 +9701,7 @@ async function findInCommonLocations() {
               }
             } catch (subError) {
             }
-          } else if (os === "linux") {
+          } else if (os !== "win32") {
             if (await isExecutable(fullPath) && await isPythonPathValid(fullPath)) {
               expandedPaths.push(fullPath);
             }
@@ -9522,7 +9715,7 @@ async function findInCommonLocations() {
 }
 async function detectArchitecture(pythonPath) {
   try {
-    const { stdout } = await execAsync$3(`"${pythonPath}" -c "import struct; print(struct.calcsize('P') * 8)"`);
+    const { stdout } = await execAsync$4(`"${pythonPath}" -c "import struct; print(struct.calcsize('P') * 8)"`);
     return stdout.trim() === "64" ? "64bit" : "32bit";
   } catch (error) {
     return require$$0$4.arch() === "x64" ? "64bit" : "32bit";
@@ -9530,7 +9723,7 @@ async function detectArchitecture(pythonPath) {
 }
 async function getPipPath(pythonPath) {
   try {
-    const { stdout } = await execAsync$3(`"${pythonPath}" -m pip --version`);
+    const { stdout } = await execAsync$4(`"${pythonPath}" -m pip --version`);
     const match = stdout.match(/pip \d+\.\d+\.\d+ from (\S+)/);
     if (match && match[1]) {
       const pipPath = match[1];
@@ -9542,7 +9735,7 @@ async function getPipPath(pythonPath) {
 }
 async function getVenvPaths(pythonPath) {
   try {
-    const { stdout } = await execAsync$3(`"${pythonPath}" -c "import sys; print('\\n'.join(sys.path))"`);
+    const { stdout } = await execAsync$4(`"${pythonPath}" -c "import sys; print('\\n'.join(sys.path))"`);
     return stdout.split("\n").filter((path2) => path2.includes("venv") || path2.includes("virtualenv")).map((path2) => path2.trim());
   } catch (error) {
     return [];
@@ -9550,7 +9743,7 @@ async function getVenvPaths(pythonPath) {
 }
 async function getSitePackagesPath(pythonPath) {
   try {
-    const { stdout } = await execAsync$3(`"${pythonPath}" -c "import site; print('\\n'.join(site.getsitepackages()))"`);
+    const { stdout } = await execAsync$4(`"${pythonPath}" -c "import site; print('\\n'.join(site.getsitepackages()))"`);
     const sitePackages = stdout.trim().split("\n");
     if (sitePackages.length === 0) {
       throw new Error("No site-packages directory found.");
@@ -9619,7 +9812,7 @@ async function analyzePythonPath(pythonPath) {
       getSitePackagesPath(pythonPath)
     ]);
     const installFolder = path.dirname(pythonPath);
-    const isLynxHubDefault = process.env.PATH ? isFirstPythonPath(process.env.PATH, installFolder) : false;
+    const isLynxHubDefault = isLynxHubDefaultPython(pythonPath);
     return {
       version: `${version.major}.${version.minor}.${version.patch}`,
       packages,
@@ -9662,7 +9855,7 @@ async function detectPythonInstallations(refresh) {
 }
 async function listAvailablePythons(pty) {
   return new Promise((resolve, reject) => {
-    const ptyProcess2 = pty.spawn(determineShell$1(), [], {});
+    const ptyProcess2 = pty.spawn(determineShell(), [], {});
     ptyProcess2.write(`conda search python --info${COMMAND_LINE_ENDING}`);
     ptyProcess2.write(`exit${COMMAND_LINE_ENDING}`);
     let output = "";
@@ -9697,7 +9890,7 @@ const createCondaEnv = async (envName, pythonVersion, pty) => {
       return;
     }
     const command = `conda create --name ${envName} python=${pythonVersion} -y`;
-    const ptyProcess2 = pty.spawn(determineShell$1(), [], {});
+    const ptyProcess2 = pty.spawn(determineShell(), [], {});
     ptyProcess2.write(`${command}${COMMAND_LINE_ENDING}`);
     ptyProcess2.write(`exit${COMMAND_LINE_ENDING}`);
     ptyProcess2.onData((data) => {
@@ -9726,7 +9919,7 @@ function isCondaInstalled(pty) {
       console.warn("Timeout reached. Conda not found or process hung.");
       resolve(false);
     }, 1e4);
-    const ptyProcess2 = pty.spawn(determineShell$1(), [], {});
+    const ptyProcess2 = pty.spawn(determineShell(), [], {});
     ptyProcess2.write(`conda --version${COMMAND_LINE_ENDING}`);
     ptyProcess2.write(`exit${COMMAND_LINE_ENDING}`);
     let outData = "";
@@ -12675,7 +12868,7 @@ async function download(window_, url, options2) {
     window_.webContents.downloadURL(url);
   });
 }
-const execAsync$2 = require$$1.promisify(child_process.exec);
+const execAsync$3 = require$$1.promisify(child_process.exec);
 async function installPython(filePath, version) {
   try {
     switch (node_os.platform()) {
@@ -12686,6 +12879,8 @@ async function installPython(filePath, version) {
         await installOnLinux(version.version);
         break;
       case "darwin":
+        await installOnMacOS(filePath);
+        break;
       default:
         break;
     }
@@ -12741,8 +12936,8 @@ async function downloadPython(version) {
 }
 async function installOnWindows(installerPath) {
   return new Promise((resolve, reject) => {
-    execAsync$2(`"${installerPath}" /quiet InstallAllUsers=0 PrependPath=1 Include_test=0 Include_pip=1 `).then(() => resolve()).catch(() => {
-      execAsync$2(`"${installerPath}" /repair`).then(() => resolve()).catch((e) => {
+    execAsync$3(`"${installerPath}" /quiet InstallAllUsers=0 PrependPath=1 Include_test=0 Include_pip=1 `).then(() => resolve()).catch(() => {
+      execAsync$3(`"${installerPath}" /repair`).then(() => resolve()).catch((e) => {
         reject(e);
       });
     });
@@ -12770,6 +12965,24 @@ async function installOnLinux(version) {
     }
   });
 }
+async function installOnMacOS(installerPath) {
+  const escapedPath = installerPath.replace(/'/g, "'\\''");
+  const script = `do shell script "installer -pkg '${escapedPath}' -target /" with administrator privileges`;
+  const command = `osascript -e '${script}'`;
+  return new Promise((resolve, reject) => {
+    child_process.exec(command, (error, stdout, stderr) => {
+      if (error) {
+        console.error(`Error installing Python on macOS: ${error.message}`);
+        console.error(stderr);
+        reject(error);
+      } else {
+        console.log("Python installed successfully on macOS");
+        console.log(stdout);
+        resolve();
+      }
+    });
+  });
+}
 async function getSitePackagesInfo(pythonExePath) {
   return new Promise((resolve, reject) => {
     const command = `"${pythonExePath}" -m pip list --format json`;
@@ -12795,7 +13008,7 @@ async function getSitePackagesInfo(pythonExePath) {
 }
 async function installPythonPackage(pythonExePath, commands) {
   return new Promise((resolve, reject) => {
-    const command = `${pythonExePath} -m pip install ${commands} --disable-pip-version-check`;
+    const command = `"${pythonExePath}" -m pip install ${commands} --disable-pip-version-check`;
     node_child_process.exec(command, (error, stdout, stderr) => {
       if (error) {
         reject(new Error(`Error installing package: ${error.message}
@@ -12862,7 +13075,7 @@ function constructChangeVersionCommand(pythonExePath, packageInfo) {
   const { packageName, currentVersion, targetVersion } = packageInfo;
   const isInstall = !currentVersion;
   const isUpgrade = !isInstall && semver.gt(targetVersion, currentVersion);
-  let command = `${pythonExePath} -m pip install`;
+  let command = `"${pythonExePath}" -m pip install`;
   if (!isInstall) {
     command += ` --force-reinstall`;
   }
@@ -22041,52 +22254,15 @@ const ptyChannels = {
   onData: "pty-on-data",
   onExit: "pty-on-exit-code"
 };
-function getPowerShellVersion() {
-  const command = "$PSVersionTable.PSVersion.Major";
-  try {
-    const pwshVersion = parseInt(
-      node_child_process.execSync(`pwsh.exe -NoProfile -Command "${command}"`, {
-        encoding: "utf8",
-        stdio: ["pipe", "pipe", "ignore"]
-      }).trim(),
-      10
-    );
-    if (pwshVersion >= 7) return pwshVersion;
-    const psVersion = parseInt(
-      node_child_process.execSync(`powershell.exe -NoProfile -Command "${command}"`, {
-        encoding: "utf8",
-        stdio: ["pipe", "pipe", "ignore"]
-      }).trim(),
-      10
-    );
-    return psVersion >= 5 ? psVersion : 0;
-  } catch (err) {
-    console.error("Error determining PowerShell version:", err);
-    return 0;
-  }
-}
-function determineShell() {
-  switch (node_os.platform()) {
-    case "darwin":
-      return "zsh";
-    case "linux":
-      return "bash";
-    case "win32":
-    default:
-      return getPowerShellVersion() >= 5 ? "pwsh.exe" : "powershell.exe";
-  }
-}
-const LINE_ENDING = node_os.platform() === "win32" ? "\r" : "\n";
-const platformOperator = node_os.platform() === "win32" ? "&" : "bash";
 let ptyProcess = void 0;
 function startPtyUpdate(pythonExePath, packageSpecs) {
   return new Promise((resolve) => {
     ptyProcess = getNodePty()?.spawn(determineShell(), [], {});
     const webContent = getAppManager()?.getWebContent();
     if (ptyProcess && webContent && !webContent.isDestroyed()) {
-      const updateCommand = `${platformOperator} "${pythonExePath}" -m pip install --upgrade ${packageSpecs}`;
-      ptyProcess.write(`${updateCommand}${LINE_ENDING}`);
-      ptyProcess.write(`exit${LINE_ENDING}`);
+      const updateCommand = node_os.platform() === "win32" ? `& "${pythonExePath}" -m pip install --upgrade ${packageSpecs}` : `"${pythonExePath}" -m pip install --upgrade ${packageSpecs}`;
+      ptyProcess.write(`${updateCommand}${COMMAND_LINE_ENDING}`);
+      ptyProcess.write(`exit${COMMAND_LINE_ENDING}`);
       ptyProcess.onData((data) => {
         webContent.send(ptyChannels.onData, "python-update", data);
       });
@@ -22116,7 +22292,7 @@ function abortOngoingUpdate() {
     console.log("No ongoing package update to cancel.");
   }
 }
-const execAsync$1 = require$$1.promisify(child_process.exec);
+const execAsync$2 = require$$1.promisify(child_process.exec);
 async function uninstallLinuxPython(pythonExecutablePath) {
   try {
     if (!pythonExecutablePath) {
@@ -22125,7 +22301,7 @@ async function uninstallLinuxPython(pythonExecutablePath) {
         message: `Invalid Python executable path provided.`
       };
     }
-    const { stdout } = await execAsync$1(`${pythonExecutablePath} --version`);
+    const { stdout } = await execAsync$2(`"${pythonExecutablePath}" --version`);
     const versionMatch = stdout.match(/Python (\d+\.\d+)/);
     if (!versionMatch) {
       return {
@@ -22135,7 +22311,7 @@ async function uninstallLinuxPython(pythonExecutablePath) {
     }
     const pythonVersion = versionMatch[1];
     const pythonPackageName = `python${pythonVersion}`;
-    await execAsync$1(`pkexec apt purge ${pythonPackageName} -y`);
+    await execAsync$2(`pkexec apt purge ${pythonPackageName} -y`);
     return {
       success: true,
       message: "Successfully removed Python installation."
@@ -22144,6 +22320,101 @@ async function uninstallLinuxPython(pythonExecutablePath) {
     return {
       success: false,
       message: `Failed to uninstall Python.`
+    };
+  }
+}
+const execAsync$1 = require$$1.promisify(child_process.exec);
+function escapeForShell(str) {
+  return str.replace(/'/g, "'\\''");
+}
+async function uninstallMacPython(pythonExecutablePath) {
+  try {
+    if (!pythonExecutablePath) {
+      return {
+        success: false,
+        message: "Invalid Python executable path provided."
+      };
+    }
+    if (pythonExecutablePath.includes("/Library/Frameworks/Python.framework")) {
+      return await uninstallOfficialMacPython(pythonExecutablePath);
+    } else if (pythonExecutablePath.includes("/opt/homebrew") || pythonExecutablePath.includes("/usr/local/Cellar")) {
+      return await uninstallHomebrewPython(pythonExecutablePath);
+    } else {
+      return {
+        success: false,
+        message: "Unknown Python installation type. Manual removal may be required."
+      };
+    }
+  } catch (e) {
+    return {
+      success: false,
+      message: `Failed to uninstall Python: ${e.message}`
+    };
+  }
+}
+async function uninstallOfficialMacPython(pythonExecutablePath) {
+  try {
+    const versionMatch = pythonExecutablePath.match(/Versions\/(\d+\.\d+)/);
+    if (!versionMatch) {
+      return {
+        success: false,
+        message: "Could not determine Python version from path."
+      };
+    }
+    const version = versionMatch[1];
+    const frameworkPath = `/Library/Frameworks/Python.framework/Versions/${version}`;
+    const applicationsPath = `/Applications/Python ${version}`;
+    if (!gracefulFsExports.existsSync(frameworkPath)) {
+      return {
+        success: false,
+        message: `Python ${version} framework not found at expected location.`
+      };
+    }
+    const removeCommands = [
+      `rm -rf '${escapeForShell(frameworkPath)}'`,
+      `rm -rf '${escapeForShell(applicationsPath)}'`,
+      // Remove symlinks from /usr/local/bin
+      `find /usr/local/bin -lname '*Python.framework/Versions/${version}*' -delete 2>/dev/null || true`
+    ].join(" && ");
+    const script = `do shell script "${removeCommands}" with administrator privileges`;
+    await execAsync$1(`osascript -e '${script}'`);
+    return {
+      success: true,
+      message: `Successfully removed Python ${version} installation.`
+    };
+  } catch (e) {
+    return {
+      success: false,
+      message: `Failed to uninstall official Python: ${e.message}`
+    };
+  }
+}
+async function uninstallHomebrewPython(pythonExecutablePath) {
+  try {
+    const formulaMatch = pythonExecutablePath.match(/python@?[\d.]*/i);
+    if (!formulaMatch) {
+      return {
+        success: false,
+        message: "Could not determine Homebrew formula name."
+      };
+    }
+    const formula = formulaMatch[0];
+    const brewPath = gracefulFsExports.existsSync("/opt/homebrew/bin/brew") ? "/opt/homebrew/bin/brew" : "/usr/local/bin/brew";
+    if (!gracefulFsExports.existsSync(brewPath)) {
+      return {
+        success: false,
+        message: "Homebrew not found. Cannot uninstall Homebrew-managed Python."
+      };
+    }
+    await execAsync$1(`${brewPath} uninstall --ignore-dependencies ${formula}`);
+    return {
+      success: true,
+      message: `Successfully removed Homebrew Python (${formula}).`
+    };
+  } catch (e) {
+    return {
+      success: false,
+      message: `Failed to uninstall Homebrew Python: ${e.message}`
     };
   }
 }
@@ -22268,6 +22539,7 @@ async function uninstallOfficialPython(pythonPath) {
       case "win32":
         return await uninstallWindowsPython(pythonPath);
       case "darwin":
+        return await uninstallMacPython(pythonPath);
       case "linux":
         return await uninstallLinuxPython(pythonPath);
       default:
@@ -22434,7 +22706,7 @@ function ListenForChannels(nodePty2) {
       const defaultEnvPath2 = getDefaultEnvPath();
       if (!defaultEnvPath2) return false;
       const newPath = replacePythonPath(defaultEnvPath2, pythonPath);
-      storageManager2?.setCustomData(DefaultLynxPython_StorageID, pythonPath);
+      setStoredLynxHubDefaultPython(pythonPath);
       process.env.PATH = newPath;
       return true;
     } catch (e) {
@@ -22445,6 +22717,7 @@ function ListenForChannels(nodePty2) {
   electron.ipcMain.on(pythonChannels.abortUpdateCheck, () => cancelPackagesUpdateCheck());
   electron.ipcMain.on(pythonChannels.abortUpdating, () => abortOngoingUpdate());
   electron.ipcMain.handle(pythonChannels.getPythonVersion, (_, pythonPath) => parseVersion(pythonPath));
+  electron.ipcMain.handle(pythonChannels.getAppVersion, () => electron.app.getVersion());
   ListenForStorage(storageManager2);
 }
 async function initialExtension(lynxApi, utils2) {
