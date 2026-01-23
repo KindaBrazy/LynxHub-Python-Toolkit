@@ -1,5 +1,5 @@
 import {Avatar, Chip, Input, ModalHeader, Progress, Selection} from '@heroui/react';
-import {extractGitUrl} from '@lynx_cross/utils';
+import {extractGitUrl} from '@lynx_common/utils';
 import {compact, isEmpty} from 'lodash';
 import {Dispatch, ReactNode, SetStateAction, useEffect, useState} from 'react';
 import {useDispatch} from 'react-redux';

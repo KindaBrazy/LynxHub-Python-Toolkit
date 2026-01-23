@@ -1,5 +1,5 @@
 import {DropdownItem, DropdownSection} from '@heroui/react';
-import {UseCardStoreType} from '@lynx_cross/types/plugins/extensions';
+import {UseCardStoreType} from '@lynx_common/types/plugins/extensions';
 import {useCallback} from 'react';
 import {useDispatch} from 'react-redux';
 

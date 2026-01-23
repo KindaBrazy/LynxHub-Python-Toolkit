@@ -1,4 +1,4 @@
-import {CardData} from '@lynx_cross/types/plugins/modules';
+import {CardData} from '@lynx_common/types/plugins/modules';
 
 export let allCardsExt: CardData[] = [];
 

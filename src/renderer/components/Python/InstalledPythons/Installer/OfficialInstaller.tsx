@@ -1,5 +1,5 @@
 import {Button, CircularProgress, Input, Link, Progress} from '@heroui/react';
-import {formatSize} from '@lynx_cross/utils';
+import {formatSize} from '@lynx_common/utils';
 import {List, Tooltip} from 'antd';
 import {isEmpty, isNil, isString} from 'lodash';
 import {OverlayScrollbarsComponent} from 'overlayscrollbars-react';

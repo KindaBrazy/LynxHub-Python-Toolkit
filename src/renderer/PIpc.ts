@@ -1,4 +1,4 @@
-import {OnPreCommands} from '@lynx_cross/types/ipc';
+import {OnPreCommands} from '@lynx_common/types/ipc';
 import {IpcRendererEvent} from 'electron';
 
 import {
