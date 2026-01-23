@@ -1,3 +1,4 @@
+import parseTerminalColors from '@lynx/features/session/terminal/colorHandler';
 import applicationIpc from '@lynx_shared/ipc/application';
 import ptyIpc from '@lynx_shared/ipc/pty';
 import {CanvasAddon} from '@xterm/addon-canvas';
@@ -11,8 +12,6 @@ import {useCallback, useEffect, useRef} from 'react';
 import {useDispatch} from 'react-redux';
 
 import {lynxTopToast} from '../../../../../../../src/renderer/main_window/hooks/utils';
-// eslint-disable-next-line
-import parseTerminalColors from '../../../../../../../src/renderer/main_window/layouts/browser_terminal/terminal/colorHandler';
 import {useAppState} from '../../../../../../../src/renderer/main_window/redux/reducers/app';
 import {useTerminalState} from '../../../../../../../src/renderer/main_window/redux/reducers/terminal';
 import {isWebgl2Supported} from '../../../../../../../src/renderer/main_window/utils';
