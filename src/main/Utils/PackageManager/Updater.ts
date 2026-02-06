@@ -2,9 +2,9 @@ import {platform} from 'node:os';
 
 import {IPty} from 'node-pty';
 
-import {ptyIpc} from '../../../../../src/main/ipc/pty';
 import {PackageUpdate} from '../../../cross/CrossExtTypes';
 import {getAppManager, getNodePty} from '../../DataHolder';
+import {ptyIpc} from '../../ipc/PtyIpc';
 import {COMMAND_LINE_ENDING, determineShell} from '../ExtMainUtils';
 
 let ptyProcess: IPty | undefined = undefined;
