@@ -14,6 +14,7 @@ export const ModulesThatSupportPython = [
   'Gitmylo_AG',
   'Bmaltais_SD',
   'LoLLMS_TG',
+  'Ostris_AI_Toolkit',
 ];
 
 export const AvailableModules = {
@@ -37,6 +38,7 @@ export const AvailableModules = {
   lollms: 'LoLLMS_TG',
   tts: 'Rsxdalv_AG',
   ag: 'Gitmylo_AG',
+  aiToolkit: 'Ostris_AI_Toolkit',
 };
 
 /** @deprecated use Associates_StorageID instead */
