@@ -14,7 +14,7 @@ export const ModulesThatSupportPython = [
   'Gitmylo_AG',
   'Bmaltais_SD',
   'LoLLMS_TG',
-  'Ostris_AI_Toolkit',
+  'Biagiomaf_SmartGallery',
 ];
 
 export const AvailableModules = {
@@ -39,6 +39,7 @@ export const AvailableModules = {
   tts: 'Rsxdalv_AG',
   ag: 'Gitmylo_AG',
   aiToolkit: 'Ostris_AI_Toolkit',
+  smartGallery: 'Biagiomaf_SmartGallery',
 };
 
 /** @deprecated use Associates_StorageID instead */
