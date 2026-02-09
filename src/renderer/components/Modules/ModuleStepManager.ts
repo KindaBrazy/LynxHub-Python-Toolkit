@@ -28,6 +28,8 @@ export const getStep = (id: string) => {
     case AvailableModules.tg:
     case AvailableModules.lollms:
     case AvailableModules.ag:
+    case AvailableModules.aiToolkit:
+    case AvailableModules.smartGallery:
       index = 2;
       break;
     case AvailableModules.invoke:
