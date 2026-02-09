@@ -30,6 +30,7 @@ export const getStep = (id: string) => {
     case AvailableModules.ag:
     case AvailableModules.aiToolkit:
     case AvailableModules.smartGallery:
+    case AvailableModules.loraManager:
       index = 2;
       break;
     case AvailableModules.invoke:

@@ -15,6 +15,7 @@ export const ModulesThatSupportPython = [
   'Bmaltais_SD',
   'LoLLMS_TG',
   'Biagiomaf_SmartGallery',
+  'Willmiao_LoraManager',
 ];
 
 export const AvailableModules = {
@@ -40,6 +41,7 @@ export const AvailableModules = {
   ag: 'Gitmylo_AG',
   aiToolkit: 'Ostris_AI_Toolkit',
   smartGallery: 'Biagiomaf_SmartGallery',
+  loraManager: 'Willmiao_LoraManager',
 };
 
 /** @deprecated use Associates_StorageID instead */
