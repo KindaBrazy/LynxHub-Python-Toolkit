@@ -7,7 +7,7 @@ import {OverlayScrollbarsComponent} from 'overlayscrollbars-react';
 import {Dispatch, SetStateAction, useEffect, useState} from 'react';
 import {useDispatch} from 'react-redux';
 
-import {useAppState} from '../../../../../../../src/renderer/main_window/redux/reducers/app';
+import {useAppState} from '../../../../../../../src/renderer/mainWindow/redux/reducers/app';
 import {Circle_Icon, Refresh_Icon} from '../../../../../../../src/renderer/shared/assets/icons';
 import {DlProgressOfficial, PythonVersion} from '../../../../../cross/CrossExtTypes';
 import pIpc from '../../../../PIpc';

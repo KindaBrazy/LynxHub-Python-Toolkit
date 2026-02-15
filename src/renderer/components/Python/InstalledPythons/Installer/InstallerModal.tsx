@@ -1,7 +1,7 @@
 import {Button, Modal, ModalBody, ModalContent, ModalFooter, ModalHeader, Tab, Tabs} from '@heroui/react';
 import {Key, useMemo, useState} from 'react';
 
-import {modalMotionProps} from '../../../../../../../src/renderer/main_window/utils/constants';
+import {modalMotionProps} from '../../../../../../../src/renderer/mainWindow/utils/constants';
 import InstallerConda from './CondaInstaller';
 import InstallerOfficial from './OfficialInstaller';
 

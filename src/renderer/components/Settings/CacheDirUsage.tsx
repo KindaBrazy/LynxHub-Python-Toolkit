@@ -3,7 +3,7 @@ import {lynxTopToast} from '@lynx/utils/hooks';
 import {useEffect, useState} from 'react';
 import {useDispatch} from 'react-redux';
 
-import LynxSwitch from '../../../../../src/renderer/main_window/components/LynxSwitch';
+import LynxSwitch from '../../../../../src/renderer/mainWindow/components/LynxSwitch';
 import {BroomDuo_Icon} from '../../../../../src/renderer/shared/assets/icons';
 import pIpc from '../../PIpc';
 import {PythonToolkitActions, usePythonToolkitState} from '../../reducer';

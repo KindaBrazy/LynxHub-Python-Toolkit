@@ -12,10 +12,10 @@ import FontFaceObserver from 'fontfaceobserver';
 import {useCallback, useEffect, useRef} from 'react';
 import {useDispatch} from 'react-redux';
 
-import {useAppState} from '../../../../../../../src/renderer/main_window/redux/reducers/app';
-import {useTerminalState} from '../../../../../../../src/renderer/main_window/redux/reducers/terminal';
-import {isWebgl2Supported} from '../../../../../../../src/renderer/main_window/utils';
-import {getColor} from '../../../../../../../src/renderer/main_window/utils/constants';
+import {useAppState} from '../../../../../../../src/renderer/mainWindow/redux/reducers/app';
+import {useTerminalState} from '../../../../../../../src/renderer/mainWindow/redux/reducers/terminal';
+import {isWebgl2Supported} from '../../../../../../../src/renderer/mainWindow/utils';
+import {getColor} from '../../../../../../../src/renderer/mainWindow/utils/constants';
 
 const id = 'python-update';
 

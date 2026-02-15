@@ -7,8 +7,8 @@ import {OverlayScrollbarsComponentRef} from 'overlayscrollbars-react';
 import {Dispatch, SetStateAction, useEffect, useRef, useState} from 'react';
 import {useDispatch} from 'react-redux';
 
-import {searchInStrings} from '../../../../../../../src/renderer/main_window/utils';
-import {modalMotionProps} from '../../../../../../../src/renderer/main_window/utils/constants';
+import {searchInStrings} from '../../../../../../../src/renderer/mainWindow/utils';
+import {modalMotionProps} from '../../../../../../../src/renderer/mainWindow/utils/constants';
 import {Add_Icon, Circle_Icon, FileDuo_Icon} from '../../../../../../../src/renderer/shared/assets/icons';
 import {RequirementData} from '../../../../../cross/CrossExtTypes';
 import pIpc from '../../../../PIpc';

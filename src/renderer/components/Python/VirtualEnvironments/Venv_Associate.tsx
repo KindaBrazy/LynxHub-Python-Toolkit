@@ -4,7 +4,7 @@ import {isEmpty} from 'lodash';
 import {useCallback, useEffect, useState} from 'react';
 import {useDispatch} from 'react-redux';
 
-import {useCardsState} from '../../../../../../src/renderer/main_window/redux/reducers/cards';
+import {useCardsState} from '../../../../../../src/renderer/mainWindow/redux/reducers/cards';
 import {Add_Icon} from '../../../../../../src/renderer/shared/assets/icons';
 import {ModulesThatSupportPython} from '../../../../cross/CrossExtConstants';
 import {allCardsExt} from '../../../DataHolder';

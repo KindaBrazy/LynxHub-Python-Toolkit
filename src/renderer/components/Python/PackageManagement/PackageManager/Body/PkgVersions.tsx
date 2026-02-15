@@ -18,7 +18,7 @@ import {memo, useCallback, useEffect, useState} from 'react';
 import {useDispatch} from 'react-redux';
 import semver, {compare, valid} from 'semver';
 
-import LynxScroll from '../../../../../../../../src/renderer/main_window/components/LynxScroll';
+import LynxScroll from '../../../../../../../../src/renderer/mainWindow/components/LynxScroll';
 import {Circle_Icon} from '../../../../../../../../src/renderer/shared/assets/icons';
 import {PackageInfo, PackageUpdate} from '../../../../../../cross/CrossExtTypes';
 import pIpc from '../../../../../PIpc';

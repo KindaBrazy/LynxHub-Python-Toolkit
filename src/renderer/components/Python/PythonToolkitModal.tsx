@@ -1,7 +1,7 @@
 import {Button, Modal, ModalBody, ModalContent, ModalFooter, ModalHeader, Tab, Tabs} from '@heroui/react';
 import {Dispatch, Key, SetStateAction, useState} from 'react';
 
-import {modalMotionProps} from '../../../../../src/renderer/main_window/utils/constants';
+import {modalMotionProps} from '../../../../../src/renderer/mainWindow/utils/constants';
 import {PythonInstallation} from '../../../cross/CrossExtTypes';
 import InstalledPythons from './InstalledPythons/InstalledPythons';
 import Venv from './VirtualEnvironments/Venv';

@@ -3,7 +3,7 @@ import {useInstalledCard} from '@lynx/utils/hooks';
 import {useEffect, useMemo, useState} from 'react';
 import {useDispatch} from 'react-redux';
 
-import {tabsActions, useTabsState} from '../../../../src/renderer/main_window/redux/reducers/tabs';
+import {tabsActions, useTabsState} from '../../../../src/renderer/mainWindow/redux/reducers/tabs';
 import pIpc from '../PIpc';
 import {ContextType, PythonToolkitActions} from '../reducer';
 import PackageManagerModal from './Python/PackageManagement/PackageManager/PackageManagerModal';

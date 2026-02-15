@@ -2,7 +2,7 @@ import {Button, Modal, ModalBody, ModalContent, ModalFooter, ModalHeader} from '
 import {Divider} from 'antd';
 import {useDispatch} from 'react-redux';
 
-import {modalMotionProps} from '../../../../../src/renderer/main_window/utils/constants';
+import {modalMotionProps} from '../../../../../src/renderer/mainWindow/utils/constants';
 import {ContextType, PythonToolkitActions} from '../../reducer';
 import UIProvider from '../UIProvider';
 import CacheDirUsage from './CacheDirUsage';

@@ -3,7 +3,7 @@ import {UseCardStoreType} from '@lynx_common/types/plugins/extensions';
 import {useCallback} from 'react';
 import {useDispatch} from 'react-redux';
 
-import {useTabsState} from '../../../../src/renderer/main_window/redux/reducers/tabs';
+import {useTabsState} from '../../../../src/renderer/mainWindow/redux/reducers/tabs';
 import {ModulesThatSupportPython} from '../../cross/CrossExtConstants';
 import {PythonToolkitActions} from '../reducer';
 import {Python_Icon} from './SvgIcons';

@@ -1,6 +1,6 @@
 import type Pty from 'node-pty';
 
-import type ElectronAppManager from '../../../src/main/main_window';
+import type ElectronAppManager from '../../../src/main/mainWindow';
 import type StorageManager from '../../../src/main/storage/helper';
 import {DefaultLynxPython_StorageID} from '../cross/CrossExtConstants';
 
