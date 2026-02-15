@@ -1,8 +1,8 @@
 import {Button} from '@heroui/react';
+import {useInstalledCard} from '@lynx/utils/hooks';
 import {useEffect, useMemo, useState} from 'react';
 import {useDispatch} from 'react-redux';
 
-import {useInstalledCard} from '../../../../src/renderer/main_window/hooks/utils';
 import {tabsActions, useTabsState} from '../../../../src/renderer/main_window/redux/reducers/tabs';
 import pIpc from '../PIpc';
 import {ContextType, PythonToolkitActions} from '../reducer';

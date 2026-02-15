@@ -12,13 +12,13 @@ import {
   PopoverTrigger,
   Progress,
 } from '@heroui/react';
+import {lynxTopToast} from '@lynx/utils/hooks';
 import {isEmpty} from 'lodash';
 import {memo, useCallback, useEffect, useState} from 'react';
 import {useDispatch} from 'react-redux';
 import semver, {compare, valid} from 'semver';
 
 import LynxScroll from '../../../../../../../../src/renderer/main_window/components/LynxScroll';
-import {lynxTopToast} from '../../../../../../../../src/renderer/main_window/hooks/utils';
 import {Circle_Icon} from '../../../../../../../../src/renderer/shared/assets/icons';
 import {PackageInfo, PackageUpdate} from '../../../../../../cross/CrossExtTypes';
 import pIpc from '../../../../../PIpc';

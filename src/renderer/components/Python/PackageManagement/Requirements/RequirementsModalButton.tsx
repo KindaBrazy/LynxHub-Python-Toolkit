@@ -1,4 +1,5 @@
 import {Button, Chip, Input, Modal, ModalBody, ModalContent, ModalFooter, ModalHeader} from '@heroui/react';
+import {lynxTopToast} from '@lynx/utils/hooks';
 import filesIpc from '@lynx_shared/ipc/files';
 import {Empty, Result} from 'antd';
 import {isEmpty} from 'lodash';
@@ -6,7 +7,6 @@ import {OverlayScrollbarsComponentRef} from 'overlayscrollbars-react';
 import {Dispatch, SetStateAction, useEffect, useRef, useState} from 'react';
 import {useDispatch} from 'react-redux';
 
-import {lynxTopToast} from '../../../../../../../src/renderer/main_window/hooks/utils';
 import {searchInStrings} from '../../../../../../../src/renderer/main_window/utils';
 import {modalMotionProps} from '../../../../../../../src/renderer/main_window/utils/constants';
 import {Add_Icon, Circle_Icon, FileDuo_Icon} from '../../../../../../../src/renderer/shared/assets/icons';

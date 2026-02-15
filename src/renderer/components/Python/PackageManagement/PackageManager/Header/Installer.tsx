@@ -1,11 +1,11 @@
 import {Alert, Button, Code, Input} from '@heroui/react';
+import {lynxTopToast} from '@lynx/utils/hooks';
 import filesIpc from '@lynx_shared/ipc/files';
 import {Divider} from 'antd';
 import {compact, isEmpty} from 'lodash';
 import {KeyboardEvent, useState} from 'react';
 import {useDispatch} from 'react-redux';
 
-import {lynxTopToast} from '../../../../../../../../src/renderer/main_window/hooks/utils';
 import {Close_Icon, Trash_Icon} from '../../../../../../../../src/renderer/shared/assets/icons';
 import pIpc from '../../../../../PIpc';
 import {Checklist_Icon} from '../../../../SvgIcons';

@@ -12,6 +12,7 @@ import {
   PopoverContent,
   PopoverTrigger,
 } from '@heroui/react';
+import {lynxTopToast} from '@lynx/utils/hooks';
 import filesIpc from '@lynx_shared/ipc/files';
 import {Divider, Spin} from 'antd';
 import {SHA256} from 'crypto-js';
@@ -19,7 +20,6 @@ import {isNil} from 'lodash';
 import {FormEvent, useCallback, useEffect, useMemo, useState} from 'react';
 import {useDispatch} from 'react-redux';
 
-import {lynxTopToast} from '../../../../../../src/renderer/main_window/hooks/utils';
 import {
   BoxDuo_Icon,
   Close_Icon,

@@ -1,10 +1,10 @@
 import {Button, Divider, Input, Popover, PopoverContent, PopoverTrigger, Select, SelectItem} from '@heroui/react';
+import {lynxTopToast} from '@lynx/utils/hooks';
 import filesIpc from '@lynx_shared/ipc/files';
 import {capitalize, isEmpty} from 'lodash';
 import {useCallback, useEffect, useMemo, useState} from 'react';
 import {useDispatch} from 'react-redux';
 
-import {lynxTopToast} from '../../../../../../src/renderer/main_window/hooks/utils';
 import {Add_Icon, MenuDots_Icon, OpenFolder_Icon} from '../../../../../../src/renderer/shared/assets/icons';
 import {PythonInstallation, VenvCreateOptions} from '../../../../cross/CrossExtTypes';
 import pIpc from '../../../PIpc';

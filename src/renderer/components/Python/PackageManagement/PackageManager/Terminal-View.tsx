@@ -1,4 +1,5 @@
 import parseTerminalColors from '@lynx/features/session/terminal/colorHandler';
+import {lynxTopToast} from '@lynx/utils/hooks';
 import applicationIpc from '@lynx_shared/ipc/application';
 import ptyIpc from '@lynx_shared/ipc/pty';
 import {CanvasAddon} from '@xterm/addon-canvas';
@@ -11,7 +12,6 @@ import FontFaceObserver from 'fontfaceobserver';
 import {useCallback, useEffect, useRef} from 'react';
 import {useDispatch} from 'react-redux';
 
-import {lynxTopToast} from '../../../../../../../src/renderer/main_window/hooks/utils';
 import {useAppState} from '../../../../../../../src/renderer/main_window/redux/reducers/app';
 import {useTerminalState} from '../../../../../../../src/renderer/main_window/redux/reducers/terminal';
 import {isWebgl2Supported} from '../../../../../../../src/renderer/main_window/utils';

@@ -1,9 +1,9 @@
 import {Button} from '@heroui/react';
+import {lynxTopToast} from '@lynx/utils/hooks';
 import {capitalize, startCase} from 'lodash';
 import {Dispatch, SetStateAction, useCallback, useMemo, useState} from 'react';
 import {useDispatch} from 'react-redux';
 
-import {lynxTopToast} from '../../../../../../../../src/renderer/main_window/hooks/utils';
 import {PackageInfo, PackageUpdate} from '../../../../../../cross/CrossExtTypes';
 import {getUpdateVersionColor} from '../../../../../../cross/CrossExtUtils';
 import pIpc from '../../../../../PIpc';

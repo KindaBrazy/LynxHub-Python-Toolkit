@@ -1,10 +1,10 @@
 import {Avatar, Chip, Input, ModalHeader, Progress, Selection} from '@heroui/react';
+import {lynxTopToast} from '@lynx/utils/hooks';
 import {extractGitUrl} from '@lynx_common/utils';
 import {compact, isEmpty} from 'lodash';
 import {Dispatch, ReactNode, SetStateAction, useEffect, useState} from 'react';
 import {useDispatch} from 'react-redux';
 
-import {lynxTopToast} from '../../../../../../../../src/renderer/main_window/hooks/utils';
 import {Circle_Icon} from '../../../../../../../../src/renderer/shared/assets/icons';
 import {FilterKeys, PackageInfo, PackageUpdate, SitePackages_Info} from '../../../../../../cross/CrossExtTypes';
 import {allCardsExt} from '../../../../../DataHolder';

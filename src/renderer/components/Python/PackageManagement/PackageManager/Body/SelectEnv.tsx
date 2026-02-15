@@ -1,8 +1,8 @@
 import {Button, CircularProgress, Dropdown, DropdownItem, DropdownMenu, DropdownTrigger} from '@heroui/react';
+import {lynxTopToast} from '@lynx/utils/hooks';
 import {Dispatch, SetStateAction, useEffect, useState} from 'react';
 import {useDispatch} from 'react-redux';
 
-import {lynxTopToast} from '../../../../../../../../src/renderer/main_window/hooks/utils';
 import {AssociateItem, PythonVenvSelectItem} from '../../../../../../cross/CrossExtTypes';
 import pIpc from '../../../../../PIpc';
 import {Env_Icon, Python_Icon} from '../../../../SvgIcons';
