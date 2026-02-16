@@ -1,6 +1,6 @@
 import {ipcMain} from 'electron';
 
-import StorageManager from '../../../src/main/storage/helper';
+import StorageManager from '../../../src/main/storage/storageOperations';
 import {CachedUsage, CustomTitle, pythonStorageChannels} from '../cross/CrossExtTypes';
 
 const keys = {
