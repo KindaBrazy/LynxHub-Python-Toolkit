@@ -20,7 +20,7 @@ export function InitialExtensions(lynxAPI: ExtensionRendererApi) {
   lynxAPI.addModal(CardMenuModal);
   lynxAPI.addModal(Settings);
 
-  lynxAPI.customizePages.tools.addComponent(ToolsPage);
+  lynxAPI.customizePages.tools.add.cardsContainer(ToolsPage);
   lynxAPI.cards.customize.menu.addSection([{index: 1, components: [CardMenu]}]);
   lynxAPI.addCustomHook(CustomHook);
 
