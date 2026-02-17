@@ -61,7 +61,7 @@ export default defineConfig({
         '@lynx_module': resolve('module/src'),
         '@lynx_extension': resolve('extension/src'),
         '@lynx_common': resolve('src/common'),
-        '@lynx': resolve('src/renderer/main_window'),
+        '@lynx': resolve('src/renderer/mainWindow'),
         '@lynx_shared': resolve('src/renderer/shared'),
         '@lynx_assets': resolve('src/renderer/shared/assets'),
       },
