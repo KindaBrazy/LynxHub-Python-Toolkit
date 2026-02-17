@@ -43,14 +43,14 @@ const UpdateModal = memo(({isOpen, setIsOpen, show}: Props) => {
       placement="center"
       scrollBehavior="inside"
       onOpenChange={setIsOpen}
-      classNames={{backdrop: `!top-10 ${show}`, wrapper: `!top-10 pb-8 ${show}`}}
+      classNames={{backdrop: `top-10! ${show}`, wrapper: `top-10! pb-8 ${show}`}}
       hideCloseButton>
       <ModalContent>
-        <ModalHeader className="justify-center">Console Output...</ModalHeader>
-        <ModalBody>
+        <ModalHeader className="justify-center py-3">Console Output...</ModalHeader>
+        <ModalBody className="py-0 px-2">
           <TerminalView />
         </ModalBody>
-        <ModalFooter>
+        <ModalFooter className="py-2">
           <Popover
             size="sm"
             isOpen={isPopoverOpen}
