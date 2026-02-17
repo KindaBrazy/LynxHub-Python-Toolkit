@@ -20,7 +20,7 @@ export function InitialExtensions(lynxAPI: ExtensionRendererApi) {
   lynxAPI.addModal(CardMenuModal);
   lynxAPI.addModal(Settings);
 
-  if (window.LynxHub && window.LynxHub.buildNumber && window.LynxHub.buildNumber > 45) {
+  if ((window.LynxHub && window.LynxHub.buildNumber && window.LynxHub.buildNumber > 45) || isDev()) {
     lynxAPI.customizePages.tools.add.cardsContainer(ToolsPage);
   } else {
     // @ts-expect-error in old versions api provides addComponent
