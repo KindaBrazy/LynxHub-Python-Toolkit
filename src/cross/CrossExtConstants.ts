@@ -16,6 +16,7 @@ export const ModulesThatSupportPython = [
   'LoLLMS_TG',
   'Biagiomaf_SmartGallery',
   'Willmiao_LoraManager',
+  'Rsxdalv_AG',
 ];
 
 export const AvailableModules = {
