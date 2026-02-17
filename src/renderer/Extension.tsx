@@ -1,5 +1,6 @@
 import './index.css';
 
+import {APP_BUILD_NUMBER} from '@lynx_common/consts';
 import {ExtensionRendererApi} from '@lynx_common/types/plugins/extensions/api';
 import {isDev} from '@lynx_common/utils';
 
@@ -21,7 +22,10 @@ export function InitialExtensions(lynxAPI: ExtensionRendererApi) {
   lynxAPI.addModal(CardMenuModal);
   lynxAPI.addModal(Settings);
 
-  if ((window.LynxHub && window.LynxHub.buildNumber && window.LynxHub.buildNumber > 45) || isDev()) {
+  if (
+    (typeof window.LynxHub !== 'undefined' && window.LynxHub.buildNumber && window.LynxHub.buildNumber > 45) ||
+    (isDev() && APP_BUILD_NUMBER > 44)
+  ) {
     lynxAPI.customizePages.tools.add.cardsContainer(ToolsPage);
   } else {
     // @ts-expect-error in old versions api provides addComponent
