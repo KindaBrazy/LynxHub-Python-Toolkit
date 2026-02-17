@@ -1,9 +1,21 @@
 {
-  "$schema": "https://raw.githubusercontent.com/KindaBrazy/LynxHub-Statics/refs/heads/schema/plugins/versioning.schema.json",
   "versions": [
     {
+      "version": "0.14.1",
+      "commit": "0999107",
+      "engines": {
+        "extensionApi": "^1.0.0"
+      },
+      "stage": "early_access",
+      "platforms": [
+        "win32",
+        "linux",
+        "darwin"
+      ]
+    },
+    {
       "version": "0.14.0",
-      "commit": "b14e95e9",
+      "commit": "b14e95e",
       "engines": {
         "extensionApi": "^1.0.0"
       },
@@ -52,6 +64,23 @@
     }
   ],
   "changes": [
+    {
+      "version": "0.14.1",
+      "date": "2026-02-17",
+      "items": [
+        {
+          "✨ New Features": [
+            "Added support for: AI Toolkit (ostris), SmartGallery (biagiomaf), ComfyUI-Lora-Manager (willmiao) and Text to Speech (rsxdalv)"
+          ],
+          "⚡ Improvements": [
+            "Improved terminal view of updating package process."
+          ],
+          "🪲 Bug Fixes": [
+            "Fixed updating package terminal view scrolling."
+          ]
+        }
+      ]
+    },
     {
       "version": "0.14.0",
       "date": "2026-01-22",
