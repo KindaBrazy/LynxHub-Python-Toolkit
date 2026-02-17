@@ -1,6 +1,5 @@
 import './index.css';
 
-import {isDev} from '../../../src/cross/CrossUtils';
 import {ExtensionRendererApi} from '../../../src/cross/plugin/ExtensionTypes_Renderer_Api';
 import CardMenu from './components/CardMenu';
 import CardMenuModal from './components/CardMenuModal';
@@ -21,7 +20,7 @@ export function InitialExtensions(lynxAPI: ExtensionRendererApi) {
   lynxAPI.addModal(CardMenuModal);
   lynxAPI.addModal(Settings);
 
-  if ((window.LynxHub && window.LynxHub.buildNumber && window.LynxHub.buildNumber > 45) || isDev()) {
+  if (typeof window.LynxHub !== 'undefined' && window.LynxHub.buildNumber && window.LynxHub.buildNumber > 45) {
     // @ts-expect-error in newer versions api provides add.cardsContainer
     lynxAPI.customizePages.tools.add.cardsContainer(ToolsPage);
   } else {
