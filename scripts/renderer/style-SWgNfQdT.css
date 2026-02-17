@@ -643,6 +643,10 @@
     top: calc(var(--spacing) * 2);
   }
 
+  .top-10\! {
+    top: calc(var(--spacing) * 10) !important;
+  }
+
   .top-\[5\%\] {
     top: 5%;
   }
