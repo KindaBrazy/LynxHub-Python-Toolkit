@@ -1,18 +1,16 @@
 import {ExtensionRendererApi} from '@lynx_common/types/plugins/extensions/api';
 
-import {ModulesThatSupportPython} from '../cross/CrossExtConstants';
-import {getStep} from './components/Modules/ModuleStepManager';
-import pIpc from './PIpc';
+// TODO: Update this after new event implemented
 
-export default function listenForEvents(lynxAPI: ExtensionRendererApi) {
-  lynxAPI.events.on('card_install_addStep', ({id, addStep}) => {
+export default function listenForEvents(_lynxAPI: ExtensionRendererApi) {
+  /*lynxAPI.events.on('card_install_addStep', ({id, addStep}) => {
     if (ModulesThatSupportPython.includes(id)) {
       const {index, title, content} = getStep(id);
       addStep(index, title, content);
     }
   });
 
-  lynxAPI.events_ipc.on('storage_utils_add_installed_card', ({cardData}) => {
+  lynxAPI.events_ipc.on(storageUtilsChannels.addInstalledCard, ({cardData}) => {
     pIpc.findAIVenv(cardData.id, cardData.dir);
-  });
+  });*/
 }
