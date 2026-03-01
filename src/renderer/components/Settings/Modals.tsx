@@ -1,10 +1,8 @@
-import {Button, Modal, ModalBody, ModalContent, ModalFooter, ModalHeader} from '@heroui/react';
-import {Divider} from 'antd';
+import {Button, Divider, Modal, ModalBody, ModalContent, ModalFooter, ModalHeader} from '@heroui/react';
 import {useDispatch} from 'react-redux';
 
 import {modalMotionProps} from '../../../../../src/renderer/mainWindow/utils/constants';
 import {ContextType, PythonToolkitActions} from '../../reducer';
-import UIProvider from '../UIProvider';
 import CacheDirUsage from './CacheDirUsage';
 import Concurrent from './Concurrent';
 import PkgString from './PkgString';
@@ -25,38 +23,36 @@ export default function Modals({isOpen, context, show}: Props) {
   };
 
   return (
-    <UIProvider>
-      <Modal
-        size="3xl"
-        isOpen={isOpen}
-        placement="center"
-        isDismissable={false}
-        scrollBehavior="inside"
-        onOpenChange={onOpenChange}
-        motionProps={modalMotionProps}
-        classNames={{backdrop: `!top-10 ${show}`, wrapper: `!top-10 pb-8 ${show}`}}
-        hideCloseButton>
-        <ModalContent className="overflow-hidden">
-          {close => (
-            <>
-              <ModalHeader>Python Toolkit Settings</ModalHeader>
-              <ModalBody>
-                <Retry />
-                <Concurrent />
-                <Divider variant="dashed" className="my-4" />
-                <PkgString />
-                <Divider variant="dashed" className="my-4" />
-                <CacheDirUsage />
-              </ModalBody>
-              <ModalFooter>
-                <Button onPress={close} variant="light" color="warning">
-                  Close
-                </Button>
-              </ModalFooter>
-            </>
-          )}
-        </ModalContent>
-      </Modal>
-    </UIProvider>
+    <Modal
+      size="3xl"
+      isOpen={isOpen}
+      placement="center"
+      isDismissable={false}
+      scrollBehavior="inside"
+      onOpenChange={onOpenChange}
+      motionProps={modalMotionProps}
+      classNames={{backdrop: `top-10! ${show}`, wrapper: `top-10! pb-8 ${show}`}}
+      hideCloseButton>
+      <ModalContent className="overflow-hidden">
+        {close => (
+          <>
+            <ModalHeader>Python Toolkit Settings</ModalHeader>
+            <ModalBody>
+              <Retry />
+              <Concurrent />
+              <Divider className="my-4" />
+              <PkgString />
+              <Divider className="my-4" />
+              <CacheDirUsage />
+            </ModalBody>
+            <ModalFooter>
+              <Button onPress={close} variant="light" color="warning">
+                Close
+              </Button>
+            </ModalFooter>
+          </>
+        )}
+      </ModalContent>
+    </Modal>
   );
 }

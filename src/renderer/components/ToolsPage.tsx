@@ -10,7 +10,6 @@ import pIpc from '../PIpc';
 import {PythonToolkitActions} from '../reducer';
 import {cacheUrl} from '../Utils';
 import PythonToolkitModal from './Python/PythonToolkitModal';
-import UIProvider from './UIProvider';
 
 const title: string = 'Python Toolkit';
 const desc: string = 'Manage Python versions, virtual environments, packages, requirements files, and more.';
@@ -58,7 +57,7 @@ export default function ToolsPage() {
   const show = useMemo(() => (activeTab === tabID ? 'flex' : 'hidden'), [activeTab, tabID]);
 
   return (
-    <UIProvider>
+    <>
       <ToolsCard
         footer={
           <Button as="div" variant="flat" color="primary" onPress={openSettings} isIconOnly>
@@ -72,6 +71,6 @@ export default function ToolsPage() {
         onPress={openModal}
       />
       <PythonToolkitModal show={show} isOpen={isOpen} setIsOpen={setIsOpen} />
-    </UIProvider>
+    </>
   );
 }

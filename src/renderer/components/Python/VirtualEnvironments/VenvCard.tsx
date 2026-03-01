@@ -4,6 +4,7 @@ import {
   CardBody,
   CardFooter,
   CardHeader,
+  Divider,
   Dropdown,
   DropdownItem,
   DropdownMenu,
@@ -11,10 +12,10 @@ import {
   Popover,
   PopoverContent,
   PopoverTrigger,
+  Spinner,
 } from '@heroui/react';
 import {lynxTopToast} from '@lynx/utils/hooks';
 import filesIpc from '@lynx_shared/ipc/files';
-import {Divider, Spin} from 'antd';
 import {SHA256} from 'crypto-js';
 import {isNil} from 'lodash';
 import {FormEvent, useCallback, useEffect, useMemo, useState} from 'react';
@@ -139,7 +140,7 @@ export default function VenvCard({
       />
       <Card
         className={
-          'min-w-[27rem] grow border-2 transition-all duration-300 border-foreground-100' +
+          'min-w-108 grow border-2 transition-all duration-300 border-foreground-100' +
           ' hover:border-foreground-200 cursor-default'
         }
         as="div"
@@ -209,7 +210,7 @@ export default function VenvCard({
                     </div>
 
                     {/* Visual separator */}
-                    <Divider className="my-0" />
+                    <Divider className="bg-foreground-200" />
 
                     {/* Option 2: Remove from List */}
                     <div>
@@ -253,7 +254,7 @@ export default function VenvCard({
               <DiskDuo_Icon className="size-3" />
               <span>Disk Usage:</span>
             </div>
-            {isNil(size) ? <Spin size="small" /> : <span>{formatSizeMB(size || 0)}</span>}
+            {isNil(size) ? <Spinner size="sm" /> : <span>{formatSizeMB(size || 0)}</span>}
           </div>
         </CardBody>
 

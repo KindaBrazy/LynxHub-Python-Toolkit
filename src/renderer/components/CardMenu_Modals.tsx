@@ -7,7 +7,6 @@ import {tabsActions, useTabsState} from '../../../../src/renderer/mainWindow/red
 import pIpc from '../PIpc';
 import {ContextType, PythonToolkitActions} from '../reducer';
 import PackageManagerModal from './Python/PackageManagement/PackageManager/PackageManagerModal';
-import UIProvider from './UIProvider';
 
 type Props = {isOpen: boolean; context: ContextType; show: string};
 
@@ -58,7 +57,7 @@ export default function CardMenu_Modals({isOpen, context, show}: Props) {
             variant="flat"
             color="danger"
             key="reloacte_venv"
-            className="!min-w-32"
+            className="min-w-32!"
             onPress={handleDeselect}>
             Deselect
           </Button>,
@@ -67,19 +66,17 @@ export default function CardMenu_Modals({isOpen, context, show}: Props) {
   }, [pythonPath]);
 
   return (
-    <UIProvider>
-      <PackageManagerModal
-        size="4xl"
-        show={show}
-        isOpen={isOpen}
-        id={context.id}
-        pythonPath={pythonPath}
-        setIsOpen={onOpenChange}
-        projectPath={webUI?.dir}
-        setPythonPath={setPythonPath}
-        actionButtons={actionButtons}
-        title={`${context.title} Dependencies`}
-      />
-    </UIProvider>
+    <PackageManagerModal
+      size="4xl"
+      show={show}
+      isOpen={isOpen}
+      id={context.id}
+      pythonPath={pythonPath}
+      setIsOpen={onOpenChange}
+      projectPath={webUI?.dir}
+      setPythonPath={setPythonPath}
+      actionButtons={actionButtons}
+      title={`${context.title} Dependencies`}
+    />
   );
 }

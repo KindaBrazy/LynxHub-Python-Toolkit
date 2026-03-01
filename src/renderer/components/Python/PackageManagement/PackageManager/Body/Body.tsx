@@ -9,7 +9,7 @@ import {
   TableHeader,
   TableRow,
 } from '@heroui/react';
-import {Result} from 'antd';
+import EmptyStateCard from '@lynx/components/EmptyStateCard';
 import {cloneDeep, isEmpty} from 'lodash';
 import {OverlayScrollbarsComponent} from 'overlayscrollbars-react';
 import {Dispatch, SetStateAction, useMemo} from 'react';
@@ -128,11 +128,10 @@ export default function PackageManagerBody({
               </Table>
             </>
           ) : (
-            <Result
-              status="404"
+            <EmptyStateCard
               title="Could not find a virtual environment."
-              extra={<SelectEnv id={id} setPythonPath={setPythonPath} />}
-              subTitle={<span>Please select your desire environment.</span>}
+              description="Please select your desire environment."
+              action={<SelectEnv id={id} setPythonPath={setPythonPath} />}
             />
           )}
         </div>

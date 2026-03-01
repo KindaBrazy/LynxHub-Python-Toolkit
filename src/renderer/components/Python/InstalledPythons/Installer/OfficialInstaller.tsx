@@ -1,7 +1,7 @@
-import {Button, CircularProgress, Input, Link, Progress} from '@heroui/react';
+import {Button, CircularProgress, Input, Link, Listbox, ListboxItem, Progress, Tooltip} from '@heroui/react';
 import {lynxTopToast} from '@lynx/utils/hooks';
 import {formatSize} from '@lynx_common/utils';
-import {List, Tooltip} from 'antd';
+import {DownloadMinimalistic} from '@solar-icons/react-perf/BoldDuotone';
 import {isEmpty, isNil, isString} from 'lodash';
 import {OverlayScrollbarsComponent} from 'overlayscrollbars-react';
 import {Dispatch, SetStateAction, useEffect, useState} from 'react';
@@ -147,7 +147,7 @@ export default function InstallerOfficial({refresh, installed, closeModal, isOpe
             startContent={<Circle_Icon />}
             placeholder="Search for Python version to install..."
           />
-          <Tooltip title="Refresh available Python versions">
+          <Tooltip delay={200} content="Refresh available Python versions" showArrow>
             <Button
               size="sm"
               variant="flat"
@@ -186,7 +186,7 @@ export default function InstallerOfficial({refresh, installed, closeModal, isOpe
               <Progress
                 className="my-4 px-2"
                 value={(downloadProgress?.percentage || 0.1) * 100}
-                classNames={{label: '!text-small', value: '!text-small'}}
+                classNames={{label: 'text-small!', value: 'text-small!'}}
                 label={`Downloading ${installingVersion?.url.split('/').pop()} ...`}
                 valueLabel={`${formatSize(downloadProgress?.downloaded)} / ${formatSize(downloadProgress?.total)}`}
                 showValueLabel
@@ -200,24 +200,28 @@ export default function InstallerOfficial({refresh, installed, closeModal, isOpe
               classNames={{indicator: 'stroke-[#ffe66e]'}}
             />
           ) : (
-            <List
-              renderItem={item => (
-                <List.Item
-                  actions={[
-                    <Button size="sm" variant="flat" key={'install_python'} onPress={() => installPython(item)}>
+            <Listbox variant="flat" className="px-4" selectionMode="none" items={searchVersions}>
+              {item => (
+                <ListboxItem
+                  endContent={
+                    <Button
+                      size="sm"
+                      variant="flat"
+                      color="success"
+                      onPress={() => installPython(item)}
+                      startContent={<DownloadMinimalistic />}
+                      fullWidth>
                       Install
-                    </Button>,
-                  ]}
-                  className="hover:bg-foreground-100 transition-colors duration-150">
-                  <Link size="sm" href={item.url} color="foreground" isExternal showAnchorIcon>
+                    </Button>
+                  }
+                  key={item.url}
+                  className="cursor-default">
+                  <Link size="sm" href={item.url} className="gap-x-2" isExternal>
                     {item.version}
                   </Link>
-                </List.Item>
+                </ListboxItem>
               )}
-              className="overflow-hidden"
-              dataSource={searchVersions}
-              bordered
-            />
+            </Listbox>
           )}
         </OverlayScrollbarsComponent>
       )}

@@ -35,7 +35,6 @@ export default defineConfig({
           Extension: resolve('extension/src/renderer/Extension.tsx'),
         },
         shared: {
-          antd: {generate: false},
           react: {generate: false},
           lodash: {generate: false},
           'react-dom': {generate: false},

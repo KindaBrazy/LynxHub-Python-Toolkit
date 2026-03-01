@@ -1,9 +1,13 @@
-import {Button, Modal, ModalBody, ModalContent, ModalHeader} from '@heroui/react';
+import {Alert, Button, Modal, ModalBody, ModalContent, ModalFooter, ModalHeader} from '@heroui/react';
+import {lynxTopToast} from '@lynx/utils/hooks';
+import {Download} from '@solar-icons/react-perf/BoldDuotone';
 import {OverlayScrollbarsComponent} from 'overlayscrollbars-react';
 import {useCallback, useState} from 'react';
+import {useDispatch} from 'react-redux';
 
 import {useAppState} from '../../../../../../../../src/renderer/mainWindow/redux/reducers/app';
 import {Add_Icon} from '../../../../../../../../src/renderer/shared/assets/icons';
+import pIpc from '../../../../../PIpc';
 import Installer from './Installer';
 
 type Props = {
@@ -13,7 +17,12 @@ type Props = {
 };
 
 export default function InstallerModal({refresh, pythonPath, show}: Props) {
+  const [installing, setInstalling] = useState<boolean>(false);
   const [isOpen, setIsOpen] = useState<boolean>(false);
+  const [installCommand, setInstallCommand] = useState<string>('');
+  const [isInstallDisabled, setIsInstallDisabled] = useState<boolean>(true);
+
+  const dispatch = useDispatch();
 
   const isDarkMode = useAppState('darkMode');
 
@@ -21,19 +30,42 @@ export default function InstallerModal({refresh, pythonPath, show}: Props) {
     setIsOpen(false);
   }, []);
 
+  const handleInstall = async () => {
+    setInstalling(true);
+
+    pIpc
+      .installPackage(pythonPath, installCommand)
+      .then(result => {
+        if (result) {
+          lynxTopToast(dispatch).success('Packages installed successfully!');
+        } else {
+          lynxTopToast(dispatch).error('Failed to install packages. Please check your inputs and try again.');
+        }
+        close();
+        refresh();
+      })
+      .catch(err => {
+        lynxTopToast(dispatch).error('Failed to install packages. Please check your inputs and try again.');
+        console.error(err);
+      })
+      .finally(() => {
+        setInstalling(false);
+      });
+  };
+
   return (
     <>
       <Button size="sm" variant="solid" startContent={<Add_Icon />} onPress={() => setIsOpen(true)}>
         Install Package
       </Button>
       <Modal
-        size="xl"
+        size="2xl"
         isOpen={isOpen}
         onClose={close}
         placement="center"
         isDismissable={false}
         scrollBehavior="inside"
-        classNames={{backdrop: `!top-10 ${show}`, wrapper: `!top-10 pb-8 ${show}`}}>
+        classNames={{backdrop: `top-10! ${show}`, wrapper: `top-10! pb-8 ${show}`}}>
         <ModalContent>
           <ModalHeader className="pb-1 justify-center">Python Package Installer</ModalHeader>
           <ModalBody className="scrollbar-hide px-0 pt-0">
@@ -46,9 +78,33 @@ export default function InstallerModal({refresh, pythonPath, show}: Props) {
                   theme: isDarkMode ? 'os-theme-light' : 'os-theme-dark',
                 },
               }}>
-              <Installer close={close} refresh={refresh} pythonPath={pythonPath} />
+              <Installer setInstallCommand={setInstallCommand} setIsInstallDisabled={setIsInstallDisabled} />
             </OverlayScrollbarsComponent>
           </ModalBody>
+          <ModalFooter className="flex-col">
+            {installing && (
+              <Alert
+                description={
+                  'Installing packages... This may take several minutes depending on' +
+                  ' the number and size of the packages you selected.'
+                }
+                color="warning"
+                isClosable
+              />
+            )}
+            <Button
+              size="md"
+              variant="flat"
+              color="success"
+              isLoading={installing}
+              onPress={handleInstall}
+              className="cursor-pointer"
+              startContent={<Download />}
+              isDisabled={isInstallDisabled}
+              fullWidth>
+              {installing ? 'Installing...' : 'Install Packages'}
+            </Button>
+          </ModalFooter>
         </ModalContent>
       </Modal>
     </>

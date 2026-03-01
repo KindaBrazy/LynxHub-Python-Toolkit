@@ -1,7 +1,7 @@
 import {Button, Chip, Input, Modal, ModalBody, ModalContent, ModalFooter, ModalHeader} from '@heroui/react';
+import EmptyStateCard from '@lynx/components/EmptyStateCard';
 import {lynxTopToast} from '@lynx/utils/hooks';
 import filesIpc from '@lynx_shared/ipc/files';
-import {Empty, Result} from 'antd';
 import {isEmpty} from 'lodash';
 import {OverlayScrollbarsComponentRef} from 'overlayscrollbars-react';
 import {Dispatch, SetStateAction, useEffect, useRef, useState} from 'react';
@@ -136,7 +136,7 @@ export default function RequirementsBtn({id, projectPath, setIsReqAvailable, sho
         scrollBehavior="inside"
         motionProps={modalMotionProps}
         onClose={() => setIsOpen(false)}
-        classNames={{backdrop: `!top-10 ${show}`, wrapper: `!top-10 pb-8 ${show}`}}
+        classNames={{backdrop: `top-10! ${show}`, wrapper: `top-10! pb-8 ${show}`}}
         hideCloseButton>
         <ModalContent className="overflow-hidden">
           <ModalHeader className="bg-foreground-200 dark:bg-LynxRaisinBlack flex flex-col gap-y-2">
@@ -178,25 +178,27 @@ export default function RequirementsBtn({id, projectPath, setIsReqAvailable, sho
           <ModalBody className="pr-0 pl-2 pt-4 scrollbar-hide">
             {isEmpty(filePath) ? (
               <div className="size-full text-center mb-2">
-                <Result
-                  extra={
+                <EmptyStateCard
+                  action={
                     <Button variant="flat" color="primary" key="create_req_file" onPress={openFilePath}>
                       Choose or Create requirements file
                     </Button>
                   }
-                  className="gap-y-4 flex flex-col"
+                  className="mx-4"
                   title="Select or create a requirements file to continue."
                 />
               </div>
             ) : isEmpty(requirements) ? (
               <div className="size-full text-center mb-2">
-                <Empty
-                  description={
+                <EmptyStateCard
+                  title={
                     <span>
-                      The file &#34;{filePath.split(/[/\\]/).pop()}&#34; is empty. Add requirements using the
-                      &#34;Add&#34; button.
+                      The file <span className="font-bold text-primary-700">{filePath.split(/[\/\\]/).pop()}</span>
+                      is empty. Add requirements using the <span className="font-bold text-primary-700">Add</span>{' '}
+                      button.
                     </span>
                   }
+                  className="mx-4"
                 />
               </div>
             ) : (

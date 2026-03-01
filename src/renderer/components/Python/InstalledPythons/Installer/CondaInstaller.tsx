@@ -3,13 +3,17 @@ import {
   CircularProgress,
   Input,
   Link,
+  Listbox,
+  ListboxItem,
   Popover,
   PopoverContent,
   PopoverTrigger,
   Progress,
   Spinner,
+  Tooltip,
 } from '@heroui/react';
-import {List, Result, Tooltip} from 'antd';
+import EmptyStateCard from '@lynx/components/EmptyStateCard';
+import {DownloadMinimalistic} from '@solar-icons/react-perf/BoldDuotone';
 import {isEmpty, isNil, isString} from 'lodash';
 import {OverlayScrollbarsComponent} from 'overlayscrollbars-react';
 import {Dispatch, SetStateAction, useEffect, useState} from 'react';
@@ -146,8 +150,8 @@ export default function InstallerConda({refresh, installed, closeModal, isOpen, 
     return <CircularProgress size="lg" className="mb-4 self-center" label="Checking for Conda installation..." />;
   } else if (!isCondaInstalled) {
     return (
-      <Result
-        extra={
+      <EmptyStateCard
+        action={
           <Link
             as={Button}
             variant="flat"
@@ -158,10 +162,9 @@ export default function InstallerConda({refresh, installed, closeModal, isOpen, 
             Conda Official Website
           </Link>
         }
-        status="warning"
-        className="text-center"
-        title="Conda Installation Not Found"
-        subTitle="To proceed, please install Conda from the official website."
+        className="mx-4"
+        description="To proceed, please install Conda from the official website."
+        title={<span className="text-warning font-bold">Conda Installation Not Found</span>}
       />
     );
   }
@@ -222,17 +225,17 @@ export default function InstallerConda({refresh, installed, closeModal, isOpen, 
               classNames={{circle2: 'border-b-[#ffe66e]', circle1: 'border-b-[#ffe66e] '}}
             />
           ) : (
-            <List
-              renderItem={item => (
-                <List.Item
-                  actions={[
-                    <Popover key={'install_conda_python'}>
+            <Listbox variant="flat" className="px-4" selectionMode="none">
+              {searchVersions.map(item => (
+                <ListboxItem
+                  endContent={
+                    <Popover key={'install_conda_python'} showArrow>
                       <PopoverTrigger>
-                        <Button size="sm" variant="flat">
+                        <Button size="sm" variant="flat" color="success" startContent={<DownloadMinimalistic />}>
                           Install
                         </Button>
                       </PopoverTrigger>
-                      <PopoverContent>
+                      <PopoverContent className="p-3">
                         <div className="px-2 py-1 space-y-2 text-center">
                           <Input
                             onKeyUp={(event: any) => {
@@ -240,26 +243,28 @@ export default function InstallerConda({refresh, installed, closeModal, isOpen, 
                                 installPython(item);
                               }
                             }}
-                            size="sm"
                             value={envName}
                             onValueChange={setEnvName}
-                            placeholder="Enter Conda environment name..."
+                            placeholder="Environment name..."
                           />
-                          <Button size="sm" onPress={() => installPython(item)} fullWidth>
+                          <Button
+                            size="sm"
+                            color="success"
+                            onPress={() => installPython(item)}
+                            startContent={<DownloadMinimalistic />}
+                            fullWidth>
                             Install v{item}
                           </Button>
                         </div>
                       </PopoverContent>
-                    </Popover>,
-                  ]}
-                  className="hover:bg-foreground-100 transition-colors duration-150">
-                  <span>{item}</span>
-                </List.Item>
-              )}
-              className="overflow-hidden"
-              dataSource={searchVersions}
-              bordered
-            />
+                    </Popover>
+                  }
+                  key={item}
+                  className="cursor-default">
+                  {item}
+                </ListboxItem>
+              ))}
+            </Listbox>
           )}
         </OverlayScrollbarsComponent>
       )}

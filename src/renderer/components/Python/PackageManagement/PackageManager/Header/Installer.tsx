@@ -1,29 +1,26 @@
-import {Alert, Button, Code, Input} from '@heroui/react';
+import {Button, Divider, Input, Listbox, ListboxItem} from '@heroui/react';
+import CopyClipboard from '@lynx/components/CopyClipboard';
 import {lynxTopToast} from '@lynx/utils/hooks';
 import filesIpc from '@lynx_shared/ipc/files';
-import {Divider} from 'antd';
+import {Checklist, TrashBin2} from '@solar-icons/react-perf/BoldDuotone';
 import {compact, isEmpty} from 'lodash';
-import {KeyboardEvent, useState} from 'react';
+import {X} from 'lucide-react';
+import {KeyboardEvent, useEffect, useState} from 'react';
 import {useDispatch} from 'react-redux';
 
-import {Close_Icon, Trash_Icon} from '../../../../../../../../src/renderer/shared/assets/icons';
 import pIpc from '../../../../../PIpc';
-import {Checklist_Icon} from '../../../../SvgIcons';
 
 type Package = {name: string; version: string};
-
-type Props = {
-  pythonPath: string;
-  refresh: () => void;
-  close: () => void;
-};
-
-export default function Installer({pythonPath, refresh, close}: Props) {
+type Props = {setInstallCommand: (value: string) => void; setIsInstallDisabled: (value: boolean) => void};
+export default function Installer({setInstallCommand, setIsInstallDisabled}: Props) {
   const [packageString, setPackageString] = useState<string>('');
   const [packages, setPackages] = useState<Package[]>([]);
   const [indexUrl, setIndexUrl] = useState<string>('');
   const [extraOptions, setExtraOptions] = useState<string>('');
-  const [installing, setInstalling] = useState<boolean>(false);
+
+  useEffect(() => {
+    setIsInstallDisabled(packages.length <= 0);
+  }, [packages]);
 
   const dispatch = useDispatch();
 
@@ -70,8 +67,8 @@ export default function Installer({pythonPath, refresh, close}: Props) {
     }
   };
 
-  const removePackage = (index: number) => {
-    setPackages(packages.filter((_, i) => i !== index));
+  const removePackage = (name: string) => {
+    setPackages(packages.filter(pkg => pkg.name !== name));
   };
 
   const handleFileSelect = () => {
@@ -110,36 +107,32 @@ export default function Installer({pythonPath, refresh, close}: Props) {
     }
 
     command = command.concat(packageStrings);
+
+    setInstallCommand(command.join(' '));
     return command.join(' ');
   };
 
-  const handleInstall = async () => {
-    setInstalling(true);
-
-    pIpc
-      .installPackage(pythonPath, generateInstallCommand())
-      .then(result => {
-        if (result) {
-          lynxTopToast(dispatch).success('Packages installed successfully!');
-        } else {
-          lynxTopToast(dispatch).error('Failed to install packages. Please check your inputs and try again.');
-        }
-        close();
-        refresh();
-      })
-      .catch(err => {
-        lynxTopToast(dispatch).error('Failed to install packages. Please check your inputs and try again.');
-        console.error(err);
-      })
-      .finally(() => {
-        setInstalling(false);
-      });
-  };
-
   return (
-    <div className="max-w-4xl mx-auto p-6 space-y-6">
+    <div className="max-w-4xl mx-auto p-6 flex flex-col gap-y-4">
       {/* Package input */}
-      <Divider>Package Input</Divider>
+      <div className="flex w-full justify-between items-center">
+        <div className="flex items-center gap-x-2">
+          <span className="font-semibold">Package Input</span>
+          <Button size="sm" variant="flat" onPress={handleFileSelect} startContent={<Checklist size={13} />}>
+            Import Requirements
+          </Button>
+        </div>
+        {!isEmpty(packages) && (
+          <Button
+            size="sm"
+            color="danger"
+            variant="flat"
+            startContent={<X size={12} />}
+            onPress={() => setPackages([])}>
+            Clear All
+          </Button>
+        )}
+      </div>
       <div className="space-y-4">
         <div className="w-full">
           <Input
@@ -149,6 +142,7 @@ export default function Installer({pythonPath, refresh, close}: Props) {
             onValueChange={handlePackageStringChange}
             placeholder="e.g., 'torch torchvision torchaudio' or 'pandas@1.5.0'"
           />
+
           <p className="text-sm text-foreground-400 mt-1">
             Press Space or Enter to add packages. Use &#39;@&#39; or &#39;==&#39; to specify version (e.g.,
             pandas@1.5.0)
@@ -157,32 +151,30 @@ export default function Installer({pythonPath, refresh, close}: Props) {
 
         {/* Package list */}
         {!isEmpty(packages) && (
-          <div className="space-y-2">
-            <Divider>Selected Packages</Divider>
-            <div>
-              <Button color="danger" variant="flat" startContent={<Close_Icon />} onPress={() => setPackages([])}>
-                Clear All
-              </Button>
-            </div>
-            {packages.map((pkg, index) => (
-              <div key={index} className="flex items-center gap-2 p-2 rounded bg-foreground-100 animate-appearance-in">
-                <span className="flex-1 font-mono">
-                  {pkg.name}
-                  {pkg.version && `@${pkg.version}`}
-                </span>
-                <div>
-                  <Button className="size-8" onPress={() => removePackage(index)} isIconOnly>
-                    <Trash_Icon className="size-4" />
-                  </Button>
-                </div>
-              </div>
-            ))}
+          <div className="flex flex-col gap-y-2">
+            <Listbox items={packages} className="bg-foreground-100 rounded-xl">
+              {pkg => (
+                <ListboxItem
+                  endContent={
+                    <Button size="sm" color="danger" variant="light" onPress={() => removePackage(pkg.name)} isIconOnly>
+                      <TrashBin2 size={15} />
+                    </Button>
+                  }
+                  key={pkg.name}>
+                  <span className="flex-1 text-sm font-JetBrainsMono">
+                    {pkg.name}
+                    {pkg.version && `@${pkg.version}`}
+                  </span>
+                </ListboxItem>
+              )}
+            </Listbox>
           </div>
         )}
       </div>
 
       {/* Extra options */}
-      <Divider>Extra Options</Divider>
+      <Divider className="bg-foreground-100" />
+      <span>Extra Options</span>
       <div className="space-y-4">
         <Input value={indexUrl} label="Index URL" placeholder="(optional)" onValueChange={setIndexUrl} />
 
@@ -194,45 +186,15 @@ export default function Installer({pythonPath, refresh, close}: Props) {
         />
       </div>
 
-      {/* Requirements file selection */}
-      <Divider>Requirements file selection</Divider>
-      <div>
-        <Button
-          className="cursor-pointer"
-          onPress={handleFileSelect}
-          startContent={<Checklist_Icon className="size-3.5" />}>
-          Requirements File
-        </Button>
-      </div>
-
       {/* Preview */}
-      <Divider>Preview</Divider>
-      <Code className="w-full p-3 overflow-hidden text-wrap break-words">pip install {generateInstallCommand()}</Code>
-
-      {/* Install button */}
-      <Divider>Install</Divider>
-      {installing && (
-        <Alert
-          description={
-            'Installing packages... This may take several minutes depending on' +
-            ' the number and size of the packages you selected.'
-          }
-          color="warning"
-          isClosable
-        />
-      )}
-      <div>
-        <Button
-          size="md"
-          variant="flat"
-          color="success"
-          isLoading={installing}
-          onPress={handleInstall}
-          className="cursor-pointer"
-          isDisabled={isEmpty(packages)}>
-          {installing ? 'Installing...' : 'Install Packages'}
-        </Button>
+      <Divider className="bg-foreground-100" />
+      <div className="flex gap-x-2 items-center justify-between">
+        <span>Preview</span>
+        <CopyClipboard contentToCopy={`pip install ${generateInstallCommand()}`} />
       </div>
+      <span className="bg-foreground-100 p-4 rounded-xl">
+        pip install <span className="text-warning-700">{generateInstallCommand()}</span>
+      </span>
     </div>
   );
 }

@@ -1,5 +1,4 @@
-import {Code} from '@heroui/react';
-import {notification} from 'antd';
+import {addToast, Code} from '@heroui/react';
 import {isString} from 'lodash';
 import {Fragment, useEffect} from 'react';
 import {useDispatch} from 'react-redux';
@@ -22,11 +21,14 @@ export default function CustomHook() {
       const message = e.message;
       if (message && isString(message)) {
         if (message.toLowerCase().includes('no python at')) {
-          notification.error({
-            message: 'Python Not Found',
+          addToast({
+            color: 'danger',
+            title: 'Python Not Found',
+            classNames: {base: 'right-3 bottom-3 cursor-default'},
+            timeout: 0,
             description: (
               <div>
-                <span className="!text-md whitespace-pre-line">
+                <span className="text-md! whitespace-pre-line">
                   {`Required Python version is missing. Please install it, so LynxHub can validate` +
                     ` your environment.\nDetails:\n`}
                 </span>
@@ -37,8 +39,6 @@ export default function CustomHook() {
                 </Code>
               </div>
             ),
-            className: '!w-fit !max-w-[777px]',
-            duration: 0,
           });
         }
       }

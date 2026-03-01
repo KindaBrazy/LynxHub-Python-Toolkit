@@ -1,7 +1,7 @@
 import {Button, Spinner} from '@heroui/react';
+import EmptyStateCard from '@lynx/components/EmptyStateCard';
 import {lynxTopToast} from '@lynx/utils/hooks';
 import filesIpc from '@lynx_shared/ipc/files';
-import {Empty} from 'antd';
 import {cloneDeep, isEmpty} from 'lodash';
 import {Dispatch, SetStateAction, useCallback, useEffect, useState} from 'react';
 import {useDispatch} from 'react-redux';
@@ -207,7 +207,7 @@ export default function InstalledPythons({
             classNames={{circle2: 'border-b-[#ffe66e]', circle1: 'border-b-[#ffe66e] '}}
           />
         ) : isEmpty(installedPythons) ? (
-          <Empty description={`No Python installations found. Use the "Install Version" button to add one.`} />
+          <EmptyStateCard title={`No Python installations found. Use the "Install Version" button to add one.`} />
         ) : (
           installedPythons.map(python => (
             <InstalledCard

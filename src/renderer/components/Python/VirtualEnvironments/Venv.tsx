@@ -1,7 +1,7 @@
 import {Button, Spinner} from '@heroui/react';
+import EmptyStateCard from '@lynx/components/EmptyStateCard';
 import {lynxTopToast} from '@lynx/utils/hooks';
 import filesIpc from '@lynx_shared/ipc/files';
-import {Empty} from 'antd';
 import {isEmpty} from 'lodash';
 import {useCallback, useEffect, useState} from 'react';
 import {useDispatch} from 'react-redux';
@@ -144,9 +144,10 @@ export default function Venv({visible, installedPythons, isLoadingPythons, show}
             classNames={{circle2: 'border-b-[#ffe66e]', circle1: 'border-b-[#ffe66e] '}}
           />
         ) : isEmpty(pythonVenvs) ? (
-          <Empty className="my-2" description="No Environments Yet">
-            Create a new environment or locate an existing one to get started.
-          </Empty>
+          <EmptyStateCard
+            description="No Environments Yet"
+            title="Create a new environment or locate an existing one to get started."
+          />
         ) : (
           <>
             {pythonVenvs.map((venv, index) => (

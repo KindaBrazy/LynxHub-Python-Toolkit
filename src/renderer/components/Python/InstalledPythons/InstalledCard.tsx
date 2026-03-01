@@ -5,6 +5,7 @@ import {
   CardFooter,
   CardHeader,
   Chip,
+  Divider,
   Dropdown,
   DropdownItem,
   DropdownMenu,
@@ -13,10 +14,10 @@ import {
   PopoverContent,
   PopoverTrigger,
   Progress,
+  Spinner,
 } from '@heroui/react';
 import {lynxTopToast} from '@lynx/utils/hooks';
 import filesIpc from '@lynx_shared/ipc/files';
-import {Divider, Spin} from 'antd';
 import {isNil, startCase} from 'lodash';
 import {useCallback, useMemo, useState} from 'react';
 import {useDispatch} from 'react-redux';
@@ -144,7 +145,7 @@ export default function InstalledCard({python, diskUsage, maxDiskValue, updateDe
           variant="flat"
           color="success"
           startContent={<CheckCircle_Icon />}
-          classNames={{content: '!font-semibold'}}>
+          classNames={{content: 'font-semibold!'}}>
           System & LynxHub
         </Chip>
       );
@@ -158,7 +159,7 @@ export default function InstalledCard({python, diskUsage, maxDiskValue, updateDe
           variant="light"
           color="secondary"
           startContent={<CheckCircle_Icon />}
-          classNames={{content: '!font-semibold'}}>
+          classNames={{content: 'font-semibold!'}}>
           System
         </Chip>
       );
@@ -172,7 +173,7 @@ export default function InstalledCard({python, diskUsage, maxDiskValue, updateDe
           variant="light"
           color="primary"
           startContent={<CheckCircle_Icon />}
-          classNames={{content: '!font-semibold'}}>
+          classNames={{content: 'font-semibold!'}}>
           LynxHub
         </Chip>
       );
@@ -202,15 +203,12 @@ export default function InstalledCard({python, diskUsage, maxDiskValue, updateDe
       {isUninstalling && (
         <div className="absolute size-full dark:bg-black/50 bg-white/50 z-10 flex justify-center items-center">
           <div className=" dark:bg-black/80 bg-white/80 p-4 rounded-lg flex flex-col space-y-2">
-            <Spin />
-            <span>Uninstalling... Please wait.</span>
+            <Spinner color="warning" />
+            <span>Uninstalling, Please wait...</span>
           </div>
         </div>
       )}
-      <Card
-        as="div"
-        className={`min-w-[27rem] grow transition-all duration-300 cursor-default ${borderColor}`}
-        isPressable>
+      <Card as="div" className={`min-w-108 grow transition-all duration-300 cursor-default ${borderColor}`} isPressable>
         <CardHeader className="flex flex-row justify-between items-center py-1 px-4">
           <div className="flex flex-col my-3">
             <div className="flex flex-row items-center gap-x-2">
@@ -218,13 +216,13 @@ export default function InstalledCard({python, diskUsage, maxDiskValue, updateDe
               Python {python.version}
               {defaultChip}
             </div>
-            <div>
+            <div className="flex items-center gap-x-2">
               <span className="text-tiny text-foreground-500">{python.architecture}</span>
-              <Divider orientation="vertical" />
+              <Divider orientation="vertical" className="h-2 bg-foreground-200" />
               <span className={'text-tiny ' + installTypeColor}>{startCase(python.installationType)}</span>
               {python.installationType === 'conda' && (
                 <>
-                  <Divider orientation="vertical" />
+                  <Divider orientation="vertical" className="h-2 bg-foreground-200" />
                   <span className={'text-tiny text-cyan-500'}>{python.condaName}</span>
                 </>
               )}
@@ -326,7 +324,7 @@ export default function InstalledCard({python, diskUsage, maxDiskValue, updateDe
                   </div>
 
                   {/* A visual separator between the two distinct options */}
-                  <Divider className="my-0" />
+                  <Divider />
 
                   {/* Option 2: Remove from List */}
                   <div>

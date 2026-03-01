@@ -1,5 +1,3 @@
-@layer theme, base, antd, components, utilities;
-
 @import 'tailwindcss';
 
 @plugin '../../../src/renderer/shared/heroUIConfig.ts';
