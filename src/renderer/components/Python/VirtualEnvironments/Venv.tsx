@@ -2,11 +2,11 @@ import {Button, Spinner} from '@heroui/react';
 import EmptyStateCard from '@lynx/components/EmptyStateCard';
 import {lynxTopToast} from '@lynx/utils/hooks';
 import filesIpc from '@lynx_shared/ipc/files';
+import {FolderOpen} from '@solar-icons/react-perf/BoldDuotone';
 import {isEmpty} from 'lodash';
 import {useCallback, useEffect, useState} from 'react';
 import {useDispatch} from 'react-redux';
 
-import {FolderDuo_Icon} from '../../../../../../src/renderer/shared/assets/icons';
 import {PythonInstallation, PythonVenvs, VenvInfo} from '../../../../cross/CrossExtTypes';
 import {bytesToMegabytes} from '../../../../cross/CrossExtUtils';
 import pIpc from '../../../PIpc';
@@ -131,7 +131,7 @@ export default function Venv({visible, installedPythons, isLoadingPythons, show}
             variant="flat"
             onPress={locateVenv}
             isLoading={isLocating}
-            startContent={!isLocating && <FolderDuo_Icon />}>
+            startContent={!isLocating && <FolderOpen />}>
             {!isLocating && 'Locate'}
           </Button>
         </div>

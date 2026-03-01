@@ -1,11 +1,12 @@
-import {Button, Divider, Input, Popover, PopoverContent, PopoverTrigger, Select, SelectItem} from '@heroui/react';
+import {Button, Input, Popover, PopoverContent, PopoverTrigger, Select, SelectItem} from '@heroui/react';
 import {lynxTopToast} from '@lynx/utils/hooks';
 import filesIpc from '@lynx_shared/ipc/files';
+import {FolderOpen} from '@solar-icons/react-perf/BoldDuotone';
 import {capitalize, isEmpty} from 'lodash';
+import {Plus} from 'lucide-react';
 import {useCallback, useEffect, useMemo, useState} from 'react';
 import {useDispatch} from 'react-redux';
 
-import {Add_Icon, MenuDots_Icon, OpenFolder_Icon} from '../../../../../../src/renderer/shared/assets/icons';
 import {PythonInstallation, VenvCreateOptions} from '../../../../cross/CrossExtTypes';
 import pIpc from '../../../PIpc';
 
@@ -79,18 +80,17 @@ export default function VenvCreator({installedPythons, refresh, isLoadingPythons
         <Button
           isLoading={isLoadingPythons}
           isDisabled={isEmpty(installedPythons)}
-          startContent={!isLoadingPythons && <Add_Icon />}>
+          startContent={!isLoadingPythons && <Plus size={14} />}>
           {isLoadingPythons ? 'Loading Pythons...' : 'New Environment'}
         </Button>
       </PopoverTrigger>
       <PopoverContent>
         {titleProps => (
-          <div className="pt-4 pb-2 px-2">
-            <p className="font-bold" {...titleProps}>
+          <div className="pt-4 pb-2 px-2 space-y-2">
+            <p className="font-semibold" {...titleProps}>
               Create New Virtual Environment
             </p>
             <div className="flex flex-col gap-y-4 py-2">
-              <Divider />
               <Input
                 size="sm"
                 value={envName}
@@ -101,7 +101,6 @@ export default function VenvCreator({installedPythons, refresh, isLoadingPythons
               />
               <Select
                 size="sm"
-                variant="faded"
                 label="Python Version"
                 selectionMode="single"
                 items={installedPythons}
@@ -118,14 +117,13 @@ export default function VenvCreator({installedPythons, refresh, isLoadingPythons
               </Select>
               <Button
                 size="sm"
-                variant="faded"
+                variant="flat"
+                endContent={<div />}
                 onPress={selectFolder}
                 className="justify-between"
-                endContent={<MenuDots_Icon />}
-                startContent={<OpenFolder_Icon />}>
+                startContent={<FolderOpen />}>
                 {targetFolder || 'Choose Destination Folder'}
               </Button>
-              <Divider />
               <Button
                 size="sm"
                 variant="flat"

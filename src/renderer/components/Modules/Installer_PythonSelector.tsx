@@ -1,10 +1,11 @@
 import {Alert, CircularProgress, Select, SelectItem, SharedSelection} from '@heroui/react';
+import {SkipNext} from '@solar-icons/react-perf/Bold';
 import {useCallback, useEffect, useMemo, useState} from 'react';
 import {useDispatch} from 'react-redux';
 
 import {PythonVenvSelectItem} from '../../../cross/CrossExtTypes';
 import {PythonToolkitActions} from '../../reducer';
-import {Env_Icon, Python_Icon, SkipDuo_Icon} from '../SvgIcons';
+import {Env_Icon, Python_Icon} from '../SvgIcons';
 import {fetchAndSetPythonVenvs} from '../UtilHooks';
 
 export const Installer_PythonSelector = (
@@ -45,7 +46,7 @@ export const Installer_PythonSelector = (
           textValue="Skip"
           description="Do not assign a specific environment. The LynxHub or system default will be used if required.">
           <span className="flex flex-row items-center gap-x-2">
-            <SkipDuo_Icon className="text-danger size-4" /> Skip
+            <SkipNext className="text-danger size-4" /> Skip
           </span>
         </SelectItem>,
         ...list.map(item => {

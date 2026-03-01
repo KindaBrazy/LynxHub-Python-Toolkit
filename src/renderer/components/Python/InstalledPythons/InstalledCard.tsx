@@ -18,22 +18,25 @@ import {
 } from '@heroui/react';
 import {lynxTopToast} from '@lynx/utils/hooks';
 import filesIpc from '@lynx_shared/ipc/files';
+import {
+  BoxMinimalistic,
+  CheckCircle,
+  Diskette,
+  Folder2,
+  MenuDots,
+  Refresh,
+  TrashBin2,
+} from '@solar-icons/react-perf/BoldDuotone';
+import {CheckRead} from '@solar-icons/react-perf/LineDuotone';
 import {isNil, startCase} from 'lodash';
+import {X} from 'lucide-react';
 import {useCallback, useMemo, useState} from 'react';
 import {useDispatch} from 'react-redux';
 
-import {
-  BoxDuo_Icon,
-  Close_Icon,
-  DiskDuo_Icon,
-  FolderDuo_Icon,
-  MenuDots_Icon,
-  RefreshDuo_Icon,
-} from '../../../../../../src/renderer/shared/assets/icons';
 import {PythonInstallation} from '../../../../cross/CrossExtTypes';
 import {formatSizeMB} from '../../../../cross/CrossExtUtils';
 import pIpc from '../../../PIpc';
-import {CheckCircle_Icon, DoubleCheck_Icon, Packages_Icon, Python_Icon, TrashDuo_Icon} from '../../SvgIcons';
+import {Python_Icon} from '../../SvgIcons';
 import PackageManagerModal from '../PackageManagement/PackageManager/PackageManagerModal';
 import Venv_Associate from '../VirtualEnvironments/Venv_Associate';
 
@@ -144,7 +147,7 @@ export default function InstalledCard({python, diskUsage, maxDiskValue, updateDe
           radius="sm"
           variant="flat"
           color="success"
-          startContent={<CheckCircle_Icon />}
+          startContent={<CheckCircle />}
           classNames={{content: 'font-semibold!'}}>
           System & LynxHub
         </Chip>
@@ -158,7 +161,7 @@ export default function InstalledCard({python, diskUsage, maxDiskValue, updateDe
           radius="sm"
           variant="light"
           color="secondary"
-          startContent={<CheckCircle_Icon />}
+          startContent={<CheckCircle />}
           classNames={{content: 'font-semibold!'}}>
           System
         </Chip>
@@ -172,7 +175,7 @@ export default function InstalledCard({python, diskUsage, maxDiskValue, updateDe
           radius="sm"
           variant="light"
           color="primary"
-          startContent={<CheckCircle_Icon />}
+          startContent={<CheckCircle />}
           classNames={{content: 'font-semibold!'}}>
           LynxHub
         </Chip>
@@ -232,7 +235,7 @@ export default function InstalledCard({python, diskUsage, maxDiskValue, updateDe
             <Dropdown className="dark:bg-LynxRaisinBlack">
               <DropdownTrigger>
                 <Button size="sm" variant="light" isIconOnly>
-                  <MenuDots_Icon className="rotate-90 size-3.5" />
+                  <MenuDots className="rotate-90 size-3.5" />
                 </Button>
               </DropdownTrigger>
               <DropdownMenu>
@@ -244,7 +247,7 @@ export default function InstalledCard({python, diskUsage, maxDiskValue, updateDe
                       key="system-default"
                       onPress={makeDefault}
                       textValue="Set as System Default"
-                      startContent={python.isDefault ? <RefreshDuo_Icon className="size-4" /> : <DoubleCheck_Icon />}>
+                      startContent={python.isDefault ? <Refresh className="size-4" /> : <CheckRead size={16} />}>
                       Set as <span className="font-bold text-secondary">System Default</span>
                     </DropdownItem>
                     <DropdownItem
@@ -253,10 +256,7 @@ export default function InstalledCard({python, diskUsage, maxDiskValue, updateDe
                       key="lynxhub-default"
                       onPress={makeLynxDefault}
                       textValue="Set as LynxHub Default"
-                      // eslint-disable-next-line perfectionist/sort-jsx-props
-                      startContent={
-                        python.isLynxHubDefault ? <RefreshDuo_Icon className="size-4" /> : <DoubleCheck_Icon />
-                      }>
+                      startContent={python.isLynxHubDefault ? <Refresh className="size-4" /> : <CheckRead size={16} />}>
                       Set as <span className="font-bold text-primary">LynxHub Default</span>
                     </DropdownItem>
                   </>
@@ -266,7 +266,7 @@ export default function InstalledCard({python, diskUsage, maxDiskValue, updateDe
                 <DropdownItem
                   key="package-manager"
                   onPress={packageManager}
-                  startContent={<Packages_Icon className="size-4" />}>
+                  startContent={<BoxMinimalistic className="size-4" />}>
                   Manage Packages
                 </DropdownItem>
               </DropdownMenu>
@@ -280,7 +280,7 @@ export default function InstalledCard({python, diskUsage, maxDiskValue, updateDe
               showArrow>
               <PopoverTrigger>
                 <Button size="sm" color="danger" variant="light" isIconOnly>
-                  <TrashDuo_Icon className="size-[50%]" />
+                  <TrashBin2 className="size-[50%]" />
                 </Button>
               </PopoverTrigger>
               <PopoverContent className="border border-foreground-100 dark:bg-DarkGray">
@@ -317,7 +317,7 @@ export default function InstalledCard({python, diskUsage, maxDiskValue, updateDe
                       color="danger"
                       className="mt-2"
                       onPress={uninstall}
-                      startContent={<TrashDuo_Icon />}
+                      startContent={<TrashBin2 />}
                       fullWidth>
                       Uninstall Permanently
                     </Button>
@@ -339,7 +339,7 @@ export default function InstalledCard({python, diskUsage, maxDiskValue, updateDe
                       color="warning"
                       className="mt-2"
                       onPress={removeFromList}
-                      startContent={<Close_Icon />}
+                      startContent={<X size={14} />}
                       fullWidth>
                       Remove from List
                     </Button>
@@ -352,12 +352,12 @@ export default function InstalledCard({python, diskUsage, maxDiskValue, updateDe
 
         <CardBody className="gap-y-4 px-4 flex flex-col text-sm">
           <Button size="sm" variant="light" onPress={openPath} className="flex flex-row justify-start -ml-3 -mb-1.5">
-            <FolderDuo_Icon className="shrink-0" />
+            <Folder2 className="shrink-0" />
             <span className="truncate">{python.installFolder}</span>
           </Button>
           <div className="w-full justify-between flex flex-row">
             <div className="flex flex-row gap-x-2 items-center">
-              <BoxDuo_Icon className="size-3" />
+              <BoxMinimalistic className="size-3" />
               <span>Installed Packages:</span>
             </div>
             <span>{python.packages}</span>
@@ -365,7 +365,7 @@ export default function InstalledCard({python, diskUsage, maxDiskValue, updateDe
           <Progress
             label={
               <div className="flex flex-row gap-x-2 items-center">
-                <DiskDuo_Icon className="size-3" />
+                <Diskette className="size-3" />
                 <span>Disk Usage:</span>
               </div>
             }

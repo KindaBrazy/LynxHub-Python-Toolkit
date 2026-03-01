@@ -13,6 +13,8 @@ import {
   Progress,
 } from '@heroui/react';
 import {lynxTopToast} from '@lynx/utils/hooks';
+import {AltArrowDown, AltArrowUp} from '@solar-icons/react-perf/Bold';
+import {BoxMinimalistic} from '@solar-icons/react-perf/BoldDuotone';
 import {isEmpty} from 'lodash';
 import {memo, useCallback, useEffect, useState} from 'react';
 import {useDispatch} from 'react-redux';
@@ -22,7 +24,6 @@ import LynxScroll from '../../../../../../../../src/renderer/mainWindow/componen
 import {Circle_Icon} from '../../../../../../../../src/renderer/shared/assets/icons';
 import {PackageInfo, PackageUpdate} from '../../../../../../cross/CrossExtTypes';
 import pIpc from '../../../../../PIpc';
-import {AltArrow_Icon, SolarBoxMinimalisticBoldDuotone} from '../../../../SvgIcons';
 
 type updateType = {color: 'default' | 'success' | 'danger'; disabled: boolean; isUpgrade: boolean | undefined};
 type Props = {
@@ -119,7 +120,7 @@ const PkgVersions = memo(({updated, item, pythonPath, show}: Props) => {
         placement="center"
         scrollBehavior="inside"
         onOpenChange={setIsOpen}
-        classNames={{backdrop: `!top-10 ${show}`, wrapper: `!top-10 pb-8 ${show}`}}
+        classNames={{backdrop: `top-10! ${show}`, wrapper: `top-10! pb-8 ${show}`}}
         hideCloseButton>
         <ModalContent>
           <ModalHeader className="justify-center gap-x-1 text-sm items-center">
@@ -162,15 +163,12 @@ const PkgVersions = memo(({updated, item, pythonPath, show}: Props) => {
                     const icon = updateType.disabled ? (
                       <Circle_Icon />
                     ) : updateType.isUpgrade ? (
-                      <AltArrow_Icon className="rotate-180" />
+                      <AltArrowUp />
                     ) : (
-                      <AltArrow_Icon />
+                      <AltArrowDown />
                     );
                     return (
-                      <Popover
-                        key={`${item.name}_${version}`}
-                        className="max-w-[17rem] before:bg-foreground-100"
-                        showArrow>
+                      <Popover key={`${item.name}_${version}`} className="max-w-68 before:bg-foreground-100" showArrow>
                         <PopoverTrigger>
                           <Button
                             variant="light"
@@ -205,7 +203,7 @@ const PkgVersions = memo(({updated, item, pythonPath, show}: Props) => {
         </ModalContent>
       </Modal>
       <Button size="sm" variant="flat" isLoading={!!changingTo} onPress={() => setIsOpen(true)} isIconOnly>
-        <SolarBoxMinimalisticBoldDuotone className="size-3.5" />
+        <BoxMinimalistic className="size-3.5" />
       </Button>
     </>
   );

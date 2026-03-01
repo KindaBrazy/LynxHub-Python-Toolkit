@@ -1,11 +1,11 @@
 import {Button, Popover, PopoverContent, PopoverTrigger} from '@heroui/react';
 import {lynxTopToast} from '@lynx/utils/hooks';
+import {TrashBin2} from '@solar-icons/react-perf/BoldDuotone';
 import {Dispatch, SetStateAction, useCallback, useState} from 'react';
 import {useDispatch} from 'react-redux';
 
 import {PackageInfo, PackageUpdate} from '../../../../../../cross/CrossExtTypes';
 import pIpc from '../../../../../PIpc';
-import {TrashDuo_Icon} from '../../../../SvgIcons';
 import PkgVersions from './PkgVersions';
 
 type Props = {
@@ -54,13 +54,13 @@ export default function ActionButtons({
         color="danger"
         key="uninstall"
         placement="left"
+        className="max-w-60"
         isOpen={isUninstallOpen}
-        className="max-w-[15rem]"
         onOpenChange={setIsUninstallOpen}
         showArrow>
         <PopoverTrigger>
           <Button size="sm" color="danger" variant="flat" isLoading={isUninstalling} isIconOnly>
-            <TrashDuo_Icon className="size-3.5" />
+            <TrashBin2 className="size-3.5" />
           </Button>
         </PopoverTrigger>
         <PopoverContent>

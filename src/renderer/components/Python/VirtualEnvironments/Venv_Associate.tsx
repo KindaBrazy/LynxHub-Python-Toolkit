@@ -1,11 +1,11 @@
 import {Avatar, Button, Chip, Dropdown, DropdownItem, DropdownMenu, DropdownTrigger} from '@heroui/react';
 import {extractGitUrl} from '@lynx_common/utils';
 import {isEmpty} from 'lodash';
+import {Plus} from 'lucide-react';
 import {useCallback, useEffect, useState} from 'react';
 import {useDispatch} from 'react-redux';
 
 import {useCardsState} from '../../../../../../src/renderer/mainWindow/redux/reducers/cards';
-import {Add_Icon} from '../../../../../../src/renderer/shared/assets/icons';
 import {ModulesThatSupportPython} from '../../../../cross/CrossExtConstants';
 import {allCardsExt} from '../../../DataHolder';
 import pIpc from '../../../PIpc';
@@ -112,7 +112,7 @@ export default function Venv_Associate({folder, type}: Props) {
         <Dropdown size="sm" className="border-1 border-foreground/10">
           <DropdownTrigger>
             <Button size="sm" radius="full" variant="flat" isIconOnly>
-              <Add_Icon />
+              <Plus size={14} />
             </Button>
           </DropdownTrigger>
           <DropdownMenu variant="flat" items={canBeAssociate} emptyContent="Nothing available to associate.">

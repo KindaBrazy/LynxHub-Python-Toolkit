@@ -16,21 +16,16 @@ import {
 } from '@heroui/react';
 import {lynxTopToast} from '@lynx/utils/hooks';
 import filesIpc from '@lynx_shared/ipc/files';
+import {BoxMinimalistic, Diskette, Folder2, MenuDots, TrashBin2} from '@solar-icons/react-perf/BoldDuotone';
 import {SHA256} from 'crypto-js';
 import {isNil} from 'lodash';
+import {X} from 'lucide-react';
 import {FormEvent, useCallback, useEffect, useMemo, useState} from 'react';
 import {useDispatch} from 'react-redux';
 
-import {
-  BoxDuo_Icon,
-  Close_Icon,
-  DiskDuo_Icon,
-  FolderDuo_Icon,
-  MenuDots_Icon,
-} from '../../../../../../src/renderer/shared/assets/icons';
 import {formatSizeMB} from '../../../../cross/CrossExtUtils';
 import pIpc from '../../../PIpc';
-import {Env_Icon, Packages_Icon, TrashDuo_Icon} from '../../SvgIcons';
+import {Env_Icon, Packages_Icon} from '../../SvgIcons';
 import PackageManagerModal from '../PackageManagement/PackageManager/PackageManagerModal';
 import Venv_Associate from './Venv_Associate';
 
@@ -164,7 +159,7 @@ export default function VenvCard({
             <Dropdown className="border-1 border-foreground/10">
               <DropdownTrigger>
                 <Button size="sm" variant="light" isIconOnly>
-                  <MenuDots_Icon className="rotate-90 size-3.5" />
+                  <MenuDots className="rotate-90 size-3.5" />
                 </Button>
               </DropdownTrigger>
               <DropdownMenu variant="flat">
@@ -186,7 +181,7 @@ export default function VenvCard({
                 showArrow>
                 <PopoverTrigger>
                   <Button size="sm" color="danger" variant="light" isLoading={isRemoving} isIconOnly>
-                    <TrashDuo_Icon className="size-[50%]" />
+                    <TrashBin2 className="size-[50%]" />
                   </Button>
                 </PopoverTrigger>
                 <PopoverContent className="border border-foreground-100 dark:bg-DarkGray">
@@ -203,7 +198,7 @@ export default function VenvCard({
                         color="danger"
                         className="mt-2"
                         onPress={remove}
-                        startContent={<TrashDuo_Icon />}
+                        startContent={<TrashBin2 />}
                         fullWidth>
                         Delete Permanently
                       </Button>
@@ -224,8 +219,8 @@ export default function VenvCard({
                         size="sm"
                         color="warning"
                         className="mt-2"
+                        startContent={<X />}
                         onPress={removeFromList}
-                        startContent={<Close_Icon />}
                         fullWidth>
                         Remove from List
                       </Button>
@@ -239,19 +234,19 @@ export default function VenvCard({
 
         <CardBody className="gap-y-4 px-4 flex flex-col text-sm">
           <Button size="sm" variant="light" onPress={openPath} className="flex flex-row justify-start -ml-3 -mb-1.5">
-            <FolderDuo_Icon className="shrink-0" />
+            <Folder2 className="shrink-0" />
             <span className="truncate">{folder}</span>
           </Button>
           <div className="w-full justify-between flex flex-row">
             <div className="flex flex-row gap-x-2 items-center">
-              <BoxDuo_Icon className="size-3" />
+              <BoxMinimalistic className="size-3" />
               <span>Installed Packages:</span>
             </div>
             <span>{installedPackages}</span>
           </div>
           <div className="w-full justify-between flex flex-row">
             <div className="flex flex-row gap-x-2 items-center">
-              <DiskDuo_Icon className="size-3" />
+              <Diskette className="size-3" />
               <span>Disk Usage:</span>
             </div>
             {isNil(size) ? <Spinner size="sm" /> : <span>{formatSizeMB(size || 0)}</span>}

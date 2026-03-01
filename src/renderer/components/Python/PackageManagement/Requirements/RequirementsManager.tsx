@@ -11,12 +11,12 @@ import {
   TableHeader,
   TableRow,
 } from '@heroui/react';
+import {TrashBin2} from '@solar-icons/react-perf/BoldDuotone';
 import {OverlayScrollbarsComponent, OverlayScrollbarsComponentRef} from 'overlayscrollbars-react';
 import {Dispatch, ReactNode, RefObject, SetStateAction, useEffect, useState} from 'react';
 
 import {useAppState} from '../../../../../../../src/renderer/mainWindow/redux/reducers/app';
 import {RequirementData} from '../../../../../cross/CrossExtTypes';
-import {TrashDuo_Icon} from '../../../SvgIcons';
 
 type TableReq = {
   key: string;
@@ -88,7 +88,7 @@ export default function RequirementsManager({requirements, setRequirements, scro
               }
               size="sm"
               aria-label="Operator selection"
-              classNames={{mainWrapper: '!min-w-20'}}
+              classNames={{mainWrapper: 'min-w-20!'}}
               defaultSelectedKeys={[req.versionOperator || 'all']}>
               {operators.map(op => (
                 <SelectItem key={op.key} aria-label={op.label}>
@@ -104,7 +104,7 @@ export default function RequirementsManager({requirements, setRequirements, scro
               variant="flat"
               onPress={() => handleDeleteRequirement(req.name)}
               isIconOnly>
-              <TrashDuo_Icon className="size-3.5" />
+              <TrashBin2 className="size-3.5" />
             </Button>
           ),
         };

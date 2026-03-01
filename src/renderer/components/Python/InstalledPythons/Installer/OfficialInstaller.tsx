@@ -1,17 +1,16 @@
 import {Button, CircularProgress, Input, Link, Listbox, ListboxItem, Progress, Tooltip} from '@heroui/react';
 import {lynxTopToast} from '@lynx/utils/hooks';
+import {Circle_Icon} from '@lynx_assets/icons';
 import {formatSize} from '@lynx_common/utils';
-import {DownloadMinimalistic} from '@solar-icons/react-perf/BoldDuotone';
+import {DownloadMinimalistic, Refresh, ShieldWarning} from '@solar-icons/react-perf/BoldDuotone';
 import {isEmpty, isNil, isString} from 'lodash';
 import {OverlayScrollbarsComponent} from 'overlayscrollbars-react';
 import {Dispatch, SetStateAction, useEffect, useState} from 'react';
 import {useDispatch} from 'react-redux';
 
 import {useAppState} from '../../../../../../../src/renderer/mainWindow/redux/reducers/app';
-import {Circle_Icon, Refresh_Icon} from '../../../../../../../src/renderer/shared/assets/icons';
 import {DlProgressOfficial, PythonVersion} from '../../../../../cross/CrossExtTypes';
 import pIpc from '../../../../PIpc';
-import {Warn_Icon} from '../../../SvgIcons';
 
 type Props = {
   isOpen: boolean;
@@ -151,7 +150,7 @@ export default function InstallerOfficial({refresh, installed, closeModal, isOpe
             <Button
               size="sm"
               variant="flat"
-              startContent={<Refresh_Icon />}
+              startContent={<Refresh />}
               onPress={() => fetchPythonList(true)}
               isIconOnly
             />
@@ -160,7 +159,7 @@ export default function InstallerOfficial({refresh, installed, closeModal, isOpe
       )}
       {errorLoadingVersion ? (
         <div className="size-full py-2 text-danger flex flex-col items-center justify-center gap-4">
-          <Warn_Icon className="size-20" />
+          <ShieldWarning className="size-20" />
           <span className="text-lg">{errorLoadingVersion.title}</span>
           <span className="text-warning text-sm">{errorLoadingVersion.description}</span>
         </div>

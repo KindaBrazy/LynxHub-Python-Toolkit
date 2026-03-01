@@ -1,12 +1,12 @@
 import {Alert, Button, Modal, ModalBody, ModalContent, ModalFooter, ModalHeader} from '@heroui/react';
 import {lynxTopToast} from '@lynx/utils/hooks';
 import {Download} from '@solar-icons/react-perf/BoldDuotone';
+import {Plus} from 'lucide-react';
 import {OverlayScrollbarsComponent} from 'overlayscrollbars-react';
 import {useCallback, useState} from 'react';
 import {useDispatch} from 'react-redux';
 
 import {useAppState} from '../../../../../../../../src/renderer/mainWindow/redux/reducers/app';
-import {Add_Icon} from '../../../../../../../../src/renderer/shared/assets/icons';
 import pIpc from '../../../../../PIpc';
 import Installer from './Installer';
 
@@ -55,7 +55,7 @@ export default function InstallerModal({refresh, pythonPath, show}: Props) {
 
   return (
     <>
-      <Button size="sm" variant="solid" startContent={<Add_Icon />} onPress={() => setIsOpen(true)}>
+      <Button size="sm" variant="solid" onPress={() => setIsOpen(true)} startContent={<Plus size={12} />}>
         Install Package
       </Button>
       <Modal

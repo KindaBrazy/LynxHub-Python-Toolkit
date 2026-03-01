@@ -2,17 +2,18 @@ import {Button, Chip, Input, Modal, ModalBody, ModalContent, ModalFooter, ModalH
 import EmptyStateCard from '@lynx/components/EmptyStateCard';
 import {lynxTopToast} from '@lynx/utils/hooks';
 import filesIpc from '@lynx_shared/ipc/files';
+import {Checklist, Diskette, File} from '@solar-icons/react-perf/BoldDuotone';
 import {isEmpty} from 'lodash';
+import {Plus} from 'lucide-react';
 import {OverlayScrollbarsComponentRef} from 'overlayscrollbars-react';
 import {Dispatch, SetStateAction, useEffect, useRef, useState} from 'react';
 import {useDispatch} from 'react-redux';
 
 import {searchInStrings} from '../../../../../../../src/renderer/mainWindow/utils';
 import {modalMotionProps} from '../../../../../../../src/renderer/mainWindow/utils/constants';
-import {Add_Icon, Circle_Icon, FileDuo_Icon} from '../../../../../../../src/renderer/shared/assets/icons';
+import {Circle_Icon} from '../../../../../../../src/renderer/shared/assets/icons';
 import {RequirementData} from '../../../../../cross/CrossExtTypes';
 import pIpc from '../../../../PIpc';
-import {Checklist_Icon, Save_Icon} from '../../../SvgIcons';
 import RequirementsManager from './RequirementsManager';
 
 type Props = {
@@ -148,7 +149,7 @@ export default function RequirementsBtn({id, projectPath, setIsReqAvailable, sho
               {!isEmpty(filePath) && (
                 <div className="flex gap-x-2">
                   <div>
-                    <Button size="sm" variant="flat" startContent={<Add_Icon />} onPress={handleAddRequirement}>
+                    <Button size="sm" variant="flat" onPress={handleAddRequirement} startContent={<Plus size={14} />}>
                       Add
                     </Button>
                   </div>
@@ -160,7 +161,7 @@ export default function RequirementsBtn({id, projectPath, setIsReqAvailable, sho
                 endContent={<div />}
                 onPress={openFilePath}
                 className="shrink-0 justify-between"
-                startContent={<FileDuo_Icon className="size-3.5" />}
+                startContent={<File className="size-3.5" />}
                 fullWidth>
                 {filePath || 'Choose or Create requirements file...'}
               </Button>
@@ -171,7 +172,7 @@ export default function RequirementsBtn({id, projectPath, setIsReqAvailable, sho
                 value={searchValue}
                 onValueChange={setSearchValue}
                 placeholder="Search requirements..."
-                startContent={<Circle_Icon className="size-4" />}
+                startContent={<Circle_Icon className="size-3.5" />}
               />
             )}
           </ModalHeader>
@@ -180,7 +181,12 @@ export default function RequirementsBtn({id, projectPath, setIsReqAvailable, sho
               <div className="size-full text-center mb-2">
                 <EmptyStateCard
                   action={
-                    <Button variant="flat" color="primary" key="create_req_file" onPress={openFilePath}>
+                    <Button
+                      variant="flat"
+                      color="primary"
+                      key="create_req_file"
+                      onPress={openFilePath}
+                      startContent={<File className="size-3.5" />}>
                       Choose or Create requirements file
                     </Button>
                   }
@@ -211,7 +217,7 @@ export default function RequirementsBtn({id, projectPath, setIsReqAvailable, sho
               color="success"
               isLoading={isSaving}
               onPress={handleSaveRequirements}
-              startContent={!isSaving && <Save_Icon className="size-3.5" />}>
+              startContent={!isSaving && <Diskette className="size-3.5" />}>
               {!isSaving && 'Save'}
             </Button>
             <Button color="warning" variant="light" className="w-fit" onPress={() => setIsOpen(false)}>
@@ -224,7 +230,7 @@ export default function RequirementsBtn({id, projectPath, setIsReqAvailable, sho
         size="sm"
         variant="solid"
         onPress={() => setIsOpen(true)}
-        startContent={<Checklist_Icon className="size-3.5" />}>
+        startContent={<Checklist className="size-3.5" />}>
         Manage Requirements
       </Button>
     </>

@@ -1,5 +1,6 @@
 import {Button} from '@heroui/react';
 import {lynxTopToast} from '@lynx/utils/hooks';
+import {ShieldWarning} from '@solar-icons/react-perf/BoldDuotone';
 import {capitalize, startCase} from 'lodash';
 import {Dispatch, SetStateAction, useCallback, useMemo, useState} from 'react';
 import {useDispatch} from 'react-redux';
@@ -8,7 +9,6 @@ import {PackageInfo, PackageUpdate} from '../../../../../../cross/CrossExtTypes'
 import {getUpdateVersionColor} from '../../../../../../cross/CrossExtUtils';
 import pIpc from '../../../../../PIpc';
 import {usePythonToolkitState} from '../../../../../reducer';
-import {Warn_Icon} from '../../../../SvgIcons';
 import ActionButtons from './ActionButtons';
 
 type Props = {
@@ -98,7 +98,7 @@ export default function TableItem({
             <div className="flex flex-row items-center gap-x-1 text-medium font-semibold">
               <span>{itemName}</span>
               {item.updateVersion && (
-                <Warn_Icon className={`${getUpdateVersionColor(item.version, item.updateVersion)} size-[1.1rem]`} />
+                <ShieldWarning className={`${getUpdateVersionColor(item.version, item.updateVersion)} size-[1.1rem]`} />
               )}
             </div>
           </div>

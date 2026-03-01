@@ -1,10 +1,10 @@
 import {Button} from '@heroui/react';
 import {lynxTopToast} from '@lynx/utils/hooks';
+import {Broom} from '@solar-icons/react-perf/BoldDuotone';
 import {useEffect, useState} from 'react';
 import {useDispatch} from 'react-redux';
 
 import LynxSwitch from '../../../../../src/renderer/mainWindow/components/LynxSwitch';
-import {BroomDuo_Icon} from '../../../../../src/renderer/shared/assets/icons';
 import pIpc from '../../PIpc';
 import {PythonToolkitActions, usePythonToolkitState} from '../../reducer';
 
@@ -56,7 +56,7 @@ export default function CacheDirUsage() {
           onPress={clearCache}
           className="h-14 shrink-0"
           isDisabled={!cacheStorageUsage}
-          startContent={!clearing && <BroomDuo_Icon />}
+          startContent={!clearing && <Broom />}
           fullWidth>
           {!clearing ? 'Clear Cache' : 'Clearing...'}
         </Button>

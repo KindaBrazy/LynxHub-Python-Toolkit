@@ -1,7 +1,7 @@
 import {Button, Dropdown, DropdownItem, DropdownMenu, DropdownSection, DropdownTrigger} from '@heroui/react';
+import {Filter} from '@solar-icons/react-perf/BoldDuotone';
 import {Dispatch, SetStateAction, useEffect, useState} from 'react';
 
-import {FilterDuo_Icon} from '../../../../../../../../src/renderer/shared/assets/icons';
 import {FilterKeys} from '../../../../../../cross/CrossExtTypes';
 
 type Props = {
@@ -33,7 +33,7 @@ export default function FilterButton({setSelectedFilter, updateAvailable}: Props
     <Dropdown className="border-1 border-foreground-100">
       <DropdownTrigger>
         <Button variant="flat" isIconOnly>
-          <FilterDuo_Icon />
+          <Filter size={16} />
         </Button>
       </DropdownTrigger>
       <DropdownMenu

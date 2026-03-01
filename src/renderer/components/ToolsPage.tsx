@@ -1,11 +1,11 @@
 import {Button} from '@heroui/react';
+import {SettingsMinimalistic} from '@solar-icons/react-perf/BoldDuotone';
 import {useEffect, useMemo, useState} from 'react';
 import {useDispatch} from 'react-redux';
 
 import {ToolsCard} from '../../../../src/renderer/mainWindow/components/ToolsCard';
 import {tabsActions, useTabsState} from '../../../../src/renderer/mainWindow/redux/reducers/tabs';
 import {AppDispatch} from '../../../../src/renderer/mainWindow/redux/store';
-import {SettingsMinimal_Icon} from '../../../../src/renderer/shared/assets/icons';
 import pIpc from '../PIpc';
 import {PythonToolkitActions} from '../reducer';
 import {cacheUrl} from '../Utils';
@@ -61,7 +61,7 @@ export default function ToolsPage() {
       <ToolsCard
         footer={
           <Button as="div" variant="flat" color="primary" onPress={openSettings} isIconOnly>
-            <SettingsMinimal_Icon className="size-4" />
+            <SettingsMinimalistic className="size-5" />
           </Button>
         }
         // @ts-expect-error Them image url can be undefined

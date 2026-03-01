@@ -1,11 +1,11 @@
 import {Button, ButtonGroup, Dropdown, DropdownItem, DropdownMenu, DropdownTrigger, Selection} from '@heroui/react';
+import {AltArrowDown} from '@solar-icons/react-perf/Bold';
+import {Download, Magnifier} from '@solar-icons/react-perf/BoldDuotone';
 import {isEmpty} from 'lodash';
 import {Dispatch, SetStateAction, useEffect, useMemo, useState} from 'react';
 
-import {Download2_Icon, Magnifier_Icon} from '../../../../../../../../src/renderer/shared/assets/icons';
 import {FilterKeys, PackageInfo, SitePackages_Info} from '../../../../../../cross/CrossExtTypes';
 import pIpc from '../../../../../PIpc';
-import {AltArrow_Icon} from '../../../../SvgIcons';
 
 type Props = {
   packagesUpdate: SitePackages_Info[];
@@ -114,7 +114,7 @@ export default function UpdateButton({
       color="success"
       onPress={update}
       isLoading={isUpdating}
-      startContent={!isUpdating && <Download2_Icon />}
+      startContent={!isUpdating && <Download />}
       isDisabled={selectedKeys !== 'all' && selectedKeys.size === 0}>
       {isUpdating ? <span>Updating ({selectedCount})...</span> : <span>Update {selectedCount}</span>}
     </Button>
@@ -124,13 +124,13 @@ export default function UpdateButton({
         size="sm"
         onPress={checkForUpdate}
         isLoading={checkingUpdates}
-        startContent={!checkingUpdates && <Magnifier_Icon />}>
+        startContent={!checkingUpdates && <Magnifier />}>
         {labelsMap[selectedOptionValue]}
       </Button>
       <Dropdown placement="bottom-end">
         <DropdownTrigger>
           <Button size="sm" variant="flat" color="default" isDisabled={!isReqAvailable || checkingUpdates} isIconOnly>
-            <AltArrow_Icon className="size-4" />
+            <AltArrowDown className="size-4" />
           </Button>
         </DropdownTrigger>
         <DropdownMenu

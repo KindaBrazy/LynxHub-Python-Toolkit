@@ -2,11 +2,12 @@ import {Button, Spinner} from '@heroui/react';
 import EmptyStateCard from '@lynx/components/EmptyStateCard';
 import {lynxTopToast} from '@lynx/utils/hooks';
 import filesIpc from '@lynx_shared/ipc/files';
+import {FolderOpen, Refresh} from '@solar-icons/react-perf/BoldDuotone';
 import {cloneDeep, isEmpty} from 'lodash';
+import {Plus} from 'lucide-react';
 import {Dispatch, SetStateAction, useCallback, useEffect, useState} from 'react';
 import {useDispatch} from 'react-redux';
 
-import {Add_Icon, FolderDuo_Icon, RefreshDuo_Icon} from '../../../../../../src/renderer/shared/assets/icons';
 import {PythonInstallation} from '../../../../cross/CrossExtTypes';
 import {bytesToMegabytes} from '../../../../cross/CrossExtUtils';
 import pIpc from '../../../PIpc';
@@ -181,17 +182,17 @@ export default function InstalledPythons({
       <div className="w-full flex flex-row justify-between items-center">
         <span className="font-bold">Installed Versions</span>
         <div className="justify-center items-center flex gap-x-2">
-          <Button variant="solid" onPress={openInstallModal} startContent={<Add_Icon />}>
+          <Button variant="solid" onPress={openInstallModal} startContent={<Plus size={14} />}>
             Install Version
           </Button>
           <Button
             variant="flat"
             onPress={locateVenv}
             isLoading={isLocating}
-            startContent={!isLocating && <FolderDuo_Icon />}>
+            startContent={!isLocating && <FolderOpen />}>
             {!isLocating && 'Locate'}
           </Button>
-          <Button variant="flat" startContent={<RefreshDuo_Icon />} onPress={() => getInstalledPythons(true)}>
+          <Button variant="flat" startContent={<Refresh />} onPress={() => getInstalledPythons(true)}>
             Refresh List
           </Button>
         </div>
