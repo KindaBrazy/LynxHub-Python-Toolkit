@@ -26,7 +26,7 @@ export default function CardMenu({useCardStore}: Props) {
   if (!ModulesThatSupportPython.includes(id)) return null;
 
   return (
-    <DropdownSection key="python_toolkit" showDivider>
+    <DropdownSection key="python_toolkit" classNames={{divider: 'bg-foreground-100'}} showDivider>
       <DropdownItem
         onPress={onPress}
         key="python_deps"
