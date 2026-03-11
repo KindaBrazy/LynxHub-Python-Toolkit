@@ -1,5 +1,5 @@
+import {ExtensionRendererApi} from '@lynx/plugins/extensions/types/api';
 import {storageUtilsChannels} from '@lynx_common/consts/ipcChannels/storage';
-import {ExtensionRendererApi} from '@lynx_common/types/plugins/extensions/api';
 
 import {ModulesThatSupportPython} from '../cross/CrossExtConstants';
 import {getStep} from './components/Modules/ModuleStepManager';
