@@ -1,7 +1,7 @@
 import {platform} from 'node:os';
 import {join, resolve} from 'node:path';
 
-import {isString} from 'lodash';
+import {isString} from 'lodash-es';
 
 import {Associates_StorageID} from '../../cross/CrossExtConstants';
 import {AssociateItem} from '../../cross/CrossExtTypes';

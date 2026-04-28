@@ -15,7 +15,7 @@ import {
 import EmptyStateCard from '@lynx/components/EmptyStateCard';
 import {DownloadMinimalistic} from '@solar-icons/react-perf/BoldDuotone';
 import {Refresh, ShieldWarning} from '@solar-icons/react-perf/BoldDuotone';
-import {isEmpty, isNil, isString} from 'lodash';
+import {isEmpty, isNil, isString} from 'lodash-es';
 import {OverlayScrollbarsComponent} from 'overlayscrollbars-react';
 import {Dispatch, SetStateAction, useEffect, useState} from 'react';
 

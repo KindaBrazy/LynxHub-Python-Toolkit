@@ -1,5 +1,5 @@
 import axios from 'axios';
-import {compact} from 'lodash';
+import {compact} from 'lodash-es';
 import semver, {compare, lt, satisfies} from 'semver';
 
 import {MaxConcurrent_StorageID, MaxRetry_StorageID} from '../../../cross/CrossExtConstants';

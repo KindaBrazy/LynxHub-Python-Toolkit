@@ -10,7 +10,7 @@ import {
   TableRow,
 } from '@heroui/react';
 import EmptyStateCard from '@lynx/components/EmptyStateCard';
-import {cloneDeep, isEmpty} from 'lodash';
+import {cloneDeep, isEmpty} from 'lodash-es';
 import {OverlayScrollbarsComponent} from 'overlayscrollbars-react';
 import {Dispatch, SetStateAction, useMemo} from 'react';
 

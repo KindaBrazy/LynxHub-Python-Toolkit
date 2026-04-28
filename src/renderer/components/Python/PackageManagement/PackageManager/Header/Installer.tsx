@@ -3,7 +3,7 @@ import CopyClipboard from '@lynx/components/CopyClipboard';
 import {lynxTopToast} from '@lynx/utils/hooks';
 import filesIpc from '@lynx_shared/ipc/files';
 import {Checklist, TrashBin2} from '@solar-icons/react-perf/BoldDuotone';
-import {compact, isEmpty} from 'lodash';
+import {compact, isEmpty} from 'lodash-es';
 import {X} from 'lucide-react';
 import {KeyboardEvent, useEffect, useState} from 'react';
 import {useDispatch} from 'react-redux';

@@ -3,7 +3,7 @@ import EmptyStateCard from '@lynx/components/EmptyStateCard';
 import {lynxTopToast} from '@lynx/utils/hooks';
 import filesIpc from '@lynx_shared/ipc/files';
 import {Checklist, Diskette, File} from '@solar-icons/react-perf/BoldDuotone';
-import {isEmpty} from 'lodash';
+import {isEmpty} from 'lodash-es';
 import {Plus} from 'lucide-react';
 import {OverlayScrollbarsComponentRef} from 'overlayscrollbars-react';
 import {Dispatch, SetStateAction, useEffect, useRef, useState} from 'react';

@@ -3,7 +3,7 @@ import {basename, dirname, join} from 'node:path';
 import {exec} from 'child_process';
 import {constants} from 'fs';
 import {existsSync, promises} from 'graceful-fs';
-import {compact, isEmpty, isNil} from 'lodash';
+import {compact, isEmpty, isNil} from 'lodash-es';
 import {arch, homedir, platform} from 'os';
 import {promisify} from 'util';
 import which from 'which';

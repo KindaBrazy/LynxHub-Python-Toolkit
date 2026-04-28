@@ -28,7 +28,7 @@ import {
   TrashBin2,
 } from '@solar-icons/react-perf/BoldDuotone';
 import {CheckRead} from '@solar-icons/react-perf/LineDuotone';
-import {isNil, startCase} from 'lodash';
+import {isNil, startCase} from 'lodash-es';
 import {X} from 'lucide-react';
 import {useCallback, useMemo, useState} from 'react';
 import {useDispatch} from 'react-redux';

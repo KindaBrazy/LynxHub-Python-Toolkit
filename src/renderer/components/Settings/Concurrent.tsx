@@ -1,5 +1,5 @@
 import {NumberInput} from '@heroui/react';
-import {debounce} from 'lodash';
+import {debounce} from 'lodash-es';
 import {useEffect, useMemo, useState} from 'react';
 
 import pIpc from '../../PIpc';

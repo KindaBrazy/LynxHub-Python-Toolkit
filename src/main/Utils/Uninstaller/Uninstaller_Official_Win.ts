@@ -4,7 +4,7 @@ import {dirname, join} from 'node:path';
 import {promisify} from 'node:util';
 
 import {existsSync, readdirSync} from 'graceful-fs';
-import {isNil} from 'lodash';
+import {isNil} from 'lodash-es';
 
 import {findFileInDir, parseVersion, removeDir} from '../PythonUtils';
 

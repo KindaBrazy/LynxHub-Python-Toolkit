@@ -18,7 +18,7 @@ import {lynxTopToast} from '@lynx/utils/hooks';
 import filesIpc from '@lynx_shared/ipc/files';
 import {BoxMinimalistic, Diskette, Folder2, MenuDots, TrashBin2} from '@solar-icons/react-perf/BoldDuotone';
 import {SHA256} from 'crypto-js';
-import {isNil} from 'lodash';
+import {isNil} from 'lodash-es';
 import {X} from 'lucide-react';
 import {FormEvent, useCallback, useEffect, useMemo, useState} from 'react';
 import {useDispatch} from 'react-redux';

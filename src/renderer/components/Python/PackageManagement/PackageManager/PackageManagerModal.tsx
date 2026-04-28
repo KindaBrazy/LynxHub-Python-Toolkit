@@ -1,5 +1,5 @@
 import {Modal, ModalContent, ModalFooter, Selection} from '@heroui/react';
-import {isEmpty} from 'lodash';
+import {isEmpty} from 'lodash-es';
 import {Dispatch, ReactNode, SetStateAction, useEffect, useState} from 'react';
 
 import {searchInStrings} from '../../../../../../../src/renderer/mainWindow/utils';

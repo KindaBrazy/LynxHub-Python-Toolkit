@@ -3,7 +3,7 @@ import {lynxTopToast} from '@lynx/utils/hooks';
 import {Circle_Icon} from '@lynx_assets/icons';
 import {formatSize} from '@lynx_common/utils';
 import {DownloadMinimalistic, Refresh, ShieldWarning} from '@solar-icons/react-perf/BoldDuotone';
-import {isEmpty, isNil, isString} from 'lodash';
+import {isEmpty, isNil, isString} from 'lodash-es';
 import {OverlayScrollbarsComponent} from 'overlayscrollbars-react';
 import {Dispatch, SetStateAction, useEffect, useState} from 'react';
 import {useDispatch} from 'react-redux';

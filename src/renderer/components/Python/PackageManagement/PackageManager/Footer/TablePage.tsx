@@ -1,5 +1,5 @@
 import {Pagination} from '@heroui/react';
-import {isEmpty} from 'lodash';
+import {isEmpty} from 'lodash-es';
 import {Dispatch, SetStateAction, useEffect, useMemo, useState} from 'react';
 
 import {PackageInfo} from '../../../../../../cross/CrossExtTypes';

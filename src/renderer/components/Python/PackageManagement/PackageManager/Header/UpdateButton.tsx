@@ -1,7 +1,7 @@
 import {Button, ButtonGroup, Dropdown, DropdownItem, DropdownMenu, DropdownTrigger, Selection} from '@heroui/react';
 import {AltArrowDown} from '@solar-icons/react-perf/Bold';
 import {Download, Magnifier} from '@solar-icons/react-perf/BoldDuotone';
-import {isEmpty} from 'lodash';
+import {isEmpty} from 'lodash-es';
 import {Dispatch, SetStateAction, useEffect, useMemo, useState} from 'react';
 
 import {FilterKeys, PackageInfo, SitePackages_Info} from '../../../../../../cross/CrossExtTypes';

@@ -3,7 +3,7 @@ import EmptyStateCard from '@lynx/components/EmptyStateCard';
 import {lynxTopToast} from '@lynx/utils/hooks';
 import filesIpc from '@lynx_shared/ipc/files';
 import {FolderOpen, Refresh} from '@solar-icons/react-perf/BoldDuotone';
-import {cloneDeep, isEmpty} from 'lodash';
+import {cloneDeep, isEmpty} from 'lodash-es';
 import {Plus} from 'lucide-react';
 import {Dispatch, SetStateAction, useCallback, useEffect, useState} from 'react';
 import {useDispatch} from 'react-redux';

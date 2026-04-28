@@ -1,5 +1,5 @@
 import {readdirSync, readFileSync, statSync, writeFileSync} from 'graceful-fs';
-import {isEmpty} from 'lodash';
+import {isEmpty} from 'lodash-es';
 import {join} from 'path';
 
 import {IdPathType, RequirementData} from '../../../cross/CrossExtTypes';

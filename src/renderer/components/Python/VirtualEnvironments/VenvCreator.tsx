@@ -2,7 +2,7 @@ import {Button, Input, Popover, PopoverContent, PopoverTrigger, Select, SelectIt
 import {lynxTopToast} from '@lynx/utils/hooks';
 import filesIpc from '@lynx_shared/ipc/files';
 import {FolderOpen} from '@solar-icons/react-perf/BoldDuotone';
-import {capitalize, isEmpty} from 'lodash';
+import {capitalize, isEmpty} from 'lodash-es';
 import {Plus} from 'lucide-react';
 import {useCallback, useEffect, useMemo, useState} from 'react';
 import {useDispatch} from 'react-redux';

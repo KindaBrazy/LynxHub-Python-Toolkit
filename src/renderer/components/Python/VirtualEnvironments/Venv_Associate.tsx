@@ -1,6 +1,6 @@
 import {Avatar, Button, Chip, Dropdown, DropdownItem, DropdownMenu, DropdownTrigger} from '@heroui/react';
 import {extractGitUrl} from '@lynx_common/utils';
-import {isEmpty} from 'lodash';
+import {isEmpty} from 'lodash-es';
 import {Plus} from 'lucide-react';
 import {useCallback, useEffect, useState} from 'react';
 import {useDispatch} from 'react-redux';

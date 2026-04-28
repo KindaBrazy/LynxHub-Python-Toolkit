@@ -1,5 +1,5 @@
 import {Radio, RadioGroup} from '@heroui/react';
-import {capitalize, startCase} from 'lodash';
+import {capitalize, startCase} from 'lodash-es';
 import {useEffect, useState} from 'react';
 import {useDispatch} from 'react-redux';
 

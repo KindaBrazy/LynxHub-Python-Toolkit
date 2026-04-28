@@ -1,7 +1,7 @@
 import {join} from 'node:path';
 
 import {exec} from 'child_process';
-import {compact, filter, isEmpty, isNil} from 'lodash';
+import {compact, filter, isEmpty, isNil} from 'lodash-es';
 
 import {pythonChannels, VenvCreateOptions, VenvInfo} from '../../../cross/CrossExtTypes';
 import {getAppManager, getStorage} from '../../DataHolder';

@@ -15,7 +15,7 @@ import {
 import {lynxTopToast} from '@lynx/utils/hooks';
 import {AltArrowDown, AltArrowUp} from '@solar-icons/react-perf/Bold';
 import {BoxMinimalistic} from '@solar-icons/react-perf/BoldDuotone';
-import {isEmpty} from 'lodash';
+import {isEmpty} from 'lodash-es';
 import {memo, useCallback, useEffect, useState} from 'react';
 import {useDispatch} from 'react-redux';
 import semver, {compare, valid} from 'semver';

@@ -1,5 +1,5 @@
 import {exec} from 'child_process';
-import {isNil} from 'lodash';
+import {isNil} from 'lodash-es';
 import semver from 'semver';
 
 interface PackageInfo {

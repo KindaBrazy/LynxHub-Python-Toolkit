@@ -1,7 +1,7 @@
 import {Button} from '@heroui/react';
 import {lynxTopToast} from '@lynx/utils/hooks';
 import {ShieldWarning} from '@solar-icons/react-perf/BoldDuotone';
-import {capitalize, startCase} from 'lodash';
+import {capitalize, startCase} from 'lodash-es';
 import {Dispatch, SetStateAction, useCallback, useMemo, useState} from 'react';
 import {useDispatch} from 'react-redux';
 
