@@ -1,10 +1,9 @@
 @import 'tailwindcss';
 
-@plugin '../../../src/renderer/shared/heroUIConfig.ts';
+@plugin './heroUIConfig.ts';
 
 @source '../../../node_modules/@heroui/theme/dist/**/*.{js,ts,jsx,tsx}';
 @source '../**/*.{js,ts,jsx,tsx}';
-@source '../../../src/renderer/main_window/components/SpotlightCard.tsx';
 @source '../../../src/renderer/main_window/components/ToolsCard.tsx';
 
 @custom-variant dark (&:is(.dark *));

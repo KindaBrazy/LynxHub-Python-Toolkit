@@ -106,7 +106,7 @@ export const Installer_PythonSelector = (
 
         <Alert
           description={
-            'Use the Python Toolkit on the Tools page to install new Python versions' +
+            'Use the Python Toolkit in the Tools page to install new Python versions' +
             ' or create virtual environments. You can then return here to select it.'
           }
           color="primary"
