@@ -1,29 +1,23 @@
 import {
   Button,
   Card,
-  CardBody,
-  CardFooter,
-  CardHeader,
   Chip,
-  Divider,
+  Description,
   Dropdown,
-  DropdownItem,
-  DropdownMenu,
-  DropdownTrigger,
+  Label,
   Popover,
-  PopoverContent,
-  PopoverTrigger,
-  Progress,
+  ProgressBar,
+  Separator,
   Spinner,
-} from '@heroui/react';
-import {useOverlayState} from '@heroui-v3/react';
+  useOverlayState,
+} from '@heroui-v3/react';
 import {topToast} from '@lynx/layouts/ToastProviders';
 import filesIpc from '@lynx_shared/ipc/files';
 import {
   BoxMinimalistic,
   CheckCircle,
   Diskette,
-  Folder2,
+  FolderOpen,
   MenuDots,
   Refresh,
   TrashBin2,
@@ -136,13 +130,8 @@ export default function InstalledCard({python, diskUsage, maxDiskValue, updateDe
   const defaultChip = useMemo(() => {
     if (python.isDefault && python.isLynxHubDefault) {
       return (
-        <Chip
-          size="sm"
-          radius="sm"
-          variant="flat"
-          color="success"
-          startContent={<CheckCircle />}
-          classNames={{content: 'font-semibold!'}}>
+        <Chip size="sm" variant="soft" color="success" className="font-semibold! px-2">
+          <CheckCircle />
           System & LynxHub
         </Chip>
       );
@@ -150,13 +139,8 @@ export default function InstalledCard({python, diskUsage, maxDiskValue, updateDe
 
     if (python.isDefault) {
       return (
-        <Chip
-          size="sm"
-          radius="sm"
-          variant="light"
-          color="secondary"
-          startContent={<CheckCircle />}
-          classNames={{content: 'font-semibold!'}}>
+        <Chip size="sm" variant="soft" color="default" className="font-semibold! px-2">
+          <CheckCircle />
           System
         </Chip>
       );
@@ -164,13 +148,8 @@ export default function InstalledCard({python, diskUsage, maxDiskValue, updateDe
 
     if (python.isLynxHubDefault) {
       return (
-        <Chip
-          size="sm"
-          radius="sm"
-          variant="light"
-          color="primary"
-          startContent={<CheckCircle />}
-          classNames={{content: 'font-semibold!'}}>
+        <Chip size="sm" variant="soft" color="accent" className="font-semibold! px-2">
+          <CheckCircle />
           LynxHub
         </Chip>
       );
@@ -197,15 +176,15 @@ export default function InstalledCard({python, diskUsage, maxDiskValue, updateDe
       />
       {isUninstalling && (
         <div className="absolute size-full dark:bg-black/50 bg-white/50 z-10 flex justify-center items-center">
-          <div className=" dark:bg-black/80 bg-white/80 p-4 rounded-lg flex flex-col space-y-2">
-            <Spinner color="warning" />
-            <span>Uninstalling, Please wait...</span>
+          <div className={'bg-surface-tertiary shadow-lg p-4 rounded-2xl flex flex-col space-y-2 items-center'}>
+            <Spinner size="lg" color="danger" />
+            <Description className="text-sm">Uninstalling, Please wait...</Description>
           </div>
         </div>
       )}
-      <Card as="div" className={`min-w-108 grow transition-all duration-300 cursor-default ${borderColor}`} isPressable>
-        <CardHeader className="flex flex-row justify-between items-center py-1 px-4">
-          <div className="flex flex-col my-3">
+      <Card className={`w-120 transition-all py-4 duration-200 ${borderColor}`}>
+        <Card.Header className="flex flex-row justify-between items-center">
+          <div className="flex flex-col">
             <div className="flex flex-row items-center gap-x-2">
               <Python_Icon className="size-4 text-yellow-300" />
               Python {python.version}
@@ -213,138 +192,119 @@ export default function InstalledCard({python, diskUsage, maxDiskValue, updateDe
             </div>
             <div className="flex items-center gap-x-2">
               <span className="text-tiny text-foreground-500">{python.architecture}</span>
-              <Divider orientation="vertical" className="h-2 bg-foreground-200" />
+              <Separator className="h-2 w-px" />
               <span className={'text-tiny ' + installTypeColor}>{startCase(python.installationType)}</span>
               {python.installationType === 'conda' && (
                 <>
-                  <Divider orientation="vertical" className="h-2 bg-foreground-200" />
+                  <Separator className="h-2 w-px" />
                   <span className={'text-tiny text-cyan-500'}>{python.condaName}</span>
                 </>
               )}
             </div>
           </div>
           <div className="space-x-1 flex items-center">
-            <Dropdown className="dark:bg-LynxRaisinBlack">
-              <DropdownTrigger>
-                <Button size="sm" variant="light" isIconOnly>
-                  <MenuDots className="rotate-90 size-3.5" />
-                </Button>
-              </DropdownTrigger>
-              <DropdownMenu>
-                {window.osPlatform === 'win32' ? (
-                  <>
-                    <DropdownItem
-                      variant="flat"
-                      color="secondary"
-                      key="system-default"
-                      onPress={makeDefault}
-                      textValue="Set as System Default"
-                      startContent={python.isDefault ? <Refresh className="size-4" /> : <CheckRead size={16} />}>
-                      Set as <span className="font-bold text-secondary">System Default</span>
-                    </DropdownItem>
-                    <DropdownItem
-                      variant="flat"
-                      color="success"
-                      key="lynxhub-default"
-                      onPress={makeLynxDefault}
-                      textValue="Set as LynxHub Default"
-                      startContent={python.isLynxHubDefault ? <Refresh className="size-4" /> : <CheckRead size={16} />}>
-                      Set as <span className="font-bold text-primary">LynxHub Default</span>
-                    </DropdownItem>
-                  </>
-                ) : (
-                  <DropdownItem key="hidden_set" className="hidden" />
-                )}
-                <DropdownItem
-                  key="package-manager"
-                  onPress={packageManagerModal.open}
-                  startContent={<BoxMinimalistic className="size-4" />}>
-                  Manage Packages
-                </DropdownItem>
-              </DropdownMenu>
+            <Dropdown>
+              <Button size="sm" variant="tertiary" isIconOnly>
+                <MenuDots className="rotate-90" />
+              </Button>
+              <Dropdown.Popover>
+                <Dropdown.Menu onAction={key => console.log(`Selected: ${key}`)}>
+                  {window.osPlatform === 'win32' && (
+                    <>
+                      <Dropdown.Item id="system-default" onPress={makeDefault} textValue="Set as System Default">
+                        {python.isDefault ? <Refresh className="size-4" /> : <CheckRead size={16} />}
+                        <Label>
+                          Set as <span className="font-bold text-secondary">System Default</span>
+                        </Label>
+                      </Dropdown.Item>
+                      <Dropdown.Item id="lynxhub-default" onPress={makeLynxDefault} textValue="Set as LynxHub Default">
+                        {python.isLynxHubDefault ? <Refresh className="size-4" /> : <CheckRead size={16} />}
+                        <Label>
+                          Set as <span className="font-bold text-primary">LynxHub Default</span>
+                        </Label>
+                      </Dropdown.Item>
+                    </>
+                  )}
+                  <Dropdown.Item id="package-manager" textValue="Manage Packages" onPress={packageManagerModal.open}>
+                    <BoxMinimalistic className="size-4" />
+                    <Label>Manage Packages</Label>
+                  </Dropdown.Item>
+                </Dropdown.Menu>
+              </Dropdown.Popover>
             </Dropdown>
 
-            <Popover
-              placement="left"
-              isOpen={popoverUninstaller}
-              onOpenChange={setPopoverUninstaller}
-              className="max-w-sm before:bg-foreground-100"
-              showArrow>
-              <PopoverTrigger>
-                <Button size="sm" color="danger" variant="light" isIconOnly>
-                  <TrashBin2 className="size-[50%]" />
-                </Button>
-              </PopoverTrigger>
-              <PopoverContent className="border border-foreground-100 dark:bg-DarkGray">
-                <div className="p-2 gap-y-3 flex flex-col">
-                  {/* Option 1: Full Uninstall */}
-                  <div>
-                    <strong className="text-sm">Complete Uninstall</strong>
-                    {python.installationType === 'conda' ? (
-                      <p className="text-xs text-default-600 mt-1">
-                        {`Permanently deletes the entire Conda environment "${python.condaName}" and all
+            <Popover isOpen={popoverUninstaller} onOpenChange={setPopoverUninstaller}>
+              <Button size="sm" variant="danger-soft" isIconOnly>
+                <TrashBin2 />
+              </Button>
+              <Popover.Content>
+                <Popover.Dialog className="max-w-sm">
+                  <Popover.Arrow />
+                  <div className="p-2 gap-y-3 flex flex-col">
+                    {/* Option 1: Full Uninstall */}
+                    <div>
+                      <strong className="text-sm">Complete Uninstall</strong>
+                      {python.installationType === 'conda' ? (
+                        <p className="text-xs text-default-600 mt-1">
+                          {`Permanently deletes the entire Conda environment "${python.condaName}" and all
                          its packages from your computer. Any AI using this environment will be
                           disconnected.`}
-                      </p>
-                    ) : window.osPlatform === 'darwin' ? (
-                      <p className="text-xs text-default-600 mt-1">
-                        {python.installPath.includes('/Library/Frameworks/Python.framework')
-                          ? `Removes Python ${python.version} from /Library/Frameworks and cleans up symlinks.
+                        </p>
+                      ) : window.osPlatform === 'darwin' ? (
+                        <p className="text-xs text-default-600 mt-1">
+                          {python.installPath.includes('/Library/Frameworks/Python.framework')
+                            ? `Removes Python ${python.version} from /Library/Frameworks and cleans up symlinks.
                              Admin password will be required.`
-                          : python.installPath.includes('/opt/homebrew') ||
-                              python.installPath.includes('/usr/local/Cellar')
-                            ? `Uninstalls Python ${python.version} via Homebrew (brew uninstall).
+                            : python.installPath.includes('/opt/homebrew') ||
+                                python.installPath.includes('/usr/local/Cellar')
+                              ? `Uninstalls Python ${python.version} via Homebrew (brew uninstall).
                                Any AI using this installation will be disconnected.`
-                            : `Permanently uninstalls Python ${python.version} and all its packages.
+                              : `Permanently uninstalls Python ${python.version} and all its packages.
                                Any AI using this installation will be disconnected.`}
-                      </p>
-                    ) : (
-                      <p className="text-xs text-default-600 mt-1">
-                        {`Permanently uninstalls Python version ${python.version} and all its packages
+                        </p>
+                      ) : (
+                        <p className="text-xs text-default-600 mt-1">
+                          {`Permanently uninstalls Python version ${python.version} and all its packages
                          from your computer. Any AI using this installation will be disconnected.`}
+                        </p>
+                      )}
+                      <Button size="sm" variant="danger" className="mt-2" onPress={uninstall} fullWidth>
+                        <TrashBin2 />
+                        Uninstall Permanently
+                      </Button>
+                    </div>
+
+                    {/* A visual separator between the two distinct options */}
+                    <Separator />
+
+                    {/* Option 2: Remove from List */}
+                    <div>
+                      <strong className="text-sm">Remove From List Only</strong>
+                      <p className="text-xs text-default-600 mt-1">
+                        Removes this entry from the list but does not delete the actual Python installation from your
+                        system. Any associated AI will be disconnected, but you can re-link them if you add this
+                        installation back later.
                       </p>
-                    )}
-                    <Button
-                      size="sm"
-                      color="danger"
-                      className="mt-2"
-                      onPress={uninstall}
-                      startContent={<TrashBin2 />}
-                      fullWidth>
-                      Uninstall Permanently
-                    </Button>
+                      <Button size="sm" className="mt-2" variant="danger-soft" onPress={removeFromList} fullWidth>
+                        <X />
+                        Remove from List
+                      </Button>
+                    </div>
                   </div>
-
-                  {/* A visual separator between the two distinct options */}
-                  <Divider />
-
-                  {/* Option 2: Remove from List */}
-                  <div>
-                    <strong className="text-sm">Remove From List Only</strong>
-                    <p className="text-xs text-default-600 mt-1">
-                      Removes this entry from the list but does not delete the actual Python installation from your
-                      system. Any associated AI will be disconnected, but you can re-link them if you add this
-                      installation back later.
-                    </p>
-                    <Button
-                      size="sm"
-                      color="warning"
-                      className="mt-2"
-                      onPress={removeFromList}
-                      startContent={<X size={14} />}
-                      fullWidth>
-                      Remove from List
-                    </Button>
-                  </div>
-                </div>
-              </PopoverContent>
+                </Popover.Dialog>
+              </Popover.Content>
             </Popover>
           </div>
-        </CardHeader>
+        </Card.Header>
 
-        <CardBody className="gap-y-4 px-4 flex flex-col text-sm">
-          <Button size="sm" variant="light" onPress={openPath} className="flex flex-row justify-start -ml-3 -mb-1.5">
-            <Folder2 className="shrink-0" />
+        <Card.Content className="gap-y-4 py-2 flex flex-col text-sm">
+          <Button
+            size="sm"
+            onPress={openPath}
+            variant="tertiary"
+            className="flex flex-row justify-start text-xs"
+            fullWidth>
+            <FolderOpen className="shrink-0 size-3" />
             <span className="truncate">{python.installFolder}</span>
           </Button>
           <div className="w-full justify-between flex flex-row">
@@ -354,30 +314,24 @@ export default function InstalledCard({python, diskUsage, maxDiskValue, updateDe
             </div>
             <span>{python.packages}</span>
           </div>
-          <Progress
-            label={
-              <div className="flex flex-row gap-x-2 items-center">
-                <Diskette className="size-3" />
-                <span>Disk Usage:</span>
-              </div>
-            }
-            size="sm"
-            minValue={0}
-            value={size}
-            color="primary"
-            maxValue={maxDiskValue}
-            isIndeterminate={isNil(size)}
-            valueLabel={formatSizeMB(size || 0)}
-            showValueLabel
-          />
-        </CardBody>
+          <ProgressBar size="sm" minValue={0} value={size} maxValue={maxDiskValue} isIndeterminate={isNil(size)}>
+            <Label className="flex flex-row gap-x-2 items-center">
+              <Diskette className="size-3" />
+              <span>Disk Usage:</span>
+            </Label>
+            <ProgressBar.Output>{formatSizeMB(size || 0)}</ProgressBar.Output>
+            <ProgressBar.Track>
+              <ProgressBar.Fill />
+            </ProgressBar.Track>
+          </ProgressBar>
+        </Card.Content>
 
-        <CardFooter className="flex-col gap-y-3">
+        <Card.Footer className="flex-col gap-y-3">
           <Venv_Associate
             folder={python.installFolder}
             type={python.installationType === 'conda' ? 'conda' : 'python'}
           />
-        </CardFooter>
+        </Card.Footer>
       </Card>
     </div>
   );

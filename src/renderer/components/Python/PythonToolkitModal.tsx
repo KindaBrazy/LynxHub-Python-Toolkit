@@ -1,7 +1,6 @@
-import {Tab, Tabs} from '@heroui/react';
-import {Modal, UseOverlayStateReturn} from '@heroui-v3/react';
+import {Key, Modal, Tabs, UseOverlayStateReturn} from '@heroui-v3/react';
 import TabModal from '@lynx/components/TabModal';
-import {Key, useState} from 'react';
+import {useState} from 'react';
 
 import {PythonInstallation} from '../../../cross/CrossExtTypes';
 import InstalledPythons from './InstalledPythons/InstalledPythons';
@@ -21,19 +20,24 @@ export default function PythonToolkitModal({state}: Props) {
     <TabModal isOpen={state.isOpen} onOpenChange={state.setOpen}>
       <Modal.CloseTrigger />
       <Modal.Header>
-        <Modal.Heading className="bg-foreground-100 shadow-sm">
-          <Tabs
-            color="primary"
-            onSelectionChange={setCurrentTab}
-            selectedKey={currentTab.toString()}
-            classNames={{tabList: 'bg-foreground-200'}}
-            fullWidth>
-            <Tab key="installation" title="Installations" />
-            <Tab key="venv" title="Virtual Environments" />
+        <Modal.Heading className="pt-5 pb-2">
+          <Tabs className="w-full" selectedKey={currentTab} onSelectionChange={setCurrentTab}>
+            <Tabs.ListContainer>
+              <Tabs.List aria-label="Options">
+                <Tabs.Tab id="installation">
+                  Installations
+                  <Tabs.Indicator />
+                </Tabs.Tab>
+                <Tabs.Tab id="venv">
+                  Virtual Environments
+                  <Tabs.Indicator />
+                </Tabs.Tab>
+              </Tabs.List>
+            </Tabs.ListContainer>
           </Tabs>
         </Modal.Heading>
       </Modal.Header>
-      <Modal.Body className="scrollbar-hide mb-0">
+      <Modal.Body className="scrollbar-hide">
         <InstalledPythons
           installedPythons={installedPythons}
           isLoadingPythons={isLoadingPythons}
