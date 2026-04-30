@@ -1,12 +1,11 @@
 import {Button, CircularProgress, Input, Link, Listbox, ListboxItem, Progress, Tooltip} from '@heroui/react';
-import {lynxTopToast} from '@lynx/utils/hooks';
+import {topToast} from '@lynx/layouts/ToastProviders';
 import {Circle_Icon} from '@lynx_assets/icons';
 import {formatSize} from '@lynx_common/utils';
 import {DownloadMinimalistic, Refresh, ShieldWarning} from '@solar-icons/react-perf/BoldDuotone';
 import {isEmpty, isNil, isString} from 'lodash-es';
 import {OverlayScrollbarsComponent} from 'overlayscrollbars-react';
 import {Dispatch, SetStateAction, useEffect, useState} from 'react';
-import {useDispatch} from 'react-redux';
 
 import {useAppState} from '../../../../../../../src/renderer/mainWindow/redux/reducers/app';
 import {DlProgressOfficial, PythonVersion} from '../../../../../cross/CrossExtTypes';
@@ -22,7 +21,6 @@ type Props = {
 
 export default function InstallerOfficial({refresh, installed, closeModal, isOpen, setCloseDisabled}: Props) {
   const isDarkMode = useAppState('darkMode');
-  const dispatch = useDispatch();
 
   const [versions, setVersions] = useState<PythonVersion[]>([]);
   const [searchVersions, setSearchVersions] = useState<PythonVersion[]>([]);
@@ -122,11 +120,11 @@ export default function InstallerOfficial({refresh, installed, closeModal, isOpe
         refresh(true);
         closeModal();
         console.log('installed', version);
-        lynxTopToast(dispatch).success(`Python${version.version} installed successfully.`);
+        topToast.success(`Python${version.version} installed successfully.`);
       })
       .catch(err => {
         console.log(err);
-        lynxTopToast(dispatch).error(`Failed to install python${version.version}!`);
+        topToast.danger(`Failed to install python${version.version}!`);
       })
       .finally(() => {
         setInstallingVersion(undefined);

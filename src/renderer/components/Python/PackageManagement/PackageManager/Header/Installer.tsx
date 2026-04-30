@@ -1,12 +1,11 @@
 import {Button, Divider, Input, Listbox, ListboxItem} from '@heroui/react';
 import CopyClipboard from '@lynx/components/CopyClipboard';
-import {lynxTopToast} from '@lynx/utils/hooks';
+import {topToast} from '@lynx/layouts/ToastProviders';
 import filesIpc from '@lynx_shared/ipc/files';
 import {Checklist, TrashBin2} from '@solar-icons/react-perf/BoldDuotone';
 import {compact, isEmpty} from 'lodash-es';
 import {X} from 'lucide-react';
 import {KeyboardEvent, useEffect, useState} from 'react';
-import {useDispatch} from 'react-redux';
 
 import pIpc from '../../../../../PIpc';
 
@@ -21,8 +20,6 @@ export default function Installer({setInstallCommand, setIsInstallDisabled}: Pro
   useEffect(() => {
     setIsInstallDisabled(packages.length <= 0);
   }, [packages]);
-
-  const dispatch = useDispatch();
 
   const handlePackageStringChange = (value: string) => {
     setPackageString(value);
@@ -82,12 +79,12 @@ export default function Installer({setInstallCommand, setIsInstallDisabled}: Pro
                 return {name: item.name, version: item.version || ''};
               }),
             );
-            lynxTopToast(dispatch).success('Requirements file loaded successfully');
+            topToast.success('Requirements file loaded successfully');
           });
         }
       })
       .catch(() => {
-        lynxTopToast(dispatch).error('Error reading requirements file');
+        topToast.danger('Error reading requirements file');
       });
   };
 

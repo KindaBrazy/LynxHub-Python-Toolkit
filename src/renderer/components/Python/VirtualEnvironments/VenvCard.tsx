@@ -14,14 +14,13 @@ import {
   PopoverTrigger,
   Spinner,
 } from '@heroui/react';
-import {lynxTopToast} from '@lynx/utils/hooks';
+import {topToast} from '@lynx/layouts/ToastProviders';
 import filesIpc from '@lynx_shared/ipc/files';
 import {BoxMinimalistic, Diskette, Folder2, MenuDots, TrashBin2} from '@solar-icons/react-perf/BoldDuotone';
 import {SHA256} from 'crypto-js';
 import {isNil} from 'lodash-es';
 import {X} from 'lucide-react';
 import {FormEvent, useCallback, useEffect, useMemo, useState} from 'react';
-import {useDispatch} from 'react-redux';
 
 import {formatSizeMB} from '../../../../cross/CrossExtUtils';
 import pIpc from '../../../PIpc';
@@ -55,8 +54,6 @@ export default function VenvCard({
   const [popoverUninstaller, setPopoverUninstaller] = useState<boolean>(false);
   const [editedTitle, setEditedTitle] = useState<string>(title);
 
-  const dispatch = useDispatch();
-
   useEffect(() => {
     pIpc.storage.getVenvCustomTitle().then(storedItems => {
       const existingTitle = storedItems.find(item => item.path === SHA256(folder).toString());
@@ -77,13 +74,13 @@ export default function VenvCard({
     filesIpc
       .trashDir(folder)
       .then(() => {
-        lynxTopToast(dispatch).success(`Environment "${title}" removed successfully.`);
+        topToast.success(`Environment "${title}" removed successfully.`);
         pIpc.removeAssociatePath(pythonPath);
         refresh();
       })
       .catch(error => {
         console.error(error);
-        lynxTopToast(dispatch).error(`Failed to remove environment "${title}".`);
+        topToast.danger(`Failed to remove environment "${title}".`);
       })
       .finally(() => {
         setIsRemoving(false);

@@ -16,7 +16,7 @@ import {
   Progress,
   Spinner,
 } from '@heroui/react';
-import {lynxTopToast} from '@lynx/utils/hooks';
+import {topToast} from '@lynx/layouts/ToastProviders';
 import filesIpc from '@lynx_shared/ipc/files';
 import {
   BoxMinimalistic,
@@ -31,7 +31,6 @@ import {CheckRead} from '@solar-icons/react-perf/LineDuotone';
 import {isNil, startCase} from 'lodash-es';
 import {X} from 'lucide-react';
 import {useCallback, useMemo, useState} from 'react';
-import {useDispatch} from 'react-redux';
 
 import {PythonInstallation} from '../../../../cross/CrossExtTypes';
 import {formatSizeMB} from '../../../../cross/CrossExtUtils';
@@ -55,30 +54,29 @@ export default function InstalledCard({python, diskUsage, maxDiskValue, updateDe
   }, [diskUsage]);
 
   const [isUninstalling, setIsUninstalling] = useState<boolean>(false);
-  const dispatch = useDispatch();
 
   const makeDefault = () => {
     pIpc
       .setDefaultPython(python.installFolder)
       .then(() => {
-        lynxTopToast(dispatch).success(`Python ${python.version} is now the system default.`);
+        topToast.success(`Python ${python.version} is now the system default.`);
         updateDefault(python.installFolder, 'isDefault');
       })
       .catch(error => {
-        lynxTopToast(dispatch).error(`Failed to set ${python.version} as system default. Please try again later.`);
+        topToast.danger(`Failed to set ${python.version} as system default. Please try again later.`);
         console.error(error);
       });
   };
 
   const makeLynxDefault = () => {
     const showFailedToast = () => {
-      lynxTopToast(dispatch).error(`Failed to set ${python.version} as LynxHub default. Please try again later.`);
+      topToast.danger(`Failed to set ${python.version} as LynxHub default. Please try again later.`);
     };
     pIpc
       .replacePythonPath(python.installFolder)
       .then(result => {
         if (result) {
-          lynxTopToast(dispatch).success(`Python ${python.version} is now the default for LynxHub.`);
+          topToast.success(`Python ${python.version} is now the default for LynxHub.`);
           updateDefault(python.installFolder, 'isLynxHubDefault');
         } else {
           showFailedToast();

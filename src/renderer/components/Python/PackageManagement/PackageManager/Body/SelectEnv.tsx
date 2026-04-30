@@ -1,7 +1,6 @@
 import {Button, CircularProgress, Dropdown, DropdownItem, DropdownMenu, DropdownTrigger} from '@heroui/react';
-import {lynxTopToast} from '@lynx/utils/hooks';
+import {topToast} from '@lynx/layouts/ToastProviders';
 import {Dispatch, SetStateAction, useEffect, useState} from 'react';
-import {useDispatch} from 'react-redux';
 
 import {AssociateItem, PythonVenvSelectItem} from '../../../../../../cross/CrossExtTypes';
 import pIpc from '../../../../../PIpc';
@@ -13,7 +12,6 @@ type Props = {id: string; setPythonPath?: Dispatch<SetStateAction<string>>};
 export default function SelectEnv({id, setPythonPath}: Props) {
   const [list, setList] = useState<PythonVenvSelectItem[]>([]);
   const [isLoading, setIsLoading] = useState<boolean>(true);
-  const dispatch = useDispatch();
 
   const onPress = (python: PythonVenvSelectItem) => {
     const result: AssociateItem = {id, dir: python.dir, type: python.type};
@@ -23,7 +21,7 @@ export default function SelectEnv({id, setPythonPath}: Props) {
       .then(exePath => {
         if (setPythonPath && exePath) {
           setPythonPath(exePath);
-          lynxTopToast(dispatch).success(`${python.condaName || python.version} associated successfully!`);
+          topToast.success(`${python.condaName || python.version} associated successfully!`);
         } else {
           console.warn('PythonToolkit: Exe path or setPythonPath is not defined.');
         }

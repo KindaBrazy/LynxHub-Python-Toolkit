@@ -1,8 +1,7 @@
 import {Button, Popover, PopoverContent, PopoverTrigger} from '@heroui/react';
-import {lynxTopToast} from '@lynx/utils/hooks';
+import {topToast} from '@lynx/layouts/ToastProviders';
 import {TrashBin2} from '@solar-icons/react-perf/BoldDuotone';
 import {Dispatch, SetStateAction, useCallback, useState} from 'react';
-import {useDispatch} from 'react-redux';
 
 import {PackageInfo, PackageUpdate} from '../../../../../../cross/CrossExtTypes';
 import pIpc from '../../../../../PIpc';
@@ -28,7 +27,6 @@ export default function ActionButtons({
   show,
 }: Props) {
   const [isUninstallOpen, setIsUninstallOpen] = useState<boolean>(false);
-  const dispatch = useDispatch();
 
   const remove = useCallback(() => {
     setIsUninstallOpen(false);
@@ -37,10 +35,10 @@ export default function ActionButtons({
       .uninstallPackage(pythonPath, item.name)
       .then(() => {
         removed(item.name);
-        lynxTopToast(dispatch).success(`Package "${item.name}" removed successfully.`);
+        topToast.success(`Package "${item.name}" removed successfully.`);
       })
       .catch(() => {
-        lynxTopToast(dispatch).error(`Failed to remove package "${item.name}".`);
+        topToast.danger(`Failed to remove package "${item.name}".`);
       })
       .finally(() => {
         setIsUninstalling(false);

@@ -1,10 +1,9 @@
 import {Alert, Button, Modal, ModalBody, ModalContent, ModalFooter, ModalHeader} from '@heroui/react';
-import {lynxTopToast} from '@lynx/utils/hooks';
+import {topToast} from '@lynx/layouts/ToastProviders';
 import {Download} from '@solar-icons/react-perf/BoldDuotone';
 import {Plus} from 'lucide-react';
 import {OverlayScrollbarsComponent} from 'overlayscrollbars-react';
 import {useCallback, useState} from 'react';
-import {useDispatch} from 'react-redux';
 
 import {useAppState} from '../../../../../../../../src/renderer/mainWindow/redux/reducers/app';
 import pIpc from '../../../../../PIpc';
@@ -22,8 +21,6 @@ export default function InstallerModal({refresh, pythonPath, show}: Props) {
   const [installCommand, setInstallCommand] = useState<string>('');
   const [isInstallDisabled, setIsInstallDisabled] = useState<boolean>(true);
 
-  const dispatch = useDispatch();
-
   const isDarkMode = useAppState('darkMode');
 
   const close = useCallback(() => {
@@ -37,15 +34,15 @@ export default function InstallerModal({refresh, pythonPath, show}: Props) {
       .installPackage(pythonPath, installCommand)
       .then(result => {
         if (result) {
-          lynxTopToast(dispatch).success('Packages installed successfully!');
+          topToast.success('Packages installed successfully!');
         } else {
-          lynxTopToast(dispatch).error('Failed to install packages. Please check your inputs and try again.');
+          topToast.danger('Failed to install packages. Please check your inputs and try again.');
         }
         close();
         refresh();
       })
       .catch(err => {
-        lynxTopToast(dispatch).error('Failed to install packages. Please check your inputs and try again.');
+        topToast.danger('Failed to install packages. Please check your inputs and try again.');
         console.error(err);
       })
       .finally(() => {

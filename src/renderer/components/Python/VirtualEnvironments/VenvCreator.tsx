@@ -1,11 +1,10 @@
 import {Button, Input, Popover, PopoverContent, PopoverTrigger, Select, SelectItem} from '@heroui/react';
-import {lynxTopToast} from '@lynx/utils/hooks';
+import {topToast} from '@lynx/layouts/ToastProviders';
 import filesIpc from '@lynx_shared/ipc/files';
 import {FolderOpen} from '@solar-icons/react-perf/BoldDuotone';
 import {capitalize, isEmpty} from 'lodash-es';
 import {Plus} from 'lucide-react';
 import {useCallback, useEffect, useMemo, useState} from 'react';
-import {useDispatch} from 'react-redux';
 
 import {PythonInstallation, VenvCreateOptions} from '../../../../cross/CrossExtTypes';
 import pIpc from '../../../PIpc';
@@ -21,8 +20,6 @@ export default function VenvCreator({installedPythons, refresh, isLoadingPythons
   const [isCreating, setIsCreating] = useState<boolean>(false);
 
   const [isOpen, setIsOpen] = useState<boolean>(false);
-
-  const dispatch = useDispatch();
 
   useEffect(() => {
     if (!isOpen) {
@@ -52,7 +49,7 @@ export default function VenvCreator({installedPythons, refresh, isLoadingPythons
     )?.installPath;
     if (!pythonPath) {
       setIsCreating(false);
-      lynxTopToast(dispatch).error('Failed to find Python path. Please restart app and try again.');
+      topToast.danger('Failed to find Python path. Please restart app and try again.');
       return;
     }
     const options: VenvCreateOptions = {
@@ -65,9 +62,9 @@ export default function VenvCreator({installedPythons, refresh, isLoadingPythons
       if (result) {
         refresh();
         setIsOpen(false);
-        lynxTopToast(dispatch).success(`Python environment "${envName}" created successfully.`);
+        topToast.success(`Python environment "${envName}" created successfully.`);
       } else {
-        lynxTopToast(dispatch).error('Failed to create Python environment. Please try again.');
+        topToast.danger('Failed to create Python environment. Please try again.');
       }
 
       setIsCreating(false);

@@ -1,11 +1,10 @@
 import {Button, Spinner} from '@heroui/react';
 import EmptyStateCard from '@lynx/components/EmptyStateCard';
-import {lynxTopToast} from '@lynx/utils/hooks';
+import {topToast} from '@lynx/layouts/ToastProviders';
 import filesIpc from '@lynx_shared/ipc/files';
 import {FolderOpen} from '@solar-icons/react-perf/BoldDuotone';
 import {isEmpty} from 'lodash-es';
 import {useCallback, useEffect, useState} from 'react';
-import {useDispatch} from 'react-redux';
 
 import {PythonInstallation, PythonVenvs, VenvInfo} from '../../../../cross/CrossExtTypes';
 import {bytesToMegabytes} from '../../../../cross/CrossExtUtils';
@@ -27,7 +26,6 @@ export default function Venv({visible, installedPythons, isLoadingPythons, show}
   const [isLoading, setIsLoading] = useState<boolean>(true);
 
   const [isLocating, setIsLocating] = useState<boolean>(false);
-  const dispatch = useDispatch();
 
   const [diskUsage, setDiskUsage] = useState<{path: string; value: number | undefined}[]>([]);
 
@@ -109,10 +107,10 @@ export default function Venv({visible, installedPythons, isLoadingPythons, show}
     setIsLocating(true);
     pIpc.locateVenv().then((isLocated: boolean) => {
       if (isLocated) {
-        lynxTopToast(dispatch).success('Environment validated successfully.');
+        topToast.success('Environment validated successfully.');
         getVenvs();
       } else {
-        lynxTopToast(dispatch).error('Failed to validate environment.');
+        topToast.danger('Failed to validate environment.');
       }
       setIsLocating(false);
     });

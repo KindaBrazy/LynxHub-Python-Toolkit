@@ -12,12 +12,11 @@ import {
   PopoverTrigger,
   Progress,
 } from '@heroui/react';
-import {lynxTopToast} from '@lynx/utils/hooks';
+import {topToast} from '@lynx/layouts/ToastProviders';
 import {AltArrowDown, AltArrowUp} from '@solar-icons/react-perf/Bold';
 import {BoxMinimalistic} from '@solar-icons/react-perf/BoldDuotone';
 import {isEmpty} from 'lodash-es';
 import {memo, useCallback, useEffect, useState} from 'react';
-import {useDispatch} from 'react-redux';
 import semver, {compare, valid} from 'semver';
 
 import LynxScroll from '../../../../../../../../src/renderer/mainWindow/components/LynxScroll';
@@ -33,7 +32,6 @@ type Props = {
   show: string;
 };
 const PkgVersions = memo(({updated, item, pythonPath, show}: Props) => {
-  const dispatch = useDispatch();
   const [availableVersion, setAvailableVersion] = useState<string[] | null>(null);
 
   const [changingTo, setChangingTo] = useState<string | undefined>(undefined);
@@ -52,7 +50,7 @@ const PkgVersions = memo(({updated, item, pythonPath, show}: Props) => {
           setAvailableVersion(uniqueVersions);
         })
         .catch(() => {
-          lynxTopToast(dispatch).warning('Failed to fetch available versions!');
+          topToast.warning('Failed to fetch available versions!');
         })
         .finally(() => {
           setIsLoadingVersions(false);
@@ -71,11 +69,11 @@ const PkgVersions = memo(({updated, item, pythonPath, show}: Props) => {
         .changePackageVersion(pythonPath, item.name, item.version, targetVersion)
         .then(() => {
           updated({name: item.name, targetVersion: targetVersion});
-          lynxTopToast(dispatch).success(`${item.name} package changed to ${targetVersion}`);
+          topToast.success(`${item.name} package changed to ${targetVersion}`);
         })
         .catch(e => {
           console.info(e);
-          lynxTopToast(dispatch).error(`Failed change version to ${targetVersion}!`);
+          topToast.danger(`Failed change version to ${targetVersion}!`);
         })
         .finally(() => {
           setChangingTo(undefined);

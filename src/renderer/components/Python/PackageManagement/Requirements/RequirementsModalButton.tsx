@@ -1,13 +1,12 @@
 import {Button, Chip, Input, Modal, ModalBody, ModalContent, ModalFooter, ModalHeader} from '@heroui/react';
 import EmptyStateCard from '@lynx/components/EmptyStateCard';
-import {lynxTopToast} from '@lynx/utils/hooks';
+import {topToast} from '@lynx/layouts/ToastProviders';
 import filesIpc from '@lynx_shared/ipc/files';
 import {Checklist, Diskette, File} from '@solar-icons/react-perf/BoldDuotone';
 import {isEmpty} from 'lodash-es';
 import {Plus} from 'lucide-react';
 import {OverlayScrollbarsComponentRef} from 'overlayscrollbars-react';
 import {Dispatch, SetStateAction, useEffect, useRef, useState} from 'react';
-import {useDispatch} from 'react-redux';
 
 import {searchInStrings} from '../../../../../../../src/renderer/mainWindow/utils';
 import {modalMotionProps} from '../../../../../../../src/renderer/mainWindow/utils/constants';
@@ -32,8 +31,6 @@ export default function RequirementsBtn({id, projectPath, setIsReqAvailable, sho
   const [searchValue, setSearchValue] = useState<string>('');
 
   const [searchReqs, setSearchReqs] = useState<RequirementData[]>([]);
-
-  const dispatch = useDispatch();
 
   useEffect(() => {
     setIsReqAvailable(!!filePath);
@@ -104,9 +101,9 @@ export default function RequirementsBtn({id, projectPath, setIsReqAvailable, sho
       setIsSaving(true);
       pIpc.saveReqs(filePath, requirements).then(success => {
         if (success) {
-          lynxTopToast(dispatch).success('Requirements saved successfully!');
+          topToast.success('Requirements saved successfully!');
         } else {
-          lynxTopToast(dispatch).error('Failed to save requirements.');
+          topToast.danger('Failed to save requirements.');
         }
         setIsSaving(false);
       });

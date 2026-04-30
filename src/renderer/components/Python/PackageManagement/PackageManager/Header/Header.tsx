@@ -1,9 +1,8 @@
 import {Avatar, Chip, Input, ModalHeader, Progress, Selection} from '@heroui/react';
-import {lynxTopToast} from '@lynx/utils/hooks';
+import {topToast} from '@lynx/layouts/ToastProviders';
 import {extractGitUrl} from '@lynx_common/utils';
 import {compact, isEmpty} from 'lodash-es';
 import {Dispatch, ReactNode, SetStateAction, useEffect, useState} from 'react';
-import {useDispatch} from 'react-redux';
 
 import {Circle_Icon} from '../../../../../../../../src/renderer/shared/assets/icons';
 import {FilterKeys, PackageInfo, PackageUpdate, SitePackages_Info} from '../../../../../../cross/CrossExtTypes';
@@ -72,8 +71,6 @@ export default function PackageManagerHeader({
   const [avatarUrl, setAvatarUrl] = useState<string | undefined>(undefined);
   const [pythonVersion, setPythonVersion] = useState<string>('');
 
-  const dispatch = useDispatch();
-
   useEffect(() => {
     const url = allCardsExt.find(item => item.id === id)?.repoUrl;
     if (url) {
@@ -115,11 +112,11 @@ export default function PackageManagerHeader({
     pIpc
       .updatePackages(pythonPath, updateList)
       .then(() => {
-        lynxTopToast(dispatch).success(`Successfully updated all selected packages (${updateList.length} total).`);
+        topToast.success(`Successfully updated all selected packages (${updateList.length} total).`);
         updated(updateList);
       })
       .catch(() => {
-        lynxTopToast(dispatch).error(`Failed to update packages`);
+        topToast.danger(`Failed to update packages`);
       })
       .finally(() => {
         setIsUpdating(false);

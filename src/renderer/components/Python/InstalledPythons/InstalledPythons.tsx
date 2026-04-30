@@ -1,12 +1,11 @@
 import {Button, Spinner} from '@heroui/react';
 import EmptyStateCard from '@lynx/components/EmptyStateCard';
-import {lynxTopToast} from '@lynx/utils/hooks';
+import {topToast} from '@lynx/layouts/ToastProviders';
 import filesIpc from '@lynx_shared/ipc/files';
 import {FolderOpen, Refresh} from '@solar-icons/react-perf/BoldDuotone';
 import {cloneDeep, isEmpty} from 'lodash-es';
 import {Plus} from 'lucide-react';
 import {Dispatch, SetStateAction, useCallback, useEffect, useState} from 'react';
-import {useDispatch} from 'react-redux';
 
 import {PythonInstallation} from '../../../../cross/CrossExtTypes';
 import {bytesToMegabytes} from '../../../../cross/CrossExtUtils';
@@ -33,7 +32,6 @@ export default function InstalledPythons({
 }: Props) {
   const [isLocating, setIsLocating] = useState<boolean>(false);
 
-  const dispatch = useDispatch();
   const cacheStorageUsage = usePythonToolkitState('cacheStorageUsage');
   const [diskUsage, setDiskUsage] = useState<{path: string; value: number | undefined}[]>([]);
   const [maxDiskValue, setMaxDiskValue] = useState<number>(0);
@@ -140,16 +138,16 @@ export default function InstalledPythons({
             .locatePython(pPath)
             .then(installation => {
               if (installation) {
-                lynxTopToast(dispatch).success('Selected Python validated successfully.');
+                topToast.success('Selected Python validated successfully.');
                 getInstalledPythons(false);
               } else {
-                lynxTopToast(dispatch).error('Failed to validate selected python.');
+                topToast.danger('Failed to validate selected python.');
               }
               setIsLocating(false);
             })
             .catch(e => {
               console.warn(e);
-              lynxTopToast(dispatch).success('Failed to validate selected python.');
+              topToast.success('Failed to validate selected python.');
               setIsLocating(false);
             });
         } else {

@@ -1,9 +1,8 @@
 import {Button} from '@heroui/react';
-import {lynxTopToast} from '@lynx/utils/hooks';
+import {topToast} from '@lynx/layouts/ToastProviders';
 import {ShieldWarning} from '@solar-icons/react-perf/BoldDuotone';
 import {capitalize, startCase} from 'lodash-es';
 import {Dispatch, SetStateAction, useCallback, useMemo, useState} from 'react';
-import {useDispatch} from 'react-redux';
 
 import {PackageInfo, PackageUpdate} from '../../../../../../cross/CrossExtTypes';
 import {getUpdateVersionColor} from '../../../../../../cross/CrossExtUtils';
@@ -35,7 +34,6 @@ export default function TableItem({
   const [isUpdating, setIsUpdating] = useState<boolean>(false);
   const [isUninstalling, setIsUninstalling] = useState<boolean>(false);
   const pkgNameDisplay = usePythonToolkitState('pkgNameDisplay');
-  const dispatch = useDispatch();
 
   const itemName = useMemo(() => {
     switch (pkgNameDisplay) {
@@ -56,10 +54,10 @@ export default function TableItem({
       .updatePackage(pythonPath, item.name, item.updateVersion)
       .then(() => {
         updated(item);
-        lynxTopToast(dispatch).success(`Package "${item.name}" updated successfully.`);
+        topToast.success(`Package "${item.name}" updated successfully.`);
       })
       .catch(() => {
-        lynxTopToast(dispatch).error(`Failed to update package "${item.name}".`);
+        topToast.danger(`Failed to update package "${item.name}".`);
       })
       .finally(() => {
         setIsUpdating(false);

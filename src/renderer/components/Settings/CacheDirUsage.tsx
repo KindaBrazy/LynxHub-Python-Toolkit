@@ -1,5 +1,5 @@
 import {Button} from '@heroui/react';
-import {lynxTopToast} from '@lynx/utils/hooks';
+import {topToast} from '@lynx/layouts/ToastProviders';
 import {Broom} from '@solar-icons/react-perf/BoldDuotone';
 import {useEffect, useState} from 'react';
 import {useDispatch} from 'react-redux';
@@ -34,7 +34,7 @@ export default function CacheDirUsage() {
 
     setTimeout(() => {
       setClearing(false);
-      lynxTopToast(dispatch).success('Disk usage cache cleared successfully');
+      topToast.success('Disk usage cache cleared successfully');
     }, 700);
   };
 
