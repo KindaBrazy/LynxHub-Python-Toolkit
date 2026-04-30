@@ -12,10 +12,9 @@ import Installer from './Installer';
 type Props = {
   pythonPath: string;
   refresh: () => void;
-  show: string;
 };
 
-export default function InstallerModal({refresh, pythonPath, show}: Props) {
+export default function InstallerModal({refresh, pythonPath}: Props) {
   const [installing, setInstalling] = useState<boolean>(false);
   const [isOpen, setIsOpen] = useState<boolean>(false);
   const [installCommand, setInstallCommand] = useState<string>('');
@@ -62,7 +61,7 @@ export default function InstallerModal({refresh, pythonPath, show}: Props) {
         placement="center"
         isDismissable={false}
         scrollBehavior="inside"
-        classNames={{backdrop: `top-10! ${show}`, wrapper: `top-10! pb-8 ${show}`}}>
+        classNames={{backdrop: `top-10!`, wrapper: `top-10! pb-8`}}>
         <ModalContent>
           <ModalHeader className="pb-1 justify-center">Python Package Installer</ModalHeader>
           <ModalBody className="scrollbar-hide px-0 pt-0">

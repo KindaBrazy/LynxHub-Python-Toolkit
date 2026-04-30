@@ -1,9 +1,10 @@
-import {Modal, ModalContent, ModalFooter, Selection} from '@heroui/react';
+import {Selection} from '@heroui/react';
+import {Modal, UseOverlayStateReturn} from '@heroui-v3/react';
+import TabModal from '@lynx/components/TabModal';
 import {isEmpty} from 'lodash-es';
 import {Dispatch, ReactNode, SetStateAction, useEffect, useState} from 'react';
 
 import {searchInStrings} from '../../../../../../../src/renderer/mainWindow/utils';
-import {modalMotionProps} from '../../../../../../../src/renderer/mainWindow/utils/constants';
 import {FilterKeys, PackageInfo, PackageUpdate, SitePackages_Info} from '../../../../../cross/CrossExtTypes';
 import {getUpdateType} from '../../../../../cross/CrossExtUtils';
 import pIpc from '../../../../PIpc';
@@ -14,8 +15,7 @@ import PackageManagerHeader from './Header/Header';
 import UpdateModal from './Update-Modal';
 
 type Props = {
-  isOpen: boolean;
-  setIsOpen: (value: boolean) => void;
+  state: UseOverlayStateReturn;
   pythonPath: string;
 
   title?: string;
@@ -25,21 +25,17 @@ type Props = {
   id: string;
   projectPath?: string;
   setPythonPath?: Dispatch<SetStateAction<string>>;
-  show: string;
   onPackagesChanged?: () => void;
 };
 
 export default function PackageManagerModal({
   title = 'Package Manager',
-  size = '2xl',
   actionButtons,
-  isOpen,
-  setIsOpen,
+  state,
   pythonPath,
   id,
   projectPath,
   setPythonPath,
-  show,
   onPackagesChanged,
 }: Props) {
   const [isLoadingPackages, setIsLoadingPackages] = useState<boolean>(false);
@@ -127,7 +123,7 @@ export default function PackageManagerModal({
   }, [searchValue, filteredPackages]);
 
   const closePackageManager = () => {
-    setIsOpen(false);
+    state.close();
     setPackagesUpdate([]);
     if (packagesChanged && onPackagesChanged) {
       onPackagesChanged();
@@ -194,7 +190,7 @@ export default function PackageManagerModal({
   };
 
   useEffect(() => {
-    if (isOpen && !isEmpty(pythonPath)) {
+    if (state.isOpen && !isEmpty(pythonPath)) {
       getPackageList();
     } else {
       setSearchData([]);
@@ -203,7 +199,7 @@ export default function PackageManagerModal({
         if (result && setPythonPath) setPythonPath(result);
       });
     }
-  }, [pythonPath, isOpen]);
+  }, [pythonPath, state.isOpen]);
 
   const updated = (updates: PackageUpdate | PackageUpdate[]) => {
     const updatesArray = Array.isArray(updates) ? updates : [updates];
@@ -247,20 +243,11 @@ export default function PackageManagerModal({
 
   return (
     <>
-      <Modal
-        size={size}
-        isOpen={isOpen}
-        placement="center"
-        isDismissable={false}
-        scrollBehavior="inside"
-        onClose={closePackageManager}
-        motionProps={modalMotionProps}
-        classNames={{backdrop: `!top-10 ${show}`, wrapper: `!top-10 pb-8 ${show}`}}
-        hideCloseButton>
-        <ModalContent className="overflow-hidden">
+      <TabModal isOpen={state.isOpen} onOpenChange={state.setOpen}>
+        <Modal.CloseTrigger />
+        <Modal.Header>
           <PackageManagerHeader
             id={id}
-            show={show}
             title={title}
             updated={updated}
             packages={packages}
@@ -282,32 +269,31 @@ export default function PackageManagerModal({
             setIsUpdateTerminalOpen={setIsUpdateTerminalOpen}
             checkingUpdates={!isLoadingPackages && isCheckingUpdates}
           />
-          <PackageManagerBody
-            id={id}
-            show={show}
-            items={items}
-            removed={removed}
-            updated={updated}
-            pythonPath={pythonPath}
-            selectedKeys={selectedKeys}
-            isLoading={isLoadingPackages}
-            setPythonPath={setPythonPath}
-            isValidPython={isValidPython}
-            packagesUpdate={packagesUpdate}
-            setSelectedKeys={setSelectedKeys}
-            setIsUpdateTerminalOpen={setIsUpdateTerminalOpen}
+        </Modal.Header>
+        <PackageManagerBody
+          id={id}
+          items={items}
+          removed={removed}
+          updated={updated}
+          pythonPath={pythonPath}
+          selectedKeys={selectedKeys}
+          isLoading={isLoadingPackages}
+          setPythonPath={setPythonPath}
+          isValidPython={isValidPython}
+          packagesUpdate={packagesUpdate}
+          setSelectedKeys={setSelectedKeys}
+          setIsUpdateTerminalOpen={setIsUpdateTerminalOpen}
+        />
+        <Modal.Footer className="items-center py-3">
+          <TablePage setItems={setItems} searchData={searchData} />
+          <Footer_Close
+            isUpdating={isUpdating}
+            isCheckingUpdates={isCheckingUpdates}
+            closePackageManager={closePackageManager}
           />
-          <ModalFooter className="items-center py-3">
-            <TablePage setItems={setItems} searchData={searchData} />
-            <Footer_Close
-              isUpdating={isUpdating}
-              isCheckingUpdates={isCheckingUpdates}
-              closePackageManager={closePackageManager}
-            />
-          </ModalFooter>
-        </ModalContent>
-      </Modal>
-      <UpdateModal show={show} isOpen={isUpdateTerminalOpen} setIsOpen={setIsUpdateTerminalOpen} />
+        </Modal.Footer>
+      </TabModal>
+      <UpdateModal isOpen={isUpdateTerminalOpen} setIsOpen={setIsUpdateTerminalOpen} />
     </>
   );
 }

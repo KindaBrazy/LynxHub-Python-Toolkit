@@ -16,6 +16,7 @@ import {
   Progress,
   Spinner,
 } from '@heroui/react';
+import {useOverlayState} from '@heroui-v3/react';
 import {topToast} from '@lynx/layouts/ToastProviders';
 import filesIpc from '@lynx_shared/ipc/files';
 import {
@@ -45,10 +46,9 @@ type Props = {
   maxDiskValue: number;
   updateDefault: (installFolder: string, type: 'isDefault' | 'isLynxHubDefault') => void;
   refresh: (research: boolean) => void;
-  show: string;
 };
 
-export default function InstalledCard({python, diskUsage, maxDiskValue, updateDefault, refresh, show}: Props) {
+export default function InstalledCard({python, diskUsage, maxDiskValue, updateDefault, refresh}: Props) {
   const size = useMemo(() => {
     return diskUsage.find(usage => usage.path === python.installFolder)?.value;
   }, [diskUsage]);
@@ -121,11 +121,7 @@ export default function InstalledCard({python, diskUsage, maxDiskValue, updateDe
 
   const [popoverUninstaller, setPopoverUninstaller] = useState<boolean>(false);
 
-  const [packageManagerOpen, setPackageManagerOpen] = useState<boolean>(false);
-
-  const packageManager = () => {
-    setPackageManagerOpen(true);
-  };
+  const packageManagerModal = useOverlayState();
 
   const borderColor = useMemo(() => {
     return python.isDefault && python.isLynxHubDefault
@@ -194,11 +190,9 @@ export default function InstalledCard({python, diskUsage, maxDiskValue, updateDe
     <div className="grow relative">
       <PackageManagerModal
         size="3xl"
-        show={show}
         id={python.installPath}
-        isOpen={packageManagerOpen}
+        state={packageManagerModal}
         pythonPath={python.installPath}
-        setIsOpen={setPackageManagerOpen}
         onPackagesChanged={() => refresh(false)}
       />
       {isUninstalling && (
@@ -263,7 +257,7 @@ export default function InstalledCard({python, diskUsage, maxDiskValue, updateDe
                 )}
                 <DropdownItem
                   key="package-manager"
-                  onPress={packageManager}
+                  onPress={packageManagerModal.open}
                   startContent={<BoxMinimalistic className="size-4" />}>
                   Manage Packages
                 </DropdownItem>

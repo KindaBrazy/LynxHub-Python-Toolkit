@@ -1,40 +1,49 @@
-import {useEffect} from 'react';
-import {useDispatch} from 'react-redux';
+import {Button} from '@heroui/react';
+import {UseOverlayStateReturn} from '@heroui-v3/react';
+import {useInstalledCard} from '@lynx/utils/hooks';
+import {useMemo, useState} from 'react';
 
-import {useTabsState} from '../../../../src/renderer/mainWindow/redux/reducers/tabs';
-import {AppDispatch} from '../../../../src/renderer/mainWindow/redux/store';
-import {PythonToolkitActions, usePythonToolkitState} from '../reducer';
-import CardMenu_Modals from './CardMenu_Modals';
+import pIpc from '../PIpc';
+import PackageManagerModal from './Python/PackageManagement/PackageManager/PackageManagerModal';
 
-export default function CardMenuModal() {
-  const dispatch = useDispatch<AppDispatch>();
-  const activeTab = useTabsState('activeTab');
-  const tabs = useTabsState('tabs');
+type Props = {id: string; title: string; state: UseOverlayStateReturn};
 
-  const cards = usePythonToolkitState('menuModal');
+export default function CardMenuModal({state, id, title}: Props) {
+  const webUI = useInstalledCard(id);
 
-  useEffect(() => {
-    cards.forEach(card => {
-      const exist = tabs.some(tab => tab.id === card.context.tabID);
-      if (!exist) {
-        dispatch(PythonToolkitActions.closeMenuModal({tabID: card.context.tabID}));
-        setTimeout(() => {
-          dispatch(PythonToolkitActions.removeMenuModal({tabID: card.context.tabID}));
-        }, 500);
-      }
-    });
-  }, [tabs, cards, dispatch]);
+  const [pythonPath, setPythonPath] = useState<string>('');
+
+  const handleDeselect = () => {
+    pIpc.removeAssociate(id);
+    setPythonPath('');
+  };
+
+  const actionButtons = useMemo(() => {
+    return pythonPath
+      ? [
+          <Button
+            size="sm"
+            variant="flat"
+            color="danger"
+            key="reloacte_venv"
+            className="min-w-32!"
+            onPress={handleDeselect}>
+            Deselect
+          </Button>,
+        ]
+      : [];
+  }, [pythonPath]);
 
   return (
-    <>
-      {cards.map(card => (
-        <CardMenu_Modals
-          isOpen={card.isOpen}
-          context={card.context}
-          key={`${card.context.id}_card`}
-          show={activeTab === card.context.tabID ? 'flex' : 'hidden'}
-        />
-      ))}
-    </>
+    <PackageManagerModal
+      id={id}
+      size="4xl"
+      state={state}
+      pythonPath={pythonPath}
+      projectPath={webUI?.dir}
+      setPythonPath={setPythonPath}
+      actionButtons={actionButtons}
+      title={`${title} Dependencies`}
+    />
   );
 }

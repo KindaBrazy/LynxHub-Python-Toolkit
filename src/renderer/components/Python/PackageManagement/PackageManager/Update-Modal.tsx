@@ -14,9 +14,9 @@ import {Dispatch, memo, SetStateAction, useEffect, useState} from 'react';
 
 import TerminalView from './Terminal-View';
 
-type Props = {isOpen: boolean; setIsOpen: Dispatch<SetStateAction<boolean>>; show: string};
+type Props = {isOpen: boolean; setIsOpen: Dispatch<SetStateAction<boolean>>};
 
-const UpdateModal = memo(({isOpen, setIsOpen, show}: Props) => {
+const UpdateModal = memo(({isOpen, setIsOpen}: Props) => {
   const [isPopoverOpen, setIsPopoverOpen] = useState<boolean>(false);
   const [isDone, setIsDone] = useState<boolean>(false);
 
@@ -43,7 +43,7 @@ const UpdateModal = memo(({isOpen, setIsOpen, show}: Props) => {
       placement="center"
       scrollBehavior="inside"
       onOpenChange={setIsOpen}
-      classNames={{backdrop: `top-10! ${show}`, wrapper: `top-10! pb-8 ${show}`}}
+      classNames={{backdrop: `top-10!`, wrapper: `top-10! pb-8`}}
       hideCloseButton>
       <ModalContent>
         <ModalHeader className="justify-center py-3">Console Output...</ModalHeader>

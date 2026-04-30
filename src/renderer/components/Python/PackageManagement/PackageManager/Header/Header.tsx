@@ -1,4 +1,5 @@
-import {Avatar, Chip, Input, ModalHeader, Progress, Selection} from '@heroui/react';
+import {Avatar, Chip, Input, Progress, Selection} from '@heroui/react';
+import {ModalHeading} from '@heroui-v3/react';
 import {topToast} from '@lynx/layouts/ToastProviders';
 import {extractGitUrl} from '@lynx_common/utils';
 import {compact, isEmpty} from 'lodash-es';
@@ -37,8 +38,6 @@ type Props = {
   setIsUpdating: Dispatch<SetStateAction<boolean>>;
   setIsUpdateTerminalOpen: Dispatch<SetStateAction<boolean>>;
   isUpdating: boolean;
-
-  show: string;
 };
 
 export default function PackageManagerHeader({
@@ -63,7 +62,6 @@ export default function PackageManagerHeader({
   visibleItems,
   setIsUpdating,
   isUpdating,
-  show,
 }: Props) {
   const [isReqAvailable, setIsReqAvailable] = useState<boolean>(false);
   const [reqPackageCount, setReqPackageCount] = useState<number>(0);
@@ -126,7 +124,7 @@ export default function PackageManagerHeader({
   };
 
   return (
-    <ModalHeader className="bg-foreground-200 dark:bg-LynxRaisinBlack items-center flex-col gap-y-2">
+    <ModalHeading className="bg-foreground-200 dark:bg-LynxRaisinBlack items-center flex-col gap-y-2">
       {progressValue > 0 && (
         <Progress
           size="sm"
@@ -187,11 +185,10 @@ export default function PackageManagerHeader({
         )}
         {isValidPython && (
           <>
-            <InstallerModal show={show} refresh={refresh} pythonPath={pythonPath} />
+            <InstallerModal refresh={refresh} pythonPath={pythonPath} />
 
             <RequirementsBtn
               id={id}
-              show={show}
               projectPath={projectPath}
               setIsReqAvailable={setIsReqAvailable}
               setReqPackageCount={setReqPackageCount}
@@ -201,6 +198,6 @@ export default function PackageManagerHeader({
 
         {isValidPython && actionButtons?.map(ActionButton => ActionButton)}
       </div>
-    </ModalHeader>
+    </ModalHeading>
   );
 }

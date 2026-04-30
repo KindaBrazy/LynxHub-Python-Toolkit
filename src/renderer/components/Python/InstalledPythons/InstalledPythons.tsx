@@ -20,7 +20,6 @@ type Props = {
   setInstalledPythons: Dispatch<SetStateAction<PythonInstallation[]>>;
   isLoadingPythons: boolean;
   setIsLoadingPythons: Dispatch<SetStateAction<boolean>>;
-  show: string;
 };
 export default function InstalledPythons({
   visible,
@@ -28,7 +27,6 @@ export default function InstalledPythons({
   setInstalledPythons,
   setIsLoadingPythons,
   isLoadingPythons,
-  show,
 }: Props) {
   const [isLocating, setIsLocating] = useState<boolean>(false);
 
@@ -172,7 +170,6 @@ export default function InstalledPythons({
             installationType,
           };
         })}
-        show={show}
         isOpen={installModalOpen}
         refresh={getInstalledPythons}
         closeModal={closeInstallModal}
@@ -210,7 +207,6 @@ export default function InstalledPythons({
         ) : (
           installedPythons.map(python => (
             <InstalledCard
-              show={show}
               python={python}
               diskUsage={diskUsage}
               maxDiskValue={maxDiskValue}

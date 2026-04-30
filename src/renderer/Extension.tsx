@@ -5,8 +5,6 @@ import {APP_BUILD_NUMBER} from '@lynx_common/consts';
 import {isDev} from '@lynx_common/utils';
 
 import CardMenu from './components/CardMenu';
-import CardMenuModal from './components/CardMenuModal';
-import Settings from './components/Settings/Settings';
 import ToolsPage from './components/ToolsPage';
 import CustomHook from './CustomHook';
 import {setCards} from './DataHolder';
@@ -19,8 +17,6 @@ export function InitialExtensions(lynxAPI: ExtensionRendererApi) {
   setCards(lynxAPI.modulesData?.allCards || []);
 
   lynxAPI.addReducer([{name: 'pythonToolkit', reducer: pythonToolkitReducer}]);
-  lynxAPI.addModal(CardMenuModal);
-  lynxAPI.addModal(Settings);
 
   if (
     (typeof window.LynxHub !== 'undefined' && window.LynxHub.buildNumber && window.LynxHub.buildNumber > 45) ||

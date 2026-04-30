@@ -14,6 +14,7 @@ import {
   PopoverTrigger,
   Spinner,
 } from '@heroui/react';
+import {useOverlayState} from '@heroui-v3/react';
 import {topToast} from '@lynx/layouts/ToastProviders';
 import filesIpc from '@lynx_shared/ipc/files';
 import {BoxMinimalistic, Diskette, Folder2, MenuDots, TrashBin2} from '@solar-icons/react-perf/BoldDuotone';
@@ -36,7 +37,6 @@ type Props = {
   pythonPath: string;
   diskUsage: {path: string; value: number | undefined}[];
   refresh: () => void;
-  show: string;
   isInstallation?: boolean;
 };
 
@@ -48,7 +48,6 @@ export default function VenvCard({
   diskUsage,
   pythonPath,
   refresh,
-  show,
   isInstallation,
 }: Props) {
   const [popoverUninstaller, setPopoverUninstaller] = useState<boolean>(false);
@@ -107,10 +106,7 @@ export default function VenvCard({
     });
   };
 
-  const [packageManagerOpen, setPackageManagerOpen] = useState<boolean>(false);
-  const packageManager = () => {
-    setPackageManagerOpen(true);
-  };
+  const packageManagerModal = useOverlayState();
 
   const removeFromList = useCallback(() => {
     pIpc.removeAssociatePath(pythonPath);
@@ -123,12 +119,10 @@ export default function VenvCard({
     <>
       <PackageManagerModal
         size="3xl"
-        show={show}
         id={pythonPath}
         pythonPath={pythonPath}
-        isOpen={packageManagerOpen}
+        state={packageManagerModal}
         onPackagesChanged={refresh}
-        setIsOpen={setPackageManagerOpen}
       />
       <Card
         className={
@@ -162,7 +156,7 @@ export default function VenvCard({
               <DropdownMenu variant="flat">
                 <DropdownItem
                   key="package-manager"
-                  onPress={packageManager}
+                  onPress={packageManagerModal.open}
                   startContent={<Packages_Icon className="size-4" />}>
                   Package Manager
                 </DropdownItem>

@@ -29,9 +29,8 @@ type Props = {
   pythonPath: string;
   item: PackageInfo;
   updated: (list: PackageUpdate | PackageUpdate[]) => void;
-  show: string;
 };
-const PkgVersions = memo(({updated, item, pythonPath, show}: Props) => {
+const PkgVersions = memo(({updated, item, pythonPath}: Props) => {
   const [availableVersion, setAvailableVersion] = useState<string[] | null>(null);
 
   const [changingTo, setChangingTo] = useState<string | undefined>(undefined);
@@ -118,7 +117,7 @@ const PkgVersions = memo(({updated, item, pythonPath, show}: Props) => {
         placement="center"
         scrollBehavior="inside"
         onOpenChange={setIsOpen}
-        classNames={{backdrop: `top-10! ${show}`, wrapper: `top-10! pb-8 ${show}`}}
+        classNames={{backdrop: `top-10!`, wrapper: `top-10! pb-8`}}
         hideCloseButton>
         <ModalContent>
           <ModalHeader className="justify-center gap-x-1 text-sm items-center">

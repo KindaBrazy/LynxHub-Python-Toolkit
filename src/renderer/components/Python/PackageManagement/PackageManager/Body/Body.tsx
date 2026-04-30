@@ -1,14 +1,5 @@
-import {
-  ModalBody,
-  Selection,
-  Spinner,
-  Table,
-  TableBody,
-  TableCell,
-  TableColumn,
-  TableHeader,
-  TableRow,
-} from '@heroui/react';
+import {Selection, Spinner, Table, TableBody, TableCell, TableColumn, TableHeader, TableRow} from '@heroui/react';
+import {ModalBody} from '@heroui-v3/react';
 import EmptyStateCard from '@lynx/components/EmptyStateCard';
 import {cloneDeep, isEmpty} from 'lodash-es';
 import {OverlayScrollbarsComponent} from 'overlayscrollbars-react';
@@ -32,7 +23,6 @@ type Props = {
   setSelectedKeys: Dispatch<SetStateAction<Selection>>;
   setPythonPath?: Dispatch<SetStateAction<string>>;
   setIsUpdateTerminalOpen: Dispatch<SetStateAction<boolean>>;
-  show: string;
 };
 
 export default function PackageManagerBody({
@@ -48,7 +38,6 @@ export default function PackageManagerBody({
   selectedKeys,
   setPythonPath,
   setIsUpdateTerminalOpen,
-  show,
 }: Props) {
   const isDarkMode = useAppState('darkMode');
   const anyUpdateAvailable = useMemo(() => packagesUpdate.length !== 0, [packagesUpdate]);
@@ -72,70 +61,70 @@ export default function PackageManagerBody({
   const refreshedItems = useMemo(() => cloneDeep(items), [items, selectedKeys]);
 
   return (
-    <ModalBody
-      options={{
-        overflow: {x: 'hidden', y: 'scroll'},
-        scrollbars: {
-          autoHide: 'move',
-          clickScroll: true,
-          theme: isDarkMode ? 'os-theme-light' : 'os-theme-dark',
-        },
-      }}
-      className="size-full p-4"
-      as={OverlayScrollbarsComponent}>
-      <div className="w-full flex flex-col gap-y-4">
-        <div className="flex flex-row gap-8 flex-wrap justify-center">
-          {isLoading ? (
-            <Spinner
-              size="lg"
-              className="mb-4"
-              label="Please wait, loading package data..."
-              classNames={{circle2: 'border-b-[#ffe66e]', circle1: 'border-b-[#ffe66e] '}}
-            />
-          ) : isValidPython ? (
-            <>
-              <Table
-                color="success"
-                aria-label="pacakges"
-                disabledKeys={disabledKeys}
-                selectedKeys={selectedKeys}
-                onSelectionChange={setSelectedKeys}
-                selectionMode={anyUpdateAvailable ? 'multiple' : 'none'}
-                classNames={{wrapper: 'bg-foreground-200 dark:bg-black/50'}}>
-                <TableHeader columns={columns}>
-                  {column => <TableColumn key={column.key}>{column.label}</TableColumn>}
-                </TableHeader>
-                <TableBody items={refreshedItems}>
-                  {item => (
-                    <TableRow key={item.name}>
-                      {columnKey => (
-                        <TableCell>
-                          <TableItem
-                            show={show}
-                            item={item}
-                            removed={removed}
-                            updated={updated}
-                            pythonPath={pythonPath}
-                            columnKey={columnKey as string}
-                            setIsUpdateTerminalOpen={setIsUpdateTerminalOpen}
-                            isSelected={selectedKeys === 'all' || selectedKeys.has(item.name)}
-                          />
-                        </TableCell>
-                      )}
-                    </TableRow>
-                  )}
-                </TableBody>
-              </Table>
-            </>
-          ) : (
-            <EmptyStateCard
-              title="Could not find a virtual environment."
-              description="Please select your desire environment."
-              action={<SelectEnv id={id} setPythonPath={setPythonPath} />}
-            />
-          )}
+    <ModalBody>
+      <OverlayScrollbarsComponent
+        options={{
+          overflow: {x: 'hidden', y: 'scroll'},
+          scrollbars: {
+            autoHide: 'move',
+            clickScroll: true,
+            theme: isDarkMode ? 'os-theme-light' : 'os-theme-dark',
+          },
+        }}
+        className="size-full p-4">
+        <div className="w-full flex flex-col gap-y-4">
+          <div className="flex flex-row gap-8 flex-wrap justify-center">
+            {isLoading ? (
+              <Spinner
+                size="lg"
+                className="mb-4"
+                label="Please wait, loading package data..."
+                classNames={{circle2: 'border-b-[#ffe66e]', circle1: 'border-b-[#ffe66e] '}}
+              />
+            ) : isValidPython ? (
+              <>
+                <Table
+                  color="success"
+                  aria-label="pacakges"
+                  disabledKeys={disabledKeys}
+                  selectedKeys={selectedKeys}
+                  onSelectionChange={setSelectedKeys}
+                  selectionMode={anyUpdateAvailable ? 'multiple' : 'none'}
+                  classNames={{wrapper: 'bg-foreground-200 dark:bg-black/50'}}>
+                  <TableHeader columns={columns}>
+                    {column => <TableColumn key={column.key}>{column.label}</TableColumn>}
+                  </TableHeader>
+                  <TableBody items={refreshedItems}>
+                    {item => (
+                      <TableRow key={item.name}>
+                        {columnKey => (
+                          <TableCell>
+                            <TableItem
+                              item={item}
+                              removed={removed}
+                              updated={updated}
+                              pythonPath={pythonPath}
+                              columnKey={columnKey as string}
+                              setIsUpdateTerminalOpen={setIsUpdateTerminalOpen}
+                              isSelected={selectedKeys === 'all' || selectedKeys.has(item.name)}
+                            />
+                          </TableCell>
+                        )}
+                      </TableRow>
+                    )}
+                  </TableBody>
+                </Table>
+              </>
+            ) : (
+              <EmptyStateCard
+                title="Could not find a virtual environment."
+                description="Please select your desire environment."
+                action={<SelectEnv id={id} setPythonPath={setPythonPath} />}
+              />
+            )}
+          </div>
         </div>
-      </div>
+      </OverlayScrollbarsComponent>
     </ModalBody>
   );
 }

@@ -1,15 +1,15 @@
 import {Button} from '@heroui/react';
+import {useOverlayState} from '@heroui-v3/react';
 import {SettingsMinimalistic} from '@solar-icons/react-perf/BoldDuotone';
-import {useEffect, useMemo, useState} from 'react';
 import {useDispatch} from 'react-redux';
 
 import {ToolsCard} from '../../../../src/renderer/mainWindow/components/ToolsCard';
-import {tabsActions, useTabsState} from '../../../../src/renderer/mainWindow/redux/reducers/tabs';
 import {AppDispatch} from '../../../../src/renderer/mainWindow/redux/store';
 import pIpc from '../PIpc';
 import {PythonToolkitActions} from '../reducer';
 import {cacheUrl} from '../Utils';
 import PythonToolkitModal from './Python/PythonToolkitModal';
+import SettingsModal from './Settings/SettingsModal';
 
 const title: string = 'Python Toolkit';
 const desc: string = 'Manage Python versions, virtual environments, packages, requirements files, and more.';
@@ -20,47 +20,20 @@ export default function ToolsPage() {
   const dispatch = useDispatch<AppDispatch>();
   const icon = cacheUrl(iconUrl);
 
-  const activeTab = useTabsState('activeTab');
-  const tabs = useTabsState('tabs');
-
-  const [prevTabTitle, setPrevTabTitle] = useState<string | undefined>(tabs.find(tab => tab.id === activeTab)?.title);
-
-  const [isOpen, setIsOpen] = useState(false);
-  const [tabID, setTabID] = useState<string>('');
-
-  useEffect(() => {
-    if (isOpen && tabID === activeTab) dispatch(tabsActions.setTabTitle({tabID, title}));
-  }, [activeTab, tabID, isOpen]);
-
-  useEffect(() => {
-    if (!tabs.find(tab => tab.id === activeTab)) {
-      setIsOpen(false);
-    }
-  }, [tabs, activeTab]);
-
-  useEffect(() => {
-    if (!isOpen && prevTabTitle) dispatch(tabsActions.setActiveTabTitle(prevTabTitle));
-  }, [isOpen]);
+  const settingsModal = useOverlayState();
+  const packageManagerModal = useOverlayState();
 
   const openModal = () => {
-    setIsOpen(true);
-    setTabID(activeTab);
-    setPrevTabTitle(tabs.find(tab => tab.id === activeTab)?.title);
-    dispatch(tabsActions.setActiveTabTitle(title));
+    packageManagerModal.open();
     pIpc.getAssociates().then(associates => dispatch(PythonToolkitActions.setAssociates(associates || [])));
   };
 
-  const openSettings = () => {
-    dispatch(PythonToolkitActions.openSettingsModal({title: '', id: '', tabID: activeTab}));
-  };
-
-  const show = useMemo(() => (activeTab === tabID ? 'flex' : 'hidden'), [activeTab, tabID]);
-
   return (
     <>
+      <SettingsModal state={settingsModal} />
       <ToolsCard
         footer={
-          <Button as="div" variant="flat" color="primary" onPress={openSettings} isIconOnly>
+          <Button as="div" variant="flat" color="primary" onPress={settingsModal.open} isIconOnly>
             <SettingsMinimalistic className="size-5" />
           </Button>
         }
@@ -70,7 +43,7 @@ export default function ToolsPage() {
         description={desc}
         onPress={openModal}
       />
-      <PythonToolkitModal show={show} isOpen={isOpen} setIsOpen={setIsOpen} />
+      <PythonToolkitModal state={packageManagerModal} />
     </>
   );
 }
