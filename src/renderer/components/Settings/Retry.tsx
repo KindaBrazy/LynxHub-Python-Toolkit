@@ -1,4 +1,4 @@
-import {NumberInput} from '@heroui/react';
+import {Description, Label, NumberField} from '@heroui-v3/react';
 import {debounce} from 'lodash-es';
 import {useEffect, useMemo, useState} from 'react';
 
@@ -25,15 +25,14 @@ export default function Retry() {
   }, [debouncedSetMaxRetry]);
 
   return (
-    <NumberInput
-      size="sm"
-      minValue={1}
-      value={value}
-      maxValue={100}
-      defaultValue={0}
-      onValueChange={onValueChange}
-      label="Max Package Update Retries"
-      description="Set the maximum number of attempts for a failed package update check. (Default is 5)"
-    />
+    <NumberField minValue={1} value={value} defaultValue={1} variant="secondary" onChange={onValueChange} fullWidth>
+      <Label>Max Package Update Retries</Label>
+      <NumberField.Group>
+        <NumberField.DecrementButton />
+        <NumberField.Input />
+        <NumberField.IncrementButton />
+      </NumberField.Group>
+      <Description>Set the maximum number of attempts for a failed package update check. (Default is 5)</Description>
+    </NumberField>
   );
 }

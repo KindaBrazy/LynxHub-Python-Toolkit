@@ -1,4 +1,4 @@
-import {NumberInput} from '@heroui/react';
+import {Description, Label, NumberField} from '@heroui-v3/react';
 import {debounce} from 'lodash-es';
 import {useEffect, useMemo, useState} from 'react';
 
@@ -25,15 +25,21 @@ export default function Concurrent() {
   }, [debouncedSetMax]);
 
   return (
-    <NumberInput
-      size="sm"
+    <NumberField
       minValue={0}
       value={value}
       maxValue={100}
       defaultValue={0}
-      onValueChange={onValueChange}
-      label="Maximum Concurrent Update Checks"
-      description="Limit the number of simultaneous update checks. Set to 0 for no limit."
-    />
+      variant="secondary"
+      onChange={onValueChange}
+      fullWidth>
+      <Label>Maximum Concurrent Update Checks</Label>
+      <NumberField.Group>
+        <NumberField.DecrementButton />
+        <NumberField.Input />
+        <NumberField.IncrementButton />
+      </NumberField.Group>
+      <Description>Limit the number of simultaneous update checks. Set to 0 for no limit.</Description>
+    </NumberField>
   );
 }

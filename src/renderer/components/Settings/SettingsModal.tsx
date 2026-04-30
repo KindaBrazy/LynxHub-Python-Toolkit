@@ -20,12 +20,12 @@ export default function SettingsModal({state}: Props) {
         <Modal.Heading>Python Toolkit Settings</Modal.Heading>
       </Modal.Header>
 
-      <Modal.Body>
+      <Modal.Body className="p-1 gap-y-4 flex flex-col">
         <Retry />
         <Concurrent />
-        <Separator className="my-4" />
+        <Separator />
         <PkgString />
-        <Separator className="my-4" />
+        <Separator />
         <CacheDirUsage />
       </Modal.Body>
     </TabModal>

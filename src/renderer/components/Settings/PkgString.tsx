@@ -1,4 +1,4 @@
-import {Radio, RadioGroup} from '@heroui/react';
+import {Description, Label, Radio, RadioGroup} from '@heroui-v3/react';
 import {capitalize, startCase} from 'lodash-es';
 import {useEffect, useState} from 'react';
 import {useDispatch} from 'react-redux';
@@ -39,21 +39,45 @@ export default function PkgString() {
   };
 
   return (
-    <RadioGroup
-      description={`This setting changes how package names are displayed in the
-       package manager. It has no effect on functionality.`}
-      label={
-        <div>
-          Package Name Display Format.
-          <span className="text-success/70"> Example: {exampleResult}</span>
-        </div>
-      }
-      value={value}
-      orientation="horizontal"
-      onValueChange={onValueChange}>
-      <Radio value="default">Default</Radio>
-      <Radio value="capitalize">Capitalize</Radio>
-      <Radio value="startCase">Start Case</Radio>
-    </RadioGroup>
+    <div className="flex flex-col gap-2">
+      <Label>
+        <span>Package Name Display Format.</span>
+        <span className="text-success"> Example: {exampleResult}</span>
+      </Label>
+      <RadioGroup
+        value={value}
+        variant="secondary"
+        defaultValue="default"
+        onChange={onValueChange}
+        orientation="horizontal">
+        <Radio value="default">
+          <Radio.Control>
+            <Radio.Indicator />
+          </Radio.Control>
+          <Radio.Content>
+            <Label>Default</Label>
+          </Radio.Content>
+        </Radio>
+        <Radio value="capitalize">
+          <Radio.Control>
+            <Radio.Indicator />
+          </Radio.Control>
+          <Radio.Content>
+            <Label>Capitalize</Label>
+          </Radio.Content>
+        </Radio>
+        <Radio value="startCase">
+          <Radio.Control>
+            <Radio.Indicator />
+          </Radio.Control>
+          <Radio.Content>
+            <Label>Start Case</Label>
+          </Radio.Content>
+        </Radio>
+      </RadioGroup>
+      <Description>
+        This setting changes how package names are displayed in the package manager. It has no effect on functionality.
+      </Description>
+    </div>
   );
 }

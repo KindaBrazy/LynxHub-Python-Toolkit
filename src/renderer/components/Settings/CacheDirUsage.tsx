@@ -1,4 +1,4 @@
-import {Button} from '@heroui/react';
+import {Button} from '@heroui-v3/react';
 import {topToast} from '@lynx/layouts/ToastProviders';
 import {Broom} from '@solar-icons/react-perf/BoldDuotone';
 import {useEffect, useState} from 'react';
@@ -39,7 +39,7 @@ export default function CacheDirUsage() {
   };
 
   return (
-    <div className="w-full flex flex-row gap-x-2">
+    <div className="w-full flex flex-col gap-y-2">
       <LynxSwitch
         description={
           'When disabled, disk usage is recalculated every time you open toolkit window, which can take longer' +
@@ -49,19 +49,16 @@ export default function CacheDirUsage() {
         enabled={cacheStorageUsage}
         onEnabledChange={onEnabledChange}
       />
-      <div className="flex flex-col items-center justify-center gap-y-1">
-        <Button
-          variant="flat"
-          isLoading={clearing}
-          onPress={clearCache}
-          className="h-14 shrink-0"
-          isDisabled={!cacheStorageUsage}
-          startContent={!clearing && <Broom />}
-          fullWidth>
-          {!clearing ? 'Clear Cache' : 'Clearing...'}
-        </Button>
-        <span className="text-tiny text-default-400 text-center">Clear the cache to refresh usage statistics.</span>
-      </div>
+      <Button
+        isPending={clearing}
+        onPress={clearCache}
+        className="shrink-0"
+        variant="danger-soft"
+        isDisabled={!cacheStorageUsage}
+        fullWidth>
+        {!clearing && <Broom />}
+        {!clearing ? 'Clear Cache' : 'Clearing...'}
+      </Button>
     </div>
   );
 }
