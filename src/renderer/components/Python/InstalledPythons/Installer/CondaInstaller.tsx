@@ -1,39 +1,32 @@
 import {
   Button,
-  CircularProgress,
+  Description,
   Input,
+  Label,
   Link,
-  Listbox,
-  ListboxItem,
   Popover,
-  PopoverContent,
-  PopoverTrigger,
-  Progress,
+  ProgressBar,
+  SearchField,
   Spinner,
-  Tooltip,
-} from '@heroui/react';
+  UseOverlayStateReturn,
+} from '@heroui-v3/react';
 import EmptyStateCard from '@lynx/components/EmptyStateCard';
-import {DownloadMinimalistic} from '@solar-icons/react-perf/BoldDuotone';
+import LynxTooltip from '@lynx/components/LynxTooltip';
+import {DownloadMinimalistic, Inbox} from '@solar-icons/react-perf/BoldDuotone';
 import {Refresh, ShieldWarning} from '@solar-icons/react-perf/BoldDuotone';
 import {isEmpty, isNil, isString} from 'lodash-es';
-import {OverlayScrollbarsComponent} from 'overlayscrollbars-react';
 import {Dispatch, SetStateAction, useEffect, useState} from 'react';
 
-import {useAppState} from '../../../../../../../src/renderer/mainWindow/redux/reducers/app';
-import {Circle_Icon} from '../../../../../../../src/renderer/shared/assets/icons';
 import pIpc from '../../../../PIpc';
 
 type Props = {
-  isOpen: boolean;
-  closeModal: () => void;
+  state: UseOverlayStateReturn;
   refresh: (research: boolean) => void;
   installed: string[];
   setCloseDisabled: Dispatch<SetStateAction<boolean>>;
 };
 
-export default function InstallerConda({refresh, installed, closeModal, isOpen, setCloseDisabled}: Props) {
-  const isDarkMode = useAppState('darkMode');
-
+export default function InstallerConda({refresh, installed, state, setCloseDisabled}: Props) {
   const [versions, setVersions] = useState<string[]>([]);
   const [searchVersions, setSearchVersions] = useState<string[]>([]);
 
@@ -118,8 +111,8 @@ export default function InstallerConda({refresh, installed, closeModal, isOpen, 
   };
 
   useEffect(() => {
-    if (isOpen) fetchPythonList(false);
-  }, [isOpen]);
+    if (state.isOpen) fetchPythonList(false);
+  }, [state.isOpen]);
 
   const installPython = (version: string) => {
     setInstallingVersion(version);
@@ -134,7 +127,7 @@ export default function InstallerConda({refresh, installed, closeModal, isOpen, 
       .installConda(envName, version)
       .then(() => {
         refresh(true);
-        closeModal();
+        state.close();
         console.log('installed', version);
       })
       .catch(err => {
@@ -147,24 +140,26 @@ export default function InstallerConda({refresh, installed, closeModal, isOpen, 
   };
 
   if (isCondaInstalled === undefined) {
-    return <CircularProgress size="lg" className="mb-4 self-center" label="Checking for Conda installation..." />;
+    return (
+      <div className="flex flex-col gap-y-2 items-center mt-2">
+        <Spinner size="lg" />
+        <Description className="text-sm">Checking for conda installation...</Description>
+      </div>
+    );
   } else if (!isCondaInstalled) {
     return (
       <EmptyStateCard
         action={
           <Link
-            as={Button}
-            variant="flat"
-            color="foreground"
-            onPress={() => window.open('https://docs.conda.io/projects/conda/en/latest/user-guide/install/index.html')}
-            isExternal
-            showAnchorIcon>
+            onPress={() => window.open('https://docs.conda.io/projects/conda/en/latest/user-guide/install/index.html')}>
             Conda Official Website
+            <Link.Icon />
           </Link>
         }
-        className="mx-4"
+        variant="secondary"
+        className="mx-4 mt-2"
+        title="Conda Installation Not Found!"
         description="To proceed, please install Conda from the official website."
-        title={<span className="text-warning font-bold">Conda Installation Not Found</span>}
       />
     );
   }
@@ -172,101 +167,93 @@ export default function InstallerConda({refresh, installed, closeModal, isOpen, 
   return (
     <>
       {isEmpty(installingVersion) && (
-        <div className="flex flex-row gap-x-2 px-4">
-          <Input
-            size="sm"
-            type="search"
-            value={inputValue}
-            onValueChange={setInputValue}
-            startContent={<Circle_Icon />}
-            placeholder="Refresh available Conda Python versions"
-          />
-          <Tooltip title="Refresh from server">
-            <Button
-              size="sm"
-              variant="flat"
-              startContent={<Refresh />}
-              onPress={() => fetchPythonList(true)}
-              isIconOnly
-            />
-          </Tooltip>
+        <div className="flex flex-row gap-x-2 px-4 mt-1">
+          <SearchField value={inputValue} variant="secondary" onChange={setInputValue} fullWidth>
+            <SearchField.Group>
+              <SearchField.SearchIcon />
+              <SearchField.Input placeholder="Search..." />
+              <SearchField.ClearButton />
+            </SearchField.Group>
+          </SearchField>
+          <LynxTooltip delay={300} content="Refresh from server">
+            <Button variant="tertiary" className="shrink-0" onPress={() => fetchPythonList(true)} isIconOnly>
+              <Refresh />
+            </Button>
+          </LynxTooltip>
         </div>
       )}
+
       {errorLoadingVersion ? (
-        <div className="size-full py-2 px-16 text-danger flex flex-col items-center justify-center gap-4">
-          <ShieldWarning className="size-20" />
-          <span className="text-lg">{errorLoadingVersion.title}</span>
-          <span className="text-warning/50 text-sm">{errorLoadingVersion.description}</span>
-        </div>
+        <EmptyStateCard
+          variant="secondary"
+          className="mt-2 mx-4"
+          title={errorLoadingVersion.title}
+          description={errorLoadingVersion.description}
+          icon={<ShieldWarning className="size-20 text-warning" />}
+        />
       ) : (
-        <OverlayScrollbarsComponent
-          options={{
-            overflow: {x: 'hidden', y: 'scroll'},
-            scrollbars: {
-              autoHide: 'move',
-              clickScroll: true,
-              theme: isDarkMode ? 'os-theme-light' : 'os-theme-dark',
-            },
-          }}
-          className={`pr-3 mr-1 pl-4 pb-4 text-center`}>
+        <div className="px-4">
           {!isEmpty(installingVersion) ? (
-            <Progress
-              value={percentage}
-              className="my-4 px-2"
-              isIndeterminate={percentage === 0 || percentage === 100}
-              label={`Installing Conda Python v${installingVersion}...`}
-              showValueLabel
-            />
+            <ProgressBar className="my-4" value={percentage} isIndeterminate={percentage === 0 || percentage === 100}>
+              <Label>Installing Conda Python v{installingVersion}...</Label>
+              <ProgressBar.Output />
+              <ProgressBar.Track>
+                <ProgressBar.Fill />
+              </ProgressBar.Track>
+            </ProgressBar>
           ) : loadingList ? (
-            <Spinner
-              size="lg"
-              className="justify-self-center my-4"
-              label="Loading available Python versions..."
-              classNames={{circle2: 'border-b-[#ffe66e]', circle1: 'border-b-[#ffe66e] '}}
+            <div className="flex flex-col gap-y-2 items-center mt-2">
+              <Spinner size="lg" />
+              <Description className="text-sm">Loading available python versions...</Description>
+            </div>
+          ) : isEmpty(searchVersions) ? (
+            <EmptyStateCard
+              className="mt-2"
+              variant="secondary"
+              icon={<Inbox size={34} />}
+              description="Nothing to install!"
             />
           ) : (
-            <Listbox variant="flat" className="px-4" selectionMode="none">
+            <div className="flex flex-col gap-y-1 my-2">
               {searchVersions.map(item => (
-                <ListboxItem
-                  endContent={
-                    <Popover key={'install_conda_python'} showArrow>
-                      <PopoverTrigger>
-                        <Button size="sm" variant="flat" color="success" startContent={<DownloadMinimalistic />}>
-                          Install
-                        </Button>
-                      </PopoverTrigger>
-                      <PopoverContent className="p-3">
-                        <div className="px-2 py-1 space-y-2 text-center">
-                          <Input
-                            onKeyUp={(event: any) => {
-                              if (event.key === 'Enter') {
-                                installPython(item);
-                              }
-                            }}
-                            value={envName}
-                            onValueChange={setEnvName}
-                            placeholder="Environment name..."
-                          />
-                          <Button
-                            size="sm"
-                            color="success"
-                            onPress={() => installPython(item)}
-                            startContent={<DownloadMinimalistic />}
-                            fullWidth>
-                            Install v{item}
-                          </Button>
-                        </div>
-                      </PopoverContent>
-                    </Popover>
+                <div
+                  className={
+                    'flex items-center justify-between hover:bg-surface-secondary/50' +
+                    ' rounded-2xl px-2 py-1 transition-colors duration-200'
                   }
-                  key={item}
-                  className="cursor-default">
-                  {item}
-                </ListboxItem>
+                  key={item}>
+                  <Label>{item}</Label>
+                  <Popover>
+                    <Button size="sm" variant="secondary">
+                      <DownloadMinimalistic />
+                      Install
+                    </Button>
+                    <Popover.Content className="max-w-64">
+                      <Popover.Dialog className="gap-y-2 flex flex-col">
+                        <Popover.Arrow />
+                        <Input
+                          onKeyUp={(event: any) => {
+                            if (event.key === 'Enter') {
+                              installPython(item);
+                            }
+                          }}
+                          value={envName}
+                          variant="secondary"
+                          placeholder="Environment name..."
+                          onChange={e => setEnvName(e.target.value)}
+                        />
+                        <Button size="sm" onPress={() => installPython(item)} fullWidth>
+                          <DownloadMinimalistic />
+                          Install v{item}
+                        </Button>
+                      </Popover.Dialog>
+                    </Popover.Content>
+                  </Popover>
+                </div>
               ))}
-            </Listbox>
+            </div>
           )}
-        </OverlayScrollbarsComponent>
+        </div>
       )}
     </>
   );

@@ -1,13 +1,14 @@
-import {Button, Modal, ModalBody, ModalContent, ModalFooter, ModalHeader, Tab, Tabs} from '@heroui/react';
-import {Key, useMemo, useState} from 'react';
+import {Key, Modal, Tabs} from '@heroui-v3/react';
+import {UseOverlayStateReturn} from '@heroui-v3/react';
+import LynxScroll from '@lynx/components/LynxScroll';
+import TabModal from '@lynx/components/TabModal';
+import {useMemo, useState} from 'react';
 
-import {modalMotionProps} from '../../../../../../../src/renderer/mainWindow/utils/constants';
 import InstallerConda from './CondaInstaller';
 import InstallerOfficial from './OfficialInstaller';
 
 type Props = {
-  isOpen: boolean;
-  closeModal: () => void;
+  state: UseOverlayStateReturn;
   refresh: (research: boolean) => void;
   installed: {
     version: string;
@@ -15,7 +16,7 @@ type Props = {
   }[];
 };
 
-export default function InstallerModal({isOpen, closeModal, refresh, installed}: Props) {
+export default function InstallerModal({state, refresh, installed}: Props) {
   const [closeDisabled, setCloseDisabled] = useState<boolean>(false);
   const [currentTab, setCurrentTab] = useState<Key>('official');
 
@@ -29,52 +30,45 @@ export default function InstallerModal({isOpen, closeModal, refresh, installed}:
   );
 
   return (
-    <>
-      <Modal
-        size="xl"
-        isOpen={isOpen}
-        placement="center"
-        onClose={closeModal}
-        isDismissable={false}
-        scrollBehavior="inside"
-        motionProps={modalMotionProps}
-        classNames={{backdrop: `top-10!`, wrapper: `!top-10 pb-8`}}
-        hideCloseButton>
-        <ModalContent className="overflow-hidden">
-          <ModalHeader className="bg-foreground-100 justify-center items-center flex-col gap-y-2">
-            <span>Install a New Python Version</span>
-            <Tabs variant="light" onSelectionChange={setCurrentTab} selectedKey={currentTab.toString()}>
-              <Tab key="official" title="Official Python Releases" />
-              <Tab key="conda" title="Conda Environments" />
-            </Tabs>
-          </ModalHeader>
-          <ModalBody className="pt-4 pb-0 px-0 scrollbar-hide">
-            {currentTab === 'official' && (
-              <InstallerOfficial
-                isOpen={isOpen}
-                refresh={refresh}
-                closeModal={closeModal}
-                installed={installedOfficial}
-                setCloseDisabled={setCloseDisabled}
-              />
-            )}
-            {currentTab === 'conda' && (
-              <InstallerConda
-                isOpen={isOpen}
-                refresh={refresh}
-                closeModal={closeModal}
-                installed={installedConda}
-                setCloseDisabled={setCloseDisabled}
-              />
-            )}
-          </ModalBody>
-          <ModalFooter className="py-3">
-            <Button variant="light" color="warning" onPress={closeModal} isDisabled={closeDisabled}>
-              Close
-            </Button>
-          </ModalFooter>
-        </ModalContent>
-      </Modal>
-    </>
+    <TabModal size="lg" isOpen={state.isOpen} dialogClassName="px-0" onOpenChange={state.setOpen}>
+      <Modal.CloseTrigger isDisabled={closeDisabled} />
+      <Modal.Header className="px-4">
+        <Modal.Heading>Install a New Python Version</Modal.Heading>
+        <Tabs className="w-full" selectedKey={currentTab} onSelectionChange={setCurrentTab}>
+          <Tabs.ListContainer>
+            <Tabs.List>
+              <Tabs.Tab id="official">
+                Official Python Releases
+                <Tabs.Indicator />
+              </Tabs.Tab>
+              <Tabs.Tab id="conda">
+                Conda Environments
+                <Tabs.Indicator />
+              </Tabs.Tab>
+            </Tabs.List>
+          </Tabs.ListContainer>
+        </Tabs>
+      </Modal.Header>
+      <Modal.Body className="overflow-hidden">
+        <LynxScroll className="size-full">
+          {currentTab === 'official' && (
+            <InstallerOfficial
+              state={state}
+              refresh={refresh}
+              installed={installedOfficial}
+              setCloseDisabled={setCloseDisabled}
+            />
+          )}
+          {currentTab === 'conda' && (
+            <InstallerConda
+              state={state}
+              refresh={refresh}
+              installed={installedConda}
+              setCloseDisabled={setCloseDisabled}
+            />
+          )}
+        </LynxScroll>
+      </Modal.Body>
+    </TabModal>
   );
 }

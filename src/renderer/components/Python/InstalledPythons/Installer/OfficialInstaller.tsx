@@ -1,27 +1,32 @@
-import {Button, CircularProgress, Input, Link, Listbox, ListboxItem, Progress, Tooltip} from '@heroui/react';
+import {
+  Button,
+  Description,
+  Label,
+  Link,
+  ProgressBar,
+  SearchField,
+  Spinner,
+  UseOverlayStateReturn,
+} from '@heroui-v3/react';
+import EmptyStateCard from '@lynx/components/EmptyStateCard';
+import LynxTooltip from '@lynx/components/LynxTooltip';
 import {topToast} from '@lynx/layouts/ToastProviders';
-import {Circle_Icon} from '@lynx_assets/icons';
 import {formatSize} from '@lynx_common/utils';
-import {DownloadMinimalistic, Refresh, ShieldWarning} from '@solar-icons/react-perf/BoldDuotone';
+import {DownloadMinimalistic, Inbox, Refresh, ShieldWarning} from '@solar-icons/react-perf/BoldDuotone';
 import {isEmpty, isNil, isString} from 'lodash-es';
-import {OverlayScrollbarsComponent} from 'overlayscrollbars-react';
 import {Dispatch, SetStateAction, useEffect, useState} from 'react';
 
-import {useAppState} from '../../../../../../../src/renderer/mainWindow/redux/reducers/app';
 import {DlProgressOfficial, PythonVersion} from '../../../../../cross/CrossExtTypes';
 import pIpc from '../../../../PIpc';
 
 type Props = {
-  isOpen: boolean;
-  closeModal: () => void;
+  state: UseOverlayStateReturn;
   refresh: (research: boolean) => void;
   installed: string[];
   setCloseDisabled: Dispatch<SetStateAction<boolean>>;
 };
 
-export default function InstallerOfficial({refresh, installed, closeModal, isOpen, setCloseDisabled}: Props) {
-  const isDarkMode = useAppState('darkMode');
-
+export default function InstallerOfficial({refresh, installed, state, setCloseDisabled}: Props) {
   const [versions, setVersions] = useState<PythonVersion[]>([]);
   const [searchVersions, setSearchVersions] = useState<PythonVersion[]>([]);
   const [loadingList, setLoadingList] = useState<boolean>(false);
@@ -79,8 +84,8 @@ export default function InstallerOfficial({refresh, installed, closeModal, isOpe
   };
 
   useEffect(() => {
-    if (isOpen) fetchPythonList(false);
-  }, [isOpen]);
+    if (state.isOpen) fetchPythonList(false);
+  }, [state.isOpen]);
 
   useEffect(() => {
     if (isEmpty(inputValue)) {
@@ -118,7 +123,7 @@ export default function InstallerOfficial({refresh, installed, closeModal, isOpe
       .installOfficial(version)
       .then(() => {
         refresh(true);
-        closeModal();
+        state.close();
         console.log('installed', version);
         topToast.success(`Python${version.version} installed successfully.`);
       })
@@ -135,24 +140,19 @@ export default function InstallerOfficial({refresh, installed, closeModal, isOpe
   return (
     <>
       {isEmpty(installingVersion) && (
-        <div className="flex flex-row gap-x-2 px-4">
-          <Input
-            size="sm"
-            type="search"
-            value={inputValue}
-            onValueChange={setInputValue}
-            startContent={<Circle_Icon />}
-            placeholder="Search for Python version to install..."
-          />
-          <Tooltip delay={200} content="Refresh available Python versions" showArrow>
-            <Button
-              size="sm"
-              variant="flat"
-              startContent={<Refresh />}
-              onPress={() => fetchPythonList(true)}
-              isIconOnly
-            />
-          </Tooltip>
+        <div className="flex flex-row gap-x-2 px-4 py-1 items-center">
+          <SearchField value={inputValue} variant="secondary" onChange={setInputValue} fullWidth>
+            <SearchField.Group>
+              <SearchField.SearchIcon />
+              <SearchField.Input placeholder="Search..." />
+              <SearchField.ClearButton />
+            </SearchField.Group>
+          </SearchField>
+          <LynxTooltip delay={300} content="Refresh available Python versions">
+            <Button variant="tertiary" onPress={() => fetchPythonList(true)} isIconOnly>
+              <Refresh />
+            </Button>
+          </LynxTooltip>
         </div>
       )}
       {errorLoadingVersion ? (
@@ -162,65 +162,61 @@ export default function InstallerOfficial({refresh, installed, closeModal, isOpe
           <span className="text-warning text-sm">{errorLoadingVersion.description}</span>
         </div>
       ) : (
-        <OverlayScrollbarsComponent
-          options={{
-            overflow: {x: 'hidden', y: 'scroll'},
-            scrollbars: {
-              autoHide: 'move',
-              clickScroll: true,
-              theme: isDarkMode ? 'os-theme-light' : 'os-theme-dark',
-            },
-          }}
-          className={`pr-3 mr-1 pl-4 pb-4`}>
+        <div className="px-4">
           {!isEmpty(installingVersion) ? (
             installStage === 'installing' ? (
-              <Progress
-                className="my-4 px-2"
-                label={`Installing Python v${installingVersion?.version} ...`}
-                isIndeterminate
-              />
+              <ProgressBar className="my-4" isIndeterminate>
+                <Label>Installing Python v{installingVersion?.version}...</Label>
+                <ProgressBar.Output />
+                <ProgressBar.Track>
+                  <ProgressBar.Fill />
+                </ProgressBar.Track>
+              </ProgressBar>
             ) : (
-              <Progress
-                className="my-4 px-2"
-                value={(downloadProgress?.percentage || 0.1) * 100}
-                classNames={{label: 'text-small!', value: 'text-small!'}}
-                label={`Downloading ${installingVersion?.url.split('/').pop()} ...`}
-                valueLabel={`${formatSize(downloadProgress?.downloaded)} / ${formatSize(downloadProgress?.total)}`}
-                showValueLabel
-              />
+              <ProgressBar className="my-4" value={(downloadProgress?.percentage || 0.1) * 100}>
+                <Label>Downloading {installingVersion?.url.split('/').pop()}...</Label>
+                <ProgressBar.Output>
+                  {formatSize(downloadProgress?.downloaded)} / {formatSize(downloadProgress?.total)}
+                </ProgressBar.Output>
+                <ProgressBar.Track>
+                  <ProgressBar.Fill />
+                </ProgressBar.Track>
+              </ProgressBar>
             )
           ) : loadingList ? (
-            <CircularProgress
-              size="lg"
-              className="justify-self-center my-4"
-              label="Loading available Python versions..."
-              classNames={{indicator: 'stroke-[#ffe66e]'}}
+            <div className="flex flex-col gap-y-2 items-center mt-4">
+              <Spinner size="lg" />
+              <Description className="text-sm">Loading available python versions...</Description>
+            </div>
+          ) : isEmpty(searchVersions) ? (
+            <EmptyStateCard
+              className="mt-2"
+              variant="secondary"
+              icon={<Inbox size={34} />}
+              description="Nothing to install!"
             />
           ) : (
-            <Listbox variant="flat" className="px-4" selectionMode="none" items={searchVersions}>
-              {item => (
-                <ListboxItem
-                  endContent={
-                    <Button
-                      size="sm"
-                      variant="flat"
-                      color="success"
-                      onPress={() => installPython(item)}
-                      startContent={<DownloadMinimalistic />}
-                      fullWidth>
-                      Install
-                    </Button>
+            <div className="flex flex-col gap-y-1 my-2">
+              {searchVersions.map(item => (
+                <div
+                  className={
+                    'flex items-center justify-between hover:bg-surface-secondary/50' +
+                    ' rounded-2xl px-2 py-1 transition-colors duration-200'
                   }
-                  key={item.url}
-                  className="cursor-default">
-                  <Link size="sm" href={item.url} className="gap-x-2" isExternal>
+                  key={item.version}>
+                  <Link onPress={() => window.open(item.url)}>
                     {item.version}
+                    <Link.Icon />
                   </Link>
-                </ListboxItem>
-              )}
-            </Listbox>
+                  <Button size="sm" variant="secondary" onPress={() => installPython(item)}>
+                    <DownloadMinimalistic />
+                    Install
+                  </Button>
+                </div>
+              ))}
+            </div>
           )}
-        </OverlayScrollbarsComponent>
+        </div>
       )}
     </>
   );

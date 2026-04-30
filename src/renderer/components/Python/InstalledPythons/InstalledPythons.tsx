@@ -1,4 +1,4 @@
-import {Button, Spinner} from '@heroui/react';
+import {Button, Description, Spinner, useOverlayState} from '@heroui-v3/react';
 import EmptyStateCard from '@lynx/components/EmptyStateCard';
 import {topToast} from '@lynx/layouts/ToastProviders';
 import filesIpc from '@lynx_shared/ipc/files';
@@ -97,14 +97,7 @@ export default function InstalledPythons({
     getInstalledPythons(false);
   }, []);
 
-  const [installModalOpen, setInstallModalOpen] = useState<boolean>(false);
-
-  const openInstallModal = () => {
-    setInstallModalOpen(true);
-  };
-  const closeInstallModal = () => {
-    setInstallModalOpen(false);
-  };
+  const installModal = useOverlayState();
 
   const updateDefault = (installFolder: string, type: 'isDefault' | 'isLynxHubDefault') => {
     setInstalledPythons(prevState =>
@@ -170,24 +163,22 @@ export default function InstalledPythons({
             installationType,
           };
         })}
-        isOpen={installModalOpen}
+        state={installModal}
         refresh={getInstalledPythons}
-        closeModal={closeInstallModal}
       />
       <div className="w-full flex flex-row justify-between items-center">
         <span className="font-bold">Installed Versions</span>
         <div className="justify-center items-center flex gap-x-2">
-          <Button variant="solid" onPress={openInstallModal} startContent={<Plus size={14} />}>
+          <Button variant="secondary" onPress={installModal.open}>
+            <Plus />
             Install Version
           </Button>
-          <Button
-            variant="flat"
-            onPress={locateVenv}
-            isLoading={isLocating}
-            startContent={!isLocating && <FolderOpen />}>
+          <Button variant="tertiary" onPress={locateVenv} isPending={isLocating}>
+            {!isLocating && <FolderOpen />}
             {!isLocating && 'Locate'}
           </Button>
-          <Button variant="flat" startContent={<Refresh />} onPress={() => getInstalledPythons(true)}>
+          <Button variant="tertiary" onPress={() => getInstalledPythons(true)}>
+            <Refresh />
             Refresh List
           </Button>
         </div>
@@ -197,11 +188,10 @@ export default function InstalledPythons({
           `flex flex-row flex-wrap gap-8 ` + `${(isLoadingPythons || isEmpty(installedPythons)) && 'justify-center'}`
         }>
         {isLoadingPythons ? (
-          <Spinner
-            size="lg"
-            label="Loading Python installations..."
-            classNames={{circle2: 'border-b-[#ffe66e]', circle1: 'border-b-[#ffe66e] '}}
-          />
+          <div className="flex flex-col gap-y-2 items-center">
+            <Spinner size="xl" />
+            <Description className="text-sm">Loading python installations...</Description>
+          </div>
         ) : isEmpty(installedPythons) ? (
           <EmptyStateCard title={`No Python installations found. Use the "Install Version" button to add one.`} />
         ) : (
