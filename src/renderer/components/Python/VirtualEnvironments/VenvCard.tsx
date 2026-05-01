@@ -1,20 +1,4 @@
-import {
-  Button,
-  Card,
-  CardBody,
-  CardFooter,
-  CardHeader,
-  Divider,
-  Dropdown,
-  DropdownItem,
-  DropdownMenu,
-  DropdownTrigger,
-  Popover,
-  PopoverContent,
-  PopoverTrigger,
-  Spinner,
-} from '@heroui/react';
-import {useOverlayState} from '@heroui-v3/react';
+import {Button, Card, Dropdown, Label, Popover, Separator, Spinner, useOverlayState} from '@heroui-v3/react';
 import {topToast} from '@lynx/layouts/ToastProviders';
 import filesIpc from '@lynx_shared/ipc/files';
 import {BoxMinimalistic, Diskette, Folder2, MenuDots, TrashBin2} from '@solar-icons/react-perf/BoldDuotone';
@@ -25,7 +9,7 @@ import {FormEvent, useCallback, useEffect, useMemo, useState} from 'react';
 
 import {formatSizeMB} from '../../../../cross/CrossExtUtils';
 import pIpc from '../../../PIpc';
-import {Env_Icon, Packages_Icon} from '../../SvgIcons';
+import {Env_Icon} from '../../SvgIcons';
 import PackageManagerModal from '../PackageManagement/PackageManager/PackageManagerModal';
 import Venv_Associate from './Venv_Associate';
 
@@ -124,15 +108,9 @@ export default function VenvCard({
         state={packageManagerModal}
         onPackagesChanged={refresh}
       />
-      <Card
-        className={
-          'min-w-108 grow border-2 transition-all duration-300 border-foreground-100' +
-          ' hover:border-foreground-200 cursor-default'
-        }
-        as="div"
-        isPressable>
-        <CardHeader className="flex flex-row justify-between items-center py-1 px-4">
-          <div className="flex flex-col my-3">
+      <Card className={'w-120 border-2 transition-all duration-200 py-4 border-surface-secondary'}>
+        <Card.Header className="flex flex-row justify-between items-center">
+          <div className="flex flex-col">
             <div className="flex flex-row items-center gap-x-2">
               <Env_Icon className="size-[1.2rem] text-yellow-300" />
               <span
@@ -147,85 +125,74 @@ export default function VenvCard({
             <span className="text-tiny text-foreground-500">Python {pythonVersion}</span>
           </div>
           <div className="space-x-2 flex items-center">
-            <Dropdown className="border-1 border-foreground/10">
-              <DropdownTrigger>
-                <Button size="sm" variant="light" isIconOnly>
-                  <MenuDots className="rotate-90 size-3.5" />
-                </Button>
-              </DropdownTrigger>
-              <DropdownMenu variant="flat">
-                <DropdownItem
-                  key="package-manager"
-                  onPress={packageManagerModal.open}
-                  startContent={<Packages_Icon className="size-4" />}>
-                  Package Manager
-                </DropdownItem>
-              </DropdownMenu>
+            <Dropdown>
+              <Button size="sm" variant="tertiary" isIconOnly>
+                <MenuDots className="rotate-90" />
+              </Button>
+              <Dropdown.Popover>
+                <Dropdown.Menu onAction={key => console.log(`Selected: ${key}`)}>
+                  <Dropdown.Item id="package-manager" textValue="Manage Packages" onPress={packageManagerModal.open}>
+                    <BoxMinimalistic className="size-4" />
+                    <Label>Manage Packages</Label>
+                  </Dropdown.Item>
+                </Dropdown.Menu>
+              </Dropdown.Popover>
             </Dropdown>
 
             {!isInstallation && (
-              <Popover
-                placement="left"
-                isOpen={popoverUninstaller}
-                onOpenChange={setPopoverUninstaller}
-                className="max-w-sm before:bg-foreground-100"
-                showArrow>
-                <PopoverTrigger>
-                  <Button size="sm" color="danger" variant="light" isLoading={isRemoving} isIconOnly>
-                    <TrashBin2 className="size-[50%]" />
-                  </Button>
-                </PopoverTrigger>
-                <PopoverContent className="border border-foreground-100 dark:bg-DarkGray">
-                  <div className="p-2 gap-y-3 flex flex-col">
-                    {/* Option 1: Permanent Deletion */}
-                    <div>
-                      <strong className="text-sm">Delete Environment</strong>
-                      <p className="text-xs text-default-600 mt-1">
-                        {`Permanently deletes the '${title}' environment folder and all its contents from your computer.
-                       Any AI using this environment will be disconnected.`}
-                      </p>
-                      <Button
-                        size="sm"
-                        color="danger"
-                        className="mt-2"
-                        onPress={remove}
-                        startContent={<TrashBin2 />}
-                        fullWidth>
-                        Delete Permanently
-                      </Button>
-                    </div>
+              <Popover isOpen={popoverUninstaller} onOpenChange={setPopoverUninstaller}>
+                <Button size="sm" variant="danger-soft" isPending={isRemoving} isIconOnly>
+                  <TrashBin2 />
+                </Button>
+                <Popover.Content className="max-w-sm">
+                  <Popover.Dialog>
+                    <Popover.Arrow />
+                    <div className="p-2 gap-y-3 flex flex-col">
+                      {/* Option 1: Permanent Deletion */}
+                      <div>
+                        <strong className="text-sm">Delete Environment</strong>
+                        <p className="text-xs text-default-600 mt-1">
+                          {`Permanently deletes the '${title}' environment folder and all its contents from ` +
+                            `your computer. Any AI using this environment will be disconnected.`}
+                        </p>
+                        <Button size="sm" variant="danger" className="mt-2" onPress={remove} fullWidth>
+                          <TrashBin2 />
+                          Delete Permanently
+                        </Button>
+                      </div>
 
-                    {/* Visual separator */}
-                    <Divider className="bg-foreground-200" />
+                      {/* Visual separator */}
+                      <Separator />
 
-                    {/* Option 2: Remove from List */}
-                    <div>
-                      <strong className="text-sm">Remove From List Only</strong>
-                      <p className="text-xs text-default-600 mt-1">
-                        {`Removes '${title}' from the list but does not delete the environment's files from your system.
-                       Any associated AI will be disconnected, but you can re-link them if you add this
-                        environment back later.`}
-                      </p>
-                      <Button
-                        size="sm"
-                        color="warning"
-                        className="mt-2"
-                        startContent={<X />}
-                        onPress={removeFromList}
-                        fullWidth>
-                        Remove from List
-                      </Button>
+                      {/* Option 2: Remove from List */}
+                      <div>
+                        <strong className="text-sm">Remove From List Only</strong>
+                        <p className="text-xs text-default-600 mt-1">
+                          {`Removes '${title}' from the list but does not delete the environment's files from ` +
+                            `your system. Any associated AI will be disconnected, but you can re-link them if ` +
+                            `you add this environment back later.`}
+                        </p>
+                        <Button size="sm" className="mt-2" variant="danger-soft" onPress={removeFromList} fullWidth>
+                          <X />
+                          Remove from List
+                        </Button>
+                      </div>
                     </div>
-                  </div>
-                </PopoverContent>
+                  </Popover.Dialog>
+                </Popover.Content>
               </Popover>
             )}
           </div>
-        </CardHeader>
+        </Card.Header>
 
-        <CardBody className="gap-y-4 px-4 flex flex-col text-sm">
-          <Button size="sm" variant="light" onPress={openPath} className="flex flex-row justify-start -ml-3 -mb-1.5">
-            <Folder2 className="shrink-0" />
+        <Card.Content className="gap-y-4 py-2 flex flex-col text-sm text-foreground">
+          <Button
+            size="sm"
+            onPress={openPath}
+            variant="tertiary"
+            className="flex flex-row justify-start text-xs"
+            fullWidth>
+            <Folder2 className="shrink-0 size-3" />
             <span className="truncate">{folder}</span>
           </Button>
           <div className="w-full justify-between flex flex-row">
@@ -240,13 +207,13 @@ export default function VenvCard({
               <Diskette className="size-3" />
               <span>Disk Usage:</span>
             </div>
-            {isNil(size) ? <Spinner size="sm" /> : <span>{formatSizeMB(size || 0)}</span>}
+            {isNil(size) ? <Spinner size="lg" /> : <span>{formatSizeMB(size || 0)}</span>}
           </div>
-        </CardBody>
+        </Card.Content>
 
-        <CardFooter className="flex-col gap-y-3">
+        <Card.Footer className="flex-col gap-y-3">
           <Venv_Associate folder={folder} type={isInstallation ? 'conda' : 'venv'} />
-        </CardFooter>
+        </Card.Footer>
       </Card>
     </>
   );

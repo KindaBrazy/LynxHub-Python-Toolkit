@@ -185,7 +185,7 @@ export default function InstalledPythons({
       </div>
       <div
         className={
-          `flex flex-row flex-wrap gap-8 ` + `${(isLoadingPythons || isEmpty(installedPythons)) && 'justify-center'}`
+          `flex flex-row flex-wrap gap-4 ` + `${(isLoadingPythons || isEmpty(installedPythons)) && 'justify-center'}`
         }>
         {isLoadingPythons ? (
           <div className="flex flex-col gap-y-2 items-center">

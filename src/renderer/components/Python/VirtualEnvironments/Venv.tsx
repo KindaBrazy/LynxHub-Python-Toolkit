@@ -1,4 +1,4 @@
-import {Button, Spinner} from '@heroui/react';
+import {Button, Description, Spinner} from '@heroui-v3/react';
 import EmptyStateCard from '@lynx/components/EmptyStateCard';
 import {topToast} from '@lynx/layouts/ToastProviders';
 import filesIpc from '@lynx_shared/ipc/files';
@@ -124,22 +124,18 @@ export default function Venv({visible, installedPythons, isLoadingPythons}: Prop
         <div className="gap-x-2 flex flex-row">
           <VenvCreator refresh={getVenvs} installedPythons={installedPythons} isLoadingPythons={isLoadingPythons} />
 
-          <Button
-            variant="flat"
-            onPress={locateVenv}
-            isLoading={isLocating}
-            startContent={!isLocating && <FolderOpen />}>
-            {!isLocating && 'Locate'}
+          <Button variant="tertiary" onPress={locateVenv} isPending={isLocating}>
+            {!isLocating && <FolderOpen />}
+            Locate
           </Button>
         </div>
       </div>
-      <div className="flex justify-center flex-row flex-wrap gap-8">
+      <div className="flex justify-start flex-row flex-wrap gap-4">
         {isLoading ? (
-          <Spinner
-            size="lg"
-            label="Reading and validating venvs, please wait..."
-            classNames={{circle2: 'border-b-[#ffe66e]', circle1: 'border-b-[#ffe66e] '}}
-          />
+          <div className="flex flex-col gap-y-2 items-center">
+            <Spinner size="lg" />
+            <Description className="text-sm">Reading and validating venvs, please wait...</Description>
+          </div>
         ) : isEmpty(pythonVenvs) ? (
           <EmptyStateCard
             description="No Environments Yet"

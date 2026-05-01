@@ -182,7 +182,7 @@ export default function InstalledCard({python, diskUsage, maxDiskValue, updateDe
           </div>
         </div>
       )}
-      <Card className={`w-120 transition-all py-4 duration-200 ${borderColor}`}>
+      <Card className={`w-120 transition-all duration-200 ${borderColor}`}>
         <Card.Header className="flex flex-row justify-between items-center">
           <div className="flex flex-col">
             <div className="flex flex-row items-center gap-x-2">
@@ -202,7 +202,7 @@ export default function InstalledCard({python, diskUsage, maxDiskValue, updateDe
               )}
             </div>
           </div>
-          <div className="space-x-1 flex items-center">
+          <div className="space-x-2 flex items-center">
             <Dropdown>
               <Button size="sm" variant="tertiary" isIconOnly>
                 <MenuDots className="rotate-90" />
@@ -214,13 +214,13 @@ export default function InstalledCard({python, diskUsage, maxDiskValue, updateDe
                       <Dropdown.Item id="system-default" onPress={makeDefault} textValue="Set as System Default">
                         {python.isDefault ? <Refresh className="size-4" /> : <CheckRead size={16} />}
                         <Label>
-                          Set as <span className="font-bold text-secondary">System Default</span>
+                          Set as <span className="font-bold text-LynxPurple">System Default</span>
                         </Label>
                       </Dropdown.Item>
                       <Dropdown.Item id="lynxhub-default" onPress={makeLynxDefault} textValue="Set as LynxHub Default">
                         {python.isLynxHubDefault ? <Refresh className="size-4" /> : <CheckRead size={16} />}
                         <Label>
-                          Set as <span className="font-bold text-primary">LynxHub Default</span>
+                          Set as <span className="font-bold text-accent">LynxHub Default</span>
                         </Label>
                       </Dropdown.Item>
                     </>

@@ -1,4 +1,4 @@
-import {Button, Input, Popover, PopoverContent, PopoverTrigger, Select, SelectItem} from '@heroui/react';
+import {Button, Input, Key, Label, ListBox, Popover, Select, TextField} from '@heroui-v3/react';
 import {topToast} from '@lynx/layouts/ToastProviders';
 import filesIpc from '@lynx_shared/ipc/files';
 import {FolderOpen} from '@solar-icons/react-perf/BoldDuotone';
@@ -12,7 +12,7 @@ import pIpc from '../../../PIpc';
 type Props = {refresh: () => void; installedPythons: PythonInstallation[]; isLoadingPythons: boolean};
 
 export default function VenvCreator({installedPythons, refresh, isLoadingPythons}: Props) {
-  const [selectedVersion, setSelectedVersion] = useState<Set<string>>(new Set(['']));
+  const [selectedVersion, setSelectedVersion] = useState<Key | null>(null);
 
   const [targetFolder, setTargetFolder] = useState<string>('');
   const [envName, setEnvName] = useState<string>('');
@@ -39,14 +39,12 @@ export default function VenvCreator({installedPythons, refresh, isLoadingPythons
   }, []);
 
   useEffect(() => {
-    if (!isEmpty(installedPythons)) setSelectedVersion(new Set([installedPythons[0].version]));
+    if (!isEmpty(installedPythons)) setSelectedVersion(installedPythons[0].version);
   }, [installedPythons]);
 
   const createEnv = useCallback(() => {
     setIsCreating(true);
-    const pythonPath = installedPythons.find(
-      item => item.version === selectedVersion.values().next().value,
-    )?.installPath;
+    const pythonPath = installedPythons.find(item => item.version === selectedVersion)?.installPath;
     if (!pythonPath) {
       setIsCreating(false);
       topToast.danger('Failed to find Python path. Please restart app and try again.');
@@ -72,68 +70,51 @@ export default function VenvCreator({installedPythons, refresh, isLoadingPythons
   }, [targetFolder, envName, selectedVersion, installedPythons]);
 
   return (
-    <Popover size="lg" isOpen={isOpen} placement="bottom" onOpenChange={setIsOpen} showArrow>
-      <PopoverTrigger>
-        <Button
-          isLoading={isLoadingPythons}
-          isDisabled={isEmpty(installedPythons)}
-          startContent={!isLoadingPythons && <Plus size={14} />}>
-          {isLoadingPythons ? 'Loading Pythons...' : 'New Environment'}
-        </Button>
-      </PopoverTrigger>
-      <PopoverContent>
-        {titleProps => (
-          <div className="pt-4 pb-2 px-2 space-y-2">
-            <p className="font-semibold" {...titleProps}>
-              Create New Virtual Environment
-            </p>
-            <div className="flex flex-col gap-y-4 py-2">
-              <Input
-                size="sm"
-                value={envName}
-                spellCheck="false"
-                label="Environment Name"
-                onValueChange={setEnvName}
-                placeholder="e.g., my_env"
-              />
-              <Select
-                size="sm"
-                label="Python Version"
-                selectionMode="single"
-                items={installedPythons}
-                selectedKeys={selectedVersion}
-                placeholder="Choose a version..."
-                // @ts-ignore-next-line
-                onSelectionChange={setSelectedVersion}>
-                {item => (
-                  <SelectItem key={item.version}>
-                    {`${item.version} | ${capitalize(item.installationType)}` +
-                      ` ${item.installationType === 'conda' ? `| ${item.condaName}` : ''}`}
-                  </SelectItem>
-                )}
-              </Select>
-              <Button
-                size="sm"
-                variant="flat"
-                endContent={<div />}
-                onPress={selectFolder}
-                className="justify-between"
-                startContent={<FolderOpen />}>
-                {targetFolder || 'Choose Destination Folder'}
-              </Button>
-              <Button
-                size="sm"
-                variant="flat"
-                color="success"
-                onPress={createEnv}
-                isLoading={isCreating}
-                isDisabled={disabledCreate}>
-                Create Environment
-              </Button>
-            </div>
+    <Popover>
+      <Button variant="secondary" isPending={isLoadingPythons} isDisabled={isEmpty(installedPythons)}>
+        {!isLoadingPythons && <Plus size={14} />}
+        {isLoadingPythons ? 'Loading Pythons...' : 'New Environment'}
+      </Button>
+      <Popover.Content>
+        <Popover.Dialog>
+          <Popover.Arrow />
+          <Popover.Heading>Create New Virtual Environment</Popover.Heading>
+          <div className="flex flex-col gap-y-4 py-2">
+            <TextField type="text" value={envName} variant="secondary" onChange={setEnvName}>
+              <Label>Environment Name</Label>
+              <Input placeholder="e.g., my_env" />
+            </TextField>
+            <Select variant="secondary" value={selectedVersion} onChange={setSelectedVersion}>
+              <Label>Python Version</Label>
+              <Select.Trigger>
+                <Select.Value />
+                <Select.Indicator />
+              </Select.Trigger>
+              <Select.Popover>
+                <ListBox items={installedPythons}>
+                  {item => (
+                    <ListBox.Item
+                      id={item.version}
+                      key={item.version}
+                      textValue={`${item.version} | ${capitalize(item.installationType)}`}>
+                      {`${item.version} | ${capitalize(item.installationType)}` +
+                        ` ${item.installationType === 'conda' ? `| ${item.condaName}` : ''}`}
+                      <ListBox.ItemIndicator />
+                    </ListBox.Item>
+                  )}
+                </ListBox>
+              </Select.Popover>
+            </Select>
+            <Button size="sm" variant="secondary" onPress={selectFolder} fullWidth>
+              <FolderOpen />
+              {targetFolder || 'Choose Destination Folder'}
+            </Button>
+            <Button size="sm" onPress={createEnv} isPending={isCreating} isDisabled={disabledCreate} fullWidth>
+              Create Environment
+            </Button>
           </div>
-        )}
-      </PopoverContent>
+        </Popover.Dialog>
+      </Popover.Content>
     </Popover>
   );
 }

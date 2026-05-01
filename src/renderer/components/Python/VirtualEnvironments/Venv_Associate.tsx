@@ -1,5 +1,5 @@
-import {Avatar, Button, Chip, Dropdown, DropdownItem, DropdownMenu, DropdownTrigger} from '@heroui/react';
-import {extractGitUrl} from '@lynx_common/utils';
+import {Avatar, Button, Chip, CloseButton, Dropdown, Label} from '@heroui-v3/react';
+import {extractGitUrl, getFallbackString} from '@lynx_common/utils';
 import {isEmpty} from 'lodash-es';
 import {Plus} from 'lucide-react';
 import {useCallback, useEffect, useState} from 'react';
@@ -94,37 +94,37 @@ export default function Venv_Associate({folder, type}: Props) {
       <div className="flex flex-row justify-between w-full">
         <div className="w-full flex flex-row gap-x-1 gap-y-2 items-center flex-wrap">
           {isEmpty(associated) ? (
-            <Chip variant="flat">Not Associated</Chip>
+            <Chip variant="soft">Not Associated</Chip>
           ) : (
             associated.map(item => (
-              <Chip
-                variant="flat"
-                color="success"
-                className="p-2"
-                key={`${item.id}_associated`}
-                onClose={() => remove(item.id)}
-                startContent={<Avatar className="size-5" src={item.avatarUrl} />}>
+              <Chip variant="soft" color="success" key={`${item.id}_associated`}>
+                <Avatar className="size-5">
+                  <Avatar.Image alt={item.title} src={item.avatarUrl} />
+                  <Avatar.Fallback className="text-xs">{getFallbackString(item.title)}</Avatar.Fallback>
+                </Avatar>
                 {item.title}
+                <CloseButton onPress={() => remove(item.id)} />
               </Chip>
             ))
           )}
         </div>
-        <Dropdown size="sm" className="border-1 border-foreground/10">
-          <DropdownTrigger>
-            <Button size="sm" radius="full" variant="flat" isIconOnly>
-              <Plus size={14} />
-            </Button>
-          </DropdownTrigger>
-          <DropdownMenu variant="flat" items={canBeAssociate} emptyContent="Nothing available to associate.">
-            {item => (
-              <DropdownItem
-                onPress={() => add(item.id)}
-                key={`${item.id}_canBeAssociate`}
-                startContent={<Avatar className="size-6" src={item.avatarUrl} />}>
-                {item.title}
-              </DropdownItem>
-            )}
-          </DropdownMenu>
+        <Dropdown>
+          <Button size="sm" variant="tertiary" className="shrink-0" isIconOnly>
+            <Plus />
+          </Button>
+          <Dropdown.Popover>
+            <Dropdown.Menu items={canBeAssociate} renderEmptyState={() => <span>Nothing available to associate!</span>}>
+              {item => (
+                <Dropdown.Item textValue={item.title} onPress={() => add(item.id)}>
+                  <Avatar className="size-5">
+                    <Avatar.Image alt={item.title} src={item.avatarUrl} />
+                    <Avatar.Fallback className="text-xs">{getFallbackString(item.title)}</Avatar.Fallback>
+                  </Avatar>
+                  <Label>{item.title}</Label>
+                </Dropdown.Item>
+              )}
+            </Dropdown.Menu>
+          </Dropdown.Popover>
         </Dropdown>
       </div>
     </>
