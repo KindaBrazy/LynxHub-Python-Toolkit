@@ -121,7 +121,7 @@ export default function VenvCard({
                 {editedTitle}
               </span>
             </div>
-            <span className="text-tiny text-foreground-500">Python {pythonVersion}</span>
+            <span className="text-xs text-muted">Python {pythonVersion}</span>
           </div>
           <div className="space-x-2 flex items-center">
             <Dropdown>

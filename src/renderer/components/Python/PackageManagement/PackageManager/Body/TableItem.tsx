@@ -92,7 +92,7 @@ export default function TableItem({
       <TableCell>
         <div className="flex flex-col">
           <div className="text-bold text-sm">
-            <div className="flex flex-row items-center gap-x-1 text-medium font-semibold">
+            <div className="flex flex-row items-center gap-x-1 text-base font-semibold">
               <span>{itemName}</span>
               {item.updateVersion && (
                 <ShieldWarning className={`${getUpdateVersionColor(item.version, item.updateVersion)} size-[1.1rem]`} />
@@ -100,7 +100,7 @@ export default function TableItem({
             </div>
           </div>
           <div className="text-bold text-sm text-default-400">
-            <div className="flex flex-row items-center gap-x-1 text-tiny">
+            <div className="flex flex-row items-center gap-x-1 text-xs">
               <span>{item.version}</span>
               {item.updateVersion && (
                 <span>

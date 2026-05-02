@@ -121,10 +121,10 @@ export default function InstalledCard({python, diskUsage, maxDiskValue, updateDe
     return python.isDefault && python.isLynxHubDefault
       ? 'border-2 border-success/60 hover:border-success'
       : python.isDefault
-        ? 'border-2 border-secondary/60 hover:border-secondary'
+        ? 'border-2 border-LynxPurple/60 hover:border-LynxPurple'
         : python.isLynxHubDefault
-          ? 'border-2 border-primary/60 hover:border-primary'
-          : 'border-2 border-foreground-100 hover:border-foreground-200';
+          ? 'border-2 border-accent/60 hover:border-accent'
+          : 'border-2 border-surface-LynxPurple hover:border-surface-tertiary';
   }, [python]);
 
   const defaultChip = useMemo(() => {
@@ -190,13 +190,13 @@ export default function InstalledCard({python, diskUsage, maxDiskValue, updateDe
               {defaultChip}
             </div>
             <div className="flex items-center gap-x-2">
-              <span className="text-tiny text-foreground-500">{python.architecture}</span>
+              <span className="text-xs text-muted">{python.architecture}</span>
               <Separator className="h-2 w-px" />
-              <span className={'text-tiny ' + installTypeColor}>{startCase(python.installationType)}</span>
+              <span className={'text-xs ' + installTypeColor}>{startCase(python.installationType)}</span>
               {python.installationType === 'conda' && (
                 <>
                   <Separator className="h-2 w-px" />
-                  <span className={'text-tiny text-cyan-500'}>{python.condaName}</span>
+                  <span className={'text-xs text-cyan-500'}>{python.condaName}</span>
                 </>
               )}
             </div>

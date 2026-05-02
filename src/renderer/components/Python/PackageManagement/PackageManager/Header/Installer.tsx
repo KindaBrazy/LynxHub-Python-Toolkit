@@ -181,7 +181,7 @@ export default function Installer({setInstallCommand, setIsInstallDisabled}: Pro
         <Label>Preview</Label>
         <CopyClipboard contentToCopy={`pip install ${generateInstallCommand()}`} />
       </div>
-      <span className="bg-foreground-100 p-4 rounded-xl">
+      <span className="bg-surface-secondary p-4 rounded-xl">
         pip install <span className="text-warning-700">{generateInstallCommand()}</span>
       </span>
     </div>

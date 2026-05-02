@@ -61,8 +61,8 @@ export const Installer_PythonSelector = (
         </ListBox.Item>,
         ...list.map(item => {
           const defaultTextMap = {
-            lynx: <span className="text-primary-500">LynxHub Default</span>,
-            system: <span className="text-secondary-500">System Default</span>,
+            lynx: <span className="text-accent/50">LynxHub Default</span>,
+            system: <span className="text-LynxPurple/50">System Default</span>,
           };
 
           const nameText = item.condaName;

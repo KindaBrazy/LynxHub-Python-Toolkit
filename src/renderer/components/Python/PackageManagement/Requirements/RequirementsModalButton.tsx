@@ -176,8 +176,8 @@ export default function RequirementsBtn({id, projectPath, setIsReqAvailable, set
               <EmptyStateCard
                 title={
                   <span>
-                    The file <span className="font-bold text-primary-700">{filePath.split(/[\/\\]/).pop()}</span>
-                    is empty. Add requirements using the <span className="font-bold text-primary-700">Add</span> button.
+                    The file <span className="font-bold text-accent/70">{filePath.split(/[\/\\]/).pop()}</span>
+                    is empty. Add requirements using the <span className="font-bold text-accent/70">Add</span> button.
                   </span>
                 }
                 className="mx-4"
