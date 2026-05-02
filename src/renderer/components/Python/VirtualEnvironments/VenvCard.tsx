@@ -102,7 +102,6 @@ export default function VenvCard({
   return (
     <>
       <PackageManagerModal
-        size="3xl"
         id={pythonPath}
         pythonPath={pythonPath}
         state={packageManagerModal}

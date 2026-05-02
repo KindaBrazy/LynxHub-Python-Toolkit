@@ -1,4 +1,4 @@
-import {Button, Popover, PopoverContent, PopoverTrigger} from '@heroui/react';
+import {Button, Popover} from '@heroui-v3/react';
 import {topToast} from '@lynx/layouts/ToastProviders';
 import {TrashBin2} from '@solar-icons/react-perf/BoldDuotone';
 import {Dispatch, SetStateAction, useCallback, useState} from 'react';
@@ -38,30 +38,20 @@ export default function ActionButtons({item, removed, pythonPath, isUninstalling
 
   return (
     <div className="flex flex-row items-center justify-center gap-x-2">
-      <Popover
-        size="sm"
-        color="danger"
-        key="uninstall"
-        placement="left"
-        className="max-w-60"
-        isOpen={isUninstallOpen}
-        onOpenChange={setIsUninstallOpen}
-        showArrow>
-        <PopoverTrigger>
-          <Button size="sm" color="danger" variant="flat" isLoading={isUninstalling} isIconOnly>
-            <TrashBin2 className="size-3.5" />
-          </Button>
-        </PopoverTrigger>
-        <PopoverContent>
-          <div className="p-2 gap-y-3 flex flex-col">
+      <Popover isOpen={isUninstallOpen} onOpenChange={setIsUninstallOpen}>
+        <Button size="sm" variant="danger-soft" isPending={isUninstalling} isIconOnly>
+          <TrashBin2 />
+        </Button>
+        <Popover.Content className="max-w-64">
+          <Popover.Dialog className="gap-y-2 flex flex-col">
+            <Popover.Arrow />
             <span>Are you sure you want to remove the package "{item.name}"?</span>
-            <Button size="sm" onPress={remove} fullWidth>
+            <Button size="sm" variant="danger" onPress={remove} fullWidth>
               Remove
             </Button>
-          </div>
-        </PopoverContent>
+          </Popover.Dialog>
+        </Popover.Content>
       </Popover>
-
       <PkgVersions item={item} updated={updated} pythonPath={pythonPath} />
     </div>
   );

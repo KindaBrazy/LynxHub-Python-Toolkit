@@ -1,11 +1,9 @@
-import {Avatar, Chip, Input, Progress, Selection} from '@heroui/react';
-import {ModalHeading} from '@heroui-v3/react';
+import {Avatar, Chip, ProgressBar, SearchField, Selection} from '@heroui-v3/react';
 import {topToast} from '@lynx/layouts/ToastProviders';
-import {extractGitUrl} from '@lynx_common/utils';
+import {extractGitUrl, getFallbackString} from '@lynx_common/utils';
 import {compact, isEmpty} from 'lodash-es';
 import {Dispatch, ReactNode, SetStateAction, useEffect, useState} from 'react';
 
-import {Circle_Icon} from '../../../../../../../../src/renderer/shared/assets/icons';
 import {FilterKeys, PackageInfo, PackageUpdate, SitePackages_Info} from '../../../../../../cross/CrossExtTypes';
 import {allCardsExt} from '../../../../../DataHolder';
 import pIpc from '../../../../../PIpc';
@@ -124,47 +122,50 @@ export default function PackageManagerHeader({
   };
 
   return (
-    <ModalHeading className="bg-foreground-200 dark:bg-LynxRaisinBlack items-center flex-col gap-y-2">
+    <>
       {progressValue > 0 && (
-        <Progress
-          size="sm"
-          radius="none"
-          color="primary"
-          value={progressValue}
-          className="absolute top-0"
-          aria-label="Package manager progress bar"
-        />
+        <ProgressBar size="sm" color="accent" value={progressValue} className="absolute -top-1 inset-x-0">
+          <ProgressBar.Track>
+            <ProgressBar.Fill />
+          </ProgressBar.Track>
+        </ProgressBar>
       )}
       <div className="flex flex-row justify-between w-full">
         {isValidPython ? (
           <>
             <div className="flex flex-row items-center gap-x-2">
-              {avatarUrl && <Avatar title={title} src={avatarUrl} />}
+              {avatarUrl && (
+                <Avatar className="size-5">
+                  <Avatar.Image alt={title} src={avatarUrl} />
+                  <Avatar.Fallback className="text-xs">{getFallbackString(title)}</Avatar.Fallback>
+                </Avatar>
+              )}
               <span>{title}</span>
               {pythonVersion && (
-                <Chip size="sm" variant="flat" color="primary">
+                <Chip size="sm" variant="soft" color="accent" className="px-2">
                   Python {pythonVersion}
                 </Chip>
               )}
-              <Chip size="sm" variant="flat">
+              <Chip size="sm" variant="soft">
                 {packages.length}
               </Chip>
             </div>
-            <FilterButton setSelectedFilter={setSelectedFilter} updateAvailable={!isEmpty(packagesUpdate)} />
           </>
         ) : (
           <span>{title}</span>
         )}
       </div>
       {!isEmpty(packages) && (
-        <Input
-          type="search"
-          className="pt-1"
-          value={searchValue}
-          startContent={<Circle_Icon />}
-          onValueChange={setSearchValue}
-          placeholder="Search for packages..."
-        />
+        <div className="flex flex-row items-center gap-x-2">
+          <SearchField variant="secondary" value={searchValue} onChange={setSearchValue} fullWidth>
+            <SearchField.Group>
+              <SearchField.SearchIcon />
+              <SearchField.Input placeholder="Search..." />
+              <SearchField.ClearButton />
+            </SearchField.Group>
+          </SearchField>
+          <FilterButton setSelectedFilter={setSelectedFilter} updateAvailable={!isEmpty(packagesUpdate)} />
+        </div>
       )}
       <div className="gap-x-2 flex justify-between items-center w-full mt-2">
         {isValidPython && (
@@ -198,6 +199,6 @@ export default function PackageManagerHeader({
 
         {isValidPython && actionButtons?.map(ActionButton => ActionButton)}
       </div>
-    </ModalHeading>
+    </>
   );
 }

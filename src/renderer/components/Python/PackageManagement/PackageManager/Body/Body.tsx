@@ -1,5 +1,4 @@
-import {Selection, Spinner, Table, TableBody, TableCell, TableColumn, TableHeader, TableRow} from '@heroui/react';
-import {ModalBody} from '@heroui-v3/react';
+import {Checkbox, Description, ModalBody, Selection, Spinner, Table} from '@heroui-v3/react';
 import EmptyStateCard from '@lynx/components/EmptyStateCard';
 import {cloneDeep, isEmpty} from 'lodash-es';
 import {OverlayScrollbarsComponent} from 'overlayscrollbars-react';
@@ -47,18 +46,7 @@ export default function PackageManagerBody({
     return items.filter(item => !packagesUpdate.some(update => update.name === item.name)).map(item => item.name);
   }, [items, packagesUpdate]);
 
-  const columns = useMemo(() => {
-    const data = [
-      {key: 'name', label: 'Name'},
-      {key: 'actions', label: 'Actions'},
-    ];
-
-    if (anyUpdateAvailable) data.splice(1, 0, {key: 'update', label: 'Update'});
-
-    return data;
-  }, [anyUpdateAvailable]);
-
-  const refreshedItems = useMemo(() => cloneDeep(items), [items, selectedKeys]);
+  const refreshedItems = useMemo(() => cloneDeep(items), [items, selectedKeys, anyUpdateAvailable]);
 
   return (
     <ModalBody>
@@ -71,50 +59,83 @@ export default function PackageManagerBody({
             theme: isDarkMode ? 'os-theme-light' : 'os-theme-dark',
           },
         }}
-        className="size-full p-4">
+        className="size-full px-4">
         <div className="w-full flex flex-col gap-y-4">
           <div className="flex flex-row gap-8 flex-wrap justify-center">
             {isLoading ? (
-              <Spinner
-                size="lg"
-                className="mb-4"
-                label="Please wait, loading package data..."
-                classNames={{circle2: 'border-b-[#ffe66e]', circle1: 'border-b-[#ffe66e] '}}
-              />
+              <div className="flex flex-col gap-y-2 items-center mt-4">
+                <Spinner size="xl" />
+                <Description className="text-sm">Please wait, loading package data...</Description>
+              </div>
             ) : isValidPython ? (
-              <>
-                <Table
-                  color="success"
-                  aria-label="pacakges"
-                  disabledKeys={disabledKeys}
-                  selectedKeys={selectedKeys}
-                  onSelectionChange={setSelectedKeys}
-                  selectionMode={anyUpdateAvailable ? 'multiple' : 'none'}
-                  classNames={{wrapper: 'bg-foreground-200 dark:bg-black/50'}}>
-                  <TableHeader columns={columns}>
-                    {column => <TableColumn key={column.key}>{column.label}</TableColumn>}
-                  </TableHeader>
-                  <TableBody items={refreshedItems}>
-                    {item => (
-                      <TableRow key={item.name}>
-                        {columnKey => (
-                          <TableCell>
+              <Table>
+                <Table.ScrollContainer>
+                  <Table.Content
+                    disabledKeys={disabledKeys}
+                    selectedKeys={selectedKeys}
+                    onSelectionChange={setSelectedKeys}
+                    selectionMode={anyUpdateAvailable ? 'multiple' : 'none'}>
+                    <Table.Header>
+                      {anyUpdateAvailable && (
+                        <Table.Column className="pr-0">
+                          <Checkbox slot="selection">
+                            <Checkbox.Control>
+                              <Checkbox.Indicator />
+                            </Checkbox.Control>
+                          </Checkbox>
+                        </Table.Column>
+                      )}
+                      <Table.Column isRowHeader>Name</Table.Column>
+                      {anyUpdateAvailable && <Table.Column>Update</Table.Column>}
+                      <Table.Column>Action</Table.Column>
+                    </Table.Header>
+                    <Table.Body items={refreshedItems}>
+                      {item => (
+                        <Table.Row id={item.name} key={item.name}>
+                          {anyUpdateAvailable ? (
+                            <Table.Cell className="pr-0">
+                              <Checkbox slot="selection" variant="secondary">
+                                <Checkbox.Control>
+                                  <Checkbox.Indicator />
+                                </Checkbox.Control>
+                              </Checkbox>
+                            </Table.Cell>
+                          ) : null}
+                          <TableItem
+                            item={item}
+                            removed={removed}
+                            updated={updated}
+                            columnKey={'name'}
+                            pythonPath={pythonPath}
+                            setIsUpdateTerminalOpen={setIsUpdateTerminalOpen}
+                            isSelected={selectedKeys === 'all' || selectedKeys.has(item.name)}
+                          />
+                          {anyUpdateAvailable ? (
                             <TableItem
                               item={item}
                               removed={removed}
                               updated={updated}
+                              columnKey={'update'}
                               pythonPath={pythonPath}
-                              columnKey={columnKey as string}
                               setIsUpdateTerminalOpen={setIsUpdateTerminalOpen}
                               isSelected={selectedKeys === 'all' || selectedKeys.has(item.name)}
                             />
-                          </TableCell>
-                        )}
-                      </TableRow>
-                    )}
-                  </TableBody>
-                </Table>
-              </>
+                          ) : null}
+                          <TableItem
+                            item={item}
+                            removed={removed}
+                            updated={updated}
+                            columnKey={'actions'}
+                            pythonPath={pythonPath}
+                            setIsUpdateTerminalOpen={setIsUpdateTerminalOpen}
+                            isSelected={selectedKeys === 'all' || selectedKeys.has(item.name)}
+                          />
+                        </Table.Row>
+                      )}
+                    </Table.Body>
+                  </Table.Content>
+                </Table.ScrollContainer>
+              </Table>
             ) : (
               <EmptyStateCard
                 title="Could not find a virtual environment."

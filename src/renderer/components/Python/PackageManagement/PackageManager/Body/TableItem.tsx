@@ -1,4 +1,4 @@
-import {Button} from '@heroui/react';
+import {Button, TableCell} from '@heroui-v3/react';
 import {topToast} from '@lynx/layouts/ToastProviders';
 import {ShieldWarning} from '@solar-icons/react-perf/BoldDuotone';
 import {capitalize, startCase} from 'lodash-es';
@@ -63,8 +63,8 @@ export default function TableItem({
   }, [item]);
 
   if (columnKey === 'actions') {
-    return (
-      !isUpdating && (
+    return !isUpdating ? (
+      <TableCell>
         <ActionButtons
           item={item}
           updated={updated}
@@ -73,21 +73,23 @@ export default function TableItem({
           isUninstalling={isUninstalling}
           setIsUninstalling={setIsUninstalling}
         />
-      )
+      </TableCell>
+    ) : (
+      <TableCell />
     );
   } else if (columnKey === 'update') {
-    return (
-      !isSelected &&
-      !isUninstalling &&
-      item.updateVersion && (
-        <Button size="sm" key="update" variant="flat" color="success" onPress={update} isLoading={isUpdating}>
+    return !isSelected && !isUninstalling && item.updateVersion ? (
+      <TableCell>
+        <Button size="sm" onPress={update} isPending={isUpdating}>
           {isUpdating ? 'Updating...' : 'Update'}
         </Button>
-      )
+      </TableCell>
+    ) : (
+      <TableCell />
     );
   } else if (columnKey === 'name') {
     return (
-      <>
+      <TableCell>
         <div className="flex flex-col">
           <div className="text-bold text-sm">
             <div className="flex flex-row items-center gap-x-1 text-medium font-semibold">
@@ -109,7 +111,7 @@ export default function TableItem({
             </div>
           </div>
         </div>
-      </>
+      </TableCell>
     );
   }
 

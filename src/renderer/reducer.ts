@@ -6,18 +6,13 @@ import {AssociateItem, PkgDisplayType, PythonVenvSelectItem} from '../cross/Cros
 export type ContextType = {
   id: string;
   title: string;
-  tabID: string;
 };
 type PythonVenvSelected = PythonVenvSelectItem & {id: string};
 type PythonToolkitState = {
   menuModal: {
     isOpen: boolean;
-    context: ContextType;
-  }[];
-  settingsModal: {
-    isOpen: boolean;
-    context: ContextType;
-  }[];
+    context: ContextType | undefined;
+  };
   pkgNameDisplay: PkgDisplayType;
   pythonVenvSelected: PythonVenvSelected;
   cacheStorageUsage: boolean;
@@ -29,8 +24,7 @@ type PythonToolkitStateTypes = {
 };
 
 const initialState: PythonToolkitState = {
-  menuModal: [],
-  settingsModal: [],
+  menuModal: {isOpen: false, context: undefined},
   pkgNameDisplay: 'default',
   pythonVenvSelected: {
     id: '',
@@ -47,27 +41,12 @@ const pythonToolkitReducer = createSlice({
   name: 'pythonToolkit',
   reducers: {
     openMenuModal: (state: PythonToolkitState, action: PayloadAction<ContextType>) => {
-      state.menuModal.push({isOpen: true, context: action.payload});
+      state.menuModal = {isOpen: true, context: action.payload};
     },
-    closeMenuModal: (state: PythonToolkitState, action: PayloadAction<{tabID: string}>) => {
-      state.menuModal = state.menuModal.map(modal =>
-        modal.context.tabID === action.payload.tabID ? {...modal, isOpen: false} : modal,
-      );
+    closeMenuModal: (state: PythonToolkitState) => {
+      state.menuModal = {isOpen: false, context: undefined};
     },
-    removeMenuModal: (state: PythonToolkitState, action: PayloadAction<{tabID: string}>) => {
-      state.menuModal = state.menuModal.filter(item => item.context.tabID !== action.payload.tabID);
-    },
-    openSettingsModal: (state: PythonToolkitState, action: PayloadAction<ContextType>) => {
-      state.settingsModal.push({isOpen: true, context: action.payload});
-    },
-    closeSettingsModal: (state: PythonToolkitState, action: PayloadAction<{tabID: string}>) => {
-      state.settingsModal = state.settingsModal.map(modal =>
-        modal.context.tabID === action.payload.tabID ? {...modal, isOpen: false} : modal,
-      );
-    },
-    removeSettingsModal: (state: PythonToolkitState, action: PayloadAction<{tabID: string}>) => {
-      state.settingsModal = state.settingsModal.filter(item => item.context.tabID !== action.payload.tabID);
-    },
+
     setPkgDisplay: (state: PythonToolkitState, action: PayloadAction<PkgDisplayType>) => {
       state.pkgNameDisplay = action.payload;
     },

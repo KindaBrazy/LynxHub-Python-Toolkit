@@ -1,5 +1,4 @@
-import {Selection} from '@heroui/react';
-import {Modal, UseOverlayStateReturn} from '@heroui-v3/react';
+import {Modal, Selection, UseOverlayStateReturn} from '@heroui-v3/react';
 import TabModal from '@lynx/components/TabModal';
 import {isEmpty} from 'lodash-es';
 import {Dispatch, ReactNode, SetStateAction, useEffect, useState} from 'react';
@@ -20,7 +19,6 @@ type Props = {
 
   title?: string;
   actionButtons?: ReactNode[];
-  size?: '2xl' | '3xl' | '4xl';
 
   id: string;
   projectPath?: string;
@@ -245,7 +243,7 @@ export default function PackageManagerModal({
     <>
       <TabModal isOpen={state.isOpen} onOpenChange={state.setOpen}>
         <Modal.CloseTrigger />
-        <Modal.Header>
+        <Modal.Header className="gap-y-2">
           <PackageManagerHeader
             id={id}
             title={title}

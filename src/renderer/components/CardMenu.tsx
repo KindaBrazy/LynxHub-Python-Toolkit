@@ -1,39 +1,36 @@
-import {DropdownItem, DropdownSection} from '@heroui/react';
+import {DropdownItem, DropdownSection, Separator} from '@heroui-v3/react';
+import {useCardOverlayState} from '@lynx/components/card/useCardOverlayState';
 import {UseCardStoreType} from '@lynx/plugins/extensions/types';
 import {useCallback} from 'react';
-import {useDispatch} from 'react-redux';
 
-import {useTabsState} from '../../../../src/renderer/mainWindow/redux/reducers/tabs';
 import {ModulesThatSupportPython} from '../../cross/CrossExtConstants';
-import {PythonToolkitActions} from '../reducer';
+import {DepsModalKey} from '../consts';
 import {Python_Icon} from './SvgIcons';
 
-type Props = {useCardStore: UseCardStoreType};
+type Props = {useCardStore: UseCardStoreType; useCardOverlayState: typeof useCardOverlayState};
 
-export default function CardMenu({useCardStore}: Props) {
-  const activeTab = useTabsState('activeTab');
-  const dispatch = useDispatch();
+export default function CardMenu({useCardStore, useCardOverlayState}: Props) {
+  const state = useCardOverlayState(DepsModalKey);
 
   const id = useCardStore(state => state.id);
-  const title = useCardStore(state => state.title);
   const setMenuIsOpen = useCardStore(state => state.setMenuIsOpen);
 
   const onPress = useCallback(() => {
-    dispatch(PythonToolkitActions.openMenuModal({title, id, tabID: activeTab}));
+    state.open();
     setMenuIsOpen(false);
-  }, [setMenuIsOpen, title, id, activeTab]);
+  }, [setMenuIsOpen, state]);
 
   if (!ModulesThatSupportPython.includes(id)) return null;
 
   return (
-    <DropdownSection key="python_toolkit" classNames={{divider: 'bg-foreground-100'}} showDivider>
-      <DropdownItem
-        onPress={onPress}
-        key="python_deps"
-        title="Dependencies"
-        className="cursor-default"
-        startContent={<Python_Icon className="size-3" />}
-      />
-    </DropdownSection>
+    <>
+      <DropdownSection key="python_toolkit_menu">
+        <DropdownItem onPress={onPress}>
+          <Python_Icon className="size-3" />
+          Dependencies
+        </DropdownItem>
+      </DropdownSection>
+      <Separator className="bg-surface-secondary/70" />
+    </>
   );
 }

@@ -5,7 +5,9 @@ import {APP_BUILD_NUMBER} from '@lynx_common/consts';
 import {isDev} from '@lynx_common/utils';
 
 import CardMenu from './components/CardMenu';
+import CardMenuModal from './components/CardMenuModal';
 import ToolsPage from './components/ToolsPage';
+import {DepsModalKey} from './consts';
 import CustomHook from './CustomHook';
 import {setCards} from './DataHolder';
 import listenForEvents from './ListenForEvents';
@@ -29,6 +31,8 @@ export function InitialExtensions(lynxAPI: ExtensionRendererApi) {
   }
 
   lynxAPI.cards.customize.menu.addSection([{index: 1, components: [CardMenu]}]);
+  lynxAPI.cards.customize.menu.addModal([{key: DepsModalKey, component: CardMenuModal}]);
+
   lynxAPI.addCustomHook(CustomHook);
 
   pIpc

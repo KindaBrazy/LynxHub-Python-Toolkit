@@ -1,4 +1,4 @@
-import {Button, Dropdown, DropdownItem, DropdownMenu, DropdownSection, DropdownTrigger} from '@heroui/react';
+import {Button, cn, Dropdown, Label, Selection} from '@heroui-v3/react';
 import {Filter} from '@solar-icons/react-perf/BoldDuotone';
 import {Dispatch, SetStateAction, useEffect, useState} from 'react';
 
@@ -7,10 +7,11 @@ import {FilterKeys} from '../../../../../../cross/CrossExtTypes';
 type Props = {
   setSelectedFilter: Dispatch<SetStateAction<FilterKeys>>;
   updateAvailable: boolean;
+  className?: string;
 };
 
-export default function FilterButton({setSelectedFilter, updateAvailable}: Props) {
-  const [selectedKeys, setSelectedKeys] = useState<Set<FilterKeys>>(new Set(['all']));
+export default function FilterButton({setSelectedFilter, updateAvailable, className}: Props) {
+  const [selectedKeys, setSelectedKeys] = useState<Selection>(new Set(['all']));
 
   useEffect(() => {
     setSelectedFilter(Array.from(selectedKeys).join(', ').replace(/_/g, '') as FilterKeys);
@@ -21,7 +22,7 @@ export default function FilterButton({setSelectedFilter, updateAvailable}: Props
       setSelectedKeys(new Set(['updates']));
     } else {
       setSelectedKeys(prevState => {
-        if (prevState.values().next().value === 'updates') {
+        if (prevState !== 'all' && prevState.values().next().value === 'updates') {
           return new Set(['all']);
         }
         return prevState;
@@ -30,47 +31,51 @@ export default function FilterButton({setSelectedFilter, updateAvailable}: Props
   }, [updateAvailable]);
 
   return (
-    <Dropdown className="border-1 border-foreground-100">
-      <DropdownTrigger>
-        <Button variant="flat" isIconOnly>
-          <Filter size={16} />
-        </Button>
-      </DropdownTrigger>
-      <DropdownMenu
-        variant="faded"
-        selectionMode="single"
-        selectedKeys={selectedKeys}
-        aria-label="Filter packages"
-        // @ts-ignore-next-line
-        onSelectionChange={setSelectedKeys}
-        disabledKeys={!updateAvailable ? ['updates'] : undefined}
-        disallowEmptySelection>
-        <DropdownSection showDivider={updateAvailable}>
-          <DropdownItem key="all">All</DropdownItem>
-          <DropdownItem key="updates">Updates</DropdownItem>
-        </DropdownSection>
-        {updateAvailable ? (
-          <DropdownSection>
-            <DropdownItem key="prerelease" className="text-blue-500">
-              Pre Release
-            </DropdownItem>
-            <DropdownItem key="major" className="text-red-500">
-              Major
-            </DropdownItem>
-            <DropdownItem key="minor" className="text-yellow-500">
-              Minor
-            </DropdownItem>
-            <DropdownItem key="patch" className="text-green-500">
-              Patch
-            </DropdownItem>
-            <DropdownItem key="others" className="text-gray-500">
-              Others
-            </DropdownItem>
-          </DropdownSection>
-        ) : (
-          <DropdownItem key="nothing" className="hidden" />
-        )}
-      </DropdownMenu>
+    <Dropdown>
+      <Button variant="tertiary" className={cn('shrink-0', className)} isIconOnly>
+        <Filter />
+      </Button>
+      <Dropdown.Popover>
+        <Dropdown.Menu
+          selectionMode="single"
+          onSelectionChange={setSelectedKeys}
+          selectedKeys={Array.from(selectedKeys)}
+          disabledKeys={!updateAvailable ? ['updates'] : undefined}
+          disallowEmptySelection>
+          <Dropdown.Item id="all" textValue="All">
+            <Dropdown.ItemIndicator />
+            <Label>All</Label>
+          </Dropdown.Item>
+          <Dropdown.Item id="updates" textValue="Updates">
+            <Dropdown.ItemIndicator />
+            <Label>Updates</Label>
+          </Dropdown.Item>
+          {updateAvailable && (
+            <>
+              <Dropdown.Item id="prerelease" textValue="Pre Release">
+                <Dropdown.ItemIndicator />
+                <Label>Pre Release</Label>
+              </Dropdown.Item>
+              <Dropdown.Item id="major" textValue="Major">
+                <Dropdown.ItemIndicator />
+                <Label>Major</Label>
+              </Dropdown.Item>
+              <Dropdown.Item id="minor" textValue="Minor">
+                <Dropdown.ItemIndicator />
+                <Label>Minor</Label>
+              </Dropdown.Item>
+              <Dropdown.Item id="patch" textValue="Patch">
+                <Dropdown.ItemIndicator />
+                <Label>Patch</Label>
+              </Dropdown.Item>
+              <Dropdown.Item id="others" textValue="Others">
+                <Dropdown.ItemIndicator />
+                <Label>Others</Label>
+              </Dropdown.Item>
+            </>
+          )}
+        </Dropdown.Menu>
+      </Dropdown.Popover>
     </Dropdown>
   );
 }

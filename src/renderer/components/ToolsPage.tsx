@@ -1,4 +1,4 @@
-import {Button} from '@heroui/react';
+import {Button} from '@heroui-v3/react';
 import {useOverlayState} from '@heroui-v3/react';
 import {SettingsMinimalistic} from '@solar-icons/react-perf/BoldDuotone';
 import {useDispatch} from 'react-redux';
@@ -33,8 +33,8 @@ export default function ToolsPage() {
       <SettingsModal state={settingsModal} />
       <ToolsCard
         footer={
-          <Button as="div" variant="flat" color="primary" onPress={settingsModal.open} isIconOnly>
-            <SettingsMinimalistic className="size-5" />
+          <Button variant="secondary" onPress={settingsModal.open} isIconOnly>
+            <SettingsMinimalistic />
           </Button>
         }
         // @ts-expect-error Them image url can be undefined

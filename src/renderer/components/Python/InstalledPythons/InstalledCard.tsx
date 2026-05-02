@@ -168,7 +168,6 @@ export default function InstalledCard({python, diskUsage, maxDiskValue, updateDe
   return (
     <div className="grow relative">
       <PackageManagerModal
-        size="3xl"
         id={python.installPath}
         state={packageManagerModal}
         pythonPath={python.installPath}
@@ -208,7 +207,7 @@ export default function InstalledCard({python, diskUsage, maxDiskValue, updateDe
                 <MenuDots className="rotate-90" />
               </Button>
               <Dropdown.Popover>
-                <Dropdown.Menu onAction={key => console.log(`Selected: ${key}`)}>
+                <Dropdown.Menu>
                   {window.osPlatform === 'win32' && (
                     <>
                       <Dropdown.Item id="system-default" onPress={makeDefault} textValue="Set as System Default">
