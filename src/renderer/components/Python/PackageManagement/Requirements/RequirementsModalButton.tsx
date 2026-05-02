@@ -1,5 +1,6 @@
-import {Button, Chip, Input, Modal, ModalBody, ModalContent, ModalFooter, ModalHeader} from '@heroui/react';
+import {Button, Chip, Modal, SearchField, useOverlayState} from '@heroui-v3/react';
 import EmptyStateCard from '@lynx/components/EmptyStateCard';
+import TabModal from '@lynx/components/TabModal';
 import {topToast} from '@lynx/layouts/ToastProviders';
 import filesIpc from '@lynx_shared/ipc/files';
 import {Checklist, Diskette, File} from '@solar-icons/react-perf/BoldDuotone';
@@ -9,8 +10,6 @@ import {OverlayScrollbarsComponentRef} from 'overlayscrollbars-react';
 import {Dispatch, SetStateAction, useEffect, useRef, useState} from 'react';
 
 import {searchInStrings} from '../../../../../../../src/renderer/mainWindow/utils';
-import {modalMotionProps} from '../../../../../../../src/renderer/mainWindow/utils/constants';
-import {Circle_Icon} from '../../../../../../../src/renderer/shared/assets/icons';
 import {RequirementData} from '../../../../../cross/CrossExtTypes';
 import pIpc from '../../../../PIpc';
 import RequirementsManager from './RequirementsManager';
@@ -23,7 +22,7 @@ type Props = {
 };
 
 export default function RequirementsBtn({id, projectPath, setIsReqAvailable, setReqPackageCount}: Props) {
-  const [isOpen, setIsOpen] = useState<boolean>(false);
+  const state = useOverlayState();
   const [requirements, setRequirements] = useState<RequirementData[]>([]);
   const [filePath, setFilePath] = useState<string>('');
   const [isSaving, setIsSaving] = useState<boolean>(false);
@@ -125,108 +124,78 @@ export default function RequirementsBtn({id, projectPath, setIsReqAvailable, set
 
   return (
     <>
-      <Modal
-        size="3xl"
-        isOpen={isOpen}
-        placement="center"
-        isDismissable={false}
-        scrollBehavior="inside"
-        motionProps={modalMotionProps}
-        onClose={() => setIsOpen(false)}
-        classNames={{backdrop: `top-10!`, wrapper: `top-10! pb-8`}}
-        hideCloseButton>
-        <ModalContent className="overflow-hidden">
-          <ModalHeader className="bg-foreground-200 dark:bg-LynxRaisinBlack flex flex-col gap-y-2">
-            <div className="flex flex-row justify-between">
-              <div className="flex flex-row gap-x-2 items-center mb-2">
-                <span>Manage Requirements</span>
-                <Chip size="sm">{requirements.length}</Chip>
-              </div>
+      <TabModal isOpen={state.isOpen} onOpenChange={state.setOpen}>
+        <Modal.CloseTrigger />
+        <Modal.Header className="flex flex-col gap-y-2">
+          <div className="flex flex-row justify-between">
+            <div className="flex flex-row gap-x-2 items-center mb-2">
+              <span>Manage Requirements</span>
+              <Chip size="sm">{requirements.length}</Chip>
+            </div>
+          </div>
+          <div>
+            <Button variant="secondary" className="shrink-0" onPress={openFilePath} fullWidth>
+              <File />
+              {filePath || 'Choose or Create requirements file...'}
+            </Button>
+          </div>
+          {!isEmpty(requirements) && (
+            <div className="flex flex-row items-center gap-x-2">
+              <SearchField name="search" variant="secondary" value={searchValue} onChange={setSearchValue} fullWidth>
+                <SearchField.Group>
+                  <SearchField.SearchIcon />
+                  <SearchField.Input placeholder="Search..." />
+                  <SearchField.ClearButton />
+                </SearchField.Group>
+              </SearchField>
               {!isEmpty(filePath) && (
-                <div className="flex gap-x-2">
-                  <div>
-                    <Button size="sm" variant="flat" onPress={handleAddRequirement} startContent={<Plus size={14} />}>
-                      Add
-                    </Button>
-                  </div>
-                </div>
+                <Button variant="secondary" onPress={handleAddRequirement}>
+                  <Plus size={14} />
+                  Add
+                </Button>
               )}
             </div>
-            <div>
-              <Button
-                endContent={<div />}
-                onPress={openFilePath}
-                className="shrink-0 justify-between"
-                startContent={<File className="size-3.5" />}
-                fullWidth>
-                {filePath || 'Choose or Create requirements file...'}
-              </Button>
-            </div>
-            {!isEmpty(requirements) && (
-              <Input
-                type="search"
-                value={searchValue}
-                onValueChange={setSearchValue}
-                placeholder="Search requirements..."
-                startContent={<Circle_Icon className="size-3.5" />}
+          )}
+        </Modal.Header>
+        <Modal.Body className="pr-0 pl-2 pt-4 scrollbar-hide">
+          {isEmpty(filePath) ? (
+            <div className="size-full text-center mb-2">
+              <EmptyStateCard
+                action={
+                  <Button variant="secondary" onPress={openFilePath}>
+                    <File />
+                    Choose or Create requirements file
+                  </Button>
+                }
+                className="mx-4"
+                title="Select or create a requirements file to continue."
               />
-            )}
-          </ModalHeader>
-          <ModalBody className="pr-0 pl-2 pt-4 scrollbar-hide">
-            {isEmpty(filePath) ? (
-              <div className="size-full text-center mb-2">
-                <EmptyStateCard
-                  action={
-                    <Button
-                      variant="flat"
-                      color="primary"
-                      key="create_req_file"
-                      onPress={openFilePath}
-                      startContent={<File className="size-3.5" />}>
-                      Choose or Create requirements file
-                    </Button>
-                  }
-                  className="mx-4"
-                  title="Select or create a requirements file to continue."
-                />
-              </div>
-            ) : isEmpty(requirements) ? (
-              <div className="size-full text-center mb-2">
-                <EmptyStateCard
-                  title={
-                    <span>
-                      The file <span className="font-bold text-primary-700">{filePath.split(/[\/\\]/).pop()}</span>
-                      is empty. Add requirements using the <span className="font-bold text-primary-700">Add</span>{' '}
-                      button.
-                    </span>
-                  }
-                  className="mx-4"
-                />
-              </div>
-            ) : (
-              <RequirementsManager scrollRef={scrollRef} requirements={searchReqs} setRequirements={setRequirements} />
-            )}
-          </ModalBody>
-          <ModalFooter className="py-3">
-            <Button
-              variant="flat"
-              color="success"
-              isLoading={isSaving}
-              onPress={handleSaveRequirements}
-              startContent={!isSaving && <Diskette className="size-3.5" />}>
-              {!isSaving && 'Save'}
-            </Button>
-            <Button color="warning" variant="light" className="w-fit" onPress={() => setIsOpen(false)}>
-              Close
-            </Button>
-          </ModalFooter>
-        </ModalContent>
-      </Modal>
-      <Button
-        size="sm"
-        variant="solid"
-        onPress={() => setIsOpen(true)}
-        startContent={<Checklist className="size-3.5" />}>
+            </div>
+          ) : isEmpty(requirements) ? (
+            <div className="size-full text-center mb-2">
+              <EmptyStateCard
+                title={
+                  <span>
+                    The file <span className="font-bold text-primary-700">{filePath.split(/[\/\\]/).pop()}</span>
+                    is empty. Add requirements using the <span className="font-bold text-primary-700">Add</span> button.
+                  </span>
+                }
+                className="mx-4"
+              />
+            </div>
+          ) : (
+            <RequirementsManager scrollRef={scrollRef} requirements={searchReqs} setRequirements={setRequirements} />
+          )}
+        </Modal.Body>
+        <Modal.Footer className="py-3">
+          <Button isPending={isSaving} onPress={handleSaveRequirements}>
+            {!isSaving && <Diskette className="size-3.5" />}
+            {!isSaving && 'Save'}
+          </Button>
+        </Modal.Footer>
+      </TabModal>
+      <Button size="sm" variant="tertiary" onPress={state.open}>
+        <Checklist />
         Manage Requirements
       </Button>
     </>

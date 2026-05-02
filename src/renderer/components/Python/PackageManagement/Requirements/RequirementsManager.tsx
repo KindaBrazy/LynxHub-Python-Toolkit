@@ -1,17 +1,4 @@
-import {
-  Button,
-  getKeyValue,
-  Input,
-  Select,
-  SelectItem,
-  Table,
-  TableBody,
-  TableCell,
-  TableColumn,
-  TableHeader,
-  TableRow,
-} from '@heroui/react';
-import {TrashBin2} from '@solar-icons/react-perf/BoldDuotone';
+import {CloseButton, Input, ListBox, Select, Selection, Table} from '@heroui-v3/react';
 import {OverlayScrollbarsComponent, OverlayScrollbarsComponentRef} from 'overlayscrollbars-react';
 import {Dispatch, ReactNode, RefObject, SetStateAction, useEffect, useState} from 'react';
 
@@ -62,51 +49,53 @@ export default function RequirementsManager({requirements, setRequirements, scro
           key: req.name,
           name: (
             <Input
-              size="sm"
               spellCheck="false"
+              variant="secondary"
               autoFocus={req.autoFocus}
               defaultValue={req.name || ''}
-              onValueChange={name => handleRequirementChange(index, {...req, name})}
+              onChange={e => handleRequirementChange(index, {...req, name: e.target.value})}
+              fullWidth
             />
           ),
           version: (
             <Input
-              size="sm"
               spellCheck="false"
+              variant="secondary"
               defaultValue={req.version || ''}
-              onValueChange={version => handleRequirementChange(index, {...req, version})}
+              onChange={e => handleRequirementChange(index, {...req, version: e.target.value})}
+              fullWidth
             />
           ),
           operator: (
-            <Select
-              // @ts-ignore-next-line
-              onSelectionChange={(selected: Set<string>) =>
-                handleRequirementChange(index, {
-                  ...req,
-                  versionOperator: selected.values().next().value || 'all',
-                })
-              }
-              size="sm"
-              aria-label="Operator selection"
-              classNames={{mainWrapper: 'min-w-20!'}}
-              defaultSelectedKeys={[req.versionOperator || 'all']}>
-              {operators.map(op => (
-                <SelectItem key={op.key} aria-label={op.label}>
-                  {op.label}
-                </SelectItem>
-              ))}
+            <Select variant="secondary" placeholder="Select one">
+              <Select.Trigger>
+                <Select.Value />
+                <Select.Indicator />
+              </Select.Trigger>
+              <Select.Popover>
+                <ListBox
+                  onSelectionChange={(selected: Selection) => {
+                    if (selected === 'all') return;
+
+                    handleRequirementChange(index, {
+                      ...req,
+                      versionOperator: String(selected.values().next().value) || 'all',
+                    });
+                  }}
+                  items={operators}
+                  selectionMode="single"
+                  defaultSelectedKeys={[req.versionOperator || 'all']}>
+                  {op => (
+                    <ListBox.Item id={op.key} textValue={op.label}>
+                      {op.label}
+                      <ListBox.ItemIndicator />
+                    </ListBox.Item>
+                  )}
+                </ListBox>
+              </Select.Popover>
             </Select>
           ),
-          actions: (
-            <Button
-              size="sm"
-              color="danger"
-              variant="flat"
-              onPress={() => handleDeleteRequirement(req.name)}
-              isIconOnly>
-              <TrashBin2 className="size-3.5" />
-            </Button>
-          ),
+          actions: <CloseButton onPress={() => handleDeleteRequirement(req.name)} />,
         };
       }),
     );
@@ -124,21 +113,27 @@ export default function RequirementsManager({requirements, setRequirements, scro
       }}
       ref={scrollRef}
       className="pr-4">
-      <Table aria-label="requirements data" classNames={{wrapper: 'bg-foreground-200 dark:bg-black/50'}}>
-        <TableHeader
-          columns={[
-            {key: 'name', label: 'Name'},
-            {key: 'operator', label: 'Operator'},
-            {key: 'version', label: 'Version'},
-            {key: 'actions', label: 'Actions'},
-          ]}>
-          {column => <TableColumn key={column.key}>{column.label}</TableColumn>}
-        </TableHeader>
-        <TableBody items={tableReq}>
-          {item => (
-            <TableRow key={item.key}>{columnKey => <TableCell>{getKeyValue(item, columnKey)}</TableCell>}</TableRow>
-          )}
-        </TableBody>
+      <Table>
+        <Table.ScrollContainer>
+          <Table.Content>
+            <Table.Header>
+              <Table.Column isRowHeader>Name</Table.Column>
+              <Table.Column>Operator</Table.Column>
+              <Table.Column>Version</Table.Column>
+              <Table.Column>Actions</Table.Column>
+            </Table.Header>
+            <Table.Body items={tableReq}>
+              {item => (
+                <Table.Row id={item.key}>
+                  <Table.Cell>{item.name}</Table.Cell>
+                  <Table.Cell>{item.operator}</Table.Cell>
+                  <Table.Cell>{item.version}</Table.Cell>
+                  <Table.Cell>{item.actions}</Table.Cell>
+                </Table.Row>
+              )}
+            </Table.Body>
+          </Table.Content>
+        </Table.ScrollContainer>
       </Table>
     </OverlayScrollbarsComponent>
   );
