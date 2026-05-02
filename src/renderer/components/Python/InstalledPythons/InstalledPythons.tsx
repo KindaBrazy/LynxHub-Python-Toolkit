@@ -189,7 +189,7 @@ export default function InstalledPythons({
         }>
         {isLoadingPythons ? (
           <div className="flex flex-col gap-y-2 items-center">
-            <Spinner size="xl" />
+            <Spinner size="lg" />
             <Description className="text-sm">Loading python installations...</Description>
           </div>
         ) : isEmpty(installedPythons) ? (

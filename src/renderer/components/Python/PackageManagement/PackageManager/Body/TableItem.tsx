@@ -2,7 +2,7 @@ import {Button, TableCell} from '@heroui-v3/react';
 import {topToast} from '@lynx/layouts/ToastProviders';
 import {ShieldWarning} from '@solar-icons/react-perf/BoldDuotone';
 import {capitalize, startCase} from 'lodash-es';
-import {Dispatch, SetStateAction, useCallback, useMemo, useState} from 'react';
+import {useCallback, useMemo, useState} from 'react';
 
 import {PackageInfo, PackageUpdate} from '../../../../../../cross/CrossExtTypes';
 import {getUpdateVersionColor} from '../../../../../../cross/CrossExtUtils';
@@ -17,7 +17,7 @@ type Props = {
   removed: (name: string) => void;
   columnKey: string;
   isSelected: boolean;
-  setIsUpdateTerminalOpen: Dispatch<SetStateAction<boolean>>;
+  setIsUpdateTerminalOpen: (value: boolean) => void;
 };
 
 export default function TableItem({

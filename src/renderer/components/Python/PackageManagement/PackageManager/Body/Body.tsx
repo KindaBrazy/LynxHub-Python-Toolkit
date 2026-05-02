@@ -21,7 +21,7 @@ type Props = {
   selectedKeys: Selection;
   setSelectedKeys: Dispatch<SetStateAction<Selection>>;
   setPythonPath?: Dispatch<SetStateAction<string>>;
-  setIsUpdateTerminalOpen: Dispatch<SetStateAction<boolean>>;
+  setIsUpdateTerminalOpen: (value: boolean) => void;
 };
 
 export default function PackageManagerBody({
@@ -138,6 +138,8 @@ export default function PackageManagerBody({
               </Table>
             ) : (
               <EmptyStateCard
+                className="px-8"
+                variant="secondary"
                 title="Could not find a virtual environment."
                 description="Please select your desire environment."
                 action={<SelectEnv id={id} setPythonPath={setPythonPath} />}

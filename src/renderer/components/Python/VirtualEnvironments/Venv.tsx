@@ -132,7 +132,7 @@ export default function Venv({visible, installedPythons, isLoadingPythons}: Prop
       </div>
       <div className="flex justify-start flex-row flex-wrap gap-4">
         {isLoading ? (
-          <div className="flex flex-col gap-y-2 items-center">
+          <div className="flex flex-col gap-y-2 items-center size-full">
             <Spinner size="lg" />
             <Description className="text-sm">Reading and validating venvs, please wait...</Description>
           </div>

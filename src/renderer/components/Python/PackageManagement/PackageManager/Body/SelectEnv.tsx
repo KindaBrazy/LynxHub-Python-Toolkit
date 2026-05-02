@@ -1,4 +1,4 @@
-import {Button, CircularProgress, Dropdown, DropdownItem, DropdownMenu, DropdownTrigger} from '@heroui/react';
+import {Button, Description, Dropdown, Spinner} from '@heroui-v3/react';
 import {topToast} from '@lynx/layouts/ToastProviders';
 import {Dispatch, SetStateAction, useEffect, useState} from 'react';
 
@@ -9,6 +9,7 @@ import {fetchAndSetPythonVenvs} from '../../../../UtilHooks';
 
 type Props = {id: string; setPythonPath?: Dispatch<SetStateAction<string>>};
 
+// TODO: show names for dropdown items (pythons or venvs)
 export default function SelectEnv({id, setPythonPath}: Props) {
   const [list, setList] = useState<PythonVenvSelectItem[]>([]);
   const [isLoading, setIsLoading] = useState<boolean>(true);
@@ -37,35 +38,32 @@ export default function SelectEnv({id, setPythonPath}: Props) {
   }, []);
 
   return isLoading ? (
-    <CircularProgress
-      color="secondary"
-      className="justify-self-center"
-      label="Loading available pythons and venvs..."
-    />
+    <div className="flex flex-col gap-y-2 items-center">
+      <Spinner size="lg" />
+      <Description>Loading available pythons and venvs...</Description>
+    </div>
   ) : (
-    <Dropdown size="md" showArrow>
-      <DropdownTrigger>
-        <Button color="secondary" key="select_python_version">
-          Select Environment
-        </Button>
-      </DropdownTrigger>
-      <DropdownMenu items={list}>
-        {item => (
-          <DropdownItem onPress={() => onPress(item)} key={`${item.version}_${item.dir}`}>
-            <div className="flex flex-row gap-x-1 items-end">
-              {item.type === 'python' ? (
-                <span className="flex flex-row items-center gap-x-2">
-                  <Python_Icon className="text-yellow-300" /> {item.version}
-                </span>
-              ) : (
-                <span className="flex flex-row items-center gap-x-2">
-                  <Env_Icon className="text-green-300" /> {item.version}
-                </span>
-              )}
-            </div>
-          </DropdownItem>
-        )}
-      </DropdownMenu>
+    <Dropdown>
+      <Button className="mt-2">Select Environment</Button>
+      <Dropdown.Popover>
+        <Dropdown.Menu items={list}>
+          {item => (
+            <Dropdown.Item onPress={() => onPress(item)} id={`${item.version}_${item.dir}`}>
+              <div className="flex flex-row gap-x-1 items-end">
+                {item.type === 'python' ? (
+                  <span className="flex flex-row items-center gap-x-2">
+                    <Python_Icon className="text-yellow-300" /> {item.version}
+                  </span>
+                ) : (
+                  <span className="flex flex-row items-center gap-x-2">
+                    <Env_Icon className="text-green-300" /> {item.version}
+                  </span>
+                )}
+              </div>
+            </Dropdown.Item>
+          )}
+        </Dropdown.Menu>
+      </Dropdown.Popover>
     </Dropdown>
   );
 }

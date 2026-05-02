@@ -34,7 +34,7 @@ type Props = {
   visibleItems: PackageInfo[];
 
   setIsUpdating: Dispatch<SetStateAction<boolean>>;
-  setIsUpdateTerminalOpen: Dispatch<SetStateAction<boolean>>;
+  setIsUpdateTerminalOpen: (value: boolean) => void;
   isUpdating: boolean;
 };
 

@@ -1,4 +1,4 @@
-import {Modal, Selection, UseOverlayStateReturn} from '@heroui-v3/react';
+import {Modal, Selection, useOverlayState, UseOverlayStateReturn} from '@heroui-v3/react';
 import TabModal from '@lynx/components/TabModal';
 import {isEmpty} from 'lodash-es';
 import {Dispatch, ReactNode, SetStateAction, useEffect, useState} from 'react';
@@ -54,7 +54,7 @@ export default function PackageManagerModal({
   const [items, setItems] = useState<PackageInfo[]>(searchData);
   const [selectedKeys, setSelectedKeys] = useState<Selection>(new Set([]));
 
-  const [isUpdateTerminalOpen, setIsUpdateTerminalOpen] = useState<boolean>(false);
+  const updateModal = useOverlayState();
 
   useEffect(() => {
     switch (selectedFilter) {
@@ -242,7 +242,11 @@ export default function PackageManagerModal({
   return (
     <>
       <TabModal isOpen={state.isOpen} onOpenChange={state.setOpen}>
-        <Modal.CloseTrigger />
+        <Footer_Close
+          isUpdating={isUpdating}
+          isCheckingUpdates={isCheckingUpdates}
+          closePackageManager={closePackageManager}
+        />
         <Modal.Header className="gap-y-2">
           <PackageManagerHeader
             id={id}
@@ -264,7 +268,7 @@ export default function PackageManagerModal({
             setSearchValue={setSearchValue}
             checkForUpdates={checkForUpdates}
             setSelectedFilter={setSelectedFilter}
-            setIsUpdateTerminalOpen={setIsUpdateTerminalOpen}
+            setIsUpdateTerminalOpen={updateModal.setOpen}
             checkingUpdates={!isLoadingPackages && isCheckingUpdates}
           />
         </Modal.Header>
@@ -280,18 +284,13 @@ export default function PackageManagerModal({
           isValidPython={isValidPython}
           packagesUpdate={packagesUpdate}
           setSelectedKeys={setSelectedKeys}
-          setIsUpdateTerminalOpen={setIsUpdateTerminalOpen}
+          setIsUpdateTerminalOpen={updateModal.setOpen}
         />
         <Modal.Footer className="items-center py-3">
           <TablePage setItems={setItems} searchData={searchData} />
-          <Footer_Close
-            isUpdating={isUpdating}
-            isCheckingUpdates={isCheckingUpdates}
-            closePackageManager={closePackageManager}
-          />
         </Modal.Footer>
       </TabModal>
-      <UpdateModal isOpen={isUpdateTerminalOpen} setIsOpen={setIsUpdateTerminalOpen} />
+      <UpdateModal state={updateModal} />
     </>
   );
 }

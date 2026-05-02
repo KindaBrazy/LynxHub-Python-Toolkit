@@ -1,22 +1,14 @@
-import {
-  Button,
-  Modal,
-  ModalBody,
-  ModalContent,
-  ModalFooter,
-  ModalHeader,
-  Popover,
-  PopoverContent,
-  PopoverTrigger,
-} from '@heroui/react';
+import {Button, Modal, Popover} from '@heroui-v3/react';
+import {UseOverlayStateReturn} from '@heroui-v3/react';
+import TabModal from '@lynx/components/TabModal';
 import ptyIpc from '@lynx_shared/ipc/pty';
-import {Dispatch, memo, SetStateAction, useEffect, useState} from 'react';
+import {memo, useEffect, useState} from 'react';
 
 import TerminalView from './Terminal-View';
 
-type Props = {isOpen: boolean; setIsOpen: Dispatch<SetStateAction<boolean>>};
+type Props = {state: UseOverlayStateReturn};
 
-const UpdateModal = memo(({isOpen, setIsOpen}: Props) => {
+const UpdateModal = memo(({state}: Props) => {
   const [isPopoverOpen, setIsPopoverOpen] = useState<boolean>(false);
   const [isDone, setIsDone] = useState<boolean>(false);
 
@@ -33,48 +25,36 @@ const UpdateModal = memo(({isOpen, setIsOpen}: Props) => {
 
   const Close = () => {
     setIsPopoverOpen(false);
-    setIsOpen(false);
+    state.close();
   };
 
   return (
-    <Modal
-      size="3xl"
-      isOpen={isOpen}
-      placement="center"
-      scrollBehavior="inside"
-      onOpenChange={setIsOpen}
-      classNames={{backdrop: `top-10!`, wrapper: `top-10! pb-8`}}
-      hideCloseButton>
-      <ModalContent>
-        <ModalHeader className="justify-center py-3">Console Output...</ModalHeader>
-        <ModalBody className="py-0 px-2">
-          <TerminalView />
-        </ModalBody>
-        <ModalFooter className="py-2">
-          <Popover
-            size="sm"
-            isOpen={isPopoverOpen}
-            onOpenChange={setIsPopoverOpen}
-            className="max-w-xs before:bg-foreground-100"
-            showArrow>
-            <PopoverTrigger>
-              <Button variant="flat" color="warning">
+    <TabModal isOpen={state.isOpen} onOpenChange={state.setOpen}>
+      <Modal.Header>
+        <Modal.Heading>Console Output...</Modal.Heading>
+      </Modal.Header>
+      <Modal.Body>
+        <TerminalView />
+      </Modal.Body>
+      <Modal.Footer>
+        <Popover isOpen={isPopoverOpen} onOpenChange={setIsPopoverOpen}>
+          <Button variant="danger-soft">Close</Button>
+          <Popover.Content className="max-w-xs">
+            <Popover.Dialog>
+              <Popover.Arrow />
+              <Popover.Heading>
+                {isDone
+                  ? 'The terminal is done and exited, close this window?'
+                  : 'Are you sure you want to close this window? the command will be still executing in background'}
+              </Popover.Heading>
+              <Button size="sm" onPress={Close} variant="danger-soft" fullWidth>
                 Close
               </Button>
-            </PopoverTrigger>
-            <PopoverContent className="p-4 flex flex-col gap-y-3 border border-foreground-100">
-              {isDone
-                ? 'The terminal is done and exited, close this window?'
-                : 'Are you sure you want to close this window? the command will be still executing in background'}
-
-              <Button size="sm" variant="flat" onPress={Close} color="warning" fullWidth>
-                Close
-              </Button>
-            </PopoverContent>
-          </Popover>
-        </ModalFooter>
-      </ModalContent>
-    </Modal>
+            </Popover.Dialog>
+          </Popover.Content>
+        </Popover>
+      </Modal.Footer>
+    </TabModal>
   );
 });
 

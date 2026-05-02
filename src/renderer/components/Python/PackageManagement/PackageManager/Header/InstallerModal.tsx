@@ -1,9 +1,10 @@
-import {Alert, Button, Modal, ModalBody, ModalContent, ModalFooter, ModalHeader} from '@heroui/react';
+import {Alert, Button, Modal, useOverlayState} from '@heroui-v3/react';
+import TabModal from '@lynx/components/TabModal';
 import {topToast} from '@lynx/layouts/ToastProviders';
 import {Download} from '@solar-icons/react-perf/BoldDuotone';
 import {Plus} from 'lucide-react';
 import {OverlayScrollbarsComponent} from 'overlayscrollbars-react';
-import {useCallback, useState} from 'react';
+import {useState} from 'react';
 
 import {useAppState} from '../../../../../../../../src/renderer/mainWindow/redux/reducers/app';
 import pIpc from '../../../../../PIpc';
@@ -16,15 +17,12 @@ type Props = {
 
 export default function InstallerModal({refresh, pythonPath}: Props) {
   const [installing, setInstalling] = useState<boolean>(false);
-  const [isOpen, setIsOpen] = useState<boolean>(false);
   const [installCommand, setInstallCommand] = useState<string>('');
   const [isInstallDisabled, setIsInstallDisabled] = useState<boolean>(true);
 
   const isDarkMode = useAppState('darkMode');
 
-  const close = useCallback(() => {
-    setIsOpen(false);
-  }, []);
+  const state = useOverlayState();
 
   const handleInstall = async () => {
     setInstalling(true);
@@ -51,58 +49,46 @@ export default function InstallerModal({refresh, pythonPath}: Props) {
 
   return (
     <>
-      <Button size="sm" variant="solid" onPress={() => setIsOpen(true)} startContent={<Plus size={12} />}>
+      <Button size="sm" variant="tertiary" onPress={state.open}>
+        <Plus size={12} />
         Install Package
       </Button>
-      <Modal
-        size="2xl"
-        isOpen={isOpen}
-        onClose={close}
-        placement="center"
-        isDismissable={false}
-        scrollBehavior="inside"
-        classNames={{backdrop: `top-10!`, wrapper: `top-10! pb-8`}}>
-        <ModalContent>
-          <ModalHeader className="pb-1 justify-center">Python Package Installer</ModalHeader>
-          <ModalBody className="scrollbar-hide px-0 pt-0">
-            <OverlayScrollbarsComponent
-              options={{
-                overflow: {x: 'hidden', y: 'scroll'},
-                scrollbars: {
-                  autoHide: 'move',
-                  clickScroll: true,
-                  theme: isDarkMode ? 'os-theme-light' : 'os-theme-dark',
-                },
-              }}>
-              <Installer setInstallCommand={setInstallCommand} setIsInstallDisabled={setIsInstallDisabled} />
-            </OverlayScrollbarsComponent>
-          </ModalBody>
-          <ModalFooter className="flex-col">
-            {installing && (
-              <Alert
-                description={
-                  'Installing packages... This may take several minutes depending on' +
-                  ' the number and size of the packages you selected.'
-                }
-                color="warning"
-                isClosable
-              />
-            )}
-            <Button
-              size="md"
-              variant="flat"
-              color="success"
-              isLoading={installing}
-              onPress={handleInstall}
-              className="cursor-pointer"
-              startContent={<Download />}
-              isDisabled={isInstallDisabled}
-              fullWidth>
-              {installing ? 'Installing...' : 'Install Packages'}
-            </Button>
-          </ModalFooter>
-        </ModalContent>
-      </Modal>
+      <TabModal size="lg" isOpen={state.isOpen} onOpenChange={state.setOpen} dialogClassName="px-4 max-w-2xl">
+        <Modal.CloseTrigger />
+        <Modal.Header>
+          <Modal.Heading className="px-2">Python Package Installer</Modal.Heading>
+        </Modal.Header>
+        <Modal.Body className="scrollbar-hide px-0 pt-0">
+          <OverlayScrollbarsComponent
+            options={{
+              overflow: {x: 'hidden', y: 'scroll'},
+              scrollbars: {
+                autoHide: 'move',
+                clickScroll: true,
+                theme: isDarkMode ? 'os-theme-light' : 'os-theme-dark',
+              },
+            }}>
+            <Installer setInstallCommand={setInstallCommand} setIsInstallDisabled={setIsInstallDisabled} />
+          </OverlayScrollbarsComponent>
+        </Modal.Body>
+        <Modal.Footer className="flex-col">
+          {installing && (
+            <Alert status="warning" className="bg-surface-secondary">
+              <Alert.Indicator />
+              <Alert.Content>
+                <Alert.Title>
+                  Installing packages... This may take several minutes depending on the number and size of the packages
+                  you selected.
+                </Alert.Title>
+              </Alert.Content>
+            </Alert>
+          )}
+          <Button size="md" isPending={installing} onPress={handleInstall} isDisabled={isInstallDisabled} fullWidth>
+            <Download />
+            {installing ? 'Installing...' : 'Install Packages'}
+          </Button>
+        </Modal.Footer>
+      </TabModal>
     </>
   );
 }

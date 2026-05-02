@@ -1,11 +1,11 @@
-import {Button, Popover, PopoverContent, PopoverTrigger} from '@heroui/react';
+import {Button, CloseButton, Description, Popover} from '@heroui-v3/react';
 import {memo, useCallback, useState} from 'react';
 
 import pIpc from '../../../../../PIpc';
 
 type Props = {isCheckingUpdates: boolean; isUpdating: boolean; closePackageManager: () => void};
 
-const CloseBtn = ({isCheckingUpdates, isUpdating, closePackageManager}: Props) => {
+const CloseBtn = memo(({isCheckingUpdates, isUpdating, closePackageManager}: Props) => {
   const [isOpen, setIsOpen] = useState<boolean>(false);
 
   const closePopover = useCallback(() => {
@@ -25,42 +25,30 @@ const CloseBtn = ({isCheckingUpdates, isUpdating, closePackageManager}: Props) =
 
   if (isUpdating || isCheckingUpdates) {
     return (
-      <Popover
-        isOpen={isOpen}
-        placement="top"
-        onOpenChange={setIsOpen}
-        className="max-w-sm before:bg-foreground-100"
-        showArrow>
-        <PopoverTrigger>
-          <Button variant="light" color="warning">
-            Close
-          </Button>
-        </PopoverTrigger>
-        <PopoverContent className="border border-foreground-100">
-          <div className="flex flex-col p-2 gap-y-3">
-            <div className="font-semibold text-warning">{isUpdating ? 'Update' : 'Update check'} in progress</div>
-            <div>
+      <Popover isOpen={isOpen} onOpenChange={setIsOpen}>
+        <CloseButton className="absolute top-4 right-4" />
+        <Popover.Content className="max-w-sm">
+          <Popover.Dialog>
+            <Popover.Arrow />
+            <Popover.Heading>{isUpdating ? 'Update' : 'Update check'} in progress</Popover.Heading>
+            <Description>
               Closing now will abort the {isUpdating ? 'update' : 'update check'}. Are you sure you want to continue?
-            </div>
+            </Description>
             <div className="flex flex-row justify-end gap-x-2">
-              <Button size="sm" variant="flat" color="success" onPress={closePopover}>
+              <Button size="sm" variant="secondary" onPress={closePopover}>
                 Cancel
               </Button>
-              <Button size="sm" variant="flat" color="danger" onPress={abort}>
+              <Button size="sm" onPress={abort} variant="danger-soft">
                 Abort Anyway
               </Button>
             </div>
-          </div>
-        </PopoverContent>
+          </Popover.Dialog>
+        </Popover.Content>
       </Popover>
     );
   }
 
-  return (
-    <Button variant="light" color="warning" onPress={closePackageManager}>
-      Close
-    </Button>
-  );
-};
+  return <CloseButton onPress={closePackageManager} className="absolute top-4 right-4" />;
+});
 
-export default memo(CloseBtn);
+export default CloseBtn;

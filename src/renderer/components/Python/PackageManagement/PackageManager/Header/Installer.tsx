@@ -1,8 +1,8 @@
-import {Button, Divider, Input, Listbox, ListboxItem} from '@heroui/react';
+import {Button, CloseButton, Description, Input, Label, ListBox, Separator, Surface, TextField} from '@heroui-v3/react';
 import CopyClipboard from '@lynx/components/CopyClipboard';
 import {topToast} from '@lynx/layouts/ToastProviders';
 import filesIpc from '@lynx_shared/ipc/files';
-import {Checklist, TrashBin2} from '@solar-icons/react-perf/BoldDuotone';
+import {Checklist} from '@solar-icons/react-perf/BoldDuotone';
 import {compact, isEmpty} from 'lodash-es';
 import {X} from 'lucide-react';
 import {KeyboardEvent, useEffect, useState} from 'react';
@@ -65,7 +65,7 @@ export default function Installer({setInstallCommand, setIsInstallDisabled}: Pro
   };
 
   const removePackage = (name: string) => {
-    setPackages(packages.filter(pkg => pkg.name !== name));
+    setPackages(prevState => prevState.filter(pkg => pkg.name !== name));
   };
 
   const handleFileSelect = () => {
@@ -110,83 +110,75 @@ export default function Installer({setInstallCommand, setIsInstallDisabled}: Pro
   };
 
   return (
-    <div className="max-w-4xl mx-auto p-6 flex flex-col gap-y-4">
+    <div className="max-w-4xl mx-auto p-6 flex flex-col gap-y-2">
       {/* Package input */}
       <div className="flex w-full justify-between items-center">
         <div className="flex items-center gap-x-2">
-          <span className="font-semibold">Package Input</span>
-          <Button size="sm" variant="flat" onPress={handleFileSelect} startContent={<Checklist size={13} />}>
+          <Button size="sm" variant="secondary" onPress={handleFileSelect}>
+            <Checklist />
             Import Requirements
           </Button>
         </div>
         {!isEmpty(packages) && (
-          <Button
-            size="sm"
-            color="danger"
-            variant="flat"
-            startContent={<X size={12} />}
-            onPress={() => setPackages([])}>
+          <Button size="sm" variant="danger-soft" onPress={() => setPackages([])}>
+            <X />
             Clear All
           </Button>
         )}
       </div>
       <div className="space-y-4">
         <div className="w-full">
-          <Input
+          <TextField
+            variant="secondary"
             value={packageString}
             onKeyDown={handleKeyDown}
-            label="Enter package names"
-            onValueChange={handlePackageStringChange}
-            placeholder="e.g., 'torch torchvision torchaudio' or 'pandas@1.5.0'"
-          />
+            onChange={handlePackageStringChange}>
+            <Label>Package name</Label>
+            <Input placeholder="e.g., 'torch torchvision torchaudio' or 'pandas@1.5.0'" />
+          </TextField>
 
-          <p className="text-sm text-foreground-400 mt-1">
+          <Description>
             Press Space or Enter to add packages. Use &#39;@&#39; or &#39;==&#39; to specify version (e.g.,
             pandas@1.5.0)
-          </p>
+          </Description>
         </div>
 
         {/* Package list */}
         {!isEmpty(packages) && (
-          <div className="flex flex-col gap-y-2">
-            <Listbox items={packages} className="bg-foreground-100 rounded-xl">
+          <Surface variant="secondary" className="flex flex-col gap-y-2 rounded-3xl p-2">
+            <ListBox items={packages}>
               {pkg => (
-                <ListboxItem
-                  endContent={
-                    <Button size="sm" color="danger" variant="light" onPress={() => removePackage(pkg.name)} isIconOnly>
-                      <TrashBin2 size={15} />
-                    </Button>
-                  }
-                  key={pkg.name}>
-                  <span className="flex-1 text-sm font-JetBrainsMono">
-                    {pkg.name}
-                    {pkg.version && `@${pkg.version}`}
-                  </span>
-                </ListboxItem>
+                <ListBox.Item id={pkg.name} className="justify-between">
+                  <div className="flex flex-col">
+                    <Label>{pkg.name}</Label>
+                    <Description>{pkg.version}</Description>
+                  </div>
+                  <CloseButton onPress={() => removePackage(pkg.name)} />
+                </ListBox.Item>
               )}
-            </Listbox>
-          </div>
+            </ListBox>
+          </Surface>
         )}
       </div>
 
       {/* Extra options */}
-      <Divider className="bg-foreground-100" />
-      <span>Extra Options</span>
+      <Separator />
+      <Label>Extra Options</Label>
       <div className="space-y-4">
-        <Input value={indexUrl} label="Index URL" placeholder="(optional)" onValueChange={setIndexUrl} />
-
-        <Input
-          value={extraOptions}
-          label="Extra options"
-          onValueChange={setExtraOptions}
-          placeholder="e.g., --user --no-cache-dir"
-        />
+        <TextField value={indexUrl} variant="secondary" onChange={setIndexUrl}>
+          <Label>Index URL</Label>
+          <Input placeholder="(optional)" />
+        </TextField>
+        <TextField variant="secondary" value={extraOptions} onChange={setExtraOptions}>
+          <Label>Extra options</Label>
+          <Input placeholder="e.g., --user --no-cache-dir" />
+        </TextField>
       </div>
 
       {/* Preview */}
-      <Divider className="bg-foreground-100" />
-      <div className="flex gap-x-2 items-center justify-between">
-        <span>Preview</span>
+      <Separator />
+      <div className="flex items-center justify-between">
+        <Label>Preview</Label>
         <CopyClipboard contentToCopy={`pip install ${generateInstallCommand()}`} />
       </div>
       <span className="bg-foreground-100 p-4 rounded-xl">

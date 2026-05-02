@@ -1,4 +1,4 @@
-import {Button, ButtonGroup, Dropdown, DropdownItem, DropdownMenu, DropdownTrigger, Selection} from '@heroui/react';
+import {Button, ButtonGroup, Description, Dropdown, Label, Selection} from '@heroui-v3/react';
 import {AltArrowDown} from '@solar-icons/react-perf/Bold';
 import {Download, Magnifier} from '@solar-icons/react-perf/BoldDuotone';
 import {isEmpty} from 'lodash-es';
@@ -37,7 +37,7 @@ export default function UpdateButton({
   reqPackageCount,
   setProgressValue,
 }: Props) {
-  const [selectedOption, setSelectedOption] = useState(new Set([isReqAvailable ? 'req' : 'all']));
+  const [selectedOption, setSelectedOption] = useState<Selection>(new Set([isReqAvailable ? 'req' : 'all']));
   const [checkedCount, setCheckedCount] = useState<string[]>([]);
 
   useEffect(() => {
@@ -110,43 +110,41 @@ export default function UpdateButton({
   return !isEmpty(packagesUpdate) ? (
     <Button
       size="sm"
-      variant="flat"
-      color="success"
       onPress={update}
-      isLoading={isUpdating}
-      startContent={!isUpdating && <Download />}
+      variant="secondary"
+      isPending={isUpdating}
       isDisabled={selectedKeys !== 'all' && selectedKeys.size === 0}>
+      {!isUpdating && <Download />}
       {isUpdating ? <span>Updating ({selectedCount})...</span> : <span>Update {selectedCount}</span>}
     </Button>
   ) : (
     <ButtonGroup>
-      <Button
-        size="sm"
-        onPress={checkForUpdate}
-        isLoading={checkingUpdates}
-        startContent={!checkingUpdates && <Magnifier />}>
+      <Button size="sm" variant="secondary" onPress={checkForUpdate} isPending={checkingUpdates}>
+        {!checkingUpdates && <Magnifier />}
         {labelsMap[selectedOptionValue]}
       </Button>
-      <Dropdown placement="bottom-end">
-        <DropdownTrigger>
-          <Button size="sm" variant="flat" color="default" isDisabled={!isReqAvailable || checkingUpdates} isIconOnly>
-            <AltArrowDown className="size-4" />
-          </Button>
-        </DropdownTrigger>
-        <DropdownMenu
-          selectionMode="single"
-          aria-label="Merge options"
-          selectedKeys={selectedOption}
-          // @ts-ignore-next-line
-          onSelectionChange={setSelectedOption}
-          disallowEmptySelection>
-          <DropdownItem key="all" description={descriptionsMap['all']}>
-            {labelsMap['all']}
-          </DropdownItem>
-          <DropdownItem key="req" description={descriptionsMap['req']}>
-            {labelsMap['req']}
-          </DropdownItem>
-        </DropdownMenu>
+      <Dropdown>
+        <Button size="sm" variant="tertiary" isDisabled={!isReqAvailable || checkingUpdates} isIconOnly>
+          <AltArrowDown />
+        </Button>
+        <Dropdown.Popover>
+          <Dropdown.Menu selectionMode="single" selectedKeys={selectedOption} onSelectionChange={setSelectedOption}>
+            <Dropdown.Item id="all" textValue={labelsMap['all']}>
+              <div className="flex flex-col">
+                <Label>{labelsMap['all']}</Label>
+                <Description>{descriptionsMap['all']}</Description>
+              </div>
+              <Dropdown.ItemIndicator />
+            </Dropdown.Item>
+            <Dropdown.Item id="req" textValue={labelsMap['req']}>
+              <div className="flex flex-col">
+                <Label>{labelsMap['req']}</Label>
+                <Description>{descriptionsMap['req']}</Description>
+              </div>
+              <Dropdown.ItemIndicator />
+            </Dropdown.Item>
+          </Dropdown.Menu>
+        </Dropdown.Popover>
       </Dropdown>
     </ButtonGroup>
   );
