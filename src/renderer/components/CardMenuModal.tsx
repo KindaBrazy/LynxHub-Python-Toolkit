@@ -1,4 +1,4 @@
-import {Button} from '@heroui/react';
+import {Button} from '@heroui-v3/react';
 import {useCardOverlayState} from '@lynx/components/card/useCardOverlayState';
 import {UseCardStoreType} from '@lynx/plugins/extensions/types';
 import {useInstalledCard} from '@lynx/utils/hooks';
@@ -28,13 +28,7 @@ export default function CardMenuModal({useCardOverlayState, useCardStore}: Props
   const actionButtons = useMemo(() => {
     return pythonPath
       ? [
-          <Button
-            size="sm"
-            variant="flat"
-            color="danger"
-            key="reloacte_venv"
-            className="min-w-32!"
-            onPress={handleDeselect}>
+          <Button size="sm" key="reloacte_venv" variant="danger-soft" className="min-w-32!" onPress={handleDeselect}>
             Deselect
           </Button>,
         ]
