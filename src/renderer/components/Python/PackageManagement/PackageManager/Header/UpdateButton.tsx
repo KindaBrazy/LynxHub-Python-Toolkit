@@ -1,4 +1,4 @@
-import {Button, ButtonGroup, Description, Dropdown, Label, Selection} from '@heroui-v3/react';
+import {Button, ButtonGroup, Description, Dropdown, Label, Selection} from '@heroui/react';
 import {AltArrowDown} from '@solar-icons/react-perf/Bold';
 import {Download, Magnifier} from '@solar-icons/react-perf/BoldDuotone';
 import {isEmpty} from 'lodash-es';

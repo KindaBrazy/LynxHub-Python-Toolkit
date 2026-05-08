@@ -1,5 +1,5 @@
-import {Button} from '@heroui-v3/react';
-import {useOverlayState} from '@heroui-v3/react';
+import {Button} from '@heroui/react';
+import {useOverlayState} from '@heroui/react';
 import {SettingsMinimalistic} from '@solar-icons/react-perf/BoldDuotone';
 import {useDispatch} from 'react-redux';
 

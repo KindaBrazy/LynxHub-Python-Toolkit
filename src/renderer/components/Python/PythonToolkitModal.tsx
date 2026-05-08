@@ -1,4 +1,4 @@
-import {Key, Modal, Tabs, UseOverlayStateReturn} from '@heroui-v3/react';
+import {Key, Modal, Tabs, UseOverlayStateReturn} from '@heroui/react';
 import TabModal from '@lynx/components/TabModal';
 import {useState} from 'react';
 

@@ -1,4 +1,4 @@
-import {Modal, Separator, UseOverlayStateReturn} from '@heroui-v3/react';
+import {Modal, Separator, UseOverlayStateReturn} from '@heroui/react';
 import TabModal from '@lynx/components/TabModal';
 
 import CacheDirUsage from './CacheDirUsage';

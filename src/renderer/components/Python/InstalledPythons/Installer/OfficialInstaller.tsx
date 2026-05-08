@@ -7,7 +7,7 @@ import {
   SearchField,
   Spinner,
   UseOverlayStateReturn,
-} from '@heroui-v3/react';
+} from '@heroui/react';
 import EmptyStateCard from '@lynx/components/EmptyStateCard';
 import LynxTooltip from '@lynx/components/LynxTooltip';
 import {topToast} from '@lynx/layouts/ToastProviders';

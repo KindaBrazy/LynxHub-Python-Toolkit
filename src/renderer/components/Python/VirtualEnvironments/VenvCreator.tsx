@@ -1,4 +1,4 @@
-import {Button, Input, Key, Label, ListBox, Popover, Select, TextField} from '@heroui-v3/react';
+import {Button, Input, Key, Label, ListBox, Popover, Select, TextField} from '@heroui/react';
 import {topToast} from '@lynx/layouts/ToastProviders';
 import filesIpc from '@lynx_shared/ipc/files';
 import {FolderOpen} from '@solar-icons/react-perf/BoldDuotone';

@@ -1,4 +1,4 @@
-import {Button, TableCell} from '@heroui-v3/react';
+import {Button, TableCell} from '@heroui/react';
 import {topToast} from '@lynx/layouts/ToastProviders';
 import {ShieldWarning} from '@solar-icons/react-perf/BoldDuotone';
 import {capitalize, startCase} from 'lodash-es';

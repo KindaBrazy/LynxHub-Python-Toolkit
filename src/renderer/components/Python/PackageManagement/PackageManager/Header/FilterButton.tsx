@@ -1,4 +1,4 @@
-import {Button, cn, Dropdown, Label, Selection} from '@heroui-v3/react';
+import {Button, cn, Dropdown, Label, Selection} from '@heroui/react';
 import {Filter} from '@solar-icons/react-perf/BoldDuotone';
 import {Dispatch, SetStateAction, useEffect, useState} from 'react';
 

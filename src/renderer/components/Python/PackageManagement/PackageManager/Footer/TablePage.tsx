@@ -1,4 +1,4 @@
-import {Pagination} from '@heroui-v3/react';
+import {Pagination} from '@heroui/react';
 import {isEmpty} from 'lodash-es';
 import {Dispatch, SetStateAction, useEffect, useMemo, useState} from 'react';
 

@@ -1,4 +1,4 @@
-import {Alert, Button, Modal, useOverlayState} from '@heroui-v3/react';
+import {Alert, Button, Modal, useOverlayState} from '@heroui/react';
 import TabModal from '@lynx/components/TabModal';
 import {topToast} from '@lynx/layouts/ToastProviders';
 import {Download} from '@solar-icons/react-perf/BoldDuotone';

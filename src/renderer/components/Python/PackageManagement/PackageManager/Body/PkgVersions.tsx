@@ -1,4 +1,4 @@
-import {Button, ButtonProps, Chip, Description, Input, Modal, Popover, ProgressBar} from '@heroui-v3/react';
+import {Button, ButtonProps, Chip, Description, Input, Modal, Popover, ProgressBar} from '@heroui/react';
 import TabModal from '@lynx/components/TabModal';
 import {topToast} from '@lynx/layouts/ToastProviders';
 import {AltArrowDown, AltArrowUp} from '@solar-icons/react-perf/Bold';

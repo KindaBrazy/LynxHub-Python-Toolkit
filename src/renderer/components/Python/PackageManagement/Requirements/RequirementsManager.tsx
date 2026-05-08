@@ -1,4 +1,4 @@
-import {CloseButton, Input, ListBox, Select, Selection, Table} from '@heroui-v3/react';
+import {CloseButton, Input, ListBox, Select, Selection, Table} from '@heroui/react';
 import {OverlayScrollbarsComponent, OverlayScrollbarsComponentRef} from 'overlayscrollbars-react';
 import {Dispatch, ReactNode, RefObject, SetStateAction, useEffect, useState} from 'react';
 

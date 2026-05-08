@@ -1,4 +1,4 @@
-import {Button, Description, Spinner, useOverlayState} from '@heroui-v3/react';
+import {Button, Description, Spinner, useOverlayState} from '@heroui/react';
 import EmptyStateCard from '@lynx/components/EmptyStateCard';
 import {topToast} from '@lynx/layouts/ToastProviders';
 import filesIpc from '@lynx_shared/ipc/files';

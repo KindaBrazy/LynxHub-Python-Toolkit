@@ -1,4 +1,4 @@
-import {Button, CloseButton, Description, Popover} from '@heroui-v3/react';
+import {Button, CloseButton, Description, Popover} from '@heroui/react';
 import {memo, useCallback, useState} from 'react';
 
 import pIpc from '../../../../../PIpc';

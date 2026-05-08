@@ -1,4 +1,4 @@
-import {Button, Popover} from '@heroui-v3/react';
+import {Button, Popover} from '@heroui/react';
 import {topToast} from '@lynx/layouts/ToastProviders';
 import {TrashBin2} from '@solar-icons/react-perf/BoldDuotone';
 import {Dispatch, SetStateAction, useCallback, useState} from 'react';

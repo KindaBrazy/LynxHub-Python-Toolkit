@@ -1,4 +1,4 @@
-import {Avatar, Chip, ProgressBar, SearchField, Selection} from '@heroui-v3/react';
+import {Avatar, Chip, ProgressBar, SearchField, Selection} from '@heroui/react';
 import {topToast} from '@lynx/layouts/ToastProviders';
 import {extractGitUrl, getFallbackString} from '@lynx_common/utils';
 import {compact, isEmpty} from 'lodash-es';

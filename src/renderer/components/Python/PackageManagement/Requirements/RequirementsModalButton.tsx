@@ -1,4 +1,4 @@
-import {Button, Chip, Modal, SearchField, useOverlayState} from '@heroui-v3/react';
+import {Button, Chip, Modal, SearchField, useOverlayState} from '@heroui/react';
 import EmptyStateCard from '@lynx/components/EmptyStateCard';
 import TabModal from '@lynx/components/TabModal';
 import {topToast} from '@lynx/layouts/ToastProviders';

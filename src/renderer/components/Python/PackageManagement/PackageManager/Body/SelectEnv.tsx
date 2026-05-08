@@ -1,4 +1,4 @@
-import {Button, Description, Dropdown, Spinner} from '@heroui-v3/react';
+import {Button, Description, Dropdown, Spinner} from '@heroui/react';
 import {topToast} from '@lynx/layouts/ToastProviders';
 import {Dispatch, SetStateAction, useEffect, useState} from 'react';
 

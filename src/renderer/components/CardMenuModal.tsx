@@ -1,4 +1,4 @@
-import {Button} from '@heroui-v3/react';
+import {Button} from '@heroui/react';
 import {useCardOverlayState} from '@lynx/components/card/useCardOverlayState';
 import {UseCardStoreType} from '@lynx/plugins/extensions/types';
 import {useInstalledCard} from '@lynx/utils/hooks';

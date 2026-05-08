@@ -1,4 +1,4 @@
-import {Button, Card, Dropdown, Label, Popover, Separator, Spinner, useOverlayState} from '@heroui-v3/react';
+import {Button, Card, Dropdown, Label, Popover, Separator, Spinner, useOverlayState} from '@heroui/react';
 import {topToast} from '@lynx/layouts/ToastProviders';
 import filesIpc from '@lynx_shared/ipc/files';
 import {BoxMinimalistic, Diskette, Folder2, MenuDots, TrashBin2} from '@solar-icons/react-perf/BoldDuotone';

@@ -1,4 +1,4 @@
-import {Description, Label, NumberField} from '@heroui-v3/react';
+import {Description, Label, NumberField} from '@heroui/react';
 import {debounce} from 'lodash-es';
 import {useEffect, useMemo, useState} from 'react';
 

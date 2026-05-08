@@ -1,5 +1,5 @@
-import {Button, Modal, Popover} from '@heroui-v3/react';
-import {UseOverlayStateReturn} from '@heroui-v3/react';
+import {Button, Modal, Popover} from '@heroui/react';
+import {UseOverlayStateReturn} from '@heroui/react';
 import TabModal from '@lynx/components/TabModal';
 import ptyIpc from '@lynx_shared/ipc/pty';
 import {memo, useEffect, useState} from 'react';

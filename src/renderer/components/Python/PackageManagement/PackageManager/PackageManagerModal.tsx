@@ -1,4 +1,4 @@
-import {Modal, Selection, useOverlayState, UseOverlayStateReturn} from '@heroui-v3/react';
+import {Modal, Selection, useOverlayState, UseOverlayStateReturn} from '@heroui/react';
 import TabModal from '@lynx/components/TabModal';
 import {isEmpty} from 'lodash-es';
 import {Dispatch, ReactNode, SetStateAction, useEffect, useState} from 'react';

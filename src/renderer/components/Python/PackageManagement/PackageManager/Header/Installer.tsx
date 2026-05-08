@@ -1,4 +1,4 @@
-import {Button, CloseButton, Description, Input, Label, ListBox, Separator, Surface, TextField} from '@heroui-v3/react';
+import {Button, CloseButton, Description, Input, Label, ListBox, Separator, Surface, TextField} from '@heroui/react';
 import CopyClipboard from '@lynx/components/CopyClipboard';
 import {topToast} from '@lynx/layouts/ToastProviders';
 import filesIpc from '@lynx_shared/ipc/files';

@@ -1,4 +1,4 @@
-import {Avatar, Button, Chip, CloseButton, Dropdown, Label} from '@heroui-v3/react';
+import {Avatar, Button, Chip, CloseButton, Dropdown, Label} from '@heroui/react';
 import {extractGitUrl, getFallbackString} from '@lynx_common/utils';
 import {isEmpty} from 'lodash-es';
 import {Plus} from 'lucide-react';

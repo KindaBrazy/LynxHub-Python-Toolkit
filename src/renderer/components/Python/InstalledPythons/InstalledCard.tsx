@@ -10,7 +10,7 @@ import {
   Separator,
   Spinner,
   useOverlayState,
-} from '@heroui-v3/react';
+} from '@heroui/react';
 import {topToast} from '@lynx/layouts/ToastProviders';
 import filesIpc from '@lynx_shared/ipc/files';
 import {

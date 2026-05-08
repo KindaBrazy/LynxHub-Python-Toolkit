@@ -1,4 +1,4 @@
-import {Checkbox, Description, ModalBody, Selection, Spinner, Table} from '@heroui-v3/react';
+import {Checkbox, Description, ModalBody, Selection, Spinner, Table} from '@heroui/react';
 import EmptyStateCard from '@lynx/components/EmptyStateCard';
 import {cloneDeep, isEmpty} from 'lodash-es';
 import {OverlayScrollbarsComponent} from 'overlayscrollbars-react';

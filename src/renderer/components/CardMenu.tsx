@@ -1,4 +1,4 @@
-import {DropdownItem, DropdownSection, Separator} from '@heroui-v3/react';
+import {DropdownItem, DropdownSection, Separator} from '@heroui/react';
 import {useCardOverlayState} from '@lynx/components/card/useCardOverlayState';
 import {UseCardStoreType} from '@lynx/plugins/extensions/types';
 import {useCallback} from 'react';

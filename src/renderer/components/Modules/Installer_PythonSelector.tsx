@@ -1,4 +1,4 @@
-import {Alert, Description, Key, Label, ListBox, Select, Spinner} from '@heroui-v3/react';
+import {Alert, Description, Key, Label, ListBox, Select, Spinner} from '@heroui/react';
 import {SkipNext} from '@solar-icons/react-perf/Bold';
 import {useCallback, useEffect, useMemo, useState} from 'react';
 import {useDispatch} from 'react-redux';
