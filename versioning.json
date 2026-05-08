@@ -1,6 +1,19 @@
 {
   "versions": [
     {
+      "version": "0.14.2",
+      "commit": "93719d1",
+      "engines": {
+        "extensionApi": "^2.0.0"
+      },
+      "stage": "early_access",
+      "platforms": [
+        "win32",
+        "linux",
+        "darwin"
+      ]
+    },
+    {
       "version": "0.14.1",
       "commit": "0999107",
       "engines": {
@@ -64,6 +77,18 @@
     }
   ],
   "changes": [
+    {
+      "version": "0.14.2",
+      "date": "2026-05-09",
+      "items": [
+        {
+          "⚡ Improvements": [
+            "Updated UI to v3.",
+            "Updated API to latest LynxHub API version."
+          ]
+        }
+      ]
+    },
     {
       "version": "0.14.1",
       "date": "2026-02-17",
