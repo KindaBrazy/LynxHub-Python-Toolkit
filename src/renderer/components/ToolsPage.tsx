@@ -33,7 +33,7 @@ export default function ToolsPage() {
       <SettingsModal state={settingsModal} />
       <ToolsCard
         footer={
-          <Button variant="secondary" onPress={settingsModal.open} isIconOnly>
+          <Button variant="tertiary" onPress={settingsModal.open} isIconOnly>
             <SettingsMinimalistic />
           </Button>
         }
