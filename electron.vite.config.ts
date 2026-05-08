@@ -36,10 +36,11 @@ export default defineConfig({
         },
         shared: {
           react: {generate: false},
-          lodash: {generate: false},
           'react-dom': {generate: false},
           'react-redux': {generate: false},
           '@heroui/react': {generate: false},
+          '@heroui/styles': {generate: false},
+          'react-aria': {generate: false},
         },
       }),
     ],
