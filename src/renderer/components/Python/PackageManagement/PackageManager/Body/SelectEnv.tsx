@@ -1,5 +1,6 @@
-import {Button, Description, Dropdown, Spinner} from '@heroui/react';
+import {Button, Description, Dropdown, Label, Spinner} from '@heroui/react';
 import {topToast} from '@lynx/layouts/ToastProviders';
+import {getLastPathItem} from '@lynx_common/utils';
 import {Dispatch, SetStateAction, useEffect, useState} from 'react';
 
 import {AssociateItem, PythonVenvSelectItem} from '../../../../../../cross/CrossExtTypes';
@@ -38,18 +39,21 @@ export default function SelectEnv({id, setPythonPath}: Props) {
   }, []);
 
   return isLoading ? (
-    <div className="flex flex-col gap-y-2 items-center">
+    <div className="flex flex-col gap-y-2 mt-4 items-center">
       <Spinner size="lg" />
       <Description>Loading available pythons and venvs...</Description>
     </div>
   ) : (
     <Dropdown>
-      <Button className="mt-2">Select Environment</Button>
+      <Button className="mt-4">Select Environment</Button>
       <Dropdown.Popover>
         <Dropdown.Menu items={list}>
           {item => (
-            <Dropdown.Item onPress={() => onPress(item)} id={`${item.version}_${item.dir}`}>
-              <div className="flex flex-row gap-x-1 items-end">
+            <Dropdown.Item
+              onPress={() => onPress(item)}
+              id={`${item.version}_${item.dir}`}
+              className="flex flex-col items-start gap-0">
+              <Label>
                 {item.type === 'python' ? (
                   <span className="flex flex-row items-center gap-x-2">
                     <Python_Icon className="text-yellow-300" /> {item.version}
@@ -59,7 +63,8 @@ export default function SelectEnv({id, setPythonPath}: Props) {
                     <Env_Icon className="text-green-300" /> {item.version}
                   </span>
                 )}
-              </div>
+              </Label>
+              <Description>{item.condaName || getLastPathItem(item.dir)}</Description>
             </Dropdown.Item>
           )}
         </Dropdown.Menu>
