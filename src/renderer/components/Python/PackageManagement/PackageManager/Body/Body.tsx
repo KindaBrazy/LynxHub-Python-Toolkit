@@ -1,5 +1,6 @@
 import {Checkbox, Description, ModalBody, Selection, Spinner, Table} from '@heroui/react';
 import EmptyStateCard from '@lynx/components/EmptyStateCard';
+import {ObjectScan} from '@solar-icons/react-perf/BoldDuotone';
 import {cloneDeep, isEmpty} from 'lodash-es';
 import {OverlayScrollbarsComponent} from 'overlayscrollbars-react';
 import {Dispatch, SetStateAction, useMemo} from 'react';
@@ -60,8 +61,8 @@ export default function PackageManagerBody({
           },
         }}
         className="size-full px-4">
-        <div className="w-full flex flex-col gap-y-4">
-          <div className="flex flex-row gap-8 flex-wrap justify-center">
+        <div className="w-full flex flex-col gap-y-4 size-full">
+          <div className="flex flex-row gap-8 flex-wrap justify-center size-full">
             {isLoading ? (
               <div className="flex flex-col gap-y-2 items-center mt-4">
                 <Spinner size="xl" />
@@ -138,11 +139,13 @@ export default function PackageManagerBody({
               </Table>
             ) : (
               <EmptyStateCard
-                className="px-8"
                 variant="secondary"
-                title="Could not find a virtual environment."
-                description="Please select your desire environment."
+                className="size-full"
+                bodyClassName="gap-y-1"
+                title="No virtual environment detected"
+                description="Select the environment you'd like to use."
                 action={<SelectEnv id={id} setPythonPath={setPythonPath} />}
+                icon={<ObjectScan className="size-24 mb-4 text-warning-hover" />}
               />
             )}
           </div>
