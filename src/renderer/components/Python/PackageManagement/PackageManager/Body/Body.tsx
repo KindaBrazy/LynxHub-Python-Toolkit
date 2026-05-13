@@ -1,11 +1,10 @@
 import {Checkbox, Description, ModalBody, Selection, Spinner, Table} from '@heroui/react';
 import EmptyStateCard from '@lynx/components/EmptyStateCard';
+import LynxScroll from '@lynx/components/LynxScroll';
 import {ObjectScan} from '@solar-icons/react-perf/BoldDuotone';
 import {cloneDeep, isEmpty} from 'lodash-es';
-import {OverlayScrollbarsComponent} from 'overlayscrollbars-react';
 import {Dispatch, SetStateAction, useMemo} from 'react';
 
-import {useAppState} from '../../../../../../../../src/renderer/mainWindow/redux/reducers/app';
 import {PackageInfo, PackageUpdate, SitePackages_Info} from '../../../../../../cross/CrossExtTypes';
 import SelectEnv from './SelectEnv';
 import TableItem from './TableItem';
@@ -39,7 +38,6 @@ export default function PackageManagerBody({
   setPythonPath,
   setIsUpdateTerminalOpen,
 }: Props) {
-  const isDarkMode = useAppState('darkMode');
   const anyUpdateAvailable = useMemo(() => packagesUpdate.length !== 0, [packagesUpdate]);
 
   const disabledKeys = useMemo(() => {
@@ -50,17 +48,8 @@ export default function PackageManagerBody({
   const refreshedItems = useMemo(() => cloneDeep(items), [items, selectedKeys, anyUpdateAvailable]);
 
   return (
-    <ModalBody>
-      <OverlayScrollbarsComponent
-        options={{
-          overflow: {x: 'hidden', y: 'scroll'},
-          scrollbars: {
-            autoHide: 'move',
-            clickScroll: true,
-            theme: isDarkMode ? 'os-theme-light' : 'os-theme-dark',
-          },
-        }}
-        className="size-full px-4">
+    <ModalBody className="overflow-hidden">
+      <LynxScroll className="size-full px-6 pt-2 pb-6">
         <div className="w-full flex flex-col gap-y-4 size-full">
           <div className="flex flex-row gap-8 flex-wrap justify-center size-full">
             {isLoading ? (
@@ -150,7 +139,7 @@ export default function PackageManagerBody({
             )}
           </div>
         </div>
-      </OverlayScrollbarsComponent>
+      </LynxScroll>
     </ModalBody>
   );
 }

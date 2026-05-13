@@ -248,13 +248,13 @@ export default function PackageManagerModal({
 
   return (
     <>
-      <TabModal isOpen={state.isOpen} onOpenChange={state.setOpen}>
+      <TabModal dialogClassName="p-0" isOpen={state.isOpen} onOpenChange={state.setOpen}>
         <Footer_Close
           isUpdating={isUpdating}
           isCheckingUpdates={isCheckingUpdates}
           closePackageManager={closePackageManager}
         />
-        <Modal.Header className="gap-y-2">
+        <Modal.Header className="gap-y-2 px-6 pt-6">
           <PackageManagerHeader
             id={id}
             title={title}
@@ -293,7 +293,7 @@ export default function PackageManagerModal({
           setSelectedKeys={setSelectedKeys}
           setIsUpdateTerminalOpen={updateModal.setOpen}
         />
-        <Modal.Footer className="items-center py-3">
+        <Modal.Footer className="items-center px-6 pb-8 pt-2">
           <TablePage setItems={setItems} searchData={searchData} />
         </Modal.Footer>
       </TabModal>
