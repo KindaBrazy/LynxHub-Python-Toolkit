@@ -177,10 +177,24 @@ export async function getPackagesUpdateByReq(
         );
 
         const latestVersion = await getLatestPipPackageVersion(req.name, maxRetriesConfig, signal);
+        if (!latestVersion) return null;
+
+        // New package: not installed yet
+        if (!targetInPackage) {
+          // Build version constraint from the requirement, if any.
+          const constraint = req.versionOperator && req.version ? `${req.versionOperator}${req.version}` : null;
+
+          if (constraint && !satisfies(latestVersion, constraint)) {
+            return null; // No satisfying version found
+          }
+
+          return {name: req.name, version: latestVersion, isNew: true};
+        }
+
+        // Installed package – check for updates
         const reqVersion = targetInPackage?.version;
         const currentVersion = semver.coerce(reqVersion)?.version;
-
-        if (!latestVersion || !packages || !currentVersion) return null;
+        if (!currentVersion) return null;
 
         let canUpdate: boolean = false;
         let targetVersion: string = currentVersion || '';
@@ -190,26 +204,20 @@ export async function getPackagesUpdateByReq(
           case '>':
           case '!=':
             if (!req.version) break;
-
             canUpdate = satisfies(latestVersion, `${req.versionOperator}${req.version}`);
             if (canUpdate) targetVersion = latestVersion;
-
             break;
           case '<':
           case '<=': {
             if (!req.version) break;
-
             canUpdate = lt(currentVersion, req.version);
             if (canUpdate) targetVersion = req.version;
-
             break;
           }
           case '==': {
             if (!req.version) break;
-
             canUpdate = currentVersion !== req.version;
             if (canUpdate) targetVersion = req.version;
-
             break;
           }
           case '~=': {
@@ -221,13 +229,13 @@ export async function getPackagesUpdateByReq(
             break;
           }
           default:
-            // console.warn(`Unsupported operator: ${req.versionOperator}`);
             canUpdate = true;
             targetVersion = latestVersion;
         }
 
-        if (canUpdate && targetVersion !== currentVersion)
-          return {name: targetInPackage?.name || req.name, version: targetVersion};
+        if (canUpdate && targetVersion !== currentVersion) {
+          return {name: targetInPackage.name || req.name, version: targetVersion};
+        }
 
         return null;
       };

@@ -134,12 +134,19 @@ export default function PackageManagerModal({
 
     const updateData = (result: SitePackages_Info[]) => {
       setPackagesUpdate(result);
-      setPackages(prevState =>
-        prevState.map(item => {
-          const updateVersion = result.find(update => update.name === item.name)?.version;
-          return updateVersion ? {...item, updateVersion} : item;
-        }),
-      );
+      setPackages(prevState => {
+        const newItems = result.filter(up => up.isNew).map(item => ({...item, updateVersion: item.version}));
+
+        return [...prevState, ...newItems].map(item => {
+          const reqItem = result.find(update => update.name === item.name);
+          if (!reqItem) return item;
+
+          const updateVersion = reqItem.version;
+          const isNew = reqItem.isNew;
+
+          return {...item, updateVersion, isNew};
+        });
+      });
     };
 
     if (type === 'req') {

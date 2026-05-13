@@ -1,6 +1,6 @@
-import {Button, TableCell} from '@heroui/react';
+import {Button, Chip, TableCell} from '@heroui/react';
 import {topToast} from '@lynx/layouts/ToastProviders';
-import {ShieldWarning} from '@solar-icons/react-perf/BoldDuotone';
+import {DownloadMinimalistic, Refresh, ShieldWarning} from '@solar-icons/react-perf/BoldDuotone';
 import {capitalize, startCase} from 'lodash-es';
 import {useCallback, useMemo, useState} from 'react';
 
@@ -80,8 +80,14 @@ export default function TableItem({
   } else if (columnKey === 'update') {
     return !isSelected && !isUninstalling && item.updateVersion ? (
       <TableCell>
-        <Button size="sm" onPress={update} isPending={isUpdating}>
-          {isUpdating ? 'Updating...' : 'Update'}
+        <Button
+          size="sm"
+          variant="ghost"
+          onPress={update}
+          isPending={isUpdating}
+          className={item.isNew ? 'text-accent-hover' : 'text-success'}>
+          {item.isNew ? <DownloadMinimalistic /> : <Refresh />}
+          {isUpdating ? 'Updating...' : item.isNew ? 'Install' : 'Update'}
         </Button>
       </TableCell>
     ) : (
@@ -94,15 +100,23 @@ export default function TableItem({
           <div className="text-bold text-sm">
             <div className="flex flex-row items-center gap-x-1 text-base font-semibold">
               <span>{itemName}</span>
-              {item.updateVersion && (
-                <ShieldWarning className={`${getUpdateVersionColor(item.version, item.updateVersion)} size-[1.1rem]`} />
+              {item.isNew ? (
+                <Chip size="sm" color="accent" variant="tertiary">
+                  New
+                </Chip>
+              ) : (
+                item.updateVersion && (
+                  <ShieldWarning
+                    className={`${getUpdateVersionColor(item.version, item.updateVersion)} size-[1.1rem]`}
+                  />
+                )
               )}
             </div>
           </div>
           <div className="text-bold text-sm text-default-400">
             <div className="flex flex-row items-center gap-x-1 text-xs">
               <span>{item.version}</span>
-              {item.updateVersion && (
+              {item.updateVersion && !item.isNew && (
                 <span>
                   (<span className={getUpdateVersionColor(item.version, item.updateVersion)}>{item.updateVersion}</span>
                   )

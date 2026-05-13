@@ -44,6 +44,7 @@ export type VenvInfo = {
 export type SitePackages_Info = {
   name: string;
   version: string;
+  isNew?: boolean;
 };
 
 export type PackageInfo = SitePackages_Info & {

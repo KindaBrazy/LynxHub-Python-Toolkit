@@ -31,7 +31,7 @@ const UpdateModal = memo(({state}: Props) => {
   return (
     <TabModal isOpen={state.isOpen} onOpenChange={state.setOpen}>
       <Modal.Header>
-        <Modal.Heading>Console Output...</Modal.Heading>
+        <Modal.Heading>Console</Modal.Heading>
       </Modal.Header>
       <Modal.Body>
         <TerminalView />
