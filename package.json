@@ -1,5 +1,5 @@
 {
-  "name": "extension",
+  "name": "python_toolkit",
   "version": "0.14.2",
   "type": "module",
   "dependencies": {
