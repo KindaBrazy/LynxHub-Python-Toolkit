@@ -1,3 +1,4 @@
+import {compare as pepCompare} from '@renovatebot/pep440';
 import axios from 'axios';
 import {compact} from 'lodash-es';
 import semver, {compare, lt, satisfies} from 'semver';
@@ -42,8 +43,7 @@ async function runWithConcurrencyLimit<T>(
         if (nextTask) {
           const {task, index} = nextTask;
 
-          const result = await task();
-          results[index] = result;
+          results[index] = await task();
         }
       }
     });
@@ -123,18 +123,12 @@ export async function getPipPackageAllVersions(packageName: string): Promise<str
     const data = response.data;
 
     if (data?.releases) {
-      const versions = Object.keys(data.releases);
+      // 1. Keep all version strings that have at least one file
+      const validVersions = Object.keys(data.releases).filter(v => data.releases[v].length > 0);
 
-      // Filter out versions that don't have any files (usually yanked versions)
-      const validVersions = versions.filter(version => data.releases[version].length > 0);
-
-      const semverVersions = validVersions
-        .map(v => semver.coerce(v)?.version)
-        .filter((v): v is string => v !== null && v !== undefined);
-
-      const versionsToSort = semverVersions.length > 0 ? semverVersions : validVersions;
-
-      return versionsToSort.sort((a, b) => semver.rcompare(a, b));
+      // 2. Sort validVersions in descending order (latest first)
+      // b, a for desc
+      return validVersions.sort((a, b) => pepCompare(b, a));
     } else {
       console.error(`Could not find releases information for ${packageName} in the response.`);
       return null;

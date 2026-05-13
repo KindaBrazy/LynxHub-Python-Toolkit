@@ -1,11 +1,11 @@
 import {Button, ButtonProps, Chip, Description, Input, Modal, Popover, ProgressBar} from '@heroui/react';
 import TabModal from '@lynx/components/TabModal';
 import {topToast} from '@lynx/layouts/ToastProviders';
+import {compare as pepCompare} from '@renovatebot/pep440';
 import {AltArrowDown, AltArrowUp} from '@solar-icons/react-perf/Bold';
 import {BoxMinimalistic} from '@solar-icons/react-perf/BoldDuotone';
 import {isEmpty} from 'lodash-es';
 import {memo, useCallback, useEffect, useState} from 'react';
-import semver, {compare, valid} from 'semver';
 
 import LynxScroll from '../../../../../../../../src/renderer/mainWindow/components/LynxScroll';
 import {PackageInfo, PackageUpdate} from '../../../../../../cross/CrossExtTypes';
@@ -73,21 +73,15 @@ const PkgVersions = memo(({updated, item, pythonPath}: Props) => {
     (version: string): updateType => {
       if (isEmpty(version)) return {color: 'tertiary', isUpgrade: undefined, disabled: true};
 
-      const currentVersion = semver.coerce(item.version)?.version;
-      const targetVersion = semver.coerce(version)?.version;
-      if (!currentVersion || !targetVersion) return {color: 'tertiary', isUpgrade: undefined, disabled: false};
+      const current = item.version; // the package's current version
 
-      const areVersionsValid = valid(currentVersion) && valid(targetVersion);
-      if (!areVersionsValid) {
-        return {color: 'tertiary', isUpgrade: undefined, disabled: false};
-      }
+      const cmp = pepCompare(current, version);
 
-      const comparison = compare(currentVersion, targetVersion);
-      if (comparison === 0) {
+      if (cmp === 0) {
         return {color: 'tertiary', isUpgrade: undefined, disabled: true};
       }
 
-      const isUpgrade = comparison === -1;
+      const isUpgrade = cmp < 0; // current < target → upgrade
       return {
         color: isUpgrade ? 'primary' : 'danger-soft',
         isUpgrade,
