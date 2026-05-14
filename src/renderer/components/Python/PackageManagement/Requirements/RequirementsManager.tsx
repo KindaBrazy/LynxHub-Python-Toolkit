@@ -1,4 +1,5 @@
-import {CloseButton, Input, ListBox, Select, Selection, Table} from '@heroui/react';
+import {CloseButton, EmptyState, Input, ListBox, Select, Selection, Table} from '@heroui/react';
+import {ListCross} from '@solar-icons/react-perf/BoldDuotone';
 import {OverlayScrollbarsComponent, OverlayScrollbarsComponentRef} from 'overlayscrollbars-react';
 import {Dispatch, ReactNode, RefObject, SetStateAction, useEffect, useState} from 'react';
 
@@ -50,6 +51,7 @@ export default function RequirementsManager({requirements, setRequirements, scro
           name: (
             <Input
               spellCheck="false"
+              placeholder="name"
               variant="secondary"
               autoFocus={req.autoFocus}
               defaultValue={req.name || ''}
@@ -61,13 +63,14 @@ export default function RequirementsManager({requirements, setRequirements, scro
             <Input
               spellCheck="false"
               variant="secondary"
+              placeholder="version"
               defaultValue={req.version || ''}
               onChange={e => handleRequirementChange(index, {...req, version: e.target.value})}
               fullWidth
             />
           ),
           operator: (
-            <Select variant="secondary" placeholder="Select one">
+            <Select variant="secondary" placeholder="operator">
               <Select.Trigger>
                 <Select.Value />
                 <Select.Indicator />
@@ -122,7 +125,15 @@ export default function RequirementsManager({requirements, setRequirements, scro
               <Table.Column>Version</Table.Column>
               <Table.Column>Actions</Table.Column>
             </Table.Header>
-            <Table.Body items={tableReq}>
+            <Table.Body
+              renderEmptyState={() => (
+                <EmptyState
+                  className={'flex h-full w-full flex-col items-center justify-center gap-y-2 text-center my-4'}>
+                  <ListCross className="size-12" />
+                  <span className="text-sm text-muted">No results found</span>
+                </EmptyState>
+              )}
+              items={tableReq}>
               {item => (
                 <Table.Row id={item.key}>
                   <Table.Cell>{item.name}</Table.Cell>

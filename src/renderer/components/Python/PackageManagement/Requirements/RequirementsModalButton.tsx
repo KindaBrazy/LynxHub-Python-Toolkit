@@ -1,11 +1,11 @@
-import {Button, Chip, Modal, SearchField, useOverlayState} from '@heroui/react';
+import {Button, Chip, Modal, SearchField, Spinner, useOverlayState} from '@heroui/react';
 import EmptyStateCard from '@lynx/components/EmptyStateCard';
 import TabModal from '@lynx/components/TabModal';
 import {topToast} from '@lynx/layouts/ToastProviders';
 import filesIpc from '@lynx_shared/ipc/files';
-import {Checklist, Diskette, File} from '@solar-icons/react-perf/BoldDuotone';
+import {Checklist, Diskette, DocumentsMinimalistic, DocumentText} from '@solar-icons/react-perf/BoldDuotone';
 import {isEmpty} from 'lodash-es';
-import {Plus} from 'lucide-react';
+import {Plus, X} from 'lucide-react';
 import {OverlayScrollbarsComponentRef} from 'overlayscrollbars-react';
 import {Dispatch, SetStateAction, useEffect, useRef, useState} from 'react';
 
@@ -20,6 +20,8 @@ type Props = {
   setIsReqAvailable: Dispatch<SetStateAction<boolean>>;
   setReqPackageCount: Dispatch<SetStateAction<number>>;
 };
+
+// TODO: fix saving not works
 
 export default function RequirementsBtn({id, projectPath, setIsReqAvailable, setReqPackageCount}: Props) {
   const state = useOverlayState();
@@ -122,6 +124,11 @@ export default function RequirementsBtn({id, projectPath, setIsReqAvailable, set
       });
   };
 
+  const deselect = () => {
+    setFilePath('');
+    pIpc.setReqPath({id, path: ''});
+  };
+
   return (
     <>
       <TabModal isOpen={state.isOpen} onOpenChange={state.setOpen}>
@@ -133,54 +140,58 @@ export default function RequirementsBtn({id, projectPath, setIsReqAvailable, set
               <Chip size="sm">{requirements.length}</Chip>
             </div>
           </div>
-          <div>
-            <Button variant="secondary" className="shrink-0" onPress={openFilePath} fullWidth>
-              <File />
-              {filePath || 'Choose or Create requirements file...'}
+          <div className="flex flex-row gap-x-1 items-center w-full">
+            <Button variant="tertiary" onPress={openFilePath} fullWidth>
+              <DocumentText />
+              {filePath || 'Select or create requirements file'}
+            </Button>
+            <Button onPress={deselect} variant="tertiary" className="shrink-0" isIconOnly>
+              <X />
             </Button>
           </div>
-          {!isEmpty(requirements) && (
-            <div className="flex flex-row items-center gap-x-2">
-              <SearchField name="search" variant="secondary" value={searchValue} onChange={setSearchValue} fullWidth>
-                <SearchField.Group>
-                  <SearchField.SearchIcon />
-                  <SearchField.Input placeholder="Search..." />
-                  <SearchField.ClearButton />
-                </SearchField.Group>
-              </SearchField>
-              {!isEmpty(filePath) && (
-                <Button variant="secondary" onPress={handleAddRequirement}>
-                  <Plus size={14} />
-                  Add
-                </Button>
-              )}
-            </div>
-          )}
+          <div className="flex flex-row items-center gap-x-2">
+            <SearchField name="search" variant="secondary" value={searchValue} onChange={setSearchValue} fullWidth>
+              <SearchField.Group>
+                <SearchField.SearchIcon />
+                <SearchField.Input placeholder="Search..." />
+                <SearchField.ClearButton />
+              </SearchField.Group>
+            </SearchField>
+            {!isEmpty(filePath) && (
+              <Button variant="secondary" onPress={handleAddRequirement}>
+                <Plus size={14} />
+                Add
+              </Button>
+            )}
+          </div>
         </Modal.Header>
         <Modal.Body className="pr-0 pl-2 pt-4 scrollbar-hide">
           {isEmpty(filePath) ? (
             <div className="size-full text-center mb-2">
               <EmptyStateCard
-                action={
-                  <Button variant="secondary" onPress={openFilePath}>
-                    <File />
-                    Choose or Create requirements file
-                  </Button>
-                }
-                className="mx-4"
+                variant="transparent"
+                className="size-full"
+                icon={<DocumentsMinimalistic className="size-20" />}
                 title="Select or create a requirements file to continue."
               />
             </div>
           ) : isEmpty(requirements) ? (
             <div className="size-full text-center mb-2">
               <EmptyStateCard
-                title={
-                  <span>
-                    The file <span className="font-bold text-accent/70">{filePath.split(/[\/\\]/).pop()}</span>
-                    is empty. Add requirements using the <span className="font-bold text-accent/70">Add</span> button.
+                description={
+                  <span className="flex flex-row items-center gap-x-1">
+                    Add requirements using the <Plus className="text-blue-400 size-3.5" /> button.
                   </span>
                 }
-                className="mx-4"
+                title={
+                  <span className="text-semi-muted text-base">
+                    The <span className="font-semibold text-blue-400">{filePath.split(/[\/\\]/).pop()}</span> file is
+                    empty.
+                  </span>
+                }
+                variant="transparent"
+                className="size-full"
+                icon={<DocumentText className="size-20" />}
               />
             </div>
           ) : (
@@ -189,7 +200,7 @@ export default function RequirementsBtn({id, projectPath, setIsReqAvailable, set
         </Modal.Body>
         <Modal.Footer className="py-3">
           <Button isPending={isSaving} onPress={handleSaveRequirements}>
-            {!isSaving && <Diskette className="size-3.5" />}
+            {isSaving ? <Spinner size="sm" color="current" /> : <Diskette className="size-3.5" />}
             {!isSaving && 'Save'}
           </Button>
         </Modal.Footer>
