@@ -2,7 +2,7 @@ import {Avatar, Chip, ProgressBar, SearchField, Selection} from '@heroui/react';
 import {topToast} from '@lynx/layouts/ToastProviders';
 import {extractGitUrl, getFallbackString} from '@lynx_common/utils';
 import {compact, isEmpty} from 'lodash-es';
-import {Dispatch, ReactNode, SetStateAction, useEffect, useState} from 'react';
+import {Dispatch, SetStateAction, useEffect, useState} from 'react';
 
 import {FilterKeys, PackageInfo, PackageUpdate, SitePackages_Info} from '../../../../../../cross/CrossExtTypes';
 import {allCardsExt} from '../../../../../DataHolder';
@@ -14,7 +14,6 @@ import UpdateButton from './UpdateButton';
 
 type Props = {
   title: string;
-  actionButtons?: ReactNode[];
   searchValue: string;
   setSearchValue: Dispatch<SetStateAction<string>>;
   packages: PackageInfo[];
@@ -48,7 +47,6 @@ export default function PackageManagerHeader({
   updated,
   refresh,
   title,
-  actionButtons,
   isValidPython,
   checkForUpdates,
   id,
@@ -167,8 +165,8 @@ export default function PackageManagerHeader({
           <FilterButton setSelectedFilter={setSelectedFilter} updateAvailable={!isEmpty(packagesUpdate)} />
         </div>
       )}
-      <div className="gap-x-2 flex justify-between items-center w-full mt-2">
-        {isValidPython && (
+      {isValidPython && (
+        <div className="gap-x-2 flex justify-between items-center w-full mt-2">
           <UpdateButton
             update={update}
             isUpdating={isUpdating}
@@ -183,22 +181,18 @@ export default function PackageManagerHeader({
             checkingUpdates={checkingUpdates}
             setProgressValue={setProgressValue}
           />
-        )}
-        {isValidPython && (
-          <>
-            <InstallerModal refresh={refresh} pythonPath={pythonPath} />
 
+          <div className="flex items-center gap-x-2">
+            <InstallerModal refresh={refresh} pythonPath={pythonPath} />
             <RequirementsBtn
               id={id}
               projectPath={projectPath}
               setIsReqAvailable={setIsReqAvailable}
               setReqPackageCount={setReqPackageCount}
             />
-          </>
-        )}
-
-        {isValidPython && actionButtons?.map(ActionButton => ActionButton)}
-      </div>
+          </div>
+        </div>
+      )}
     </>
   );
 }

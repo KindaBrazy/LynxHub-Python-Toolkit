@@ -1,8 +1,9 @@
-import {Button} from '@heroui/react';
+import {Button, Description, Popover} from '@heroui/react';
 import {useCardOverlayState} from '@lynx/components/card/useCardOverlayState';
 import {UseCardStoreType} from '@lynx/plugins/extensions/types';
 import {useInstalledCard} from '@lynx/utils/hooks';
-import {useMemo, useState} from 'react';
+import {Unplug} from 'lucide-react';
+import {useEffect, useMemo, useState} from 'react';
 
 import {DepsModalKey} from '../consts';
 import pIpc from '../PIpc';
@@ -19,6 +20,20 @@ export default function CardMenuModal({useCardOverlayState, useCardStore}: Props
   const state = useCardOverlayState(DepsModalKey);
 
   const [pythonPath, setPythonPath] = useState<string>('');
+  const [pythonVersion, setPythonVersion] = useState<string>('');
+
+  useEffect(() => {
+    console.log(pythonVersion);
+  }, [pythonVersion]);
+
+  useEffect(() => {
+    if (pythonPath) {
+      pIpc.getPythonVersion(pythonPath).then(version => {
+        console.log(version);
+        setPythonVersion(`${version.major}.${version.minor}.${version.patch}`);
+      });
+    }
+  }, [pythonPath]);
 
   const handleDeselect = () => {
     pIpc.removeAssociate(id);
@@ -26,14 +41,27 @@ export default function CardMenuModal({useCardOverlayState, useCardStore}: Props
   };
 
   const actionButtons = useMemo(() => {
-    return pythonPath
-      ? [
-          <Button size="sm" key="reloacte_venv" variant="danger-soft" className="min-w-32!" onPress={handleDeselect}>
-            Deselect
-          </Button>,
-        ]
-      : [];
-  }, [pythonPath]);
+    return pythonPath ? (
+      <Popover>
+        <Button size="sm" variant="tertiary" className="h-7 text-warning/70">
+          <Unplug />
+          Unassign Selected Python
+        </Button>
+        <Popover.Content className="max-w-xs">
+          <Popover.Dialog className="flex flex-col">
+            <Popover.Heading className="text-warning">Unassign {title}</Popover.Heading>
+            <Description>
+              This action will deselect {pythonVersion} for {title}.
+            </Description>
+            <Description>Are you sure?</Description>
+            <Button size="sm" className="mt-2" variant="danger-soft" onPress={handleDeselect} fullWidth>
+              Unassign
+            </Button>
+          </Popover.Dialog>
+        </Popover.Content>
+      </Popover>
+    ) : null;
+  }, [pythonPath, pythonVersion]);
 
   return (
     <PackageManagerModal

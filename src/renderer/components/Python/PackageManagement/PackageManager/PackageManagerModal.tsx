@@ -18,7 +18,7 @@ type Props = {
   pythonPath: string;
 
   title?: string;
-  actionButtons?: ReactNode[];
+  actionButtons?: ReactNode;
 
   id: string;
   projectPath?: string;
@@ -254,6 +254,7 @@ export default function PackageManagerModal({
           isCheckingUpdates={isCheckingUpdates}
           closePackageManager={closePackageManager}
         />
+        <div className="absolute top-3.5 right-12">{actionButtons}</div>
         <Modal.Header className="gap-y-2 px-6 pt-6">
           <PackageManagerHeader
             id={id}
@@ -269,7 +270,6 @@ export default function PackageManagerModal({
             refresh={refreshAfterInstall}
             setIsUpdating={setIsUpdating}
             isValidPython={isValidPython}
-            actionButtons={actionButtons}
             selectedFilter={selectedFilter}
             packagesUpdate={packagesUpdate}
             setSearchValue={setSearchValue}
