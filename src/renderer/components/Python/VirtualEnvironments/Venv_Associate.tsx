@@ -1,7 +1,7 @@
 import {Avatar, Button, Chip, CloseButton, Dropdown, Label} from '@heroui/react';
 import {extractGitUrl, getFallbackString} from '@lynx_common/utils';
 import {isEmpty} from 'lodash-es';
-import {Plus} from 'lucide-react';
+import {Plus, X} from 'lucide-react';
 import {useCallback, useEffect, useState} from 'react';
 import {useDispatch} from 'react-redux';
 
@@ -97,13 +97,15 @@ export default function Venv_Associate({folder, type}: Props) {
             <Chip variant="soft">Not Associated</Chip>
           ) : (
             associated.map(item => (
-              <Chip variant="soft" color="success" key={`${item.id}_associated`}>
+              <Chip variant="soft" color="success" className="gap-x-1" key={`${item.id}_associated`}>
                 <Avatar className="size-5">
                   <Avatar.Image alt={item.title} src={item.avatarUrl} />
                   <Avatar.Fallback className="text-xs">{getFallbackString(item.title)}</Avatar.Fallback>
                 </Avatar>
                 {item.title}
-                <CloseButton onPress={() => remove(item.id)} />
+                <CloseButton className="size-4" onPress={() => remove(item.id)}>
+                  <X className="size-3" />
+                </CloseButton>
               </Chip>
             ))
           )}
