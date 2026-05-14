@@ -40,7 +40,7 @@ export default function CardMenuModal({useCardOverlayState, useCardStore}: Props
       <Popover>
         <Button size="sm" variant="tertiary" className="h-7 text-warning/70">
           <Unplug />
-          Unassign Selected Python
+          Unassign Python
         </Button>
         <Popover.Content className="max-w-xs">
           <Popover.Dialog className="flex flex-col">

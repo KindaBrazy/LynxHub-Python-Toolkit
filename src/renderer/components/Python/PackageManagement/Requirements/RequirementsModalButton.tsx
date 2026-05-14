@@ -196,7 +196,7 @@ export default function RequirementsBtn({id, projectPath, setIsReqAvailable, set
       </TabModal>
       <Button size="sm" variant="tertiary" onPress={state.open}>
         <Checklist />
-        Manage Requirements
+        Requirements
       </Button>
     </>
   );

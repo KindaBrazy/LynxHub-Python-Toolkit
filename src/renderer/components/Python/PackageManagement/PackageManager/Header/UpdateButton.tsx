@@ -61,10 +61,10 @@ export default function UpdateButton({
 
   const labelsMap = useMemo(() => {
     return {
-      all: checkingUpdates ? `Checking All (${checkedCount.length}/${allPackageCount})...` : `Check for Updates (All)`,
+      all: checkingUpdates ? `Checking All (${checkedCount.length}/${allPackageCount})...` : `Check Updates (All)`,
       req: checkingUpdates
         ? `Checking Requirements (${checkedCount.length}/${reqPackageCount})...`
-        : `Check for Updates (Requirements)`,
+        : `Check Updates (Reqs)`,
     };
   }, [checkingUpdates, allPackageCount, reqPackageCount, checkedCount]);
 

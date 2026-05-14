@@ -51,7 +51,7 @@ export default function InstallerModal({refresh, pythonPath}: Props) {
     <>
       <Button size="sm" variant="tertiary" onPress={state.open}>
         <Plus size={12} />
-        Install Package
+        Package
       </Button>
       <TabModal size="lg" isOpen={state.isOpen} onOpenChange={state.setOpen} dialogClassName="px-4 max-w-2xl">
         <Modal.CloseTrigger />
