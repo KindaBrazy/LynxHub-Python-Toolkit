@@ -1,18 +1,19 @@
 import {Button, Description, Dropdown, Label, Spinner} from '@heroui/react';
 import {topToast} from '@lynx/layouts/ToastProviders';
-import {getLastPathItem} from '@lynx_common/utils';
 import {Restart} from '@solar-icons/react-perf/BoldDuotone';
 import {Dispatch, SetStateAction, useCallback, useEffect, useState} from 'react';
 
 import {AssociateItem, PythonVenvSelectItem} from '../../../../../../cross/CrossExtTypes';
 import pIpc from '../../../../../PIpc';
+import {getUniqueLabels} from '../../../../../Utils';
 import {Env_Icon} from '../../../../SvgIcons';
 import {fetchAndSetPythonVenvs} from '../../../../UtilHooks';
 
 type Props = {id: string; setPythonPath?: Dispatch<SetStateAction<string>>};
+type ListWithLabel = PythonVenvSelectItem & {label: string};
 
 export default function SelectEnv({id, setPythonPath}: Props) {
-  const [list, setList] = useState<PythonVenvSelectItem[]>([]);
+  const [list, setList] = useState<ListWithLabel[]>([]);
   const [isLoading, setIsLoading] = useState<boolean>(true);
 
   const onPress = (python: PythonVenvSelectItem) => {
@@ -35,7 +36,18 @@ export default function SelectEnv({id, setPythonPath}: Props) {
 
   const fetchList = useCallback(() => {
     setIsLoading(true);
-    fetchAndSetPythonVenvs(setList, setIsLoading);
+    fetchAndSetPythonVenvs(items => {
+      if (items.length > 0) {
+        const labels = getUniqueLabels(items.map(item => item.dir));
+        const updated = items.map((item, idx) => ({
+          ...item,
+          label: labels[idx],
+        }));
+        setList(updated);
+      } else {
+        setList([]);
+      }
+    }, setIsLoading);
   }, []);
 
   useEffect(() => fetchList(), []);
@@ -70,7 +82,7 @@ export default function SelectEnv({id, setPythonPath}: Props) {
                     </span>
                   )}
                 </Label>
-                <Description>{item.condaName || getLastPathItem(item.dir)}</Description>
+                <Description>{item.label}</Description>
               </Dropdown.Item>
             )}
           </Dropdown.Menu>

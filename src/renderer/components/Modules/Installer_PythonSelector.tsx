@@ -6,8 +6,11 @@ import {useDispatch} from 'react-redux';
 
 import {PythonVenvSelectItem} from '../../../cross/CrossExtTypes';
 import {PythonToolkitActions} from '../../reducer';
+import {getUniqueLabels} from '../../Utils';
 import {Env_Icon, Python_Icon} from '../SvgIcons';
 import {fetchAndSetPythonVenvs} from '../UtilHooks';
+
+type ListWithLabel = PythonVenvSelectItem & {label: string};
 
 export const Installer_PythonSelector = (
   id: string,
@@ -15,7 +18,7 @@ export const Installer_PythonSelector = (
 ) =>
   function Selector() {
     const dispatch = useDispatch();
-    const [list, setList] = useState<PythonVenvSelectItem[]>([]);
+    const [list, setList] = useState<ListWithLabel[]>([]);
     const [isLoading, setIsLoading] = useState<boolean>(false);
 
     const [selectedKey, setSelectedKey] = useState<Key | null>('skip');
@@ -28,7 +31,22 @@ export const Installer_PythonSelector = (
 
     const fetchList = useCallback(() => {
       setIsLoading(true);
-      fetchAndSetPythonVenvs(setList, setIsLoading, onSelected);
+      fetchAndSetPythonVenvs(
+        items => {
+          if (items.length > 0) {
+            const labels = getUniqueLabels(items.map(item => item.dir));
+            const updated = items.map((item, idx) => ({
+              ...item,
+              label: labels[idx],
+            }));
+            setList(updated);
+          } else {
+            setList([]);
+          }
+        },
+        setIsLoading,
+        onSelected,
+      );
     }, []);
 
     useEffect(() => fetchList(), []);

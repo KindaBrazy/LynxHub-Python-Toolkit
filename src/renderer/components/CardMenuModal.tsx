@@ -25,7 +25,6 @@ export default function CardMenuModal({useCardOverlayState, useCardStore}: Props
   useEffect(() => {
     if (pythonPath) {
       pIpc.getPythonVersion(pythonPath).then(version => {
-        console.log(version);
         setPythonVersion(`${version.major}.${version.minor}.${version.patch}`);
       });
     }
