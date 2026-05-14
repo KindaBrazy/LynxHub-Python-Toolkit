@@ -1,5 +1,6 @@
 import {Modal, Selection, useOverlayState, UseOverlayStateReturn} from '@heroui/react';
 import TabModal from '@lynx/components/TabModal';
+import {topToast} from '@lynx/layouts/ToastProviders';
 import {isEmpty} from 'lodash-es';
 import {Dispatch, ReactNode, SetStateAction, useEffect, useState} from 'react';
 
@@ -132,13 +133,17 @@ export default function PackageManagerModal({
   const checkForUpdates = (type: 'req' | 'normal') => {
     setIsCheckingUpdates(true);
 
-    const updateData = (result: SitePackages_Info[]) => {
-      setPackagesUpdate(result);
+    const updateData = (updateList: SitePackages_Info[]) => {
+      if (updateList.length === 0) {
+        topToast.info('No updates found (packages may be up to date, or a connection issue occurred).');
+      }
+
+      setPackagesUpdate(updateList);
       setPackages(prevState => {
-        const newItems = result.filter(up => up.isNew).map(item => ({...item, updateVersion: item.version}));
+        const newItems = updateList.filter(up => up.isNew).map(item => ({...item, updateVersion: item.version}));
 
         return [...prevState, ...newItems].map(item => {
-          const reqItem = result.find(update => update.name === item.name);
+          const reqItem = updateList.find(update => update.name === item.name);
           if (!reqItem) return item;
 
           const updateVersion = reqItem.version;
