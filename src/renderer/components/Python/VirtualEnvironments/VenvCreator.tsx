@@ -1,4 +1,4 @@
-import {Button, Input, Key, Label, ListBox, Popover, Select, TextField} from '@heroui/react';
+import {Button, Input, Key, Label, ListBox, Popover, Select, Spinner, TextField} from '@heroui/react';
 import {topToast} from '@lynx/layouts/ToastProviders';
 import filesIpc from '@lynx_shared/ipc/files';
 import {FolderOpen} from '@solar-icons/react-perf/BoldDuotone';
@@ -70,7 +70,7 @@ export default function VenvCreator({installedPythons, refresh, isLoadingPythons
   }, [targetFolder, envName, selectedVersion, installedPythons]);
 
   return (
-    <Popover>
+    <Popover isOpen={isOpen} onOpenChange={setIsOpen}>
       <Button variant="secondary" isPending={isLoadingPythons} isDisabled={isEmpty(installedPythons)}>
         {!isLoadingPythons && <Plus size={14} />}
         {isLoadingPythons ? 'Loading Pythons...' : 'New Environment'}
@@ -80,7 +80,7 @@ export default function VenvCreator({installedPythons, refresh, isLoadingPythons
           <Popover.Arrow />
           <Popover.Heading>Create New Virtual Environment</Popover.Heading>
           <div className="flex flex-col gap-y-4 py-2">
-            <TextField type="text" value={envName} variant="secondary" onChange={setEnvName}>
+            <TextField type="text" value={envName} variant="secondary" onChange={setEnvName} autoFocus>
               <Label>Environment Name</Label>
               <Input placeholder="e.g., my_env" />
             </TextField>
@@ -105,11 +105,12 @@ export default function VenvCreator({installedPythons, refresh, isLoadingPythons
                 </ListBox>
               </Select.Popover>
             </Select>
-            <Button size="sm" variant="secondary" onPress={selectFolder} fullWidth>
+            <Button size="sm" variant="secondary" isPending={isCreating} onPress={selectFolder} fullWidth>
               <FolderOpen />
               {targetFolder || 'Choose Destination Folder'}
             </Button>
             <Button size="sm" onPress={createEnv} isPending={isCreating} isDisabled={disabledCreate} fullWidth>
+              {isCreating && <Spinner size="sm" color="current" />}
               Create Environment
             </Button>
           </div>
