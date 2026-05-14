@@ -12,7 +12,7 @@ import SettingsModal from './Settings/SettingsModal';
 import {Env_Icon} from './SvgIcons';
 
 const title: string = 'Python Toolkit';
-const desc: string = 'Manage Python versions, virtual environments, packages, requirements files, and more.';
+const desc: string = 'Manage Python versions, virtual environments, packages, requirements and more.';
 
 export default function ToolsPage() {
   const dispatch = useDispatch<AppDispatch>();
