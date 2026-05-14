@@ -76,7 +76,7 @@ export default function VenvCreator({installedPythons, refresh, isLoadingPythons
         {isLoadingPythons ? 'Loading Pythons...' : 'New Environment'}
       </Button>
       <Popover.Content>
-        <Popover.Dialog>
+        <Popover.Dialog className="w-75">
           <Popover.Arrow />
           <Popover.Heading>Create New Virtual Environment</Popover.Heading>
           <div className="flex flex-col gap-y-4 py-2">
