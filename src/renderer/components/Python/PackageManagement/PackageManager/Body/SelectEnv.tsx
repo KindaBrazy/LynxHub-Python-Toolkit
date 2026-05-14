@@ -6,12 +6,11 @@ import {Dispatch, SetStateAction, useCallback, useEffect, useState} from 'react'
 
 import {AssociateItem, PythonVenvSelectItem} from '../../../../../../cross/CrossExtTypes';
 import pIpc from '../../../../../PIpc';
-import {Env_Icon, Python_Icon} from '../../../../SvgIcons';
+import {Env_Icon} from '../../../../SvgIcons';
 import {fetchAndSetPythonVenvs} from '../../../../UtilHooks';
 
 type Props = {id: string; setPythonPath?: Dispatch<SetStateAction<string>>};
 
-// TODO: show names for dropdown items (pythons or venvs)
 export default function SelectEnv({id, setPythonPath}: Props) {
   const [list, setList] = useState<PythonVenvSelectItem[]>([]);
   const [isLoading, setIsLoading] = useState<boolean>(true);
@@ -49,7 +48,10 @@ export default function SelectEnv({id, setPythonPath}: Props) {
   ) : (
     <div className="flex items-center gap-x-2 mt-4">
       <Dropdown>
-        <Button>Select Environment</Button>
+        <Button>
+          <Env_Icon />
+          Select Environment
+        </Button>
         <Dropdown.Popover>
           <Dropdown.Menu items={list}>
             {item => (
@@ -60,11 +62,11 @@ export default function SelectEnv({id, setPythonPath}: Props) {
                 <Label>
                   {item.type === 'python' ? (
                     <span className="flex flex-row items-center gap-x-2">
-                      <Python_Icon className="text-yellow-300" /> {item.version}
+                      <Env_Icon className="text-blue-400" /> {item.version}
                     </span>
                   ) : (
                     <span className="flex flex-row items-center gap-x-2">
-                      <Env_Icon className="text-green-300" /> {item.version}
+                      <Env_Icon className="text-yellow-400" /> {item.version}
                     </span>
                   )}
                 </Label>
