@@ -31,6 +31,7 @@ export type VenvCreateOptions = {
   pythonPath: string;
   destinationFolder: string;
   venvName: string;
+  upgradeDeps: boolean;
 };
 
 export type VenvInfo = {

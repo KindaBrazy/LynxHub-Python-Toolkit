@@ -1,10 +1,11 @@
-import {Button, Input, Key, Label, ListBox, Popover, Select, Spinner, TextField} from '@heroui/react';
+import {Button, Checkbox, Input, Key, Label, ListBox, Popover, Select, Spinner, TextField} from '@heroui/react';
 import {topToast} from '@lynx/layouts/ToastProviders';
 import filesIpc from '@lynx_shared/ipc/files';
 import {FolderOpen} from '@solar-icons/react-perf/BoldDuotone';
 import {capitalize, isEmpty} from 'lodash-es';
 import {Plus} from 'lucide-react';
 import {useCallback, useEffect, useMemo, useState} from 'react';
+import {parse} from 'semver';
 
 import {PythonInstallation, VenvCreateOptions} from '../../../../cross/CrossExtTypes';
 import pIpc from '../../../PIpc';
@@ -18,8 +19,10 @@ export default function VenvCreator({installedPythons, refresh, isLoadingPythons
   const [envName, setEnvName] = useState<string>('');
 
   const [isCreating, setIsCreating] = useState<boolean>(false);
-
   const [isOpen, setIsOpen] = useState<boolean>(false);
+
+  const [updatePip, setUpdatePip] = useState<boolean>(true);
+  const [showUpgrade, setShowUpgrade] = useState<boolean>(false);
 
   useEffect(() => {
     if (!isOpen) {
@@ -27,6 +30,13 @@ export default function VenvCreator({installedPythons, refresh, isLoadingPythons
       setEnvName('');
     }
   }, [isOpen]);
+
+  useEffect(() => {
+    if (selectedVersion && typeof selectedVersion !== 'number') {
+      const version = parse(selectedVersion);
+      if (version && version.major >= 3 && version.minor >= 9) setShowUpgrade(true);
+    }
+  }, [selectedVersion]);
 
   const disabledCreate = useMemo(() => {
     return isEmpty(targetFolder) || isEmpty(envName) || isEmpty(selectedVersion);
@@ -54,6 +64,7 @@ export default function VenvCreator({installedPythons, refresh, isLoadingPythons
       destinationFolder: targetFolder,
       venvName: envName,
       pythonPath,
+      upgradeDeps: updatePip,
     };
 
     pIpc.createVenv(options).then(result => {
@@ -67,7 +78,7 @@ export default function VenvCreator({installedPythons, refresh, isLoadingPythons
 
       setIsCreating(false);
     });
-  }, [targetFolder, envName, selectedVersion, installedPythons]);
+  }, [targetFolder, envName, selectedVersion, installedPythons, updatePip]);
 
   return (
     <Popover isOpen={isOpen} onOpenChange={setIsOpen}>
@@ -78,13 +89,20 @@ export default function VenvCreator({installedPythons, refresh, isLoadingPythons
       <Popover.Content>
         <Popover.Dialog className="w-75">
           <Popover.Arrow />
-          <Popover.Heading>Create New Virtual Environment</Popover.Heading>
+          <Popover.Heading className="mb-2">Create New Virtual Environment</Popover.Heading>
           <div className="flex flex-col gap-y-4 py-2">
-            <TextField type="text" value={envName} variant="secondary" onChange={setEnvName} autoFocus>
+            <TextField
+              type="text"
+              value={envName}
+              variant="secondary"
+              onChange={setEnvName}
+              isDisabled={isCreating}
+              autoFocus>
               <Label>Environment Name</Label>
               <Input placeholder="e.g., my_env" />
             </TextField>
-            <Select variant="secondary" value={selectedVersion} onChange={setSelectedVersion}>
+
+            <Select variant="secondary" isDisabled={isCreating} value={selectedVersion} onChange={setSelectedVersion}>
               <Label>Python Version</Label>
               <Select.Trigger>
                 <Select.Value />
@@ -105,14 +123,29 @@ export default function VenvCreator({installedPythons, refresh, isLoadingPythons
                 </ListBox>
               </Select.Popover>
             </Select>
-            <Button size="sm" variant="secondary" isPending={isCreating} onPress={selectFolder} fullWidth>
-              <FolderOpen />
-              {targetFolder || 'Choose Destination Folder'}
-            </Button>
-            <Button size="sm" onPress={createEnv} isPending={isCreating} isDisabled={disabledCreate} fullWidth>
-              {isCreating && <Spinner size="sm" color="current" />}
-              Create Environment
-            </Button>
+
+            {showUpgrade && (
+              <Checkbox variant="secondary" isSelected={updatePip} isDisabled={isCreating} onChange={setUpdatePip}>
+                <Checkbox.Control>
+                  <Checkbox.Indicator />
+                </Checkbox.Control>
+                <Checkbox.Content>
+                  <Label className="cursor-pointer">Upgrade core packages</Label>
+                </Checkbox.Content>
+              </Checkbox>
+            )}
+
+            <div className="flex flex-col gap-y-2">
+              <Button variant="secondary" isPending={isCreating} onPress={selectFolder} fullWidth>
+                <FolderOpen />
+                {targetFolder || 'Choose Destination Folder'}
+              </Button>
+
+              <Button onPress={createEnv} isPending={isCreating} isDisabled={disabledCreate} fullWidth>
+                {isCreating && <Spinner size="sm" color="current" />}
+                Create Environment
+              </Button>
+            </div>
           </div>
         </Popover.Dialog>
       </Popover.Content>

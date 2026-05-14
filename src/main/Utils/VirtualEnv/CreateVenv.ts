@@ -89,11 +89,12 @@ export async function locateVenv() {
   }
 }
 
-export default async function createPythonVenv(options: VenvCreateOptions): Promise<boolean> {
-  const {pythonPath, destinationFolder, venvName} = options;
+export default function createPythonVenv(options: VenvCreateOptions): Promise<boolean> {
+  const {pythonPath, destinationFolder, venvName, upgradeDeps} = options;
 
   const venvPath = join(destinationFolder, venvName);
-  const command = `"${pythonPath}" -m venv "${venvPath}"`;
+  const upgradeCommand = upgradeDeps ? `--upgrade-deps ` : ``;
+  const command = `"${pythonPath}" -m venv ${upgradeCommand}"${venvPath}"`;
 
   return new Promise(resolve => {
     exec(command, (error, stdout, stderr) => {
