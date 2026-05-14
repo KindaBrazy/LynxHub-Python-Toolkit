@@ -9,7 +9,7 @@ import pIpc from '../PIpc';
 import {PythonToolkitActions} from '../reducer';
 import PythonToolkitModal from './Python/PythonToolkitModal';
 import SettingsModal from './Settings/SettingsModal';
-import {Env_Icon} from './SvgIcons';
+import {PythonIcon} from './SvgIcons';
 
 const title: string = 'Python Toolkit';
 const desc: string = 'Manage Python versions, virtual environments, packages, requirements and more.';
@@ -37,7 +37,7 @@ export default function ToolsPage() {
         title={title}
         description={desc}
         onPress={openModal}
-        icon={<Env_Icon className="size-full p-0.5 text-warning" />}
+        icon={<PythonIcon className="size-full p-0.5 text-yellow-400" />}
       />
       <PythonToolkitModal state={packageManagerModal} />
     </>

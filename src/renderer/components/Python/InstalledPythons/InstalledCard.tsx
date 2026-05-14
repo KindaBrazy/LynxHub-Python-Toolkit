@@ -30,7 +30,7 @@ import {useCallback, useMemo, useState} from 'react';
 import {PythonInstallation} from '../../../../cross/CrossExtTypes';
 import {formatSizeMB} from '../../../../cross/CrossExtUtils';
 import pIpc from '../../../PIpc';
-import {Python_Icon} from '../../SvgIcons';
+import {PythonIcon} from '../../SvgIcons';
 import PackageManagerModal from '../PackageManagement/PackageManager/PackageManagerModal';
 import Venv_Associate from '../VirtualEnvironments/Venv_Associate';
 
@@ -185,7 +185,7 @@ export default function InstalledCard({python, diskUsage, maxDiskValue, updateDe
         <Card.Header className="flex flex-row justify-between items-center">
           <div className="flex flex-col">
             <div className="flex flex-row items-center gap-x-2">
-              <Python_Icon className="size-4 text-yellow-300" />
+              <PythonIcon className="size-5 text-blue-400" />
               Python {python.version}
               {defaultChip}
             </div>

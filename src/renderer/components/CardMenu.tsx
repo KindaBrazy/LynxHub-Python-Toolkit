@@ -5,7 +5,7 @@ import {useCallback} from 'react';
 
 import {ModulesThatSupportPython} from '../../cross/CrossExtConstants';
 import {DepsModalKey} from '../consts';
-import {Python_Icon} from './SvgIcons';
+import {PythonIcon} from './SvgIcons';
 
 type Props = {useCardStore: UseCardStoreType; useCardOverlayState: typeof useCardOverlayState};
 
@@ -26,7 +26,7 @@ export default function CardMenu({useCardStore, useCardOverlayState}: Props) {
     <>
       <DropdownSection key="python_toolkit_menu">
         <DropdownItem onPress={onPress}>
-          <Python_Icon className="size-3" />
+          <PythonIcon />
           Dependencies
         </DropdownItem>
       </DropdownSection>

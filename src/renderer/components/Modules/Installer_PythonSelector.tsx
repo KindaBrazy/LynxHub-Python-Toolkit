@@ -7,7 +7,7 @@ import {useDispatch} from 'react-redux';
 import {PythonVenvSelectItem} from '../../../cross/CrossExtTypes';
 import {PythonToolkitActions} from '../../reducer';
 import {getUniqueLabels} from '../../Utils';
-import {Env_Icon, Python_Icon} from '../SvgIcons';
+import {PythonIcon} from '../SvgIcons';
 import {fetchAndSetPythonVenvs} from '../UtilHooks';
 
 type ListWithLabel = PythonVenvSelectItem & {label: string};
@@ -105,11 +105,11 @@ export const Installer_PythonSelector = (
               <div className="flex flex-col">
                 {item.type === 'python' ? (
                   <span className="flex flex-row items-center gap-x-2">
-                    <Python_Icon className="text-yellow-300 size-4" /> {item.version}
+                    <PythonIcon className="text-blue-400 size-4" /> {item.version}
                   </span>
                 ) : (
                   <span className="flex flex-row items-center gap-x-2">
-                    <Env_Icon className="text-green-300 size-4.5" /> {item.version}
+                    <PythonIcon className="text-yellow-400 size-4.5" /> {item.version}
                   </span>
                 )}
                 <Description>{description}</Description>

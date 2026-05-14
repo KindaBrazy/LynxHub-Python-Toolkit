@@ -6,7 +6,7 @@ import {Dispatch, SetStateAction, useCallback, useEffect, useState} from 'react'
 import {AssociateItem, PythonVenvSelectItem} from '../../../../../../cross/CrossExtTypes';
 import pIpc from '../../../../../PIpc';
 import {getUniqueLabels} from '../../../../../Utils';
-import {Env_Icon} from '../../../../SvgIcons';
+import {PythonIcon} from '../../../../SvgIcons';
 import {fetchAndSetPythonVenvs} from '../../../../UtilHooks';
 
 type Props = {id: string; setPythonPath?: Dispatch<SetStateAction<string>>};
@@ -61,7 +61,7 @@ export default function SelectEnv({id, setPythonPath}: Props) {
     <div className="flex items-center gap-x-2 mt-4">
       <Dropdown>
         <Button>
-          <Env_Icon />
+          <PythonIcon />
           Select Environment
         </Button>
         <Dropdown.Popover>
@@ -74,11 +74,11 @@ export default function SelectEnv({id, setPythonPath}: Props) {
                 <Label>
                   {item.type === 'python' ? (
                     <span className="flex flex-row items-center gap-x-2">
-                      <Env_Icon className="text-blue-400" /> {item.version}
+                      <PythonIcon className="text-blue-400" /> {item.version}
                     </span>
                   ) : (
                     <span className="flex flex-row items-center gap-x-2">
-                      <Env_Icon className="text-yellow-400" /> {item.version}
+                      <PythonIcon className="text-yellow-400" /> {item.version}
                     </span>
                   )}
                 </Label>

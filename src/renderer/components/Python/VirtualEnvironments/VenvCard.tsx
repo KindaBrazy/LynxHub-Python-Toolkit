@@ -9,7 +9,7 @@ import {FormEvent, useCallback, useEffect, useMemo, useState} from 'react';
 
 import {formatSizeMB} from '../../../../cross/CrossExtUtils';
 import pIpc from '../../../PIpc';
-import {Env_Icon} from '../../SvgIcons';
+import {PythonIcon} from '../../SvgIcons';
 import PackageManagerModal from '../PackageManagement/PackageManager/PackageManagerModal';
 import Venv_Associate from './Venv_Associate';
 
@@ -111,7 +111,7 @@ export default function VenvCard({
         <Card.Header className="flex flex-row justify-between items-center">
           <div className="flex flex-col">
             <div className="flex flex-row items-center gap-x-2">
-              <Env_Icon className="size-[1.2rem] text-yellow-300" />
+              <PythonIcon className="size-5 text-yellow-400" />
               <span
                 spellCheck={false}
                 onInput={onTitleChange}
