@@ -7,18 +7,15 @@ import {ToolsCard} from '../../../../src/renderer/mainWindow/components/ToolsCar
 import {AppDispatch} from '../../../../src/renderer/mainWindow/redux/store';
 import pIpc from '../PIpc';
 import {PythonToolkitActions} from '../reducer';
-import {cacheUrl} from '../Utils';
 import PythonToolkitModal from './Python/PythonToolkitModal';
 import SettingsModal from './Settings/SettingsModal';
+import {Env_Icon} from './SvgIcons';
 
 const title: string = 'Python Toolkit';
 const desc: string = 'Manage Python versions, virtual environments, packages, requirements files, and more.';
-const iconUrl: string =
-  'https://raw.githubusercontent.com/KindaBrazy/LynxHub-Python-Toolkit/refs/heads/metadata/icon.png';
 
 export default function ToolsPage() {
   const dispatch = useDispatch<AppDispatch>();
-  const icon = cacheUrl(iconUrl);
 
   const settingsModal = useOverlayState();
   const packageManagerModal = useOverlayState();
@@ -37,11 +34,10 @@ export default function ToolsPage() {
             <SettingsMinimalistic />
           </Button>
         }
-        // @ts-expect-error Them image url can be undefined
-        icon={icon}
         title={title}
         description={desc}
         onPress={openModal}
+        icon={<Env_Icon className="size-full p-0.5 text-warning" />}
       />
       <PythonToolkitModal state={packageManagerModal} />
     </>
