@@ -1,5 +1,6 @@
-import {Alert, Description, Key, Label, ListBox, Select, Spinner} from '@heroui/react';
+import {Alert, Button, Description, Key, Label, ListBox, Select, Spinner} from '@heroui/react';
 import {SkipNext} from '@solar-icons/react-perf/Bold';
+import {Restart} from '@solar-icons/react-perf/BoldDuotone';
 import {useCallback, useEffect, useMemo, useState} from 'react';
 import {useDispatch} from 'react-redux';
 
@@ -25,10 +26,12 @@ export const Installer_PythonSelector = (
       addAssociate(id, 'add', item);
     }, []);
 
-    useEffect(() => {
+    const fetchList = useCallback(() => {
       setIsLoading(true);
       fetchAndSetPythonVenvs(setList, setIsLoading, onSelected);
     }, []);
+
+    useEffect(() => fetchList(), []);
 
     const onSelectionChange = (key: Key | null) => {
       if (!key || typeof key === 'number') return;
@@ -61,8 +64,8 @@ export const Installer_PythonSelector = (
         </ListBox.Item>,
         ...list.map(item => {
           const defaultTextMap = {
-            lynx: <span className="text-accent/50">LynxHub Default</span>,
-            system: <span className="text-LynxPurple/50">System Default</span>,
+            lynx: <span className="text-accent">LynxHub Default</span>,
+            system: <span className="text-LynxPurple">System Default</span>,
           };
 
           const nameText = item.condaName;
@@ -112,29 +115,35 @@ export const Installer_PythonSelector = (
             <Description className="text-sm">Searching for python environments...</Description>
           </div>
         ) : (
-          <Select
-            defaultValue="skip"
-            variant="secondary"
-            value={selectedKey}
-            selectionMode="single"
-            onChange={onSelectionChange}>
-            <Select.Trigger>
-              <Select.Value />
-              <Select.Indicator />
-            </Select.Trigger>
-            <Select.Popover>
-              <ListBox>{items}</ListBox>
-            </Select.Popover>
-          </Select>
+          <div className="w-full flex items-center gap-x-2">
+            <Select
+              defaultValue="skip"
+              variant="secondary"
+              value={selectedKey}
+              selectionMode="single"
+              onChange={onSelectionChange}
+              fullWidth>
+              <Select.Trigger>
+                <Select.Value />
+                <Select.Indicator />
+              </Select.Trigger>
+              <Select.Popover>
+                <ListBox>{items}</ListBox>
+              </Select.Popover>
+            </Select>
+            <Button variant="tertiary" onPress={fetchList}>
+              <Restart />
+              Refresh
+            </Button>
+          </div>
         )}
 
-        <Alert status="accent" className="bg-surface-secondary shadow-none">
+        <Alert className="bg-surface-secondary shadow-none">
           <Alert.Indicator />
           <Alert.Content>
             <Alert.Title>Don't see the environment you need?</Alert.Title>
-            <Alert.Description>
+            <Alert.Description className="text-sm">
               Use the Python Toolkit in the Tools page to install new Python versions or create virtual environments.
-              You can then return here to select it.
             </Alert.Description>
           </Alert.Content>
         </Alert>
