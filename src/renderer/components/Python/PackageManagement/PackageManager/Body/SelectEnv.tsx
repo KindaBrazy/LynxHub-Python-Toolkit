@@ -1,7 +1,8 @@
 import {Button, Description, Dropdown, Label, Spinner} from '@heroui/react';
 import {topToast} from '@lynx/layouts/ToastProviders';
 import {getLastPathItem} from '@lynx_common/utils';
-import {Dispatch, SetStateAction, useEffect, useState} from 'react';
+import {Restart} from '@solar-icons/react-perf/BoldDuotone';
+import {Dispatch, SetStateAction, useCallback, useEffect, useState} from 'react';
 
 import {AssociateItem, PythonVenvSelectItem} from '../../../../../../cross/CrossExtTypes';
 import pIpc from '../../../../../PIpc';
@@ -33,10 +34,12 @@ export default function SelectEnv({id, setPythonPath}: Props) {
       });
   };
 
-  useEffect(() => {
+  const fetchList = useCallback(() => {
     setIsLoading(true);
     fetchAndSetPythonVenvs(setList, setIsLoading);
   }, []);
+
+  useEffect(() => fetchList(), []);
 
   return isLoading ? (
     <div className="flex flex-col gap-y-2 mt-4 items-center">
@@ -44,31 +47,37 @@ export default function SelectEnv({id, setPythonPath}: Props) {
       <Description>Loading available pythons and venvs...</Description>
     </div>
   ) : (
-    <Dropdown>
-      <Button className="mt-4">Select Environment</Button>
-      <Dropdown.Popover>
-        <Dropdown.Menu items={list}>
-          {item => (
-            <Dropdown.Item
-              onPress={() => onPress(item)}
-              id={`${item.version}_${item.dir}`}
-              className="flex flex-col items-start gap-0">
-              <Label>
-                {item.type === 'python' ? (
-                  <span className="flex flex-row items-center gap-x-2">
-                    <Python_Icon className="text-yellow-300" /> {item.version}
-                  </span>
-                ) : (
-                  <span className="flex flex-row items-center gap-x-2">
-                    <Env_Icon className="text-green-300" /> {item.version}
-                  </span>
-                )}
-              </Label>
-              <Description>{item.condaName || getLastPathItem(item.dir)}</Description>
-            </Dropdown.Item>
-          )}
-        </Dropdown.Menu>
-      </Dropdown.Popover>
-    </Dropdown>
+    <div className="flex items-center gap-x-2 mt-4">
+      <Dropdown>
+        <Button>Select Environment</Button>
+        <Dropdown.Popover>
+          <Dropdown.Menu items={list}>
+            {item => (
+              <Dropdown.Item
+                onPress={() => onPress(item)}
+                id={`${item.version}_${item.dir}`}
+                className="flex flex-col items-start gap-0">
+                <Label>
+                  {item.type === 'python' ? (
+                    <span className="flex flex-row items-center gap-x-2">
+                      <Python_Icon className="text-yellow-300" /> {item.version}
+                    </span>
+                  ) : (
+                    <span className="flex flex-row items-center gap-x-2">
+                      <Env_Icon className="text-green-300" /> {item.version}
+                    </span>
+                  )}
+                </Label>
+                <Description>{item.condaName || getLastPathItem(item.dir)}</Description>
+              </Dropdown.Item>
+            )}
+          </Dropdown.Menu>
+        </Dropdown.Popover>
+      </Dropdown>
+      <Button variant="tertiary" onPress={fetchList}>
+        <Restart />
+        Refresh
+      </Button>
+    </div>
   );
 }
