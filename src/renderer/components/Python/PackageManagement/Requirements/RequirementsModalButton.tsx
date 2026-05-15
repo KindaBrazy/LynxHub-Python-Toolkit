@@ -23,11 +23,12 @@ type Props = {
 
 export default function RequirementsBtn({id, projectPath, setIsReqAvailable, setReqPackageCount}: Props) {
   const state = useOverlayState();
+  const scrollRef = useRef<OverlayScrollbarsComponentRef>(null);
+
   const [requirements, setRequirements] = useState<RequirementData[]>([]);
   const [filePath, setFilePath] = useState<string>('');
   const [isSaving, setIsSaving] = useState<boolean>(false);
   const [searchValue, setSearchValue] = useState<string>('');
-
   const [searchReqs, setSearchReqs] = useState<RequirementData[]>([]);
 
   useEffect(() => {
@@ -64,8 +65,6 @@ export default function RequirementsBtn({id, projectPath, setIsReqAvailable, set
   useEffect(() => {
     setSearchReqs(requirements.filter(item => searchInStrings(searchValue, [item.name])));
   }, [searchValue, requirements]);
-
-  const scrollRef = useRef<OverlayScrollbarsComponentRef>(null);
 
   const scrollToBottom = () => {
     const {current} = scrollRef;

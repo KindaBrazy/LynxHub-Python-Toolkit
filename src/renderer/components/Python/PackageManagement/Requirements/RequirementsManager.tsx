@@ -1,9 +1,9 @@
 import {CloseButton, EmptyState, Input, ListBox, Select, Table} from '@heroui/react';
+import LynxScroll from '@lynx/components/LynxScroll';
 import {ListCross} from '@solar-icons/react-perf/BoldDuotone';
-import {OverlayScrollbarsComponent, OverlayScrollbarsComponentRef} from 'overlayscrollbars-react';
-import {Dispatch, ReactNode, RefObject, SetStateAction, useEffect, useState} from 'react';
+import {OverlayScrollbarsComponentRef} from 'overlayscrollbars-react';
+import {Dispatch, ReactNode, RefObject, SetStateAction, useMemo} from 'react';
 
-import {useAppState} from '../../../../../../../src/renderer/mainWindow/redux/reducers/app';
 import {RequirementData} from '../../../../../cross/CrossExtTypes';
 
 type TableReq = {
@@ -32,9 +32,6 @@ const operators = [
 ];
 
 export default function RequirementsManager({requirements, setRequirements, scrollRef}: Props) {
-  const darkMode = useAppState('darkMode');
-  const [tableReq, setTableReq] = useState<TableReq[]>([]);
-
   const handleRequirementChange = (index: number, updatedRequirement: RequirementData) => {
     setRequirements(prevState => prevState.map((req, i) => (i === index ? updatedRequirement : req)));
   };
@@ -43,11 +40,11 @@ export default function RequirementsManager({requirements, setRequirements, scro
     setRequirements(prevState => prevState.filter(item => item.name !== name));
   };
 
-  useEffect(() => {
-    setTableReq(
+  const tableReq: TableReq[] = useMemo(
+    () =>
       requirements.map((req, index) => {
         return {
-          key: req.name,
+          key: req.name || `req_${index}`,
           name: (
             <Input
               spellCheck="false"
@@ -98,21 +95,11 @@ export default function RequirementsManager({requirements, setRequirements, scro
           actions: <CloseButton onPress={() => handleDeleteRequirement(req.name)} />,
         };
       }),
-    );
-  }, [requirements]);
+    [requirements],
+  );
 
   return (
-    <OverlayScrollbarsComponent
-      options={{
-        overflow: {x: 'hidden', y: 'scroll'},
-        scrollbars: {
-          autoHide: 'move',
-          clickScroll: true,
-          theme: darkMode ? 'os-theme-light' : 'os-theme-dark',
-        },
-      }}
-      ref={scrollRef}
-      className="pr-4">
+    <LynxScroll ref={scrollRef} className="pr-4">
       <Table>
         <Table.ScrollContainer>
           <Table.Content>
@@ -143,6 +130,6 @@ export default function RequirementsManager({requirements, setRequirements, scro
           </Table.Content>
         </Table.ScrollContainer>
       </Table>
-    </OverlayScrollbarsComponent>
+    </LynxScroll>
   );
 }
