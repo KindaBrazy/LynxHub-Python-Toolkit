@@ -129,7 +129,7 @@ export default function VenvCard({
                 <MenuDots className="rotate-90" />
               </Button>
               <Dropdown.Popover>
-                <Dropdown.Menu onAction={key => console.log(`Selected: ${key}`)}>
+                <Dropdown.Menu>
                   <Dropdown.Item id="package-manager" textValue="Manage Packages" onPress={packageManagerModal.open}>
                     <BoxMinimalistic className="size-4" />
                     <Label>Manage Packages</Label>
