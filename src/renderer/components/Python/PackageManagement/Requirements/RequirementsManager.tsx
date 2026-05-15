@@ -1,4 +1,4 @@
-import {CloseButton, EmptyState, Input, ListBox, Select, Selection, Table} from '@heroui/react';
+import {CloseButton, EmptyState, Input, ListBox, Select, Table} from '@heroui/react';
 import {ListCross} from '@solar-icons/react-perf/BoldDuotone';
 import {OverlayScrollbarsComponent, OverlayScrollbarsComponentRef} from 'overlayscrollbars-react';
 import {Dispatch, ReactNode, RefObject, SetStateAction, useEffect, useState} from 'react';
@@ -70,24 +70,21 @@ export default function RequirementsManager({requirements, setRequirements, scro
             />
           ),
           operator: (
-            <Select variant="secondary" placeholder="operator">
+            <Select
+              onChange={key => {
+                if (!key || typeof key === 'number') return;
+                handleRequirementChange(index, {...req, versionOperator: key.toString()});
+              }}
+              variant="secondary"
+              selectionMode="single"
+              placeholder="operator"
+              value={req.versionOperator || 'all'}>
               <Select.Trigger>
                 <Select.Value />
                 <Select.Indicator />
               </Select.Trigger>
               <Select.Popover>
-                <ListBox
-                  onSelectionChange={(selected: Selection) => {
-                    if (selected === 'all') return;
-
-                    handleRequirementChange(index, {
-                      ...req,
-                      versionOperator: String(selected.values().next().value) || 'all',
-                    });
-                  }}
-                  items={operators}
-                  selectionMode="single"
-                  defaultSelectedKeys={[req.versionOperator || 'all']}>
+                <ListBox items={operators}>
                   {op => (
                     <ListBox.Item id={op.key} textValue={op.label}>
                       {op.label}

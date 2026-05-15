@@ -21,8 +21,6 @@ type Props = {
   setReqPackageCount: Dispatch<SetStateAction<number>>;
 };
 
-// TODO: fix saving not works
-
 export default function RequirementsBtn({id, projectPath, setIsReqAvailable, setReqPackageCount}: Props) {
   const state = useOverlayState();
   const [requirements, setRequirements] = useState<RequirementData[]>([]);

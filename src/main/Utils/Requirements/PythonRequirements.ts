@@ -41,7 +41,7 @@ export async function saveRequirements(filePath: string, requirements: Requireme
   try {
     const updatedContent = requirements
       .map(req => {
-        if (req.versionOperator && req.version) {
+        if (req.versionOperator && req.version && req.versionOperator !== 'all') {
           return `${req.name}${req.versionOperator}${req.version}`;
         } else {
           return req.name;
