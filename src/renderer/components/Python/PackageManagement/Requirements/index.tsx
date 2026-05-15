@@ -2,17 +2,17 @@ import {Button, Chip, Modal, SearchField, Spinner, useOverlayState} from '@herou
 import EmptyStateCard from '@lynx/components/EmptyStateCard';
 import TabModal from '@lynx/components/TabModal';
 import {topToast} from '@lynx/layouts/ToastProviders';
+import {searchInStrings} from '@lynx/utils';
 import filesIpc from '@lynx_shared/ipc/files';
 import {Checklist, Diskette, DocumentsMinimalistic, DocumentText} from '@solar-icons/react-perf/BoldDuotone';
 import {isEmpty} from 'lodash-es';
 import {Plus, X} from 'lucide-react';
 import {OverlayScrollbarsComponentRef} from 'overlayscrollbars-react';
-import {Dispatch, SetStateAction, useEffect, useRef, useState} from 'react';
+import {Dispatch, SetStateAction, useEffect, useMemo, useRef, useState} from 'react';
 
-import {searchInStrings} from '../../../../../../../src/renderer/mainWindow/utils';
 import {RequirementData} from '../../../../../cross/CrossExtTypes';
 import pIpc from '../../../../PIpc';
-import RequirementsManager from './RequirementsManager';
+import RenderTable from './RenderTable';
 
 type Props = {
   id: string;
@@ -21,7 +21,7 @@ type Props = {
   setReqPackageCount: Dispatch<SetStateAction<number>>;
 };
 
-export default function RequirementsBtn({id, projectPath, setIsReqAvailable, setReqPackageCount}: Props) {
+export default function RequirementsModal({id, projectPath, setIsReqAvailable, setReqPackageCount}: Props) {
   const state = useOverlayState();
   const scrollRef = useRef<OverlayScrollbarsComponentRef>(null);
 
@@ -29,11 +29,11 @@ export default function RequirementsBtn({id, projectPath, setIsReqAvailable, set
   const [filePath, setFilePath] = useState<string>('');
   const [isSaving, setIsSaving] = useState<boolean>(false);
   const [searchValue, setSearchValue] = useState<string>('');
-  const [searchReqs, setSearchReqs] = useState<RequirementData[]>([]);
 
-  useEffect(() => {
-    setIsReqAvailable(!!filePath);
-  }, [filePath]);
+  const filteredReqs = useMemo(
+    () => requirements.filter(item => searchInStrings(searchValue, [item.name])),
+    [searchValue, requirements],
+  );
 
   useEffect(() => {
     const findReqs = () => {
@@ -62,10 +62,6 @@ export default function RequirementsBtn({id, projectPath, setIsReqAvailable, set
       });
   }, [projectPath, id]);
 
-  useEffect(() => {
-    setSearchReqs(requirements.filter(item => searchInStrings(searchValue, [item.name])));
-  }, [searchValue, requirements]);
-
   const scrollToBottom = () => {
     const {current} = scrollRef;
     const osInstance = current?.osInstance();
@@ -82,6 +78,8 @@ export default function RequirementsBtn({id, projectPath, setIsReqAvailable, set
       setRequirements(result);
       setReqPackageCount(result.length);
     });
+
+    setIsReqAvailable(!!filePath);
   }, [filePath]);
 
   const handleAddRequirement = () => {
@@ -192,7 +190,7 @@ export default function RequirementsBtn({id, projectPath, setIsReqAvailable, set
               />
             </div>
           ) : (
-            <RequirementsManager scrollRef={scrollRef} requirements={searchReqs} setRequirements={setRequirements} />
+            <RenderTable scrollRef={scrollRef} filteredReqs={filteredReqs} setRequirements={setRequirements} />
           )}
         </Modal.Body>
         <Modal.Footer className="py-3">

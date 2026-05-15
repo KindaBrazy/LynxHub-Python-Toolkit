@@ -7,7 +7,7 @@ import {Dispatch, SetStateAction, useEffect, useState} from 'react';
 import {FilterKeys, PackageInfo, PackageUpdate, SitePackages_Info} from '../../../../../../cross/CrossExtTypes';
 import {allCardsExt} from '../../../../../DataHolder';
 import pIpc from '../../../../../PIpc';
-import RequirementsBtn from '../../Requirements/RequirementsModalButton';
+import RequirementsModal from '../../Requirements';
 import FilterButton from './FilterButton';
 import InstallerModal from './InstallerModal';
 import UpdateButton from './UpdateButton';
@@ -184,7 +184,7 @@ export default function PackageManagerHeader({
 
           <div className="flex items-center gap-x-2">
             <InstallerModal refresh={refresh} pythonPath={pythonPath} />
-            <RequirementsBtn
+            <RequirementsModal
               id={id}
               projectPath={projectPath}
               setIsReqAvailable={setIsReqAvailable}
