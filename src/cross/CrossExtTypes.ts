@@ -61,6 +61,9 @@ export type RequirementData = {
   versionOperator: string | null;
   version: string | null;
   originalLine: string;
+  url?: string | null;
+  extras?: string[] | null;
+  markers?: string | null;
   autoFocus?: boolean;
 };
 

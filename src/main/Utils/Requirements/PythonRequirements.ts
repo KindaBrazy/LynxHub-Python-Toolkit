@@ -1,53 +1,56 @@
 import {readdirSync, readFileSync, statSync, writeFileSync} from 'graceful-fs';
-import {isEmpty} from 'lodash-es';
 import {join} from 'path';
 
 import {IdPathType, RequirementData} from '../../../cross/CrossExtTypes';
+import {parseRequirementLine} from '../../../cross/CrossExtUtils';
 import {getStorage} from '../../DataHolder';
 
 const REQ_STORE_ID = 'reqs_path';
 
+// Lines that are not requirements (options, includes, blank, comments)
+function isMetaLine(line: string): boolean {
+  // eslint-disable-next-line max-len
+  return /^(-r|--requirement|-c|--constraint|-e|--editable|-f|--find-links|--index-url|--extra-index-url|--no-index|-i)\s/i.test(
+    line,
+  );
+}
+
 export async function readRequirements(filePath: string): Promise<RequirementData[]> {
-  if (isEmpty(filePath)) return [];
+  if (!filePath) return [];
 
   try {
     const data = readFileSync(filePath, 'utf-8');
 
-    // noinspection UnnecessaryLocalVariableJS
-    const requirements = data
+    return data
       .split('\n')
-      .filter(line => line.trim() !== '' && !line.startsWith('#'))
-      .map(line => {
-        const parts = line.split(/==|>=|<=|>|<|~=/);
-        const versionMatch = line.match(/(==|>=|<=|>|<|~=)\s*([^#\s]+)/);
-        const versionOperator = versionMatch ? versionMatch[1].trim() : null;
-        const version = versionMatch ? versionMatch[2]?.trim() : null;
-
-        return {
-          name: parts[0].trim(),
-          versionOperator: versionOperator,
-          version: version,
-          originalLine: line.trim(),
-        };
-      });
-    return requirements;
+      .map(line => line.trim())
+      .filter(line => line !== '' && !line.startsWith('#') && !isMetaLine(line))
+      .map(parseRequirementLine);
   } catch (error) {
     console.error('Error reading requirements file:', error);
     return [];
   }
 }
 
-export async function saveRequirements(filePath: string, requirements: RequirementData[]) {
+export async function saveRequirements(filePath: string, requirements: RequirementData[]): Promise<boolean> {
   try {
     const updatedContent = requirements
       .map(req => {
-        if (req.versionOperator && req.version && req.versionOperator !== 'all') {
-          return `${req.name}${req.versionOperator}${req.version}`;
-        } else {
-          return req.name;
-        }
+        // URL-based entries: preserve the original line unchanged
+        if (req.url) return req.originalLine;
+
+        // Regular entries: reconstruct from parsed parts
+        const extras = req.extras?.length ? `[${req.extras.join(',')}]` : '';
+        const version =
+          req.versionOperator && req.version && req.versionOperator !== 'all'
+            ? `${req.versionOperator}${req.version}`
+            : '';
+        const markers = req.markers ? `; ${req.markers}` : '';
+
+        return `${req.name}${extras}${version}${markers}`;
       })
       .join('\n');
+
     writeFileSync(filePath, updatedContent, 'utf-8');
     return true;
   } catch (error) {
