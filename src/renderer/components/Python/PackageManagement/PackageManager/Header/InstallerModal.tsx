@@ -48,8 +48,6 @@ export default function InstallerModal({refresh, pythonPath}: Props) {
       });
   };
 
-  console.log(installCommand);
-
   // Derive package count from install command for header badge
   const packageCount = installCommand ? installCommand.split(' ').filter(t => t && !t.startsWith('-')).length : 0;
 

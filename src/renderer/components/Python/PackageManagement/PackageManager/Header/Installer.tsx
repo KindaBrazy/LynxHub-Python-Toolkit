@@ -2,7 +2,8 @@ import {Button, CloseButton, Description, Input, Label, Surface, TextField} from
 import CopyClipboard from '@lynx/components/CopyClipboard';
 import {topToast} from '@lynx/layouts/ToastProviders';
 import filesIpc from '@lynx_shared/ipc/files';
-import {AltArrowDown, BoxMinimalistic, Broom, Import} from '@solar-icons/react-perf/BoldDuotone';
+import {AltArrowDown} from '@solar-icons/react-perf/Bold';
+import {BoxMinimalistic, Broom, Import} from '@solar-icons/react-perf/BoldDuotone';
 import {compact, isEmpty} from 'lodash-es';
 import {KeyboardEvent, useEffect, useState} from 'react';
 
