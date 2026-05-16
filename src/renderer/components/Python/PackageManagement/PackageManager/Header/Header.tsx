@@ -7,6 +7,7 @@ import {Dispatch, SetStateAction, useEffect, useState} from 'react';
 import {FilterKeys, PackageInfo, PackageUpdate, SitePackages_Info} from '../../../../../../cross/CrossExtTypes';
 import {allCardsExt} from '../../../../../DataHolder';
 import pIpc from '../../../../../PIpc';
+import {cacheUrl} from '../../../../../Utils';
 import RequirementsModal from '../../Requirements';
 import FilterButton from './FilterButton';
 import InstallerModal from './InstallerModal';
@@ -69,9 +70,9 @@ export default function PackageManagerHeader({
     const url = allCardsExt.find(item => item.id === id)?.repoUrl;
     if (url) {
       const avatar = extractGitUrl(url).avatarUrl;
-      setAvatarUrl(avatar);
+      setAvatarUrl(cacheUrl(avatar));
     }
-  }, []);
+  }, [id]);
 
   useEffect(() => {
     if (pythonPath) {
