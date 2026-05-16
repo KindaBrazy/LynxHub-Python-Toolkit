@@ -1,73 +1,93 @@
-import {Button, CloseButton, Description, Input, Label, Surface, TextField} from '@heroui/react';
+import {Button, Chip, Description, Disclosure, Input, Label, Surface, TextField} from '@heroui/react';
 import CopyClipboard from '@lynx/components/CopyClipboard';
 import {topToast} from '@lynx/layouts/ToastProviders';
 import filesIpc from '@lynx_shared/ipc/files';
-import {AltArrowDown} from '@solar-icons/react-perf/Bold';
-import {BoxMinimalistic, Broom, Import} from '@solar-icons/react-perf/BoldDuotone';
-import {compact, isEmpty} from 'lodash-es';
-import {KeyboardEvent, useEffect, useState} from 'react';
+import {BoxMinimalistic, Broom, Import, Pen} from '@solar-icons/react-perf/BoldDuotone';
+import {isEmpty} from 'lodash-es';
+import {X} from 'lucide-react';
+import {KeyboardEvent, useEffect, useRef, useState} from 'react';
 
+import {RequirementData} from '../../../../../../cross/CrossExtTypes';
+import {parseRequirementLine} from '../../../../../../cross/CrossExtUtils';
 import pIpc from '../../../../../PIpc';
 
-type Package = {name: string; version: string};
+const buildPackageString = (pkg: RequirementData) => {
+  let pkgStr: string;
+
+  if (pkg.url) {
+    // Only format as PEP-508 `name @ url` if it was originally input that way
+    if (pkg.originalLine && pkg.originalLine.includes(' @ ')) {
+      pkgStr = `${pkg.name} @ ${pkg.url}`;
+    } else {
+      pkgStr = pkg.url;
+    }
+  } else {
+    pkgStr = pkg.name;
+    if (pkg.extras && pkg.extras.length > 0) {
+      pkgStr += `[${pkg.extras.join(',')}]`;
+    }
+    if (pkg.version) {
+      pkgStr += `${pkg.versionOperator || '=='}${pkg.version}`;
+    }
+  }
+
+  if (pkg.markers) {
+    pkgStr += `; ${pkg.markers}`;
+  }
+
+  // Replace internal double quotes with single quotes to avoid nesting issues in CLI wrapper quotes
+  pkgStr = pkgStr.replace(/"/g, "'");
+
+  return pkgStr;
+};
+
 type Props = {setInstallCommand: (value: string) => void; setIsInstallDisabled: (value: boolean) => void};
 
 export default function Installer({setInstallCommand, setIsInstallDisabled}: Props) {
   const [packageString, setPackageString] = useState<string>('');
-  const [packages, setPackages] = useState<Package[]>([]);
+  const [packages, setPackages] = useState<RequirementData[]>([]);
   const [indexUrl, setIndexUrl] = useState<string>('');
   const [extraOptions, setExtraOptions] = useState<string>('');
   const [showAdvanced, setShowAdvanced] = useState(false);
+
+  const inputRef = useRef<HTMLInputElement>(null);
 
   useEffect(() => {
     setIsInstallDisabled(packages.length <= 0);
   }, [packages]);
 
+  const addPackagesFromString = (value: string) => {
+    // Splitting by line ensures we handle pasted multiline imports safely without breaking spaces in markers
+    const lines = value
+      .split('\n')
+      .map(l => l.trim())
+      .filter(Boolean);
+    if (lines.length === 0) {
+      setPackageString('');
+      return;
+    }
+
+    const newPkgs = lines.map(line => parseRequirementLine(line));
+    setPackages(prev => [...prev, ...newPkgs]);
+    setPackageString('');
+  };
+
   const handlePackageStringChange = (value: string) => {
     setPackageString(value);
-
-    if (value.endsWith(' ') || value.endsWith('\n')) {
-      const newPackages = value
-        .trim()
-        .split(/\s+/)
-        .filter(pkg => pkg)
-        .map(pkg => {
-          const [name, version] = pkg.split('@');
-          return {name, version: version || ''};
-        });
-
-      setPackages([...packages, ...newPackages]);
-      setPackageString('');
+    if (value.endsWith('\n')) {
+      addPackagesFromString(value);
     }
   };
 
-  const handleKeyDown = (event: KeyboardEvent) => {
+  const handleKeyDown = (event: KeyboardEvent<HTMLInputElement>) => {
     if (event.key === 'Enter') {
       event.preventDefault();
-      const value = packageString.trim();
-      if (value) {
-        const newPackages = compact(
-          value
-            .split(/\s+/)
-            .filter(pkg => pkg)
-            .map(pkg => {
-              const [name, version] = pkg.split('@');
-              if (!packages.some(p => p.name.toLowerCase() === name.toLowerCase())) {
-                return {name, version: version || ''};
-              } else {
-                return null;
-              }
-            }),
-        );
-
-        setPackages([...packages, ...newPackages]);
-        setPackageString('');
-      }
+      addPackagesFromString(packageString);
     }
   };
 
-  const removePackage = (name: string) => {
-    setPackages(prevState => prevState.filter(pkg => pkg.name !== name));
+  const removePackage = (pkgToRemove: RequirementData) => {
+    setPackages(prevState => prevState.filter(pkg => pkg !== pkgToRemove));
   };
 
   const handleFileSelect = () => {
@@ -75,8 +95,18 @@ export default function Installer({setInstallCommand, setIsInstallDisabled}: Pro
       .openDlg({properties: ['openFile']})
       .then(file => {
         if (file) {
-          pIpc.readReqs(file).then(result => {
-            setPackages(result.map(item => ({name: item.name, version: item.version || ''})));
+          pIpc.readReqs(file).then((result: RequirementData[]) => {
+            setPackages(prev => {
+              const newPackages: RequirementData[] = [];
+              result.forEach(item => {
+                // Ensure packages with identical names but DIFFERENT markers (like Windows/Linux wheels) are both kept
+                const exists =
+                  prev.some(p => p.name.toLowerCase() === item.name.toLowerCase() && p.markers === item.markers) ||
+                  newPackages.some(p => p.name.toLowerCase() === item.name.toLowerCase() && p.markers === item.markers);
+                if (!exists) newPackages.push(item);
+              });
+              return [...prev, ...newPackages];
+            });
             topToast.success('Requirements file loaded successfully');
           });
         }
@@ -86,13 +116,34 @@ export default function Installer({setInstallCommand, setIsInstallDisabled}: Pro
       });
   };
 
+  const handleEditItem = (pkgToEdit: RequirementData) => {
+    // Remove the exact package instance from list
+    setPackages(prevState => prevState.filter(p => p !== pkgToEdit));
+    // Re-populate text input with the original input string
+    setPackageString(pkgToEdit.originalLine || pkgToEdit.name);
+
+    // Focus the input so the user can easily start typing
+    setTimeout(() => {
+      inputRef.current?.focus();
+    }, 0);
+  };
+
   const generateInstallCommand = () => {
     if (packages.length === 0) {
       setInstallCommand('');
       return '';
     }
 
-    const packageStrings = packages.map(pkg => `${pkg.name}${pkg.version ? `==${pkg.version}` : ''}`);
+    const packageStrings = packages.map(pkg => {
+      const pkgStr = buildPackageString(pkg);
+
+      // If it contains spaces or semi-colons (like markers or PEP 508 URL definitions do), wrap safely in quotes
+      if (pkgStr.includes(' ') || pkgStr.includes(';')) {
+        return `"${pkgStr}"`;
+      }
+      return pkgStr;
+    });
+
     const parts: string[] = [];
 
     if (indexUrl.trim()) parts.push(`--index-url ${indexUrl.trim()}`);
@@ -130,6 +181,7 @@ export default function Installer({setInstallCommand, setIsInstallDisabled}: Pro
 
       {/* ── Package input ── */}
       <TextField
+        ref={inputRef}
         variant="secondary"
         value={packageString}
         onKeyDown={handleKeyDown}
@@ -137,39 +189,50 @@ export default function Installer({setInstallCommand, setIsInstallDisabled}: Pro
         <Label>Add packages</Label>
         <Input placeholder="e.g. numpy  pandas@2.0  torch==2.1.0" />
         <Description>
-          Press <kbd className="px-1 py-0.5 text-xs rounded bg-surface-tertiary font-mono">Space</kbd> or{' '}
-          <kbd className="px-1 py-0.5 text-xs rounded bg-surface-tertiary font-mono">Enter</kbd> to add. Use{' '}
-          <code className="text-xs font-mono">@</code> or <code className="text-xs font-mono">==</code> to pin a
-          version.
+          Press <kbd className="px-1 py-0.5 text-xs rounded bg-surface-tertiary font-JetBrainsMono">Enter</kbd> to add.
+          Use <code className="text-xs font-JetBrainsMono">@</code> or{' '}
+          <code className="text-xs font-JetBrainsMono">==</code> to pin a version.
         </Description>
       </TextField>
 
       {/* ── Package chips ── */}
       {!isEmpty(packages) ? (
-        <Surface variant="secondary" className="rounded-2xl p-3">
+        <Surface variant="secondary" className="rounded-3xl p-3">
           <div className="flex flex-wrap gap-2">
-            {packages.map(pkg => (
-              <span
-                className={
-                  'group flex items-center gap-1.5 rounded-full bg-surface-primary border' +
-                  ' border-content-quaternary/20 pl-3 pr-1.5 py-1 text-sm transition-colors' +
-                  ' hover:border-content-tertiary/40'
-                }
-                key={pkg.name}>
-                <span className="font-medium text-content-primary">{pkg.name}</span>
-                {pkg.version && (
-                  <span
-                    className={
-                      'rounded-full bg-surface-tertiary px-1.5 py-0.5 text-[11px] font-mono text-content-secondary'
-                    }>
-                    {pkg.version}
-                  </span>
-                )}
-                <CloseButton
-                  onPress={() => removePackage(pkg.name)}
-                  className="size-4 shrink-0 opacity-50 transition-opacity group-hover:opacity-100"
-                />
-              </span>
+            {packages.map((pkg, i) => (
+              <Chip
+                variant="soft"
+                color="warning"
+                key={`${pkg.name}-${i}`}
+                className="group px-2 text-warning/70 hover:text-warning transition-colors duration-150">
+                <span>
+                  {pkg.name}
+                  {pkg.extras && pkg.extras.length > 0 && `[${pkg.extras.join(',')}]`}
+
+                  {pkg.version && (
+                    <>
+                      {pkg.versionOperator || '=='}
+                      {pkg.version}
+                    </>
+                  )}
+                </span>
+                <Button
+                  size="sm"
+                  variant="ghost"
+                  onPress={() => handleEditItem(pkg)}
+                  className="size-4 shrink-0 opacity-50 transition-opacity group-hover:opacity-100 text-foreground"
+                  isIconOnly>
+                  <Pen className="size-3" />
+                </Button>
+                <Button
+                  size="sm"
+                  variant="ghost"
+                  onPress={() => removePackage(pkg)}
+                  className="size-4 shrink-0 opacity-50 transition-opacity group-hover:opacity-100 text-danger"
+                  isIconOnly>
+                  <X className="size-3" />
+                </Button>
+              </Chip>
             ))}
           </div>
           <p className="mt-2.5 text-xs text-content-tertiary pl-1">
@@ -189,61 +252,68 @@ export default function Installer({setInstallCommand, setIsInstallDisabled}: Pro
         </Surface>
       )}
 
-      {/* ── Advanced options (collapsible) ── */}
-      <div className="rounded-2xl overflow-hidden border border-content-quaternary/10">
-        <button
-          className={
-            'flex w-full items-center justify-between px-4 py-3 text-sm text-content-secondary' +
-            ' hover:bg-surface-secondary/50 transition-colors cursor-pointer'
-          }
-          type="button"
-          onClick={() => setShowAdvanced(v => !v)}>
-          <span className="font-medium">Advanced options</span>
-          <AltArrowDown
-            className={`size-4 transition-transform duration-200 ${showAdvanced ? 'rotate-180' : 'rotate-0'}`}
-          />
-        </button>
-
-        {showAdvanced && (
-          <div className="flex flex-col gap-y-3 border-t border-content-quaternary/10 px-4 pb-4 pt-3">
-            <TextField value={indexUrl} variant="secondary" onChange={setIndexUrl}>
-              <Label>Index URL</Label>
-              <Input placeholder="https://pypi.org/simple (optional)" />
-              <Description>Override the default PyPI index</Description>
-            </TextField>
-            <TextField variant="secondary" value={extraOptions} onChange={setExtraOptions}>
-              <Label>Extra flags</Label>
-              <Input placeholder="--user --no-cache-dir" />
-            </TextField>
-          </div>
-        )}
-      </div>
+      <Disclosure isExpanded={showAdvanced} onExpandedChange={setShowAdvanced}>
+        <Disclosure.Heading>
+          <Button slot="trigger" variant="tertiary" className="justify-between" fullWidth>
+            Advanced options
+            <Disclosure.Indicator />
+          </Button>
+        </Disclosure.Heading>
+        <Disclosure.Content>
+          <Disclosure.Body className={'flex flex-col items-center rounded-3xl p-2 text-start bg-surface-secondary'}>
+            <div className="flex flex-col gap-y-3 px-4 pb-4 pt-3 w-full">
+              <TextField value={indexUrl} onChange={setIndexUrl}>
+                <Label>Index URL</Label>
+                <Input placeholder="https://pypi.org/simple (optional)" />
+                <Description>Override the default PyPI index</Description>
+              </TextField>
+              <TextField value={extraOptions} onChange={setExtraOptions}>
+                <Label>Extra flags</Label>
+                <Input placeholder="--user --no-cache-dir" />
+              </TextField>
+            </div>
+          </Disclosure.Body>
+        </Disclosure.Content>
+      </Disclosure>
 
       {/* ── Terminal preview ── */}
       {!isEmpty(packages) && (
         <div className="overflow-hidden rounded-2xl border border-white/[0.07] bg-surface-secondary">
           {/* Titlebar */}
-          <div className="flex items-center justify-between border-b border-white/6 px-4 py-2.5">
-            <div className="flex gap-1.5">
-              <div className="size-2.5 rounded-full bg-[#ff5f57]" />
-              <div className="size-2.5 rounded-full bg-[#febc2e]" />
-              <div className="size-2.5 rounded-full bg-[#28c840]" />
-            </div>
-            <span className="font-mono text-xs text-muted">terminal preview</span>
+          <div className="flex items-center justify-between border-b border-white/6 px-4 py-2">
+            <div />
+            <span className="font-JetBrainsMono text-xs text-muted">Terminal Preview</span>
             <CopyClipboard contentToCopy={fullCommand} />
           </div>
 
           {/* Command line */}
-          <div className="px-4 py-3.5 font-mono text-[13px] leading-relaxed">
+          <div className="px-4 py-3.5 font-JetBrainsMono text-xs leading-relaxed">
             <span className="select-none text-emerald-400">$ </span>
             <span className="text-semi-muted">pip install </span>
-            {packages.map((pkg, i) => (
-              <span key={pkg.name}>
-                <span className="text-amber-400">{pkg.name}</span>
-                {pkg.version && <span className="text-amber-400/70">=={pkg.version}</span>}
-                {i < packages.length - 1 && <span className="text-white/30"> </span>}
-              </span>
-            ))}
+            {packages.map((pkg, i) => {
+              const baseStr = pkg.url
+                ? pkg.originalLine && pkg.originalLine.includes(' @ ')
+                  ? `${pkg.name} @ ${pkg.url}`
+                  : pkg.url
+                : `${pkg.name}${pkg.extras && pkg.extras.length > 0 ? `[${pkg.extras.join(',')}]` : ''}`;
+
+              const versionStr = pkg.url ? null : pkg.version ? `${pkg.versionOperator || '=='}${pkg.version}` : null;
+              const markersStr = pkg.markers ? `; ${pkg.markers.replace(/"/g, "'")}` : null;
+
+              const fullStr = `${baseStr}${versionStr || ''}${markersStr || ''}`;
+              const hasQuotes = fullStr.includes(' ') || fullStr.includes(';');
+
+              return (
+                <span key={`${pkg.name}-${i}`}>
+                  {hasQuotes && <span className="text-amber-400/70">"</span>}
+                  <span className="text-amber-400">{baseStr}</span>
+                  {versionStr && <span className="text-amber-400/70">{versionStr}</span>}
+                  {markersStr && <span className="text-amber-400/50">{markersStr}</span>}
+                  {hasQuotes && <span className="text-amber-400/70">"</span>}
+                  {i < packages.length - 1 && <span className="text-white/30"> </span>}
+                </span>
+              );
+            })}
             {indexUrl.trim() && <span className="text-sky-400"> --index-url {indexUrl.trim()}</span>}
             {extraOptions.trim() && <span className="text-purple-400"> {extraOptions.trim()}</span>}
           </div>
