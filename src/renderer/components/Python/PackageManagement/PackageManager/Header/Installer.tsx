@@ -1,21 +1,22 @@
-import {Button, CloseButton, Description, Input, Label, ListBox, Separator, Surface, TextField} from '@heroui/react';
+import {Button, CloseButton, Description, Input, Label, Surface, TextField} from '@heroui/react';
 import CopyClipboard from '@lynx/components/CopyClipboard';
 import {topToast} from '@lynx/layouts/ToastProviders';
 import filesIpc from '@lynx_shared/ipc/files';
-import {Checklist} from '@solar-icons/react-perf/BoldDuotone';
+import {AltArrowDown, BoxMinimalistic, Broom, Import} from '@solar-icons/react-perf/BoldDuotone';
 import {compact, isEmpty} from 'lodash-es';
-import {X} from 'lucide-react';
 import {KeyboardEvent, useEffect, useState} from 'react';
 
 import pIpc from '../../../../../PIpc';
 
 type Package = {name: string; version: string};
 type Props = {setInstallCommand: (value: string) => void; setIsInstallDisabled: (value: boolean) => void};
+
 export default function Installer({setInstallCommand, setIsInstallDisabled}: Props) {
   const [packageString, setPackageString] = useState<string>('');
   const [packages, setPackages] = useState<Package[]>([]);
   const [indexUrl, setIndexUrl] = useState<string>('');
   const [extraOptions, setExtraOptions] = useState<string>('');
+  const [showAdvanced, setShowAdvanced] = useState(false);
 
   useEffect(() => {
     setIsInstallDisabled(packages.length <= 0);
@@ -74,11 +75,7 @@ export default function Installer({setInstallCommand, setIsInstallDisabled}: Pro
       .then(file => {
         if (file) {
           pIpc.readReqs(file).then(result => {
-            setPackages(
-              result.map(item => {
-                return {name: item.name, version: item.version || ''};
-              }),
-            );
+            setPackages(result.map(item => ({name: item.name, version: item.version || ''})));
             topToast.success('Requirements file loaded successfully');
           });
         }
@@ -89,101 +86,168 @@ export default function Installer({setInstallCommand, setIsInstallDisabled}: Pro
   };
 
   const generateInstallCommand = () => {
-    if (packages.length === 0) return '';
+    if (packages.length === 0) {
+      setInstallCommand('');
+      return '';
+    }
 
     const packageStrings = packages.map(pkg => `${pkg.name}${pkg.version ? `==${pkg.version}` : ''}`);
+    const parts: string[] = [];
 
-    let command: string[] = [];
+    if (indexUrl.trim()) parts.push(`--index-url ${indexUrl.trim()}`);
+    if (extraOptions.trim()) parts.push(extraOptions.trim());
 
-    if (indexUrl.trim()) {
-      command.push(`--index-url ${indexUrl.trim()}`);
-    }
-
-    if (extraOptions.trim()) {
-      command.push(extraOptions.trim());
-    }
-
-    command = command.concat(packageStrings);
-
-    setInstallCommand(command.join(' '));
-    return command.join(' ');
+    const command = [...parts, ...packageStrings].join(' ');
+    setInstallCommand(command);
+    return command;
   };
 
+  const command = generateInstallCommand();
+  const fullCommand = `pip install ${command}`;
+
   return (
-    <div className="max-w-4xl mx-auto p-6 flex flex-col gap-y-2">
-      {/* Package input */}
-      <div className="flex w-full justify-between items-center">
-        <div className="flex items-center gap-x-2">
-          <Button size="sm" variant="secondary" onPress={handleFileSelect}>
-            <Checklist />
-            Import Requirements
-          </Button>
-        </div>
-        {!isEmpty(packages) && (
-          <Button size="sm" variant="danger-soft" onPress={() => setPackages([])}>
-            <X />
-            Clear All
-          </Button>
-        )}
-      </div>
-      <div className="space-y-4">
-        <div className="w-full">
-          <TextField
-            variant="secondary"
-            value={packageString}
-            onKeyDown={handleKeyDown}
-            onChange={handlePackageStringChange}>
-            <Label>Package name</Label>
-            <Input placeholder="e.g., 'torch torchvision torchaudio' or 'pandas@1.5.0'" />
-          </TextField>
-
-          <Description>
-            Press Space or Enter to add packages. Use &#39;@&#39; or &#39;==&#39; to specify version (e.g.,
-            pandas@1.5.0)
-          </Description>
-        </div>
-
-        {/* Package list */}
-        {!isEmpty(packages) && (
-          <Surface variant="secondary" className="flex flex-col gap-y-2 rounded-3xl p-2">
-            <ListBox items={packages}>
-              {pkg => (
-                <ListBox.Item id={pkg.name} className="justify-between">
-                  <div className="flex flex-col">
-                    <Label>{pkg.name}</Label>
-                    <Description>{pkg.version}</Description>
-                  </div>
-                  <CloseButton onPress={() => removePackage(pkg.name)} />
-                </ListBox.Item>
-              )}
-            </ListBox>
-          </Surface>
-        )}
-      </div>
-
-      {/* Extra options */}
-      <Separator />
-      <Label>Extra Options</Label>
-      <div className="space-y-4">
-        <TextField value={indexUrl} variant="secondary" onChange={setIndexUrl}>
-          <Label>Index URL</Label>
-          <Input placeholder="(optional)" />
-        </TextField>
-        <TextField variant="secondary" value={extraOptions} onChange={setExtraOptions}>
-          <Label>Extra options</Label>
-          <Input placeholder="e.g., --user --no-cache-dir" />
-        </TextField>
-      </div>
-
-      {/* Preview */}
-      <Separator />
+    <div className="flex flex-col gap-y-5 p-5 mx-auto">
+      {/* ── Top bar ── */}
       <div className="flex items-center justify-between">
-        <Label>Preview</Label>
-        <CopyClipboard contentToCopy={`pip install ${generateInstallCommand()}`} />
+        <Button size="sm" variant="tertiary" onPress={handleFileSelect}>
+          <Import />
+          Import requirements.txt
+        </Button>
+        {!isEmpty(packages) && (
+          <Button
+            onPress={() => {
+              setPackages([]);
+              setInstallCommand('');
+            }}
+            size="sm"
+            variant="danger-soft">
+            <Broom className="size-3.5" />
+            Clear all
+          </Button>
+        )}
       </div>
-      <span className="bg-surface-secondary p-4 rounded-xl">
-        pip install <span className="text-warning-700">{generateInstallCommand()}</span>
-      </span>
+
+      {/* ── Package input ── */}
+      <TextField
+        variant="secondary"
+        value={packageString}
+        onKeyDown={handleKeyDown}
+        onChange={handlePackageStringChange}>
+        <Label>Add packages</Label>
+        <Input placeholder="e.g. numpy  pandas@2.0  torch==2.1.0" />
+        <Description>
+          Press <kbd className="px-1 py-0.5 text-xs rounded bg-surface-tertiary font-mono">Space</kbd> or{' '}
+          <kbd className="px-1 py-0.5 text-xs rounded bg-surface-tertiary font-mono">Enter</kbd> to add. Use{' '}
+          <code className="text-xs font-mono">@</code> or <code className="text-xs font-mono">==</code> to pin a
+          version.
+        </Description>
+      </TextField>
+
+      {/* ── Package chips ── */}
+      {!isEmpty(packages) ? (
+        <Surface variant="secondary" className="rounded-2xl p-3">
+          <div className="flex flex-wrap gap-2">
+            {packages.map(pkg => (
+              <span
+                className={
+                  'group flex items-center gap-1.5 rounded-full bg-surface-primary border' +
+                  ' border-content-quaternary/20 pl-3 pr-1.5 py-1 text-sm transition-colors' +
+                  ' hover:border-content-tertiary/40'
+                }
+                key={pkg.name}>
+                <span className="font-medium text-content-primary">{pkg.name}</span>
+                {pkg.version && (
+                  <span
+                    className={
+                      'rounded-full bg-surface-tertiary px-1.5 py-0.5 text-[11px] font-mono text-content-secondary'
+                    }>
+                    {pkg.version}
+                  </span>
+                )}
+                <CloseButton
+                  onPress={() => removePackage(pkg.name)}
+                  className="size-4 shrink-0 opacity-50 transition-opacity group-hover:opacity-100"
+                />
+              </span>
+            ))}
+          </div>
+          <p className="mt-2.5 text-xs text-content-tertiary pl-1">
+            {packages.length} package{packages.length !== 1 ? 's' : ''} queued
+          </p>
+        </Surface>
+      ) : (
+        <Surface
+          className={
+            'flex flex-col items-center justify-center gap-2 rounded-2xl p-8 text-center border-2' +
+            ' border-dashed border-content-quaternary/30'
+          }
+          variant="secondary">
+          <BoxMinimalistic className="size-10 text-yellow-600" />
+          <p className="text-sm text-content-secondary">No packages added yet</p>
+          <p className="text-xs text-content-tertiary">Type above or import a requirements file</p>
+        </Surface>
+      )}
+
+      {/* ── Advanced options (collapsible) ── */}
+      <div className="rounded-2xl overflow-hidden border border-content-quaternary/10">
+        <button
+          className={
+            'flex w-full items-center justify-between px-4 py-3 text-sm text-content-secondary' +
+            ' hover:bg-surface-secondary/50 transition-colors cursor-pointer'
+          }
+          type="button"
+          onClick={() => setShowAdvanced(v => !v)}>
+          <span className="font-medium">Advanced options</span>
+          <AltArrowDown
+            className={`size-4 transition-transform duration-200 ${showAdvanced ? 'rotate-180' : 'rotate-0'}`}
+          />
+        </button>
+
+        {showAdvanced && (
+          <div className="flex flex-col gap-y-3 border-t border-content-quaternary/10 px-4 pb-4 pt-3">
+            <TextField value={indexUrl} variant="secondary" onChange={setIndexUrl}>
+              <Label>Index URL</Label>
+              <Input placeholder="https://pypi.org/simple (optional)" />
+              <Description>Override the default PyPI index</Description>
+            </TextField>
+            <TextField variant="secondary" value={extraOptions} onChange={setExtraOptions}>
+              <Label>Extra flags</Label>
+              <Input placeholder="--user --no-cache-dir" />
+            </TextField>
+          </div>
+        )}
+      </div>
+
+      {/* ── Terminal preview ── */}
+      {!isEmpty(packages) && (
+        <div className="overflow-hidden rounded-2xl border border-white/[0.07] bg-surface-secondary">
+          {/* Titlebar */}
+          <div className="flex items-center justify-between border-b border-white/6 px-4 py-2.5">
+            <div className="flex gap-1.5">
+              <div className="size-2.5 rounded-full bg-[#ff5f57]" />
+              <div className="size-2.5 rounded-full bg-[#febc2e]" />
+              <div className="size-2.5 rounded-full bg-[#28c840]" />
+            </div>
+            <span className="font-mono text-xs text-muted">terminal preview</span>
+            <CopyClipboard contentToCopy={fullCommand} />
+          </div>
+
+          {/* Command line */}
+          <div className="px-4 py-3.5 font-mono text-[13px] leading-relaxed">
+            <span className="select-none text-emerald-400">$ </span>
+            <span className="text-semi-muted">pip install </span>
+            {packages.map((pkg, i) => (
+              <span key={pkg.name}>
+                <span className="text-amber-400">{pkg.name}</span>
+                {pkg.version && <span className="text-amber-400/70">=={pkg.version}</span>}
+                {i < packages.length - 1 && <span className="text-white/30"> </span>}
+              </span>
+            ))}
+            {indexUrl.trim() && <span className="text-sky-400"> --index-url {indexUrl.trim()}</span>}
+            {extraOptions.trim() && <span className="text-purple-400"> {extraOptions.trim()}</span>}
+          </div>
+        </div>
+      )}
     </div>
   );
 }

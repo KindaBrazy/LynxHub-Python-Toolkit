@@ -1,12 +1,11 @@
 import {Alert, Button, Modal, useOverlayState} from '@heroui/react';
+import LynxScroll from '@lynx/components/LynxScroll';
 import TabModal from '@lynx/components/TabModal';
 import {topToast} from '@lynx/layouts/ToastProviders';
 import {Download} from '@solar-icons/react-perf/BoldDuotone';
 import {Plus} from 'lucide-react';
-import {OverlayScrollbarsComponent} from 'overlayscrollbars-react';
-import {useState} from 'react';
+import {useEffect, useState} from 'react';
 
-import {useAppState} from '../../../../../../../../src/renderer/mainWindow/redux/reducers/app';
 import pIpc from '../../../../../PIpc';
 import Installer from './Installer';
 
@@ -20,9 +19,11 @@ export default function InstallerModal({refresh, pythonPath}: Props) {
   const [installCommand, setInstallCommand] = useState<string>('');
   const [isInstallDisabled, setIsInstallDisabled] = useState<boolean>(true);
 
-  const isDarkMode = useAppState('darkMode');
-
   const state = useOverlayState();
+
+  useEffect(() => {
+    if (!state.isOpen) setInstallCommand('');
+  }, [state.isOpen]);
 
   const handleInstall = async () => {
     setInstalling(true);
@@ -35,7 +36,7 @@ export default function InstallerModal({refresh, pythonPath}: Props) {
         } else {
           topToast.danger('Failed to install packages. Please check your inputs and try again.');
         }
-        close();
+        state.close();
         refresh();
       })
       .catch(err => {
@@ -47,46 +48,59 @@ export default function InstallerModal({refresh, pythonPath}: Props) {
       });
   };
 
+  console.log(installCommand);
+
+  // Derive package count from install command for header badge
+  const packageCount = installCommand ? installCommand.split(' ').filter(t => t && !t.startsWith('-')).length : 0;
+
   return (
     <>
       <Button size="sm" variant="tertiary" onPress={state.open}>
         <Plus size={12} />
         Package
       </Button>
-      <TabModal size="lg" isOpen={state.isOpen} onOpenChange={state.setOpen} dialogClassName="px-4 max-w-2xl">
+
+      <TabModal size="lg" isOpen={state.isOpen} onOpenChange={state.setOpen} dialogClassName="px-4 max-w-3xl">
         <Modal.CloseTrigger />
-        <Modal.Header>
-          <Modal.Heading className="px-2">Python Package Installer</Modal.Heading>
+
+        <Modal.Header className="flex items-center gap-3 px-5 pb-0">
+          <Modal.Heading className="text-base font-semibold">Package Installer</Modal.Heading>
+          {packageCount > 0 && (
+            <span className="rounded-full bg-primary/10 px-2 py-0.5 text-xs font-medium text-primary">
+              {packageCount} selected
+            </span>
+          )}
         </Modal.Header>
-        <Modal.Body className="scrollbar-hide px-0 pt-0">
-          <OverlayScrollbarsComponent
-            options={{
-              overflow: {x: 'hidden', y: 'scroll'},
-              scrollbars: {
-                autoHide: 'move',
-                clickScroll: true,
-                theme: isDarkMode ? 'os-theme-light' : 'os-theme-dark',
-              },
-            }}>
+
+        <Modal.Body className="overflow-hidden px-0 pt-0">
+          <LynxScroll className="size-full">
             <Installer setInstallCommand={setInstallCommand} setIsInstallDisabled={setIsInstallDisabled} />
-          </OverlayScrollbarsComponent>
+          </LynxScroll>
         </Modal.Body>
-        <Modal.Footer className="flex-col">
+
+        <Modal.Footer className="flex-col gap-y-2.5 px-5 pb-5">
           {installing && (
-            <Alert status="warning" className="bg-surface-secondary">
+            <Alert status="warning" className="rounded-2xl bg-surface-secondary">
               <Alert.Indicator />
               <Alert.Content>
-                <Alert.Title>
-                  Installing packages... This may take several minutes depending on the number and size of the packages
-                  you selected.
-                </Alert.Title>
+                <Alert.Title className="text-sm">Installing packages… this may take a few minutes.</Alert.Title>
               </Alert.Content>
             </Alert>
           )}
-          <Button size="md" isPending={installing} onPress={handleInstall} isDisabled={isInstallDisabled} fullWidth>
-            <Download />
-            {installing ? 'Installing...' : 'Install Packages'}
-          </Button>
+
+          <div className="flex gap-2.5 w-full">
+            <Button size="md" variant="tertiary" className="flex-none" onPress={state.close} isDisabled={installing}>
+              Cancel
+            </Button>
+            <Button size="md" isPending={installing} onPress={handleInstall} isDisabled={isInstallDisabled} fullWidth>
+              <Download />
+              {installing
+                ? 'Installing…'
+                : `Install${
+                    packageCount > 0 ? ` ${packageCount} Package${packageCount !== 1 ? 's' : ''}` : ' Packages'
+                  }`}
+            </Button>
+          </div>
         </Modal.Footer>
       </TabModal>
     </>
