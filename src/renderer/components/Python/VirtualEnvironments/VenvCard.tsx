@@ -107,23 +107,13 @@ export default function VenvCard({
         onPackagesChanged={refresh}
       />
       <EnvironmentCard
-        subtitle={
-          <>
-            <span>Python {pythonVersion}</span>
-            <span className="text-muted/60">/</span>
-            <span>{isInstallation ? 'Conda environment' : 'Project virtual environment'}</span>
-          </>
-        }
         badges={
-          <>
-            <span
-              className={
-                'rounded-full border border-amber-500/25 bg-amber-500/10 px-2.5 py-1 text-xs' +
-                ' font-semibold text-amber-500'
-              }>
-              {isInstallation ? 'Conda' : 'Venv'}
-            </span>
-          </>
+          <span
+            className={
+              'rounded-full border border-amber-500/25 bg-amber-500/10 px-2 py-0.5 text-xs font-medium text-amber-500'
+            }>
+            {isInstallation ? 'Conda' : 'Venv'}
+          </span>
         }
         title={
           <span className="min-w-0 truncate">
@@ -205,6 +195,7 @@ export default function VenvCard({
         maxDiskValue={maxDiskValue}
         packages={installedPackages}
         busyMessage="Removing environment..."
+        subtitle={<span>Python {pythonVersion}</span>}
         associationType={isInstallation ? 'conda' : 'venv'}
         iconClassName={isInstallation ? 'text-emerald-400' : 'text-amber-400'}
       />

@@ -115,7 +115,9 @@ export default function Venv_Associate({folder, type}: Props) {
             <Plus />
           </Button>
           <Dropdown.Popover>
-            <Dropdown.Menu items={canBeAssociate} renderEmptyState={() => <span>Nothing available to associate!</span>}>
+            <Dropdown.Menu
+              items={canBeAssociate}
+              renderEmptyState={() => <span className="px-2">Nothing available to associate!</span>}>
               {item => (
                 <Dropdown.Item textValue={item.title} onPress={() => add(item.id)}>
                   <Avatar className="size-5">

@@ -157,14 +157,13 @@ export default function InstalledCard({python, diskUsage, maxDiskValue, updateDe
         }
         badges={
           <>
-            <span className={`rounded-full border px-2.5 py-1 text-xs font-semibold ${installTypeClassName}`}>
+            <span className={`rounded-full border px-2 py-0.5 text-xs font-medium ${installTypeClassName}`}>
               {startCase(python.installationType)}
             </span>
             {python.installationType === 'conda' && python.condaName && (
               <span
                 className={
-                  'rounded-full border border-cyan-500/25 bg-cyan-500/10 px-2.5 py-1 text-xs ' +
-                  'font-semibold text-cyan-500'
+                  'rounded-md border border-cyan-500/25 bg-cyan-500/10 px-2 py-0.5 text-xs font-medium text-cyan-500'
                 }>
                 {python.condaName}
               </span>

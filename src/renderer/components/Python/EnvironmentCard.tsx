@@ -44,79 +44,81 @@ export default function EnvironmentCard({
   const packageCount = Number.isFinite(packages) ? packages : 0;
 
   return (
-    <div className="grow relative">
+    <div className="relative grow">
       {isBusy && (
         <div
           className={
-            'absolute inset-0 z-10 flex items-center justify-center rounded-2xl bg-background/70 backdrop-blur-sm'
+            'absolute inset-0 z-10 flex items-center justify-center rounded-3xl bg-background/70 backdrop-blur-sm'
           }>
           <div
             className={
-              'flex flex-col items-center gap-y-2 rounded-2xl border border-divider bg-content1 px-5 py-4 shadow-xl'
+              'flex flex-col items-center gap-y-2 rounded-3xl border border-divider bg-content1 px-4 py-3 shadow-xl'
             }>
-            <Spinner size="lg" color="danger" />
-            <span className="text-sm text-muted">{busyMessage}</span>
+            <Spinner size="md" color="danger" />
+            <span className="text-xs text-muted">{busyMessage}</span>
           </div>
         </div>
       )}
 
       <Card
         className={
-          'group w-120 overflow-hidden border border-divider/70 bg-content1/85 shadow-sm transition-all' +
-          ' duration-200 p-0 hover:-translate-y-0.5 hover:border-accent/45 hover:shadow-xl'
+          'group w-96 overflow-hidden border border-divider/70 bg-content1/90 p-0 shadow-sm transition-all' +
+          ' duration-200 hover:border-divider hover:bg-content1 hover:shadow-md'
         }>
-        <Card.Header className="flex flex-row items-start justify-between gap-x-4 px-5 pb-3 pt-4">
+        <Card.Header className="flex flex-row items-start justify-between gap-x-3 px-4 pb-2.5 pt-3.5">
           <div className="min-w-0 flex-1">
-            <div className="flex min-w-0 items-center gap-x-3">
+            <div className="flex min-w-0 items-center gap-x-2.5">
               <div
                 className={
-                  'flex size-10 shrink-0 items-center justify-center rounded-xl border border-divider' +
-                  ' bg-surface-secondary/80 shadow-sm'
+                  'flex size-10 shrink-0 items-center justify-center rounded-full border border-divider' +
+                  ' bg-surface-secondary/70'
                 }>
                 <PythonIcon className={`size-6 ${iconClassName}`} />
               </div>
               <div className="min-w-0">
-                <div className="flex min-w-0 flex-wrap items-center gap-2 text-base font-semibold text-foreground">
+                <div className="flex min-w-0 flex-wrap items-center gap-1.5 text-sm font-semibold text-foreground">
                   {title}
                 </div>
-                <div className="mt-1 flex min-w-0 flex-wrap items-center gap-2 text-xs text-muted">{subtitle}</div>
+                <div className="mt-0.5 flex min-w-0 flex-wrap items-center gap-1.5 text-xs text-muted">{subtitle}</div>
               </div>
             </div>
-            {badges && <div className="mt-3 flex flex-wrap items-center gap-2">{badges}</div>}
+            {badges && <div className="mt-2 flex flex-wrap items-center gap-1.5">{badges}</div>}
           </div>
-          {actions && <div className="flex shrink-0 items-center gap-x-2">{actions}</div>}
+          {actions && <div className="flex shrink-0 items-center gap-x-1.5">{actions}</div>}
         </Card.Header>
 
-        <Card.Content className="flex flex-col gap-y-4 px-5 pb-4 pt-1 text-sm">
+        <Card.Content className="flex flex-col gap-y-3 px-4 pb-3 pt-0 text-sm">
           <Button
             size="sm"
             variant="tertiary"
             onPress={onOpenPath}
-            className="min-w-0 justify-start rounded-xl border border-divider/70 bg-surface-secondary/60 px-3 text-xs"
+            className={'h-8 min-w-0 justify-start border border-divider/60 bg-surface-secondary/45 px-2.5 text-xs'}
             fullWidth>
-            <FolderOpen className="size-4 shrink-0 text-accent" />
+            <FolderOpen className="size-3.5 shrink-0 text-muted" />
             <span className="truncate font-JetBrainsMono">{path}</span>
           </Button>
 
-          <div className="grid grid-cols-2 gap-3">
-            <div className="rounded-xl border border-divider/70 bg-surface-secondary/45 p-3">
-              <div className="mb-2 flex items-center gap-x-2 text-xs text-muted">
-                <BoxMinimalistic className="size-4" />
+          <div className="grid grid-cols-2 gap-2 rounded-3xl border border-divider/60 bg-surface-secondary/35 p-3">
+            <div className="min-w-0">
+              <div className="mb-1 flex items-center gap-x-1.5 text-xs text-muted">
+                <BoxMinimalistic className="size-3.5" />
                 <span>Packages</span>
               </div>
-              <div className="text-xl font-bold leading-none text-foreground">{packageCount}</div>
+              <div className="text-base font-semibold leading-none text-foreground">{packageCount}</div>
             </div>
-            <div className="rounded-xl border border-divider/70 bg-surface-secondary/45 p-3">
-              <div className="mb-2 flex items-center gap-x-2 text-xs text-muted">
-                <Diskette className="size-4" />
+            <div className="min-w-0 border-l border-divider/60 pl-2.5">
+              <div className="mb-1 flex items-center gap-x-1.5 text-xs text-muted">
+                <Diskette className="size-3.5" />
                 <span>Disk usage</span>
               </div>
               {diskUsage === undefined ? (
-                <div className="flex h-5 items-center">
+                <div className="flex h-4 items-center">
                   <Spinner size="sm" />
                 </div>
               ) : (
-                <div className="text-xl font-bold leading-none text-foreground">{formatSizeMB(diskValue)}</div>
+                <div className="truncate text-base font-semibold leading-none text-foreground">
+                  {formatSizeMB(diskValue)}
+                </div>
               )}
             </div>
           </div>
@@ -127,7 +129,7 @@ export default function EnvironmentCard({
             value={diskValue}
             maxValue={diskMax}
             isIndeterminate={diskUsage === undefined}>
-            <Label className="text-xs text-muted">Storage footprint</Label>
+            <Label className="text-xs text-muted">Storage</Label>
             <ProgressBar.Output>
               {diskUsage === undefined ? 'Calculating...' : formatSizeMB(diskValue)}
             </ProgressBar.Output>
@@ -137,7 +139,7 @@ export default function EnvironmentCard({
           </ProgressBar>
         </Card.Content>
 
-        <Card.Footer className="flex-col gap-y-3 border-t border-divider/70 bg-surface-secondary/30 px-5 py-4">
+        <Card.Footer className="flex-col gap-y-2 border-t border-divider/60 bg-surface-secondary/20 px-4 py-3">
           <Venv_Associate folder={path} type={associationType} />
           {footer}
         </Card.Footer>
