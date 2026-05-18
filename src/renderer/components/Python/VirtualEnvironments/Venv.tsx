@@ -27,6 +27,20 @@ export default function Venv({visible, installedPythons, isLoadingPythons}: Prop
   const [isLocating, setIsLocating] = useState<boolean>(false);
 
   const [diskUsage, setDiskUsage] = useState<{path: string; value: number | undefined}[]>([]);
+  const [maxDiskValue, setMaxDiskValue] = useState<number>(0);
+
+  useEffect(() => {
+    diskUsage.forEach(disk => {
+      setMaxDiskValue(prevState => {
+        const size = disk.value || 0;
+        if (prevState >= size) {
+          return prevState;
+        } else {
+          return size < 500 ? size + 500 : size + 1000;
+        }
+      });
+    });
+  }, [diskUsage]);
 
   const calcDiskUsage = useCallback((venv: VenvInfo) => {
     filesIpc.calcFolderSize(venv.folder).then(value => {
@@ -45,6 +59,8 @@ export default function Venv({visible, installedPythons, isLoadingPythons}: Prop
 
   const getVenvs = useCallback(() => {
     setIsLoading(true);
+    setDiskUsage([]);
+    setMaxDiskValue(0);
     const condaVenvs = installedPythons.filter(pt => pt.installationType === 'conda');
     pIpc
       .getVenvs()
@@ -149,6 +165,7 @@ export default function Venv({visible, installedPythons, isLoadingPythons}: Prop
                 title={venv.title}
                 folder={venv.folder}
                 diskUsage={diskUsage}
+                maxDiskValue={maxDiskValue}
                 pythonPath={venv.pythonPath}
                 pythonVersion={venv.pythonVersion}
                 key={`${venv.title}_${index}_card`}

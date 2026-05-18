@@ -1,38 +1,16 @@
-import {
-  Button,
-  Card,
-  Chip,
-  Description,
-  Dropdown,
-  Label,
-  Popover,
-  ProgressBar,
-  Separator,
-  Spinner,
-  useOverlayState,
-} from '@heroui/react';
+import {Button, Chip, Dropdown, Label, Popover, Separator, useOverlayState} from '@heroui/react';
 import {topToast} from '@lynx/layouts/ToastProviders';
 import filesIpc from '@lynx_shared/ipc/files';
-import {
-  BoxMinimalistic,
-  CheckCircle,
-  Diskette,
-  FolderOpen,
-  MenuDots,
-  Refresh,
-  TrashBin2,
-} from '@solar-icons/react-perf/BoldDuotone';
+import {BoxMinimalistic, CheckCircle, MenuDots, Refresh, TrashBin2} from '@solar-icons/react-perf/BoldDuotone';
 import {CheckRead} from '@solar-icons/react-perf/LineDuotone';
-import {isNil, startCase} from 'lodash-es';
+import {startCase} from 'lodash-es';
 import {X} from 'lucide-react';
 import {useCallback, useMemo, useState} from 'react';
 
 import {PythonInstallation} from '../../../../cross/CrossExtTypes';
-import {formatSizeMB} from '../../../../cross/CrossExtUtils';
 import pIpc from '../../../PIpc';
-import {PythonIcon} from '../../SvgIcons';
+import EnvironmentCard from '../EnvironmentCard';
 import PackageManagerModal from '../PackageManagement/PackageManager/PackageManagerModal';
-import Venv_Associate from '../VirtualEnvironments/Venv_Associate';
 
 type Props = {
   python: PythonInstallation;
@@ -45,7 +23,7 @@ type Props = {
 export default function InstalledCard({python, diskUsage, maxDiskValue, updateDefault, refresh}: Props) {
   const size = useMemo(() => {
     return diskUsage.find(usage => usage.path === python.installFolder)?.value;
-  }, [diskUsage]);
+  }, [diskUsage, python.installFolder]);
 
   const [isUninstalling, setIsUninstalling] = useState<boolean>(false);
 
@@ -102,30 +80,20 @@ export default function InstalledCard({python, diskUsage, maxDiskValue, updateDe
     filesIpc.openPath(python.installFolder);
   };
 
-  const installTypeColor = useMemo(() => {
+  const installTypeClassName = useMemo(() => {
     switch (python.installationType) {
       case 'official':
-        return 'text-[#28A745]';
+        return 'border-success/30 bg-success/10 text-success';
       case 'conda':
-        return 'text-[#007BFF]';
+        return 'border-accent/30 bg-accent/10 text-accent';
       case 'other':
-        return 'text-[#FFA500]';
+        return 'border-warning/30 bg-warning/10 text-warning';
     }
   }, [python.installationType]);
 
   const [popoverUninstaller, setPopoverUninstaller] = useState<boolean>(false);
 
   const packageManagerModal = useOverlayState();
-
-  const borderColor = useMemo(() => {
-    return python.isDefault && python.isLynxHubDefault
-      ? 'border-2 border-success/60 hover:border-success'
-      : python.isDefault
-        ? 'border-2 border-LynxPurple/60 hover:border-LynxPurple'
-        : python.isLynxHubDefault
-          ? 'border-2 border-accent/60 hover:border-accent'
-          : 'border-2 border-surface-LynxPurple hover:border-surface-tertiary';
-  }, [python]);
 
   const defaultChip = useMemo(() => {
     if (python.isDefault && python.isLynxHubDefault) {
@@ -163,45 +131,48 @@ export default function InstalledCard({python, diskUsage, maxDiskValue, updateDe
     pIpc.removeSavedPython(python.installPath);
     setPopoverUninstaller(false);
     refresh(false);
-  }, [python]);
+  }, [python.installPath, refresh]);
 
   return (
-    <div className="grow relative">
+    <>
       <PackageManagerModal
         id={python.installPath}
         state={packageManagerModal}
         pythonPath={python.installPath}
         onPackagesChanged={() => refresh(false)}
       />
-      {isUninstalling && (
-        <div className="absolute size-full dark:bg-black/50 bg-white/50 z-10 flex justify-center items-center">
-          <div className={'bg-surface-tertiary shadow-lg p-4 rounded-2xl flex flex-col space-y-2 items-center'}>
-            <Spinner size="lg" color="danger" />
-            <Description className="text-sm">Uninstalling, Please wait...</Description>
-          </div>
-        </div>
-      )}
-      <Card className={`w-120 transition-all duration-200 ${borderColor}`}>
-        <Card.Header className="flex flex-row justify-between items-center">
-          <div className="flex flex-col">
-            <div className="flex flex-row items-center gap-x-2">
-              <PythonIcon className="size-5 text-blue-400" />
-              Python {python.version}
-              {defaultChip}
-            </div>
-            <div className="flex items-center gap-x-2">
-              <span className="text-xs text-muted">{python.architecture}</span>
-              <Separator className="h-2 w-px" />
-              <span className={'text-xs ' + installTypeColor}>{startCase(python.installationType)}</span>
-              {python.installationType === 'conda' && (
-                <>
-                  <Separator className="h-2 w-px" />
-                  <span className={'text-xs text-cyan-500'}>{python.condaName}</span>
-                </>
-              )}
-            </div>
-          </div>
-          <div className="space-x-2 flex items-center">
+      <EnvironmentCard
+        title={
+          <>
+            <span>Python {python.version}</span>
+            {defaultChip}
+          </>
+        }
+        subtitle={
+          <>
+            <span>{python.architecture}</span>
+            <span className="text-muted/60">/</span>
+            <span>{python.installationType === 'conda' ? 'Conda managed runtime' : 'Standalone runtime'}</span>
+          </>
+        }
+        badges={
+          <>
+            <span className={`rounded-full border px-2.5 py-1 text-xs font-semibold ${installTypeClassName}`}>
+              {startCase(python.installationType)}
+            </span>
+            {python.installationType === 'conda' && python.condaName && (
+              <span
+                className={
+                  'rounded-full border border-cyan-500/25 bg-cyan-500/10 px-2.5 py-1 text-xs ' +
+                  'font-semibold text-cyan-500'
+                }>
+                {python.condaName}
+              </span>
+            )}
+          </>
+        }
+        actions={
+          <>
             <Dropdown>
               <Button size="sm" variant="tertiary" isIconOnly>
                 <MenuDots className="rotate-90" />
@@ -293,45 +264,18 @@ export default function InstalledCard({python, diskUsage, maxDiskValue, updateDe
                 </Popover.Dialog>
               </Popover.Content>
             </Popover>
-          </div>
-        </Card.Header>
-
-        <Card.Content className="gap-y-4 py-2 flex flex-col text-sm">
-          <Button
-            size="sm"
-            onPress={openPath}
-            variant="tertiary"
-            className="flex flex-row justify-start text-xs"
-            fullWidth>
-            <FolderOpen className="shrink-0 size-3" />
-            <span className="truncate">{python.installFolder}</span>
-          </Button>
-          <div className="w-full justify-between flex flex-row">
-            <div className="flex flex-row gap-x-2 items-center">
-              <BoxMinimalistic className="size-3" />
-              <span>Installed Packages:</span>
-            </div>
-            <span>{python.packages}</span>
-          </div>
-          <ProgressBar size="sm" minValue={0} value={size} maxValue={maxDiskValue} isIndeterminate={isNil(size)}>
-            <Label className="flex flex-row gap-x-2 items-center">
-              <Diskette className="size-3" />
-              <span>Disk Usage:</span>
-            </Label>
-            <ProgressBar.Output>{formatSizeMB(size || 0)}</ProgressBar.Output>
-            <ProgressBar.Track>
-              <ProgressBar.Fill />
-            </ProgressBar.Track>
-          </ProgressBar>
-        </Card.Content>
-
-        <Card.Footer className="flex-col gap-y-3">
-          <Venv_Associate
-            folder={python.installFolder}
-            type={python.installationType === 'conda' ? 'conda' : 'python'}
-          />
-        </Card.Footer>
-      </Card>
-    </div>
+          </>
+        }
+        diskUsage={size}
+        onOpenPath={openPath}
+        isBusy={isUninstalling}
+        packages={python.packages}
+        path={python.installFolder}
+        maxDiskValue={maxDiskValue}
+        iconClassName="text-blue-400"
+        busyMessage="Uninstalling, please wait..."
+        associationType={python.installationType === 'conda' ? 'conda' : 'python'}
+      />
+    </>
   );
 }

@@ -67,6 +67,8 @@ export default function InstalledPythons({
 
   const getInstalledPythons = (refresh: boolean) => {
     setIsLoadingPythons(true);
+    setDiskUsage([]);
+    setMaxDiskValue(0);
     pIpc.getInstalledPythons(refresh).then((result: PythonInstallation[]) => {
       setInstalledPythons(result);
       setIsLoadingPythons(false);

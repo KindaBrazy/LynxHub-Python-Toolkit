@@ -1,17 +1,14 @@
-import {Button, Card, Dropdown, Label, Popover, Separator, Spinner, useOverlayState} from '@heroui/react';
+import {Button, Dropdown, Label, Popover, Separator, useOverlayState} from '@heroui/react';
 import {topToast} from '@lynx/layouts/ToastProviders';
 import filesIpc from '@lynx_shared/ipc/files';
-import {BoxMinimalistic, Diskette, Folder2, MenuDots, TrashBin2} from '@solar-icons/react-perf/BoldDuotone';
+import {BoxMinimalistic, MenuDots, TrashBin2} from '@solar-icons/react-perf/BoldDuotone';
 import {SHA256} from 'crypto-js';
-import {isNil} from 'lodash-es';
 import {X} from 'lucide-react';
 import {FormEvent, useCallback, useEffect, useMemo, useState} from 'react';
 
-import {formatSizeMB} from '../../../../cross/CrossExtUtils';
 import pIpc from '../../../PIpc';
-import {PythonIcon} from '../../SvgIcons';
+import EnvironmentCard from '../EnvironmentCard';
 import PackageManagerModal from '../PackageManagement/PackageManager/PackageManagerModal';
-import Venv_Associate from './Venv_Associate';
 
 type Props = {
   title: string;
@@ -20,6 +17,7 @@ type Props = {
   folder: string;
   pythonPath: string;
   diskUsage: {path: string; value: number | undefined}[];
+  maxDiskValue: number;
   refresh: () => void;
   isInstallation?: boolean;
 };
@@ -30,6 +28,7 @@ export default function VenvCard({
   pythonVersion,
   folder,
   diskUsage,
+  maxDiskValue,
   pythonPath,
   refresh,
   isInstallation,
@@ -47,7 +46,7 @@ export default function VenvCard({
 
   const size = useMemo(() => {
     return diskUsage.find(usage => usage.path === folder)?.value;
-  }, [diskUsage]);
+  }, [diskUsage, folder]);
 
   const [isRemoving, setIsRemoving] = useState<boolean>(false);
 
@@ -97,7 +96,7 @@ export default function VenvCard({
     pIpc.removeSavedVenv(folder);
     setPopoverUninstaller(false);
     refresh();
-  }, [pythonPath, folder]);
+  }, [pythonPath, folder, refresh]);
 
   return (
     <>
@@ -107,23 +106,39 @@ export default function VenvCard({
         state={packageManagerModal}
         onPackagesChanged={refresh}
       />
-      <Card className={'w-120 border-2 transition-all duration-200 py-4 border-surface-secondary'}>
-        <Card.Header className="flex flex-row justify-between items-center">
-          <div className="flex flex-col">
-            <div className="flex flex-row items-center gap-x-2">
-              <PythonIcon className="size-5 text-yellow-400" />
-              <span
-                spellCheck={false}
-                onInput={onTitleChange}
-                className="pr-7 cursor-text"
-                contentEditable
-                suppressContentEditableWarning>
-                {editedTitle}
-              </span>
-            </div>
-            <span className="text-xs text-muted">Python {pythonVersion}</span>
-          </div>
-          <div className="space-x-2 flex items-center">
+      <EnvironmentCard
+        subtitle={
+          <>
+            <span>Python {pythonVersion}</span>
+            <span className="text-muted/60">/</span>
+            <span>{isInstallation ? 'Conda environment' : 'Project virtual environment'}</span>
+          </>
+        }
+        badges={
+          <>
+            <span
+              className={
+                'rounded-full border border-amber-500/25 bg-amber-500/10 px-2.5 py-1 text-xs' +
+                ' font-semibold text-amber-500'
+              }>
+              {isInstallation ? 'Conda' : 'Venv'}
+            </span>
+          </>
+        }
+        title={
+          <span className="min-w-0 truncate">
+            <span
+              spellCheck={false}
+              onInput={onTitleChange}
+              className="cursor-text rounded-md px-1 outline-none transition-colors focus:bg-surface-secondary"
+              contentEditable
+              suppressContentEditableWarning>
+              {editedTitle}
+            </span>
+          </span>
+        }
+        actions={
+          <>
             <Dropdown>
               <Button size="sm" variant="tertiary" isIconOnly>
                 <MenuDots className="rotate-90" />
@@ -181,39 +196,18 @@ export default function VenvCard({
                 </Popover.Content>
               </Popover>
             )}
-          </div>
-        </Card.Header>
-
-        <Card.Content className="gap-y-4 py-2 flex flex-col text-sm text-foreground">
-          <Button
-            size="sm"
-            onPress={openPath}
-            variant="tertiary"
-            className="flex flex-row justify-start text-xs"
-            fullWidth>
-            <Folder2 className="shrink-0 size-3" />
-            <span className="truncate">{folder}</span>
-          </Button>
-          <div className="w-full justify-between flex flex-row">
-            <div className="flex flex-row gap-x-2 items-center">
-              <BoxMinimalistic className="size-3" />
-              <span>Installed Packages:</span>
-            </div>
-            <span>{installedPackages}</span>
-          </div>
-          <div className="w-full justify-between flex flex-row">
-            <div className="flex flex-row gap-x-2 items-center">
-              <Diskette className="size-3" />
-              <span>Disk Usage:</span>
-            </div>
-            {isNil(size) ? <Spinner size="lg" /> : <span>{formatSizeMB(size || 0)}</span>}
-          </div>
-        </Card.Content>
-
-        <Card.Footer className="flex-col gap-y-3">
-          <Venv_Associate folder={folder} type={isInstallation ? 'conda' : 'venv'} />
-        </Card.Footer>
-      </Card>
+          </>
+        }
+        path={folder}
+        diskUsage={size}
+        isBusy={isRemoving}
+        onOpenPath={openPath}
+        maxDiskValue={maxDiskValue}
+        packages={installedPackages}
+        busyMessage="Removing environment..."
+        associationType={isInstallation ? 'conda' : 'venv'}
+        iconClassName={isInstallation ? 'text-emerald-400' : 'text-amber-400'}
+      />
     </>
   );
 }
