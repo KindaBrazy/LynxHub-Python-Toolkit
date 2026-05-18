@@ -10,7 +10,7 @@ import {parseRequirementLine} from '../../../../../cross/CrossExtUtils';
 type Props = {
   item: RequirementData;
   index: number;
-  onDelete: (name: string) => void;
+  onDelete: (index: number) => void;
   onUpdate: (index: number, updatedRequirement: RequirementData) => void;
 };
 
@@ -84,8 +84,8 @@ const RenderRow = memo(({item, index, onDelete, onUpdate}: Props) => {
   );
 
   const handleDelete = useCallback(() => {
-    onDelete(localName);
-  }, [localName, onDelete]);
+    onDelete(index);
+  }, [index, onDelete]);
 
   const handleFocus = useCallback(() => {
     isFocusedRef.current = true;

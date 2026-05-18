@@ -21,7 +21,7 @@ const RenderTable = memo(({filteredReqs, setRequirements, scrollRef}: Props) => 
         const newState = [...prev];
         // Find the actual index in the full requirements array
         const item = filteredReqs[index];
-        const actualIndex = prev.findIndex(req => req.name === item.name || req.originalLine === item.originalLine);
+        const actualIndex = prev.findIndex(req => req === item);
         if (actualIndex !== -1) {
           newState[actualIndex] = updated;
         }
@@ -32,10 +32,18 @@ const RenderTable = memo(({filteredReqs, setRequirements, scrollRef}: Props) => 
   );
 
   const handleDelete = useCallback(
-    (name: string) => {
-      setRequirements(prev => prev.filter(item => item.name !== name));
+    (index: number) => {
+      setRequirements(prev => {
+        const item = filteredReqs[index];
+        const actualIndex = prev.findIndex(req => req === item);
+        if (actualIndex === -1) return prev;
+
+        const newState = [...prev];
+        newState.splice(actualIndex, 1);
+        return newState;
+      });
     },
-    [setRequirements],
+    [filteredReqs, setRequirements],
   );
 
   return (
@@ -63,7 +71,7 @@ const RenderTable = memo(({filteredReqs, setRequirements, scrollRef}: Props) => 
                   index={index}
                   onUpdate={handleUpdate}
                   onDelete={handleDelete}
-                  key={item.originalLine || `new_req_${index}`}
+                  key={`${item.originalLine || item.name || 'new_req'}_${index}`}
                 />
               ))}
             </Table.Body>

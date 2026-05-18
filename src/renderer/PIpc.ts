@@ -51,7 +51,7 @@ const pIpc = {
     ipc.invoke(pythonChannels.uninstallPackage, pythonPath, packageName),
 
   readReqs: (filePath: string): Promise<RequirementData[]> => ipc.invoke(pythonChannels.readReqs, filePath),
-  saveReqs: (filePath: string, data: RequirementData[]): Promise<RequirementData[]> =>
+  saveReqs: (filePath: string, data: RequirementData[]): Promise<boolean> =>
     ipc.invoke(pythonChannels.saveReqs, filePath, data),
   findReq: (dirPath: string): Promise<string | undefined> => ipc.invoke(pythonChannels.findReq, dirPath),
   setReqPath: (data: IdPathType): void => ipc.send(pythonChannels.setReqPath, data),

@@ -4,7 +4,14 @@ import TabModal from '@lynx/components/TabModal';
 import {topToast} from '@lynx/layouts/ToastProviders';
 import {searchInStrings} from '@lynx/utils';
 import filesIpc from '@lynx_shared/ipc/files';
-import {Checklist, Diskette, DocumentsMinimalistic, DocumentText} from '@solar-icons/react-perf/BoldDuotone';
+import {
+  Checklist,
+  Diskette,
+  DocumentsMinimalistic,
+  DocumentText,
+  Import,
+  ShieldWarning,
+} from '@solar-icons/react-perf/BoldDuotone';
 import {isEmpty} from 'lodash-es';
 import {Plus, X} from 'lucide-react';
 import {OverlayScrollbarsComponentRef} from 'overlayscrollbars-react';
@@ -21,6 +28,43 @@ type Props = {
   setReqPackageCount: Dispatch<SetStateAction<number>>;
 };
 
+type ImportedRequirement = RequirementData & {sourcePath: string};
+type RequirementConflict = {
+  id: string;
+  existing: RequirementData;
+  imported: ImportedRequirement;
+};
+type ConflictResolution = 'current' | 'imported' | 'both';
+
+const reqFileFilters = [{name: 'Text', extensions: ['txt']}];
+
+const normalizeReqName = (name: string) =>
+  name
+    .trim()
+    .replace(/[-_.]+/g, '-')
+    .toLowerCase();
+const getBasename = (path: string) => path.split(/[\/\\]/).pop() || path;
+
+const getRequirementKey = (req: RequirementData) => {
+  const extras = req.extras?.length ? [...req.extras].sort().join(',').toLowerCase() : '';
+  return [normalizeReqName(req.name), extras, req.markers?.trim().toLowerCase() || ''].join('|');
+};
+
+const getRequirementLabel = (req: RequirementData) => {
+  if (req.url) return req.originalLine;
+  const extras = req.extras?.length ? `[${req.extras.join(',')}]` : '';
+  const version = req.version ? `${req.versionOperator || '=='}${req.version}` : '';
+  const markers = req.markers ? `; ${req.markers}` : '';
+  return `${req.name}${extras}${version}${markers}`;
+};
+
+const isSameRequirement = (a: RequirementData, b: RequirementData) =>
+  getRequirementKey(a) === getRequirementKey(b) &&
+  (a.versionOperator || null) === (b.versionOperator || null) &&
+  (a.version || null) === (b.version || null) &&
+  (a.url || null) === (b.url || null) &&
+  (a.originalLine || '') === (b.originalLine || '');
+
 export default function RequirementsModal({id, projectPath, setIsReqAvailable, setReqPackageCount}: Props) {
   const state = useOverlayState();
   const scrollRef = useRef<OverlayScrollbarsComponentRef>(null);
@@ -28,7 +72,10 @@ export default function RequirementsModal({id, projectPath, setIsReqAvailable, s
   const [requirements, setRequirements] = useState<RequirementData[]>([]);
   const [filePath, setFilePath] = useState<string>('');
   const [isSaving, setIsSaving] = useState<boolean>(false);
+  const [isImporting, setIsImporting] = useState<boolean>(false);
   const [searchValue, setSearchValue] = useState<string>('');
+  const [conflicts, setConflicts] = useState<RequirementConflict[]>([]);
+  const requirementsRef = useRef<RequirementData[]>([]);
 
   const filteredReqs = useMemo(
     () => requirements.filter(item => searchInStrings(searchValue, [item.name])),
@@ -76,18 +123,25 @@ export default function RequirementsModal({id, projectPath, setIsReqAvailable, s
   useEffect(() => {
     pIpc.readReqs(filePath).then(result => {
       setRequirements(result);
-      setReqPackageCount(result.length);
+      setConflicts([]);
     });
 
     setIsReqAvailable(!!filePath);
   }, [filePath]);
+
+  useEffect(() => {
+    setReqPackageCount(requirements.length);
+  }, [requirements.length, setReqPackageCount]);
+
+  useEffect(() => {
+    requirementsRef.current = requirements;
+  }, [requirements]);
 
   const handleAddRequirement = () => {
     setRequirements(prevRequirements => [
       ...prevRequirements,
       {name: '', versionOperator: null, version: null, originalLine: '', autoFocus: true},
     ]);
-    setReqPackageCount(prevState => prevState + 1);
     scrollToBottom();
   };
 
@@ -109,7 +163,7 @@ export default function RequirementsModal({id, projectPath, setIsReqAvailable, s
     filesIpc
       .openDlg({
         properties: ['openFile'],
-        filters: [{name: 'Text', extensions: ['txt']}],
+        filters: reqFileFilters,
       })
       .then(file => {
         if (file) {
@@ -121,7 +175,93 @@ export default function RequirementsModal({id, projectPath, setIsReqAvailable, s
 
   const deselect = () => {
     setFilePath('');
+    setConflicts([]);
     pIpc.setReqPath({id, path: ''});
+  };
+
+  const handleImportRequirements = () => {
+    filesIpc
+      .openDlgMany({properties: ['openFile'], filters: reqFileFilters})
+      .then(async files => {
+        if (files.length === 0) return;
+
+        setIsImporting(true);
+        const importedFiles = await Promise.all(
+          files.map(async path => ({path, requirements: await pIpc.readReqs(path)})),
+        );
+        let importedCount = 0;
+        let skippedCount = 0;
+        const nextConflicts: RequirementConflict[] = [];
+        const merged = [...requirementsRef.current];
+
+        importedFiles.forEach(({path, requirements: importedReqs}) => {
+          importedReqs.forEach(req => {
+            if (!req.name.trim()) return;
+            importedCount += 1;
+
+            const imported = {...req, sourcePath: path};
+            const existing = merged.find(item => getRequirementKey(item) === getRequirementKey(imported));
+
+            if (!existing) {
+              merged.push(imported);
+              return;
+            }
+
+            if (isSameRequirement(existing, imported)) {
+              skippedCount += 1;
+              return;
+            }
+
+            nextConflicts.push({
+              id: `${getRequirementKey(imported)}|${path}|${nextConflicts.length}`,
+              existing,
+              imported,
+            });
+          });
+        });
+
+        setRequirements(merged);
+        setConflicts(prev => [...prev, ...nextConflicts]);
+        setIsImporting(false);
+
+        const addedCount = importedCount - skippedCount - nextConflicts.length;
+        if (nextConflicts.length > 0) {
+          topToast.warning(
+            `Imported ${addedCount} package${addedCount === 1 ? '' : 's'} with ${nextConflicts.length} conflict${
+              nextConflicts.length === 1 ? '' : 's'
+            } to resolve.`,
+          );
+        } else {
+          topToast.success(
+            files.length === 1 ? 'Requirements file imported successfully' : 'Requirements files imported successfully',
+          );
+        }
+      })
+      .catch(() => {
+        setIsImporting(false);
+        topToast.danger('Error importing requirements files');
+      });
+  };
+
+  const applyConflictResolution = (conflict: RequirementConflict, resolution: ConflictResolution) => {
+    setRequirements(prev => {
+      if (resolution === 'current') return prev;
+      if (resolution === 'both') return [...prev, conflict.imported];
+
+      const key = getRequirementKey(conflict.existing);
+      const existingIndex = prev.findIndex(item => getRequirementKey(item) === key);
+      if (existingIndex === -1) return [...prev, conflict.imported];
+
+      const next = [...prev];
+      next[existingIndex] = conflict.imported;
+      return next;
+    });
+
+    setConflicts(prev => prev.filter(item => item.id !== conflict.id));
+  };
+
+  const applyAllConflictResolutions = (resolution: ConflictResolution) => {
+    conflicts.forEach(conflict => applyConflictResolution(conflict, resolution));
   };
 
   return (
@@ -153,14 +293,90 @@ export default function RequirementsModal({id, projectPath, setIsReqAvailable, s
               </SearchField.Group>
             </SearchField>
             {!isEmpty(filePath) && (
-              <Button variant="secondary" onPress={handleAddRequirement}>
-                <Plus size={14} />
-                Add
-              </Button>
+              <>
+                <Button variant="secondary" isPending={isImporting} onPress={handleImportRequirements}>
+                  {isImporting ? <Spinner size="sm" color="current" /> : <Import className="size-3.5" />}
+                  Import
+                </Button>
+                <Button variant="secondary" onPress={handleAddRequirement}>
+                  <Plus size={14} />
+                  Add
+                </Button>
+              </>
             )}
           </div>
         </Modal.Header>
         <Modal.Body className="pr-0 pl-2 pt-4 scrollbar-hide">
+          {!isEmpty(conflicts) && (
+            <div className="mr-4 mb-4 rounded-2xl border border-warning/25 bg-warning/5 p-3">
+              <div className="flex flex-wrap items-center justify-between gap-2">
+                <div className="flex items-center gap-2 text-warning">
+                  <ShieldWarning className="size-5" />
+                  <span className="text-sm font-medium">
+                    {conflicts.length} import conflict{conflicts.length === 1 ? '' : 's'}
+                  </span>
+                </div>
+                <div className="flex flex-wrap gap-1.5">
+                  <Button size="sm" variant="tertiary" onPress={() => applyAllConflictResolutions('current')}>
+                    Keep current
+                  </Button>
+                  <Button size="sm" variant="tertiary" onPress={() => applyAllConflictResolutions('imported')}>
+                    Use imported
+                  </Button>
+                  <Button size="sm" variant="tertiary" onPress={() => applyAllConflictResolutions('both')}>
+                    Keep both
+                  </Button>
+                </div>
+              </div>
+              <div className="mt-3 flex flex-col gap-2">
+                {conflicts.map(conflict => (
+                  <div key={conflict.id} className="rounded-xl bg-surface-secondary p-3">
+                    <div className="flex flex-wrap items-start justify-between gap-2">
+                      <div className="min-w-0 flex-1">
+                        <div className="flex flex-wrap items-center gap-2">
+                          <span className="text-sm font-medium">{conflict.existing.name}</span>
+                          <Chip size="sm" variant="soft" color="warning">
+                            {getBasename(conflict.imported.sourcePath)}
+                          </Chip>
+                        </div>
+                        <div className="mt-2 grid gap-1 text-xs">
+                          <p className="break-all text-content-secondary">
+                            Current:{' '}
+                            <span className="font-JetBrainsMono text-content-primary">
+                              {getRequirementLabel(conflict.existing)}
+                            </span>
+                          </p>
+                          <p className="break-all text-content-secondary">
+                            Imported:{' '}
+                            <span className="font-JetBrainsMono text-content-primary">
+                              {getRequirementLabel(conflict.imported)}
+                            </span>
+                          </p>
+                        </div>
+                      </div>
+                      <div className="flex shrink-0 flex-wrap gap-1.5">
+                        <Button
+                          size="sm"
+                          variant="tertiary"
+                          onPress={() => applyConflictResolution(conflict, 'current')}>
+                          Current
+                        </Button>
+                        <Button
+                          size="sm"
+                          variant="secondary"
+                          onPress={() => applyConflictResolution(conflict, 'imported')}>
+                          Imported
+                        </Button>
+                        <Button size="sm" variant="tertiary" onPress={() => applyConflictResolution(conflict, 'both')}>
+                          Both
+                        </Button>
+                      </div>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
+          )}
           {isEmpty(filePath) ? (
             <div className="size-full text-center mb-2">
               <EmptyStateCard
