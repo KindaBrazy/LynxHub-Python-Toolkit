@@ -140,7 +140,7 @@ export default function InstalledPythons({
             })
             .catch(e => {
               console.warn(e);
-              topToast.success('Failed to validate selected python.');
+              topToast.danger('Failed to validate selected python.');
               setIsLocating(false);
             });
         } else {
