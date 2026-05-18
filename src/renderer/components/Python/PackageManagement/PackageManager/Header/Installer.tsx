@@ -2,7 +2,7 @@ import {Button, Chip, Description, Disclosure, Input, Label, Surface, TextField}
 import CopyClipboard from '@lynx/components/CopyClipboard';
 import {topToast} from '@lynx/layouts/ToastProviders';
 import filesIpc from '@lynx_shared/ipc/files';
-import {BoxMinimalistic, Broom, Import, Pen} from '@solar-icons/react-perf/BoldDuotone';
+import {BoxMinimalistic, Broom, Download, Import, Pen} from '@solar-icons/react-perf/BoldDuotone';
 import {isEmpty} from 'lodash-es';
 import {X} from 'lucide-react';
 import {KeyboardEvent, useEffect, useRef, useState} from 'react';
@@ -41,11 +41,18 @@ const buildPackageString = (pkg: RequirementData) => {
   return pkgStr;
 };
 
-type Props = {setInstallCommand: (value: string) => void; setIsInstallDisabled: (value: boolean) => void};
+const quotePath = (path: string) => `"${path.replace(/"/g, '\\"')}"`;
 
-export default function Installer({setInstallCommand, setIsInstallDisabled}: Props) {
+type Props = {
+  isOpen: boolean;
+  setInstallCommand: (value: string) => void;
+  setIsInstallDisabled: (value: boolean) => void;
+};
+
+export default function Installer({isOpen, setInstallCommand, setIsInstallDisabled}: Props) {
   const [packageString, setPackageString] = useState<string>('');
   const [packages, setPackages] = useState<RequirementData[]>([]);
+  const [requirementsFilePath, setRequirementsFilePath] = useState<string>('');
   const [indexUrl, setIndexUrl] = useState<string>('');
   const [extraOptions, setExtraOptions] = useState<string>('');
   const [showAdvanced, setShowAdvanced] = useState(false);
@@ -53,8 +60,42 @@ export default function Installer({setInstallCommand, setIsInstallDisabled}: Pro
   const inputRef = useRef<HTMLInputElement>(null);
 
   useEffect(() => {
-    setIsInstallDisabled(packages.length <= 0);
-  }, [packages]);
+    if (isOpen) return;
+
+    setPackageString('');
+    setPackages([]);
+    setRequirementsFilePath('');
+    setIndexUrl('');
+    setExtraOptions('');
+    setInstallCommand('');
+    setIsInstallDisabled(true);
+  }, [isOpen, setInstallCommand, setIsInstallDisabled]);
+
+  useEffect(() => {
+    const parts: string[] = [];
+
+    if (indexUrl.trim()) parts.push(`--index-url ${indexUrl.trim()}`);
+    if (extraOptions.trim()) parts.push(extraOptions.trim());
+
+    if (requirementsFilePath) {
+      parts.push(`-r ${quotePath(requirementsFilePath)}`);
+    } else {
+      parts.push(
+        ...packages.map(pkg => {
+          const pkgStr = buildPackageString(pkg);
+
+          // If it contains spaces or semi-colons (like markers or PEP 508 URL definitions do), wrap safely in quotes
+          if (pkgStr.includes(' ') || pkgStr.includes(';')) {
+            return `"${pkgStr}"`;
+          }
+          return pkgStr;
+        }),
+      );
+    }
+
+    setInstallCommand(parts.join(' '));
+    setIsInstallDisabled(packages.length <= 0 && !requirementsFilePath);
+  }, [packages, requirementsFilePath, indexUrl, extraOptions, setInstallCommand, setIsInstallDisabled]);
 
   const addPackagesFromString = (value: string) => {
     // Splitting by line ensures we handle pasted multiline imports safely without breaking spaces in markers
@@ -68,6 +109,7 @@ export default function Installer({setInstallCommand, setIsInstallDisabled}: Pro
     }
 
     const newPkgs = lines.map(line => parseRequirementLine(line));
+    setRequirementsFilePath('');
     setPackages(prev => [...prev, ...newPkgs]);
     setPackageString('');
   };
@@ -107,12 +149,29 @@ export default function Installer({setInstallCommand, setIsInstallDisabled}: Pro
               });
               return [...prev, ...newPackages];
             });
+            setRequirementsFilePath('');
             topToast.success('Requirements file loaded successfully');
           });
         }
       })
       .catch(() => {
         topToast.danger('Error reading requirements file');
+      });
+  };
+
+  const handleRequirementsInstallSelect = () => {
+    filesIpc
+      .openDlg({properties: ['openFile']})
+      .then(file => {
+        if (file) {
+          setPackages([]);
+          setPackageString('');
+          setRequirementsFilePath(file);
+          topToast.success('Requirements file selected for install');
+        }
+      })
+      .catch(() => {
+        topToast.danger('Error selecting requirements file');
       });
   };
 
@@ -128,47 +187,40 @@ export default function Installer({setInstallCommand, setIsInstallDisabled}: Pro
     }, 0);
   };
 
-  const generateInstallCommand = () => {
-    if (packages.length === 0) {
-      setInstallCommand('');
-      return '';
-    }
-
-    const packageStrings = packages.map(pkg => {
-      const pkgStr = buildPackageString(pkg);
-
-      // If it contains spaces or semi-colons (like markers or PEP 508 URL definitions do), wrap safely in quotes
-      if (pkgStr.includes(' ') || pkgStr.includes(';')) {
-        return `"${pkgStr}"`;
-      }
-      return pkgStr;
-    });
-
-    const parts: string[] = [];
-
-    if (indexUrl.trim()) parts.push(`--index-url ${indexUrl.trim()}`);
-    if (extraOptions.trim()) parts.push(extraOptions.trim());
-
-    const command = [...parts, ...packageStrings].join(' ');
-    setInstallCommand(command);
-    return command;
-  };
-
-  const command = generateInstallCommand();
-  const fullCommand = `pip install ${command}`;
+  const fullCommand = requirementsFilePath
+    ? `pip install ${indexUrl.trim() ? `--index-url ${indexUrl.trim()} ` : ''}${
+        extraOptions.trim() ? `${extraOptions.trim()} ` : ''
+      }-r ${quotePath(requirementsFilePath)}`
+    : `pip install ${[
+        indexUrl.trim() ? `--index-url ${indexUrl.trim()}` : '',
+        extraOptions.trim(),
+        ...packages.map(pkg => {
+          const pkgStr = buildPackageString(pkg);
+          return pkgStr.includes(' ') || pkgStr.includes(';') ? `"${pkgStr}"` : pkgStr;
+        }),
+      ]
+        .filter(Boolean)
+        .join(' ')}`;
 
   return (
     <div className="flex flex-col gap-y-5 p-5 mx-auto">
       {/* ── Top bar ── */}
       <div className="flex items-center justify-between">
-        <Button size="sm" variant="tertiary" onPress={handleFileSelect}>
-          <Import />
-          Import requirements.txt
-        </Button>
-        {!isEmpty(packages) && (
+        <div className="flex flex-wrap items-center gap-2">
+          <Button size="sm" variant="tertiary" onPress={handleFileSelect}>
+            <Import />
+            Import requirements.txt
+          </Button>
+          <Button size="sm" variant="tertiary" onPress={handleRequirementsInstallSelect}>
+            <Download />
+            Install requirements.txt
+          </Button>
+        </div>
+        {(!isEmpty(packages) || requirementsFilePath) && (
           <Button
             onPress={() => {
               setPackages([]);
+              setRequirementsFilePath('');
               setInstallCommand('');
             }}
             size="sm"
@@ -196,7 +248,14 @@ export default function Installer({setInstallCommand, setIsInstallDisabled}: Pro
       </TextField>
 
       {/* ── Package chips ── */}
-      {!isEmpty(packages) ? (
+      {requirementsFilePath ? (
+        <Surface variant="secondary" className="rounded-3xl p-3">
+          <div className="flex flex-col gap-1 px-1">
+            <p className="text-sm text-content-secondary">Requirements file queued for install</p>
+            <p className="font-JetBrainsMono text-xs text-warning break-all">{requirementsFilePath}</p>
+          </div>
+        </Surface>
+      ) : !isEmpty(packages) ? (
         <Surface variant="secondary" className="rounded-3xl p-3">
           <div className="flex flex-wrap gap-2">
             {packages.map((pkg, i) => (
@@ -248,7 +307,7 @@ export default function Installer({setInstallCommand, setIsInstallDisabled}: Pro
           variant="secondary">
           <BoxMinimalistic className="size-10 text-yellow-600" />
           <p className="text-sm text-content-secondary">No packages added yet</p>
-          <p className="text-xs text-content-tertiary">Type above or import a requirements file</p>
+          <p className="text-xs text-content-tertiary">Type above, import, or install a requirements file</p>
         </Surface>
       )}
 
@@ -277,7 +336,7 @@ export default function Installer({setInstallCommand, setIsInstallDisabled}: Pro
       </Disclosure>
 
       {/* ── Terminal preview ── */}
-      {!isEmpty(packages) && (
+      {(!isEmpty(packages) || requirementsFilePath) && (
         <div className="overflow-hidden rounded-2xl border border-white/[0.07] bg-surface-secondary">
           {/* Titlebar */}
           <div className="flex items-center justify-between border-b border-white/6 px-4 py-2">
@@ -290,32 +349,39 @@ export default function Installer({setInstallCommand, setIsInstallDisabled}: Pro
           <div className="px-4 py-3.5 font-JetBrainsMono text-xs leading-relaxed">
             <span className="select-none text-emerald-400">$ </span>
             <span className="text-semi-muted">pip install </span>
-            {packages.map((pkg, i) => {
-              const baseStr = pkg.url
-                ? pkg.originalLine && pkg.originalLine.includes(' @ ')
-                  ? `${pkg.name} @ ${pkg.url}`
-                  : pkg.url
-                : `${pkg.name}${pkg.extras && pkg.extras.length > 0 ? `[${pkg.extras.join(',')}]` : ''}`;
-
-              const versionStr = pkg.url ? null : pkg.version ? `${pkg.versionOperator || '=='}${pkg.version}` : null;
-              const markersStr = pkg.markers ? `; ${pkg.markers.replace(/"/g, "'")}` : null;
-
-              const fullStr = `${baseStr}${versionStr || ''}${markersStr || ''}`;
-              const hasQuotes = fullStr.includes(' ') || fullStr.includes(';');
-
-              return (
-                <span key={`${pkg.name}-${i}`}>
-                  {hasQuotes && <span className="text-amber-400/70">"</span>}
-                  <span className="text-amber-400">{baseStr}</span>
-                  {versionStr && <span className="text-amber-400/70">{versionStr}</span>}
-                  {markersStr && <span className="text-amber-400/50">{markersStr}</span>}
-                  {hasQuotes && <span className="text-amber-400/70">"</span>}
-                  {i < packages.length - 1 && <span className="text-white/30"> </span>}
-                </span>
-              );
-            })}
             {indexUrl.trim() && <span className="text-sky-400"> --index-url {indexUrl.trim()}</span>}
             {extraOptions.trim() && <span className="text-purple-400"> {extraOptions.trim()}</span>}
+            {requirementsFilePath ? (
+              <>
+                <span className="text-sky-400"> -r </span>
+                <span className="text-amber-400">"{requirementsFilePath}"</span>
+              </>
+            ) : (
+              packages.map((pkg, i) => {
+                const baseStr = pkg.url
+                  ? pkg.originalLine && pkg.originalLine.includes(' @ ')
+                    ? `${pkg.name} @ ${pkg.url}`
+                    : pkg.url
+                  : `${pkg.name}${pkg.extras && pkg.extras.length > 0 ? `[${pkg.extras.join(',')}]` : ''}`;
+
+                const versionStr = pkg.url ? null : pkg.version ? `${pkg.versionOperator || '=='}${pkg.version}` : null;
+                const markersStr = pkg.markers ? `; ${pkg.markers.replace(/"/g, "'")}` : null;
+
+                const fullStr = `${baseStr}${versionStr || ''}${markersStr || ''}`;
+                const hasQuotes = fullStr.includes(' ') || fullStr.includes(';');
+
+                return (
+                  <span key={`${pkg.name}-${i}`}>
+                    {hasQuotes && <span className="text-amber-400/70">"</span>}
+                    <span className="text-amber-400">{baseStr}</span>
+                    {versionStr && <span className="text-amber-400/70">{versionStr}</span>}
+                    {markersStr && <span className="text-amber-400/50">{markersStr}</span>}
+                    {hasQuotes && <span className="text-amber-400/70">"</span>}
+                    {i < packages.length - 1 && <span className="text-white/30"> </span>}
+                  </span>
+                );
+              })
+            )}
           </div>
         </div>
       )}

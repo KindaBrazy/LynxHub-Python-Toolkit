@@ -48,8 +48,13 @@ export default function InstallerModal({refresh, pythonPath}: Props) {
       });
   };
 
+  const isRequirementsInstall = installCommand.trim().includes('-r ');
+
   // Derive package count from install command for header badge
-  const packageCount = installCommand ? installCommand.split(' ').filter(t => t && !t.startsWith('-')).length : 0;
+  const packageCount =
+    installCommand && !isRequirementsInstall
+      ? installCommand.split(' ').filter(t => t && !t.startsWith('-')).length
+      : 0;
 
   return (
     <>
@@ -63,16 +68,20 @@ export default function InstallerModal({refresh, pythonPath}: Props) {
 
         <Modal.Header className="flex items-center gap-3 px-5 pb-0">
           <Modal.Heading className="text-base font-semibold">Package Installer</Modal.Heading>
-          {packageCount > 0 && (
+          {(packageCount > 0 || isRequirementsInstall) && (
             <span className="rounded-full bg-primary/10 px-2 py-0.5 text-xs font-medium text-primary">
-              {packageCount} selected
+              {isRequirementsInstall ? 'requirements.txt' : `${packageCount} selected`}
             </span>
           )}
         </Modal.Header>
 
         <Modal.Body className="overflow-hidden px-0 pt-0">
           <LynxScroll className="size-full">
-            <Installer setInstallCommand={setInstallCommand} setIsInstallDisabled={setIsInstallDisabled} />
+            <Installer
+              isOpen={state.isOpen}
+              setInstallCommand={setInstallCommand}
+              setIsInstallDisabled={setIsInstallDisabled}
+            />
           </LynxScroll>
         </Modal.Body>
 
@@ -94,9 +103,11 @@ export default function InstallerModal({refresh, pythonPath}: Props) {
               <Download />
               {installing
                 ? 'Installing…'
-                : `Install${
-                    packageCount > 0 ? ` ${packageCount} Package${packageCount !== 1 ? 's' : ''}` : ' Packages'
-                  }`}
+                : isRequirementsInstall
+                  ? 'Install Requirements'
+                  : `Install${
+                      packageCount > 0 ? ` ${packageCount} Package${packageCount !== 1 ? 's' : ''}` : ' Packages'
+                    }`}
             </Button>
           </div>
         </Modal.Footer>
