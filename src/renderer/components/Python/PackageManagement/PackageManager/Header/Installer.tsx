@@ -48,9 +48,17 @@ type Props = {
   isOpen: boolean;
   setInstallCommand: (value: string) => void;
   setIsInstallDisabled: (value: boolean) => void;
+  setPackageCount: (value: number) => void;
+  setRequirementsFileCount: (value: number) => void;
 };
 
-export default function Installer({isOpen, setInstallCommand, setIsInstallDisabled}: Props) {
+export default function Installer({
+  isOpen,
+  setInstallCommand,
+  setIsInstallDisabled,
+  setPackageCount,
+  setRequirementsFileCount,
+}: Props) {
   const [packageString, setPackageString] = useState<string>('');
   const [packages, setPackages] = useState<RequirementData[]>([]);
   const [requirementsFilePaths, setRequirementsFilePaths] = useState<string[]>([]);
@@ -70,7 +78,9 @@ export default function Installer({isOpen, setInstallCommand, setIsInstallDisabl
     setExtraOptions('');
     setInstallCommand('');
     setIsInstallDisabled(true);
-  }, [isOpen, setInstallCommand, setIsInstallDisabled]);
+    setPackageCount(0);
+    setRequirementsFileCount(0);
+  }, [isOpen, setInstallCommand, setIsInstallDisabled, setPackageCount, setRequirementsFileCount]);
 
   useEffect(() => {
     const parts: string[] = [];
@@ -96,7 +106,18 @@ export default function Installer({isOpen, setInstallCommand, setIsInstallDisabl
 
     setInstallCommand(parts.join(' '));
     setIsInstallDisabled(packages.length <= 0 && requirementsFilePaths.length === 0);
-  }, [packages, requirementsFilePaths, indexUrl, extraOptions, setInstallCommand, setIsInstallDisabled]);
+    setPackageCount(requirementsFilePaths.length > 0 ? 0 : packages.length);
+    setRequirementsFileCount(requirementsFilePaths.length);
+  }, [
+    packages,
+    requirementsFilePaths,
+    indexUrl,
+    extraOptions,
+    setInstallCommand,
+    setIsInstallDisabled,
+    setPackageCount,
+    setRequirementsFileCount,
+  ]);
 
   const addPackagesFromString = (value: string) => {
     // Splitting by line ensures we handle pasted multiline imports safely without breaking spaces in markers
@@ -227,6 +248,8 @@ export default function Installer({isOpen, setInstallCommand, setIsInstallDisabl
               setPackages([]);
               setRequirementsFilePaths([]);
               setInstallCommand('');
+              setPackageCount(0);
+              setRequirementsFileCount(0);
             }}
             size="sm"
             variant="danger-soft">

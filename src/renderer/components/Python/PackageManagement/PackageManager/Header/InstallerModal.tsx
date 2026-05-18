@@ -18,11 +18,17 @@ export default function InstallerModal({refresh, pythonPath}: Props) {
   const [installing, setInstalling] = useState<boolean>(false);
   const [installCommand, setInstallCommand] = useState<string>('');
   const [isInstallDisabled, setIsInstallDisabled] = useState<boolean>(true);
+  const [packageCount, setPackageCount] = useState<number>(0);
+  const [requirementsFileCount, setRequirementsFileCount] = useState<number>(0);
 
   const state = useOverlayState();
 
   useEffect(() => {
-    if (!state.isOpen) setInstallCommand('');
+    if (!state.isOpen) {
+      setInstallCommand('');
+      setPackageCount(0);
+      setRequirementsFileCount(0);
+    }
   }, [state.isOpen]);
 
   const handleInstall = async () => {
@@ -49,13 +55,6 @@ export default function InstallerModal({refresh, pythonPath}: Props) {
   };
 
   const isRequirementsInstall = installCommand.trim().includes('-r ');
-  const requirementsFileCount = installCommand.match(/(?:^|\s)-r\s+"/g)?.length || 0;
-
-  // Derive package count from install command for header badge
-  const packageCount =
-    installCommand && !isRequirementsInstall
-      ? installCommand.split(' ').filter(t => t && !t.startsWith('-')).length
-      : 0;
 
   return (
     <>
@@ -82,8 +81,10 @@ export default function InstallerModal({refresh, pythonPath}: Props) {
           <LynxScroll className="size-full">
             <Installer
               isOpen={state.isOpen}
+              setPackageCount={setPackageCount}
               setInstallCommand={setInstallCommand}
               setIsInstallDisabled={setIsInstallDisabled}
+              setRequirementsFileCount={setRequirementsFileCount}
             />
           </LynxScroll>
         </Modal.Body>
