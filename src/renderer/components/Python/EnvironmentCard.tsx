@@ -1,8 +1,16 @@
 import {Button, Card, Label, ProgressBar, Spinner} from '@heroui/react';
+import LynxTooltip from '@lynx/components/LynxTooltip';
+import {cardsActions} from '@lynx/redux/reducers/cards';
+import {useTabsState} from '@lynx/redux/reducers/tabs';
+import {terminalLineEnding} from '@lynx_common/utils';
+import ptyIpc from '@lynx_shared/ipc/pty';
 import {BoxMinimalistic, Diskette, FolderOpen} from '@solar-icons/react-perf/BoldDuotone';
+import {Terminal} from 'lucide-react';
 import type {ReactNode} from 'react';
+import {useDispatch} from 'react-redux';
 
 import {formatSizeMB} from '../../../cross/CrossExtUtils';
+import pIpc from '../../PIpc';
 import {PythonIcon} from '../SvgIcons';
 import Venv_Associate from './VirtualEnvironments/Venv_Associate';
 
@@ -17,6 +25,7 @@ type Props = {
   maxDiskValue?: number;
   onOpenPath: () => void;
   associationType: 'python' | 'venv' | 'conda';
+  condaName?: string;
   iconClassName?: string;
   footer?: ReactNode;
   isBusy?: boolean;
@@ -34,6 +43,7 @@ export default function EnvironmentCard({
   maxDiskValue,
   onOpenPath,
   associationType,
+  condaName,
   iconClassName = 'text-blue-400',
   footer,
   isBusy,
@@ -42,6 +52,21 @@ export default function EnvironmentCard({
   const diskValue = diskUsage || 0;
   const diskMax = Math.max(maxDiskValue || diskValue || 1, 1);
   const packageCount = Number.isFinite(packages) ? packages : 0;
+  const activeTab = useTabsState('activeTab');
+  const dispatch = useDispatch();
+
+  const openTerminal = () => {
+    pIpc
+      .getEnvironmentActivationCommand({dir: path, type: associationType, condaName})
+      .then(command => {
+        const id = `${activeTab}_terminal`;
+        dispatch(cardsActions.addRunningEmpty({tabId: activeTab, type: 'terminal'}));
+        setTimeout(() => ptyIpc.write(id, `${command}${terminalLineEnding}`), 500);
+      })
+      .catch(error => {
+        console.error('Failed to open terminal in environment:', error);
+      });
+  };
 
   return (
     <div className="relative grow">
@@ -88,15 +113,27 @@ export default function EnvironmentCard({
         </Card.Header>
 
         <Card.Content className="flex flex-col gap-y-3 px-4 pb-3 pt-0 text-sm">
-          <Button
-            size="sm"
-            variant="tertiary"
-            onPress={onOpenPath}
-            className={'h-8 min-w-0 justify-start border border-divider/60 bg-surface-secondary/45 px-2.5 text-xs'}
-            fullWidth>
-            <FolderOpen className="size-3.5 shrink-0 text-muted" />
-            <span className="truncate font-JetBrainsMono">{path}</span>
-          </Button>
+          <div className="flex min-w-0 gap-2">
+            <Button
+              size="sm"
+              variant="tertiary"
+              onPress={onOpenPath}
+              className={'h-8 min-w-0 justify-start border border-divider/60 bg-surface-secondary/45 px-2.5 text-xs'}
+              fullWidth>
+              <FolderOpen className="size-3.5 shrink-0 text-muted" />
+              <span className="truncate font-JetBrainsMono">{path}</span>
+            </Button>
+            <LynxTooltip delay={300} content="Open terminal in environment">
+              <Button
+                size="sm"
+                variant="tertiary"
+                onPress={openTerminal}
+                className="h-8 w-8 min-w-8 shrink-0 border border-divider/60 bg-surface-secondary/45"
+                isIconOnly>
+                <Terminal className="size-3.5 text-muted" />
+              </Button>
+            </LynxTooltip>
+          </div>
 
           <div className="grid grid-cols-2 gap-2 rounded-3xl border border-divider/60 bg-surface-secondary/35 p-3">
             <div className="min-w-0">

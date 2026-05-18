@@ -24,6 +24,7 @@ import ListenForStorage from './StorageIpcHandler';
 import {
   addAssociate,
   getAssociates,
+  getCommandByType,
   getExePathAssociate,
   removeAssociate,
   removeAssociatePath,
@@ -184,19 +185,13 @@ export default function ListenForChannels(nodePty: any) {
 
   ipcMain.handle(pythonChannels.getCardStartCommand, () => storageManager?.getCustomData(CardStartCommand_StorageID));
   ipcMain.on(pythonChannels.setCardStartCommand, (_, value: OnPreCommands) => {
-    const currentCommands = storageManager?.getCustomData(CardStartCommand_StorageID) as OnPreCommands[] | undefined;
-
-    if (currentCommands) {
-      const existing = currentCommands.findIndex(item => item.id === value.id);
-      if (existing !== -1) {
-        currentCommands[existing].commands = value.commands;
-      } else {
-        currentCommands.push(value);
-      }
-    }
-
-    storageManager?.setCustomData(CardStartCommand_StorageID, currentCommands);
+    storageManager?.setCardTerminalPreCommands(value.id, value.commands);
   });
+  ipcMain.handle(
+    pythonChannels.getEnvironmentActivationCommand,
+    (_, data: Pick<AssociateItem, 'dir' | 'type' | 'condaName'>) =>
+      getCommandByType(data.type, data.dir, data.condaName),
+  );
 
   ipcMain.handle(pythonChannels.replacePythonPath, (_, pythonPath: string) => {
     try {

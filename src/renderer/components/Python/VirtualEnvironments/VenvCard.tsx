@@ -202,6 +202,7 @@ export default function VenvCard({
         busyMessage="Removing environment..."
         subtitle={<span>Python {pythonVersion}</span>}
         associationType={isInstallation ? 'conda' : 'venv'}
+        condaName={isInstallation ? title : undefined}
         iconClassName={isInstallation ? 'text-emerald-400' : 'text-amber-400'}
       />
     </>

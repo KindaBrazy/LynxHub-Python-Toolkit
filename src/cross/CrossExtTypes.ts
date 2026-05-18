@@ -140,6 +140,7 @@ export const pythonChannels = {
 
   getCardStartCommand: 'get-card-start-command',
   setCardStartCommand: 'set-card-start-command',
+  getEnvironmentActivationCommand: 'ptoolkit-get-environment-activation-command',
 
   replacePythonPath: 'ptoolkit-replace-python-path',
 

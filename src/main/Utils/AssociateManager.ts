@@ -11,7 +11,7 @@ import {getVenvPythonPath} from './VirtualEnv/VenvUtils';
 /**
  * Generate environment activation or path modification command
  */
-function getCommandByType(type: 'python' | 'venv' | 'conda', dir: string, condaName?: string): string {
+export function getCommandByType(type: 'python' | 'venv' | 'conda', dir: string, condaName?: string): string {
   const isWin = platform() === 'win32';
 
   switch (type) {

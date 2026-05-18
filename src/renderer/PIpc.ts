@@ -112,6 +112,11 @@ const pIpc = {
 
   getCardStartCommand: (): Promise<OnPreCommands[] | undefined> => ipc.invoke(pythonChannels.getCardStartCommand),
   setCardStartCommand: (value: OnPreCommands) => ipc.send(pythonChannels.setCardStartCommand, value),
+  getEnvironmentActivationCommand: (data: {
+    dir: string;
+    type: 'python' | 'venv' | 'conda';
+    condaName?: string;
+  }): Promise<string> => ipc.invoke(pythonChannels.getEnvironmentActivationCommand, data),
 
   replacePythonPath: (pythonPath: string): Promise<boolean> => ipc.invoke(pythonChannels.replacePythonPath, pythonPath),
 

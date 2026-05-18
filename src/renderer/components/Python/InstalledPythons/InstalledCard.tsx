@@ -293,6 +293,7 @@ export default function InstalledCard({python, diskUsage, maxDiskValue, updateDe
         iconClassName="text-blue-400"
         busyMessage="Uninstalling, please wait..."
         associationType={python.installationType === 'conda' ? 'conda' : 'python'}
+        condaName={python.installationType === 'conda' ? python.condaName : undefined}
       />
     </>
   );
