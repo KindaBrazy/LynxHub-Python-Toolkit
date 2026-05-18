@@ -1,4 +1,5 @@
 import {Avatar, Button, Chip, CloseButton, Dropdown, Label} from '@heroui/react';
+import LynxTooltip from '@lynx/components/LynxTooltip';
 import {extractGitUrl, getFallbackString} from '@lynx_common/utils';
 import {isEmpty} from 'lodash-es';
 import {Plus, X} from 'lucide-react';
@@ -111,9 +112,11 @@ export default function Venv_Associate({folder, type}: Props) {
           )}
         </div>
         <Dropdown>
-          <Button size="sm" variant="tertiary" className="shrink-0" isIconOnly>
-            <Plus />
-          </Button>
+          <LynxTooltip delay={300} content="Associate card">
+            <Button size="sm" variant="tertiary" className="shrink-0" isIconOnly>
+              <Plus />
+            </Button>
+          </LynxTooltip>
           <Dropdown.Popover>
             <Dropdown.Menu
               items={canBeAssociate}

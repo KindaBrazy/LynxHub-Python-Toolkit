@@ -1,4 +1,5 @@
 import {Button} from '@heroui/react';
+import LynxTooltip from '@lynx/components/LynxTooltip';
 import {useOverlayState} from '@heroui/react';
 import {SettingsMinimalistic} from '@solar-icons/react-perf/BoldDuotone';
 import {useDispatch} from 'react-redux';
@@ -30,9 +31,11 @@ export default function ToolsPage() {
       <SettingsModal state={settingsModal} />
       <ToolsCard
         footer={
-          <Button variant="tertiary" onPress={settingsModal.open} isIconOnly>
-            <SettingsMinimalistic />
-          </Button>
+          <LynxTooltip delay={300} content="Settings">
+            <Button variant="tertiary" onPress={settingsModal.open} isIconOnly>
+              <SettingsMinimalistic />
+            </Button>
+          </LynxTooltip>
         }
         title={title}
         description={desc}

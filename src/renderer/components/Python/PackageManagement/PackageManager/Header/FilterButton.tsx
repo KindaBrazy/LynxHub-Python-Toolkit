@@ -1,4 +1,5 @@
 import {Button, cn, Dropdown, Label, Selection} from '@heroui/react';
+import LynxTooltip from '@lynx/components/LynxTooltip';
 import {Filter} from '@solar-icons/react-perf/BoldDuotone';
 import {Dispatch, SetStateAction, useEffect, useState} from 'react';
 
@@ -32,9 +33,11 @@ export default function FilterButton({setSelectedFilter, updateAvailable, classN
 
   return (
     <Dropdown>
-      <Button variant="tertiary" className={cn('shrink-0', className)} isIconOnly>
-        <Filter />
-      </Button>
+      <LynxTooltip delay={300} content="Filter packages">
+        <Button variant="tertiary" className={cn('shrink-0', className)} isIconOnly>
+          <Filter />
+        </Button>
+      </LynxTooltip>
       <Dropdown.Popover>
         <Dropdown.Menu
           selectionMode="single"

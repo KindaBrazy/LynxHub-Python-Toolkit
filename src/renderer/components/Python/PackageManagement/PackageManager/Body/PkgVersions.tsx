@@ -1,4 +1,5 @@
 import {Button, ButtonProps, Chip, Description, Input, Modal, Popover, ProgressBar} from '@heroui/react';
+import LynxTooltip from '@lynx/components/LynxTooltip';
 import TabModal from '@lynx/components/TabModal';
 import {topToast} from '@lynx/layouts/ToastProviders';
 import {compare as pepCompare} from '@renovatebot/pep440';
@@ -168,9 +169,11 @@ const PkgVersions = memo(({updated, item, pythonPath}: Props) => {
           )}
         </Modal.Body>
       </TabModal>
-      <Button size="sm" variant="tertiary" isPending={!!changingTo} onPress={() => setIsOpen(true)} isIconOnly>
-        <BoxMinimalistic className="size-3.5" />
-      </Button>
+      <LynxTooltip delay={300} content="Change package version">
+        <Button size="sm" variant="tertiary" isPending={!!changingTo} onPress={() => setIsOpen(true)} isIconOnly>
+          <BoxMinimalistic className="size-3.5" />
+        </Button>
+      </LynxTooltip>
     </>
   );
 });

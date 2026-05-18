@@ -1,5 +1,6 @@
 import {Button, Chip, Description, Disclosure, Input, Label, Surface, TextField} from '@heroui/react';
 import CopyClipboard from '@lynx/components/CopyClipboard';
+import LynxTooltip from '@lynx/components/LynxTooltip';
 import {topToast} from '@lynx/layouts/ToastProviders';
 import filesIpc from '@lynx_shared/ipc/files';
 import {BoxMinimalistic, Broom, Download, Import, Pen} from '@solar-icons/react-perf/BoldDuotone';
@@ -310,22 +311,26 @@ export default function Installer({
                     </>
                   )}
                 </span>
-                <Button
-                  size="sm"
-                  variant="ghost"
-                  onPress={() => handleEditItem(pkg)}
-                  className="size-4 shrink-0 opacity-50 transition-opacity group-hover:opacity-100 text-foreground"
-                  isIconOnly>
-                  <Pen className="size-3" />
-                </Button>
-                <Button
-                  size="sm"
-                  variant="ghost"
-                  onPress={() => removePackage(pkg)}
-                  className="size-4 shrink-0 opacity-50 transition-opacity group-hover:opacity-100 text-danger"
-                  isIconOnly>
-                  <X className="size-3" />
-                </Button>
+                <LynxTooltip delay={300} content="Edit package">
+                  <Button
+                    size="sm"
+                    variant="ghost"
+                    onPress={() => handleEditItem(pkg)}
+                    className="size-4 shrink-0 opacity-50 transition-opacity group-hover:opacity-100 text-foreground"
+                    isIconOnly>
+                    <Pen className="size-3" />
+                  </Button>
+                </LynxTooltip>
+                <LynxTooltip delay={300} content="Remove package">
+                  <Button
+                    size="sm"
+                    variant="ghost"
+                    onPress={() => removePackage(pkg)}
+                    className="size-4 shrink-0 opacity-50 transition-opacity group-hover:opacity-100 text-danger"
+                    isIconOnly>
+                    <X className="size-3" />
+                  </Button>
+                </LynxTooltip>
               </Chip>
             ))}
           </div>

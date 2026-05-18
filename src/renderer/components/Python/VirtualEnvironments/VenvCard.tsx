@@ -1,4 +1,5 @@
 import {Button, Dropdown, Label, Popover, Separator, useOverlayState} from '@heroui/react';
+import LynxTooltip from '@lynx/components/LynxTooltip';
 import {topToast} from '@lynx/layouts/ToastProviders';
 import filesIpc from '@lynx_shared/ipc/files';
 import {BoxMinimalistic, MenuDots, TrashBin2} from '@solar-icons/react-perf/BoldDuotone';
@@ -130,9 +131,11 @@ export default function VenvCard({
         actions={
           <>
             <Dropdown>
-              <Button size="sm" variant="tertiary" isIconOnly>
-                <MenuDots className="rotate-90" />
-              </Button>
+              <LynxTooltip delay={300} content="Environment actions">
+                <Button size="sm" variant="tertiary" isIconOnly>
+                  <MenuDots className="rotate-90" />
+                </Button>
+              </LynxTooltip>
               <Dropdown.Popover>
                 <Dropdown.Menu>
                   <Dropdown.Item id="package-manager" textValue="Manage Packages" onPress={packageManagerModal.open}>
@@ -145,9 +148,11 @@ export default function VenvCard({
 
             {!isInstallation && (
               <Popover isOpen={popoverUninstaller} onOpenChange={setPopoverUninstaller}>
-                <Button size="sm" variant="danger-soft" isPending={isRemoving} isIconOnly>
-                  <TrashBin2 />
-                </Button>
+                <LynxTooltip delay={300} content="Remove environment">
+                  <Button size="sm" variant="danger-soft" isPending={isRemoving} isIconOnly>
+                    <TrashBin2 />
+                  </Button>
+                </LynxTooltip>
                 <Popover.Content className="max-w-sm">
                   <Popover.Dialog>
                     <Popover.Arrow />

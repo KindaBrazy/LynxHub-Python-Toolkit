@@ -1,5 +1,6 @@
 import {Button, Chip, Modal, SearchField, Spinner, useOverlayState} from '@heroui/react';
 import EmptyStateCard from '@lynx/components/EmptyStateCard';
+import LynxTooltip from '@lynx/components/LynxTooltip';
 import TabModal from '@lynx/components/TabModal';
 import {topToast} from '@lynx/layouts/ToastProviders';
 import {searchInStrings} from '@lynx/utils';
@@ -280,9 +281,11 @@ export default function RequirementsModal({id, projectPath, setIsReqAvailable, s
               <DocumentText />
               {filePath || 'Select or create requirements file'}
             </Button>
-            <Button onPress={deselect} variant="tertiary" className="shrink-0" isIconOnly>
-              <X />
-            </Button>
+            <LynxTooltip delay={300} content="Deselect requirements file">
+              <Button onPress={deselect} variant="tertiary" className="shrink-0" isIconOnly>
+                <X />
+              </Button>
+            </LynxTooltip>
           </div>
           <div className="flex flex-row items-center gap-x-2">
             <SearchField name="search" variant="secondary" value={searchValue} onChange={setSearchValue} fullWidth>

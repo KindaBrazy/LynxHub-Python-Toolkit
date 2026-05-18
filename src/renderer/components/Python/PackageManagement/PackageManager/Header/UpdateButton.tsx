@@ -1,4 +1,5 @@
 import {Button, ButtonGroup, Description, Dropdown, Label, Selection} from '@heroui/react';
+import LynxTooltip from '@lynx/components/LynxTooltip';
 import {AltArrowDown} from '@solar-icons/react-perf/Bold';
 import {Download, Magnifier} from '@solar-icons/react-perf/BoldDuotone';
 import {isEmpty} from 'lodash-es';
@@ -124,9 +125,11 @@ export default function UpdateButton({
         {labelsMap[selectedOptionValue]}
       </Button>
       <Dropdown>
-        <Button size="sm" variant="tertiary" isDisabled={!isReqAvailable || checkingUpdates} isIconOnly>
-          <AltArrowDown />
-        </Button>
+        <LynxTooltip delay={300} content="Update check scope">
+          <Button size="sm" variant="tertiary" isDisabled={!isReqAvailable || checkingUpdates} isIconOnly>
+            <AltArrowDown />
+          </Button>
+        </LynxTooltip>
         <Dropdown.Popover>
           <Dropdown.Menu selectionMode="single" selectedKeys={selectedOption} onSelectionChange={setSelectedOption}>
             <Dropdown.Item id="all" textValue={labelsMap['all']}>

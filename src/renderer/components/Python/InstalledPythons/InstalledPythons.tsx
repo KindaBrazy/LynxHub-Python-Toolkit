@@ -192,7 +192,7 @@ export default function InstalledPythons({
         {isLoadingPythons ? (
           <div className="flex flex-col gap-y-2 items-center">
             <Spinner size="lg" />
-            <Description className="text-sm">Loading python installations...</Description>
+            <Description className="text-sm">Loading Python installations...</Description>
           </div>
         ) : isEmpty(installedPythons) ? (
           <EmptyStateCard title={`No Python installations found. Use the "Install Version" button to add one.`} />

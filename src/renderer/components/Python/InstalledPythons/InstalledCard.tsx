@@ -1,4 +1,5 @@
 import {Button, Chip, Dropdown, Label, Popover, Separator, useOverlayState} from '@heroui/react';
+import LynxTooltip from '@lynx/components/LynxTooltip';
 import {topToast} from '@lynx/layouts/ToastProviders';
 import filesIpc from '@lynx_shared/ipc/files';
 import {BoxMinimalistic, CheckCircle, MenuDots, Refresh, TrashBin2} from '@solar-icons/react-perf/BoldDuotone';
@@ -173,9 +174,11 @@ export default function InstalledCard({python, diskUsage, maxDiskValue, updateDe
         actions={
           <>
             <Dropdown>
-              <Button size="sm" variant="tertiary" isIconOnly>
-                <MenuDots className="rotate-90" />
-              </Button>
+              <LynxTooltip delay={300} content="Python actions">
+                <Button size="sm" variant="tertiary" isIconOnly>
+                  <MenuDots className="rotate-90" />
+                </Button>
+              </LynxTooltip>
               <Dropdown.Popover>
                 <Dropdown.Menu>
                   {window.osPlatform === 'win32' && (
@@ -203,9 +206,11 @@ export default function InstalledCard({python, diskUsage, maxDiskValue, updateDe
             </Dropdown>
 
             <Popover isOpen={popoverUninstaller} onOpenChange={setPopoverUninstaller}>
-              <Button size="sm" variant="danger-soft" isIconOnly>
-                <TrashBin2 />
-              </Button>
+              <LynxTooltip delay={300} content="Remove Python">
+                <Button size="sm" variant="danger-soft" isIconOnly>
+                  <TrashBin2 />
+                </Button>
+              </LynxTooltip>
               <Popover.Content>
                 <Popover.Dialog className="max-w-sm">
                   <Popover.Arrow />

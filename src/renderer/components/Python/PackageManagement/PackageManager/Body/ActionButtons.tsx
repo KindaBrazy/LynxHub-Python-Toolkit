@@ -1,4 +1,5 @@
 import {Button, Popover} from '@heroui/react';
+import LynxTooltip from '@lynx/components/LynxTooltip';
 import {topToast} from '@lynx/layouts/ToastProviders';
 import {TrashBin2} from '@solar-icons/react-perf/BoldDuotone';
 import {Dispatch, SetStateAction, useCallback, useState} from 'react';
@@ -39,9 +40,11 @@ export default function ActionButtons({item, removed, pythonPath, isUninstalling
   return (
     <div className="flex flex-row items-center justify-center gap-x-2">
       <Popover isOpen={isUninstallOpen} onOpenChange={setIsUninstallOpen}>
-        <Button size="sm" variant="danger-soft" isPending={isUninstalling} isIconOnly>
-          <TrashBin2 />
-        </Button>
+        <LynxTooltip delay={300} content="Remove package">
+          <Button size="sm" variant="danger-soft" isPending={isUninstalling} isIconOnly>
+            <TrashBin2 />
+          </Button>
+        </LynxTooltip>
         <Popover.Content className="max-w-64">
           <Popover.Dialog className="gap-y-2 flex flex-col">
             <Popover.Arrow />
