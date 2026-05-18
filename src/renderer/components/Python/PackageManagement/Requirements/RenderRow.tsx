@@ -69,7 +69,11 @@ const RenderRow = memo(({item, index, onDelete, onUpdate}: Props) => {
   const handleRawBlur = useCallback(() => {
     isFocusedRef.current = false;
     if (localRaw !== item.originalLine) {
-      onUpdate(index, parseRequirementLine(localRaw));
+      onUpdate(index, {
+        ...parseRequirementLine(localRaw),
+        sourceLine: item.sourceLine,
+        sourceLineRaw: item.sourceLineRaw,
+      });
     }
   }, [index, item, localRaw, onUpdate]);
 

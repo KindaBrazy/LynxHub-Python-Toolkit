@@ -64,6 +64,8 @@ export type RequirementData = {
   url?: string | null;
   extras?: string[] | null;
   markers?: string | null;
+  sourceLine?: number;
+  sourceLineRaw?: string;
   autoFocus?: boolean;
 };
 

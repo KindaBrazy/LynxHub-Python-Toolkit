@@ -66,6 +66,11 @@ const isSameRequirement = (a: RequirementData, b: RequirementData) =>
   (a.url || null) === (b.url || null) &&
   (a.originalLine || '') === (b.originalLine || '');
 
+const toImportedRequirement = (req: RequirementData, sourcePath: string): ImportedRequirement => {
+  const {sourceLine, sourceLineRaw, ...importedReq} = req;
+  return {...importedReq, sourcePath};
+};
+
 export default function RequirementsModal({id, projectPath, setIsReqAvailable, setReqPackageCount}: Props) {
   const state = useOverlayState();
   const scrollRef = useRef<OverlayScrollbarsComponentRef>(null);
@@ -200,7 +205,7 @@ export default function RequirementsModal({id, projectPath, setIsReqAvailable, s
             if (!req.name.trim()) return;
             importedCount += 1;
 
-            const imported = {...req, sourcePath: path};
+            const imported = toImportedRequirement(req, path);
             const existing = merged.find(item => getRequirementKey(item) === getRequirementKey(imported));
 
             if (!existing) {
