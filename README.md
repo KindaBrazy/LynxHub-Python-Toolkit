@@ -33,24 +33,6 @@ installations, virtual environments, and packages.
 - [🤝 Contribution](#-contribution)
 - [📄 License](#-license)
 
-## 🗺️ Roadmap
-
-- [x] **Linux** support.
-- [ ] **macOS** support.
-- [x] Use`conda activate`for Conda environments.
-- [ ] Merge`requirements.txt`files and manage conflicts.
-- [ ] Improve package installation:
-  - Show`pip`output, progress bar, and download size (MB).
-- [x] Optimize disk usage calculations and caching.
-- [x] Refresh only Python/venv on changes, no full reload.
-- [ ] Expand tools page to full screen.
-- [x] Activate Python/venv during AI installation.
-- [ ] Check for Python version updates and auto-update on startup.
-- [ ] Show detailed errors for installations/updates.
-- [ ] Add settings to disable auto venv assignment for AIs.
-- [ ] Set a default venv for all AIs.
-- [x] Change package version (upgrade/downgrade)
-
 ## 🚀 Features
 
 ### 🐍 Python Management
