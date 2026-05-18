@@ -49,6 +49,7 @@ export default function InstallerModal({refresh, pythonPath}: Props) {
   };
 
   const isRequirementsInstall = installCommand.trim().includes('-r ');
+  const requirementsFileCount = installCommand.match(/(?:^|\s)-r\s+"/g)?.length || 0;
 
   // Derive package count from install command for header badge
   const packageCount =
@@ -70,7 +71,9 @@ export default function InstallerModal({refresh, pythonPath}: Props) {
           <Modal.Heading className="text-base font-semibold">Package Installer</Modal.Heading>
           {(packageCount > 0 || isRequirementsInstall) && (
             <span className="rounded-full bg-primary/10 px-2 py-0.5 text-xs font-medium text-primary">
-              {isRequirementsInstall ? 'requirements.txt' : `${packageCount} selected`}
+              {isRequirementsInstall
+                ? `${requirementsFileCount || 1} requirements file${requirementsFileCount !== 1 ? 's' : ''}`
+                : `${packageCount} selected`}
             </span>
           )}
         </Modal.Header>

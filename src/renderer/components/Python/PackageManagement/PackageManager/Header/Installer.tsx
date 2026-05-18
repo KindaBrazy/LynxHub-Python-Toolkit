@@ -42,6 +42,7 @@ const buildPackageString = (pkg: RequirementData) => {
 };
 
 const quotePath = (path: string) => `"${path.replace(/"/g, '\\"')}"`;
+const reqFileFilters = [{name: 'Text', extensions: ['txt']}];
 
 type Props = {
   isOpen: boolean;
@@ -52,7 +53,7 @@ type Props = {
 export default function Installer({isOpen, setInstallCommand, setIsInstallDisabled}: Props) {
   const [packageString, setPackageString] = useState<string>('');
   const [packages, setPackages] = useState<RequirementData[]>([]);
-  const [requirementsFilePath, setRequirementsFilePath] = useState<string>('');
+  const [requirementsFilePaths, setRequirementsFilePaths] = useState<string[]>([]);
   const [indexUrl, setIndexUrl] = useState<string>('');
   const [extraOptions, setExtraOptions] = useState<string>('');
   const [showAdvanced, setShowAdvanced] = useState(false);
@@ -64,7 +65,7 @@ export default function Installer({isOpen, setInstallCommand, setIsInstallDisabl
 
     setPackageString('');
     setPackages([]);
-    setRequirementsFilePath('');
+    setRequirementsFilePaths([]);
     setIndexUrl('');
     setExtraOptions('');
     setInstallCommand('');
@@ -77,8 +78,8 @@ export default function Installer({isOpen, setInstallCommand, setIsInstallDisabl
     if (indexUrl.trim()) parts.push(`--index-url ${indexUrl.trim()}`);
     if (extraOptions.trim()) parts.push(extraOptions.trim());
 
-    if (requirementsFilePath) {
-      parts.push(`-r ${quotePath(requirementsFilePath)}`);
+    if (requirementsFilePaths.length > 0) {
+      parts.push(...requirementsFilePaths.map(path => `-r ${quotePath(path)}`));
     } else {
       parts.push(
         ...packages.map(pkg => {
@@ -94,8 +95,8 @@ export default function Installer({isOpen, setInstallCommand, setIsInstallDisabl
     }
 
     setInstallCommand(parts.join(' '));
-    setIsInstallDisabled(packages.length <= 0 && !requirementsFilePath);
-  }, [packages, requirementsFilePath, indexUrl, extraOptions, setInstallCommand, setIsInstallDisabled]);
+    setIsInstallDisabled(packages.length <= 0 && requirementsFilePaths.length === 0);
+  }, [packages, requirementsFilePaths, indexUrl, extraOptions, setInstallCommand, setIsInstallDisabled]);
 
   const addPackagesFromString = (value: string) => {
     // Splitting by line ensures we handle pasted multiline imports safely without breaking spaces in markers
@@ -109,7 +110,7 @@ export default function Installer({isOpen, setInstallCommand, setIsInstallDisabl
     }
 
     const newPkgs = lines.map(line => parseRequirementLine(line));
-    setRequirementsFilePath('');
+    setRequirementsFilePaths([]);
     setPackages(prev => [...prev, ...newPkgs]);
     setPackageString('');
   };
@@ -134,24 +135,25 @@ export default function Installer({isOpen, setInstallCommand, setIsInstallDisabl
 
   const handleFileSelect = () => {
     filesIpc
-      .openDlg({properties: ['openFile']})
-      .then(file => {
-        if (file) {
-          pIpc.readReqs(file).then((result: RequirementData[]) => {
-            setPackages(prev => {
-              const newPackages: RequirementData[] = [];
-              result.forEach(item => {
-                // Ensure packages with identical names but DIFFERENT markers (like Windows/Linux wheels) are both kept
-                const exists =
-                  prev.some(p => p.name.toLowerCase() === item.name.toLowerCase() && p.markers === item.markers) ||
-                  newPackages.some(p => p.name.toLowerCase() === item.name.toLowerCase() && p.markers === item.markers);
-                if (!exists) newPackages.push(item);
-              });
-              return [...prev, ...newPackages];
+      .openDlgMany({properties: ['openFile'], filters: reqFileFilters})
+      .then(async files => {
+        if (files.length > 0) {
+          const results = await Promise.all(files.map(file => pIpc.readReqs(file)));
+          setPackages(prev => {
+            const newPackages: RequirementData[] = [];
+            results.flat().forEach(item => {
+              // Ensure packages with identical names but DIFFERENT markers (like Windows/Linux wheels) are both kept
+              const exists =
+                prev.some(p => p.name.toLowerCase() === item.name.toLowerCase() && p.markers === item.markers) ||
+                newPackages.some(p => p.name.toLowerCase() === item.name.toLowerCase() && p.markers === item.markers);
+              if (!exists) newPackages.push(item);
             });
-            setRequirementsFilePath('');
-            topToast.success('Requirements file loaded successfully');
+            return [...prev, ...newPackages];
           });
+          setRequirementsFilePaths([]);
+          topToast.success(
+            files.length === 1 ? 'Requirements file loaded successfully' : 'Requirements files loaded successfully',
+          );
         }
       })
       .catch(() => {
@@ -161,13 +163,15 @@ export default function Installer({isOpen, setInstallCommand, setIsInstallDisabl
 
   const handleRequirementsInstallSelect = () => {
     filesIpc
-      .openDlg({properties: ['openFile']})
-      .then(file => {
-        if (file) {
+      .openDlgMany({properties: ['openFile'], filters: reqFileFilters})
+      .then(files => {
+        if (files.length > 0) {
           setPackages([]);
           setPackageString('');
-          setRequirementsFilePath(file);
-          topToast.success('Requirements file selected for install');
+          setRequirementsFilePaths(files);
+          topToast.success(
+            files.length === 1 ? 'Requirements file selected for install' : 'Requirements files selected for install',
+          );
         }
       })
       .catch(() => {
@@ -187,20 +191,21 @@ export default function Installer({isOpen, setInstallCommand, setIsInstallDisabl
     }, 0);
   };
 
-  const fullCommand = requirementsFilePath
-    ? `pip install ${indexUrl.trim() ? `--index-url ${indexUrl.trim()} ` : ''}${
-        extraOptions.trim() ? `${extraOptions.trim()} ` : ''
-      }-r ${quotePath(requirementsFilePath)}`
-    : `pip install ${[
-        indexUrl.trim() ? `--index-url ${indexUrl.trim()}` : '',
-        extraOptions.trim(),
-        ...packages.map(pkg => {
-          const pkgStr = buildPackageString(pkg);
-          return pkgStr.includes(' ') || pkgStr.includes(';') ? `"${pkgStr}"` : pkgStr;
-        }),
-      ]
-        .filter(Boolean)
-        .join(' ')}`;
+  const fullCommand =
+    requirementsFilePaths.length > 0
+      ? `pip install ${indexUrl.trim() ? `--index-url ${indexUrl.trim()} ` : ''}${
+          extraOptions.trim() ? `${extraOptions.trim()} ` : ''
+        }${requirementsFilePaths.map(path => `-r ${quotePath(path)}`).join(' ')}`
+      : `pip install ${[
+          indexUrl.trim() ? `--index-url ${indexUrl.trim()}` : '',
+          extraOptions.trim(),
+          ...packages.map(pkg => {
+            const pkgStr = buildPackageString(pkg);
+            return pkgStr.includes(' ') || pkgStr.includes(';') ? `"${pkgStr}"` : pkgStr;
+          }),
+        ]
+          .filter(Boolean)
+          .join(' ')}`;
 
   return (
     <div className="flex flex-col gap-y-5 p-5 mx-auto">
@@ -209,18 +214,18 @@ export default function Installer({isOpen, setInstallCommand, setIsInstallDisabl
         <div className="flex flex-wrap items-center gap-2">
           <Button size="sm" variant="tertiary" onPress={handleFileSelect}>
             <Import />
-            Import requirements.txt
+            Import requirements files
           </Button>
           <Button size="sm" variant="tertiary" onPress={handleRequirementsInstallSelect}>
             <Download />
-            Install requirements.txt
+            Install requirements files
           </Button>
         </div>
-        {(!isEmpty(packages) || requirementsFilePath) && (
+        {(!isEmpty(packages) || requirementsFilePaths.length > 0) && (
           <Button
             onPress={() => {
               setPackages([]);
-              setRequirementsFilePath('');
+              setRequirementsFilePaths([]);
               setInstallCommand('');
             }}
             size="sm"
@@ -248,11 +253,18 @@ export default function Installer({isOpen, setInstallCommand, setIsInstallDisabl
       </TextField>
 
       {/* ── Package chips ── */}
-      {requirementsFilePath ? (
+      {requirementsFilePaths.length > 0 ? (
         <Surface variant="secondary" className="rounded-3xl p-3">
           <div className="flex flex-col gap-1 px-1">
-            <p className="text-sm text-content-secondary">Requirements file queued for install</p>
-            <p className="font-JetBrainsMono text-xs text-warning break-all">{requirementsFilePath}</p>
+            <p className="text-sm text-content-secondary">
+              {requirementsFilePaths.length} requirements file{requirementsFilePaths.length !== 1 ? 's' : ''} queued for
+              install
+            </p>
+            {requirementsFilePaths.map(path => (
+              <p key={path} className="font-JetBrainsMono text-xs text-warning break-all">
+                {path}
+              </p>
+            ))}
           </div>
         </Surface>
       ) : !isEmpty(packages) ? (
@@ -307,7 +319,7 @@ export default function Installer({isOpen, setInstallCommand, setIsInstallDisabl
           variant="secondary">
           <BoxMinimalistic className="size-10 text-yellow-600" />
           <p className="text-sm text-content-secondary">No packages added yet</p>
-          <p className="text-xs text-content-tertiary">Type above, import, or install a requirements file</p>
+          <p className="text-xs text-content-tertiary">Type above, import, or install requirements files</p>
         </Surface>
       )}
 
@@ -336,7 +348,7 @@ export default function Installer({isOpen, setInstallCommand, setIsInstallDisabl
       </Disclosure>
 
       {/* ── Terminal preview ── */}
-      {(!isEmpty(packages) || requirementsFilePath) && (
+      {(!isEmpty(packages) || requirementsFilePaths.length > 0) && (
         <div className="overflow-hidden rounded-2xl border border-white/[0.07] bg-surface-secondary">
           {/* Titlebar */}
           <div className="flex items-center justify-between border-b border-white/6 px-4 py-2">
@@ -351,10 +363,14 @@ export default function Installer({isOpen, setInstallCommand, setIsInstallDisabl
             <span className="text-semi-muted">pip install </span>
             {indexUrl.trim() && <span className="text-sky-400"> --index-url {indexUrl.trim()}</span>}
             {extraOptions.trim() && <span className="text-purple-400"> {extraOptions.trim()}</span>}
-            {requirementsFilePath ? (
+            {requirementsFilePaths.length > 0 ? (
               <>
-                <span className="text-sky-400"> -r </span>
-                <span className="text-amber-400">"{requirementsFilePath}"</span>
+                {requirementsFilePaths.map(path => (
+                  <span key={path}>
+                    <span className="text-sky-400"> -r </span>
+                    <span className="text-amber-400">"{path}"</span>
+                  </span>
+                ))}
               </>
             ) : (
               packages.map((pkg, i) => {
