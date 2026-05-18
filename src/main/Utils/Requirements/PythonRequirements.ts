@@ -182,16 +182,11 @@ export function setReqPath(data: IdPathType) {
   const storageManager = getStorage();
   const existingData = storageManager?.getCustomData(REQ_STORE_ID) as IdPathType[] | undefined;
 
-  let result: IdPathType[] = [];
-  if (existingData) {
-    const found = existingData.some(item => item.id === data.id);
-    if (found) {
-      result = existingData.map(item => {
-        return item.id === data.id ? data : item;
-      });
-    } else {
-      result.push(data);
-    }
+  let result = existingData ?? [];
+  const found = result.some(item => item.id === data.id);
+
+  if (found) {
+    result = result.map(item => (item.id === data.id ? data : item));
   } else {
     result.push(data);
   }
