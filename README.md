@@ -6,9 +6,9 @@
 
 ![Python Management Screenshot](./resources/python.png)
 
-**Python Toolkit Extension** is a powerful tool designed to streamline Python environment management within the
-[**LynxHub**](https://github.com/KindaBrazy/LynxHub) platform. It offers comprehensive features for managing Python
-installations, virtual environments, and packages.
+**Python Toolkit Extension** brings Python installation, virtual environment, package, and requirements management into
+[**LynxHub**](https://github.com/KindaBrazy/LynxHub). It is built for managing Python-backed AI tools and modules without
+leaving the LynxHub workspace.
 
 </div>
 
@@ -16,70 +16,92 @@ installations, virtual environments, and packages.
 
 ## 📚 Table of Contents
 
-- [🗺️ Roadmap](#-roadmap)
-- [🚀 Features](#-features)
+- [🚀 What it can do](#-what-it-can-do)
   - [🐍 Python Management](#-python-management)
-  - [🌐 Virtual Environment](#-virtual-environment)
+  - [🌐 Virtual Environments](#-virtual-environments)
   - [📦 Package Manager](#-package-manager)
   - [📝 Requirements Manager](#-requirements-manager)
-  - [🤖 AI Integration](#-ai-integration)
-  - [🛠️ Tools Page Integration](#-tools-page-integration)
+  - [🤖 LynxHub Integration](#-lynxhub-integration)
+- [⚙️ Settings](#-settings)
 - [📸 Screenshots](#-screenshots)
 - [⬇️ Installation](#-installation)
 - [🤝 Contribution](#-contribution)
 - [📄 License](#-license)
 
-## 🚀 Features
+## 🚀 What it can do
 
 ### 🐍 Python Management
 
-- **Auto-Detect Installed Pythons:** Automatically detects all installed Python versions, including those installed via
-  Conda.
-- **Install Python Versions:** Install new Python versions (official and Conda-based) directly from the extension.
-- **Set System Default Python:** Easily set any installed Python as the system default.
-- **Manage Installed Packages:** Manage packages installed in each Python environment.
-- **View Python Details:** View detailed information about installed Pythons, including version, install path, installed
-  packages count, and disk usage.
+- **Auto-detect Python installations:** Finds installed Python versions, including Conda installations, and keeps them
+  available inside LynxHub.
+- **Install Python versions:** Install official Python builds or Conda-based versions directly from the extension.
+- **Locate existing Python executables:** Manually add an already-installed Python when it is not detected automatically.
+- **Refresh detected installations:** Re-scan Python installations from the UI when your system changes.
+- **Set defaults:** Mark a Python as the system default or the LynxHub default.
+- **Inspect installations:** View version, installation type, path, package count, disk usage, and related package tools.
+- **Uninstall supported installs:** Remove official or Conda-managed Python installations through the toolkit.
 
-### 🌐 Virtual Environment
+### 🌐 Virtual Environments
 
-- **Locate Existing Venvs:** Locate and list existing virtual environments.
-- **Create New Venv:** Create new virtual environments with selected Python versions (official or Conda).
-- **Associate AI with Venv:** Associate AI tools with specific virtual environments, allowing multiple AIs to share the
-  same environment.
-- **View Venv Details:** View detailed information about virtual environments, including Python version, install path,
-  installed packages count, disk usage, and associated AIs.
-- **Manage Venv Packages:** Manage packages installed in virtual environments.
+- **Create virtual environments:** Choose a Python version, destination folder, and environment name from a compact
+  creator popover.
+- **Upgrade core packages on creation:** Optionally create venvs with upgraded core dependencies when supported by the
+  selected Python version.
+- **Locate existing environments:** Add existing virtual environments to LynxHub after validation.
+- **Treat Conda envs as environments:** Conda installations are shown alongside regular venvs where appropriate.
+- **Inspect environment details:** View Python version, path, package count, disk usage, and environment source.
+- **Associate environments with LynxHub modules:** Assign one or more AI/tool modules to a virtual environment so shared
+  dependencies can live in one place.
+- **Manage venv packages:** Open the package manager for any detected virtual environment.
 
 ### 📦 Package Manager
 
-- **Check for Updates:**
-  - Check for updates for all installed packages.
-  - Check for updates based on requirements files.
-- **Update Manager:**
-  - Interactively update packages.
-  - Categorize and colorize updates based on update type (prerelease, major, minor, patch, others).
-  - Filter updates by type and choose to update all or select packages.
-- **Install Packages:**
-  - Select and install multiple packages with version conditions.
-  - Install packages from a requirements file.
-  - View a preview of script before installation.
-- **Manage Requirements:**
-  - Manage requirements files and their associated packages.
+- **Browse installed packages:** See packages installed in each Python or virtual environment.
+- **Install multiple packages:** Add packages manually, paste multiple requirement lines, or import packages from one or
+  more requirements files.
+- **Install requirements files directly:** Queue one or more requirements files and run them as `pip install -r ...`
+  without converting them into individual package chips.
+- **Edit queued package specs:** Edit package chips using their raw/original requirement line before installing.
+- **Support richer requirement syntax:** Handles version operators, extras, environment markers, URL entries, and
+  PEP 508-style package URLs.
+- **Advanced pip options:** Add a custom index URL and extra pip flags before install.
+- **Terminal preview:** Preview and copy the generated `pip install` command before running it.
+- **Check package updates:** Check installed packages for available updates.
+- **Interactive update modal:** Review available updates, filter by update type, and update selected packages or update
+  all.
+- **Update feedback:** Shows a clear notification when no package updates are available.
+- **Live terminal output:** Package install and update operations run through a terminal view so progress is visible.
 
 ### 📝 Requirements Manager
 
-- **Select and Change Requirements File:** Easily switch between different requirements files.
-- **Add, Remove, and Change Requirements:** Modify requirements in a user-friendly interface.
+- **Auto-detect project requirements:** Finds the best matching requirements file in a project folder, preferring
+  `requirements.txt` when available.
+- **Select or deselect a requirements file:** Switch between files or clear the selected file for a module/environment.
+- **Search requirements:** Quickly filter requirements by package name.
+- **Add, edit, and remove requirements:** Manage package name, version constraints, extras, markers, URL entries, and raw
+  lines from the UI.
+- **Import multiple requirements files:** Merge packages from several requirements files into the selected file.
+- **Resolve import conflicts:** Keep the current requirement, use the imported one, or keep both when imported files
+  disagree.
+- **Skip duplicates safely:** Identical requirement entries are skipped during import, while entries with different
+  markers can coexist.
+- **Save cleaned requirements:** Writes the edited requirements back to disk while preserving URL-based entries.
 
-### 🤖 AI Integration
+### 🤖 LynxHub Integration
 
-- **New Menu Item for Package and Requirement Management:** Direct access to package and requirement management from the
-  AI menu.
+- **Tools page card:** Open the Python Toolkit from the LynxHub tools page.
+- **AI/module menus:** Access package and requirements management from module-specific menus.
+- **Supported module presets:** Includes Python dependency support for LynxHub modules such as Rsxdalv_AG,
+  ComfyUI-Lora-Manager, Ostris AI Toolkit, and Smart Gallery references.
+- **Shared LynxHub UI:** Uses LynxHub toast notifications, tab modals, terminal components, storage APIs, and the current
+  HeroUI-based design system.
 
-### 🛠️ Tools Page Integration
+## ⚙️ Settings
 
-- **New Card for Individual Toolkit:** Open and manage individual pythons from a dedicated card on the tools page.
+- **Concurrent operations:** Configure package-management concurrency where supported.
+- **Retry behavior:** Tune retry handling for package operations.
+- **Package name display:** Choose how package names are displayed in the package manager.
+- **Cache usage:** Cache package/environment disk usage calculations to avoid repeated expensive scans.
 
 ## 📸 Screenshots
 
