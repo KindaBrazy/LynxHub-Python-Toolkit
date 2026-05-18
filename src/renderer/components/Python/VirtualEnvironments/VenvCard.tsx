@@ -161,8 +161,8 @@ export default function VenvCard({
                       <div>
                         <strong className="text-sm">Delete Environment</strong>
                         <p className="text-xs text-default-600 mt-1">
-                          {`Permanently deletes the '${title}' environment folder and all its contents from ` +
-                            `your computer. Any AI using this environment will be disconnected.`}
+                          Permanently deletes the "{title}" environment folder and all its contents from your computer.
+                          Any AI using this environment will be disconnected.
                         </p>
                         <Button size="sm" variant="danger" className="mt-2" onPress={remove} fullWidth>
                           <TrashBin2 />
@@ -177,9 +177,9 @@ export default function VenvCard({
                       <div>
                         <strong className="text-sm">Remove From List Only</strong>
                         <p className="text-xs text-default-600 mt-1">
-                          {`Removes '${title}' from the list but does not delete the environment's files from ` +
-                            `your system. Any associated AI will be disconnected, but you can re-link them if ` +
-                            `you add this environment back later.`}
+                          Removes "{title}" from the list but does not delete the environment's files from your system.
+                          Any associated AI will be disconnected, but you can re-link them if you add this environment
+                          back later.
                         </p>
                         <Button size="sm" className="mt-2" variant="danger-soft" onPress={removeFromList} fullWidth>
                           <X />

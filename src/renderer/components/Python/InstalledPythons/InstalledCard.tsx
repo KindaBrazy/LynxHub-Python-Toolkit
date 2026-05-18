@@ -29,6 +29,14 @@ export default function InstalledCard({python, diskUsage, maxDiskValue, updateDe
   const [isUninstalling, setIsUninstalling] = useState<boolean>(false);
 
   const makeDefault = () => {
+    const confirmed = window.confirm(
+      `Set Python ${python.version} as the system default?\n\nTarget path:\n${python.installFolder}\n\nThis updates` +
+        ` the Python directory used at the front of PATH for system-default detection. Existing terminals may need` +
+        ` to be restarted before they see the change.`,
+    );
+
+    if (!confirmed) return;
+
     pIpc
       .setDefaultPython(python.installFolder)
       .then(() => {
@@ -42,6 +50,13 @@ export default function InstalledCard({python, diskUsage, maxDiskValue, updateDe
   };
 
   const makeLynxDefault = () => {
+    const confirmed = window.confirm(
+      `Set Python ${python.version} as the LynxHub default?\n\nTarget path:\n${python.installFolder}\n\nThis` +
+        ` changes the PATH used by LynxHub-run tools so new Python package operations use this installation first.`,
+    );
+
+    if (!confirmed) return;
+
     const showFailedToast = () => {
       topToast.danger(`Failed to set ${python.version} as LynxHub default. Please try again later.`);
     };
@@ -220,9 +235,8 @@ export default function InstalledCard({python, diskUsage, maxDiskValue, updateDe
                       <strong className="text-sm">Complete Uninstall</strong>
                       {python.installationType === 'conda' ? (
                         <p className="text-xs text-default-600 mt-1">
-                          {`Permanently deletes the entire Conda environment "${python.condaName}" and all
-                         its packages from your computer. Any AI using this environment will be
-                          disconnected.`}
+                          Permanently deletes the entire Conda environment "{python.condaName}" and all its packages
+                          from your computer. Any AI using this environment will be disconnected.
                         </p>
                       ) : window.osPlatform === 'darwin' ? (
                         <p className="text-xs text-default-600 mt-1">
@@ -238,8 +252,8 @@ export default function InstalledCard({python, diskUsage, maxDiskValue, updateDe
                         </p>
                       ) : (
                         <p className="text-xs text-default-600 mt-1">
-                          {`Permanently uninstalls Python version ${python.version} and all its packages
-                         from your computer. Any AI using this installation will be disconnected.`}
+                          Permanently uninstalls Python version {python.version} and all its packages from your
+                          computer. Any AI using this installation will be disconnected.
                         </p>
                       )}
                       <Button size="sm" variant="danger" className="mt-2" onPress={uninstall} fullWidth>
