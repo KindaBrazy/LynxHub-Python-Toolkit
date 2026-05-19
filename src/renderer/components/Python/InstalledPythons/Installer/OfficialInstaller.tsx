@@ -137,6 +137,8 @@ export default function InstallerOfficial({refresh, installed, state, setCloseDi
       });
   };
 
+  const isDownloading = !!downloadProgress?.percentage || downloadProgress?.percentage !== 0;
+
   return (
     <>
       {isEmpty(installingVersion) && (
@@ -156,7 +158,7 @@ export default function InstallerOfficial({refresh, installed, state, setCloseDi
         </div>
       )}
       {errorLoadingVersion ? (
-        <div className="size-full py-2 text-danger flex flex-col items-center justify-center gap-4">
+        <div className="py-2 text-danger flex flex-col items-center justify-center gap-4 px-6">
           <ShieldWarning className="size-20" />
           <span className="text-lg">{errorLoadingVersion.title}</span>
           <span className="text-warning text-sm">{errorLoadingVersion.description}</span>
@@ -173,10 +175,14 @@ export default function InstallerOfficial({refresh, installed, state, setCloseDi
                 </ProgressBar.Track>
               </ProgressBar>
             ) : (
-              <ProgressBar className="my-4" value={(downloadProgress?.percentage || 0.1) * 100}>
+              <ProgressBar
+                className="my-4"
+                isIndeterminate={!isDownloading}
+                value={(downloadProgress?.percentage || 0) * 100}>
                 <Label>Downloading {installingVersion?.url.split('/').pop()}...</Label>
                 <ProgressBar.Output>
-                  {formatSize(downloadProgress?.downloaded)} / {formatSize(downloadProgress?.total)}
+                  {isDownloading &&
+                    `${formatSize(downloadProgress?.downloaded)} / ${formatSize(downloadProgress?.total)}`}
                 </ProgressBar.Output>
                 <ProgressBar.Track>
                   <ProgressBar.Fill />
