@@ -87,7 +87,7 @@ export default function EnvironmentCard({
 
       <Card
         className={
-          'group w-96 overflow-hidden border border-divider/70 bg-content1/90 p-0 shadow-sm transition-all' +
+          'group w-103 overflow-hidden border border-divider/70 bg-content1/90 p-0 shadow-sm transition-all' +
           ' duration-200 hover:border-divider hover:bg-content1 hover:shadow-md'
         }>
         <Card.Header className="flex flex-row items-start justify-between gap-x-3 px-4 pb-2.5 pt-3.5">
