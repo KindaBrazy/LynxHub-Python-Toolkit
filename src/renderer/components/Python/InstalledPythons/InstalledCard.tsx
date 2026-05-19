@@ -1,7 +1,20 @@
-import {Button, Chip, Dropdown, Label, Popover, Separator, useOverlayState} from '@heroui/react';
+import {
+  AlertDialog,
+  Button,
+  Chip,
+  Description,
+  Dropdown,
+  Label,
+  Popover,
+  Separator,
+  useOverlayState,
+} from '@heroui/react';
 import LynxTooltip from '@lynx/components/LynxTooltip';
+import {topToast} from '@lynx/layouts/ToastProviders';
+import {isWin} from '@lynx_common/utils';
 import filesIpc from '@lynx_shared/ipc/files';
-import {BoxMinimalistic, CheckCircle, MenuDots, TrashBin2} from '@solar-icons/react-perf/BoldDuotone';
+import {BoxMinimalistic, CheckCircle, MenuDots, Refresh, TrashBin2} from '@solar-icons/react-perf/BoldDuotone';
+import {CheckRead} from '@solar-icons/react-perf/LineDuotone';
 import {startCase} from 'lodash-es';
 import {X} from 'lucide-react';
 import {useCallback, useMemo, useState} from 'react';
@@ -10,7 +23,6 @@ import {PythonInstallation} from '../../../../cross/CrossExtTypes';
 import pIpc from '../../../PIpc';
 import EnvironmentCard from '../EnvironmentCard';
 import PackageManagerModal from '../PackageManagement/PackageManager/PackageManagerModal';
-import SetDefault from './SetDefault';
 
 type Props = {
   python: PythonInstallation;
@@ -21,6 +33,9 @@ type Props = {
 };
 
 export default function InstalledCard({python, diskUsage, maxDiskValue, updateDefault, refresh}: Props) {
+  const systemConfirm = useOverlayState();
+  const lynxConfirm = useOverlayState();
+
   const size = useMemo(() => {
     return diskUsage.find(usage => usage.path === python.installFolder)?.value;
   }, [diskUsage, python.installFolder]);
@@ -93,6 +108,44 @@ export default function InstalledCard({python, diskUsage, maxDiskValue, updateDe
     return null;
   }, [python]);
 
+  const makeDefault = () => {
+    systemConfirm.close();
+
+    pIpc
+      .setDefaultPython(python.installFolder)
+      .then(() => {
+        topToast.success(`Python ${python.version} is now the system default.`);
+        updateDefault(python.installFolder, 'isDefault');
+      })
+      .catch(error => {
+        topToast.danger(`Failed to set ${python.version} as system default. Please try again later.`);
+        console.error(error);
+      });
+  };
+
+  const makeLynxDefault = () => {
+    lynxConfirm.close();
+
+    const showFailedToast = () => {
+      topToast.danger(`Failed to set ${python.version} as LynxHub default. Please try again later.`);
+    };
+
+    pIpc
+      .replacePythonPath(python.installFolder)
+      .then(result => {
+        if (result) {
+          topToast.success(`Python ${python.version} is now the default for LynxHub.`);
+          updateDefault(python.installFolder, 'isLynxHubDefault');
+        } else {
+          showFailedToast();
+        }
+      })
+      .catch(e => {
+        console.log(e);
+        showFailedToast();
+      });
+  };
+
   const removeFromList = useCallback(() => {
     pIpc.removeAssociatePath(python.installPath);
     pIpc.removeSavedPython(python.installPath);
@@ -147,7 +200,23 @@ export default function InstalledCard({python, diskUsage, maxDiskValue, updateDe
               </LynxTooltip>
               <Dropdown.Popover>
                 <Dropdown.Menu>
-                  <SetDefault python={python} updateDefault={updateDefault} />
+                  {isWin && (
+                    <>
+                      <Dropdown.Item id="system-default" onPress={systemConfirm.open} textValue="Set as System Default">
+                        {python.isDefault ? <Refresh className="size-4" /> : <CheckRead size={16} />}
+                        <Label>
+                          Set as <span className="font-bold text-LynxPurple">System Default</span>
+                        </Label>
+                      </Dropdown.Item>
+
+                      <Dropdown.Item id="lynxhub-default" onPress={lynxConfirm.open} textValue="Set as LynxHub Default">
+                        {python.isLynxHubDefault ? <Refresh className="size-4" /> : <CheckRead size={16} />}
+                        <Label>
+                          Set as <span className="font-bold text-accent">LynxHub Default</span>
+                        </Label>
+                      </Dropdown.Item>
+                    </>
+                  )}
                   <Dropdown.Item id="package-manager" textValue="Manage Packages" onPress={packageManagerModal.open}>
                     <BoxMinimalistic className="size-4" />
                     <Label>Manage Packages</Label>
@@ -155,6 +224,69 @@ export default function InstalledCard({python, diskUsage, maxDiskValue, updateDe
                 </Dropdown.Menu>
               </Dropdown.Popover>
             </Dropdown>
+
+            <AlertDialog isOpen={systemConfirm.isOpen} onOpenChange={systemConfirm.setOpen}>
+              <AlertDialog.Backdrop>
+                <AlertDialog.Container>
+                  <AlertDialog.Dialog>
+                    <AlertDialog.CloseTrigger />
+                    <AlertDialog.Header>
+                      <AlertDialog.Icon status="danger" />
+                      <AlertDialog.Heading>
+                        Set Python <span className="font-bold">{python.version}</span> as the system default?
+                      </AlertDialog.Heading>
+                    </AlertDialog.Header>
+                    <AlertDialog.Body className="flex flex-col gap-y-1">
+                      <Description className="text-warning">{python.installFolder}</Description>
+
+                      <Description>
+                        This updates the Python directory used at the front of PATH for system-default detection.
+                        Existing terminals may need to be restarted before they see the change.
+                      </Description>
+                    </AlertDialog.Body>
+                    <AlertDialog.Footer>
+                      <Button slot="close" variant="ghost">
+                        No
+                      </Button>
+                      <Button variant="danger" onPress={makeDefault}>
+                        Yes
+                      </Button>
+                    </AlertDialog.Footer>
+                  </AlertDialog.Dialog>
+                </AlertDialog.Container>
+              </AlertDialog.Backdrop>
+            </AlertDialog>
+
+            <AlertDialog isOpen={lynxConfirm.isOpen} onOpenChange={lynxConfirm.setOpen}>
+              <AlertDialog.Backdrop>
+                <AlertDialog.Container>
+                  <AlertDialog.Dialog>
+                    <AlertDialog.CloseTrigger />
+                    <AlertDialog.Header>
+                      <AlertDialog.Icon status="warning" />
+                      <AlertDialog.Heading>
+                        Set Python <span className="font-bold">{python.version}</span> as the LynxHub default?
+                      </AlertDialog.Heading>
+                    </AlertDialog.Header>
+                    <AlertDialog.Body className="flex flex-col gap-y-1">
+                      <Description className="text-warning">{python.installFolder}</Description>
+                      <Description>
+                        This changes the PATH used by LynxHub-run tools so new Python package operations use this
+                        installation first.
+                      </Description>
+                    </AlertDialog.Body>
+                    <AlertDialog.Footer>
+                      <Button slot="close" variant="ghost">
+                        No
+                      </Button>
+                      <Button variant="danger-soft" onPress={makeLynxDefault}>
+                        Yes
+                      </Button>
+                    </AlertDialog.Footer>
+                  </AlertDialog.Dialog>
+                </AlertDialog.Container>
+              </AlertDialog.Backdrop>
+            </AlertDialog>
 
             <Popover isOpen={popoverUninstaller} onOpenChange={setPopoverUninstaller}>
               <LynxTooltip delay={300} content="Remove Python">
