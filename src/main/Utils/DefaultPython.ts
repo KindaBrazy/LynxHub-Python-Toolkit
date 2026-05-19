@@ -2,6 +2,7 @@ import {spawn} from 'node:child_process';
 import {platform} from 'node:os';
 import {dirname, resolve} from 'node:path';
 
+import {determineShell} from '@lynx_main/utils';
 import {promises} from 'graceful-fs';
 import {homedir} from 'os';
 import which from 'which';
@@ -150,54 +151,66 @@ async function comparePythonPaths(path1: string, path2: string): Promise<boolean
 
 async function setDefaultPythonWindows(pythonPath: string): Promise<void> {
   return new Promise((resolve, reject) => {
-    const regQuery = spawn('reg', ['query', 'HKEY_CURRENT_USER\\Environment', '/v', 'Path']);
+    const powershellExe = determineShell();
 
-    let queryOutput = '';
+    const getCmd = `[Environment]::GetEnvironmentVariable('Path', 'User')`;
+    const getProc = spawn(powershellExe, ['-NoProfile', '-Command', getCmd]);
 
-    regQuery.stdout.on('data', data => {
-      queryOutput += data.toString();
+    let getOutput = '';
+    let getError = '';
+
+    getProc.stdout.on('data', data => {
+      getOutput += data.toString();
     });
 
-    regQuery.stderr.on('data', data => {
-      reject(new Error(`Registry query error: ${data.toString()}`));
+    getProc.stderr.on('data', data => {
+      getError += data.toString();
     });
 
-    regQuery.on('close', code => {
+    getProc.on('close', code => {
       if (code !== 0) {
-        reject(new Error('Failed to query registry'));
-        return;
+        return reject(new Error(`Failed to retrieve current user PATH: ${getError}`));
       }
 
-      const match = queryOutput.match(/REG_\w+\s+(.+)/);
-      if (!match) {
-        reject(new Error('Failed to retrieve current PATH'));
-        return;
+      const currentUserPath = getOutput.trim();
+      let newUserPath: string;
+
+      try {
+        newUserPath = replacePythonPath(currentUserPath, pythonPath);
+      } catch (err) {
+        return reject(err);
       }
 
-      const newPathValue = replacePythonPath(match[1], pythonPath);
-      const defaultEnvPath = getDefaultEnvPath();
-      if (defaultEnvPath) setDefaultEnvPath(replacePythonPath(defaultEnvPath, pythonPath));
+      // Encode to Base64 to entirely avoid nested quote escape issues with Windows Shell
+      const base64Path = Buffer.from(newUserPath, 'utf16le').toString('base64');
+      const setCmd = `
+        $path = [System.Text.Encoding]::Unicode.GetString([System.Convert]::FromBase64String('${base64Path}'))
+        [Environment]::SetEnvironmentVariable('Path', $path, 'User')
+      `;
 
-      const regAdd = spawn(
-        'reg',
-        ['add', 'HKEY_CURRENT_USER\\Environment', '/v', 'Path', '/t', 'REG_EXPAND_SZ', '/d', newPathValue, '/f'],
-        {
-          timeout: 3000,
-        },
-      );
+      const setProc = spawn(powershellExe, ['-NoProfile', '-Command', setCmd]);
 
       let addError = '';
-
-      regAdd.stderr.on('data', data => {
+      setProc.stderr.on('data', data => {
         addError += data.toString();
       });
 
-      regAdd.on('close', code => {
-        if (code !== 0) {
-          reject(new Error(`Failed to update PATH: ${addError}`));
-          return;
+      setProc.on('close', setCode => {
+        if (setCode !== 0) {
+          return reject(new Error(`Failed to update PATH in registry: ${addError}`));
         }
-        process.env.PATH = newPathValue;
+
+        // Apply carefully to `process.env.PATH` without losing fundamental system paths (e.g., C:\Windows\System32)
+        try {
+          process.env.PATH = replacePythonPath(process.env.PATH || '', pythonPath);
+          const defaultEnvPath = getDefaultEnvPath();
+          if (defaultEnvPath) {
+            setDefaultEnvPath(replacePythonPath(defaultEnvPath, pythonPath));
+          }
+        } catch (envErr) {
+          console.error('Failed to update process.env.PATH', envErr);
+        }
+
         resolve();
       });
     });

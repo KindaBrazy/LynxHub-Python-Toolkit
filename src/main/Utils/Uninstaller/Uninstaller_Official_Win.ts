@@ -3,12 +3,14 @@ import {homedir} from 'node:os';
 import {dirname, join} from 'node:path';
 import {promisify} from 'node:util';
 
+import {determineShell} from '@lynx_main/utils';
 import {existsSync, readdirSync} from 'graceful-fs';
 import {isNil} from 'lodash-es';
 
 import {findFileInDir, parseVersion, removeDir} from '../PythonUtils';
 
 const execAsync = promisify(exec);
+const execFileAsync = promisify(execFile);
 
 const defaultPackageCachePath = join(homedir(), 'AppData', 'Local', 'Package Cache');
 
@@ -117,28 +119,42 @@ async function cleanupWindowsRegistry(version: string): Promise<void> {
 async function removePythonFromPath(pythonPath: string): Promise<void> {
   return new Promise(async (resolve, reject) => {
     try {
-      const {stdout: currentPath} = await execAsync('reg query "HKEY_CURRENT_USER\\Environment" /v Path');
+      const powershellExe = determineShell();
 
-      const match = currentPath.match(/REG_\w+\s+(.+)/);
-      if (!match) {
-        reject(new Error('Failed to retrieve current PATH'));
+      const getCmd = `[Environment]::GetEnvironmentVariable('Path', 'User')`;
+      const {stdout} = await execFileAsync(powershellExe, ['-NoProfile', '-Command', getCmd]);
+
+      const currentUserPath = stdout.trim();
+      if (!currentUserPath) {
+        console.log('No user PATH found');
+        return resolve();
       }
 
-      const paths = match ? match[1].split(';').filter(Boolean) : [];
-      const nonPythonPaths = paths.filter(path => !path.toLowerCase().includes(pythonPath.toLowerCase()));
+      const paths = currentUserPath.split(';').filter(Boolean);
+      const nonPythonPaths = paths.filter(p => !p.toLowerCase().includes(pythonPath.toLowerCase()));
 
       if (paths.length === nonPythonPaths.length) {
         console.log('No Python paths found in PATH');
-        return;
+        return resolve();
       }
 
       const newPathValue = nonPythonPaths.join(';');
 
-      const regCommand = `REG ADD "HKEY_CURRENT_USER\\Environment" /v Path /t REG_EXPAND_SZ /d "${newPathValue}" /f`;
+      const base64Path = Buffer.from(newPathValue, 'utf16le').toString('base64');
+      const setCmd = `
+        $path = [System.Text.Encoding]::Unicode.GetString([System.Convert]::FromBase64String('${base64Path}'))
+        [Environment]::SetEnvironmentVariable('Path', $path, 'User')
+      `;
 
-      await execAsync(regCommand);
+      await execFileAsync(powershellExe, ['-NoProfile', '-Command', setCmd]);
 
-      process.env.PATH = newPathValue;
+      // Carefully modify `process.env.PATH` without blowing out `System32` etc
+      if (process.env.PATH) {
+        process.env.PATH = process.env.PATH.split(';')
+          .filter(Boolean)
+          .filter(p => !p.toLowerCase().includes(pythonPath.toLowerCase()))
+          .join(';');
+      }
 
       console.log('Python paths removed successfully');
       resolve();
