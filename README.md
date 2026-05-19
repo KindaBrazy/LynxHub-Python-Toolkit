@@ -4,7 +4,7 @@
 
 # [LynxHub](https://github.com/KindaBrazy/LynxHub) Python Toolkit Extension
 
-![Python Management Screenshot](./resources/python.png)
+![Python Management Screenshot](./resources/venv.png)
 
 **Python Toolkit Extension** brings Python installation, virtual environment, package, and requirements management into
 [**LynxHub**](https://github.com/KindaBrazy/LynxHub). It is built for managing Python-backed AI tools and modules without
@@ -102,17 +102,6 @@ leaving the LynxHub workspace.
 - **Retry behavior:** Tune retry handling for package operations.
 - **Package name display:** Choose how package names are displayed in the package manager.
 - **Cache usage:** Cache package/environment disk usage calculations to avoid repeated expensive scans.
-
-## 📸 Screenshots
-
-- **Python Management:**
-  - ![Python Management Screenshot](./resources/python.png)
-- **Virtual Environment Management:**
-  - ![Virtual Environment Screenshot](./resources/venv.png)
-- **Package Manager:**
-  - ![Package Manager Screenshot](./resources/package.png)
-- **Requirements Manager:**
-  - ![Requirements Manager Screenshot](./resources/requirements.png)
 
 ## ⬇️ Installation
 
