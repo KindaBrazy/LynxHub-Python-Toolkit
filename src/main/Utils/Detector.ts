@@ -328,6 +328,8 @@ async function analyzePythonPath(pythonPath: string): Promise<PythonInstallation
     const isValid = await isPythonPathValid(pythonPath);
     if (!isValid) return null;
 
+    const installFolder = dirname(pythonPath);
+
     const [
       version,
       isDefault,
@@ -340,7 +342,7 @@ async function analyzePythonPath(pythonPath: string): Promise<PythonInstallation
       sitePackagesPath,
     ] = await Promise.all([
       parseVersion(pythonPath),
-      isDefaultPython(pythonPath),
+      isDefaultPython(installFolder),
       detectInstallationType(pythonPath),
       getCondaEnvName(pythonPath),
       getSitePackagesCount(pythonPath),
@@ -350,7 +352,6 @@ async function analyzePythonPath(pythonPath: string): Promise<PythonInstallation
       getSitePackagesPath(pythonPath),
     ]);
 
-    const installFolder = dirname(pythonPath);
     // Use stored selection for LynxHub default instead of PATH inspection
     // This correctly handles Conda environments where shell auto-activation affects PATH
     const isLynxHubDefault = isLynxHubDefaultPython(pythonPath);

@@ -47,7 +47,7 @@ export async function setDefaultPython(pythonPath: string): Promise<void> {
     setStoredSystemDefaultPython(pythonPath);
     console.log(`Python ${pythonPath} set as default`);
   } catch (err: any) {
-    throw new Error(`Failed to set Python ${pythonPath} as default: ${err.message}`);
+    throw new Error(`Failed to set Python ${pythonPath} as default: ${err.message}`, {cause: err});
   }
 }
 
@@ -117,12 +117,8 @@ export function isLynxHubDefaultPython(pythonPath: string): boolean {
 async function comparePythonPaths(path1: string, path2: string): Promise<boolean> {
   const isWindows = platform() === 'win32';
 
-  // Normalize to install folders (dirname of the executable)
-  const dir1 = resolve(dirname(path1));
-  const dir2 = resolve(dirname(path2));
-
   // Direct directory comparison first
-  if (isWindows ? dir1.toLowerCase() === dir2.toLowerCase() : dir1 === dir2) {
+  if (isWindows ? path1.toLowerCase() === path2.toLowerCase() : path1 === path2) {
     return true;
   }
 
@@ -260,7 +256,7 @@ async function setDefaultPythonUnix(pythonPath: string, shellConfigFile: string)
       setDefaultEnvPath(`${pythonBinDir}:${defaultEnvPath}`);
     }
   } catch (err: any) {
-    throw new Error(`Failed to update shell config: ${err.message}`);
+    throw new Error(`Failed to update shell config: ${err.message}`, {cause: err});
   }
 }
 

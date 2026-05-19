@@ -4,7 +4,8 @@ import {join, resolve} from 'node:path';
 
 import {accessSync, realpathSync} from 'graceful-fs';
 
-export const COMMAND_LINE_ENDING = platform() === 'win32' ? '\r' : '\n';
+export const isWin = platform() === 'win32';
+export const COMMAND_LINE_ENDING = isWin ? '\r' : '\n';
 
 /** Returns PowerShell version, or -1 if PowerShell is not available */
 function getPowerShellVersion(): number {
@@ -57,18 +58,14 @@ export function determineShell(): string {
   }
 }
 
-export function isWin() {
-  return platform() === 'win32';
-}
-
 /** Returns the PATH separator for the current platform (';' for Windows, ':' for Unix) */
 function getPathSeparator(): string {
-  return platform() === 'win32' ? ';' : ':';
+  return isWin ? ';' : ':';
 }
 
 /** Returns the Python scripts subdirectory name for the current platform */
 function getPythonScriptsDir(): string {
-  return platform() === 'win32' ? 'Scripts' : 'bin';
+  return isWin ? 'Scripts' : 'bin';
 }
 
 function validatePath(path: string): boolean {
@@ -99,8 +96,7 @@ export function replacePythonPath(envPath: string, newPythonBase: string): strin
 
   // On Windows, installFolder is the base (e.g., C:\Python312) and Scripts is a subdirectory
   // On Unix, installFolder is already the bin directory (e.g., /usr/local/bin)
-  const isWindows = platform() === 'win32';
-  const newPaths = isWindows
+  const newPaths = isWin
     ? [targetPath, join(targetPath, getPythonScriptsDir()), ...nonPythonPaths]
     : [targetPath, ...nonPythonPaths];
 
@@ -115,12 +111,11 @@ export function isFirstPythonPath(envPath: string, targetPythonBase: string): bo
     return false;
   }
 
-  const isWindows = platform() === 'win32';
   const separator = getPathSeparator();
   const paths = envPath.split(separator).filter(Boolean);
 
   // On Windows, compare directories directly
-  if (isWindows) {
+  if (isWin) {
     const firstPath = paths[0];
     if (firstPath) {
       const resolvedFirst = resolve(firstPath);
