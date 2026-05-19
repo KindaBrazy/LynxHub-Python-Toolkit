@@ -110,17 +110,14 @@ export default function InstalledCard({python, diskUsage, maxDiskValue, updateDe
 
   const makeDefault = () => {
     systemConfirm.close();
-
-    pIpc
-      .setDefaultPython(python.installFolder)
-      .then(() => {
-        topToast.success(`Python ${python.version} is now the system default.`);
+    topToast.promise(pIpc.setDefaultPython(python.installFolder), {
+      error: `Failed to set ${python.version} as system default. Please try again later.`,
+      loading: `Changing system default to the ${python.version}...`,
+      success: () => {
         updateDefault(python.installFolder, 'isDefault');
-      })
-      .catch(error => {
-        topToast.danger(`Failed to set ${python.version} as system default. Please try again later.`);
-        console.error(error);
-      });
+        return `Python ${python.version} is now the system default.`;
+      },
+    });
   };
 
   const makeLynxDefault = () => {
