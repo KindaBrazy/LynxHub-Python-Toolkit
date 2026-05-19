@@ -114,7 +114,7 @@ const PkgVersions = memo(({updated, item, pythonPath}: Props) => {
               </ProgressBar>
               <Description>
                 {isLoadingVersions
-                  ? 'Fetching latest available versions.'
+                  ? 'Fetching available versions...'
                   : changingTo
                     ? `Changing from "${item.version}" to "${changingTo}"`
                     : ''}
