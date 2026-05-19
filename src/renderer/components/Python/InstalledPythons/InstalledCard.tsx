@@ -200,16 +200,18 @@ export default function InstalledCard({python, diskUsage, maxDiskValue, updateDe
                   {isWin && (
                     <>
                       <Dropdown.Item id="system-default" onPress={systemConfirm.open} textValue="Set as System Default">
-                        {python.isDefault ? <Refresh className="size-4" /> : <CheckRead size={16} />}
+                        {python.isDefault ? <Refresh size={16} /> : <CheckRead size={16} />}
                         <Label>
-                          Set as <span className="font-bold text-LynxPurple">System Default</span>
+                          {python.isDefault ? 'Reset ' : 'Set '}
+                          <span className="font-bold text-LynxPurple">System Default</span>
                         </Label>
                       </Dropdown.Item>
 
                       <Dropdown.Item id="lynxhub-default" onPress={lynxConfirm.open} textValue="Set as LynxHub Default">
-                        {python.isLynxHubDefault ? <Refresh className="size-4" /> : <CheckRead size={16} />}
+                        {python.isLynxHubDefault ? <Refresh size={16} /> : <CheckRead size={16} />}
                         <Label>
-                          Set as <span className="font-bold text-accent">LynxHub Default</span>
+                          {python.isDefault ? 'Reset ' : 'Set '}
+                          <span className="font-bold text-accent">LynxHub Default</span>
                         </Label>
                       </Dropdown.Item>
                     </>
