@@ -69,7 +69,7 @@ export default function EnvironmentCard({
   };
 
   return (
-    <div className="relative grow">
+    <div className="relative">
       {isBusy && (
         <div
           className={
