@@ -1,6 +1,6 @@
 {
   "name": "python_toolkit",
-  "version": "0.14.2",
+  "version": "0.15.0",
   "type": "module",
   "dependencies": {
     "crypto-js": "^4.2.0",
