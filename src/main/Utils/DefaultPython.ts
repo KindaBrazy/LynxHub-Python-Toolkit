@@ -2,7 +2,6 @@ import {spawn} from 'node:child_process';
 import {platform} from 'node:os';
 import {dirname, resolve} from 'node:path';
 
-import {determineShell} from '@lynx_main/utils';
 import {promises} from 'graceful-fs';
 import {homedir} from 'os';
 import which from 'which';
@@ -14,7 +13,7 @@ import {
   setDefaultEnvPath,
   setStoredSystemDefaultPython,
 } from '../DataHolder';
-import {replacePythonPath} from './ExtMainUtils';
+import {determineShell, replacePythonPath} from './ExtMainUtils';
 
 async function validatePath(path: string): Promise<boolean> {
   try {

@@ -7,8 +7,13 @@ import {accessSync, realpathSync} from 'graceful-fs';
 export const isWin = platform() === 'win32';
 export const COMMAND_LINE_ENDING = isWin ? '\r' : '\n';
 
-/** Returns PowerShell version, or -1 if PowerShell is not available */
-function getPowerShellVersion(): number {
+/**
+ * Gets the highest available PowerShell version on the system.
+ * Checks for `pwsh` (PowerShell Core) first, then `powershell` (Windows PowerShell).
+ *
+ * @returns {number} The major version number of PowerShell, or -1 if PowerShell is not found or version is too low.
+ */
+export function getPowerShellVersion(): number {
   const command = '$PSVersionTable.PSVersion.Major';
 
   try {
@@ -41,6 +46,14 @@ function getPowerShellVersion(): number {
   }
 }
 
+/**
+ * Determines the appropriate shell executable based on the operating system.
+ * - macOS: zsh
+ * - Linux: bash
+ * - Windows: pwsh.exe (if v7+), powershell.exe (if v5+), or cmd.exe fallback
+ *
+ * @returns {string} The shell command to use.
+ */
 export function determineShell(): string {
   switch (platform()) {
     case 'darwin':

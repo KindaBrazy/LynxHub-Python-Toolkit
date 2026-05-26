@@ -3,10 +3,10 @@ import {homedir} from 'node:os';
 import {dirname, join} from 'node:path';
 import {promisify} from 'node:util';
 
-import {determineShell} from '@lynx_main/utils';
 import {existsSync, readdirSync} from 'graceful-fs';
 import {isNil} from 'lodash-es';
 
+import {determineShell} from '../ExtMainUtils';
 import {findFileInDir, parseVersion, removeDir} from '../PythonUtils';
 
 const execAsync = promisify(exec);
