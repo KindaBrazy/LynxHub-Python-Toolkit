@@ -1,6 +1,7 @@
-import {exec} from 'child_process';
+import {exec} from 'node:child_process';
+import {promisify} from 'node:util';
+
 import {existsSync} from 'graceful-fs';
-import {promisify} from 'util';
 
 const execAsync = promisify(exec);
 

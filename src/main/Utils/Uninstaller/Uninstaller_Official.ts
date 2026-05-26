@@ -1,4 +1,4 @@
-import {platform} from 'os';
+import {platform} from 'node:os';
 
 import {uninstallLinuxPython} from './Uninstaller_Official_Linux';
 import {uninstallMacPython} from './Uninstaller_Official_Mac';

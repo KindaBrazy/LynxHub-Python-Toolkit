@@ -1,7 +1,6 @@
+import {exec} from 'node:child_process';
 import {platform} from 'node:os';
-
-import {exec} from 'child_process';
-import {promisify} from 'util';
+import {promisify} from 'node:util';
 
 import {PythonVersion} from '../../cross/CrossExtTypes';
 

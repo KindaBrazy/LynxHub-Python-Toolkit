@@ -1,11 +1,11 @@
+import {exec} from 'node:child_process';
+import {constants} from 'node:fs';
+import {arch, homedir, platform} from 'node:os';
 import {basename, dirname, join} from 'node:path';
+import {promisify} from 'node:util';
 
-import {exec} from 'child_process';
-import {constants} from 'fs';
 import {existsSync, promises} from 'graceful-fs';
 import {compact, isEmpty, isNil} from 'lodash-es';
-import {arch, homedir, platform} from 'os';
-import {promisify} from 'util';
 import which from 'which';
 
 import {PythonInstallation} from '../../cross/CrossExtTypes';

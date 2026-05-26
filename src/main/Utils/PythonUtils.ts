@@ -1,7 +1,6 @@
-import {spawn} from 'node:child_process';
+import {exec, spawn} from 'node:child_process';
 import {join, resolve} from 'node:path';
 
-import {exec} from 'child_process';
 import {dialog, OpenDialogOptions, OpenDialogReturnValue} from 'electron';
 import {existsSync, promises, readdirSync, statSync} from 'graceful-fs';
 import {compare} from 'semver';

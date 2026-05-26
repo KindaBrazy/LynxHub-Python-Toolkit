@@ -1,9 +1,8 @@
 import {spawn} from 'node:child_process';
-import {platform} from 'node:os';
+import {homedir, platform} from 'node:os';
 import {dirname, resolve} from 'node:path';
 
 import {promises} from 'graceful-fs';
-import {homedir} from 'os';
 import which from 'which';
 
 import {

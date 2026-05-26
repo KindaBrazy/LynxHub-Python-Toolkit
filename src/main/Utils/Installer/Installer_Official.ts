@@ -1,10 +1,10 @@
+import {exec} from 'node:child_process';
 import {platform} from 'node:os';
 import {join} from 'node:path';
+import {promisify} from 'node:util';
 
-import {exec} from 'child_process';
 import {app} from 'electron';
 import {download} from 'electron-dl';
-import {promisify} from 'util';
 
 import {pythonChannels, PythonVersion} from '../../../cross/CrossExtTypes';
 import {getAppManager} from '../../DataHolder';
