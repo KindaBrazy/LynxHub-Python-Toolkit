@@ -2,8 +2,8 @@ const currentImports = {};
       const exportSet = new Set(['Module', '__esModule', 'default', '_export_sfc']);
       let moduleMap = {
 "Extension":()=>{
-      dynamicLoadingCss(["style-KZ2jttn-.css"], false, 'Extension');
-      return __federation_import('./__federation_expose_Extension-DlStiLdY.js').then(module =>Object.keys(module).every(item => exportSet.has(item)) ? () => module.default : () => module)},};
+      dynamicLoadingCss(["style-uMyLczik.css"], false, 'Extension');
+      return __federation_import('./__federation_expose_Extension-CrdAgcVI.js').then(module =>Object.keys(module).every(item => exportSet.has(item)) ? () => module.default : () => module)},};
       const seen = {};
       const dynamicLoadingCss = (cssFilePaths, dontAppendStylesToHead, exposeItemName) => {
         const metaUrl = import.meta.url;

@@ -10,18 +10,17 @@ const require$$0$2 = require("constants");
 const stream = require("stream");
 const require$$1 = require("util");
 const require$$5 = require("assert");
-const child_process = require("child_process");
-const require$$0$5 = require("os");
 const require$$0$4 = require("node:fs");
 const require$$1$1 = require("node:fs/promises");
 const require$$1$2 = require("path");
 const process$1 = require("node:process");
 const require$$3 = require("http");
 const require$$4 = require("https");
-const require$$0$6 = require("url");
+const require$$0$5 = require("url");
 const require$$8 = require("crypto");
 const http2 = require("http2");
 const require$$1$3 = require("tty");
+const require$$0$6 = require("os");
 const zlib = require("zlib");
 const events = require("events");
 const AI_VENV_STORE_KEYS = "ai_venvs";
@@ -107,6 +106,7 @@ const pythonChannels = {
   setCacheStorageUsage: "set-cache-storage-usage",
   getCardStartCommand: "get-card-start-command",
   setCardStartCommand: "set-card-start-command",
+  getEnvironmentActivationCommand: "ptoolkit-get-environment-activation-command",
   replacePythonPath: "ptoolkit-replace-python-path",
   errorGetVenvInfo: "ptoolkit-errorGetVenvInfo",
   updateCheckProgress: "ptoolkit-update-check-progress",
@@ -2444,7 +2444,7 @@ function requireParse() {
   if (hasRequiredParse) return parse_1;
   hasRequiredParse = 1;
   const SemVer = requireSemver$1();
-  const parse = (version, options, throwErrors = false) => {
+  const parse2 = (version, options, throwErrors = false) => {
     if (version instanceof SemVer) {
       return version;
     }
@@ -2457,7 +2457,7 @@ function requireParse() {
       throw er;
     }
   };
-  parse_1 = parse;
+  parse_1 = parse2;
   return parse_1;
 }
 var valid_1;
@@ -2465,9 +2465,9 @@ var hasRequiredValid$1;
 function requireValid$1() {
   if (hasRequiredValid$1) return valid_1;
   hasRequiredValid$1 = 1;
-  const parse = requireParse();
+  const parse2 = requireParse();
   const valid2 = (version, options) => {
-    const v = parse(version, options);
+    const v = parse2(version, options);
     return v ? v.version : null;
   };
   valid_1 = valid2;
@@ -2478,9 +2478,9 @@ var hasRequiredClean;
 function requireClean() {
   if (hasRequiredClean) return clean_1;
   hasRequiredClean = 1;
-  const parse = requireParse();
+  const parse2 = requireParse();
   const clean = (version, options) => {
-    const s = parse(version.trim().replace(/^[=v]+/, ""), options);
+    const s = parse2(version.trim().replace(/^[=v]+/, ""), options);
     return s ? s.version : null;
   };
   clean_1 = clean;
@@ -2515,10 +2515,10 @@ var hasRequiredDiff;
 function requireDiff() {
   if (hasRequiredDiff) return diff_1;
   hasRequiredDiff = 1;
-  const parse = requireParse();
+  const parse2 = requireParse();
   const diff = (version1, version2) => {
-    const v1 = parse(version1, null, true);
-    const v2 = parse(version2, null, true);
+    const v1 = parse2(version1, null, true);
+    const v2 = parse2(version2, null, true);
     const comparison = v1.compare(v2);
     if (comparison === 0) {
       return null;
@@ -2589,9 +2589,9 @@ var hasRequiredPrerelease;
 function requirePrerelease() {
   if (hasRequiredPrerelease) return prerelease_1;
   hasRequiredPrerelease = 1;
-  const parse = requireParse();
+  const parse2 = requireParse();
   const prerelease = (version, options) => {
-    const parsed = parse(version, options);
+    const parsed = parse2(version, options);
     return parsed && parsed.prerelease.length ? parsed.prerelease : null;
   };
   prerelease_1 = prerelease;
@@ -2603,8 +2603,8 @@ function requireCompare() {
   if (hasRequiredCompare) return compare_1;
   hasRequiredCompare = 1;
   const SemVer = requireSemver$1();
-  const compare = (a, b, loose) => new SemVer(a, loose).compare(new SemVer(b, loose));
-  compare_1 = compare;
+  const compare2 = (a, b, loose) => new SemVer(a, loose).compare(new SemVer(b, loose));
+  compare_1 = compare2;
   return compare_1;
 }
 var rcompare_1;
@@ -2612,8 +2612,8 @@ var hasRequiredRcompare;
 function requireRcompare() {
   if (hasRequiredRcompare) return rcompare_1;
   hasRequiredRcompare = 1;
-  const compare = requireCompare();
-  const rcompare = (a, b, loose) => compare(b, a, loose);
+  const compare2 = requireCompare();
+  const rcompare = (a, b, loose) => compare2(b, a, loose);
   rcompare_1 = rcompare;
   return rcompare_1;
 }
@@ -2622,8 +2622,8 @@ var hasRequiredCompareLoose;
 function requireCompareLoose() {
   if (hasRequiredCompareLoose) return compareLoose_1;
   hasRequiredCompareLoose = 1;
-  const compare = requireCompare();
-  const compareLoose = (a, b) => compare(a, b, true);
+  const compare2 = requireCompare();
+  const compareLoose = (a, b) => compare2(a, b, true);
   compareLoose_1 = compareLoose;
   return compareLoose_1;
 }
@@ -2666,8 +2666,8 @@ var hasRequiredGt;
 function requireGt() {
   if (hasRequiredGt) return gt_1;
   hasRequiredGt = 1;
-  const compare = requireCompare();
-  const gt = (a, b, loose) => compare(a, b, loose) > 0;
+  const compare2 = requireCompare();
+  const gt = (a, b, loose) => compare2(a, b, loose) > 0;
   gt_1 = gt;
   return gt_1;
 }
@@ -2676,8 +2676,8 @@ var hasRequiredLt;
 function requireLt() {
   if (hasRequiredLt) return lt_1;
   hasRequiredLt = 1;
-  const compare = requireCompare();
-  const lt = (a, b, loose) => compare(a, b, loose) < 0;
+  const compare2 = requireCompare();
+  const lt = (a, b, loose) => compare2(a, b, loose) < 0;
   lt_1 = lt;
   return lt_1;
 }
@@ -2686,8 +2686,8 @@ var hasRequiredEq;
 function requireEq() {
   if (hasRequiredEq) return eq_1;
   hasRequiredEq = 1;
-  const compare = requireCompare();
-  const eq2 = (a, b, loose) => compare(a, b, loose) === 0;
+  const compare2 = requireCompare();
+  const eq2 = (a, b, loose) => compare2(a, b, loose) === 0;
   eq_1 = eq2;
   return eq_1;
 }
@@ -2696,8 +2696,8 @@ var hasRequiredNeq;
 function requireNeq() {
   if (hasRequiredNeq) return neq_1;
   hasRequiredNeq = 1;
-  const compare = requireCompare();
-  const neq = (a, b, loose) => compare(a, b, loose) !== 0;
+  const compare2 = requireCompare();
+  const neq = (a, b, loose) => compare2(a, b, loose) !== 0;
   neq_1 = neq;
   return neq_1;
 }
@@ -2706,8 +2706,8 @@ var hasRequiredGte;
 function requireGte() {
   if (hasRequiredGte) return gte_1;
   hasRequiredGte = 1;
-  const compare = requireCompare();
-  const gte = (a, b, loose) => compare(a, b, loose) >= 0;
+  const compare2 = requireCompare();
+  const gte = (a, b, loose) => compare2(a, b, loose) >= 0;
   gte_1 = gte;
   return gte_1;
 }
@@ -2716,8 +2716,8 @@ var hasRequiredLte;
 function requireLte() {
   if (hasRequiredLte) return lte_1;
   hasRequiredLte = 1;
-  const compare = requireCompare();
-  const lte = (a, b, loose) => compare(a, b, loose) <= 0;
+  const compare2 = requireCompare();
+  const lte = (a, b, loose) => compare2(a, b, loose) <= 0;
   lte_1 = lte;
   return lte_1;
 }
@@ -2777,7 +2777,7 @@ function requireCoerce() {
   if (hasRequiredCoerce) return coerce_1;
   hasRequiredCoerce = 1;
   const SemVer = requireSemver$1();
-  const parse = requireParse();
+  const parse2 = requireParse();
   const { safeRe: re2, t } = requireRe();
   const coerce = (version, options) => {
     if (version instanceof SemVer) {
@@ -2812,7 +2812,7 @@ function requireCoerce() {
     const patch = match[4] || "0";
     const prerelease = options.includePrerelease && match[5] ? `-${match[5]}` : "";
     const build = options.includePrerelease && match[6] ? `+${match[6]}` : "";
-    return parse(`${major}.${minor}.${patch}${prerelease}${build}`, options);
+    return parse2(`${major}.${minor}.${patch}${prerelease}${build}`, options);
   };
   coerce_1 = coerce;
   return coerce_1;
@@ -3614,12 +3614,12 @@ function requireSimplify() {
   if (hasRequiredSimplify) return simplify;
   hasRequiredSimplify = 1;
   const satisfies = requireSatisfies();
-  const compare = requireCompare();
+  const compare2 = requireCompare();
   simplify = (versions, range2, options) => {
     const set = [];
     let first = null;
     let prev = null;
-    const v = versions.sort((a, b) => compare(a, b, options));
+    const v = versions.sort((a, b) => compare2(a, b, options));
     for (const version of v) {
       const included = satisfies(version, range2, options);
       if (included) {
@@ -3667,7 +3667,7 @@ function requireSubset() {
   const Comparator = requireComparator();
   const { ANY } = Comparator;
   const satisfies = requireSatisfies();
-  const compare = requireCompare();
+  const compare2 = requireCompare();
   const subset = (sub, dom, options = {}) => {
     if (sub === dom) {
       return true;
@@ -3727,7 +3727,7 @@ function requireSubset() {
     }
     let gtltComp;
     if (gt && lt) {
-      gtltComp = compare(gt.semver, lt.semver, options);
+      gtltComp = compare2(gt.semver, lt.semver, options);
       if (gtltComp > 0) {
         return null;
       } else if (gtltComp === 0 && (gt.operator !== ">=" || lt.operator !== "<=")) {
@@ -3807,14 +3807,14 @@ function requireSubset() {
     if (!a) {
       return b;
     }
-    const comp = compare(a.semver, b.semver, options);
+    const comp = compare2(a.semver, b.semver, options);
     return comp > 0 ? a : comp < 0 ? b : b.operator === ">" && a.operator === ">=" ? b : a;
   };
   const lowerLT = (a, b, options) => {
     if (!a) {
       return b;
     }
-    const comp = compare(a.semver, b.semver, options);
+    const comp = compare2(a.semver, b.semver, options);
     return comp < 0 ? a : comp > 0 ? b : b.operator === "<" && a.operator === "<=" ? b : a;
   };
   subset_1 = subset;
@@ -3829,7 +3829,7 @@ function requireSemver() {
   const constants2 = requireConstants();
   const SemVer = requireSemver$1();
   const identifiers2 = requireIdentifiers();
-  const parse = requireParse();
+  const parse2 = requireParse();
   const valid2 = requireValid$1();
   const clean = requireClean();
   const inc = requireInc();
@@ -3838,7 +3838,7 @@ function requireSemver() {
   const minor = requireMinor();
   const patch = requirePatch();
   const prerelease = requirePrerelease();
-  const compare = requireCompare();
+  const compare2 = requireCompare();
   const rcompare = requireRcompare();
   const compareLoose = requireCompareLoose();
   const compareBuild = requireCompareBuild();
@@ -3867,7 +3867,7 @@ function requireSemver() {
   const simplifyRange = requireSimplify();
   const subset = requireSubset();
   semver$1 = {
-    parse,
+    parse: parse2,
     valid: valid2,
     clean,
     inc,
@@ -3876,7 +3876,7 @@ function requireSemver() {
     minor,
     patch,
     prerelease,
-    compare,
+    compare: compare2,
     rcompare,
     compareLoose,
     compareBuild,
@@ -4006,7 +4006,7 @@ async function getSitePackagesCount(pythonPath) {
   return new Promise((resolve2, reject) => {
     const supportImportLib = semverExports.compare(`${version.major}.${version.minor}.${version.patch}`, "3.8.0") === 1;
     const command = supportImportLib ? `import importlib.metadata; print(len(list(importlib.metadata.distributions())))` : `import pkg_resources; print(len(list(pkg_resources.working_set)))`;
-    child_process.exec(`"${pythonPath}" -c "${command}"`, (error, stdout, stderr) => {
+    node_child_process.exec(`"${pythonPath}" -c "${command}"`, (error, stdout, stderr) => {
       if (error) {
         reject(error);
         return;
@@ -4128,12 +4128,13 @@ async function locateVenv() {
     return false;
   }
 }
-async function createPythonVenv(options) {
-  const { pythonPath, destinationFolder, venvName } = options;
+function createPythonVenv(options) {
+  const { pythonPath, destinationFolder, venvName, upgradeDeps } = options;
   const venvPath = path.join(destinationFolder, venvName);
-  const command = `"${pythonPath}" -m venv "${venvPath}"`;
+  const upgradeCommand = upgradeDeps ? `--upgrade-deps ` : ``;
+  const command = `"${pythonPath}" -m venv ${upgradeCommand}"${venvPath}"`;
   return new Promise((resolve) => {
-    child_process.exec(command, (error, stdout, stderr) => {
+    node_child_process.exec(command, (error, stdout, stderr) => {
       if (error) {
         console.error(`Error creating virtual environment: ${error.message}`);
         if (stderr) {
@@ -4158,7 +4159,7 @@ async function createPythonVenv(options) {
     });
   });
 }
-const execFileAsync = node_util.promisify(node_child_process.execFile);
+const execFileAsync$1 = node_util.promisify(node_child_process.execFile);
 async function getPythonVersion(venvPath) {
   return new Promise((resolve, reject) => {
     const pythonExecutable = getVenvPythonPath(venvPath);
@@ -4187,7 +4188,7 @@ async function getPythonVersion(venvPath) {
 async function checkPipInstallation(exePath) {
   return new Promise(async (resolve, reject) => {
     try {
-      await execFileAsync(exePath, ["-m", "pip", "--version"]);
+      await execFileAsync$1(exePath, ["-m", "pip", "--version"]);
       resolve();
     } catch (e) {
       console.log("pip not found. Attempting to install pip...");
@@ -4276,23 +4277,23 @@ async function findAIVenv(id, folder) {
   }
 }
 function getCommandByType(type2, dir, condaName) {
-  const isWin = node_os.platform() === "win32";
+  const isWin2 = node_os.platform() === "win32";
   switch (type2) {
     case "python": {
-      if (isWin) {
+      if (isWin2) {
         return `$env:Path = "${dir};${dir}\\Scripts;" + $env:Path`;
       }
       return `export PATH="${dir}:$PATH"`;
     }
     case "venv": {
-      if (isWin) {
+      if (isWin2) {
         return `& "${dir}\\Scripts\\Activate.ps1"`;
       }
       const activatePath = dir.endsWith("/bin") ? `${dir}/activate` : `${dir}/bin/activate`;
       return `source "${activatePath}"`;
     }
     case "conda": {
-      if (isWin) {
+      if (isWin2) {
         if (condaName) {
           return `conda activate ${condaName}`;
         }
@@ -4344,12 +4345,12 @@ function updateAssociateStorage(data) {
 function getExePathAssociate(target) {
   try {
     const buildPath = (item) => {
-      const isWin = node_os.platform() === "win32";
+      const isWin2 = node_os.platform() === "win32";
       switch (item.type) {
         case "venv":
           return path.resolve(getVenvPythonPath(item.dir));
         case "conda": {
-          if (isWin) {
+          if (isWin2) {
             return path.resolve(path.join(item.dir, "python.exe"));
           }
           const pythonPath = item.dir.endsWith("/bin") ? path.join(item.dir, "python") : path.join(item.dir, "bin", "python");
@@ -4357,7 +4358,7 @@ function getExePathAssociate(target) {
         }
         case "python":
         default: {
-          if (isWin) {
+          if (isWin2) {
             return path.resolve(path.join(item.dir, "python.exe"));
           }
           const pythonPath = item.dir.endsWith("/bin") ? path.join(item.dir, "python") : path.join(item.dir, "bin", "python");
@@ -4415,7 +4416,7 @@ function removeAssociatePath(pythonPath) {
     console.warn(`Error removing associate by path: ${pythonPath}`, err);
   }
 }
-const execAsync$6 = require$$1.promisify(child_process.exec);
+const execAsync$6 = node_util.promisify(node_child_process.exec);
 function removeDuplicateUrls(versions) {
   const seenUrls = /* @__PURE__ */ new Set();
   return versions.filter((version) => {
@@ -4745,7 +4746,8 @@ function requireLib() {
 }
 var libExports = requireLib();
 const which = /* @__PURE__ */ getDefaultExportFromCjs(libExports);
-const COMMAND_LINE_ENDING = node_os.platform() === "win32" ? "\r" : "\n";
+const isWin = node_os.platform() === "win32";
+const COMMAND_LINE_ENDING = isWin ? "\r" : "\n";
 function getPowerShellVersion() {
   const command = "$PSVersionTable.PSVersion.Major";
   try {
@@ -4788,10 +4790,10 @@ function determineShell() {
   }
 }
 function getPathSeparator() {
-  return node_os.platform() === "win32" ? ";" : ":";
+  return isWin ? ";" : ":";
 }
 function getPythonScriptsDir() {
-  return node_os.platform() === "win32" ? "Scripts" : "bin";
+  return isWin ? "Scripts" : "bin";
 }
 function validatePath$1(path2) {
   try {
@@ -4813,8 +4815,7 @@ function replacePythonPath(envPath, newPythonBase) {
     const lowerPath = p.toLowerCase();
     return !lowerPath.includes("python") && !lowerPath.includes("conda") && !lowerPath.includes("miniconda");
   });
-  const isWindows = node_os.platform() === "win32";
-  const newPaths = isWindows ? [targetPath, path.join(targetPath, getPythonScriptsDir()), ...nonPythonPaths] : [targetPath, ...nonPythonPaths];
+  const newPaths = isWin ? [targetPath, path.join(targetPath, getPythonScriptsDir()), ...nonPythonPaths] : [targetPath, ...nonPythonPaths];
   return newPaths.join(separator);
 }
 async function validatePath(path2) {
@@ -4845,7 +4846,7 @@ async function setDefaultPython(pythonPath) {
     setStoredSystemDefaultPython(pythonPath);
     console.log(`Python ${pythonPath} set as default`);
   } catch (err) {
-    throw new Error(`Failed to set Python ${pythonPath} as default: ${err.message}`);
+    throw new Error(`Failed to set Python ${pythonPath} as default: ${err.message}`, { cause: err });
   }
 }
 async function isDefaultPython(pythonPath) {
@@ -4883,9 +4884,7 @@ function isLynxHubDefaultPython(pythonPath) {
 }
 async function comparePythonPaths(path1, path2) {
   const isWindows = node_os.platform() === "win32";
-  const dir1 = path.resolve(path.dirname(path1));
-  const dir2 = path.resolve(path.dirname(path2));
-  if (isWindows ? dir1.toLowerCase() === dir2.toLowerCase() : dir1 === dir2) {
+  if (isWindows ? path1.toLowerCase() === path2.toLowerCase() : path1 === path2) {
     return true;
   }
   if (!isWindows) {
@@ -4908,44 +4907,51 @@ async function comparePythonPaths(path1, path2) {
 }
 async function setDefaultPythonWindows(pythonPath) {
   return new Promise((resolve2, reject) => {
-    const regQuery = node_child_process.spawn("reg", ["query", "HKEY_CURRENT_USER\\Environment", "/v", "Path"]);
-    let queryOutput = "";
-    regQuery.stdout.on("data", (data) => {
-      queryOutput += data.toString();
+    const powershellExe = determineShell();
+    const getCmd = `[Environment]::GetEnvironmentVariable('Path', 'User')`;
+    const getProc = node_child_process.spawn(powershellExe, ["-NoProfile", "-Command", getCmd]);
+    let getOutput = "";
+    let getError = "";
+    getProc.stdout.on("data", (data) => {
+      getOutput += data.toString();
     });
-    regQuery.stderr.on("data", (data) => {
-      reject(new Error(`Registry query error: ${data.toString()}`));
+    getProc.stderr.on("data", (data) => {
+      getError += data.toString();
     });
-    regQuery.on("close", (code) => {
+    getProc.on("close", (code) => {
       if (code !== 0) {
-        reject(new Error("Failed to query registry"));
-        return;
+        return reject(new Error(`Failed to retrieve current user PATH: ${getError}`));
       }
-      const match = queryOutput.match(/REG_\w+\s+(.+)/);
-      if (!match) {
-        reject(new Error("Failed to retrieve current PATH"));
-        return;
+      const currentUserPath = getOutput.trim();
+      let newUserPath;
+      try {
+        newUserPath = replacePythonPath(currentUserPath, pythonPath);
+      } catch (err) {
+        return reject(err);
       }
-      const newPathValue = replacePythonPath(match[1], pythonPath);
-      const defaultEnvPath2 = getDefaultEnvPath();
-      if (defaultEnvPath2) setDefaultEnvPath(replacePythonPath(defaultEnvPath2, pythonPath));
-      const regAdd = node_child_process.spawn(
-        "reg",
-        ["add", "HKEY_CURRENT_USER\\Environment", "/v", "Path", "/t", "REG_EXPAND_SZ", "/d", newPathValue, "/f"],
-        {
-          timeout: 3e3
-        }
-      );
+      const base64Path = Buffer.from(newUserPath, "utf16le").toString("base64");
+      const setCmd = `
+        $path = [System.Text.Encoding]::Unicode.GetString([System.Convert]::FromBase64String('${base64Path}'))
+        [Environment]::SetEnvironmentVariable('Path', $path, 'User')
+      `;
+      const setProc = node_child_process.spawn(powershellExe, ["-NoProfile", "-Command", setCmd]);
       let addError = "";
-      regAdd.stderr.on("data", (data) => {
+      setProc.stderr.on("data", (data) => {
         addError += data.toString();
       });
-      regAdd.on("close", (code2) => {
-        if (code2 !== 0) {
-          reject(new Error(`Failed to update PATH: ${addError}`));
-          return;
+      setProc.on("close", (setCode) => {
+        if (setCode !== 0) {
+          return reject(new Error(`Failed to update PATH in registry: ${addError}`));
         }
-        process.env.PATH = newPathValue;
+        try {
+          process.env.PATH = replacePythonPath(process.env.PATH || "", pythonPath);
+          const defaultEnvPath2 = getDefaultEnvPath();
+          if (defaultEnvPath2) {
+            setDefaultEnvPath(replacePythonPath(defaultEnvPath2, pythonPath));
+          }
+        } catch (envErr) {
+          console.error("Failed to update process.env.PATH", envErr);
+        }
         resolve2();
       });
     });
@@ -4988,15 +4994,15 @@ export PATH="${pythonBinDir}:$PATH"`;
       setDefaultEnvPath(`${pythonBinDir}:${defaultEnvPath2}`);
     }
   } catch (err) {
-    throw new Error(`Failed to update shell config: ${err.message}`);
+    throw new Error(`Failed to update shell config: ${err.message}`, { cause: err });
   }
 }
 async function setDefaultPythonMacOS(pythonPath) {
-  const zshrcPath = `${require$$0$5.homedir()}/.zshrc`;
+  const zshrcPath = `${node_os.homedir()}/.zshrc`;
   return setDefaultPythonUnix(pythonPath, zshrcPath);
 }
 async function setDefaultPythonLinux(pythonPath) {
-  const bashrcPath = `${require$$0$5.homedir()}/.bashrc`;
+  const bashrcPath = `${node_os.homedir()}/.bashrc`;
   return setDefaultPythonUnix(pythonPath, bashrcPath);
 }
 const execAsync$5 = node_util.promisify(node_child_process.exec);
@@ -5036,7 +5042,7 @@ async function getCondaEnvName(pythonPath) {
     throw new Error(`Failed to get conda environment name: ${err.message}`);
   }
 }
-const execAsync$4 = require$$1.promisify(child_process.exec);
+const execAsync$4 = node_util.promisify(node_child_process.exec);
 const commonPaths = {
   win32: [
     "C:\\Python*",
@@ -5102,7 +5108,7 @@ async function fileExists(filePath) {
 }
 async function isExecutable(filePath) {
   try {
-    await gracefulFsExports.promises.access(filePath, require$$0$3.constants.X_OK);
+    await gracefulFsExports.promises.access(filePath, require$$0$4.constants.X_OK);
     return true;
   } catch {
     return false;
@@ -5113,7 +5119,7 @@ async function isPythonPathValid(pythonPath) {
     return false;
   }
   const fileName = path.basename(pythonPath).toLowerCase();
-  const isWindows = require$$0$5.platform() === "win32";
+  const isWindows = node_os.platform() === "win32";
   if (isWindows) {
     if (fileName !== "python.exe") {
       return false;
@@ -5127,7 +5133,7 @@ async function isPythonPathValid(pythonPath) {
     }
   }
   return new Promise((resolve) => {
-    child_process.exec(`"${pythonPath}" --version`, (error, stdout, stderr) => {
+    node_child_process.exec(`"${pythonPath}" --version`, (error, stdout, stderr) => {
       if (error) {
         resolve(false);
       } else {
@@ -5147,7 +5153,7 @@ async function findPythonInPath() {
     for (const cmd of pythonCommands) {
       try {
         const path2 = await which(cmd);
-        if (path2) paths.push(require$$0$5.platform() === "win32" ? path2.replace(".EXE", ".exe") : path2);
+        if (path2) paths.push(node_os.platform() === "win32" ? path2.replace(".EXE", ".exe") : path2);
       } catch (error) {
       }
     }
@@ -5157,11 +5163,11 @@ async function findPythonInPath() {
   }
 }
 async function findInCommonLocations() {
-  const os = require$$0$5.platform();
+  const os = node_os.platform();
   const paths = commonPaths[os] || [];
   const expandedPaths = [];
   for (const pathPattern of paths) {
-    const expandedPath = pathPattern.replace("%LOCALAPPDATA%", process.env.LOCALAPPDATA || "").replace("%USERPROFILE%", require$$0$5.homedir()).replace("~", require$$0$5.homedir());
+    const expandedPath = pathPattern.replace("%LOCALAPPDATA%", process.env.LOCALAPPDATA || "").replace("%USERPROFILE%", node_os.homedir()).replace("~", node_os.homedir());
     const basePath = path.dirname(expandedPath);
     const pattern = path.basename(expandedPath);
     try {
@@ -5209,7 +5215,7 @@ async function detectArchitecture(pythonPath) {
     const { stdout } = await execAsync$4(`"${pythonPath}" -c "import struct; print(struct.calcsize('P') * 8)"`);
     return stdout.trim() === "64" ? "64bit" : "32bit";
   } catch (error) {
-    return require$$0$5.arch() === "x64" ? "64bit" : "32bit";
+    return node_os.arch() === "x64" ? "64bit" : "32bit";
   }
 }
 async function getPipPath(pythonPath) {
@@ -5281,6 +5287,7 @@ async function analyzePythonPath(pythonPath) {
   try {
     const isValid = await isPythonPathValid(pythonPath);
     if (!isValid) return null;
+    const installFolder = path.dirname(pythonPath);
     const [
       version,
       isDefault,
@@ -5293,7 +5300,7 @@ async function analyzePythonPath(pythonPath) {
       sitePackagesPath
     ] = await Promise.all([
       parseVersion(pythonPath),
-      isDefaultPython(pythonPath),
+      isDefaultPython(installFolder),
       detectInstallationType(pythonPath),
       getCondaEnvName(pythonPath),
       getSitePackagesCount(pythonPath),
@@ -5302,7 +5309,6 @@ async function analyzePythonPath(pythonPath) {
       getVenvPaths(pythonPath),
       getSitePackagesPath(pythonPath)
     ]);
-    const installFolder = path.dirname(pythonPath);
     const isLynxHubDefault = isLynxHubDefaultPython(pythonPath);
     return {
       version: `${version.major}.${version.minor}.${version.patch}`,
@@ -8359,7 +8365,7 @@ async function download(window_, url, options) {
     window_.webContents.downloadURL(url);
   });
 }
-const execAsync$3 = require$$1.promisify(child_process.exec);
+const execAsync$3 = node_util.promisify(node_child_process.exec);
 async function installPython(filePath, version) {
   try {
     switch (node_os.platform()) {
@@ -8440,7 +8446,7 @@ async function installOnLinux(version) {
   const command = `pkexec apt install ${packagesToInstall} -y`;
   return new Promise((resolve, reject) => {
     try {
-      child_process.exec(command, (error, stdout, stderr) => {
+      node_child_process.exec(command, (error, stdout, stderr) => {
         if (error) {
           console.error(`Error executing command: ${command}`);
           console.error(stderr);
@@ -8461,7 +8467,7 @@ async function installOnMacOS(installerPath) {
   const script = `do shell script "installer -pkg '${escapedPath}' -target /" with administrator privileges`;
   const command = `osascript -e '${script}'`;
   return new Promise((resolve, reject) => {
-    child_process.exec(command, (error, stdout, stderr) => {
+    node_child_process.exec(command, (error, stdout, stderr) => {
       if (error) {
         console.error(`Error installing Python on macOS: ${error.message}`);
         console.error(stderr);
@@ -8548,7 +8554,7 @@ async function changePythonPackageVersion(pythonPath, packageName, cVersion, tVe
       targetVersion
     };
     const changeVersionCommand = constructChangeVersionCommand(pythonPath, packageInfo);
-    child_process.exec(changeVersionCommand, (error, stdout, stderr) => {
+    node_child_process.exec(changeVersionCommand, (error, stdout, stderr) => {
       if (error) {
         reject(`Error changing version of ${packageName}: ${error.message}`);
         return;
@@ -8575,6 +8581,175 @@ function constructChangeVersionCommand(pythonExePath, packageInfo) {
   }
   command += ` ${packageName}==${targetVersion}`;
   return command;
+}
+const VERSION_PATTERN = [
+  "v?",
+  "(?:",
+  /* */
+  "(?:(?<epoch>[0-9]+)!)?",
+  // epoch
+  /* */
+  "(?<release>[0-9]+(?:\\.[0-9]+)*)",
+  // release segment
+  /* */
+  "(?<pre>",
+  // pre-release
+  /*    */
+  "[-_\\.]?",
+  /*    */
+  "(?<pre_l>(a|b|c|rc|alpha|beta|pre|preview))",
+  /*    */
+  "[-_\\.]?",
+  /*    */
+  "(?<pre_n>[0-9]+)?",
+  /* */
+  ")?",
+  /* */
+  "(?<post>",
+  // post release
+  /*    */
+  "(?:-(?<post_n1>[0-9]+))",
+  /*    */
+  "|",
+  /*    */
+  "(?:",
+  /*        */
+  "[-_\\.]?",
+  /*        */
+  "(?<post_l>post|rev|r)",
+  /*        */
+  "[-_\\.]?",
+  /*        */
+  "(?<post_n2>[0-9]+)?",
+  /*    */
+  ")",
+  /* */
+  ")?",
+  /* */
+  "(?<dev>",
+  // dev release
+  /*    */
+  "[-_\\.]?",
+  /*    */
+  "(?<dev_l>dev)",
+  /*    */
+  "[-_\\.]?",
+  /*    */
+  "(?<dev_n>[0-9]+)?",
+  /* */
+  ")?",
+  ")",
+  "(?:\\+(?<local>[a-z0-9]+(?:[-_\\.][a-z0-9]+)*))?"
+  // local version
+].join("");
+const validRegex = new RegExp("^" + VERSION_PATTERN + "$", "i");
+function parse(version, regex) {
+  const { groups } = validRegex.exec(version) || {};
+  if (!groups) {
+    return null;
+  }
+  const parsed = {
+    epoch: Number(groups.epoch ? groups.epoch : 0),
+    release: groups.release.split(".").map(Number),
+    pre: normalize_letter_version(groups.pre_l, groups.pre_n),
+    post: normalize_letter_version(
+      groups.post_l,
+      groups.post_n1 || groups.post_n2
+    ),
+    dev: normalize_letter_version(groups.dev_l, groups.dev_n),
+    local: parse_local_version(groups.local)
+  };
+  return parsed;
+}
+function normalize_letter_version(letterIn, numberIn) {
+  let letter = letterIn;
+  let number = numberIn;
+  if (letter) {
+    if (!number) {
+      number = 0;
+    }
+    letter = letter.toLowerCase();
+    if (letter === "alpha") {
+      letter = "a";
+    } else if (letter === "beta") {
+      letter = "b";
+    } else if (["c", "pre", "preview"].includes(letter)) {
+      letter = "rc";
+    } else if (["rev", "r"].includes(letter)) {
+      letter = "post";
+    }
+    return [letter, Number(number)];
+  }
+  if (!letter && number) {
+    letter = "post";
+    return [letter, Number(number)];
+  }
+  return null;
+}
+function parse_local_version(local) {
+  if (local) {
+    return local.split(/[._-]/).map(
+      (part) => Number.isNaN(Number(part)) ? part.toLowerCase() : Number(part)
+    );
+  }
+  return null;
+}
+function compare(version, other) {
+  const parsedVersion = parse(version);
+  const parsedOther = parse(other);
+  const keyVersion = calculateKey(parsedVersion);
+  const keyOther = calculateKey(parsedOther);
+  return pyCompare(keyVersion, keyOther);
+}
+function pyCompare(elemIn, otherIn) {
+  let elem = elemIn;
+  let other = otherIn;
+  if (elem === other) {
+    return 0;
+  }
+  if (Array.isArray(elem) !== Array.isArray(other)) {
+    elem = Array.isArray(elem) ? elem : [elem];
+    other = Array.isArray(other) ? other : [other];
+  }
+  if (Array.isArray(elem)) {
+    const len = Math.min(elem.length, other.length);
+    for (let i = 0; i < len; i += 1) {
+      const res = pyCompare(elem[i], other[i]);
+      if (res !== 0) {
+        return res;
+      }
+    }
+    return elem.length - other.length;
+  }
+  if (elem === -Infinity || other === Infinity) {
+    return -1;
+  }
+  if (elem === Infinity || other === -Infinity) {
+    return 1;
+  }
+  return elem < other ? -1 : 1;
+}
+function calculateKey(input) {
+  const { epoch } = input;
+  let { release, pre, post, local, dev } = input;
+  release = release.concat();
+  release.reverse();
+  while (release.length && release[0] === 0) {
+    release.shift();
+  }
+  release.reverse();
+  if (!pre && !post && dev) pre = -Infinity;
+  else if (!pre) pre = Infinity;
+  if (!post) post = -Infinity;
+  if (!dev) dev = Infinity;
+  if (!local) {
+    local = -Infinity;
+  } else {
+    local = local.map(
+      (i) => Number.isNaN(Number(i)) ? [-Infinity, i] : [Number(i), ""]
+    );
+  }
+  return [epoch, release, pre, post, dev, local];
 }
 function bind(fn, thisArg) {
   return function wrap() {
@@ -12779,7 +12954,7 @@ function requireForm_data() {
   var path2 = require$$1$2;
   var http = require$$3;
   var https = require$$4;
-  var parseUrl = require$$0$6.parse;
+  var parseUrl = require$$0$5.parse;
   var fs = require$$0$3;
   var Stream = stream.Stream;
   var crypto = require$$8;
@@ -13327,7 +13502,7 @@ const transitionalDefaults = {
   clarifyTimeoutError: false,
   legacyInterceptorReqResOrdering: true
 };
-const URLSearchParams = require$$0$6.URLSearchParams;
+const URLSearchParams = require$$0$5.URLSearchParams;
 const ALPHA = "abcdefghijklmnopqrstuvwxyz";
 const DIGIT = "0123456789";
 const ALPHABET = {
@@ -13878,7 +14053,7 @@ var hasRequiredProxyFromEnv;
 function requireProxyFromEnv() {
   if (hasRequiredProxyFromEnv) return proxyFromEnv$1;
   hasRequiredProxyFromEnv = 1;
-  var parseUrl = require$$0$6.parse;
+  var parseUrl = require$$0$5.parse;
   var DEFAULT_PORTS = {
     ftp: 21,
     gopher: 70,
@@ -13963,7 +14138,7 @@ function requireMs() {
     options = options || {};
     var type2 = typeof val;
     if (type2 === "string" && val.length > 0) {
-      return parse(val);
+      return parse2(val);
     } else if (type2 === "number" && isFinite(val)) {
       return options.long ? fmtLong(val) : fmtShort(val);
     }
@@ -13971,7 +14146,7 @@ function requireMs() {
       "val is not a non-empty string or a valid number. val=" + JSON.stringify(val)
     );
   };
-  function parse(str) {
+  function parse2(str) {
     str = String(str);
     if (str.length > 100) {
       return;
@@ -14434,7 +14609,7 @@ var hasRequiredSupportsColor;
 function requireSupportsColor() {
   if (hasRequiredSupportsColor) return supportsColor_1;
   hasRequiredSupportsColor = 1;
-  const os = require$$0$5;
+  const os = require$$0$6;
   const tty = require$$1$3;
   const hasFlag2 = requireHasFlag();
   const { env } = process;
@@ -14743,7 +14918,7 @@ var hasRequiredFollowRedirects;
 function requireFollowRedirects() {
   if (hasRequiredFollowRedirects) return followRedirects$1.exports;
   hasRequiredFollowRedirects = 1;
-  var url = require$$0$6;
+  var url = require$$0$5;
   var URL2 = url.URL;
   var http = require$$3;
   var https = require$$4;
@@ -17469,24 +17644,104 @@ const {
   getAdapter,
   mergeConfig
 } = axios;
+function parseWheelFilename(filename) {
+  const match = filename.match(/^([A-Za-z0-9](?:[A-Za-z0-9._-]*[A-Za-z0-9])?)-([^-]+(?:\+[^-]+)?)/);
+  if (!match) return null;
+  return {
+    // Normalize underscores/dots to hyphens per PEP 503
+    name: match[1].replace(/[-_.]+/g, "-"),
+    version: match[2]
+  };
+}
+function parseRequirementLine(line) {
+  const originalLine = line.trim();
+  const isDirectUrl = /^https?:\/\//i.test(originalLine);
+  const isAtUrl = /\s@\s+https?:\/\//i.test(originalLine);
+  if (isDirectUrl || isAtUrl) {
+    let url;
+    let markers2 = null;
+    let name2 = originalLine;
+    let version2 = null;
+    if (isAtUrl) {
+      const atMatch = originalLine.match(
+        /^([A-Za-z0-9][A-Za-z0-9._-]*)\s*@\s*(https?:\/\/\S+?)(?:\s*;\s*(.+?))?(?:\s*#.*)?$/i
+      );
+      if (atMatch) {
+        name2 = atMatch[1].replace(/[-_.]+/g, "-");
+        url = atMatch[2];
+        markers2 = atMatch[3]?.trim() ?? null;
+      } else {
+        url = originalLine;
+      }
+    } else {
+      const urlMarkerMatch = originalLine.match(/^(https?:\/\/\S+?)(?:\s*;\s*(.+?))?(?:\s*#.*)?$/i);
+      url = urlMarkerMatch ? urlMarkerMatch[1] : originalLine;
+      markers2 = urlMarkerMatch?.[2]?.trim() ?? null;
+    }
+    const filename = url.split("/").pop() ?? "";
+    if (filename.endsWith(".whl")) {
+      const parsed = parseWheelFilename(filename);
+      if (parsed) {
+        name2 = parsed.name;
+        version2 = parsed.version;
+      }
+    }
+    return { name: name2, versionOperator: null, version: version2, originalLine, url, markers: markers2 };
+  }
+  let working = originalLine;
+  working = working.replace(/\s+#.*$/, "");
+  let markers = null;
+  const semiIdx = working.indexOf(";");
+  if (semiIdx !== -1) {
+    markers = working.slice(semiIdx + 1).trim() || null;
+    working = working.slice(0, semiIdx).trim();
+  }
+  let extras = null;
+  const extrasMatch = working.match(/^([^[]+)\[([^\]]+)](.*)/);
+  if (extrasMatch) {
+    extras = extrasMatch[2].split(",").map((e) => e.trim());
+    working = extrasMatch[1] + extrasMatch[3];
+  }
+  const versionMatch = working.match(/(===|~=|==|!=|>=|<=|>|<)\s*([^\s,]+)/);
+  const versionOperator = versionMatch?.[1] ?? null;
+  const version = versionMatch?.[2] ?? null;
+  const namePart = working.split(/===|~=|==|!=|>=|<=|>|</)[0].trim();
+  const name = namePart.replace(/[-_.]+/g, "-");
+  return { name, versionOperator, version, originalLine, extras, markers };
+}
 const REQ_STORE_ID = "reqs_path";
+function isMetaLine(line) {
+  const trimmed = line.trim();
+  if (trimmed.startsWith("-")) return true;
+  if (/^(git|hg|svn|bzr)\+/i.test(trimmed)) return true;
+  return /^(-r|--requirement|-c|--constraint|-e|--editable|-f|--find-links|--index-url|--extra-index-url|--no-index|-i)\s/i.test(
+    trimmed
+  );
+}
+function isRequirementLine(line) {
+  const trimmed = line.trim();
+  if (trimmed === "" || trimmed.startsWith("#") || isMetaLine(trimmed)) return false;
+  return /^https?:\/\//i.test(trimmed) || /^[A-Za-z0-9][A-Za-z0-9._-]*(?:\[|[<>=!~@;\s]|$)/.test(trimmed);
+}
+function formatRequirementLine(req) {
+  if (req.url && req.originalLine === req.sourceLineRaw?.trim()) {
+    return req.sourceLineRaw;
+  }
+  if (req.url) return req.originalLine;
+  const extras = req.extras?.length ? `[${req.extras.join(",")}]` : "";
+  const version = req.versionOperator && req.version && req.versionOperator !== "all" ? `${req.versionOperator}${req.version}` : "";
+  const markers = req.markers ? `; ${req.markers}` : "";
+  return `${req.name}${extras}${version}${markers}`;
+}
 async function readRequirements(filePath) {
-  if (isEmpty(filePath)) return [];
+  if (!filePath) return [];
   try {
     const data = gracefulFsExports.readFileSync(filePath, "utf-8");
-    const requirements = data.split("\n").filter((line) => line.trim() !== "" && !line.startsWith("#")).map((line) => {
-      const parts = line.split(/==|>=|<=|>|<|~=/);
-      const versionMatch = line.match(/(==|>=|<=|>|<|~=)\s*([^#\s]+)/);
-      const versionOperator = versionMatch ? versionMatch[1].trim() : null;
-      const version = versionMatch ? versionMatch[2]?.trim() : null;
-      return {
-        name: parts[0].trim(),
-        versionOperator,
-        version,
-        originalLine: line.trim()
-      };
-    });
-    return requirements;
+    return data.split(/\r?\n/).map((line, index) => ({ line, index })).filter(({ line }) => isRequirementLine(line)).map(({ line, index }) => ({
+      ...parseRequirementLine(line),
+      sourceLine: index,
+      sourceLineRaw: line
+    }));
   } catch (error) {
     console.error("Error reading requirements file:", error);
     return [];
@@ -17494,13 +17749,29 @@ async function readRequirements(filePath) {
 }
 async function saveRequirements(filePath, requirements) {
   try {
-    const updatedContent = requirements.map((req) => {
-      if (req.versionOperator && req.version) {
-        return `${req.name}${req.versionOperator}${req.version}`;
+    const originalContent = gracefulFsExports.readFileSync(filePath, "utf-8");
+    const eol = originalContent.includes("\r\n") ? "\r\n" : "\n";
+    const hadTrailingEol = originalContent.endsWith("\n");
+    const originalLines = originalContent === "" ? [] : originalContent.split(/\r?\n/);
+    if (hadTrailingEol) {
+      originalLines.pop();
+    }
+    const requirementsBySourceLine = /* @__PURE__ */ new Map();
+    const appendedRequirements = [];
+    requirements.forEach((req) => {
+      if (typeof req.sourceLine === "number") {
+        requirementsBySourceLine.set(req.sourceLine, req);
       } else {
-        return req.name;
+        appendedRequirements.push(req);
       }
-    }).join("\n");
+    });
+    const updatedLines = originalLines.flatMap((line, index) => {
+      if (!isRequirementLine(line)) return [line];
+      const updatedRequirement = requirementsBySourceLine.get(index);
+      return updatedRequirement ? [formatRequirementLine(updatedRequirement)] : [];
+    });
+    updatedLines.push(...appendedRequirements.map(formatRequirementLine));
+    const updatedContent = updatedLines.join(eol) + (hadTrailingEol ? eol : "");
     gracefulFsExports.writeFileSync(filePath, updatedContent, "utf-8");
     return true;
   } catch (error) {
@@ -17528,8 +17799,8 @@ function findValidRequirementsFiles(dirPath) {
     let bestMatch = void 0;
     let bestMatchScore = -1;
     for (const file of files) {
-      if (file.includes("requirements") && gracefulFsExports.statSync(require$$1$2.join(dirPath, file)).isFile()) {
-        const fullPath = require$$1$2.join(dirPath, file);
+      if (file.includes("requirements") && gracefulFsExports.statSync(path.join(dirPath, file)).isFile()) {
+        const fullPath = path.join(dirPath, file);
         if (isValidRequirementsFile(fullPath)) {
           const score = calculatePriorityScore(file);
           if (score > bestMatchScore) {
@@ -17568,16 +17839,10 @@ function calculatePriorityScore(filename) {
 function setReqPath(data) {
   const storageManager2 = getStorage();
   const existingData = storageManager2?.getCustomData(REQ_STORE_ID);
-  let result = [];
-  if (existingData) {
-    const found = existingData.some((item) => item.id === data.id);
-    if (found) {
-      result = existingData.map((item) => {
-        return item.id === data.id ? data : item;
-      });
-    } else {
-      result.push(data);
-    }
+  let result = existingData ?? [];
+  const found = result.some((item) => item.id === data.id);
+  if (found) {
+    result = result.map((item) => item.id === data.id ? data : item);
   } else {
     result.push(data);
   }
@@ -17603,8 +17868,7 @@ async function runWithConcurrencyLimit(tasks, limit, signal) {
       const nextTask = taskQueue.shift();
       if (nextTask) {
         const { task, index } = nextTask;
-        const result = await task();
-        results[index] = result;
+        results[index] = await task();
       }
     }
   });
@@ -17668,11 +17932,8 @@ async function getPipPackageAllVersions(packageName) {
     const response = await axios.get(url, { timeout: 15e3 });
     const data = response.data;
     if (data?.releases) {
-      const versions = Object.keys(data.releases);
-      const validVersions = versions.filter((version) => data.releases[version].length > 0);
-      const semverVersions = validVersions.map((v) => semver.coerce(v)?.version).filter((v) => v !== null && v !== void 0);
-      const versionsToSort = semverVersions.length > 0 ? semverVersions : validVersions;
-      return versionsToSort.sort((a, b) => semver.rcompare(a, b));
+      const validVersions = Object.keys(data.releases).filter((v) => data.releases[v].length > 0);
+      return validVersions.sort((a, b) => compare(b, a));
     } else {
       console.error(`Could not find releases information for ${packageName} in the response.`);
       return null;
@@ -17705,9 +17966,17 @@ async function getPackagesUpdateByReq(reqPath, packages) {
           (item) => item.name.toLowerCase().replaceAll("_", "-") === req.name.toLowerCase().replaceAll("_", "-")
         );
         const latestVersion = await getLatestPipPackageVersion(req.name, maxRetriesConfig, signal);
+        if (!latestVersion) return null;
+        if (!targetInPackage) {
+          const constraint = req.versionOperator && req.version ? `${req.versionOperator}${req.version}` : null;
+          if (constraint && !semverExports.satisfies(latestVersion, constraint)) {
+            return null;
+          }
+          return { name: req.name, version: latestVersion, isNew: true };
+        }
         const reqVersion = targetInPackage?.version;
         const currentVersion = semver.coerce(reqVersion)?.version;
-        if (!latestVersion || !packages || !currentVersion) return null;
+        if (!currentVersion) return null;
         let canUpdate = false;
         let targetVersion = currentVersion || "";
         switch (req.versionOperator) {
@@ -17743,8 +18012,9 @@ async function getPackagesUpdateByReq(reqPath, packages) {
             canUpdate = true;
             targetVersion = latestVersion;
         }
-        if (canUpdate && targetVersion !== currentVersion)
-          return { name: targetInPackage?.name || req.name, version: targetVersion };
+        if (canUpdate && targetVersion !== currentVersion) {
+          return { name: targetInPackage.name || req.name, version: targetVersion };
+        }
         return null;
       };
     });
@@ -17837,7 +18107,7 @@ function abortOngoingUpdate() {
     console.log("No ongoing package update to cancel.");
   }
 }
-const execAsync$2 = require$$1.promisify(child_process.exec);
+const execAsync$2 = node_util.promisify(node_child_process.exec);
 async function uninstallLinuxPython(pythonExecutablePath) {
   try {
     if (!pythonExecutablePath) {
@@ -17868,7 +18138,7 @@ async function uninstallLinuxPython(pythonExecutablePath) {
     };
   }
 }
-const execAsync$1 = require$$1.promisify(child_process.exec);
+const execAsync$1 = node_util.promisify(node_child_process.exec);
 function escapeForShell(str) {
   return str.replace(/'/g, "'\\''");
 }
@@ -17964,6 +18234,7 @@ async function uninstallHomebrewPython(pythonExecutablePath) {
   }
 }
 const execAsync = node_util.promisify(node_child_process.exec);
+const execFileAsync = node_util.promisify(node_child_process.execFile);
 const defaultPackageCachePath = path.join(node_os.homedir(), "AppData", "Local", "Package Cache");
 async function uninstallWindowsPython(pythonPath) {
   const version = await parseVersion(pythonPath);
@@ -18054,21 +18325,30 @@ async function cleanupWindowsRegistry(version) {
 async function removePythonFromPath(pythonPath) {
   return new Promise(async (resolve, reject) => {
     try {
-      const { stdout: currentPath } = await execAsync('reg query "HKEY_CURRENT_USER\\Environment" /v Path');
-      const match = currentPath.match(/REG_\w+\s+(.+)/);
-      if (!match) {
-        reject(new Error("Failed to retrieve current PATH"));
+      const powershellExe = determineShell();
+      const getCmd = `[Environment]::GetEnvironmentVariable('Path', 'User')`;
+      const { stdout } = await execFileAsync(powershellExe, ["-NoProfile", "-Command", getCmd]);
+      const currentUserPath = stdout.trim();
+      if (!currentUserPath) {
+        console.log("No user PATH found");
+        return resolve();
       }
-      const paths = match ? match[1].split(";").filter(Boolean) : [];
-      const nonPythonPaths = paths.filter((path2) => !path2.toLowerCase().includes(pythonPath.toLowerCase()));
+      const paths = currentUserPath.split(";").filter(Boolean);
+      const nonPythonPaths = paths.filter((p) => !p.toLowerCase().includes(pythonPath.toLowerCase()));
       if (paths.length === nonPythonPaths.length) {
         console.log("No Python paths found in PATH");
-        return;
+        return resolve();
       }
       const newPathValue = nonPythonPaths.join(";");
-      const regCommand = `REG ADD "HKEY_CURRENT_USER\\Environment" /v Path /t REG_EXPAND_SZ /d "${newPathValue}" /f`;
-      await execAsync(regCommand);
-      process.env.PATH = newPathValue;
+      const base64Path = Buffer.from(newPathValue, "utf16le").toString("base64");
+      const setCmd = `
+        $path = [System.Text.Encoding]::Unicode.GetString([System.Convert]::FromBase64String('${base64Path}'))
+        [Environment]::SetEnvironmentVariable('Path', $path, 'User')
+      `;
+      await execFileAsync(powershellExe, ["-NoProfile", "-Command", setCmd]);
+      if (process.env.PATH) {
+        process.env.PATH = process.env.PATH.split(";").filter(Boolean).filter((p) => !p.toLowerCase().includes(pythonPath.toLowerCase())).join(";");
+      }
       console.log("Python paths removed successfully");
       resolve();
     } catch (error) {
@@ -18078,7 +18358,7 @@ async function removePythonFromPath(pythonPath) {
   });
 }
 async function uninstallOfficialPython(pythonPath) {
-  const os = require$$0$5.platform();
+  const os = node_os.platform();
   try {
     switch (os) {
       case "win32":
@@ -18235,17 +18515,12 @@ function ListenForChannels(nodePty2) {
   });
   electron.ipcMain.handle(pythonChannels.getCardStartCommand, () => storageManager2?.getCustomData(CardStartCommand_StorageID));
   electron.ipcMain.on(pythonChannels.setCardStartCommand, (_, value) => {
-    const currentCommands = storageManager2?.getCustomData(CardStartCommand_StorageID);
-    if (currentCommands) {
-      const existing = currentCommands.findIndex((item) => item.id === value.id);
-      if (existing !== -1) {
-        currentCommands[existing].commands = value.commands;
-      } else {
-        currentCommands.push(value);
-      }
-    }
-    storageManager2?.setCustomData(CardStartCommand_StorageID, currentCommands);
+    storageManager2?.setCardTerminalPreCommands(value.id, value.commands);
   });
+  electron.ipcMain.handle(
+    pythonChannels.getEnvironmentActivationCommand,
+    (_, data) => getCommandByType(data.type, data.dir, data.condaName)
+  );
   electron.ipcMain.handle(pythonChannels.replacePythonPath, (_, pythonPath) => {
     try {
       const defaultEnvPath2 = getDefaultEnvPath();

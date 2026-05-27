@@ -3693,6 +3693,7 @@ function detectIsLinux() {
 const isWin = detectIsWin();
 const isMac = detectIsMac();
 const isLinux = detectIsLinux();
+const terminalLineEnding = isWin ? "\r" : "\n";
 
 function formatSize(size) {
   if (!size) return "0KB";
@@ -3794,19 +3795,7 @@ const AvailableModules = {
 
 const DepsModalKey = "pt_deps";
 
-function Python_Icon(props) {
-  return /* @__PURE__ */ jsxRuntimeExports.jsxs("svg", { ...props, height: "1rem", viewBox: "0 0 24 24", xmlns: "http://www.w3.org/2000/svg", children: [
-    /* @__PURE__ */ jsxRuntimeExports.jsx("rect", { fill: "none", height: "1rem" }),
-    /* @__PURE__ */ jsxRuntimeExports.jsxs("g", { fill: "none", children: [
-      /* @__PURE__ */ jsxRuntimeExports.jsxs("g", { fill: "currentColor", clipPath: "url(#akarIconsPythonFill0)", children: [
-        /* @__PURE__ */ jsxRuntimeExports.jsx("path", { d: "M11.914 0C5.82 0 6.2 2.656 6.2 2.656l.007 2.752h5.814v.826H3.9S0 5.789 0 11.969s3.403 5.96 3.403 5.96h2.03v-2.867s-.109-3.42 3.35-3.42h5.766s3.24.052 3.24-3.148V3.202S18.28 0 11.913 0M8.708 1.85c.578 0 1.046.47 1.046 1.052c0 .581-.468 1.051-1.046 1.051s-1.046-.47-1.046-1.051c0-.582.467-1.052 1.046-1.052" }),
-        /* @__PURE__ */ jsxRuntimeExports.jsx("path", { d: "M12.087 24c6.092 0 5.712-2.656 5.712-2.656l-.007-2.752h-5.814v-.826h8.123s3.9.445 3.9-5.735s-3.404-5.96-3.404-5.96h-2.03v2.867s.109 3.42-3.35 3.42H9.452s-3.24-.052-3.24 3.148v5.292S5.72 24 12.087 24m3.206-1.85c-.579 0-1.046-.47-1.046-1.052c0-.581.467-1.051 1.046-1.051c.578 0 1.046.47 1.046 1.051c0 .582-.468 1.052-1.046 1.052" })
-      ] }),
-      /* @__PURE__ */ jsxRuntimeExports.jsx("defs", { children: /* @__PURE__ */ jsxRuntimeExports.jsx("clipPath", { id: "akarIconsPythonFill0", children: /* @__PURE__ */ jsxRuntimeExports.jsx("path", { fill: "#fff", d: "M0 0h24v24H0z" }) }) })
-    ] })
-  ] });
-}
-function Env_Icon(props) {
+function PythonIcon(props) {
   return /* @__PURE__ */ jsxRuntimeExports.jsxs("svg", { ...props, height: "1rem", viewBox: "0 0 32 32", xmlns: "http://www.w3.org/2000/svg", children: [
     /* @__PURE__ */ jsxRuntimeExports.jsxs("defs", { children: [
       /* @__PURE__ */ jsxRuntimeExports.jsxs(
@@ -3860,24 +3849,24 @@ function Env_Icon(props) {
   ] });
 }
 
-const {DropdownItem,DropdownSection,Separator: Separator$4} = await importShared('@heroui/react');
+const {DropdownItem,DropdownSection,Separator: Separator$3} = await importShared('@heroui/react');
 
-const {useCallback: useCallback$e} = await importShared('react');
+const {useCallback: useCallback$h} = await importShared('react');
 function CardMenu({ useCardStore, useCardOverlayState: useCardOverlayState2 }) {
   const state = useCardOverlayState2(DepsModalKey);
   const id = useCardStore((state2) => state2.id);
   const setMenuIsOpen = useCardStore((state2) => state2.setMenuIsOpen);
-  const onPress = useCallback$e(() => {
+  const onPress = useCallback$h(() => {
     state.open();
     setMenuIsOpen(false);
   }, [setMenuIsOpen, state]);
   if (!ModulesThatSupportPython.includes(id)) return null;
   return /* @__PURE__ */ jsxRuntimeExports.jsxs(jsxRuntimeExports.Fragment, { children: [
     /* @__PURE__ */ jsxRuntimeExports.jsx(DropdownSection, { children: /* @__PURE__ */ jsxRuntimeExports.jsxs(DropdownItem, { onPress, children: [
-      /* @__PURE__ */ jsxRuntimeExports.jsx(Python_Icon, { className: "size-3" }),
+      /* @__PURE__ */ jsxRuntimeExports.jsx(PythonIcon, {}),
       "Dependencies"
     ] }) }, "python_toolkit_menu"),
-    /* @__PURE__ */ jsxRuntimeExports.jsx(Separator$4, { className: "bg-surface-secondary/70" })
+    /* @__PURE__ */ jsxRuntimeExports.jsx(Separator$3, { className: "bg-surface-secondary/70" })
   ] });
 }
 
@@ -5657,7 +5646,7 @@ const settingsSlice = createSlice({
 const useSettingsState = (name) => useSelector$6((state) => state.settings[name]);
 const settingsActions = settingsSlice.actions;
 
-const {Fragment: Fragment$1,useEffect: useEffect$s,useRef: useRef$4,useState: useState$y} = await importShared('react');
+const {Fragment: Fragment$1,useEffect: useEffect$u,useRef: useRef$6,useState: useState$y} = await importShared('react');
 
 function useInstalledCard(cardId) {
   const installedCards = useCardsState("installedCards");
@@ -5686,11 +5675,222 @@ function useIsPinnedCard(cardId) {
 function useHasScroll() {
   const [hasScroll, setHasScroll] = useState$y(false);
   const [containerRef, setContainerRef] = useState$y(null);
-  useEffect$s(() => {
+  useEffect$u(() => {
     if (containerRef) setHasScroll(containerRef.scrollWidth > containerRef.clientWidth);
   }, [containerRef]);
   return { hasScroll, containerRef, setContainerRef };
 }
+
+/**
+ * @license lucide-react v0.575.0 - ISC
+ *
+ * This source code is licensed under the ISC license.
+ * See the LICENSE file in the root directory of this source tree.
+ */
+
+const mergeClasses = (...classes) => classes.filter((className, index, array) => {
+  return Boolean(className) && className.trim() !== "" && array.indexOf(className) === index;
+}).join(" ").trim();
+
+/**
+ * @license lucide-react v0.575.0 - ISC
+ *
+ * This source code is licensed under the ISC license.
+ * See the LICENSE file in the root directory of this source tree.
+ */
+
+const toKebabCase = (string) => string.replace(/([a-z0-9])([A-Z])/g, "$1-$2").toLowerCase();
+
+/**
+ * @license lucide-react v0.575.0 - ISC
+ *
+ * This source code is licensed under the ISC license.
+ * See the LICENSE file in the root directory of this source tree.
+ */
+
+const toCamelCase = (string) => string.replace(
+  /^([A-Z])|[\s-_]+(\w)/g,
+  (match, p1, p2) => p2 ? p2.toUpperCase() : p1.toLowerCase()
+);
+
+/**
+ * @license lucide-react v0.575.0 - ISC
+ *
+ * This source code is licensed under the ISC license.
+ * See the LICENSE file in the root directory of this source tree.
+ */
+
+
+const toPascalCase = (string) => {
+  const camelCase = toCamelCase(string);
+  return camelCase.charAt(0).toUpperCase() + camelCase.slice(1);
+};
+
+/**
+ * @license lucide-react v0.575.0 - ISC
+ *
+ * This source code is licensed under the ISC license.
+ * See the LICENSE file in the root directory of this source tree.
+ */
+
+var defaultAttributes = {
+  xmlns: "http://www.w3.org/2000/svg",
+  width: 24,
+  height: 24,
+  viewBox: "0 0 24 24",
+  fill: "none",
+  stroke: "currentColor",
+  strokeWidth: 2,
+  strokeLinecap: "round",
+  strokeLinejoin: "round"
+};
+
+/**
+ * @license lucide-react v0.575.0 - ISC
+ *
+ * This source code is licensed under the ISC license.
+ * See the LICENSE file in the root directory of this source tree.
+ */
+
+const hasA11yProp = (props) => {
+  for (const prop in props) {
+    if (prop.startsWith("aria-") || prop === "role" || prop === "title") {
+      return true;
+    }
+  }
+  return false;
+};
+
+/**
+ * @license lucide-react v0.575.0 - ISC
+ *
+ * This source code is licensed under the ISC license.
+ * See the LICENSE file in the root directory of this source tree.
+ */
+
+const {forwardRef: forwardRef$2,createElement: createElement$1} = await importShared('react');
+
+const Icon = forwardRef$2(
+  ({
+    color = "currentColor",
+    size = 24,
+    strokeWidth = 2,
+    absoluteStrokeWidth,
+    className = "",
+    children,
+    iconNode,
+    ...rest
+  }, ref) => createElement$1(
+    "svg",
+    {
+      ref,
+      ...defaultAttributes,
+      width: size,
+      height: size,
+      stroke: color,
+      strokeWidth: absoluteStrokeWidth ? Number(strokeWidth) * 24 / Number(size) : strokeWidth,
+      className: mergeClasses("lucide", className),
+      ...!children && !hasA11yProp(rest) && { "aria-hidden": "true" },
+      ...rest
+    },
+    [
+      ...iconNode.map(([tag, attrs]) => createElement$1(tag, attrs)),
+      ...Array.isArray(children) ? children : [children]
+    ]
+  )
+);
+
+/**
+ * @license lucide-react v0.575.0 - ISC
+ *
+ * This source code is licensed under the ISC license.
+ * See the LICENSE file in the root directory of this source tree.
+ */
+
+const {forwardRef: forwardRef$1,createElement} = await importShared('react');
+
+const createLucideIcon = (iconName, iconNode) => {
+  const Component = forwardRef$1(
+    ({ className, ...props }, ref) => createElement(Icon, {
+      ref,
+      iconNode,
+      className: mergeClasses(
+        `lucide-${toKebabCase(toPascalCase(iconName))}`,
+        `lucide-${iconName}`,
+        className
+      ),
+      ...props
+    })
+  );
+  Component.displayName = toPascalCase(iconName);
+  return Component;
+};
+
+/**
+ * @license lucide-react v0.575.0 - ISC
+ *
+ * This source code is licensed under the ISC license.
+ * See the LICENSE file in the root directory of this source tree.
+ */
+
+
+const __iconNode$3 = [
+  ["path", { d: "M5 12h14", key: "1ays0h" }],
+  ["path", { d: "M12 5v14", key: "s699le" }]
+];
+const Plus = createLucideIcon("plus", __iconNode$3);
+
+/**
+ * @license lucide-react v0.575.0 - ISC
+ *
+ * This source code is licensed under the ISC license.
+ * See the LICENSE file in the root directory of this source tree.
+ */
+
+
+const __iconNode$2 = [
+  ["path", { d: "M12 19h8", key: "baeox8" }],
+  ["path", { d: "m4 17 6-6-6-6", key: "1yngyt" }]
+];
+const Terminal = createLucideIcon("terminal", __iconNode$2);
+
+/**
+ * @license lucide-react v0.575.0 - ISC
+ *
+ * This source code is licensed under the ISC license.
+ * See the LICENSE file in the root directory of this source tree.
+ */
+
+
+const __iconNode$1 = [
+  ["path", { d: "m19 5 3-3", key: "yk6iyv" }],
+  ["path", { d: "m2 22 3-3", key: "19mgm9" }],
+  [
+    "path",
+    { d: "M6.3 20.3a2.4 2.4 0 0 0 3.4 0L12 18l-6-6-2.3 2.3a2.4 2.4 0 0 0 0 3.4Z", key: "goz73y" }
+  ],
+  ["path", { d: "M7.5 13.5 10 11", key: "7xgeeb" }],
+  ["path", { d: "M10.5 16.5 13 14", key: "10btkg" }],
+  [
+    "path",
+    { d: "m12 6 6 6 2.3-2.3a2.4 2.4 0 0 0 0-3.4l-2.6-2.6a2.4 2.4 0 0 0-3.4 0Z", key: "1snsnr" }
+  ]
+];
+const Unplug = createLucideIcon("unplug", __iconNode$1);
+
+/**
+ * @license lucide-react v0.575.0 - ISC
+ *
+ * This source code is licensed under the ISC license.
+ * See the LICENSE file in the root directory of this source tree.
+ */
+
+
+const __iconNode = [
+  ["path", { d: "M18 6 6 18", key: "1bl5f8" }],
+  ["path", { d: "m6 6 12 12", key: "d8bk6v" }]
+];
+const X$3 = createLucideIcon("x", __iconNode);
 
 const pythonChannels = {
   removeSavedPython: "remove-saved-python",
@@ -5741,6 +5941,7 @@ const pythonChannels = {
   setCacheStorageUsage: "set-cache-storage-usage",
   getCardStartCommand: "get-card-start-command",
   setCardStartCommand: "set-card-start-command",
+  getEnvironmentActivationCommand: "ptoolkit-get-environment-activation-command",
   replacePythonPath: "ptoolkit-replace-python-path",
   errorGetVenvInfo: "ptoolkit-errorGetVenvInfo",
   updateCheckProgress: "ptoolkit-update-check-progress",
@@ -5813,6 +6014,7 @@ const pIpc = {
   setCacheStorageUsage: (value) => ipc.send(pythonChannels.setCacheStorageUsage, value),
   getCardStartCommand: () => ipc.invoke(pythonChannels.getCardStartCommand),
   setCardStartCommand: (value) => ipc.send(pythonChannels.setCardStartCommand, value),
+  getEnvironmentActivationCommand: (data) => ipc.invoke(pythonChannels.getEnvironmentActivationCommand, data),
   replacePythonPath: (pythonPath) => ipc.invoke(pythonChannels.replacePythonPath, pythonPath),
   onErrorGetVenvInfo: (result) => ipc.on(pythonChannels.errorGetVenvInfo, result),
   offErrorGetVenvInfo: () => ipc.removeAllListeners(pythonChannels.errorGetVenvInfo),
@@ -5835,73 +6037,88 @@ const pIpc = {
 };
 
 const {forwardRef:e$1} = await importShared('react');
-const r$3=e$1((e,r)=>{let{alt:i,color:a=`currentColor`,size:o=`1em`,mirrored:s=false,children:c,...l}=e;return jsxRuntimeExports.jsxs(`svg`,{ref:r,xmlns:`http://www.w3.org/2000/svg`,width:o,height:o,color:a,fill:`none`,viewBox:`0 0 24 24`,transform:s?`scale(-1, 1)`:void 0,...l,children:[!!i&&jsxRuntimeExports.jsx(`title`,{children:i}),c]})});r$3.displayName=`IconBase`;var i$m=r$3;
+const r$3=e$1((e,r)=>{let{alt:i,color:a=`currentColor`,size:o=`1em`,mirrored:s=false,children:c,...l}=e;return jsxRuntimeExports.jsxs(`svg`,{ref:r,xmlns:`http://www.w3.org/2000/svg`,width:o,height:o,color:a,fill:`none`,viewBox:`0 0 24 24`,transform:s?`scale(-1, 1)`:void 0,...l,children:[!!i&&jsxRuntimeExports.jsx(`title`,{children:i}),c]})});r$3.displayName=`IconBase`;var i$r=r$3;
+
+const {forwardRef:t$s} = await importShared('react');
+const r$2=t$s((t,r)=>jsxRuntimeExports.jsx(i$r,{ref:r,...t,children:jsxRuntimeExports.jsx(`path`,{d:`M12.3704 15.8351L18.8001 9.20467C19.2013 8.79094 18.9581 8 18.4297 8H5.5703C5.04189 8 4.79869 8.79094 5.1999 9.20467L11.6296 15.8351C11.8427 16.0549 12.1573 16.0549 12.3704 15.8351Z`,fill:`currentColor`})}));r$2.displayName=`AltArrowDown`;
+
+const {forwardRef:t$r} = await importShared('react');
+const r$1=t$r((t,r)=>jsxRuntimeExports.jsx(i$r,{ref:r,...t,children:jsxRuntimeExports.jsx(`path`,{d:`M12.3704 8.16485L18.8001 14.7953C19.2013 15.2091 18.9581 16 18.4297 16H5.5703C5.04189 16 4.79869 15.2091 5.1999 14.7953L11.6296 8.16485C11.8427 7.94505 12.1573 7.94505 12.3704 8.16485Z`,fill:`currentColor`})}));r$1.displayName=`AltArrowUp`;
+
+const {forwardRef:t$q} = await importShared('react');
+const i$q=t$q((t,i)=>jsxRuntimeExports.jsxs(i$r,{ref:i,...t,children:[jsxRuntimeExports.jsx(`path`,{d:`M16.6598 14.6474C18.4467 13.4935 18.4467 10.5065 16.6598 9.35258L5.87083 2.38548C4.13419 1.26402 2 2.72368 2 5.0329V18.9671C2 21.2763 4.13419 22.736 5.87083 21.6145L16.6598 14.6474Z`,fill:`currentColor`}),jsxRuntimeExports.jsx(`path`,{d:`M22.75 5C22.75 4.58579 22.4142 4.25 22 4.25C21.5858 4.25 21.25 4.58579 21.25 5V19C21.25 19.4142 21.5858 19.75 22 19.75C22.4142 19.75 22.75 19.4142 22.75 19V5Z`,fill:`currentColor`})]}));i$q.displayName=`SkipNext`;
+
+const {forwardRef:t$p} = await importShared('react');
+const i$p=t$p((t,i)=>jsxRuntimeExports.jsxs(i$r,{ref:i,...t,children:[jsxRuntimeExports.jsx(`path`,{opacity:`0.5`,d:`M22 16.0003V15.0003C22 12.1718 21.9998 10.7581 21.1211 9.8794C20.2424 9.00072 18.8282 9.00072 15.9998 9.00072H7.99977C5.17135 9.00072 3.75713 9.00072 2.87845 9.8794C2 10.7579 2 12.1711 2 14.9981V15.0003V16.0003C2 18.8287 2 20.2429 2.87868 21.1216C3.75736 22.0003 5.17157 22.0003 8 22.0003H16H16C18.8284 22.0003 20.2426 22.0003 21.1213 21.1216C22 20.2429 22 18.8287 22 16.0003Z`,fill:`currentColor`}),jsxRuntimeExports.jsx(`path`,{fillRule:`evenodd`,clipRule:`evenodd`,d:`M12 1.25C11.5858 1.25 11.25 1.58579 11.25 2L11.25 12.9726L9.56943 11.0119C9.29986 10.6974 8.82639 10.661 8.51189 10.9306C8.1974 11.2001 8.16098 11.6736 8.43054 11.9881L11.4305 15.4881C11.573 15.6543 11.781 15.75 12 15.75C12.2189 15.75 12.4269 15.6543 12.5694 15.4881L15.5694 11.9881C15.839 11.6736 15.8026 11.2001 15.4881 10.9306C15.1736 10.661 14.7001 10.6974 14.4305 11.0119L12.75 12.9726L12.75 2C12.75 1.58579 12.4142 1.25 12 1.25Z`,fill:`currentColor`})]}));i$p.displayName=`Download`;
+
+const {forwardRef:t$o} = await importShared('react');
+const i$o=t$o((t,i)=>jsxRuntimeExports.jsxs(i$r,{ref:i,...t,children:[jsxRuntimeExports.jsx(`path`,{opacity:`0.5`,fillRule:`evenodd`,clipRule:`evenodd`,d:`M3 14.25C3.41421 14.25 3.75 14.5858 3.75 15C3.75 16.4354 3.75159 17.4365 3.85315 18.1919C3.9518 18.9257 4.13225 19.3142 4.40901 19.591C4.68577 19.8678 5.07435 20.0482 5.80812 20.1469C6.56347 20.2484 7.56459 20.25 9 20.25H15C16.4354 20.25 17.4365 20.2484 18.1919 20.1469C18.9257 20.0482 19.3142 19.8678 19.591 19.591C19.8678 19.3142 20.0482 18.9257 20.1469 18.1919C20.2484 17.4365 20.25 16.4354 20.25 15C20.25 14.5858 20.5858 14.25 21 14.25C21.4142 14.25 21.75 14.5858 21.75 15V15.0549C21.75 16.4225 21.75 17.5248 21.6335 18.3918C21.5125 19.2919 21.2536 20.0497 20.6517 20.6516C20.0497 21.2536 19.2919 21.5125 18.3918 21.6335C17.5248 21.75 16.4225 21.75 15.0549 21.75H8.94513C7.57754 21.75 6.47522 21.75 5.60825 21.6335C4.70814 21.5125 3.95027 21.2536 3.34835 20.6517C2.74643 20.0497 2.48754 19.2919 2.36652 18.3918C2.24996 17.5248 2.24998 16.4225 2.25 15.0549C2.25 15.0366 2.25 15.0183 2.25 15C2.25 14.5858 2.58579 14.25 3 14.25Z`,fill:`currentColor`}),jsxRuntimeExports.jsx(`path`,{fillRule:`evenodd`,clipRule:`evenodd`,d:`M12 16.75C12.2106 16.75 12.4114 16.6615 12.5535 16.5061L16.5535 12.1311C16.833 11.8254 16.8118 11.351 16.5061 11.0715C16.2004 10.792 15.726 10.8132 15.4465 11.1189L12.75 14.0682V3C12.75 2.58579 12.4142 2.25 12 2.25C11.5858 2.25 11.25 2.58579 11.25 3V14.0682L8.55353 11.1189C8.27403 10.8132 7.79963 10.792 7.49393 11.0715C7.18823 11.351 7.16698 11.8254 7.44648 12.1311L11.4465 16.5061C11.5886 16.6615 11.7894 16.75 12 16.75Z`,fill:`currentColor`})]}));i$o.displayName=`DownloadMinimalistic`;
 
 const {forwardRef:t$n} = await importShared('react');
-const r$2=t$n((t,r)=>jsxRuntimeExports.jsx(i$m,{ref:r,...t,children:jsxRuntimeExports.jsx(`path`,{d:`M12.3704 15.8351L18.8001 9.20467C19.2013 8.79094 18.9581 8 18.4297 8H5.5703C5.04189 8 4.79869 8.79094 5.1999 9.20467L11.6296 15.8351C11.8427 16.0549 12.1573 16.0549 12.3704 15.8351Z`,fill:`currentColor`})}));r$2.displayName=`AltArrowDown`;
+const i$n=t$n((t,i)=>jsxRuntimeExports.jsxs(i$r,{ref:i,...t,children:[jsxRuntimeExports.jsx(`path`,{opacity:`0.5`,d:`M4 12C4 16.4183 7.58172 20 12 20C16.4183 20 20 16.4183 20 12L4 12Z`,fill:`currentColor`}),jsxRuntimeExports.jsx(`path`,{fillRule:`evenodd`,clipRule:`evenodd`,d:`M15.5303 10.4697C15.2374 10.1768 14.7626 10.1768 14.4697 10.4697L12.75 12.1893L12.75 4C12.75 3.58579 12.4142 3.25 12 3.25C11.5858 3.25 11.25 3.58579 11.25 4L11.25 12.1893L9.53033 10.4697C9.23744 10.1768 8.76256 10.1768 8.46967 10.4697C8.17678 10.7626 8.17678 11.2374 8.46967 11.5303L11.4697 14.5303C11.7626 14.8232 12.2374 14.8232 12.5303 14.5303L15.5303 11.5303C15.8232 11.2374 15.8232 10.7626 15.5303 10.4697Z`,fill:`currentColor`})]}));i$n.displayName=`Import`;
 
 const {forwardRef:t$m} = await importShared('react');
-const r$1=t$m((t,r)=>jsxRuntimeExports.jsx(i$m,{ref:r,...t,children:jsxRuntimeExports.jsx(`path`,{d:`M12.3704 8.16485L18.8001 14.7953C19.2013 15.2091 18.9581 16 18.4297 16H5.5703C5.04189 16 4.79869 15.2091 5.1999 14.7953L11.6296 8.16485C11.8427 7.94505 12.1573 7.94505 12.3704 8.16485Z`,fill:`currentColor`})}));r$1.displayName=`AltArrowUp`;
+const i$m=t$m((t,i)=>jsxRuntimeExports.jsxs(i$r,{ref:i,...t,children:[jsxRuntimeExports.jsx(`path`,{d:`M12.0789 2.25C7.2854 2.25 3.34478 5.913 2.96055 10.5833H2.00002C1.69614 10.5833 1.42229 10.7667 1.30655 11.0477C1.19081 11.3287 1.25606 11.6517 1.47178 11.8657L3.15159 13.5324C3.444 13.8225 3.91567 13.8225 4.20808 13.5324L5.88789 11.8657C6.10361 11.6517 6.16886 11.3287 6.05312 11.0477C5.93738 10.7667 5.66353 10.5833 5.35965 10.5833H4.4668C4.84652 6.75167 8.10479 3.75 12.0789 3.75C14.8484 3.75 17.2727 5.20845 18.6156 7.39279C18.8325 7.74565 19.2944 7.85585 19.6473 7.63892C20.0002 7.42199 20.1104 6.96007 19.8934 6.60721C18.2871 3.99427 15.3873 2.25 12.0789 2.25Z`,fill:`currentColor`}),jsxRuntimeExports.jsx(`path`,{opacity:`0.5`,d:`M20.8412 10.4666C20.5491 10.1778 20.0789 10.1778 19.7868 10.4666L18.1005 12.1333C17.8842 12.3471 17.8185 12.6703 17.934 12.9517C18.0496 13.233 18.3236 13.4167 18.6278 13.4167H19.5269C19.1456 17.2462 15.876 20.25 11.8828 20.25C9.10034 20.25 6.66595 18.7903 5.31804 16.6061C5.10051 16.2536 4.63841 16.1442 4.28591 16.3618C3.93342 16.5793 3.82401 17.0414 4.04154 17.3939C5.65416 20.007 8.56414 21.75 11.8828 21.75C16.6907 21.75 20.6476 18.0892 21.0332 13.4167H22.0002C22.3044 13.4167 22.5784 13.233 22.694 12.9517C22.8096 12.6703 22.7438 12.3471 22.5275 12.1333L20.8412 10.4666Z`,fill:`currentColor`})]}));i$m.displayName=`Refresh`;
 
 const {forwardRef:t$l} = await importShared('react');
-const i$l=t$l((t,i)=>jsxRuntimeExports.jsxs(i$m,{ref:i,...t,children:[jsxRuntimeExports.jsx(`path`,{d:`M16.6598 14.6474C18.4467 13.4935 18.4467 10.5065 16.6598 9.35258L5.87083 2.38548C4.13419 1.26402 2 2.72368 2 5.0329V18.9671C2 21.2763 4.13419 22.736 5.87083 21.6145L16.6598 14.6474Z`,fill:`currentColor`}),jsxRuntimeExports.jsx(`path`,{d:`M22.75 5C22.75 4.58579 22.4142 4.25 22 4.25C21.5858 4.25 21.25 4.58579 21.25 5V19C21.25 19.4142 21.5858 19.75 22 19.75C22.4142 19.75 22.75 19.4142 22.75 19V5Z`,fill:`currentColor`})]}));i$l.displayName=`SkipNext`;
+const i$l=t$l((t,i)=>jsxRuntimeExports.jsxs(i$r,{ref:i,...t,children:[jsxRuntimeExports.jsx(`path`,{opacity:`0.5`,fillRule:`evenodd`,clipRule:`evenodd`,d:`M6.87348 7.87338C9.01606 5.7308 12.1674 5.20902 14.8007 6.31041L15.9309 5.18019C12.6515 3.53111 8.55119 4.07435 5.81282 6.81272C2.39573 10.2298 2.39573 15.77 5.81282 19.1871C9.2299 22.6042 14.7701 22.6042 18.1872 19.1871C20.1746 17.1997 21.0057 14.4933 20.6819 11.9072C20.6304 11.4962 20.2555 11.2048 19.8445 11.2562C19.4335 11.3077 19.142 11.6826 19.1935 12.0936C19.4622 14.24 18.7727 16.4802 17.1265 18.1264C14.2952 20.9577 9.70478 20.9577 6.87348 18.1264C4.04217 15.2951 4.04217 10.7047 6.87348 7.87338Z`,fill:`currentColor`}),jsxRuntimeExports.jsx(`path`,{d:`M18.7212 4.20119C18.7212 3.89785 18.5384 3.62437 18.2582 3.50828C17.9779 3.3922 17.6553 3.45637 17.4408 3.67086L15.9314 5.18028L14.8012 6.3105L13.1982 7.9135C12.9837 8.128 12.9195 8.45059 13.0356 8.73085C13.1517 9.0111 13.4252 9.19383 13.7285 9.19383H17.9712C18.3854 9.19383 18.7212 8.85805 18.7212 8.44383V4.20119Z`,fill:`currentColor`})]}));i$l.displayName=`Restart`;
 
 const {forwardRef:t$k} = await importShared('react');
-const i$k=t$k((t,i)=>jsxRuntimeExports.jsxs(i$m,{ref:i,...t,children:[jsxRuntimeExports.jsx(`path`,{opacity:`0.5`,d:`M22 16.0003V15.0003C22 12.1718 21.9998 10.7581 21.1211 9.8794C20.2424 9.00072 18.8282 9.00072 15.9998 9.00072H7.99977C5.17135 9.00072 3.75713 9.00072 2.87845 9.8794C2 10.7579 2 12.1711 2 14.9981V15.0003V16.0003C2 18.8287 2 20.2429 2.87868 21.1216C3.75736 22.0003 5.17157 22.0003 8 22.0003H16H16C18.8284 22.0003 20.2426 22.0003 21.1213 21.1216C22 20.2429 22 18.8287 22 16.0003Z`,fill:`currentColor`}),jsxRuntimeExports.jsx(`path`,{fillRule:`evenodd`,clipRule:`evenodd`,d:`M12 1.25C11.5858 1.25 11.25 1.58579 11.25 2L11.25 12.9726L9.56943 11.0119C9.29986 10.6974 8.82639 10.661 8.51189 10.9306C8.1974 11.2001 8.16098 11.6736 8.43054 11.9881L11.4305 15.4881C11.573 15.6543 11.781 15.75 12 15.75C12.2189 15.75 12.4269 15.6543 12.5694 15.4881L15.5694 11.9881C15.839 11.6736 15.8026 11.2001 15.4881 10.9306C15.1736 10.661 14.7001 10.6974 14.4305 11.0119L12.75 12.9726L12.75 2C12.75 1.58579 12.4142 1.25 12 1.25Z`,fill:`currentColor`})]}));i$k.displayName=`Download`;
+const i$k=t$k((t,i)=>jsxRuntimeExports.jsxs(i$r,{ref:i,...t,children:[jsxRuntimeExports.jsx(`path`,{opacity:`0.5`,d:`M20.5355 20.5355C22 19.0711 22 16.714 22 12C22 11.6585 22 11.4878 21.9848 11.3142C21.9142 10.5049 21.586 9.71257 21.0637 9.09034C20.9516 8.95687 20.828 8.83317 20.5806 8.58578L15.4142 3.41944C15.1668 3.17206 15.0431 3.04835 14.9097 2.93631C14.2874 2.414 13.4951 2.08581 12.6858 2.01515C12.5122 2 12.3415 2 12 2C7.28595 2 4.92893 2 3.46447 3.46447C2 4.92893 2 7.28595 2 12C2 16.714 2 19.0711 3.46447 20.5355C4.1485 21.2196 5.02727 21.5841 6.25 21.7784L7.75 21.9313C8.9058 22 10.2996 22 12 22C13.7004 22 15.0942 22 16.25 21.9313L17.75 21.7784C18.9727 21.5841 19.8515 21.2196 20.5355 20.5355Z`,fill:`currentColor`}),jsxRuntimeExports.jsx(`path`,{d:`M7 7.25C6.58579 7.25 6.25 7.58579 6.25 8C6.25 8.41421 6.58579 8.75 7 8.75H13C13.4142 8.75 13.75 8.41421 13.75 8C13.75 7.58579 13.4142 7.25 13 7.25H7Z`,fill:`currentColor`}),jsxRuntimeExports.jsx(`path`,{d:`M13.052 16.25C13.9505 16.25 14.6997 16.2499 15.2945 16.3299C15.9223 16.4143 16.4891 16.6 16.9445 17.0555C17.4 17.5109 17.5857 18.0777 17.6701 18.7055C17.7501 19.3003 17.75 20.0495 17.75 20.948V20.948L17.75 21.7812L16.25 21.9219V21C16.25 20.036 16.2484 19.3884 16.1835 18.9054C16.1214 18.4439 16.0142 18.2464 15.8839 18.1161C15.7536 17.9858 15.5561 17.8786 15.0946 17.8165C14.6116 17.7516 13.964 17.75 13 17.75H11C10.036 17.75 9.38843 17.7516 8.90539 17.8165C8.44393 17.8786 8.24644 17.9858 8.11612 18.1161C7.9858 18.2464 7.87858 18.4439 7.81654 18.9054C7.7516 19.3884 7.75 20.036 7.75 21V21.9258L6.25 21.7773L6.25 20.948V20.948C6.24997 20.0495 6.24995 19.3003 6.32991 18.7055C6.41432 18.0777 6.59999 17.5109 7.05546 17.0555C7.51093 16.6 8.07773 16.4143 8.70552 16.3299C9.3003 16.2499 10.0495 16.25 10.948 16.25H10.948H13.052H13.052Z`,fill:`currentColor`})]}));i$k.displayName=`Diskette`;
 
 const {forwardRef:t$j} = await importShared('react');
-const i$j=t$j((t,i)=>jsxRuntimeExports.jsxs(i$m,{ref:i,...t,children:[jsxRuntimeExports.jsx(`path`,{opacity:`0.5`,fillRule:`evenodd`,clipRule:`evenodd`,d:`M3 14.25C3.41421 14.25 3.75 14.5858 3.75 15C3.75 16.4354 3.75159 17.4365 3.85315 18.1919C3.9518 18.9257 4.13225 19.3142 4.40901 19.591C4.68577 19.8678 5.07435 20.0482 5.80812 20.1469C6.56347 20.2484 7.56459 20.25 9 20.25H15C16.4354 20.25 17.4365 20.2484 18.1919 20.1469C18.9257 20.0482 19.3142 19.8678 19.591 19.591C19.8678 19.3142 20.0482 18.9257 20.1469 18.1919C20.2484 17.4365 20.25 16.4354 20.25 15C20.25 14.5858 20.5858 14.25 21 14.25C21.4142 14.25 21.75 14.5858 21.75 15V15.0549C21.75 16.4225 21.75 17.5248 21.6335 18.3918C21.5125 19.2919 21.2536 20.0497 20.6517 20.6516C20.0497 21.2536 19.2919 21.5125 18.3918 21.6335C17.5248 21.75 16.4225 21.75 15.0549 21.75H8.94513C7.57754 21.75 6.47522 21.75 5.60825 21.6335C4.70814 21.5125 3.95027 21.2536 3.34835 20.6517C2.74643 20.0497 2.48754 19.2919 2.36652 18.3918C2.24996 17.5248 2.24998 16.4225 2.25 15.0549C2.25 15.0366 2.25 15.0183 2.25 15C2.25 14.5858 2.58579 14.25 3 14.25Z`,fill:`currentColor`}),jsxRuntimeExports.jsx(`path`,{fillRule:`evenodd`,clipRule:`evenodd`,d:`M12 16.75C12.2106 16.75 12.4114 16.6615 12.5535 16.5061L16.5535 12.1311C16.833 11.8254 16.8118 11.351 16.5061 11.0715C16.2004 10.792 15.726 10.8132 15.4465 11.1189L12.75 14.0682V3C12.75 2.58579 12.4142 2.25 12 2.25C11.5858 2.25 11.25 2.58579 11.25 3V14.0682L8.55353 11.1189C8.27403 10.8132 7.79963 10.792 7.49393 11.0715C7.18823 11.351 7.16698 11.8254 7.44648 12.1311L11.4465 16.5061C11.5886 16.6615 11.7894 16.75 12 16.75Z`,fill:`currentColor`})]}));i$j.displayName=`DownloadMinimalistic`;
+const i$j=t$j((t,i)=>jsxRuntimeExports.jsxs(i$r,{ref:i,...t,children:[jsxRuntimeExports.jsx(`path`,{fillRule:`evenodd`,clipRule:`evenodd`,d:`M3.35791 12.7787C2.74772 13.7201 2.99956 15.0291 3.50323 17.647C3.8658 19.5316 4.04709 20.4738 4.67523 21.0991C4.8382 21.2614 5.02054 21.4052 5.2186 21.5277C5.98195 21.9999 6.99539 21.9999 9.02227 21.9999H15.9777C18.0046 21.9999 19.0181 21.9999 19.7814 21.5277C19.9795 21.4052 20.1618 21.2614 20.3248 21.0991C20.9529 20.4738 21.1342 19.5316 21.4968 17.647C22.0004 15.0291 22.2523 13.7201 21.6421 12.7787C21.4864 12.5384 21.2943 12.321 21.0721 12.1332C20.2011 11.3975 18.7933 11.3975 15.9777 11.3975H9.02227C6.20667 11.3975 4.79888 11.3975 3.92792 12.1332C3.70566 12.321 3.51363 12.5384 3.35791 12.7787ZM9.69518 17.1806C9.69518 16.7814 10.0376 16.4577 10.4601 16.4577H14.5398C14.9622 16.4577 15.3047 16.7814 15.3047 17.1806C15.3047 17.5798 14.9622 17.9035 14.5398 17.9035H10.4601C10.0376 17.9035 9.69518 17.5798 9.69518 17.1806Z`,fill:`currentColor`}),jsxRuntimeExports.jsx(`path`,{opacity:`0.5`,d:`M3.5762 12.4846C3.68271 12.3586 3.80034 12.241 3.92792 12.1332C4.79888 11.3975 6.20667 11.3975 9.02227 11.3975H15.9777C18.7933 11.3975 20.2011 11.3975 21.0721 12.1332C21.2 12.2413 21.3179 12.3592 21.4247 12.4857V9.75579C21.4247 8.84687 21.4247 8.09279 21.3394 7.49156C21.2494 6.85704 21.0531 6.29458 20.5839 5.83245C20.5074 5.75707 20.4266 5.68552 20.342 5.61807C19.8302 5.21023 19.2167 5.04345 18.5222 4.96608C17.8531 4.89155 17.0102 4.89157 15.9769 4.89158L15.6242 4.89158C14.6421 4.89158 14.29 4.88587 13.9711 4.80533C13.7837 4.75802 13.604 4.69195 13.4352 4.60878C13.151 4.46867 12.9033 4.25762 12.2077 3.64132L11.7336 3.22128C11.5345 3.04489 11.3987 2.9245 11.2531 2.81755C10.6284 2.35879 9.86779 2.08132 9.07145 2.01534C8.88602 1.99998 8.6968 1.99999 8.41356 2.00002L8.29714 2.00001C7.65647 1.9999 7.23365 1.99983 6.86652 2.0612C5.26167 2.32947 3.96392 3.45143 3.64782 4.93575C3.57591 5.27344 3.57602 5.66035 3.57619 6.21853L3.5762 12.4846Z`,fill:`currentColor`})]}));i$j.displayName=`FolderOpen`;
 
 const {forwardRef:t$i} = await importShared('react');
-const i$i=t$i((t,i)=>jsxRuntimeExports.jsxs(i$m,{ref:i,...t,children:[jsxRuntimeExports.jsx(`path`,{d:`M12.0789 2.25C7.2854 2.25 3.34478 5.913 2.96055 10.5833H2.00002C1.69614 10.5833 1.42229 10.7667 1.30655 11.0477C1.19081 11.3287 1.25606 11.6517 1.47178 11.8657L3.15159 13.5324C3.444 13.8225 3.91567 13.8225 4.20808 13.5324L5.88789 11.8657C6.10361 11.6517 6.16886 11.3287 6.05312 11.0477C5.93738 10.7667 5.66353 10.5833 5.35965 10.5833H4.4668C4.84652 6.75167 8.10479 3.75 12.0789 3.75C14.8484 3.75 17.2727 5.20845 18.6156 7.39279C18.8325 7.74565 19.2944 7.85585 19.6473 7.63892C20.0002 7.42199 20.1104 6.96007 19.8934 6.60721C18.2871 3.99427 15.3873 2.25 12.0789 2.25Z`,fill:`currentColor`}),jsxRuntimeExports.jsx(`path`,{opacity:`0.5`,d:`M20.8412 10.4666C20.5491 10.1778 20.0789 10.1778 19.7868 10.4666L18.1005 12.1333C17.8842 12.3471 17.8185 12.6703 17.934 12.9517C18.0496 13.233 18.3236 13.4167 18.6278 13.4167H19.5269C19.1456 17.2462 15.876 20.25 11.8828 20.25C9.10034 20.25 6.66595 18.7903 5.31804 16.6061C5.10051 16.2536 4.63841 16.1442 4.28591 16.3618C3.93342 16.5793 3.82401 17.0414 4.04154 17.3939C5.65416 20.007 8.56414 21.75 11.8828 21.75C16.6907 21.75 20.6476 18.0892 21.0332 13.4167H22.0002C22.3044 13.4167 22.5784 13.233 22.694 12.9517C22.8096 12.6703 22.7438 12.3471 22.5275 12.1333L20.8412 10.4666Z`,fill:`currentColor`})]}));i$i.displayName=`Refresh`;
+const i$i=t$i((t,i)=>jsxRuntimeExports.jsxs(i$r,{ref:i,...t,children:[jsxRuntimeExports.jsx(`path`,{fillRule:`evenodd`,clipRule:`evenodd`,d:`M8.04832 2.48826C8.33094 2.79108 8.31458 3.26567 8.01176 3.54829L3.72605 7.54829C3.57393 7.69027 3.36967 7.76267 3.1621 7.74818C2.95453 7.7337 2.7623 7.63363 2.63138 7.4719L1.41709 5.9719C1.15647 5.64996 1.20618 5.17769 1.52813 4.91707C1.85007 4.65645 2.32234 4.70616 2.58296 5.0281L3.29089 5.90261L6.98829 2.45171C7.2911 2.16909 7.76569 2.18545 8.04832 2.48826ZM11.25 5C11.25 4.58579 11.5858 4.25 12 4.25H22C22.4142 4.25 22.75 4.58579 22.75 5C22.75 5.41422 22.4142 5.75 22 5.75H12C11.5858 5.75 11.25 5.41422 11.25 5ZM8.04832 16.4883C8.33094 16.7911 8.31458 17.2657 8.01176 17.5483L3.72605 21.5483C3.57393 21.6903 3.36967 21.7627 3.1621 21.7482C2.95453 21.7337 2.7623 21.6336 2.63138 21.4719L1.41709 19.9719C1.15647 19.65 1.20618 19.1777 1.52813 18.9171C1.85007 18.6564 2.32234 18.7062 2.58296 19.0281L3.29089 19.9026L6.98829 16.4517C7.2911 16.1691 7.76569 16.1855 8.04832 16.4883ZM11.25 19C11.25 18.5858 11.5858 18.25 12 18.25H22C22.4142 18.25 22.75 18.5858 22.75 19C22.75 19.4142 22.4142 19.75 22 19.75H12C11.5858 19.75 11.25 19.4142 11.25 19Z`,fill:`currentColor`}),jsxRuntimeExports.jsxs(`g`,{opacity:`0.5`,children:[jsxRuntimeExports.jsx(`path`,{d:`M8.04832 9.48826C8.33094 9.79108 8.31458 10.2657 8.01176 10.5483L3.72605 14.5483C3.57393 14.6903 3.36967 14.7627 3.1621 14.7482C2.95453 14.7337 2.7623 14.6336 2.63138 14.4719L1.41709 12.9719C1.15647 12.65 1.20618 12.1777 1.52813 11.9171C1.85007 11.6564 2.32234 11.7062 2.58296 12.0281L3.29089 12.9026L6.98829 9.45171C7.2911 9.16909 7.76569 9.18545 8.04832 9.48826Z`,fill:`currentColor`}),jsxRuntimeExports.jsx(`path`,{d:`M11.25 12C11.25 11.5858 11.5858 11.25 12 11.25H22C22.4142 11.25 22.75 11.5858 22.75 12C22.75 12.4142 22.4142 12.75 22 12.75H12C11.5858 12.75 11.25 12.4142 11.25 12Z`,fill:`currentColor`})]})]}));i$i.displayName=`Checklist`;
 
 const {forwardRef:t$h} = await importShared('react');
-const i$h=t$h((t,i)=>jsxRuntimeExports.jsxs(i$m,{ref:i,...t,children:[jsxRuntimeExports.jsx(`path`,{opacity:`0.5`,d:`M20.5355 20.5355C22 19.0711 22 16.714 22 12C22 11.6585 22 11.4878 21.9848 11.3142C21.9142 10.5049 21.586 9.71257 21.0637 9.09034C20.9516 8.95687 20.828 8.83317 20.5806 8.58578L15.4142 3.41944C15.1668 3.17206 15.0431 3.04835 14.9097 2.93631C14.2874 2.414 13.4951 2.08581 12.6858 2.01515C12.5122 2 12.3415 2 12 2C7.28595 2 4.92893 2 3.46447 3.46447C2 4.92893 2 7.28595 2 12C2 16.714 2 19.0711 3.46447 20.5355C4.1485 21.2196 5.02727 21.5841 6.25 21.7784L7.75 21.9313C8.9058 22 10.2996 22 12 22C13.7004 22 15.0942 22 16.25 21.9313L17.75 21.7784C18.9727 21.5841 19.8515 21.2196 20.5355 20.5355Z`,fill:`currentColor`}),jsxRuntimeExports.jsx(`path`,{d:`M7 7.25C6.58579 7.25 6.25 7.58579 6.25 8C6.25 8.41421 6.58579 8.75 7 8.75H13C13.4142 8.75 13.75 8.41421 13.75 8C13.75 7.58579 13.4142 7.25 13 7.25H7Z`,fill:`currentColor`}),jsxRuntimeExports.jsx(`path`,{d:`M13.052 16.25C13.9505 16.25 14.6997 16.2499 15.2945 16.3299C15.9223 16.4143 16.4891 16.6 16.9445 17.0555C17.4 17.5109 17.5857 18.0777 17.6701 18.7055C17.7501 19.3003 17.75 20.0495 17.75 20.948V20.948L17.75 21.7812L16.25 21.9219V21C16.25 20.036 16.2484 19.3884 16.1835 18.9054C16.1214 18.4439 16.0142 18.2464 15.8839 18.1161C15.7536 17.9858 15.5561 17.8786 15.0946 17.8165C14.6116 17.7516 13.964 17.75 13 17.75H11C10.036 17.75 9.38843 17.7516 8.90539 17.8165C8.44393 17.8786 8.24644 17.9858 8.11612 18.1161C7.9858 18.2464 7.87858 18.4439 7.81654 18.9054C7.7516 19.3884 7.75 20.036 7.75 21V21.9258L6.25 21.7773L6.25 20.948V20.948C6.24997 20.0495 6.24995 19.3003 6.32991 18.7055C6.41432 18.0777 6.59999 17.5109 7.05546 17.0555C7.51093 16.6 8.07773 16.4143 8.70552 16.3299C9.3003 16.2499 10.0495 16.25 10.948 16.25H10.948H13.052H13.052Z`,fill:`currentColor`})]}));i$h.displayName=`Diskette`;
+const i$h=t$h((t,i)=>jsxRuntimeExports.jsxs(i$r,{ref:i,...t,children:[jsxRuntimeExports.jsx(`path`,{opacity:`0.5`,fillRule:`evenodd`,clipRule:`evenodd`,d:`M2.25 6C2.25 5.58579 2.58579 5.25 3 5.25H21C21.4142 5.25 21.75 5.58579 21.75 6C21.75 6.41421 21.4142 6.75 21 6.75H3C2.58579 6.75 2.25 6.41421 2.25 6ZM2.25 10C2.25 9.58579 2.58579 9.25 3 9.25H21C21.4142 9.25 21.75 9.58579 21.75 10C21.75 10.4142 21.4142 10.75 21 10.75H3C2.58579 10.75 2.25 10.4142 2.25 10ZM2.25 14C2.25 13.5858 2.58579 13.25 3 13.25H11C11.4142 13.25 11.75 13.5858 11.75 14C11.75 14.4142 11.4142 14.75 11 14.75H3C2.58579 14.75 2.25 14.4142 2.25 14ZM2.25 18C2.25 17.5858 2.58579 17.25 3 17.25H11C11.4142 17.25 11.75 17.5858 11.75 18C11.75 18.4142 11.4142 18.75 11 18.75H3C2.58579 18.75 2.25 18.4142 2.25 18Z`,fill:`currentColor`}),jsxRuntimeExports.jsx(`path`,{d:`M14.4697 12.9697C14.7626 12.6768 15.2374 12.6768 15.5303 12.9697L17.5 14.9393L19.4697 12.9697C19.7626 12.6768 20.2374 12.6768 20.5303 12.9697C20.8232 13.2626 20.8232 13.7374 20.5303 14.0303L18.5607 16L20.5303 17.9697C20.8232 18.2626 20.8232 18.7374 20.5303 19.0303C20.2374 19.3232 19.7626 19.3232 19.4697 19.0303L17.5 17.0607L15.5303 19.0303C15.2374 19.3232 14.7626 19.3232 14.4697 19.0303C14.1768 18.7374 14.1768 18.2626 14.4697 17.9697L16.4393 16L14.4697 14.0303C14.1768 13.7374 14.1768 13.2626 14.4697 12.9697Z`,fill:`currentColor`})]}));i$h.displayName=`ListCross`;
 
 const {forwardRef:t$g} = await importShared('react');
-const i$g=t$g((t,i)=>jsxRuntimeExports.jsxs(i$m,{ref:i,...t,children:[jsxRuntimeExports.jsx(`g`,{opacity:`0.5`,children:jsxRuntimeExports.jsx(`path`,{fillRule:`evenodd`,clipRule:`evenodd`,d:`M14 22H10C6.22876 22 4.34315 22 3.17157 20.8284C2 19.6569 2 17.7712 2 14V10C2 6.22876 2 4.34315 3.17157 3.17157C4.34315 2 6.23869 2 10.0298 2C10.6358 2 11.1214 2 11.53 2.01666C11.5166 2.09659 11.5095 2.17813 11.5092 2.26057L11.5 5.09497C11.4999 6.19207 11.4998 7.16164 11.6049 7.94316C11.7188 8.79028 11.9803 9.63726 12.6716 10.3285C13.3628 11.0198 14.2098 11.2813 15.0569 11.3952C15.8385 11.5003 16.808 11.5002 17.9051 11.5001L18 11.5001H21.9574C22 12.0344 22 12.6901 22 13.5629V14C22 17.7712 22 19.6569 20.8284 20.8284C19.6569 22 17.7712 22 14 22Z`,fill:`currentColor`})}),jsxRuntimeExports.jsx(`path`,{d:`M11.5092 2.2601L11.5 5.0945C11.4999 6.1916 11.4998 7.16117 11.6049 7.94269C11.7188 8.78981 11.9803 9.6368 12.6716 10.3281C13.3629 11.0193 14.2098 11.2808 15.057 11.3947C15.8385 11.4998 16.808 11.4997 17.9051 11.4996L21.9574 11.4996C21.9698 11.6552 21.9786 11.821 21.9848 11.9995H22C22 11.732 22 11.5983 21.9901 11.4408C21.9335 10.5463 21.5617 9.52125 21.0315 8.79853C20.9382 8.6713 20.8743 8.59493 20.7467 8.44218C19.9542 7.49359 18.911 6.31193 18 5.49953C17.1892 4.77645 16.0787 3.98536 15.1101 3.3385C14.2781 2.78275 13.862 2.50487 13.2915 2.29834C13.1403 2.24359 12.9408 2.18311 12.7846 2.14466C12.4006 2.05013 12.0268 2.01725 11.5 2.00586L11.5092 2.2601Z`,fill:`currentColor`})]}));i$g.displayName=`File`;
+const i$g=t$g((t,i)=>jsxRuntimeExports.jsxs(i$r,{ref:i,...t,children:[jsxRuntimeExports.jsx(`path`,{opacity:`0.5`,d:`M1 12C1 6.81455 1 4.22183 2.61091 2.61091C4.22183 1 6.81455 1 12 1C17.1854 1 19.7782 1 21.3891 2.61091C23 4.22183 23 6.81455 23 12C23 17.1854 23 19.7782 21.3891 21.3891C19.7782 23 17.1854 23 12 23C6.81455 23 4.22183 23 2.61091 21.3891C1 19.7782 1 17.1854 1 12Z`,fill:`currentColor`}),jsxRuntimeExports.jsx(`path`,{d:`M2.61091 21.3887C4.22183 22.9996 6.81455 22.9996 12 22.9996C17.1854 22.9996 19.7782 22.9996 21.3891 21.3887C22.8818 19.896 22.9913 17.5602 22.9994 13.0996H19.5237C18.528 13.0996 18.0302 13.0996 17.5926 13.3009C17.155 13.5022 16.831 13.8801 16.183 14.6361L16.183 14.6361L15.517 15.4131L15.517 15.4131C14.869 16.1691 14.545 16.5471 14.1074 16.7483C13.6698 16.9496 13.172 16.9496 12.1763 16.9496H11.8237C10.828 16.9496 10.3302 16.9496 9.89257 16.7483C9.45496 16.5471 9.13097 16.1691 8.48298 15.4131L7.81701 14.6361C7.16903 13.8801 6.84504 13.5022 6.40743 13.3009C5.96982 13.0996 5.47197 13.0996 4.47629 13.0996H1C1.00803 17.5602 1.11818 19.896 2.61091 21.3887Z`,fill:`currentColor`})]}));i$g.displayName=`Inbox`;
 
 const {forwardRef:t$f} = await importShared('react');
-const i$f=t$f((t,i)=>jsxRuntimeExports.jsxs(i$m,{ref:i,...t,children:[jsxRuntimeExports.jsx(`path`,{d:`M22 14V11.7979C22 11.4227 21.9978 10.75 21.9978 10.75L22 10H2V10.75V14C2 17.7712 2 19.6569 3.17157 20.8284C4.34315 22 6.22876 22 10 22H14C17.7712 22 19.6569 22 20.8284 20.8284C22 19.6569 22 17.7712 22 14Z`,fill:`currentColor`}),jsxRuntimeExports.jsx(`path`,{opacity:`0.5`,d:`M11 4L10.4497 3.44975C10.1763 3.17633 10.0396 3.03961 9.89594 2.92051C9.27652 2.40704 8.51665 2.09229 7.71557 2.01738C7.52976 2 7.33642 2 6.94975 2C6.06722 2 5.62595 2 5.25839 2.06935C3.64031 2.37464 2.37464 3.64031 2.06935 5.25839C2 5.62595 2 6.06722 2 6.94975V9.25V10H22L21.9531 9.25C21.8809 8.20117 21.6973 7.51276 21.2305 6.99383C21.1598 6.91514 21.0849 6.84024 21.0062 6.76946C20.1506 6 18.8345 6 16.2021 6H15.8284C14.6747 6 14.0979 6 13.5604 5.84678C13.2651 5.7626 12.9804 5.64471 12.7121 5.49543C12.2237 5.22367 11.8158 4.81578 11 4Z`,fill:`currentColor`})]}));i$f.displayName=`Folder2`;
+const i$f=t$f((t,i)=>jsxRuntimeExports.jsxs(i$r,{ref:i,...t,children:[jsxRuntimeExports.jsx(`path`,{opacity:`0.5`,d:`M20.8487 8.71306C22.3844 7.17735 22.3844 4.68748 20.8487 3.15178C19.313 1.61607 16.8231 1.61607 15.2874 3.15178L14.4004 4.03882C14.4125 4.0755 14.4251 4.11268 14.4382 4.15035C14.7633 5.0875 15.3768 6.31601 16.5308 7.47002C17.6848 8.62403 18.9133 9.23749 19.8505 9.56262C19.888 9.57563 19.925 9.58817 19.9615 9.60026L20.8487 8.71306Z`,fill:`currentColor`}),jsxRuntimeExports.jsx(`path`,{d:`M14.4386 4L14.4004 4.03819C14.4125 4.07487 14.4251 4.11206 14.4382 4.14973C14.7633 5.08687 15.3768 6.31538 16.5308 7.4694C17.6848 8.62341 18.9133 9.23686 19.8505 9.56199C19.8876 9.57489 19.9243 9.58733 19.9606 9.59933L11.4001 18.1598C10.823 18.7369 10.5343 19.0255 10.2162 19.2737C9.84082 19.5665 9.43469 19.8175 9.00498 20.0223C8.6407 20.1959 8.25351 20.3249 7.47918 20.583L3.39584 21.9442C3.01478 22.0712 2.59466 21.972 2.31063 21.688C2.0266 21.4039 1.92743 20.9838 2.05445 20.6028L3.41556 16.5194C3.67368 15.7451 3.80273 15.3579 3.97634 14.9936C4.18114 14.5639 4.43213 14.1578 4.7249 13.7824C4.97307 13.4643 5.26165 13.1757 5.83874 12.5986L14.4386 4Z`,fill:`currentColor`})]}));i$f.displayName=`Pen`;
 
 const {forwardRef:t$e} = await importShared('react');
-const i$e=t$e((t,i)=>jsxRuntimeExports.jsxs(i$m,{ref:i,...t,children:[jsxRuntimeExports.jsx(`path`,{fillRule:`evenodd`,clipRule:`evenodd`,d:`M3.35791 12.7787C2.74772 13.7201 2.99956 15.0291 3.50323 17.647C3.8658 19.5316 4.04709 20.4738 4.67523 21.0991C4.8382 21.2614 5.02054 21.4052 5.2186 21.5277C5.98195 21.9999 6.99539 21.9999 9.02227 21.9999H15.9777C18.0046 21.9999 19.0181 21.9999 19.7814 21.5277C19.9795 21.4052 20.1618 21.2614 20.3248 21.0991C20.9529 20.4738 21.1342 19.5316 21.4968 17.647C22.0004 15.0291 22.2523 13.7201 21.6421 12.7787C21.4864 12.5384 21.2943 12.321 21.0721 12.1332C20.2011 11.3975 18.7933 11.3975 15.9777 11.3975H9.02227C6.20667 11.3975 4.79888 11.3975 3.92792 12.1332C3.70566 12.321 3.51363 12.5384 3.35791 12.7787ZM9.69518 17.1806C9.69518 16.7814 10.0376 16.4577 10.4601 16.4577H14.5398C14.9622 16.4577 15.3047 16.7814 15.3047 17.1806C15.3047 17.5798 14.9622 17.9035 14.5398 17.9035H10.4601C10.0376 17.9035 9.69518 17.5798 9.69518 17.1806Z`,fill:`currentColor`}),jsxRuntimeExports.jsx(`path`,{opacity:`0.5`,d:`M3.5762 12.4846C3.68271 12.3586 3.80034 12.241 3.92792 12.1332C4.79888 11.3975 6.20667 11.3975 9.02227 11.3975H15.9777C18.7933 11.3975 20.2011 11.3975 21.0721 12.1332C21.2 12.2413 21.3179 12.3592 21.4247 12.4857V9.75579C21.4247 8.84687 21.4247 8.09279 21.3394 7.49156C21.2494 6.85704 21.0531 6.29458 20.5839 5.83245C20.5074 5.75707 20.4266 5.68552 20.342 5.61807C19.8302 5.21023 19.2167 5.04345 18.5222 4.96608C17.8531 4.89155 17.0102 4.89157 15.9769 4.89158L15.6242 4.89158C14.6421 4.89158 14.29 4.88587 13.9711 4.80533C13.7837 4.75802 13.604 4.69195 13.4352 4.60878C13.151 4.46867 12.9033 4.25762 12.2077 3.64132L11.7336 3.22128C11.5345 3.04489 11.3987 2.9245 11.2531 2.81755C10.6284 2.35879 9.86779 2.08132 9.07145 2.01534C8.88602 1.99998 8.6968 1.99999 8.41356 2.00002L8.29714 2.00001C7.65647 1.9999 7.23365 1.99983 6.86652 2.0612C5.26167 2.32947 3.96392 3.45143 3.64782 4.93575C3.57591 5.27344 3.57602 5.66035 3.57619 6.21853L3.5762 12.4846Z`,fill:`currentColor`})]}));i$e.displayName=`FolderOpen`;
+const i$e=t$e((t,i)=>jsxRuntimeExports.jsxs(i$r,{ref:i,...t,children:[jsxRuntimeExports.jsx(`path`,{opacity:`0.5`,d:`M3 10C3 6.22876 3 4.34315 4.17157 3.17157C5.34315 2 7.22876 2 11 2H13C16.7712 2 18.6569 2 19.8284 3.17157C21 4.34315 21 6.22876 21 10V14C21 17.7712 21 19.6569 19.8284 20.8284C18.6569 22 16.7712 22 13 22H11C7.22876 22 5.34315 22 4.17157 20.8284C3 19.6569 3 17.7712 3 14V10Z`,fill:`currentColor`}),jsxRuntimeExports.jsx(`path`,{fillRule:`evenodd`,clipRule:`evenodd`,d:`M7.25 12C7.25 11.5858 7.58579 11.25 8 11.25H16C16.4142 11.25 16.75 11.5858 16.75 12C16.75 12.4142 16.4142 12.75 16 12.75H8C7.58579 12.75 7.25 12.4142 7.25 12Z`,fill:`currentColor`}),jsxRuntimeExports.jsx(`path`,{fillRule:`evenodd`,clipRule:`evenodd`,d:`M7.25 8C7.25 7.58579 7.58579 7.25 8 7.25H16C16.4142 7.25 16.75 7.58579 16.75 8C16.75 8.41421 16.4142 8.75 16 8.75H8C7.58579 8.75 7.25 8.41421 7.25 8Z`,fill:`currentColor`}),jsxRuntimeExports.jsx(`path`,{fillRule:`evenodd`,clipRule:`evenodd`,d:`M7.25 16C7.25 15.5858 7.58579 15.25 8 15.25H13C13.4142 15.25 13.75 15.5858 13.75 16C13.75 16.4142 13.4142 16.75 13 16.75H8C7.58579 16.75 7.25 16.4142 7.25 16Z`,fill:`currentColor`})]}));i$e.displayName=`DocumentText`;
 
 const {forwardRef:t$d} = await importShared('react');
-const i$d=t$d((t,i)=>jsxRuntimeExports.jsxs(i$m,{ref:i,...t,children:[jsxRuntimeExports.jsx(`path`,{fillRule:`evenodd`,clipRule:`evenodd`,d:`M8.04832 2.48826C8.33094 2.79108 8.31458 3.26567 8.01176 3.54829L3.72605 7.54829C3.57393 7.69027 3.36967 7.76267 3.1621 7.74818C2.95453 7.7337 2.7623 7.63363 2.63138 7.4719L1.41709 5.9719C1.15647 5.64996 1.20618 5.17769 1.52813 4.91707C1.85007 4.65645 2.32234 4.70616 2.58296 5.0281L3.29089 5.90261L6.98829 2.45171C7.2911 2.16909 7.76569 2.18545 8.04832 2.48826ZM11.25 5C11.25 4.58579 11.5858 4.25 12 4.25H22C22.4142 4.25 22.75 4.58579 22.75 5C22.75 5.41422 22.4142 5.75 22 5.75H12C11.5858 5.75 11.25 5.41422 11.25 5ZM8.04832 16.4883C8.33094 16.7911 8.31458 17.2657 8.01176 17.5483L3.72605 21.5483C3.57393 21.6903 3.36967 21.7627 3.1621 21.7482C2.95453 21.7337 2.7623 21.6336 2.63138 21.4719L1.41709 19.9719C1.15647 19.65 1.20618 19.1777 1.52813 18.9171C1.85007 18.6564 2.32234 18.7062 2.58296 19.0281L3.29089 19.9026L6.98829 16.4517C7.2911 16.1691 7.76569 16.1855 8.04832 16.4883ZM11.25 19C11.25 18.5858 11.5858 18.25 12 18.25H22C22.4142 18.25 22.75 18.5858 22.75 19C22.75 19.4142 22.4142 19.75 22 19.75H12C11.5858 19.75 11.25 19.4142 11.25 19Z`,fill:`currentColor`}),jsxRuntimeExports.jsxs(`g`,{opacity:`0.5`,children:[jsxRuntimeExports.jsx(`path`,{d:`M8.04832 9.48826C8.33094 9.79108 8.31458 10.2657 8.01176 10.5483L3.72605 14.5483C3.57393 14.6903 3.36967 14.7627 3.1621 14.7482C2.95453 14.7337 2.7623 14.6336 2.63138 14.4719L1.41709 12.9719C1.15647 12.65 1.20618 12.1777 1.52813 11.9171C1.85007 11.6564 2.32234 11.7062 2.58296 12.0281L3.29089 12.9026L6.98829 9.45171C7.2911 9.16909 7.76569 9.18545 8.04832 9.48826Z`,fill:`currentColor`}),jsxRuntimeExports.jsx(`path`,{d:`M11.25 12C11.25 11.5858 11.5858 11.25 12 11.25H22C22.4142 11.25 22.75 11.5858 22.75 12C22.75 12.4142 22.4142 12.75 22 12.75H12C11.5858 12.75 11.25 12.4142 11.25 12Z`,fill:`currentColor`})]})]}));i$d.displayName=`Checklist`;
+const i$d=t$d((t,i)=>jsxRuntimeExports.jsxs(i$r,{ref:i,...t,children:[jsxRuntimeExports.jsx(`path`,{fillRule:`evenodd`,clipRule:`evenodd`,d:`M10.75 2H12.75C15.5784 2 16.9926 2 17.8713 2.87868C18.75 3.75736 18.75 5.17157 18.75 8V16C18.75 18.8284 18.75 20.2426 17.8713 21.1213C16.9926 22 15.5784 22 12.75 22H10.75C7.92157 22 6.50736 22 5.62868 21.1213C4.75 20.2426 4.75 18.8284 4.75 16V8C4.75 5.17157 4.75 3.75736 5.62868 2.87868C6.50736 2 7.92157 2 10.75 2ZM8 13C8 12.5858 8.33579 12.25 8.75 12.25H14.75C15.1642 12.25 15.5 12.5858 15.5 13C15.5 13.4142 15.1642 13.75 14.75 13.75H8.75C8.33579 13.75 8 13.4142 8 13ZM8 9C8 8.58579 8.33579 8.25 8.75 8.25H14.75C15.1642 8.25 15.5 8.58579 15.5 9C15.5 9.41421 15.1642 9.75 14.75 9.75H8.75C8.33579 9.75 8 9.41421 8 9ZM8 17C8 16.5858 8.33579 16.25 8.75 16.25H11.75C12.1642 16.25 12.5 16.5858 12.5 17C12.5 17.4142 12.1642 17.75 11.75 17.75H8.75C8.33579 17.75 8 17.4142 8 17Z`,fill:`currentColor`}),jsxRuntimeExports.jsxs(`g`,{opacity:`0.5`,children:[jsxRuntimeExports.jsx(`path`,{fillRule:`evenodd`,clipRule:`evenodd`,d:`M1.75 4.25C2.16421 4.25 2.5 4.58579 2.5 5V19C2.5 19.4142 2.16421 19.75 1.75 19.75C1.33579 19.75 1 19.4142 1 19V5C1 4.58579 1.33579 4.25 1.75 4.25Z`,fill:`currentColor`}),jsxRuntimeExports.jsx(`path`,{fillRule:`evenodd`,clipRule:`evenodd`,d:`M21.75 4.25C22.1642 4.25 22.5 4.58579 22.5 5V19C22.5 19.4142 22.1642 19.75 21.75 19.75C21.3358 19.75 21 19.4142 21 19V5C21 4.58579 21.3358 4.25 21.75 4.25Z`,fill:`currentColor`})]})]}));i$d.displayName=`DocumentsMinimalistic`;
 
 const {forwardRef:t$c} = await importShared('react');
-const i$c=t$c((t,i)=>jsxRuntimeExports.jsxs(i$m,{ref:i,...t,children:[jsxRuntimeExports.jsx(`path`,{opacity:`0.5`,d:`M1 12C1 6.81455 1 4.22183 2.61091 2.61091C4.22183 1 6.81455 1 12 1C17.1854 1 19.7782 1 21.3891 2.61091C23 4.22183 23 6.81455 23 12C23 17.1854 23 19.7782 21.3891 21.3891C19.7782 23 17.1854 23 12 23C6.81455 23 4.22183 23 2.61091 21.3891C1 19.7782 1 17.1854 1 12Z`,fill:`currentColor`}),jsxRuntimeExports.jsx(`path`,{d:`M2.61091 21.3887C4.22183 22.9996 6.81455 22.9996 12 22.9996C17.1854 22.9996 19.7782 22.9996 21.3891 21.3887C22.8818 19.896 22.9913 17.5602 22.9994 13.0996H19.5237C18.528 13.0996 18.0302 13.0996 17.5926 13.3009C17.155 13.5022 16.831 13.8801 16.183 14.6361L16.183 14.6361L15.517 15.4131L15.517 15.4131C14.869 16.1691 14.545 16.5471 14.1074 16.7483C13.6698 16.9496 13.172 16.9496 12.1763 16.9496H11.8237C10.828 16.9496 10.3302 16.9496 9.89257 16.7483C9.45496 16.5471 9.13097 16.1691 8.48298 15.4131L7.81701 14.6361C7.16903 13.8801 6.84504 13.5022 6.40743 13.3009C5.96982 13.0996 5.47197 13.0996 4.47629 13.0996H1C1.00803 17.5602 1.11818 19.896 2.61091 21.3887Z`,fill:`currentColor`})]}));i$c.displayName=`Inbox`;
+const i$c=t$c((t,i)=>jsxRuntimeExports.jsxs(i$r,{ref:i,...t,children:[jsxRuntimeExports.jsx(`path`,{opacity:`0.5`,d:`M20.3133 11.1566C20.3133 16.2137 16.2137 20.3133 11.1566 20.3133C6.09956 20.3133 2 16.2137 2 11.1566C2 6.09956 6.09956 2 11.1566 2C16.2137 2 20.3133 6.09956 20.3133 11.1566Z`,fill:`currentColor`}),jsxRuntimeExports.jsx(`path`,{d:`M17.1001 18.1219L20.7664 21.7882C21.0487 22.0705 21.5064 22.0705 21.7887 21.7882C22.071 21.5059 22.071 21.0482 21.7887 20.7659L18.1224 17.0996C17.809 17.4666 17.4671 17.8085 17.1001 18.1219Z`,fill:`currentColor`})]}));i$c.displayName=`Magnifier`;
 
 const {forwardRef:t$b} = await importShared('react');
-const i$b=t$b((t,i)=>jsxRuntimeExports.jsxs(i$m,{ref:i,...t,children:[jsxRuntimeExports.jsx(`path`,{opacity:`0.5`,d:`M20.3133 11.1566C20.3133 16.2137 16.2137 20.3133 11.1566 20.3133C6.09956 20.3133 2 16.2137 2 11.1566C2 6.09956 6.09956 2 11.1566 2C16.2137 2 20.3133 6.09956 20.3133 11.1566Z`,fill:`currentColor`}),jsxRuntimeExports.jsx(`path`,{d:`M17.1001 18.1219L20.7664 21.7882C21.0487 22.0705 21.5064 22.0705 21.7887 21.7882C22.071 21.5059 22.071 21.0482 21.7887 20.7659L18.1224 17.0996C17.809 17.4666 17.4671 17.8085 17.1001 18.1219Z`,fill:`currentColor`})]}));i$b.displayName=`Magnifier`;
+const i$b=t$b((t,i)=>jsxRuntimeExports.jsxs(i$r,{ref:i,...t,children:[jsxRuntimeExports.jsx(`path`,{fillRule:`evenodd`,clipRule:`evenodd`,d:`M9.94358 1.25L10 1.25C10.4142 1.25 10.75 1.58579 10.75 2C10.75 2.41421 10.4142 2.75 10 2.75C8.09318 2.75 6.73851 2.75159 5.71085 2.88976C4.70476 3.02502 4.12511 3.27869 3.7019 3.7019C3.27869 4.12511 3.02502 4.70476 2.88976 5.71085C2.75159 6.73851 2.75 8.09318 2.75 10C2.75 10.4142 2.41421 10.75 2 10.75C1.58579 10.75 1.25 10.4142 1.25 10L1.25 9.94358C1.24998 8.10582 1.24997 6.65019 1.40314 5.51098C1.56076 4.33856 1.89288 3.38961 2.64124 2.64124C3.38961 1.89288 4.33856 1.56076 5.51098 1.40314C6.65019 1.24997 8.10582 1.24998 9.94358 1.25ZM18.2892 2.88976C17.2615 2.75159 15.9068 2.75 14 2.75C13.5858 2.75 13.25 2.41421 13.25 2C13.25 1.58579 13.5858 1.25 14 1.25L14.0564 1.25C15.8942 1.24998 17.3498 1.24997 18.489 1.40314C19.6614 1.56076 20.6104 1.89288 21.3588 2.64124C22.1071 3.38961 22.4392 4.33856 22.5969 5.51098C22.75 6.65019 22.75 8.10583 22.75 9.94359V10C22.75 10.4142 22.4142 10.75 22 10.75C21.5858 10.75 21.25 10.4142 21.25 10C21.25 8.09318 21.2484 6.73851 21.1102 5.71085C20.975 4.70476 20.7213 4.12511 20.2981 3.7019C19.8749 3.27869 19.2952 3.02502 18.2892 2.88976ZM2 13.25C2.41421 13.25 2.75 13.5858 2.75 14C2.75 15.9068 2.75159 17.2615 2.88976 18.2892C3.02502 19.2952 3.27869 19.8749 3.7019 20.2981C4.12511 20.7213 4.70476 20.975 5.71085 21.1102C6.73851 21.2484 8.09318 21.25 10 21.25C10.4142 21.25 10.75 21.5858 10.75 22C10.75 22.4142 10.4142 22.75 10 22.75H9.94359C8.10583 22.75 6.65019 22.75 5.51098 22.5969C4.33856 22.4392 3.38961 22.1071 2.64124 21.3588C1.89288 20.6104 1.56076 19.6614 1.40314 18.489C1.24997 17.3498 1.24998 15.8942 1.25 14.0564L1.25 14C1.25 13.5858 1.58579 13.25 2 13.25ZM22 13.25C22.4142 13.25 22.75 13.5858 22.75 14V14.0564C22.75 15.8942 22.75 17.3498 22.5969 18.489C22.4392 19.6614 22.1071 20.6104 21.3588 21.3588C20.6104 22.1071 19.6614 22.4392 18.489 22.5969C17.3498 22.75 15.8942 22.75 14.0564 22.75H14C13.5858 22.75 13.25 22.4142 13.25 22C13.25 21.5858 13.5858 21.25 14 21.25C15.9068 21.25 17.2615 21.2484 18.2892 21.1102C19.2952 20.975 19.8749 20.7213 20.2981 20.2981C20.7213 19.8749 20.975 19.2952 21.1102 18.2892C21.2484 17.2615 21.25 15.9068 21.25 14C21.25 13.5858 21.5858 13.25 22 13.25Z`,fill:`currentColor`}),jsxRuntimeExports.jsx(`path`,{opacity:`0.5`,d:`M10 5.5H14C15.8856 5.5 16.8284 5.5 17.4142 6.08579C17.9642 6.63575 17.9978 7.5004 17.9999 9.16448L18 12.0167V14.5C18 16.3856 18 17.3284 17.4142 17.9142C16.8284 18.5 15.8856 18.5 14 18.5H10C8.11438 18.5 7.17157 18.5 6.58579 17.9142C6 17.3284 6 16.3856 6 14.5V12.0167L6.00013 9.16449C6.00219 7.5004 6.03582 6.63575 6.58579 6.08579C7.17157 5.5 8.11438 5.5 10 5.5Z`,fill:`currentColor`}),jsxRuntimeExports.jsx(`path`,{d:`M18.3693 9.29994C18.2513 9.25455 18.1281 9.20929 17.9999 9.16445C16.1667 8.38595 11.2002 7.29605 6.00013 9.16446C5.87187 9.20929 5.74878 9.25456 5.63078 9.29994C4.9385 9.5662 4.42459 9.83556 4.07665 10.0443C3.90273 10.1487 3.77043 10.2378 3.67815 10.3037C3.63202 10.3367 3.59589 10.3638 3.56958 10.3842C3.55642 10.3943 3.54572 10.4028 3.53745 10.4094L3.52685 10.418L3.52291 10.4213L3.52128 10.4226L3.51988 10.4238C3.20167 10.689 3.15868 11.1619 3.42385 11.4801C3.68807 11.7971 4.15855 11.841 4.47672 11.579L4.4871 11.5708C4.49868 11.5619 4.51958 11.546 4.55001 11.5243C4.61086 11.4808 4.7098 11.4137 4.84839 11.3306C5.12545 11.1643 5.56153 10.9337 6.16925 10.7C7.38288 10.2332 9.29159 9.74995 12 9.74995C14.7085 9.74995 16.6172 10.2332 17.8308 10.7C18.4385 10.9337 18.8746 11.1643 19.1516 11.3306C19.2902 11.4137 19.3892 11.4808 19.45 11.5243C19.4805 11.546 19.5014 11.5619 19.5129 11.5708L19.5233 11.579C19.8415 11.841 20.312 11.7971 20.5762 11.4801C20.8414 11.1619 20.7984 10.689 20.4802 10.4238L20 10.9999C20.4802 10.4238 20.4788 10.4226 20.4788 10.4226L20.4771 10.4213L20.4732 10.418L20.4626 10.4094C20.4543 10.4028 20.4436 10.3943 20.4305 10.3842C20.4041 10.3638 20.368 10.3367 20.3219 10.3037C20.2296 10.2378 20.0973 10.1487 19.9234 10.0443C19.5755 9.83556 19.0615 9.5662 18.3693 9.29994Z`,fill:`currentColor`})]}));i$b.displayName=`ObjectScan`;
 
 const {forwardRef:t$a} = await importShared('react');
-const i$a=t$a((t,i)=>jsxRuntimeExports.jsxs(i$m,{ref:i,...t,children:[jsxRuntimeExports.jsx(`path`,{opacity:`0.5`,d:`M3 10.4167C3 7.21907 3 5.62028 3.37752 5.08241C3.75503 4.54454 5.25832 4.02996 8.26491 3.00079L8.83772 2.80472C10.405 2.26824 11.1886 2 12 2C12.8114 2 13.595 2.26824 15.1623 2.80472L15.7351 3.00079C18.7417 4.02996 20.245 4.54454 20.6225 5.08241C21 5.62028 21 7.21907 21 10.4167V11.9914C21 17.6294 16.761 20.3655 14.1014 21.5273C13.38 21.8424 13.0193 22 12 22C10.9807 22 10.62 21.8424 9.89856 21.5273C7.23896 20.3655 3 17.6294 3 11.9914V10.4167Z`,fill:`currentColor`}),jsxRuntimeExports.jsx(`path`,{d:`M12 7.25C12.4142 7.25 12.75 7.58579 12.75 8V12C12.75 12.4142 12.4142 12.75 12 12.75C11.5858 12.75 11.25 12.4142 11.25 12V8C11.25 7.58579 11.5858 7.25 12 7.25Z`,fill:`currentColor`}),jsxRuntimeExports.jsx(`path`,{d:`M12 16C12.5523 16 13 15.5523 13 15C13 14.4477 12.5523 14 12 14C11.4477 14 11 14.4477 11 15C11 15.5523 11.4477 16 12 16Z`,fill:`currentColor`})]}));i$a.displayName=`ShieldWarning`;
+const i$a=t$a((t,i)=>jsxRuntimeExports.jsxs(i$r,{ref:i,...t,children:[jsxRuntimeExports.jsx(`path`,{opacity:`0.5`,d:`M3 10.4167C3 7.21907 3 5.62028 3.37752 5.08241C3.75503 4.54454 5.25832 4.02996 8.26491 3.00079L8.83772 2.80472C10.405 2.26824 11.1886 2 12 2C12.8114 2 13.595 2.26824 15.1623 2.80472L15.7351 3.00079C18.7417 4.02996 20.245 4.54454 20.6225 5.08241C21 5.62028 21 7.21907 21 10.4167V11.9914C21 17.6294 16.761 20.3655 14.1014 21.5273C13.38 21.8424 13.0193 22 12 22C10.9807 22 10.62 21.8424 9.89856 21.5273C7.23896 20.3655 3 17.6294 3 11.9914V10.4167Z`,fill:`currentColor`}),jsxRuntimeExports.jsx(`path`,{d:`M12 7.25C12.4142 7.25 12.75 7.58579 12.75 8V12C12.75 12.4142 12.4142 12.75 12 12.75C11.5858 12.75 11.25 12.4142 11.25 12V8C11.25 7.58579 11.5858 7.25 12 7.25Z`,fill:`currentColor`}),jsxRuntimeExports.jsx(`path`,{d:`M12 16C12.5523 16 13 15.5523 13 15C13 14.4477 12.5523 14 12 14C11.4477 14 11 14.4477 11 15C11 15.5523 11.4477 16 12 16Z`,fill:`currentColor`})]}));i$a.displayName=`ShieldWarning`;
 
 const {forwardRef:t$9} = await importShared('react');
-const i$9=t$9((t,i)=>jsxRuntimeExports.jsxs(i$m,{ref:i,...t,children:[jsxRuntimeExports.jsx(`path`,{opacity:`0.5`,fillRule:`evenodd`,clipRule:`evenodd`,d:`M12.4277 2C11.3139 2 10.2995 2.6007 8.27081 3.80211L7.58466 4.20846C5.55594 5.40987 4.54158 6.01057 3.98466 7C3.42773 7.98943 3.42773 9.19084 3.42773 11.5937V12.4063C3.42773 14.8092 3.42773 16.0106 3.98466 17C4.54158 17.9894 5.55594 18.5901 7.58466 19.7915L8.27081 20.1979C10.2995 21.3993 11.3139 22 12.4277 22C13.5416 22 14.5559 21.3993 16.5847 20.1979L17.2708 19.7915C19.2995 18.5901 20.3139 17.9894 20.8708 17C21.4277 16.0106 21.4277 14.8092 21.4277 12.4063V11.5937C21.4277 9.19084 21.4277 7.98943 20.8708 7C20.3139 6.01057 19.2995 5.40987 17.2708 4.20846L16.5847 3.80211C14.5559 2.6007 13.5416 2 12.4277 2Z`,fill:`currentColor`}),jsxRuntimeExports.jsx(`path`,{d:`M12.4277 8.25C10.3567 8.25 8.67773 9.92893 8.67773 12C8.67773 14.0711 10.3567 15.75 12.4277 15.75C14.4988 15.75 16.1777 14.0711 16.1777 12C16.1777 9.92893 14.4988 8.25 12.4277 8.25Z`,fill:`currentColor`})]}));i$9.displayName=`SettingsMinimalistic`;
+const i$9=t$9((t,i)=>jsxRuntimeExports.jsxs(i$r,{ref:i,...t,children:[jsxRuntimeExports.jsx(`path`,{opacity:`0.5`,fillRule:`evenodd`,clipRule:`evenodd`,d:`M12.4277 2C11.3139 2 10.2995 2.6007 8.27081 3.80211L7.58466 4.20846C5.55594 5.40987 4.54158 6.01057 3.98466 7C3.42773 7.98943 3.42773 9.19084 3.42773 11.5937V12.4063C3.42773 14.8092 3.42773 16.0106 3.98466 17C4.54158 17.9894 5.55594 18.5901 7.58466 19.7915L8.27081 20.1979C10.2995 21.3993 11.3139 22 12.4277 22C13.5416 22 14.5559 21.3993 16.5847 20.1979L17.2708 19.7915C19.2995 18.5901 20.3139 17.9894 20.8708 17C21.4277 16.0106 21.4277 14.8092 21.4277 12.4063V11.5937C21.4277 9.19084 21.4277 7.98943 20.8708 7C20.3139 6.01057 19.2995 5.40987 17.2708 4.20846L16.5847 3.80211C14.5559 2.6007 13.5416 2 12.4277 2Z`,fill:`currentColor`}),jsxRuntimeExports.jsx(`path`,{d:`M12.4277 8.25C10.3567 8.25 8.67773 9.92893 8.67773 12C8.67773 14.0711 10.3567 15.75 12.4277 15.75C14.4988 15.75 16.1777 14.0711 16.1777 12C16.1777 9.92893 14.4988 8.25 12.4277 8.25Z`,fill:`currentColor`})]}));i$9.displayName=`SettingsMinimalistic`;
 
 const {forwardRef:t$8} = await importShared('react');
-const i$8=t$8((t,i)=>jsxRuntimeExports.jsxs(i$m,{ref:i,...t,children:[jsxRuntimeExports.jsx(`path`,{d:`M8.42229 20.6181C10.1779 21.5395 11.0557 22.0001 12 22.0001V12.0001L2.63802 7.07275C2.62423 7.09491 2.6107 7.11727 2.5974 7.13986C2 8.15436 2 9.41678 2 11.9416V12.0586C2 14.5834 2 15.8459 2.5974 16.8604C3.19479 17.8749 4.27063 18.4395 6.42229 19.5686L8.42229 20.6181Z`,fill:`currentColor`}),jsxRuntimeExports.jsx(`path`,{opacity:`0.7`,d:`M17.5774 4.43152L15.5774 3.38197C13.8218 2.46066 12.944 2 11.9997 2C11.0554 2 10.1776 2.46066 8.42197 3.38197L6.42197 4.43152C4.31821 5.53552 3.24291 6.09982 2.6377 7.07264L11.9997 12L21.3617 7.07264C20.7564 6.09982 19.6811 5.53552 17.5774 4.43152Z`,fill:`currentColor`}),jsxRuntimeExports.jsx(`path`,{opacity:`0.5`,d:`M21.4026 7.13986C21.3893 7.11727 21.3758 7.09491 21.362 7.07275L12 12.0001V22.0001C12.9443 22.0001 13.8221 21.5395 15.5777 20.6181L17.5777 19.5686C19.7294 18.4395 20.8052 17.8749 21.4026 16.8604C22 15.8459 22 14.5834 22 12.0586V11.9416C22 9.41678 22 8.15436 21.4026 7.13986Z`,fill:`currentColor`})]}));i$8.displayName=`BoxMinimalistic`;
+const i$8=t$8((t,i)=>jsxRuntimeExports.jsxs(i$r,{ref:i,...t,children:[jsxRuntimeExports.jsx(`path`,{d:`M8.42229 20.6181C10.1779 21.5395 11.0557 22.0001 12 22.0001V12.0001L2.63802 7.07275C2.62423 7.09491 2.6107 7.11727 2.5974 7.13986C2 8.15436 2 9.41678 2 11.9416V12.0586C2 14.5834 2 15.8459 2.5974 16.8604C3.19479 17.8749 4.27063 18.4395 6.42229 19.5686L8.42229 20.6181Z`,fill:`currentColor`}),jsxRuntimeExports.jsx(`path`,{opacity:`0.7`,d:`M17.5774 4.43152L15.5774 3.38197C13.8218 2.46066 12.944 2 11.9997 2C11.0554 2 10.1776 2.46066 8.42197 3.38197L6.42197 4.43152C4.31821 5.53552 3.24291 6.09982 2.6377 7.07264L11.9997 12L21.3617 7.07264C20.7564 6.09982 19.6811 5.53552 17.5774 4.43152Z`,fill:`currentColor`}),jsxRuntimeExports.jsx(`path`,{opacity:`0.5`,d:`M21.4026 7.13986C21.3893 7.11727 21.3758 7.09491 21.362 7.07275L12 12.0001V22.0001C12.9443 22.0001 13.8221 21.5395 15.5777 20.6181L17.5777 19.5686C19.7294 18.4395 20.8052 17.8749 21.4026 16.8604C22 15.8459 22 14.5834 22 12.0586V11.9416C22 9.41678 22 8.15436 21.4026 7.13986Z`,fill:`currentColor`})]}));i$8.displayName=`BoxMinimalistic`;
 
 const {forwardRef:t$7} = await importShared('react');
-const i$7=t$7((t,i)=>jsxRuntimeExports.jsxs(i$m,{ref:i,...t,children:[jsxRuntimeExports.jsx(`path`,{opacity:`0.5`,d:`M22.53 2.53033C22.8229 2.23743 22.8229 1.76256 22.53 1.46967C22.2371 1.17678 21.7622 1.17678 21.4693 1.46967L19.0674 3.87162C19.2692 4.01476 19.4617 4.17674 19.6425 4.35756C19.8232 4.53824 19.985 4.7306 20.1281 4.93221L22.53 2.53033Z`,fill:`currentColor`}),jsxRuntimeExports.jsx(`path`,{opacity:`0.5`,d:`M2.44853 11.4112L3.18962 12.6294C5.22275 15.9716 8.02819 18.777 11.3703 20.8102L12.5886 21.5514C14.4872 22.5205 16.9425 21.8979 18.0027 19.8899C18.5037 18.941 18.9798 17.8776 19.2819 16.8209C19.7699 15.1139 19.9408 13.5611 19.9945 12.4895C20.0266 11.8492 20.0426 11.529 19.8902 11.1334C19.7378 10.7378 19.4738 10.4738 18.9456 9.9457L14.1203 5.12119C13.6288 4.62976 13.383 4.38404 13.0133 4.23177C12.6435 4.07951 12.3489 4.08069 11.7597 4.08306C10.6466 4.08753 8.97556 4.20429 7.17896 4.71789C6.12226 5.01998 5.05883 5.49608 4.11001 5.99706C2.10201 7.05728 1.47943 9.51262 2.44853 11.4112Z`,fill:`currentColor`}),jsxRuntimeExports.jsx(`path`,{d:`M19.6426 4.35756C17.9067 2.62162 15.0922 2.62175 13.3562 4.35764L13.3184 4.39549C13.5498 4.55102 13.774 4.77521 14.1201 5.12119L18.9454 9.9457C19.2472 10.2475 19.4628 10.463 19.6205 10.6662L19.6427 10.644C21.3786 8.90807 21.3785 6.09349 19.6426 4.35756Z`,fill:`currentColor`})]}));i$7.displayName=`Broom`;
+const i$7=t$7((t,i)=>jsxRuntimeExports.jsxs(i$r,{ref:i,...t,children:[jsxRuntimeExports.jsx(`path`,{opacity:`0.5`,d:`M22.53 2.53033C22.8229 2.23743 22.8229 1.76256 22.53 1.46967C22.2371 1.17678 21.7622 1.17678 21.4693 1.46967L19.0674 3.87162C19.2692 4.01476 19.4617 4.17674 19.6425 4.35756C19.8232 4.53824 19.985 4.7306 20.1281 4.93221L22.53 2.53033Z`,fill:`currentColor`}),jsxRuntimeExports.jsx(`path`,{opacity:`0.5`,d:`M2.44853 11.4112L3.18962 12.6294C5.22275 15.9716 8.02819 18.777 11.3703 20.8102L12.5886 21.5514C14.4872 22.5205 16.9425 21.8979 18.0027 19.8899C18.5037 18.941 18.9798 17.8776 19.2819 16.8209C19.7699 15.1139 19.9408 13.5611 19.9945 12.4895C20.0266 11.8492 20.0426 11.529 19.8902 11.1334C19.7378 10.7378 19.4738 10.4738 18.9456 9.9457L14.1203 5.12119C13.6288 4.62976 13.383 4.38404 13.0133 4.23177C12.6435 4.07951 12.3489 4.08069 11.7597 4.08306C10.6466 4.08753 8.97556 4.20429 7.17896 4.71789C6.12226 5.01998 5.05883 5.49608 4.11001 5.99706C2.10201 7.05728 1.47943 9.51262 2.44853 11.4112Z`,fill:`currentColor`}),jsxRuntimeExports.jsx(`path`,{d:`M19.6426 4.35756C17.9067 2.62162 15.0922 2.62175 13.3562 4.35764L13.3184 4.39549C13.5498 4.55102 13.774 4.77521 14.1201 5.12119L18.9454 9.9457C19.2472 10.2475 19.4628 10.463 19.6205 10.6662L19.6427 10.644C21.3786 8.90807 21.3785 6.09349 19.6426 4.35756Z`,fill:`currentColor`})]}));i$7.displayName=`Broom`;
 
 const {forwardRef:t$6} = await importShared('react');
-const i$6=t$6((t,i)=>jsxRuntimeExports.jsxs(i$m,{ref:i,...t,children:[jsxRuntimeExports.jsx(`path`,{opacity:`0.5`,d:`M22 12C22 17.5228 17.5228 22 12 22C6.47715 22 2 17.5228 2 12C2 6.47715 6.47715 2 12 2C17.5228 2 22 6.47715 22 12Z`,fill:`currentColor`}),jsxRuntimeExports.jsx(`path`,{d:`M16.0303 8.96967C16.3232 9.26256 16.3232 9.73744 16.0303 10.0303L11.0303 15.0303C10.7374 15.3232 10.2626 15.3232 9.96967 15.0303L7.96967 13.0303C7.67678 12.7374 7.67678 12.2626 7.96967 11.9697C8.26256 11.6768 8.73744 11.6768 9.03033 11.9697L10.5 13.4393L12.7348 11.2045L14.9697 8.96967C15.2626 8.67678 15.7374 8.67678 16.0303 8.96967Z`,fill:`currentColor`})]}));i$6.displayName=`CheckCircle`;
+const i$6=t$6((t,i)=>jsxRuntimeExports.jsxs(i$r,{ref:i,...t,children:[jsxRuntimeExports.jsx(`path`,{opacity:`0.5`,d:`M22 12C22 17.5228 17.5228 22 12 22C6.47715 22 2 17.5228 2 12C2 6.47715 6.47715 2 12 2C17.5228 2 22 6.47715 22 12Z`,fill:`currentColor`}),jsxRuntimeExports.jsx(`path`,{d:`M16.0303 8.96967C16.3232 9.26256 16.3232 9.73744 16.0303 10.0303L11.0303 15.0303C10.7374 15.3232 10.2626 15.3232 9.96967 15.0303L7.96967 13.0303C7.67678 12.7374 7.67678 12.2626 7.96967 11.9697C8.26256 11.6768 8.73744 11.6768 9.03033 11.9697L10.5 13.4393L12.7348 11.2045L14.9697 8.96967C15.2626 8.67678 15.7374 8.67678 16.0303 8.96967Z`,fill:`currentColor`})]}));i$6.displayName=`CheckCircle`;
 
 const {forwardRef:t$5} = await importShared('react');
-const i$5=t$5((t,i)=>jsxRuntimeExports.jsxs(i$m,{ref:i,...t,children:[jsxRuntimeExports.jsx(`path`,{d:`M6.59961 11.3974C6.59961 8.67119 6.59961 7.3081 7.44314 6.46118C8.28667 5.61426 9.64432 5.61426 12.3596 5.61426H15.2396C17.9549 5.61426 19.3125 5.61426 20.1561 6.46118C20.9996 7.3081 20.9996 8.6712 20.9996 11.3974V16.2167C20.9996 18.9429 20.9996 20.306 20.1561 21.1529C19.3125 21.9998 17.9549 21.9998 15.2396 21.9998H12.3596C9.64432 21.9998 8.28667 21.9998 7.44314 21.1529C6.59961 20.306 6.59961 18.9429 6.59961 16.2167V11.3974Z`,fill:`currentColor`}),jsxRuntimeExports.jsx(`path`,{opacity:`0.5`,d:`M4.17157 3.17157C3 4.34315 3 6.22876 3 10V12C3 15.7712 3 17.6569 4.17157 18.8284C4.78913 19.446 5.6051 19.738 6.79105 19.8761C6.59961 19.0353 6.59961 17.8796 6.59961 16.2167V11.3974C6.59961 8.6712 6.59961 7.3081 7.44314 6.46118C8.28667 5.61426 9.64432 5.61426 12.3596 5.61426H15.2396C16.8915 5.61426 18.0409 5.61426 18.8777 5.80494C18.7403 4.61146 18.4484 3.79154 17.8284 3.17157C16.6569 2 14.7712 2 11 2C7.22876 2 5.34315 2 4.17157 3.17157Z`,fill:`currentColor`})]}));i$5.displayName=`Copy`;
+const i$5=t$5((t,i)=>jsxRuntimeExports.jsxs(i$r,{ref:i,...t,children:[jsxRuntimeExports.jsx(`path`,{d:`M6.59961 11.3974C6.59961 8.67119 6.59961 7.3081 7.44314 6.46118C8.28667 5.61426 9.64432 5.61426 12.3596 5.61426H15.2396C17.9549 5.61426 19.3125 5.61426 20.1561 6.46118C20.9996 7.3081 20.9996 8.6712 20.9996 11.3974V16.2167C20.9996 18.9429 20.9996 20.306 20.1561 21.1529C19.3125 21.9998 17.9549 21.9998 15.2396 21.9998H12.3596C9.64432 21.9998 8.28667 21.9998 7.44314 21.1529C6.59961 20.306 6.59961 18.9429 6.59961 16.2167V11.3974Z`,fill:`currentColor`}),jsxRuntimeExports.jsx(`path`,{opacity:`0.5`,d:`M4.17157 3.17157C3 4.34315 3 6.22876 3 10V12C3 15.7712 3 17.6569 4.17157 18.8284C4.78913 19.446 5.6051 19.738 6.79105 19.8761C6.59961 19.0353 6.59961 17.8796 6.59961 16.2167V11.3974C6.59961 8.6712 6.59961 7.3081 7.44314 6.46118C8.28667 5.61426 9.64432 5.61426 12.3596 5.61426H15.2396C16.8915 5.61426 18.0409 5.61426 18.8777 5.80494C18.7403 4.61146 18.4484 3.79154 17.8284 3.17157C16.6569 2 14.7712 2 11 2C7.22876 2 5.34315 2 4.17157 3.17157Z`,fill:`currentColor`})]}));i$5.displayName=`Copy`;
 
 const {forwardRef:t$4} = await importShared('react');
-const i$4=t$4((t,i)=>jsxRuntimeExports.jsxs(i$m,{ref:i,...t,children:[jsxRuntimeExports.jsx(`path`,{fillRule:`evenodd`,clipRule:`evenodd`,d:`M5 3H19L8.81562 13.1844C8.65593 12.7689 8.39992 12.4122 8.03751 12.0976C7.80967 11.8998 7.49146 11.7206 6.85504 11.3624L3.94202 9.72255C2.99347 9.18858 2.5192 8.9216 2.2596 8.49142C2 8.06124 2 7.54232 2 6.50448V5.81466C2 4.48782 2 3.8244 2.43934 3.4122C2.87868 3 3.58579 3 5 3Z`,fill:`currentColor`}),jsxRuntimeExports.jsx(`path`,{opacity:`0.5`,d:`M21.9998 6.50448V5.81466C21.9998 4.48782 21.9998 3.8244 21.5605 3.4122C21.1211 3 20.414 3 18.9998 3L8.81543 13.1844C8.86481 13.3129 8.90498 13.447 8.93625 13.5872C8.99981 13.8722 8.99981 14.2058 8.99981 14.8729L8.99981 17.5424C8.99981 18.452 8.99981 18.9067 9.25173 19.2613C9.50366 19.6158 9.95109 19.7907 10.846 20.1406C12.7246 20.875 13.6639 21.2422 14.3319 20.8244C14.9998 20.4066 14.9998 19.4519 14.9998 17.5424V14.8729C14.9998 14.2058 14.9998 13.8722 15.0634 13.5872C15.1957 12.9935 15.4878 12.5095 15.9623 12.0976C16.1901 11.8998 16.5083 11.7206 17.1448 11.3624L20.0578 9.72255C21.0063 9.18858 21.4806 8.9216 21.7402 8.49142C21.9998 8.06124 21.9998 7.54232 21.9998 6.50448Z`,fill:`currentColor`})]}));i$4.displayName=`Filter`;
+const i$4=t$4((t,i)=>jsxRuntimeExports.jsxs(i$r,{ref:i,...t,children:[jsxRuntimeExports.jsx(`path`,{fillRule:`evenodd`,clipRule:`evenodd`,d:`M5 3H19L8.81562 13.1844C8.65593 12.7689 8.39992 12.4122 8.03751 12.0976C7.80967 11.8998 7.49146 11.7206 6.85504 11.3624L3.94202 9.72255C2.99347 9.18858 2.5192 8.9216 2.2596 8.49142C2 8.06124 2 7.54232 2 6.50448V5.81466C2 4.48782 2 3.8244 2.43934 3.4122C2.87868 3 3.58579 3 5 3Z`,fill:`currentColor`}),jsxRuntimeExports.jsx(`path`,{opacity:`0.5`,d:`M21.9998 6.50448V5.81466C21.9998 4.48782 21.9998 3.8244 21.5605 3.4122C21.1211 3 20.414 3 18.9998 3L8.81543 13.1844C8.86481 13.3129 8.90498 13.447 8.93625 13.5872C8.99981 13.8722 8.99981 14.2058 8.99981 14.8729L8.99981 17.5424C8.99981 18.452 8.99981 18.9067 9.25173 19.2613C9.50366 19.6158 9.95109 19.7907 10.846 20.1406C12.7246 20.875 13.6639 21.2422 14.3319 20.8244C14.9998 20.4066 14.9998 19.4519 14.9998 17.5424V14.8729C14.9998 14.2058 14.9998 13.8722 15.0634 13.5872C15.1957 12.9935 15.4878 12.5095 15.9623 12.0976C16.1901 11.8998 16.5083 11.7206 17.1448 11.3624L20.0578 9.72255C21.0063 9.18858 21.4806 8.9216 21.7402 8.49142C21.9998 8.06124 21.9998 7.54232 21.9998 6.50448Z`,fill:`currentColor`})]}));i$4.displayName=`Filter`;
 
 const {forwardRef:t$3} = await importShared('react');
-const i$3=t$3((t,i)=>jsxRuntimeExports.jsxs(i$m,{ref:i,...t,children:[jsxRuntimeExports.jsx(`path`,{d:`M7 12C7 13.1046 6.10457 14 5 14C3.89543 14 3 13.1046 3 12C3 10.8954 3.89543 10 5 10C6.10457 10 7 10.8954 7 12Z`,fill:`currentColor`}),jsxRuntimeExports.jsx(`path`,{d:`M21 12C21 13.1046 20.1046 14 19 14C17.8954 14 17 13.1046 17 12C17 10.8954 17.8954 10 19 10C20.1046 10 21 10.8954 21 12Z`,fill:`currentColor`}),jsxRuntimeExports.jsx(`path`,{opacity:`0.5`,d:`M14 12C14 13.1046 13.1046 14 12 14C10.8954 14 10 13.1046 10 12C10 10.8954 10.8954 10 12 10C13.1046 10 14 10.8954 14 12Z`,fill:`currentColor`})]}));i$3.displayName=`MenuDots`;
+const i$3=t$3((t,i)=>jsxRuntimeExports.jsxs(i$r,{ref:i,...t,children:[jsxRuntimeExports.jsx(`path`,{d:`M7 12C7 13.1046 6.10457 14 5 14C3.89543 14 3 13.1046 3 12C3 10.8954 3.89543 10 5 10C6.10457 10 7 10.8954 7 12Z`,fill:`currentColor`}),jsxRuntimeExports.jsx(`path`,{d:`M21 12C21 13.1046 20.1046 14 19 14C17.8954 14 17 13.1046 17 12C17 10.8954 17.8954 10 19 10C20.1046 10 21 10.8954 21 12Z`,fill:`currentColor`}),jsxRuntimeExports.jsx(`path`,{opacity:`0.5`,d:`M14 12C14 13.1046 13.1046 14 12 14C10.8954 14 10 13.1046 10 12C10 10.8954 10.8954 10 12 10C13.1046 10 14 10.8954 14 12Z`,fill:`currentColor`})]}));i$3.displayName=`MenuDots`;
 
 const {forwardRef:t$2} = await importShared('react');
-const i$2=t$2((t,i)=>jsxRuntimeExports.jsxs(i$m,{ref:i,...t,children:[jsxRuntimeExports.jsx(`path`,{d:`M2.75 6.16667C2.75 5.70644 3.09538 5.33335 3.52143 5.33335L6.18567 5.3329C6.71502 5.31841 7.18202 4.95482 7.36214 4.41691C7.36688 4.40277 7.37232 4.38532 7.39185 4.32203L7.50665 3.94993C7.5769 3.72179 7.6381 3.52303 7.72375 3.34536C8.06209 2.64349 8.68808 2.1561 9.41147 2.03132C9.59457 1.99973 9.78848 1.99987 10.0111 2.00002H13.4891C13.7117 1.99987 13.9056 1.99973 14.0887 2.03132C14.8121 2.1561 15.4381 2.64349 15.7764 3.34536C15.8621 3.52303 15.9233 3.72179 15.9935 3.94993L16.1083 4.32203C16.1279 4.38532 16.1333 4.40277 16.138 4.41691C16.3182 4.95482 16.8778 5.31886 17.4071 5.33335H19.9786C20.4046 5.33335 20.75 5.70644 20.75 6.16667C20.75 6.62691 20.4046 7 19.9786 7H3.52143C3.09538 7 2.75 6.62691 2.75 6.16667Z`,fill:`currentColor`}),jsxRuntimeExports.jsx(`path`,{opacity:`0.5`,d:`M11.6068 21.9998H12.3937C15.1012 21.9998 16.4549 21.9998 17.3351 21.1366C18.2153 20.2734 18.3054 18.8575 18.4855 16.0256L18.745 11.945C18.8427 10.4085 18.8916 9.6402 18.45 9.15335C18.0084 8.6665 17.2628 8.6665 15.7714 8.6665H8.22905C6.73771 8.6665 5.99204 8.6665 5.55047 9.15335C5.10891 9.6402 5.15777 10.4085 5.25549 11.945L5.515 16.0256C5.6951 18.8575 5.78515 20.2734 6.66534 21.1366C7.54553 21.9998 8.89927 21.9998 11.6068 21.9998Z`,fill:`currentColor`})]}));i$2.displayName=`TrashBin2`;
+const i$2=t$2((t,i)=>jsxRuntimeExports.jsxs(i$r,{ref:i,...t,children:[jsxRuntimeExports.jsx(`path`,{d:`M2.75 6.16667C2.75 5.70644 3.09538 5.33335 3.52143 5.33335L6.18567 5.3329C6.71502 5.31841 7.18202 4.95482 7.36214 4.41691C7.36688 4.40277 7.37232 4.38532 7.39185 4.32203L7.50665 3.94993C7.5769 3.72179 7.6381 3.52303 7.72375 3.34536C8.06209 2.64349 8.68808 2.1561 9.41147 2.03132C9.59457 1.99973 9.78848 1.99987 10.0111 2.00002H13.4891C13.7117 1.99987 13.9056 1.99973 14.0887 2.03132C14.8121 2.1561 15.4381 2.64349 15.7764 3.34536C15.8621 3.52303 15.9233 3.72179 15.9935 3.94993L16.1083 4.32203C16.1279 4.38532 16.1333 4.40277 16.138 4.41691C16.3182 4.95482 16.8778 5.31886 17.4071 5.33335H19.9786C20.4046 5.33335 20.75 5.70644 20.75 6.16667C20.75 6.62691 20.4046 7 19.9786 7H3.52143C3.09538 7 2.75 6.62691 2.75 6.16667Z`,fill:`currentColor`}),jsxRuntimeExports.jsx(`path`,{opacity:`0.5`,d:`M11.6068 21.9998H12.3937C15.1012 21.9998 16.4549 21.9998 17.3351 21.1366C18.2153 20.2734 18.3054 18.8575 18.4855 16.0256L18.745 11.945C18.8427 10.4085 18.8916 9.6402 18.45 9.15335C18.0084 8.6665 17.2628 8.6665 15.7714 8.6665H8.22905C6.73771 8.6665 5.99204 8.6665 5.55047 9.15335C5.10891 9.6402 5.15777 10.4085 5.25549 11.945L5.515 16.0256C5.6951 18.8575 5.78515 20.2734 6.66534 21.1366C7.54553 21.9998 8.89927 21.9998 11.6068 21.9998Z`,fill:`currentColor`})]}));i$2.displayName=`TrashBin2`;
 
 const storageChannels = {
   get: "storage:getData",
@@ -6255,6 +6472,11 @@ const fileChannels = {
 const filesIpc = {
   // Opens file/folder selection dialog
   openDlg: (option) => lynxIpc.invoke(fileChannels.dialog, option),
+  // Opens file/folder selection dialog and returns all selected paths.
+  openDlgMany: (option) => lynxIpc.invoke(fileChannels.dialog, {
+    ...option,
+    properties: Array.from(/* @__PURE__ */ new Set([...option.properties || [], "multiSelections"]))
+  }).then((result) => Array.isArray(result) ? result : result ? [result] : []),
   // Opens directory in system file manager
   openPath: (dir) => lynxIpc.send(fileChannels.openPath, dir),
   // Shows save dialog and saves content to file
@@ -6280,7 +6502,7 @@ const filesIpc = {
   isAbsolute: (dir) => lynxIpc.invoke(fileChannels.isAbsolute, dir)
 };
 
-const {Card: Card$3,cn: cn$3} = await importShared('@heroui/react');
+const {Card: Card$2,cn: cn$3} = await importShared('@heroui/react');
 
 function EmptyStateCard({
   className,
@@ -6292,7 +6514,7 @@ function EmptyStateCard({
   children,
   variant
 }) {
-  return /* @__PURE__ */ jsxRuntimeExports.jsx(Card$3, { variant, className: cn$3("border border-surface-secondary/70 p-0", className), children: /* @__PURE__ */ jsxRuntimeExports.jsxs(Card$3.Content, { className: cn$3("flex items-center justify-center gap-y-2 px-6 py-10 text-center", bodyClassName), children: [
+  return /* @__PURE__ */ jsxRuntimeExports.jsx(Card$2, { variant, className: cn$3("border border-surface-secondary/70 p-0", className), children: /* @__PURE__ */ jsxRuntimeExports.jsxs(Card$2.Content, { className: cn$3("flex items-center justify-center gap-y-2 px-6 py-10 text-center", bodyClassName), children: [
     icon,
     typeof title === "string" ? /* @__PURE__ */ jsxRuntimeExports.jsx("h3", { className: "text-base font-medium text-semi-muted", children: title }) : title,
     typeof description === "string" ? /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "text-sm text-muted", children: description }) : description,
@@ -6333,7 +6555,7 @@ const useAppState = (key) => useSelector$4((state) => state.app[key]);
 const appActions = appSlice.actions;
 
 const {forwardRef:t$1} = await importShared('react');
-const i$1=t$1((t,i)=>jsxRuntimeExports.jsxs(i$m,{ref:i,...t,children:[jsxRuntimeExports.jsx(`path`,{opacity:`0.5`,d:`M4 12.9L7.14286 16.5L15 7.5`,stroke:`currentColor`,strokeWidth:`1.5`,strokeLinecap:`round`,strokeLinejoin:`round`}),jsxRuntimeExports.jsx(`path`,{d:`M20.0002 7.5625L11.4286 16.5625L11.0002 16`,stroke:`currentColor`,strokeWidth:`1.5`,strokeLinecap:`round`,strokeLinejoin:`round`})]}));i$1.displayName=`CheckRead`;
+const i$1=t$1((t,i)=>jsxRuntimeExports.jsxs(i$r,{ref:i,...t,children:[jsxRuntimeExports.jsx(`path`,{opacity:`0.5`,d:`M4 12.9L7.14286 16.5L15 7.5`,stroke:`currentColor`,strokeWidth:`1.5`,strokeLinecap:`round`,strokeLinejoin:`round`}),jsxRuntimeExports.jsx(`path`,{d:`M20.0002 7.5625L11.4286 16.5625L11.0002 16`,stroke:`currentColor`,strokeWidth:`1.5`,strokeLinecap:`round`,strokeLinejoin:`round`})]}));i$1.displayName=`CheckRead`;
 
 /*!
  * OverlayScrollbars
@@ -7095,7 +7317,7 @@ const F$4 = "host";
 
 const j$3 = `${V$2}-viewport`;
 
-const X$3 = m$1;
+const X$2 = m$1;
 
 const Y$3 = O$3;
 
@@ -8727,7 +8949,7 @@ const createOverflowUpdateSegment = (t, s) => {
   });
   const q = getStaticPluginModuleInstance(xt$3);
   const createViewportOverflowStyleClassName = (t, n) => {
-    const o = n ? X$3 : Y$3;
+    const o = n ? X$2 : Y$3;
     return `${o}${capitalizeFirstLetter(t)}`;
   };
   return ({zt: n, Qt: o, un: c, At: l}, {_n: u}) => {
@@ -9222,7 +9444,7 @@ const S$2 = () => {
   /* @__PURE__ */ w$3.createElement(s, { "data-overlayscrollbars-initialize": "", ref: n, ...u }, t === "body" ? r : /* @__PURE__ */ w$3.createElement("div", { "data-overlayscrollbars-contents": "", ref: e }, r));
 }, g$2 = E$1(q$3);
 
-function LynxScroll({ children, className, overflow = { x: "hidden", y: "scroll" } }) {
+function LynxScroll({ children, className, overflow = { x: "hidden", y: "scroll" }, ref }) {
   const isDarkMode = useAppState("darkMode");
   return /* @__PURE__ */ jsxRuntimeExports.jsx(
     g$2,
@@ -9234,6 +9456,7 @@ function LynxScroll({ children, className, overflow = { x: "hidden", y: "scroll"
           theme: isDarkMode ? "os-theme-light" : "os-theme-dark"
         }
       },
+      ref,
       className,
       children
     }
@@ -9308,17 +9531,41 @@ function createToastFunction(queue) {
   return toastFn;
 }
 
-const {Toast,ToastQueue} = await importShared('@heroui/react');
-const {memo: memo$5} = await importShared('react');
+const {Toast,ToastContent,ToastDescription,ToastIndicator,ToastQueue,ToastTitle} = await importShared('@heroui/react');
+const {memo: memo$7} = await importShared('react');
 
 const bottomQueue = new ToastQueue({ maxVisibleToasts: 3 });
 const topQueue = new ToastQueue({ maxVisibleToasts: 3 });
 const topToast = createToastFunction(topQueue);
 const bottomToast = createToastFunction(bottomQueue);
-memo$5(() => {
+memo$7(() => {
   return /* @__PURE__ */ jsxRuntimeExports.jsxs(jsxRuntimeExports.Fragment, { children: [
-    /* @__PURE__ */ jsxRuntimeExports.jsx(Toast.Provider, { placement: "top", queue: topQueue }),
-    /* @__PURE__ */ jsxRuntimeExports.jsx(Toast.Provider, { queue: bottomQueue, placement: "bottom end" })
+    /* @__PURE__ */ jsxRuntimeExports.jsx(Toast.Provider, { placement: "top", queue: topQueue, children: ({ toast: toastItem }) => {
+      const content = toastItem.content;
+      return /* @__PURE__ */ jsxRuntimeExports.jsxs(Toast, { toast: toastItem, variant: content.variant, className: "border notDraggable", children: [
+        /* @__PURE__ */ jsxRuntimeExports.jsx(ToastContent, { children: /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "flex items-center gap-2", children: [
+          /* @__PURE__ */ jsxRuntimeExports.jsx(ToastIndicator, { variant: content.variant }),
+          /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "flex flex-col pr-6", children: [
+            content.title ? /* @__PURE__ */ jsxRuntimeExports.jsx(ToastTitle, { children: content.title }) : null,
+            content.description ? /* @__PURE__ */ jsxRuntimeExports.jsx(ToastDescription, { children: content.description }) : null
+          ] })
+        ] }) }),
+        /* @__PURE__ */ jsxRuntimeExports.jsx(Toast.CloseButton, { className: "notDraggable" })
+      ] });
+    } }),
+    /* @__PURE__ */ jsxRuntimeExports.jsx(Toast.Provider, { queue: bottomQueue, placement: "bottom end", children: ({ toast: toastItem }) => {
+      const content = toastItem.content;
+      return /* @__PURE__ */ jsxRuntimeExports.jsxs(Toast, { toast: toastItem, className: "border", variant: content.variant, children: [
+        /* @__PURE__ */ jsxRuntimeExports.jsx(ToastContent, { children: /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "flex items-center gap-2", children: [
+          /* @__PURE__ */ jsxRuntimeExports.jsx(ToastIndicator, { variant: content.variant }),
+          /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "flex flex-col pr-6", children: [
+            content.title ? /* @__PURE__ */ jsxRuntimeExports.jsx(ToastTitle, { children: content.title }) : null,
+            content.description ? /* @__PURE__ */ jsxRuntimeExports.jsx(ToastDescription, { children: content.description }) : null
+          ] })
+        ] }) }),
+        /* @__PURE__ */ jsxRuntimeExports.jsx(Toast.CloseButton, {})
+      ] });
+    } })
   ] });
 });
 
@@ -9857,179 +10104,6 @@ function requireMain () {
 var mainExports = /*@__PURE__*/ requireMain();
 const Highlighter = /*@__PURE__*/getDefaultExportFromCjs(mainExports);
 
-/**
- * @license lucide-react v0.575.0 - ISC
- *
- * This source code is licensed under the ISC license.
- * See the LICENSE file in the root directory of this source tree.
- */
-
-const mergeClasses = (...classes) => classes.filter((className, index, array) => {
-  return Boolean(className) && className.trim() !== "" && array.indexOf(className) === index;
-}).join(" ").trim();
-
-/**
- * @license lucide-react v0.575.0 - ISC
- *
- * This source code is licensed under the ISC license.
- * See the LICENSE file in the root directory of this source tree.
- */
-
-const toKebabCase = (string) => string.replace(/([a-z0-9])([A-Z])/g, "$1-$2").toLowerCase();
-
-/**
- * @license lucide-react v0.575.0 - ISC
- *
- * This source code is licensed under the ISC license.
- * See the LICENSE file in the root directory of this source tree.
- */
-
-const toCamelCase = (string) => string.replace(
-  /^([A-Z])|[\s-_]+(\w)/g,
-  (match, p1, p2) => p2 ? p2.toUpperCase() : p1.toLowerCase()
-);
-
-/**
- * @license lucide-react v0.575.0 - ISC
- *
- * This source code is licensed under the ISC license.
- * See the LICENSE file in the root directory of this source tree.
- */
-
-
-const toPascalCase = (string) => {
-  const camelCase = toCamelCase(string);
-  return camelCase.charAt(0).toUpperCase() + camelCase.slice(1);
-};
-
-/**
- * @license lucide-react v0.575.0 - ISC
- *
- * This source code is licensed under the ISC license.
- * See the LICENSE file in the root directory of this source tree.
- */
-
-var defaultAttributes = {
-  xmlns: "http://www.w3.org/2000/svg",
-  width: 24,
-  height: 24,
-  viewBox: "0 0 24 24",
-  fill: "none",
-  stroke: "currentColor",
-  strokeWidth: 2,
-  strokeLinecap: "round",
-  strokeLinejoin: "round"
-};
-
-/**
- * @license lucide-react v0.575.0 - ISC
- *
- * This source code is licensed under the ISC license.
- * See the LICENSE file in the root directory of this source tree.
- */
-
-const hasA11yProp = (props) => {
-  for (const prop in props) {
-    if (prop.startsWith("aria-") || prop === "role" || prop === "title") {
-      return true;
-    }
-  }
-  return false;
-};
-
-/**
- * @license lucide-react v0.575.0 - ISC
- *
- * This source code is licensed under the ISC license.
- * See the LICENSE file in the root directory of this source tree.
- */
-
-const {forwardRef: forwardRef$2,createElement: createElement$1} = await importShared('react');
-
-const Icon = forwardRef$2(
-  ({
-    color = "currentColor",
-    size = 24,
-    strokeWidth = 2,
-    absoluteStrokeWidth,
-    className = "",
-    children,
-    iconNode,
-    ...rest
-  }, ref) => createElement$1(
-    "svg",
-    {
-      ref,
-      ...defaultAttributes,
-      width: size,
-      height: size,
-      stroke: color,
-      strokeWidth: absoluteStrokeWidth ? Number(strokeWidth) * 24 / Number(size) : strokeWidth,
-      className: mergeClasses("lucide", className),
-      ...!children && !hasA11yProp(rest) && { "aria-hidden": "true" },
-      ...rest
-    },
-    [
-      ...iconNode.map(([tag, attrs]) => createElement$1(tag, attrs)),
-      ...Array.isArray(children) ? children : [children]
-    ]
-  )
-);
-
-/**
- * @license lucide-react v0.575.0 - ISC
- *
- * This source code is licensed under the ISC license.
- * See the LICENSE file in the root directory of this source tree.
- */
-
-const {forwardRef: forwardRef$1,createElement} = await importShared('react');
-
-const createLucideIcon = (iconName, iconNode) => {
-  const Component = forwardRef$1(
-    ({ className, ...props }, ref) => createElement(Icon, {
-      ref,
-      iconNode,
-      className: mergeClasses(
-        `lucide-${toKebabCase(toPascalCase(iconName))}`,
-        `lucide-${iconName}`,
-        className
-      ),
-      ...props
-    })
-  );
-  Component.displayName = toPascalCase(iconName);
-  return Component;
-};
-
-/**
- * @license lucide-react v0.575.0 - ISC
- *
- * This source code is licensed under the ISC license.
- * See the LICENSE file in the root directory of this source tree.
- */
-
-
-const __iconNode$1 = [
-  ["path", { d: "M5 12h14", key: "1ays0h" }],
-  ["path", { d: "M12 5v14", key: "s699le" }]
-];
-const Plus = createLucideIcon("plus", __iconNode$1);
-
-/**
- * @license lucide-react v0.575.0 - ISC
- *
- * This source code is licensed under the ISC license.
- * See the LICENSE file in the root directory of this source tree.
- */
-
-
-const __iconNode = [
-  ["path", { d: "M18 6 6 18", key: "1bl5f8" }],
-  ["path", { d: "m6 6 12 12", key: "d8bk6v" }]
-];
-const X$2 = createLucideIcon("x", __iconNode);
-
 const {Tooltip} = await importShared('@heroui/react');
 
 const {UNSAFE_PortalProvider: UNSAFE_PortalProvider$1} = await importShared('react-aria');
@@ -10044,17 +10118,17 @@ function LynxTooltip({ children, content, delay = 300, isDisabled, triggerClassN
   ] }) });
 }
 
-const {Button: Button$m} = await importShared('@heroui/react');
-const {memo: memo$4,useCallback: useCallback$d,useEffect: useEffect$r,useRef: useRef$3,useState: useState$x} = await importShared('react');
-const CopyClipboard = memo$4(({ showTooltip = true, tooltipTitle, contentToCopy, className, onCopy }) => {
+const {Button: Button$p} = await importShared('@heroui/react');
+const {memo: memo$6,useCallback: useCallback$g,useEffect: useEffect$t,useRef: useRef$5,useState: useState$x} = await importShared('react');
+const CopyClipboard = memo$6(({ showTooltip = true, tooltipTitle, contentToCopy, className, onCopy }) => {
   const [copied, setCopied] = useState$x(false);
-  const timeoutRef = useRef$3(null);
-  useEffect$r(() => {
+  const timeoutRef = useRef$5(null);
+  useEffect$t(() => {
     return () => {
       if (timeoutRef.current) clearTimeout(timeoutRef.current);
     };
   }, []);
-  const handleCopy = useCallback$d(() => {
+  const handleCopy = useCallback$g(() => {
     if (onCopy) {
       onCopy();
     } else {
@@ -10074,7 +10148,7 @@ const CopyClipboard = memo$4(({ showTooltip = true, tooltipTitle, contentToCopy,
       delay: 500,
       isDisabled: !showTooltip,
       content: copied ? "Copied!" : tooltipTitle || "Copy to clipboard",
-      children: /* @__PURE__ */ jsxRuntimeExports.jsx(Button$m, { size: "sm", variant: "ghost", onPress: handleCopy, className, isIconOnly: true, children: copied ? /* @__PURE__ */ jsxRuntimeExports.jsx(i$1, { className: "size-5 animate-appearance-in" }) : /* @__PURE__ */ jsxRuntimeExports.jsx(i$5, { className: "size-4 animate-appearance-in" }) })
+      children: /* @__PURE__ */ jsxRuntimeExports.jsx(Button$p, { size: "sm", variant: "ghost", onPress: handleCopy, className, isIconOnly: true, children: copied ? /* @__PURE__ */ jsxRuntimeExports.jsx(i$1, { className: "size-5 animate-appearance-in" }) : /* @__PURE__ */ jsxRuntimeExports.jsx(i$5, { className: "size-4 animate-appearance-in" }) })
     }
   );
 });
@@ -15105,7 +15179,7 @@ const triggerSlice = createSlice({
 });
 const triggerActions = triggerSlice.actions;
 
-const {useCallback: useCallback$c,useEffect: useEffect$q,useRef: useRef$2} = await importShared('react');
+const {useCallback: useCallback$f,useEffect: useEffect$s,useRef: useRef$4} = await importShared('react');
 const FONT_FAMILY = "JetBrainsMono";
 const useXTerm = ({
   id,
@@ -15129,19 +15203,20 @@ const useXTerm = ({
   dispatch,
   useConpty,
   enableLigatures,
-  openLinkNewTab
+  openLinkNewTab,
+  type
 }) => {
   const activeTab = useTabsState("activeTab");
-  const terminal = useRef$2(null);
-  const fitAddon = useRef$2(null);
-  const apiRef = useRef$2(null);
-  const canResize = useCallback$c(() => {
+  const terminal = useRef$4(null);
+  const fitAddon = useRef$4(null);
+  const apiRef = useRef$4(null);
+  const canResize = useCallback$f(() => {
     if (minResizeCols === 0 && minResizeRows === 0) return true;
     const dims = fitAddon.current?.proposeDimensions();
     if (!dims) return false;
     return dims.cols > minResizeCols && dims.rows > minResizeRows;
   }, [minResizeCols, minResizeRows]);
-  useEffect$q(() => {
+  useEffect$s(() => {
     const terminalContainer = terminalContainerRef.current;
     if (!terminalContainer || terminal.current) return;
     let xTerm = null;
@@ -15171,12 +15246,12 @@ const useXTerm = ({
       xTerm.loadAddon(new j$2());
       xTerm.loadAddon(
         new L$1((event, uri) => {
-          if (openLinkNewTab || event.button === 1) {
-            window.open(uri);
-          } else {
+          if (!openLinkNewTab && event.button !== 1 && type === "both") {
             dispatch(cardsActions.setRunningCardCustomAddress({ tabId: activeTab, address: uri }));
             dispatch(cardsActions.setRunningCardView({ tabId: activeTab, view: "browser" }));
             dispatch(triggerActions.trigger("clearBrowserFail"));
+          } else {
+            window.open(uri);
           }
         })
       );
@@ -15271,7 +15346,7 @@ const useXTerm = ({
       apiRef.current = null;
     };
   }, [id]);
-  useEffect$q(() => {
+  useEffect$s(() => {
     const offData = ptyIpc.onData((dataID, data) => {
       if (dataID === id) {
         apiRef.current?.write(data);
@@ -15279,22 +15354,22 @@ const useXTerm = ({
     });
     return () => offData();
   }, [id]);
-  useEffect$q(() => {
+  useEffect$s(() => {
     if (terminal.current) terminal.current.options.theme = getTheme(darkMode);
   }, [darkMode]);
-  useEffect$q(() => {
+  useEffect$s(() => {
     if (terminal.current) {
       terminal.current.options.fontSize = fontSize;
       fitAddon.current?.fit();
     }
   }, [fontSize]);
-  useEffect$q(() => {
+  useEffect$s(() => {
     if (terminal.current) terminal.current.options.scrollback = scrollBack;
   }, [scrollBack]);
-  useEffect$q(() => {
+  useEffect$s(() => {
     if (terminal.current) terminal.current.options.cursorBlink = blinkCursor;
   }, [blinkCursor]);
-  useEffect$q(() => {
+  useEffect$s(() => {
     if (terminal.current) {
       terminal.current.options.cursorStyle = cursorStyle;
       terminal.current.options.cursorInactiveStyle = cursorInactiveStyle;
@@ -15303,15 +15378,16 @@ const useXTerm = ({
   return apiRef;
 };
 
-const {forwardRef,memo: memo$3,useImperativeHandle,useRef: useRef$1} = await importShared('react');
+const {forwardRef,memo: memo$5,useImperativeHandle,useRef: useRef$3} = await importShared('react');
 
-const {useDispatch: useDispatch$6} = await importShared('react-redux');
+const {useDispatch: useDispatch$7} = await importShared('react-redux');
 const MIN_RESIZE_COLS = 95;
 const MIN_RESIZE_ROWS = 22;
-const XTermCore = memo$3(
+const XTermCore = memo$5(
   forwardRef(
     ({
       id,
+      type,
       onReady,
       className = "",
       serializeAddon,
@@ -15328,8 +15404,8 @@ const XTermCore = memo$3(
       minResizeRows = MIN_RESIZE_ROWS,
       onProgress
     }, ref) => {
-      const terminalContainerRef = useRef$1(null);
-      const dispatch = useDispatch$6();
+      const terminalContainerRef = useRef$3(null);
+      const dispatch = useDispatch$7();
       const darkMode = useAppState("darkMode");
       const terminalSettings = useTerminalStat();
       const fontSize = fontSizeOverride ?? terminalSettings.fontSize;
@@ -15364,7 +15440,8 @@ const XTermCore = memo$3(
         darkMode,
         dispatch,
         useConpty,
-        enableLigatures
+        enableLigatures,
+        type
       });
       useImperativeHandle(
         ref,
@@ -15409,8 +15486,8 @@ const SettingsSearchHighlight = ({ text, children, className, highlightClassName
   );
 };
 
-const {Description: Description$g,Label: Label$e,Surface: Surface$1,Switch} = await importShared('@heroui/react');
-const {useCallback: useCallback$b,useEffect: useEffect$p,useState: useState$w} = await importShared('react');
+const {Description: Description$h,Label: Label$g,Surface: Surface$1,Switch} = await importShared('@heroui/react');
+const {useCallback: useCallback$e,useEffect: useEffect$r,useState: useState$w} = await importShared('react');
 
 function LynxSwitch({
   enabled = false,
@@ -15425,10 +15502,10 @@ function LynxSwitch({
   variant = "default"
 }) {
   const [isSelected, setIsSelected] = useState$w(enabled);
-  useEffect$p(() => {
+  useEffect$r(() => {
     setIsSelected(enabled);
   }, [enabled]);
-  const onChange = useCallback$b(
+  const onChange = useCallback$e(
     (selected) => {
       setIsSelected(selected);
       onEnabledChange?.(selected);
@@ -15442,9 +15519,9 @@ function LynxSwitch({
   return /* @__PURE__ */ jsxRuntimeExports.jsx(
     Surface$1,
     {
-      className: `px-3 py-2 rounded-2xl transition-colors duration-300 cursor-pointer border-2 ${isSelected ? "border-accent/40" : "border-surface"} w-full shadow-surface`,
-      onClick: toggle,
+      className: `px-3 py-2 rounded-2xl transition-colors duration-300 ${isDisabled ? "" : "cursor-pointer"} border-2 ${isSelected ? "border-accent/40" : "border-surface"} w-full shadow-surface`,
       variant,
+      onClick: isDisabled ? void 0 : toggle,
       children: /* @__PURE__ */ jsxRuntimeExports.jsxs(
         Switch,
         {
@@ -15457,8 +15534,8 @@ function LynxSwitch({
             /* @__PURE__ */ jsxRuntimeExports.jsxs(Switch.Content, { className: "flex flex-row items-center gap-x-2", children: [
               icon,
               /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "flex flex-col", children: [
-                /* @__PURE__ */ jsxRuntimeExports.jsx(Label$e, { className: "cursor-pointer", children: /* @__PURE__ */ jsxRuntimeExports.jsx(SettingsSearchHighlight, { text: title, className: "text-sm" }) }),
-                /* @__PURE__ */ jsxRuntimeExports.jsx(Description$g, { children: description && (typeof description === "string" ? /* @__PURE__ */ jsxRuntimeExports.jsx(SettingsSearchHighlight, { text: description, className: "text-xs text-default-400" }) : /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "text-xs text-default-400", children: description })) })
+                /* @__PURE__ */ jsxRuntimeExports.jsx(Label$g, { className: "cursor-pointer", children: /* @__PURE__ */ jsxRuntimeExports.jsx(SettingsSearchHighlight, { text: title, className: "text-sm" }) }),
+                /* @__PURE__ */ jsxRuntimeExports.jsx(Description$h, { children: description && (typeof description === "string" ? /* @__PURE__ */ jsxRuntimeExports.jsx(SettingsSearchHighlight, { text: description, className: "text-xs text-default-400" }) : /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "text-xs text-default-400", children: description })) })
               ] })
             ] }),
             /* @__PURE__ */ jsxRuntimeExports.jsx(Switch.Control, { children: thumbIcon ? /* @__PURE__ */ jsxRuntimeExports.jsx(Switch.Thumb, { children: /* @__PURE__ */ jsxRuntimeExports.jsx(Switch.Icon, { children: thumbIcon }) }) : /* @__PURE__ */ jsxRuntimeExports.jsx(Switch.Thumb, {}) })
@@ -15625,7 +15702,7 @@ const tabsActions = tabsSlice.actions;
 
 const {Modal: Modal$8} = await importShared('@heroui/react');
 
-const {useEffect: useEffect$o,useState: useState$v} = await importShared('react');
+const {useEffect: useEffect$q,useState: useState$v} = await importShared('react');
 
 const {UNSAFE_PortalProvider} = await importShared('react-aria');
 function TabModal({
@@ -15641,7 +15718,7 @@ function TabModal({
 }) {
   const activeTab = useTabsState("activeTab");
   const [targetContainer, setTargetContainer] = useState$v(null);
-  useEffect$o(() => {
+  useEffect$q(() => {
     setTargetContainer(isOpen ? document.getElementById(`${activeTab}_wrapper`) : null);
   }, [isOpen]);
   return /* @__PURE__ */ jsxRuntimeExports.jsx(Modal$8, { isOpen, onOpenChange, children: targetContainer && /* @__PURE__ */ jsxRuntimeExports.jsx(UNSAFE_PortalProvider, { getContainer: () => targetContainer, children: /* @__PURE__ */ jsxRuntimeExports.jsx(
@@ -18409,6 +18486,103 @@ function bytesToMegabytes(bytes) {
   const megabytes = bytes / (1024 * 1024);
   return parseFloat(megabytes.toFixed(2));
 }
+function parseWheelFilename(filename) {
+  const match = filename.match(/^([A-Za-z0-9](?:[A-Za-z0-9._-]*[A-Za-z0-9])?)-([^-]+(?:\+[^-]+)?)/);
+  if (!match) return null;
+  return {
+    // Normalize underscores/dots to hyphens per PEP 503
+    name: match[1].replace(/[-_.]+/g, "-"),
+    version: match[2]
+  };
+}
+function parseRequirementLine(line) {
+  const originalLine = line.trim();
+  const isDirectUrl = /^https?:\/\//i.test(originalLine);
+  const isAtUrl = /\s@\s+https?:\/\//i.test(originalLine);
+  if (isDirectUrl || isAtUrl) {
+    let url;
+    let markers2 = null;
+    let name2 = originalLine;
+    let version2 = null;
+    if (isAtUrl) {
+      const atMatch = originalLine.match(
+        /^([A-Za-z0-9][A-Za-z0-9._-]*)\s*@\s*(https?:\/\/\S+?)(?:\s*;\s*(.+?))?(?:\s*#.*)?$/i
+      );
+      if (atMatch) {
+        name2 = atMatch[1].replace(/[-_.]+/g, "-");
+        url = atMatch[2];
+        markers2 = atMatch[3]?.trim() ?? null;
+      } else {
+        url = originalLine;
+      }
+    } else {
+      const urlMarkerMatch = originalLine.match(/^(https?:\/\/\S+?)(?:\s*;\s*(.+?))?(?:\s*#.*)?$/i);
+      url = urlMarkerMatch ? urlMarkerMatch[1] : originalLine;
+      markers2 = urlMarkerMatch?.[2]?.trim() ?? null;
+    }
+    const filename = url.split("/").pop() ?? "";
+    if (filename.endsWith(".whl")) {
+      const parsed = parseWheelFilename(filename);
+      if (parsed) {
+        name2 = parsed.name;
+        version2 = parsed.version;
+      }
+    }
+    return { name: name2, versionOperator: null, version: version2, originalLine, url, markers: markers2 };
+  }
+  let working = originalLine;
+  working = working.replace(/\s+#.*$/, "");
+  let markers = null;
+  const semiIdx = working.indexOf(";");
+  if (semiIdx !== -1) {
+    markers = working.slice(semiIdx + 1).trim() || null;
+    working = working.slice(0, semiIdx).trim();
+  }
+  let extras = null;
+  const extrasMatch = working.match(/^([^[]+)\[([^\]]+)](.*)/);
+  if (extrasMatch) {
+    extras = extrasMatch[2].split(",").map((e) => e.trim());
+    working = extrasMatch[1] + extrasMatch[3];
+  }
+  const versionMatch = working.match(/(===|~=|==|!=|>=|<=|>|<)\s*([^\s,]+)/);
+  const versionOperator = versionMatch?.[1] ?? null;
+  const version = versionMatch?.[2] ?? null;
+  const namePart = working.split(/===|~=|==|!=|>=|<=|>|</)[0].trim();
+  const name = namePart.replace(/[-_.]+/g, "-");
+  return { name, versionOperator, version, originalLine, extras, markers };
+}
+
+const cacheUrl = (url) => {
+  if (!url) return void 0;
+  return semverExports.gte(window.lynxVersion || "3.3.0", "3.4.0") ? `lynxcache://fetch/${encodeURIComponent(url)}` : url;
+};
+function getUniqueLabels(dirs) {
+  const normalized = dirs.map((dir) => dir.replace(/\\/g, "/").replace(/\/$/, ""));
+  const segments = normalized.map((path) => path.split("/").reverse());
+  const parts = segments.map((segs) => [segs[0]]);
+  let changed = true;
+  while (changed) {
+    changed = false;
+    const groups = /* @__PURE__ */ new Map();
+    parts.forEach((p, i) => {
+      const label = p.join(" -> ");
+      if (!groups.has(label)) groups.set(label, []);
+      groups.get(label).push(i);
+    });
+    for (const indices of groups.values()) {
+      if (indices.length > 1) {
+        for (const idx of indices) {
+          const segs = segments[idx];
+          if (parts[idx].length < segs.length) {
+            parts[idx] = [segs[parts[idx].length], ...parts[idx]];
+            changed = true;
+          }
+        }
+      }
+    }
+  }
+  return parts.map((p) => p.join(" | "));
+}
 
 function fetchAndSetPythonVenvs(setList, setIsLoading, onSelected) {
   return Promise.all([pIpc.getInstalledPythons(false), pIpc.getVenvs()]).then(([pythons, venvs]) => {
@@ -18433,8 +18607,8 @@ function fetchAndSetPythonVenvs(setList, setIsLoading, onSelected) {
   }).catch(console.warn).finally(() => setIsLoading(false));
 }
 
-const {Button: Button$l,Description: Description$f,Dropdown: Dropdown$5,Spinner: Spinner$8} = await importShared('@heroui/react');
-const {useEffect: useEffect$n,useState: useState$u} = await importShared('react');
+const {Button: Button$o,Description: Description$g,Dropdown: Dropdown$5,Label: Label$f,Spinner: Spinner$9} = await importShared('@heroui/react');
+const {useCallback: useCallback$d,useEffect: useEffect$p,useState: useState$u} = await importShared('react');
 function SelectEnv({ id, setPythonPath }) {
   const [list, setList] = useState$u([]);
   const [isLoading, setIsLoading] = useState$u(true);
@@ -18452,24 +18626,56 @@ function SelectEnv({ id, setPythonPath }) {
       console.warn("PythonToolkit: Failed to get exe path: ", e);
     });
   };
-  useEffect$n(() => {
+  const fetchList = useCallback$d(() => {
     setIsLoading(true);
-    fetchAndSetPythonVenvs(setList, setIsLoading);
+    fetchAndSetPythonVenvs((items) => {
+      if (items.length > 0) {
+        const labels = getUniqueLabels(items.map((item) => item.dir));
+        const updated = items.map((item, idx) => ({
+          ...item,
+          label: labels[idx]
+        }));
+        setList(updated);
+      } else {
+        setList([]);
+      }
+    }, setIsLoading);
   }, []);
-  return isLoading ? /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "flex flex-col gap-y-2 items-center", children: [
-    /* @__PURE__ */ jsxRuntimeExports.jsx(Spinner$8, { size: "lg" }),
-    /* @__PURE__ */ jsxRuntimeExports.jsx(Description$f, { children: "Loading available pythons and venvs..." })
-  ] }) : /* @__PURE__ */ jsxRuntimeExports.jsxs(Dropdown$5, { children: [
-    /* @__PURE__ */ jsxRuntimeExports.jsx(Button$l, { className: "mt-2", children: "Select Environment" }),
-    /* @__PURE__ */ jsxRuntimeExports.jsx(Dropdown$5.Popover, { children: /* @__PURE__ */ jsxRuntimeExports.jsx(Dropdown$5.Menu, { items: list, children: (item) => /* @__PURE__ */ jsxRuntimeExports.jsx(Dropdown$5.Item, { onPress: () => onPress(item), id: `${item.version}_${item.dir}`, children: /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "flex flex-row gap-x-1 items-end", children: item.type === "python" ? /* @__PURE__ */ jsxRuntimeExports.jsxs("span", { className: "flex flex-row items-center gap-x-2", children: [
-      /* @__PURE__ */ jsxRuntimeExports.jsx(Python_Icon, { className: "text-yellow-300" }),
-      " ",
-      item.version
-    ] }) : /* @__PURE__ */ jsxRuntimeExports.jsxs("span", { className: "flex flex-row items-center gap-x-2", children: [
-      /* @__PURE__ */ jsxRuntimeExports.jsx(Env_Icon, { className: "text-green-300" }),
-      " ",
-      item.version
-    ] }) }) }) }) })
+  useEffect$p(() => fetchList(), []);
+  return isLoading ? /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "flex flex-col gap-y-2 mt-4 items-center", children: [
+    /* @__PURE__ */ jsxRuntimeExports.jsx(Spinner$9, { size: "lg" }),
+    /* @__PURE__ */ jsxRuntimeExports.jsx(Description$g, { children: "Loading available pythons and venvs..." })
+  ] }) : /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "flex items-center gap-x-2 mt-4", children: [
+    /* @__PURE__ */ jsxRuntimeExports.jsxs(Dropdown$5, { children: [
+      /* @__PURE__ */ jsxRuntimeExports.jsxs(Button$o, { children: [
+        /* @__PURE__ */ jsxRuntimeExports.jsx(PythonIcon, {}),
+        "Select Environment"
+      ] }),
+      /* @__PURE__ */ jsxRuntimeExports.jsx(Dropdown$5.Popover, { children: /* @__PURE__ */ jsxRuntimeExports.jsx(Dropdown$5.Menu, { items: list, children: (item) => /* @__PURE__ */ jsxRuntimeExports.jsxs(
+        Dropdown$5.Item,
+        {
+          onPress: () => onPress(item),
+          id: `${item.version}_${item.dir}`,
+          className: "flex flex-col items-start gap-0",
+          children: [
+            /* @__PURE__ */ jsxRuntimeExports.jsx(Label$f, { children: item.type === "python" ? /* @__PURE__ */ jsxRuntimeExports.jsxs("span", { className: "flex flex-row items-center gap-x-2", children: [
+              /* @__PURE__ */ jsxRuntimeExports.jsx(PythonIcon, { className: "text-blue-400" }),
+              " ",
+              item.version
+            ] }) : /* @__PURE__ */ jsxRuntimeExports.jsxs("span", { className: "flex flex-row items-center gap-x-2", children: [
+              /* @__PURE__ */ jsxRuntimeExports.jsx(PythonIcon, { className: "text-yellow-400" }),
+              " ",
+              item.version
+            ] }) }),
+            /* @__PURE__ */ jsxRuntimeExports.jsx(Description$g, { children: item.label })
+          ]
+        }
+      ) }) })
+    ] }),
+    /* @__PURE__ */ jsxRuntimeExports.jsxs(Button$o, { variant: "tertiary", onPress: fetchList, children: [
+      /* @__PURE__ */ jsxRuntimeExports.jsx(i$l, {}),
+      "Refresh"
+    ] })
   ] });
 }
 
@@ -18508,15 +18714,211 @@ const usePythonToolkitState = (name) => useSelector((state) => state.pythonToolk
 const PythonToolkitActions = pythonToolkitReducer.actions;
 const pythonToolkitReducer$1 = pythonToolkitReducer.reducer;
 
-const {Button: Button$k,Chip: Chip$4,Description: Description$e,Input: Input$4,Modal: Modal$7,Popover: Popover$7,ProgressBar: ProgressBar$4} = await importShared('@heroui/react');
-const {memo: memo$2,useCallback: useCallback$a,useEffect: useEffect$m,useState: useState$t} = await importShared('react');
-const PkgVersions = memo$2(({ updated, item, pythonPath }) => {
+const VERSION_PATTERN = [
+  'v?',
+  '(?:',
+  /* */ '(?:(?<epoch>[0-9]+)!)?', // epoch
+  /* */ '(?<release>[0-9]+(?:\\.[0-9]+)*)', // release segment
+  /* */ '(?<pre>', // pre-release
+  /*    */ '[-_\\.]?',
+  /*    */ '(?<pre_l>(a|b|c|rc|alpha|beta|pre|preview))',
+  /*    */ '[-_\\.]?',
+  /*    */ '(?<pre_n>[0-9]+)?',
+  /* */ ')?',
+  /* */ '(?<post>', // post release
+  /*    */ '(?:-(?<post_n1>[0-9]+))',
+  /*    */ '|',
+  /*    */ '(?:',
+  /*        */ '[-_\\.]?',
+  /*        */ '(?<post_l>post|rev|r)',
+  /*        */ '[-_\\.]?',
+  /*        */ '(?<post_n2>[0-9]+)?',
+  /*    */ ')',
+  /* */ ')?',
+  /* */ '(?<dev>', // dev release
+  /*    */ '[-_\\.]?',
+  /*    */ '(?<dev_l>dev)',
+  /*    */ '[-_\\.]?',
+  /*    */ '(?<dev_n>[0-9]+)?',
+  /* */ ')?',
+  ')',
+  '(?:\\+(?<local>[a-z0-9]+(?:[-_\\.][a-z0-9]+)*))?', // local version
+].join('');
+
+const validRegex = new RegExp('^' + VERSION_PATTERN + '$', 'i');
+
+function parse(version, regex) {
+  // Validate the version and parse it into pieces
+  const { groups } = (validRegex).exec(version) || {};
+  if (!groups) {
+    return null;
+  }
+
+  // Store the parsed out pieces of the version
+  const parsed = {
+    epoch: Number(groups.epoch ? groups.epoch : 0),
+    release: groups.release.split('.').map(Number),
+    pre: normalize_letter_version(groups.pre_l, groups.pre_n),
+    post: normalize_letter_version(
+      groups.post_l,
+      groups.post_n1 || groups.post_n2,
+    ),
+    dev: normalize_letter_version(groups.dev_l, groups.dev_n),
+    local: parse_local_version(groups.local),
+  };
+
+  return parsed;
+}
+
+function normalize_letter_version(letterIn, numberIn) {
+  let letter = letterIn;
+  let number = numberIn;
+  if (letter) {
+    // We consider there to be an implicit 0 in a pre-release if there is
+    // not a numeral associated with it.
+    if (!number) {
+      number = 0;
+    }
+    // We normalize any letters to their lower case form
+    letter = letter.toLowerCase();
+
+    // We consider some words to be alternate spellings of other words and
+    // in those cases we want to normalize the spellings to our preferred
+    // spelling.
+    if (letter === 'alpha') {
+      letter = 'a';
+    } else if (letter === 'beta') {
+      letter = 'b';
+    } else if (['c', 'pre', 'preview'].includes(letter)) {
+      letter = 'rc';
+    } else if (['rev', 'r'].includes(letter)) {
+      letter = 'post';
+    }
+    return [letter, Number(number)];
+  }
+  if (!letter && number) {
+    // We assume if we are given a number, but we are not given a letter
+    // then this is using the implicit post release syntax (e.g. 1.0-1)
+    letter = 'post';
+
+    return [letter, Number(number)];
+  }
+  return null;
+}
+
+function parse_local_version(local) {
+  /*
+    Takes a string like abc.1.twelve and turns it into("abc", 1, "twelve").
+    */
+  if (local) {
+    return local
+      .split(/[._-]/)
+      .map((part) =>
+        Number.isNaN(Number(part)) ? part.toLowerCase() : Number(part),
+      );
+  }
+  return null;
+}
+
+function compare(version, other) {
+  const parsedVersion = parse(version);
+  const parsedOther = parse(other);
+
+  const keyVersion = calculateKey(parsedVersion);
+  const keyOther = calculateKey(parsedOther);
+
+  return pyCompare(keyVersion, keyOther);
+}
+
+// this logic is buitin in python, but we need to port it to js
+// see https://stackoverflow.com/a/5292332/1438522
+function pyCompare(elemIn, otherIn) {
+  let elem = elemIn;
+  let other = otherIn;
+  if (elem === other) {
+    return 0;
+  }
+  if (Array.isArray(elem) !== Array.isArray(other)) {
+    elem = Array.isArray(elem) ? elem : [elem];
+    other = Array.isArray(other) ? other : [other];
+  }
+  if (Array.isArray(elem)) {
+    const len = Math.min(elem.length, other.length);
+    for (let i = 0; i < len; i += 1) {
+      const res = pyCompare(elem[i], other[i]);
+      if (res !== 0) {
+        return res;
+      }
+    }
+    return elem.length - other.length;
+  }
+  if (elem === -Infinity || other === Infinity) {
+    return -1;
+  }
+  if (elem === Infinity || other === -Infinity) {
+    return 1;
+  }
+  return elem < other ? -1 : 1;
+}
+
+function calculateKey(input) {
+  const { epoch } = input;
+  let { release, pre, post, local, dev } = input;
+  // When we compare a release version, we want to compare it with all of the
+  // trailing zeros removed. So we'll use a reverse the list, drop all the now
+  // leading zeros until we come to something non zero, then take the rest
+  // re-reverse it back into the correct order and make it a tuple and use
+  // that for our sorting key.
+  release = release.concat();
+  release.reverse();
+  while (release.length && release[0] === 0) {
+    release.shift();
+  }
+  release.reverse();
+
+  // We need to "trick" the sorting algorithm to put 1.0.dev0 before 1.0a0.
+  // We'll do this by abusing the pre segment, but we _only_ want to do this
+  // if there is !a pre or a post segment. If we have one of those then
+  // the normal sorting rules will handle this case correctly.
+  if (!pre && !post && dev) pre = -Infinity;
+  // Versions without a pre-release (except as noted above) should sort after
+  // those with one.
+  else if (!pre) pre = Infinity;
+
+  // Versions without a post segment should sort before those with one.
+  if (!post) post = -Infinity;
+
+  // Versions without a development segment should sort after those with one.
+  if (!dev) dev = Infinity;
+
+  if (!local) {
+    // Versions without a local segment should sort before those with one.
+    local = -Infinity;
+  } else {
+    // Versions with a local segment need that segment parsed to implement
+    // the sorting rules in PEP440.
+    // - Alpha numeric segments sort before numeric segments
+    // - Alpha numeric segments sort lexicographically
+    // - Numeric segments sort numerically
+    // - Shorter versions sort before longer versions when the prefixes
+    //   match exactly
+    local = local.map((i) =>
+      Number.isNaN(Number(i)) ? [-Infinity, i] : [Number(i), ''],
+    );
+  }
+
+  return [epoch, release, pre, post, dev, local];
+}
+
+const {Button: Button$n,Chip: Chip$6,Description: Description$f,Input: Input$4,Modal: Modal$7,Popover: Popover$9,ProgressBar: ProgressBar$4} = await importShared('@heroui/react');
+const {memo: memo$4,useCallback: useCallback$c,useEffect: useEffect$o,useState: useState$t} = await importShared('react');
+const PkgVersions = memo$4(({ updated, item, pythonPath }) => {
   const [availableVersion, setAvailableVersion] = useState$t(null);
   const [changingTo, setChangingTo] = useState$t(void 0);
   const [isLoadingVersions, setIsLoadingVersions] = useState$t(false);
   const [isOpen, setIsOpen] = useState$t(false);
   const [customVersion, setCustomVersion] = useState$t(item.version);
-  useEffect$m(() => {
+  useEffect$o(() => {
     if (isOpen) {
       setIsLoadingVersions(true);
       pIpc.getPackageAllVersions(item.name).then((versions) => {
@@ -18532,7 +18934,7 @@ const PkgVersions = memo$2(({ updated, item, pythonPath }) => {
       setAvailableVersion(null);
     };
   }, [isOpen]);
-  const changeVersion = useCallback$a(
+  const changeVersion = useCallback$c(
     (targetVersion) => {
       setChangingTo(targetVersion);
       pIpc.changePackageVersion(pythonPath, item.name, item.version, targetVersion).then(() => {
@@ -18548,21 +18950,15 @@ const PkgVersions = memo$2(({ updated, item, pythonPath }) => {
     },
     [pythonPath, item]
   );
-  const getUpdateType = useCallback$a(
+  const getUpdateType = useCallback$c(
     (version) => {
       if (isEmpty(version)) return { color: "tertiary", isUpgrade: void 0, disabled: true };
-      const currentVersion = semver.coerce(item.version)?.version;
-      const targetVersion = semver.coerce(version)?.version;
-      if (!currentVersion || !targetVersion) return { color: "tertiary", isUpgrade: void 0, disabled: false };
-      const areVersionsValid = semverExports.valid(currentVersion) && semverExports.valid(targetVersion);
-      if (!areVersionsValid) {
-        return { color: "tertiary", isUpgrade: void 0, disabled: false };
-      }
-      const comparison = semverExports.compare(currentVersion, targetVersion);
-      if (comparison === 0) {
+      const current = item.version;
+      const cmp = compare(current, version);
+      if (cmp === 0) {
         return { color: "tertiary", isUpgrade: void 0, disabled: true };
       }
-      const isUpgrade = comparison === -1;
+      const isUpgrade = cmp < 0;
       return {
         color: isUpgrade ? "primary" : "danger-soft",
         isUpgrade,
@@ -18577,14 +18973,14 @@ const PkgVersions = memo$2(({ updated, item, pythonPath }) => {
       /* @__PURE__ */ jsxRuntimeExports.jsxs(Modal$7.Header, { className: "justify-center gap-x-1 text-sm items-center flex flex-row", children: [
         /* @__PURE__ */ jsxRuntimeExports.jsx("span", { children: "Change" }),
         /* @__PURE__ */ jsxRuntimeExports.jsx("span", { className: "text-accent", children: item.name }),
-        /* @__PURE__ */ jsxRuntimeExports.jsx(Chip$4, { size: "sm", variant: "soft", color: "accent", children: item.version })
+        /* @__PURE__ */ jsxRuntimeExports.jsx(Chip$6, { size: "sm", variant: "soft", color: "accent", children: item.version })
       ] }),
       /* @__PURE__ */ jsxRuntimeExports.jsx(Modal$7.Body, { className: "px-1", children: isLoadingVersions || changingTo ? /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "size-full px-6 py-3", children: [
         /* @__PURE__ */ jsxRuntimeExports.jsxs(ProgressBar$4, { isIndeterminate: true, children: [
           /* @__PURE__ */ jsxRuntimeExports.jsx(ProgressBar$4.Output, {}),
           /* @__PURE__ */ jsxRuntimeExports.jsx(ProgressBar$4.Track, { children: /* @__PURE__ */ jsxRuntimeExports.jsx(ProgressBar$4.Fill, {}) })
         ] }),
-        /* @__PURE__ */ jsxRuntimeExports.jsx(Description$e, { children: isLoadingVersions ? "Fetching latest available versions." : changingTo ? `Changing from "${item.version}" to "${changingTo}"` : "" })
+        /* @__PURE__ */ jsxRuntimeExports.jsx(Description$f, { children: isLoadingVersions ? "Fetching available versions..." : changingTo ? `Changing from "${item.version}" to "${changingTo}"` : "" })
       ] }) : /* @__PURE__ */ jsxRuntimeExports.jsxs(LynxScroll, { className: "size-full", children: [
         /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "flex flex-row items-center w-full gap-x-2 px-4 py-2", children: [
           /* @__PURE__ */ jsxRuntimeExports.jsx(
@@ -18597,14 +18993,14 @@ const PkgVersions = memo$2(({ updated, item, pythonPath }) => {
               fullWidth: true
             }
           ),
-          getUpdateType(customVersion).isUpgrade !== void 0 && /* @__PURE__ */ jsxRuntimeExports.jsx(Button$k, { variant: getUpdateType(customVersion).color, onPress: () => changeVersion(customVersion), children: getUpdateType(customVersion).isUpgrade ? "Upgrade" : "Downgrade" })
+          getUpdateType(customVersion).isUpgrade !== void 0 && /* @__PURE__ */ jsxRuntimeExports.jsx(Button$n, { variant: getUpdateType(customVersion).color, onPress: () => changeVersion(customVersion), children: getUpdateType(customVersion).isUpgrade ? "Upgrade" : "Downgrade" })
         ] }),
         /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "flex flex-row gap-2 flex-wrap pl-10 mt-2", children: availableVersion?.map((version) => {
           const updateType = getUpdateType(version);
           const icon = updateType.disabled ? null : updateType.isUpgrade ? /* @__PURE__ */ jsxRuntimeExports.jsx(r$1, {}) : /* @__PURE__ */ jsxRuntimeExports.jsx(r$2, {});
-          return /* @__PURE__ */ jsxRuntimeExports.jsxs(Popover$7, { children: [
+          return /* @__PURE__ */ jsxRuntimeExports.jsxs(Popover$9, { children: [
             /* @__PURE__ */ jsxRuntimeExports.jsxs(
-              Button$k,
+              Button$n,
               {
                 variant: updateType.color,
                 className: "shrink-0 max-w-34",
@@ -18616,30 +19012,30 @@ const PkgVersions = memo$2(({ updated, item, pythonPath }) => {
                 ]
               }
             ),
-            /* @__PURE__ */ jsxRuntimeExports.jsx(Popover$7.Content, { className: "max-w-68", children: /* @__PURE__ */ jsxRuntimeExports.jsxs(Popover$7.Dialog, { className: "gap-y-2 flex flex-col", children: [
-              /* @__PURE__ */ jsxRuntimeExports.jsx(Popover$7.Arrow, {}),
-              /* @__PURE__ */ jsxRuntimeExports.jsxs(Popover$7.Heading, { children: [
+            /* @__PURE__ */ jsxRuntimeExports.jsx(Popover$9.Content, { className: "max-w-68", children: /* @__PURE__ */ jsxRuntimeExports.jsxs(Popover$9.Dialog, { className: "gap-y-2 flex flex-col", children: [
+              /* @__PURE__ */ jsxRuntimeExports.jsx(Popover$9.Arrow, {}),
+              /* @__PURE__ */ jsxRuntimeExports.jsxs(Popover$9.Heading, { children: [
                 "Are you sure you want to ",
                 updateType.isUpgrade ? "upgrade" : "downgrade",
                 " to ",
                 version,
                 "?"
               ] }),
-              /* @__PURE__ */ jsxRuntimeExports.jsx(Button$k, { size: "sm", onPress: () => changeVersion(version), fullWidth: true, children: "Confirm" })
+              /* @__PURE__ */ jsxRuntimeExports.jsx(Button$n, { size: "sm", onPress: () => changeVersion(version), fullWidth: true, children: "Confirm" })
             ] }) })
           ] }, `${item.name}_${version}`);
         }) })
       ] }) })
     ] }),
-    /* @__PURE__ */ jsxRuntimeExports.jsx(Button$k, { size: "sm", variant: "tertiary", isPending: !!changingTo, onPress: () => setIsOpen(true), isIconOnly: true, children: /* @__PURE__ */ jsxRuntimeExports.jsx(i$8, { className: "size-3.5" }) })
+    /* @__PURE__ */ jsxRuntimeExports.jsx(LynxTooltip, { delay: 300, content: "Change package version", children: /* @__PURE__ */ jsxRuntimeExports.jsx(Button$n, { size: "sm", variant: "tertiary", isPending: !!changingTo, onPress: () => setIsOpen(true), isIconOnly: true, children: /* @__PURE__ */ jsxRuntimeExports.jsx(i$8, { className: "size-3.5" }) }) })
   ] });
 });
 
-const {Button: Button$j,Popover: Popover$6} = await importShared('@heroui/react');
-const {useCallback: useCallback$9,useState: useState$s} = await importShared('react');
+const {Button: Button$m,Popover: Popover$8} = await importShared('@heroui/react');
+const {useCallback: useCallback$b,useState: useState$s} = await importShared('react');
 function ActionButtons({ item, removed, pythonPath, isUninstalling, setIsUninstalling, updated }) {
   const [isUninstallOpen, setIsUninstallOpen] = useState$s(false);
-  const remove = useCallback$9(() => {
+  const remove = useCallback$b(() => {
     setIsUninstallOpen(false);
     setIsUninstalling(true);
     pIpc.uninstallPackage(pythonPath, item.name).then(() => {
@@ -18652,24 +19048,41 @@ function ActionButtons({ item, removed, pythonPath, isUninstalling, setIsUninsta
     });
   }, [item]);
   return /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "flex flex-row items-center justify-center gap-x-2", children: [
-    /* @__PURE__ */ jsxRuntimeExports.jsxs(Popover$6, { isOpen: isUninstallOpen, onOpenChange: setIsUninstallOpen, children: [
-      /* @__PURE__ */ jsxRuntimeExports.jsx(Button$j, { size: "sm", variant: "danger-soft", isPending: isUninstalling, isIconOnly: true, children: /* @__PURE__ */ jsxRuntimeExports.jsx(i$2, {}) }),
-      /* @__PURE__ */ jsxRuntimeExports.jsx(Popover$6.Content, { className: "max-w-64", children: /* @__PURE__ */ jsxRuntimeExports.jsxs(Popover$6.Dialog, { className: "gap-y-2 flex flex-col", children: [
-        /* @__PURE__ */ jsxRuntimeExports.jsx(Popover$6.Arrow, {}),
-        /* @__PURE__ */ jsxRuntimeExports.jsxs("span", { children: [
-          'Are you sure you want to remove the package "',
-          item.name,
-          '"?'
+    /* @__PURE__ */ jsxRuntimeExports.jsxs(Popover$8, { isOpen: isUninstallOpen, onOpenChange: setIsUninstallOpen, children: [
+      /* @__PURE__ */ jsxRuntimeExports.jsx(LynxTooltip, { delay: 300, content: "Remove package", children: /* @__PURE__ */ jsxRuntimeExports.jsx(Button$m, { size: "sm", variant: "danger-soft", isPending: isUninstalling, isIconOnly: true, children: /* @__PURE__ */ jsxRuntimeExports.jsx(i$2, {}) }) }),
+      /* @__PURE__ */ jsxRuntimeExports.jsx(Popover$8.Content, { className: "max-w-sm", children: /* @__PURE__ */ jsxRuntimeExports.jsxs(Popover$8.Dialog, { className: "gap-y-2 flex flex-col", children: [
+        /* @__PURE__ */ jsxRuntimeExports.jsx(Popover$8.Arrow, {}),
+        /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "gap-y-2 flex flex-col", children: [
+          /* @__PURE__ */ jsxRuntimeExports.jsx("strong", { className: "text-sm", children: "Uninstall Package" }),
+          /* @__PURE__ */ jsxRuntimeExports.jsxs("p", { className: "text-xs text-default-600", children: [
+            'This runs pip uninstall for "',
+            item.name,
+            '" in the selected Python environment. Code that imports this package may stop working until it is installed again.'
+          ] }),
+          /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "rounded-md border border-danger/25 bg-danger/10 p-2", children: [
+            /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "text-xs font-medium text-danger", children: "Command preview" }),
+            /* @__PURE__ */ jsxRuntimeExports.jsxs("p", { className: "mt-1 break-all font-JetBrainsMono text-xs text-default-700", children: [
+              '"',
+              pythonPath,
+              '" -m pip uninstall -y "',
+              item.name,
+              '"'
+            ] }),
+            /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "mt-2 text-xs font-medium text-danger", children: "Package" }),
+            /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "mt-1 break-all font-JetBrainsMono text-xs text-default-700", children: item.name }),
+            /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "mt-2 text-xs font-medium text-danger", children: "Python executable" }),
+            /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "mt-1 break-all font-JetBrainsMono text-xs text-default-700", children: pythonPath })
+          ] })
         ] }),
-        /* @__PURE__ */ jsxRuntimeExports.jsx(Button$j, { size: "sm", variant: "danger", onPress: remove, fullWidth: true, children: "Remove" })
+        /* @__PURE__ */ jsxRuntimeExports.jsx(Button$m, { size: "sm", variant: "danger", onPress: remove, fullWidth: true, children: "Uninstall Package" })
       ] }) })
     ] }),
     /* @__PURE__ */ jsxRuntimeExports.jsx(PkgVersions, { item, updated, pythonPath })
   ] });
 }
 
-const {Button: Button$i,TableCell} = await importShared('@heroui/react');
-const {useCallback: useCallback$8,useMemo: useMemo$c,useState: useState$r} = await importShared('react');
+const {Button: Button$l,Chip: Chip$5,TableCell} = await importShared('@heroui/react');
+const {useCallback: useCallback$a,useMemo: useMemo$d,useState: useState$r} = await importShared('react');
 function TableItem({
   item,
   pythonPath,
@@ -18682,7 +19095,7 @@ function TableItem({
   const [isUpdating, setIsUpdating] = useState$r(false);
   const [isUninstalling, setIsUninstalling] = useState$r(false);
   const pkgNameDisplay = usePythonToolkitState("pkgNameDisplay");
-  const itemName = useMemo$c(() => {
+  const itemName = useMemo$d(() => {
     switch (pkgNameDisplay) {
       case "capitalize":
         return capitalize(item.name);
@@ -18693,7 +19106,7 @@ function TableItem({
         return item.name;
     }
   }, [item, pkgNameDisplay]);
-  const update = useCallback$8(() => {
+  const update = useCallback$a(() => {
     setIsUpdating(true);
     setIsUpdateTerminalOpen(true);
     pIpc.updatePackage(pythonPath, item.name, item.updateVersion).then(() => {
@@ -18718,16 +19131,34 @@ function TableItem({
       }
     ) }) : /* @__PURE__ */ jsxRuntimeExports.jsx(TableCell, {});
   } else if (columnKey === "update") {
-    return !isSelected && !isUninstalling && item.updateVersion ? /* @__PURE__ */ jsxRuntimeExports.jsx(TableCell, { children: /* @__PURE__ */ jsxRuntimeExports.jsx(Button$i, { size: "sm", onPress: update, isPending: isUpdating, children: isUpdating ? "Updating..." : "Update" }) }) : /* @__PURE__ */ jsxRuntimeExports.jsx(TableCell, {});
+    return !isSelected && !isUninstalling && item.updateVersion ? /* @__PURE__ */ jsxRuntimeExports.jsx(TableCell, { children: /* @__PURE__ */ jsxRuntimeExports.jsxs(
+      Button$l,
+      {
+        size: "sm",
+        variant: "ghost",
+        onPress: update,
+        isPending: isUpdating,
+        className: item.isNew ? "text-accent-hover" : "text-success",
+        children: [
+          item.isNew ? /* @__PURE__ */ jsxRuntimeExports.jsx(i$o, {}) : /* @__PURE__ */ jsxRuntimeExports.jsx(i$m, {}),
+          isUpdating ? "Updating..." : item.isNew ? "Install" : "Update"
+        ]
+      }
+    ) }) : /* @__PURE__ */ jsxRuntimeExports.jsx(TableCell, {});
   } else if (columnKey === "name") {
     return /* @__PURE__ */ jsxRuntimeExports.jsx(TableCell, { children: /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "flex flex-col", children: [
       /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "text-bold text-sm", children: /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "flex flex-row items-center gap-x-1 text-base font-semibold", children: [
         /* @__PURE__ */ jsxRuntimeExports.jsx("span", { children: itemName }),
-        item.updateVersion && /* @__PURE__ */ jsxRuntimeExports.jsx(i$a, { className: `${getUpdateVersionColor(item.version, item.updateVersion)} size-[1.1rem]` })
+        item.isNew ? /* @__PURE__ */ jsxRuntimeExports.jsx(Chip$5, { size: "sm", color: "accent", variant: "tertiary", children: "New" }) : item.updateVersion && /* @__PURE__ */ jsxRuntimeExports.jsx(
+          i$a,
+          {
+            className: `${getUpdateVersionColor(item.version, item.updateVersion)} size-[1.1rem]`
+          }
+        )
       ] }) }),
       /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "text-bold text-sm text-default-400", children: /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "flex flex-row items-center gap-x-1 text-xs", children: [
         /* @__PURE__ */ jsxRuntimeExports.jsx("span", { children: item.version }),
-        item.updateVersion && /* @__PURE__ */ jsxRuntimeExports.jsxs("span", { children: [
+        item.updateVersion && !item.isNew && /* @__PURE__ */ jsxRuntimeExports.jsxs("span", { children: [
           "(",
           /* @__PURE__ */ jsxRuntimeExports.jsx("span", { className: getUpdateVersionColor(item.version, item.updateVersion), children: item.updateVersion }),
           ")"
@@ -18738,8 +19169,8 @@ function TableItem({
   return null;
 }
 
-const {Checkbox,Description: Description$d,ModalBody,Spinner: Spinner$7,Table: Table$1} = await importShared('@heroui/react');
-const {useMemo: useMemo$b} = await importShared('react');
+const {Checkbox: Checkbox$1,Description: Description$e,ModalBody,Spinner: Spinner$8,Table: Table$2} = await importShared('@heroui/react');
+const {useMemo: useMemo$c} = await importShared('react');
 function PackageManagerBody({
   id,
   items,
@@ -18754,106 +19185,93 @@ function PackageManagerBody({
   setPythonPath,
   setIsUpdateTerminalOpen
 }) {
-  const isDarkMode = useAppState("darkMode");
-  const anyUpdateAvailable = useMemo$b(() => packagesUpdate.length !== 0, [packagesUpdate]);
-  const disabledKeys = useMemo$b(() => {
+  const anyUpdateAvailable = useMemo$c(() => packagesUpdate.length !== 0, [packagesUpdate]);
+  const disabledKeys = useMemo$c(() => {
     if (isEmpty(packagesUpdate)) return [];
     return items.filter((item) => !packagesUpdate.some((update) => update.name === item.name)).map((item) => item.name);
   }, [items, packagesUpdate]);
-  const refreshedItems = useMemo$b(() => cloneDeep(items), [items, selectedKeys, anyUpdateAvailable]);
-  return /* @__PURE__ */ jsxRuntimeExports.jsx(ModalBody, { children: /* @__PURE__ */ jsxRuntimeExports.jsx(
-    g$2,
+  const refreshedItems = useMemo$c(() => cloneDeep(items), [items, selectedKeys, anyUpdateAvailable]);
+  return /* @__PURE__ */ jsxRuntimeExports.jsx(ModalBody, { className: "overflow-hidden", children: /* @__PURE__ */ jsxRuntimeExports.jsx(LynxScroll, { className: "size-full px-6 pt-2 pb-6", children: /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "w-full flex flex-col gap-y-4 size-full", children: /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "flex flex-row gap-8 flex-wrap justify-center size-full", children: isLoading ? /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "flex flex-col gap-y-2 items-center mt-4", children: [
+    /* @__PURE__ */ jsxRuntimeExports.jsx(Spinner$8, { size: "xl" }),
+    /* @__PURE__ */ jsxRuntimeExports.jsx(Description$e, { className: "text-sm", children: "Please wait, loading package data..." })
+  ] }) : isValidPython ? /* @__PURE__ */ jsxRuntimeExports.jsx(Table$2, { children: /* @__PURE__ */ jsxRuntimeExports.jsx(Table$2.ScrollContainer, { children: /* @__PURE__ */ jsxRuntimeExports.jsxs(
+    Table$2.Content,
     {
-      options: {
-        overflow: { x: "hidden", y: "scroll" },
-        scrollbars: {
-          autoHide: "move",
-          clickScroll: true,
-          theme: isDarkMode ? "os-theme-light" : "os-theme-dark"
-        }
-      },
-      className: "size-full px-4",
-      children: /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "w-full flex flex-col gap-y-4", children: /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "flex flex-row gap-8 flex-wrap justify-center", children: isLoading ? /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "flex flex-col gap-y-2 items-center mt-4", children: [
-        /* @__PURE__ */ jsxRuntimeExports.jsx(Spinner$7, { size: "xl" }),
-        /* @__PURE__ */ jsxRuntimeExports.jsx(Description$d, { className: "text-sm", children: "Please wait, loading package data..." })
-      ] }) : isValidPython ? /* @__PURE__ */ jsxRuntimeExports.jsx(Table$1, { children: /* @__PURE__ */ jsxRuntimeExports.jsx(Table$1.ScrollContainer, { children: /* @__PURE__ */ jsxRuntimeExports.jsxs(
-        Table$1.Content,
-        {
-          disabledKeys,
-          selectedKeys,
-          onSelectionChange: setSelectedKeys,
-          selectionMode: anyUpdateAvailable ? "multiple" : "none",
-          children: [
-            /* @__PURE__ */ jsxRuntimeExports.jsxs(Table$1.Header, { children: [
-              anyUpdateAvailable && /* @__PURE__ */ jsxRuntimeExports.jsx(Table$1.Column, { className: "pr-0", children: /* @__PURE__ */ jsxRuntimeExports.jsx(Checkbox, { slot: "selection", children: /* @__PURE__ */ jsxRuntimeExports.jsx(Checkbox.Control, { children: /* @__PURE__ */ jsxRuntimeExports.jsx(Checkbox.Indicator, {}) }) }) }),
-              /* @__PURE__ */ jsxRuntimeExports.jsx(Table$1.Column, { isRowHeader: true, children: "Name" }),
-              anyUpdateAvailable && /* @__PURE__ */ jsxRuntimeExports.jsx(Table$1.Column, { children: "Update" }),
-              /* @__PURE__ */ jsxRuntimeExports.jsx(Table$1.Column, { children: "Action" })
-            ] }),
-            /* @__PURE__ */ jsxRuntimeExports.jsx(Table$1.Body, { items: refreshedItems, children: (item) => /* @__PURE__ */ jsxRuntimeExports.jsxs(Table$1.Row, { id: item.name, children: [
-              anyUpdateAvailable ? /* @__PURE__ */ jsxRuntimeExports.jsx(Table$1.Cell, { className: "pr-0", children: /* @__PURE__ */ jsxRuntimeExports.jsx(Checkbox, { slot: "selection", variant: "secondary", children: /* @__PURE__ */ jsxRuntimeExports.jsx(Checkbox.Control, { children: /* @__PURE__ */ jsxRuntimeExports.jsx(Checkbox.Indicator, {}) }) }) }) : null,
-              /* @__PURE__ */ jsxRuntimeExports.jsx(
-                TableItem,
-                {
-                  item,
-                  removed,
-                  updated,
-                  columnKey: "name",
-                  pythonPath,
-                  setIsUpdateTerminalOpen,
-                  isSelected: selectedKeys === "all" || selectedKeys.has(item.name)
-                }
-              ),
-              anyUpdateAvailable ? /* @__PURE__ */ jsxRuntimeExports.jsx(
-                TableItem,
-                {
-                  item,
-                  removed,
-                  updated,
-                  columnKey: "update",
-                  pythonPath,
-                  setIsUpdateTerminalOpen,
-                  isSelected: selectedKeys === "all" || selectedKeys.has(item.name)
-                }
-              ) : null,
-              /* @__PURE__ */ jsxRuntimeExports.jsx(
-                TableItem,
-                {
-                  item,
-                  removed,
-                  updated,
-                  columnKey: "actions",
-                  pythonPath,
-                  setIsUpdateTerminalOpen,
-                  isSelected: selectedKeys === "all" || selectedKeys.has(item.name)
-                }
-              )
-            ] }, item.name) })
-          ]
-        }
-      ) }) }) : /* @__PURE__ */ jsxRuntimeExports.jsx(
-        EmptyStateCard,
-        {
-          className: "px-8",
-          variant: "secondary",
-          title: "Could not find a virtual environment.",
-          description: "Please select your desire environment.",
-          action: /* @__PURE__ */ jsxRuntimeExports.jsx(SelectEnv, { id, setPythonPath })
-        }
-      ) }) })
+      disabledKeys,
+      selectedKeys,
+      onSelectionChange: setSelectedKeys,
+      selectionMode: anyUpdateAvailable ? "multiple" : "none",
+      children: [
+        /* @__PURE__ */ jsxRuntimeExports.jsxs(Table$2.Header, { children: [
+          anyUpdateAvailable && /* @__PURE__ */ jsxRuntimeExports.jsx(Table$2.Column, { className: "pr-0", children: /* @__PURE__ */ jsxRuntimeExports.jsx(Checkbox$1, { slot: "selection", children: /* @__PURE__ */ jsxRuntimeExports.jsx(Checkbox$1.Control, { children: /* @__PURE__ */ jsxRuntimeExports.jsx(Checkbox$1.Indicator, {}) }) }) }),
+          /* @__PURE__ */ jsxRuntimeExports.jsx(Table$2.Column, { isRowHeader: true, children: "Name" }),
+          anyUpdateAvailable && /* @__PURE__ */ jsxRuntimeExports.jsx(Table$2.Column, { children: "Update" }),
+          /* @__PURE__ */ jsxRuntimeExports.jsx(Table$2.Column, { children: "Action" })
+        ] }),
+        /* @__PURE__ */ jsxRuntimeExports.jsx(Table$2.Body, { items: refreshedItems, children: (item) => /* @__PURE__ */ jsxRuntimeExports.jsxs(Table$2.Row, { id: item.name, children: [
+          anyUpdateAvailable ? /* @__PURE__ */ jsxRuntimeExports.jsx(Table$2.Cell, { className: "pr-0", children: /* @__PURE__ */ jsxRuntimeExports.jsx(Checkbox$1, { slot: "selection", variant: "secondary", children: /* @__PURE__ */ jsxRuntimeExports.jsx(Checkbox$1.Control, { children: /* @__PURE__ */ jsxRuntimeExports.jsx(Checkbox$1.Indicator, {}) }) }) }) : null,
+          /* @__PURE__ */ jsxRuntimeExports.jsx(
+            TableItem,
+            {
+              item,
+              removed,
+              updated,
+              columnKey: "name",
+              pythonPath,
+              setIsUpdateTerminalOpen,
+              isSelected: selectedKeys === "all" || selectedKeys.has(item.name)
+            }
+          ),
+          anyUpdateAvailable ? /* @__PURE__ */ jsxRuntimeExports.jsx(
+            TableItem,
+            {
+              item,
+              removed,
+              updated,
+              columnKey: "update",
+              pythonPath,
+              setIsUpdateTerminalOpen,
+              isSelected: selectedKeys === "all" || selectedKeys.has(item.name)
+            }
+          ) : null,
+          /* @__PURE__ */ jsxRuntimeExports.jsx(
+            TableItem,
+            {
+              item,
+              removed,
+              updated,
+              columnKey: "actions",
+              pythonPath,
+              setIsUpdateTerminalOpen,
+              isSelected: selectedKeys === "all" || selectedKeys.has(item.name)
+            }
+          )
+        ] }, item.name) })
+      ]
     }
-  ) });
+  ) }) }) : /* @__PURE__ */ jsxRuntimeExports.jsx(
+    EmptyStateCard,
+    {
+      variant: "secondary",
+      className: "size-full",
+      bodyClassName: "gap-y-1",
+      title: "No virtual environment detected",
+      description: "Select the environment you'd like to use.",
+      action: /* @__PURE__ */ jsxRuntimeExports.jsx(SelectEnv, { id, setPythonPath }),
+      icon: /* @__PURE__ */ jsxRuntimeExports.jsx(i$b, { className: "size-24 mb-4 text-warning-hover" })
+    }
+  ) }) }) }) });
 }
 
-const {Button: Button$h,CloseButton: CloseButton$3,Description: Description$c,Popover: Popover$5} = await importShared('@heroui/react');
+const {Button: Button$k,CloseButton: CloseButton$1,Description: Description$d,Popover: Popover$7} = await importShared('@heroui/react');
 
-const {memo: memo$1,useCallback: useCallback$7,useState: useState$q} = await importShared('react');
-const CloseBtn = memo$1(({ isCheckingUpdates, isUpdating, closePackageManager }) => {
+const {memo: memo$3,useCallback: useCallback$9,useState: useState$q} = await importShared('react');
+const CloseBtn = memo$3(({ isCheckingUpdates, isUpdating, closePackageManager }) => {
   const [isOpen, setIsOpen] = useState$q(false);
-  const closePopover = useCallback$7(() => {
+  const closePopover = useCallback$9(() => {
     setIsOpen(false);
   }, []);
-  const abort = useCallback$7(() => {
+  const abort = useCallback$9(() => {
     if (isUpdating) {
       pIpc.abortUpdating();
     } else if (isCheckingUpdates) {
@@ -18863,37 +19281,37 @@ const CloseBtn = memo$1(({ isCheckingUpdates, isUpdating, closePackageManager })
     closePackageManager();
   }, [isCheckingUpdates, isUpdating]);
   if (isUpdating || isCheckingUpdates) {
-    return /* @__PURE__ */ jsxRuntimeExports.jsxs(Popover$5, { isOpen, onOpenChange: setIsOpen, children: [
-      /* @__PURE__ */ jsxRuntimeExports.jsx(CloseButton$3, { className: "absolute top-4 right-4" }),
-      /* @__PURE__ */ jsxRuntimeExports.jsx(Popover$5.Content, { className: "max-w-sm", children: /* @__PURE__ */ jsxRuntimeExports.jsxs(Popover$5.Dialog, { children: [
-        /* @__PURE__ */ jsxRuntimeExports.jsx(Popover$5.Arrow, {}),
-        /* @__PURE__ */ jsxRuntimeExports.jsxs(Popover$5.Heading, { children: [
+    return /* @__PURE__ */ jsxRuntimeExports.jsxs(Popover$7, { isOpen, onOpenChange: setIsOpen, children: [
+      /* @__PURE__ */ jsxRuntimeExports.jsx(CloseButton$1, { className: "absolute top-4 right-4" }),
+      /* @__PURE__ */ jsxRuntimeExports.jsx(Popover$7.Content, { className: "max-w-sm", children: /* @__PURE__ */ jsxRuntimeExports.jsxs(Popover$7.Dialog, { children: [
+        /* @__PURE__ */ jsxRuntimeExports.jsx(Popover$7.Arrow, {}),
+        /* @__PURE__ */ jsxRuntimeExports.jsxs(Popover$7.Heading, { children: [
           isUpdating ? "Update" : "Update check",
           " in progress"
         ] }),
-        /* @__PURE__ */ jsxRuntimeExports.jsxs(Description$c, { children: [
+        /* @__PURE__ */ jsxRuntimeExports.jsxs(Description$d, { children: [
           "Closing now will abort the ",
           isUpdating ? "update" : "update check",
           ". Are you sure you want to continue?"
         ] }),
         /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "flex flex-row justify-end gap-x-2", children: [
-          /* @__PURE__ */ jsxRuntimeExports.jsx(Button$h, { size: "sm", variant: "secondary", onPress: closePopover, children: "Cancel" }),
-          /* @__PURE__ */ jsxRuntimeExports.jsx(Button$h, { size: "sm", onPress: abort, variant: "danger-soft", children: "Abort Anyway" })
+          /* @__PURE__ */ jsxRuntimeExports.jsx(Button$k, { size: "sm", variant: "secondary", onPress: closePopover, children: "Cancel" }),
+          /* @__PURE__ */ jsxRuntimeExports.jsx(Button$k, { size: "sm", onPress: abort, variant: "danger-soft", children: "Abort Anyway" })
         ] })
       ] }) })
     ] });
   }
-  return /* @__PURE__ */ jsxRuntimeExports.jsx(CloseButton$3, { onPress: closePackageManager, className: "absolute top-4 right-4" });
+  return /* @__PURE__ */ jsxRuntimeExports.jsx(CloseButton$1, { onPress: closePackageManager, className: "absolute top-4 right-4" });
 });
 
 const {Pagination} = await importShared('@heroui/react');
-const {useEffect: useEffect$l,useMemo: useMemo$a,useState: useState$p} = await importShared('react');
+const {useEffect: useEffect$n,useMemo: useMemo$b,useState: useState$p} = await importShared('react');
 
 function TablePage({ searchData, setItems }) {
   const [page, setPage] = useState$p(1);
   const [rowsPerPage] = useState$p(50);
-  const pages = useMemo$a(() => Math.ceil(searchData.length / rowsPerPage), [searchData, rowsPerPage]);
-  useEffect$l(() => {
+  const pages = useMemo$b(() => Math.ceil(searchData.length / rowsPerPage), [searchData, rowsPerPage]);
+  useEffect$n(() => {
     const start = (page - 1) * rowsPerPage;
     const end = start + rowsPerPage;
     const data = searchData.slice(start, end);
@@ -18915,127 +19333,257 @@ function TablePage({ searchData, setItems }) {
 let allCardsExt = [];
 const setCards = (cards) => allCardsExt = cards;
 
-const {CloseButton: CloseButton$2,Input: Input$3,ListBox: ListBox$3,Select: Select$2,Table} = await importShared('@heroui/react');
-const {useEffect: useEffect$k,useState: useState$o} = await importShared('react');
-const operators = [
-  { key: "all", label: "Any" },
-  { key: "==", label: "==" },
-  { key: ">=", label: ">=" },
-  { key: "<=", label: "<=" },
-  { key: ">", label: ">" },
-  { key: "<", label: "<" },
-  { key: "!=", label: "!=" },
-  { key: "~=", label: "~=" }
+const {Button: Button$j,Input: Input$3,ListBox: ListBox$2,Popover: Popover$6,Select: Select$2,Table: Table$1,TextArea,useOverlayState: useOverlayState$7} = await importShared('@heroui/react');
+const {memo: memo$2,useCallback: useCallback$8,useEffect: useEffect$m,useRef: useRef$2,useState: useState$o} = await importShared('react');
+const OPERATORS = [
+  { id: "all", label: "Any" },
+  { id: "==", label: "==" },
+  { id: ">=", label: ">=" },
+  { id: "<=", label: "<=" },
+  { id: ">", label: ">" },
+  { id: "<", label: "<" },
+  { id: "!=", label: "!=" },
+  { id: "~=", label: "~=" }
 ];
-function RequirementsManager({ requirements, setRequirements, scrollRef }) {
-  const darkMode = useAppState("darkMode");
-  const [tableReq, setTableReq] = useState$o([]);
-  const handleRequirementChange = (index, updatedRequirement) => {
-    setRequirements((prevState) => prevState.map((req, i) => i === index ? updatedRequirement : req));
-  };
-  const handleDeleteRequirement = (name) => {
-    setRequirements((prevState) => prevState.filter((item) => item.name !== name));
-  };
-  useEffect$k(() => {
-    setTableReq(
-      requirements.map((req, index) => {
-        return {
-          key: req.name,
-          name: /* @__PURE__ */ jsxRuntimeExports.jsx(
-            Input$3,
-            {
-              spellCheck: "false",
-              variant: "secondary",
-              autoFocus: req.autoFocus,
-              defaultValue: req.name || "",
-              onChange: (e) => handleRequirementChange(index, { ...req, name: e.target.value }),
-              fullWidth: true
-            }
-          ),
-          version: /* @__PURE__ */ jsxRuntimeExports.jsx(
-            Input$3,
-            {
-              spellCheck: "false",
-              variant: "secondary",
-              defaultValue: req.version || "",
-              onChange: (e) => handleRequirementChange(index, { ...req, version: e.target.value }),
-              fullWidth: true
-            }
-          ),
-          operator: /* @__PURE__ */ jsxRuntimeExports.jsxs(Select$2, { variant: "secondary", placeholder: "Select one", children: [
-            /* @__PURE__ */ jsxRuntimeExports.jsxs(Select$2.Trigger, { children: [
-              /* @__PURE__ */ jsxRuntimeExports.jsx(Select$2.Value, {}),
-              /* @__PURE__ */ jsxRuntimeExports.jsx(Select$2.Indicator, {})
-            ] }),
-            /* @__PURE__ */ jsxRuntimeExports.jsx(Select$2.Popover, { children: /* @__PURE__ */ jsxRuntimeExports.jsx(
-              ListBox$3,
-              {
-                onSelectionChange: (selected) => {
-                  if (selected === "all") return;
-                  handleRequirementChange(index, {
-                    ...req,
-                    versionOperator: String(selected.values().next().value) || "all"
-                  });
-                },
-                items: operators,
-                selectionMode: "single",
-                defaultSelectedKeys: [req.versionOperator || "all"],
-                children: (op) => /* @__PURE__ */ jsxRuntimeExports.jsxs(ListBox$3.Item, { id: op.key, textValue: op.label, children: [
-                  op.label,
-                  /* @__PURE__ */ jsxRuntimeExports.jsx(ListBox$3.ItemIndicator, {})
-                ] })
-              }
-            ) })
-          ] }),
-          actions: /* @__PURE__ */ jsxRuntimeExports.jsx(CloseButton$2, { onPress: () => handleDeleteRequirement(req.name) })
-        };
-      })
-    );
-  }, [requirements]);
-  return /* @__PURE__ */ jsxRuntimeExports.jsx(
-    g$2,
-    {
-      options: {
-        overflow: { x: "hidden", y: "scroll" },
-        scrollbars: {
-          autoHide: "move",
-          clickScroll: true,
-          theme: darkMode ? "os-theme-light" : "os-theme-dark"
-        }
-      },
-      ref: scrollRef,
-      className: "pr-4",
-      children: /* @__PURE__ */ jsxRuntimeExports.jsx(Table, { children: /* @__PURE__ */ jsxRuntimeExports.jsx(Table.ScrollContainer, { children: /* @__PURE__ */ jsxRuntimeExports.jsxs(Table.Content, { children: [
-        /* @__PURE__ */ jsxRuntimeExports.jsxs(Table.Header, { children: [
-          /* @__PURE__ */ jsxRuntimeExports.jsx(Table.Column, { isRowHeader: true, children: "Name" }),
-          /* @__PURE__ */ jsxRuntimeExports.jsx(Table.Column, { children: "Operator" }),
-          /* @__PURE__ */ jsxRuntimeExports.jsx(Table.Column, { children: "Version" }),
-          /* @__PURE__ */ jsxRuntimeExports.jsx(Table.Column, { children: "Actions" })
-        ] }),
-        /* @__PURE__ */ jsxRuntimeExports.jsx(Table.Body, { items: tableReq, children: (item) => /* @__PURE__ */ jsxRuntimeExports.jsxs(Table.Row, { id: item.key, children: [
-          /* @__PURE__ */ jsxRuntimeExports.jsx(Table.Cell, { children: item.name }),
-          /* @__PURE__ */ jsxRuntimeExports.jsx(Table.Cell, { children: item.operator }),
-          /* @__PURE__ */ jsxRuntimeExports.jsx(Table.Cell, { children: item.version }),
-          /* @__PURE__ */ jsxRuntimeExports.jsx(Table.Cell, { children: item.actions })
-        ] }) })
-      ] }) }) })
+const RenderRow = memo$2(({ item, index, onDelete, onUpdate }) => {
+  const [localName, setLocalName] = useState$o(item.name || "");
+  const [localVersion, setLocalVersion] = useState$o(item.version || "");
+  const [localOperator, setLocalOperator] = useState$o(item.versionOperator || "all");
+  const [localRaw, setLocalRaw] = useState$o(item.originalLine || "");
+  const isFocusedRef = useRef$2(false);
+  const prevItemRef = useRef$2(item);
+  useEffect$m(() => {
+    if (isFocusedRef.current) return;
+    if (prevItemRef.current !== item) {
+      prevItemRef.current = item;
+      setLocalName(item.name || "");
+      setLocalVersion(item.version || "");
+      setLocalOperator(item.versionOperator || "all");
+      setLocalRaw(item.originalLine || "");
     }
+  }, [item]);
+  const handleNameBlur = useCallback$8(() => {
+    isFocusedRef.current = false;
+    if (localName !== item.name) {
+      onUpdate(index, { ...item, name: localName });
+    }
+  }, [index, item, localName, onUpdate]);
+  const handleVersionBlur = useCallback$8(() => {
+    isFocusedRef.current = false;
+    if (localVersion !== item.version) {
+      onUpdate(index, { ...item, version: localVersion });
+    }
+  }, [index, item, localVersion, onUpdate]);
+  const handleRawBlur = useCallback$8(() => {
+    isFocusedRef.current = false;
+    if (localRaw !== item.originalLine) {
+      onUpdate(index, {
+        ...parseRequirementLine(localRaw),
+        sourceLine: item.sourceLine,
+        sourceLineRaw: item.sourceLineRaw
+      });
+    }
+  }, [index, item, localRaw, onUpdate]);
+  const handleOperatorChange = useCallback$8(
+    (key) => {
+      if (!key || typeof key === "number") return;
+      const newOperator = key.toString();
+      setLocalOperator(newOperator);
+      onUpdate(index, { ...item, versionOperator: newOperator === "all" ? null : newOperator });
+    },
+    [index, item, onUpdate]
   );
-}
+  const handleDelete = useCallback$8(() => {
+    onDelete(index);
+  }, [index, onDelete]);
+  const handleFocus = useCallback$8(() => {
+    isFocusedRef.current = true;
+  }, []);
+  const editPop = useOverlayState$7();
+  return /* @__PURE__ */ jsxRuntimeExports.jsxs(Table$1.Row, { id: item.originalLine || `req_${index}`, children: [
+    /* @__PURE__ */ jsxRuntimeExports.jsx(Table$1.Cell, { children: /* @__PURE__ */ jsxRuntimeExports.jsx(
+      Input$3,
+      {
+        value: localName,
+        spellCheck: false,
+        placeholder: "name",
+        variant: "secondary",
+        onFocus: handleFocus,
+        onBlur: handleNameBlur,
+        autoFocus: item.autoFocus,
+        onChange: (e) => setLocalName(e.target.value),
+        fullWidth: true
+      }
+    ) }),
+    /* @__PURE__ */ jsxRuntimeExports.jsx(Table$1.Cell, { children: /* @__PURE__ */ jsxRuntimeExports.jsxs(
+      Select$2,
+      {
+        variant: "secondary",
+        value: localOperator,
+        selectionMode: "single",
+        placeholder: "operator",
+        onChange: handleOperatorChange,
+        children: [
+          /* @__PURE__ */ jsxRuntimeExports.jsxs(Select$2.Trigger, { children: [
+            /* @__PURE__ */ jsxRuntimeExports.jsx(Select$2.Value, {}),
+            /* @__PURE__ */ jsxRuntimeExports.jsx(Select$2.Indicator, {})
+          ] }),
+          /* @__PURE__ */ jsxRuntimeExports.jsx(Select$2.Popover, { children: /* @__PURE__ */ jsxRuntimeExports.jsx(ListBox$2, { items: OPERATORS, children: (op) => /* @__PURE__ */ jsxRuntimeExports.jsxs(ListBox$2.Item, { id: op.id, textValue: op.label, children: [
+            op.label,
+            /* @__PURE__ */ jsxRuntimeExports.jsx(ListBox$2.ItemIndicator, {})
+          ] }) }) })
+        ]
+      }
+    ) }),
+    /* @__PURE__ */ jsxRuntimeExports.jsx(Table$1.Cell, { children: /* @__PURE__ */ jsxRuntimeExports.jsx(
+      Input$3,
+      {
+        spellCheck: false,
+        variant: "secondary",
+        value: localVersion,
+        placeholder: "version",
+        onFocus: handleFocus,
+        onBlur: handleVersionBlur,
+        onChange: (e) => setLocalVersion(e.target.value),
+        fullWidth: true
+      }
+    ) }),
+    /* @__PURE__ */ jsxRuntimeExports.jsxs(Table$1.Cell, { className: "w-30", children: [
+      /* @__PURE__ */ jsxRuntimeExports.jsx(LynxTooltip, { delay: 300, content: "Delete Line", children: /* @__PURE__ */ jsxRuntimeExports.jsx(Button$j, { size: "sm", className: "ml-2", variant: "tertiary", onPress: handleDelete, isIconOnly: true, children: /* @__PURE__ */ jsxRuntimeExports.jsx(X$3, {}) }) }),
+      /* @__PURE__ */ jsxRuntimeExports.jsxs(
+        Popover$6,
+        {
+          onOpenChange: (isOpen) => {
+            if (!isOpen) handleRawBlur();
+            editPop.setOpen(isOpen);
+          },
+          isOpen: editPop.isOpen,
+          children: [
+            /* @__PURE__ */ jsxRuntimeExports.jsx(LynxTooltip, { delay: 300, content: "Edit Raw Line", children: /* @__PURE__ */ jsxRuntimeExports.jsx(Button$j, { size: "sm", className: "ml-2", variant: "tertiary", isIconOnly: true, children: /* @__PURE__ */ jsxRuntimeExports.jsx(i$f, {}) }) }),
+            /* @__PURE__ */ jsxRuntimeExports.jsx(Popover$6.Content, { placement: "left", children: /* @__PURE__ */ jsxRuntimeExports.jsxs(Popover$6.Dialog, { className: "min-w-xl p-2", children: [
+              /* @__PURE__ */ jsxRuntimeExports.jsx(Popover$6.Arrow, {}),
+              /* @__PURE__ */ jsxRuntimeExports.jsx(
+                TextArea,
+                {
+                  value: localRaw,
+                  variant: "secondary",
+                  className: "min-h-fit",
+                  rows: localRaw.length > 70 ? 3 : 1,
+                  onChange: (e) => setLocalRaw(e.target.value),
+                  fullWidth: true
+                }
+              )
+            ] }) })
+          ]
+        }
+      )
+    ] })
+  ] });
+});
+RenderRow.displayName = "RenderRow";
 
-const {Button: Button$g,Chip: Chip$3,Modal: Modal$6,SearchField: SearchField$3,useOverlayState: useOverlayState$6} = await importShared('@heroui/react');
-const {useEffect: useEffect$j,useRef,useState: useState$n} = await importShared('react');
-function RequirementsBtn({ id, projectPath, setIsReqAvailable, setReqPackageCount }) {
+const {EmptyState,Table} = await importShared('@heroui/react');
+const {memo: memo$1,useCallback: useCallback$7} = await importShared('react');
+const RenderTable = memo$1(({ filteredReqs, setRequirements, scrollRef }) => {
+  const handleUpdate = useCallback$7(
+    (index, updated) => {
+      setRequirements((prev) => {
+        const newState = [...prev];
+        const item = filteredReqs[index];
+        const actualIndex = prev.findIndex((req) => req === item);
+        if (actualIndex !== -1) {
+          newState[actualIndex] = updated;
+        }
+        return newState;
+      });
+    },
+    [filteredReqs, setRequirements]
+  );
+  const handleDelete = useCallback$7(
+    (index) => {
+      setRequirements((prev) => {
+        const item = filteredReqs[index];
+        const actualIndex = prev.findIndex((req) => req === item);
+        if (actualIndex === -1) return prev;
+        const newState = [...prev];
+        newState.splice(actualIndex, 1);
+        return newState;
+      });
+    },
+    [filteredReqs, setRequirements]
+  );
+  return /* @__PURE__ */ jsxRuntimeExports.jsx(LynxScroll, { ref: scrollRef, className: "pr-4", children: /* @__PURE__ */ jsxRuntimeExports.jsx(Table, { children: /* @__PURE__ */ jsxRuntimeExports.jsx(Table.ScrollContainer, { children: /* @__PURE__ */ jsxRuntimeExports.jsxs(Table.Content, { "aria-label": "Requirements table", children: [
+    /* @__PURE__ */ jsxRuntimeExports.jsxs(Table.Header, { children: [
+      /* @__PURE__ */ jsxRuntimeExports.jsx(Table.Column, { isRowHeader: true, children: "Name" }),
+      /* @__PURE__ */ jsxRuntimeExports.jsx(Table.Column, { children: "Operator" }),
+      /* @__PURE__ */ jsxRuntimeExports.jsx(Table.Column, { children: "Version" }),
+      /* @__PURE__ */ jsxRuntimeExports.jsx(Table.Column, { children: "Actions" })
+    ] }),
+    /* @__PURE__ */ jsxRuntimeExports.jsx(
+      Table.Body,
+      {
+        renderEmptyState: () => /* @__PURE__ */ jsxRuntimeExports.jsxs(
+          EmptyState,
+          {
+            className: "flex h-full w-full flex-col items-center justify-center gap-y-2 text-center my-4",
+            children: [
+              /* @__PURE__ */ jsxRuntimeExports.jsx(i$h, { className: "size-12" }),
+              /* @__PURE__ */ jsxRuntimeExports.jsx("span", { className: "text-sm text-muted", children: "No results found" })
+            ]
+          }
+        ),
+        children: filteredReqs.map((item, index) => /* @__PURE__ */ jsxRuntimeExports.jsx(
+          RenderRow,
+          {
+            item,
+            index,
+            onUpdate: handleUpdate,
+            onDelete: handleDelete
+          },
+          `${item.originalLine || item.name || "new_req"}_${index}`
+        ))
+      }
+    )
+  ] }) }) }) });
+});
+RenderTable.displayName = "RenderTable";
+
+const {Button: Button$i,Chip: Chip$4,Modal: Modal$6,SearchField: SearchField$3,Spinner: Spinner$7,useOverlayState: useOverlayState$6} = await importShared('@heroui/react');
+const {useEffect: useEffect$l,useMemo: useMemo$a,useRef: useRef$1,useState: useState$n} = await importShared('react');
+const reqFileFilters$1 = [{ name: "Text", extensions: ["txt"] }];
+const normalizeReqName = (name) => name.trim().replace(/[-_.]+/g, "-").toLowerCase();
+const getBasename = (path) => path.split(/[\/\\]/).pop() || path;
+const getRequirementKey = (req) => {
+  const extras = req.extras?.length ? [...req.extras].sort().join(",").toLowerCase() : "";
+  return [normalizeReqName(req.name), extras, req.markers?.trim().toLowerCase() || ""].join("|");
+};
+const getRequirementLabel = (req) => {
+  if (req.url) return req.originalLine;
+  const extras = req.extras?.length ? `[${req.extras.join(",")}]` : "";
+  const version = req.version ? `${req.versionOperator || "=="}${req.version}` : "";
+  const markers = req.markers ? `; ${req.markers}` : "";
+  return `${req.name}${extras}${version}${markers}`;
+};
+const isSameRequirement = (a, b) => getRequirementKey(a) === getRequirementKey(b) && (a.versionOperator || null) === (b.versionOperator || null) && (a.version || null) === (b.version || null) && (a.url || null) === (b.url || null) && (a.originalLine || "") === (b.originalLine || "");
+const toImportedRequirement = (req, sourcePath) => {
+  const { sourceLine, sourceLineRaw, ...importedReq } = req;
+  return { ...importedReq, sourcePath };
+};
+function RequirementsModal({ id, projectPath, setIsReqAvailable, setReqPackageCount }) {
   const state = useOverlayState$6();
+  const scrollRef = useRef$1(null);
   const [requirements, setRequirements] = useState$n([]);
   const [filePath, setFilePath] = useState$n("");
   const [isSaving, setIsSaving] = useState$n(false);
+  const [isImporting, setIsImporting] = useState$n(false);
   const [searchValue, setSearchValue] = useState$n("");
-  const [searchReqs, setSearchReqs] = useState$n([]);
-  useEffect$j(() => {
-    setIsReqAvailable(!!filePath);
-  }, [filePath]);
-  useEffect$j(() => {
+  const [conflicts, setConflicts] = useState$n([]);
+  const requirementsRef = useRef$1([]);
+  const filteredReqs = useMemo$a(
+    () => requirements.filter((item) => searchInStrings(searchValue, [item.name])),
+    [searchValue, requirements]
+  );
+  useEffect$l(() => {
     const findReqs = () => {
       if (projectPath) {
         pIpc.findReq(projectPath).then((reqPath) => {
@@ -19057,10 +19605,6 @@ function RequirementsBtn({ id, projectPath, setIsReqAvailable, setReqPackageCoun
       findReqs();
     });
   }, [projectPath, id]);
-  useEffect$j(() => {
-    setSearchReqs(requirements.filter((item) => searchInStrings(searchValue, [item.name])));
-  }, [searchValue, requirements]);
-  const scrollRef = useRef(null);
   const scrollToBottom = () => {
     const { current } = scrollRef;
     const osInstance = current?.osInstance();
@@ -19071,18 +19615,24 @@ function RequirementsBtn({ id, projectPath, setIsReqAvailable, setReqPackageCoun
     const { scrollHeight } = scrollOffsetElement;
     scrollOffsetElement.scrollTo({ behavior: "smooth", top: scrollHeight + 100 });
   };
-  useEffect$j(() => {
+  useEffect$l(() => {
     pIpc.readReqs(filePath).then((result) => {
       setRequirements(result);
-      setReqPackageCount(result.length);
+      setConflicts([]);
     });
+    setIsReqAvailable(!!filePath);
   }, [filePath]);
+  useEffect$l(() => {
+    setReqPackageCount(requirements.length);
+  }, [requirements.length, setReqPackageCount]);
+  useEffect$l(() => {
+    requirementsRef.current = requirements;
+  }, [requirements]);
   const handleAddRequirement = () => {
     setRequirements((prevRequirements) => [
       ...prevRequirements,
       { name: "", versionOperator: null, version: null, originalLine: "", autoFocus: true }
     ]);
-    setReqPackageCount((prevState) => prevState + 1);
     scrollToBottom();
   };
   const handleSaveRequirements = () => {
@@ -19101,7 +19651,7 @@ function RequirementsBtn({ id, projectPath, setIsReqAvailable, setReqPackageCoun
   const openFilePath = () => {
     filesIpc.openDlg({
       properties: ["openFile"],
-      filters: [{ name: "Text", extensions: ["txt"] }]
+      filters: reqFileFilters$1
     }).then((file) => {
       if (file) {
         setFilePath(file);
@@ -19109,74 +19659,217 @@ function RequirementsBtn({ id, projectPath, setIsReqAvailable, setReqPackageCoun
       }
     });
   };
+  const deselect = () => {
+    setFilePath("");
+    setConflicts([]);
+    pIpc.setReqPath({ id, path: "" });
+  };
+  const handleImportRequirements = () => {
+    filesIpc.openDlgMany({ properties: ["openFile"], filters: reqFileFilters$1 }).then(async (files) => {
+      if (files.length === 0) return;
+      setIsImporting(true);
+      const importedFiles = await Promise.all(
+        files.map(async (path) => ({ path, requirements: await pIpc.readReqs(path) }))
+      );
+      let importedCount = 0;
+      let skippedCount = 0;
+      const nextConflicts = [];
+      const merged = [...requirementsRef.current];
+      importedFiles.forEach(({ path, requirements: importedReqs }) => {
+        importedReqs.forEach((req) => {
+          if (!req.name.trim()) return;
+          importedCount += 1;
+          const imported = toImportedRequirement(req, path);
+          const existing = merged.find((item) => getRequirementKey(item) === getRequirementKey(imported));
+          if (!existing) {
+            merged.push(imported);
+            return;
+          }
+          if (isSameRequirement(existing, imported)) {
+            skippedCount += 1;
+            return;
+          }
+          nextConflicts.push({
+            id: `${getRequirementKey(imported)}|${path}|${nextConflicts.length}`,
+            existing,
+            imported
+          });
+        });
+      });
+      setRequirements(merged);
+      setConflicts((prev) => [...prev, ...nextConflicts]);
+      setIsImporting(false);
+      const addedCount = importedCount - skippedCount - nextConflicts.length;
+      if (nextConflicts.length > 0) {
+        topToast.warning(
+          `Imported ${addedCount} package${addedCount === 1 ? "" : "s"} with ${nextConflicts.length} conflict${nextConflicts.length === 1 ? "" : "s"} to resolve.`
+        );
+      } else {
+        topToast.success(
+          files.length === 1 ? "Requirements file imported successfully" : "Requirements files imported successfully"
+        );
+      }
+    }).catch(() => {
+      setIsImporting(false);
+      topToast.danger("Error importing requirements files");
+    });
+  };
+  const applyConflictResolution = (conflict, resolution) => {
+    setRequirements((prev) => {
+      if (resolution === "current") return prev;
+      if (resolution === "both") return [...prev, conflict.imported];
+      const key = getRequirementKey(conflict.existing);
+      const existingIndex = prev.findIndex((item) => getRequirementKey(item) === key);
+      if (existingIndex === -1) return [...prev, conflict.imported];
+      const next = [...prev];
+      next[existingIndex] = conflict.imported;
+      return next;
+    });
+    setConflicts((prev) => prev.filter((item) => item.id !== conflict.id));
+  };
+  const applyAllConflictResolutions = (resolution) => {
+    conflicts.forEach((conflict) => applyConflictResolution(conflict, resolution));
+  };
   return /* @__PURE__ */ jsxRuntimeExports.jsxs(jsxRuntimeExports.Fragment, { children: [
     /* @__PURE__ */ jsxRuntimeExports.jsxs(TabModal, { isOpen: state.isOpen, onOpenChange: state.setOpen, children: [
       /* @__PURE__ */ jsxRuntimeExports.jsx(Modal$6.CloseTrigger, {}),
       /* @__PURE__ */ jsxRuntimeExports.jsxs(Modal$6.Header, { className: "flex flex-col gap-y-2", children: [
         /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "flex flex-row justify-between", children: /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "flex flex-row gap-x-2 items-center mb-2", children: [
           /* @__PURE__ */ jsxRuntimeExports.jsx("span", { children: "Manage Requirements" }),
-          /* @__PURE__ */ jsxRuntimeExports.jsx(Chip$3, { size: "sm", children: requirements.length })
+          /* @__PURE__ */ jsxRuntimeExports.jsx(Chip$4, { size: "sm", children: requirements.length })
         ] }) }),
-        /* @__PURE__ */ jsxRuntimeExports.jsx("div", { children: /* @__PURE__ */ jsxRuntimeExports.jsxs(Button$g, { variant: "secondary", className: "shrink-0", onPress: openFilePath, fullWidth: true, children: [
-          /* @__PURE__ */ jsxRuntimeExports.jsx(i$g, {}),
-          filePath || "Choose or Create requirements file..."
-        ] }) }),
-        !isEmpty(requirements) && /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "flex flex-row items-center gap-x-2", children: [
+        /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "flex flex-row gap-x-1 items-center w-full", children: [
+          /* @__PURE__ */ jsxRuntimeExports.jsxs(Button$i, { variant: "tertiary", onPress: openFilePath, fullWidth: true, children: [
+            /* @__PURE__ */ jsxRuntimeExports.jsx(i$e, {}),
+            filePath || "Select or create requirements file"
+          ] }),
+          /* @__PURE__ */ jsxRuntimeExports.jsx(LynxTooltip, { delay: 300, content: "Deselect requirements file", children: /* @__PURE__ */ jsxRuntimeExports.jsx(Button$i, { onPress: deselect, variant: "tertiary", className: "shrink-0", isIconOnly: true, children: /* @__PURE__ */ jsxRuntimeExports.jsx(X$3, {}) }) })
+        ] }),
+        /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "flex flex-row items-center gap-x-2", children: [
           /* @__PURE__ */ jsxRuntimeExports.jsx(SearchField$3, { name: "search", variant: "secondary", value: searchValue, onChange: setSearchValue, fullWidth: true, children: /* @__PURE__ */ jsxRuntimeExports.jsxs(SearchField$3.Group, { children: [
             /* @__PURE__ */ jsxRuntimeExports.jsx(SearchField$3.SearchIcon, {}),
             /* @__PURE__ */ jsxRuntimeExports.jsx(SearchField$3.Input, { placeholder: "Search..." }),
             /* @__PURE__ */ jsxRuntimeExports.jsx(SearchField$3.ClearButton, {})
           ] }) }),
-          !isEmpty(filePath) && /* @__PURE__ */ jsxRuntimeExports.jsxs(Button$g, { variant: "secondary", onPress: handleAddRequirement, children: [
-            /* @__PURE__ */ jsxRuntimeExports.jsx(Plus, { size: 14 }),
-            "Add"
+          !isEmpty(filePath) && /* @__PURE__ */ jsxRuntimeExports.jsxs(jsxRuntimeExports.Fragment, { children: [
+            /* @__PURE__ */ jsxRuntimeExports.jsxs(Button$i, { variant: "secondary", isPending: isImporting, onPress: handleImportRequirements, children: [
+              isImporting ? /* @__PURE__ */ jsxRuntimeExports.jsx(Spinner$7, { size: "sm", color: "current" }) : /* @__PURE__ */ jsxRuntimeExports.jsx(i$n, { className: "size-3.5" }),
+              "Import"
+            ] }),
+            /* @__PURE__ */ jsxRuntimeExports.jsxs(Button$i, { variant: "secondary", onPress: handleAddRequirement, children: [
+              /* @__PURE__ */ jsxRuntimeExports.jsx(Plus, { size: 14 }),
+              "Add"
+            ] })
           ] })
         ] })
       ] }),
-      /* @__PURE__ */ jsxRuntimeExports.jsx(Modal$6.Body, { className: "pr-0 pl-2 pt-4 scrollbar-hide", children: isEmpty(filePath) ? /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "size-full text-center mb-2", children: /* @__PURE__ */ jsxRuntimeExports.jsx(
-        EmptyStateCard,
-        {
-          action: /* @__PURE__ */ jsxRuntimeExports.jsxs(Button$g, { variant: "secondary", onPress: openFilePath, children: [
-            /* @__PURE__ */ jsxRuntimeExports.jsx(i$g, {}),
-            "Choose or Create requirements file"
+      /* @__PURE__ */ jsxRuntimeExports.jsxs(Modal$6.Body, { className: "pr-0 pl-2 pt-4 scrollbar-hide", children: [
+        !isEmpty(conflicts) && /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "mr-4 mb-4 rounded-2xl border border-warning/25 bg-warning/5 p-3", children: [
+          /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "flex flex-wrap items-center justify-between gap-2", children: [
+            /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "flex items-center gap-2 text-warning", children: [
+              /* @__PURE__ */ jsxRuntimeExports.jsx(i$a, { className: "size-5" }),
+              /* @__PURE__ */ jsxRuntimeExports.jsxs("span", { className: "text-sm font-medium", children: [
+                conflicts.length,
+                " import conflict",
+                conflicts.length === 1 ? "" : "s"
+              ] })
+            ] }),
+            /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "flex flex-wrap gap-1.5", children: [
+              /* @__PURE__ */ jsxRuntimeExports.jsx(Button$i, { size: "sm", variant: "tertiary", onPress: () => applyAllConflictResolutions("current"), children: "Keep current" }),
+              /* @__PURE__ */ jsxRuntimeExports.jsx(Button$i, { size: "sm", variant: "tertiary", onPress: () => applyAllConflictResolutions("imported"), children: "Use imported" }),
+              /* @__PURE__ */ jsxRuntimeExports.jsx(Button$i, { size: "sm", variant: "tertiary", onPress: () => applyAllConflictResolutions("both"), children: "Keep both" })
+            ] })
           ] }),
-          className: "mx-4",
-          title: "Select or create a requirements file to continue."
-        }
-      ) }) : isEmpty(requirements) ? /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "size-full text-center mb-2", children: /* @__PURE__ */ jsxRuntimeExports.jsx(
-        EmptyStateCard,
-        {
-          title: /* @__PURE__ */ jsxRuntimeExports.jsxs("span", { children: [
-            "The file ",
-            /* @__PURE__ */ jsxRuntimeExports.jsx("span", { className: "font-bold text-accent/70", children: filePath.split(/[\/\\]/).pop() }),
-            "is empty. Add requirements using the ",
-            /* @__PURE__ */ jsxRuntimeExports.jsx("span", { className: "font-bold text-accent/70", children: "Add" }),
-            " button."
-          ] }),
-          className: "mx-4"
-        }
-      ) }) : /* @__PURE__ */ jsxRuntimeExports.jsx(RequirementsManager, { scrollRef, requirements: searchReqs, setRequirements }) }),
-      /* @__PURE__ */ jsxRuntimeExports.jsx(Modal$6.Footer, { className: "py-3", children: /* @__PURE__ */ jsxRuntimeExports.jsxs(Button$g, { isPending: isSaving, onPress: handleSaveRequirements, children: [
-        !isSaving && /* @__PURE__ */ jsxRuntimeExports.jsx(i$h, { className: "size-3.5" }),
+          /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "mt-3 flex flex-col gap-2", children: conflicts.map((conflict) => /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "rounded-xl bg-surface-secondary p-3", children: /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "flex flex-wrap items-start justify-between gap-2", children: [
+            /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "min-w-0 flex-1", children: [
+              /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "flex flex-wrap items-center gap-2", children: [
+                /* @__PURE__ */ jsxRuntimeExports.jsx("span", { className: "text-sm font-medium", children: conflict.existing.name }),
+                /* @__PURE__ */ jsxRuntimeExports.jsx(Chip$4, { size: "sm", variant: "soft", color: "warning", children: getBasename(conflict.imported.sourcePath) })
+              ] }),
+              /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "mt-2 grid gap-1 text-xs", children: [
+                /* @__PURE__ */ jsxRuntimeExports.jsxs("p", { className: "break-all text-content-secondary", children: [
+                  "Current:",
+                  " ",
+                  /* @__PURE__ */ jsxRuntimeExports.jsx("span", { className: "font-JetBrainsMono text-content-primary", children: getRequirementLabel(conflict.existing) })
+                ] }),
+                /* @__PURE__ */ jsxRuntimeExports.jsxs("p", { className: "break-all text-content-secondary", children: [
+                  "Imported:",
+                  " ",
+                  /* @__PURE__ */ jsxRuntimeExports.jsx("span", { className: "font-JetBrainsMono text-content-primary", children: getRequirementLabel(conflict.imported) })
+                ] })
+              ] })
+            ] }),
+            /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "flex shrink-0 flex-wrap gap-1.5", children: [
+              /* @__PURE__ */ jsxRuntimeExports.jsx(
+                Button$i,
+                {
+                  size: "sm",
+                  variant: "tertiary",
+                  onPress: () => applyConflictResolution(conflict, "current"),
+                  children: "Current"
+                }
+              ),
+              /* @__PURE__ */ jsxRuntimeExports.jsx(
+                Button$i,
+                {
+                  size: "sm",
+                  variant: "secondary",
+                  onPress: () => applyConflictResolution(conflict, "imported"),
+                  children: "Imported"
+                }
+              ),
+              /* @__PURE__ */ jsxRuntimeExports.jsx(Button$i, { size: "sm", variant: "tertiary", onPress: () => applyConflictResolution(conflict, "both"), children: "Both" })
+            ] })
+          ] }) }, conflict.id)) })
+        ] }),
+        isEmpty(filePath) ? /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "size-full text-center mb-2", children: /* @__PURE__ */ jsxRuntimeExports.jsx(
+          EmptyStateCard,
+          {
+            variant: "transparent",
+            className: "size-full",
+            icon: /* @__PURE__ */ jsxRuntimeExports.jsx(i$d, { className: "size-20" }),
+            title: "Select or create a requirements file to continue."
+          }
+        ) }) : isEmpty(requirements) ? /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "size-full text-center mb-2", children: /* @__PURE__ */ jsxRuntimeExports.jsx(
+          EmptyStateCard,
+          {
+            description: /* @__PURE__ */ jsxRuntimeExports.jsxs("span", { className: "flex flex-row items-center gap-x-1", children: [
+              "Add requirements using the ",
+              /* @__PURE__ */ jsxRuntimeExports.jsx(Plus, { className: "text-blue-400 size-3.5" }),
+              " button."
+            ] }),
+            title: /* @__PURE__ */ jsxRuntimeExports.jsxs("span", { className: "text-semi-muted text-base", children: [
+              "The ",
+              /* @__PURE__ */ jsxRuntimeExports.jsx("span", { className: "font-semibold text-blue-400", children: filePath.split(/[\/\\]/).pop() }),
+              " file is empty."
+            ] }),
+            variant: "transparent",
+            className: "size-full",
+            icon: /* @__PURE__ */ jsxRuntimeExports.jsx(i$e, { className: "size-20" })
+          }
+        ) }) : /* @__PURE__ */ jsxRuntimeExports.jsx(RenderTable, { scrollRef, filteredReqs, setRequirements })
+      ] }),
+      /* @__PURE__ */ jsxRuntimeExports.jsx(Modal$6.Footer, { className: "py-3", children: /* @__PURE__ */ jsxRuntimeExports.jsxs(Button$i, { isPending: isSaving, onPress: handleSaveRequirements, children: [
+        isSaving ? /* @__PURE__ */ jsxRuntimeExports.jsx(Spinner$7, { size: "sm", color: "current" }) : /* @__PURE__ */ jsxRuntimeExports.jsx(i$k, { className: "size-3.5" }),
         !isSaving && "Save"
       ] }) })
     ] }),
-    /* @__PURE__ */ jsxRuntimeExports.jsxs(Button$g, { size: "sm", variant: "tertiary", onPress: state.open, children: [
-      /* @__PURE__ */ jsxRuntimeExports.jsx(i$d, {}),
-      "Manage Requirements"
+    /* @__PURE__ */ jsxRuntimeExports.jsxs(Button$i, { size: "sm", variant: "tertiary", onPress: state.open, children: [
+      /* @__PURE__ */ jsxRuntimeExports.jsx(i$i, {}),
+      "Requirements"
     ] })
   ] });
 }
 
-const {Button: Button$f,cn,Dropdown: Dropdown$4,Label: Label$d} = await importShared('@heroui/react');
-const {useEffect: useEffect$i,useState: useState$m} = await importShared('react');
+const {Button: Button$h,cn,Dropdown: Dropdown$4,Label: Label$e} = await importShared('@heroui/react');
+const {useEffect: useEffect$k,useState: useState$m} = await importShared('react');
 
 function FilterButton({ setSelectedFilter, updateAvailable, className }) {
   const [selectedKeys, setSelectedKeys] = useState$m(/* @__PURE__ */ new Set(["all"]));
-  useEffect$i(() => {
+  useEffect$k(() => {
     setSelectedFilter(Array.from(selectedKeys).join(", ").replace(/_/g, ""));
   }, [selectedKeys]);
-  useEffect$i(() => {
+  useEffect$k(() => {
     if (updateAvailable) {
       setSelectedKeys(/* @__PURE__ */ new Set(["updates"]));
     } else {
@@ -19189,7 +19882,7 @@ function FilterButton({ setSelectedFilter, updateAvailable, className }) {
     }
   }, [updateAvailable]);
   return /* @__PURE__ */ jsxRuntimeExports.jsxs(Dropdown$4, { children: [
-    /* @__PURE__ */ jsxRuntimeExports.jsx(Button$f, { variant: "tertiary", className: cn("shrink-0", className), isIconOnly: true, children: /* @__PURE__ */ jsxRuntimeExports.jsx(i$4, {}) }),
+    /* @__PURE__ */ jsxRuntimeExports.jsx(LynxTooltip, { delay: 300, content: "Filter packages", children: /* @__PURE__ */ jsxRuntimeExports.jsx(Button$h, { variant: "tertiary", className: cn("shrink-0", className), isIconOnly: true, children: /* @__PURE__ */ jsxRuntimeExports.jsx(i$4, {}) }) }),
     /* @__PURE__ */ jsxRuntimeExports.jsx(Dropdown$4.Popover, { children: /* @__PURE__ */ jsxRuntimeExports.jsxs(
       Dropdown$4.Menu,
       {
@@ -19201,32 +19894,32 @@ function FilterButton({ setSelectedFilter, updateAvailable, className }) {
         children: [
           /* @__PURE__ */ jsxRuntimeExports.jsxs(Dropdown$4.Item, { id: "all", textValue: "All", children: [
             /* @__PURE__ */ jsxRuntimeExports.jsx(Dropdown$4.ItemIndicator, {}),
-            /* @__PURE__ */ jsxRuntimeExports.jsx(Label$d, { children: "All" })
+            /* @__PURE__ */ jsxRuntimeExports.jsx(Label$e, { children: "All" })
           ] }),
           /* @__PURE__ */ jsxRuntimeExports.jsxs(Dropdown$4.Item, { id: "updates", textValue: "Updates", children: [
             /* @__PURE__ */ jsxRuntimeExports.jsx(Dropdown$4.ItemIndicator, {}),
-            /* @__PURE__ */ jsxRuntimeExports.jsx(Label$d, { children: "Updates" })
+            /* @__PURE__ */ jsxRuntimeExports.jsx(Label$e, { children: "Updates" })
           ] }),
           updateAvailable && /* @__PURE__ */ jsxRuntimeExports.jsxs(jsxRuntimeExports.Fragment, { children: [
             /* @__PURE__ */ jsxRuntimeExports.jsxs(Dropdown$4.Item, { id: "prerelease", textValue: "Pre Release", children: [
               /* @__PURE__ */ jsxRuntimeExports.jsx(Dropdown$4.ItemIndicator, {}),
-              /* @__PURE__ */ jsxRuntimeExports.jsx(Label$d, { children: "Pre Release" })
+              /* @__PURE__ */ jsxRuntimeExports.jsx(Label$e, { children: "Pre Release" })
             ] }),
             /* @__PURE__ */ jsxRuntimeExports.jsxs(Dropdown$4.Item, { id: "major", textValue: "Major", children: [
               /* @__PURE__ */ jsxRuntimeExports.jsx(Dropdown$4.ItemIndicator, {}),
-              /* @__PURE__ */ jsxRuntimeExports.jsx(Label$d, { children: "Major" })
+              /* @__PURE__ */ jsxRuntimeExports.jsx(Label$e, { children: "Major" })
             ] }),
             /* @__PURE__ */ jsxRuntimeExports.jsxs(Dropdown$4.Item, { id: "minor", textValue: "Minor", children: [
               /* @__PURE__ */ jsxRuntimeExports.jsx(Dropdown$4.ItemIndicator, {}),
-              /* @__PURE__ */ jsxRuntimeExports.jsx(Label$d, { children: "Minor" })
+              /* @__PURE__ */ jsxRuntimeExports.jsx(Label$e, { children: "Minor" })
             ] }),
             /* @__PURE__ */ jsxRuntimeExports.jsxs(Dropdown$4.Item, { id: "patch", textValue: "Patch", children: [
               /* @__PURE__ */ jsxRuntimeExports.jsx(Dropdown$4.ItemIndicator, {}),
-              /* @__PURE__ */ jsxRuntimeExports.jsx(Label$d, { children: "Patch" })
+              /* @__PURE__ */ jsxRuntimeExports.jsx(Label$e, { children: "Patch" })
             ] }),
             /* @__PURE__ */ jsxRuntimeExports.jsxs(Dropdown$4.Item, { id: "others", textValue: "Others", children: [
               /* @__PURE__ */ jsxRuntimeExports.jsx(Dropdown$4.ItemIndicator, {}),
-              /* @__PURE__ */ jsxRuntimeExports.jsx(Label$d, { children: "Others" })
+              /* @__PURE__ */ jsxRuntimeExports.jsx(Label$e, { children: "Others" })
             ] })
           ] })
         ]
@@ -19235,148 +19928,366 @@ function FilterButton({ setSelectedFilter, updateAvailable, className }) {
   ] });
 }
 
-const {Button: Button$e,CloseButton: CloseButton$1,Description: Description$b,Input: Input$2,Label: Label$c,ListBox: ListBox$2,Separator: Separator$3,Surface,TextField: TextField$1} = await importShared('@heroui/react');
-const {useEffect: useEffect$h,useState: useState$l} = await importShared('react');
-function Installer({ setInstallCommand, setIsInstallDisabled }) {
+const {Button: Button$g,Chip: Chip$3,Description: Description$c,Disclosure,Input: Input$2,Label: Label$d,Surface,TextField: TextField$1} = await importShared('@heroui/react');
+const {useEffect: useEffect$j,useRef,useState: useState$l} = await importShared('react');
+const buildPackageString = (pkg) => {
+  let pkgStr;
+  if (pkg.url) {
+    if (pkg.originalLine && pkg.originalLine.includes(" @ ")) {
+      pkgStr = `${pkg.name} @ ${pkg.url}`;
+    } else {
+      pkgStr = pkg.url;
+    }
+  } else {
+    pkgStr = pkg.name;
+    if (pkg.extras && pkg.extras.length > 0) {
+      pkgStr += `[${pkg.extras.join(",")}]`;
+    }
+    if (pkg.version) {
+      pkgStr += `${pkg.versionOperator || "=="}${pkg.version}`;
+    }
+  }
+  if (pkg.markers) {
+    pkgStr += `; ${pkg.markers}`;
+  }
+  pkgStr = pkgStr.replace(/"/g, "'");
+  return pkgStr;
+};
+const quotePath = (path) => `"${path.replace(/"/g, '\\"')}"`;
+const reqFileFilters = [{ name: "Text", extensions: ["txt"] }];
+function Installer({
+  isOpen,
+  setInstallCommand,
+  setIsInstallDisabled,
+  setPackageCount,
+  setRequirementsFileCount
+}) {
   const [packageString, setPackageString] = useState$l("");
   const [packages, setPackages] = useState$l([]);
+  const [requirementsFilePaths, setRequirementsFilePaths] = useState$l([]);
   const [indexUrl, setIndexUrl] = useState$l("");
   const [extraOptions, setExtraOptions] = useState$l("");
-  useEffect$h(() => {
-    setIsInstallDisabled(packages.length <= 0);
-  }, [packages]);
+  const [showAdvanced, setShowAdvanced] = useState$l(false);
+  const inputRef = useRef(null);
+  useEffect$j(() => {
+    if (isOpen) return;
+    setPackageString("");
+    setPackages([]);
+    setRequirementsFilePaths([]);
+    setIndexUrl("");
+    setExtraOptions("");
+    setInstallCommand("");
+    setIsInstallDisabled(true);
+    setPackageCount(0);
+    setRequirementsFileCount(0);
+  }, [isOpen, setInstallCommand, setIsInstallDisabled, setPackageCount, setRequirementsFileCount]);
+  useEffect$j(() => {
+    const parts = [];
+    if (indexUrl.trim()) parts.push(`--index-url ${indexUrl.trim()}`);
+    if (extraOptions.trim()) parts.push(extraOptions.trim());
+    if (requirementsFilePaths.length > 0) {
+      parts.push(...requirementsFilePaths.map((path) => `-r ${quotePath(path)}`));
+    } else {
+      parts.push(
+        ...packages.map((pkg) => {
+          const pkgStr = buildPackageString(pkg);
+          if (pkgStr.includes(" ") || pkgStr.includes(";")) {
+            return `"${pkgStr}"`;
+          }
+          return pkgStr;
+        })
+      );
+    }
+    setInstallCommand(parts.join(" "));
+    setIsInstallDisabled(packages.length <= 0 && requirementsFilePaths.length === 0);
+    setPackageCount(requirementsFilePaths.length > 0 ? 0 : packages.length);
+    setRequirementsFileCount(requirementsFilePaths.length);
+  }, [
+    packages,
+    requirementsFilePaths,
+    indexUrl,
+    extraOptions,
+    setInstallCommand,
+    setIsInstallDisabled,
+    setPackageCount,
+    setRequirementsFileCount
+  ]);
+  const addPackagesFromString = (value) => {
+    const lines = value.split("\n").map((l) => l.trim()).filter(Boolean);
+    if (lines.length === 0) {
+      setPackageString("");
+      return;
+    }
+    const newPkgs = lines.map((line) => parseRequirementLine(line));
+    setRequirementsFilePaths([]);
+    setPackages((prev) => [...prev, ...newPkgs]);
+    setPackageString("");
+  };
   const handlePackageStringChange = (value) => {
     setPackageString(value);
-    if (value.endsWith(" ") || value.endsWith("\n")) {
-      const newPackages = value.trim().split(/\s+/).filter((pkg) => pkg).map((pkg) => {
-        const [name, version] = pkg.split("@");
-        return { name, version: version || "" };
-      });
-      setPackages([...packages, ...newPackages]);
-      setPackageString("");
+    if (value.endsWith("\n")) {
+      addPackagesFromString(value);
     }
   };
   const handleKeyDown = (event) => {
     if (event.key === "Enter") {
       event.preventDefault();
-      const value = packageString.trim();
-      if (value) {
-        const newPackages = compact(
-          value.split(/\s+/).filter((pkg) => pkg).map((pkg) => {
-            const [name, version] = pkg.split("@");
-            if (!packages.some((p) => p.name.toLowerCase() === name.toLowerCase())) {
-              return { name, version: version || "" };
-            } else {
-              return null;
-            }
-          })
-        );
-        setPackages([...packages, ...newPackages]);
-        setPackageString("");
-      }
+      addPackagesFromString(packageString);
     }
   };
-  const removePackage = (name) => {
-    setPackages((prevState) => prevState.filter((pkg) => pkg.name !== name));
+  const removePackage = (pkgToRemove) => {
+    setPackages((prevState) => prevState.filter((pkg) => pkg !== pkgToRemove));
   };
   const handleFileSelect = () => {
-    filesIpc.openDlg({ properties: ["openFile"] }).then((file) => {
-      if (file) {
-        pIpc.readReqs(file).then((result) => {
-          setPackages(
-            result.map((item) => {
-              return { name: item.name, version: item.version || "" };
-            })
-          );
-          topToast.success("Requirements file loaded successfully");
+    filesIpc.openDlgMany({ properties: ["openFile"], filters: reqFileFilters }).then(async (files) => {
+      if (files.length > 0) {
+        const results = await Promise.all(files.map((file) => pIpc.readReqs(file)));
+        setPackages((prev) => {
+          const newPackages = [];
+          results.flat().forEach((item) => {
+            const exists = prev.some((p) => p.name.toLowerCase() === item.name.toLowerCase() && p.markers === item.markers) || newPackages.some((p) => p.name.toLowerCase() === item.name.toLowerCase() && p.markers === item.markers);
+            if (!exists) newPackages.push(item);
+          });
+          return [...prev, ...newPackages];
         });
+        setRequirementsFilePaths([]);
+        topToast.success(
+          files.length === 1 ? "Requirements file loaded successfully" : "Requirements files loaded successfully"
+        );
       }
     }).catch(() => {
       topToast.danger("Error reading requirements file");
     });
   };
-  const generateInstallCommand = () => {
-    if (packages.length === 0) return "";
-    const packageStrings = packages.map((pkg) => `${pkg.name}${pkg.version ? `==${pkg.version}` : ""}`);
-    let command = [];
-    if (indexUrl.trim()) {
-      command.push(`--index-url ${indexUrl.trim()}`);
-    }
-    if (extraOptions.trim()) {
-      command.push(extraOptions.trim());
-    }
-    command = command.concat(packageStrings);
-    setInstallCommand(command.join(" "));
-    return command.join(" ");
+  const handleRequirementsInstallSelect = () => {
+    filesIpc.openDlgMany({ properties: ["openFile"], filters: reqFileFilters }).then((files) => {
+      if (files.length > 0) {
+        setPackages([]);
+        setPackageString("");
+        setRequirementsFilePaths(files);
+        topToast.success(
+          files.length === 1 ? "Requirements file selected for install" : "Requirements files selected for install"
+        );
+      }
+    }).catch(() => {
+      topToast.danger("Error selecting requirements file");
+    });
   };
-  return /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "max-w-4xl mx-auto p-6 flex flex-col gap-y-2", children: [
-    /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "flex w-full justify-between items-center", children: [
-      /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "flex items-center gap-x-2", children: /* @__PURE__ */ jsxRuntimeExports.jsxs(Button$e, { size: "sm", variant: "secondary", onPress: handleFileSelect, children: [
-        /* @__PURE__ */ jsxRuntimeExports.jsx(i$d, {}),
-        "Import Requirements"
-      ] }) }),
-      !isEmpty(packages) && /* @__PURE__ */ jsxRuntimeExports.jsxs(Button$e, { size: "sm", variant: "danger-soft", onPress: () => setPackages([]), children: [
-        /* @__PURE__ */ jsxRuntimeExports.jsx(X$2, {}),
-        "Clear All"
-      ] })
-    ] }),
-    /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "space-y-4", children: [
-      /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "w-full", children: [
-        /* @__PURE__ */ jsxRuntimeExports.jsxs(
-          TextField$1,
-          {
-            variant: "secondary",
-            value: packageString,
-            onKeyDown: handleKeyDown,
-            onChange: handlePackageStringChange,
-            children: [
-              /* @__PURE__ */ jsxRuntimeExports.jsx(Label$c, { children: "Package name" }),
-              /* @__PURE__ */ jsxRuntimeExports.jsx(Input$2, { placeholder: "e.g., 'torch torchvision torchaudio' or 'pandas@1.5.0'" })
-            ]
-          }
-        ),
-        /* @__PURE__ */ jsxRuntimeExports.jsx(Description$b, { children: "Press Space or Enter to add packages. Use '@' or '==' to specify version (e.g., pandas@1.5.0)" })
-      ] }),
-      !isEmpty(packages) && /* @__PURE__ */ jsxRuntimeExports.jsx(Surface, { variant: "secondary", className: "flex flex-col gap-y-2 rounded-3xl p-2", children: /* @__PURE__ */ jsxRuntimeExports.jsx(ListBox$2, { items: packages, children: (pkg) => /* @__PURE__ */ jsxRuntimeExports.jsxs(ListBox$2.Item, { id: pkg.name, className: "justify-between", children: [
-        /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "flex flex-col", children: [
-          /* @__PURE__ */ jsxRuntimeExports.jsx(Label$c, { children: pkg.name }),
-          /* @__PURE__ */ jsxRuntimeExports.jsx(Description$b, { children: pkg.version })
+  const handleEditItem = (pkgToEdit) => {
+    setPackages((prevState) => prevState.filter((p) => p !== pkgToEdit));
+    setPackageString(pkgToEdit.originalLine || pkgToEdit.name);
+    setTimeout(() => {
+      inputRef.current?.focus();
+    }, 0);
+  };
+  const fullCommand = requirementsFilePaths.length > 0 ? `pip install ${indexUrl.trim() ? `--index-url ${indexUrl.trim()} ` : ""}${extraOptions.trim() ? `${extraOptions.trim()} ` : ""}${requirementsFilePaths.map((path) => `-r ${quotePath(path)}`).join(" ")}` : `pip install ${[
+    indexUrl.trim() ? `--index-url ${indexUrl.trim()}` : "",
+    extraOptions.trim(),
+    ...packages.map((pkg) => {
+      const pkgStr = buildPackageString(pkg);
+      return pkgStr.includes(" ") || pkgStr.includes(";") ? `"${pkgStr}"` : pkgStr;
+    })
+  ].filter(Boolean).join(" ")}`;
+  return /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "flex flex-col gap-y-5 p-5 mx-auto", children: [
+    /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "flex items-center justify-between", children: [
+      /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "flex flex-wrap items-center gap-2", children: [
+        /* @__PURE__ */ jsxRuntimeExports.jsxs(Button$g, { size: "sm", variant: "tertiary", onPress: handleFileSelect, children: [
+          /* @__PURE__ */ jsxRuntimeExports.jsx(i$n, {}),
+          "Import requirements files"
         ] }),
-        /* @__PURE__ */ jsxRuntimeExports.jsx(CloseButton$1, { onPress: () => removePackage(pkg.name) })
+        /* @__PURE__ */ jsxRuntimeExports.jsxs(Button$g, { size: "sm", variant: "tertiary", onPress: handleRequirementsInstallSelect, children: [
+          /* @__PURE__ */ jsxRuntimeExports.jsx(i$p, {}),
+          "Install requirements files"
+        ] })
+      ] }),
+      (!isEmpty(packages) || requirementsFilePaths.length > 0) && /* @__PURE__ */ jsxRuntimeExports.jsxs(
+        Button$g,
+        {
+          onPress: () => {
+            setPackages([]);
+            setRequirementsFilePaths([]);
+            setInstallCommand("");
+            setPackageCount(0);
+            setRequirementsFileCount(0);
+          },
+          size: "sm",
+          variant: "danger-soft",
+          children: [
+            /* @__PURE__ */ jsxRuntimeExports.jsx(i$7, { className: "size-3.5" }),
+            "Clear all"
+          ]
+        }
+      )
+    ] }),
+    /* @__PURE__ */ jsxRuntimeExports.jsxs(
+      TextField$1,
+      {
+        ref: inputRef,
+        variant: "secondary",
+        value: packageString,
+        onKeyDown: handleKeyDown,
+        onChange: handlePackageStringChange,
+        children: [
+          /* @__PURE__ */ jsxRuntimeExports.jsx(Label$d, { children: "Add packages" }),
+          /* @__PURE__ */ jsxRuntimeExports.jsx(Input$2, { placeholder: "e.g. numpy  pandas@2.0  torch==2.1.0" }),
+          /* @__PURE__ */ jsxRuntimeExports.jsxs(Description$c, { children: [
+            "Press ",
+            /* @__PURE__ */ jsxRuntimeExports.jsx("kbd", { className: "px-1 py-0.5 text-xs rounded bg-surface-tertiary font-JetBrainsMono", children: "Enter" }),
+            " to add. Use ",
+            /* @__PURE__ */ jsxRuntimeExports.jsx("code", { className: "text-xs font-JetBrainsMono", children: "@" }),
+            " or",
+            " ",
+            /* @__PURE__ */ jsxRuntimeExports.jsx("code", { className: "text-xs font-JetBrainsMono", children: "==" }),
+            " to pin a version."
+          ] })
+        ]
+      }
+    ),
+    requirementsFilePaths.length > 0 ? /* @__PURE__ */ jsxRuntimeExports.jsx(Surface, { variant: "secondary", className: "rounded-3xl p-3", children: /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "flex flex-col gap-1 px-1", children: [
+      /* @__PURE__ */ jsxRuntimeExports.jsxs("p", { className: "text-sm text-content-secondary", children: [
+        requirementsFilePaths.length,
+        " requirements file",
+        requirementsFilePaths.length !== 1 ? "s" : "",
+        " queued for install"
+      ] }),
+      requirementsFilePaths.map((path) => /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "font-JetBrainsMono text-xs text-warning break-all", children: path }, path))
+    ] }) }) : !isEmpty(packages) ? /* @__PURE__ */ jsxRuntimeExports.jsxs(Surface, { variant: "secondary", className: "rounded-3xl p-3", children: [
+      /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "flex flex-wrap gap-2", children: packages.map((pkg, i) => /* @__PURE__ */ jsxRuntimeExports.jsxs(
+        Chip$3,
+        {
+          variant: "soft",
+          color: "warning",
+          className: "group px-2 text-warning/70 hover:text-warning transition-colors duration-150",
+          children: [
+            /* @__PURE__ */ jsxRuntimeExports.jsxs("span", { children: [
+              pkg.name,
+              pkg.extras && pkg.extras.length > 0 && `[${pkg.extras.join(",")}]`,
+              pkg.version && /* @__PURE__ */ jsxRuntimeExports.jsxs(jsxRuntimeExports.Fragment, { children: [
+                pkg.versionOperator || "==",
+                pkg.version
+              ] })
+            ] }),
+            /* @__PURE__ */ jsxRuntimeExports.jsx(LynxTooltip, { delay: 300, content: "Edit package", children: /* @__PURE__ */ jsxRuntimeExports.jsx(
+              Button$g,
+              {
+                size: "sm",
+                variant: "ghost",
+                onPress: () => handleEditItem(pkg),
+                className: "size-4 shrink-0 opacity-50 transition-opacity group-hover:opacity-100 text-foreground",
+                isIconOnly: true,
+                children: /* @__PURE__ */ jsxRuntimeExports.jsx(i$f, { className: "size-3" })
+              }
+            ) }),
+            /* @__PURE__ */ jsxRuntimeExports.jsx(LynxTooltip, { delay: 300, content: "Remove package", children: /* @__PURE__ */ jsxRuntimeExports.jsx(
+              Button$g,
+              {
+                size: "sm",
+                variant: "ghost",
+                onPress: () => removePackage(pkg),
+                className: "size-4 shrink-0 opacity-50 transition-opacity group-hover:opacity-100 text-danger",
+                isIconOnly: true,
+                children: /* @__PURE__ */ jsxRuntimeExports.jsx(X$3, { className: "size-3" })
+              }
+            ) })
+          ]
+        },
+        `${pkg.name}-${i}`
+      )) }),
+      /* @__PURE__ */ jsxRuntimeExports.jsxs("p", { className: "mt-2.5 text-xs text-content-tertiary pl-1", children: [
+        packages.length,
+        " package",
+        packages.length !== 1 ? "s" : "",
+        " queued"
+      ] })
+    ] }) : /* @__PURE__ */ jsxRuntimeExports.jsxs(
+      Surface,
+      {
+        className: "flex flex-col items-center justify-center gap-2 rounded-2xl p-8 text-center border-2 border-dashed border-content-quaternary/30",
+        variant: "secondary",
+        children: [
+          /* @__PURE__ */ jsxRuntimeExports.jsx(i$8, { className: "size-10 text-yellow-600" }),
+          /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "text-sm text-content-secondary", children: "No packages added yet" }),
+          /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "text-xs text-content-tertiary", children: "Type above, import, or install requirements files" })
+        ]
+      }
+    ),
+    /* @__PURE__ */ jsxRuntimeExports.jsxs(Disclosure, { isExpanded: showAdvanced, onExpandedChange: setShowAdvanced, children: [
+      /* @__PURE__ */ jsxRuntimeExports.jsx(Disclosure.Heading, { children: /* @__PURE__ */ jsxRuntimeExports.jsxs(Button$g, { slot: "trigger", variant: "tertiary", className: "justify-between", fullWidth: true, children: [
+        "Advanced options",
+        /* @__PURE__ */ jsxRuntimeExports.jsx(Disclosure.Indicator, {})
+      ] }) }),
+      /* @__PURE__ */ jsxRuntimeExports.jsx(Disclosure.Content, { children: /* @__PURE__ */ jsxRuntimeExports.jsx(Disclosure.Body, { className: "flex flex-col items-center rounded-3xl p-2 text-start bg-surface-secondary", children: /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "flex flex-col gap-y-3 px-4 pb-4 pt-3 w-full", children: [
+        /* @__PURE__ */ jsxRuntimeExports.jsxs(TextField$1, { value: indexUrl, onChange: setIndexUrl, children: [
+          /* @__PURE__ */ jsxRuntimeExports.jsx(Label$d, { children: "Index URL" }),
+          /* @__PURE__ */ jsxRuntimeExports.jsx(Input$2, { placeholder: "https://pypi.org/simple (optional)" }),
+          /* @__PURE__ */ jsxRuntimeExports.jsx(Description$c, { children: "Override the default PyPI index" })
+        ] }),
+        /* @__PURE__ */ jsxRuntimeExports.jsxs(TextField$1, { value: extraOptions, onChange: setExtraOptions, children: [
+          /* @__PURE__ */ jsxRuntimeExports.jsx(Label$d, { children: "Extra flags" }),
+          /* @__PURE__ */ jsxRuntimeExports.jsx(Input$2, { placeholder: "--user --no-cache-dir" })
+        ] })
       ] }) }) })
     ] }),
-    /* @__PURE__ */ jsxRuntimeExports.jsx(Separator$3, {}),
-    /* @__PURE__ */ jsxRuntimeExports.jsx(Label$c, { children: "Extra Options" }),
-    /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "space-y-4", children: [
-      /* @__PURE__ */ jsxRuntimeExports.jsxs(TextField$1, { value: indexUrl, variant: "secondary", onChange: setIndexUrl, children: [
-        /* @__PURE__ */ jsxRuntimeExports.jsx(Label$c, { children: "Index URL" }),
-        /* @__PURE__ */ jsxRuntimeExports.jsx(Input$2, { placeholder: "(optional)" })
+    (!isEmpty(packages) || requirementsFilePaths.length > 0) && /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "overflow-hidden rounded-2xl border border-white/[0.07] bg-surface-secondary", children: [
+      /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "flex items-center justify-between border-b border-white/6 px-4 py-2", children: [
+        /* @__PURE__ */ jsxRuntimeExports.jsx("div", {}),
+        /* @__PURE__ */ jsxRuntimeExports.jsx("span", { className: "font-JetBrainsMono text-xs text-muted", children: "Terminal Preview" }),
+        /* @__PURE__ */ jsxRuntimeExports.jsx(CopyClipboard, { contentToCopy: fullCommand })
       ] }),
-      /* @__PURE__ */ jsxRuntimeExports.jsxs(TextField$1, { variant: "secondary", value: extraOptions, onChange: setExtraOptions, children: [
-        /* @__PURE__ */ jsxRuntimeExports.jsx(Label$c, { children: "Extra options" }),
-        /* @__PURE__ */ jsxRuntimeExports.jsx(Input$2, { placeholder: "e.g., --user --no-cache-dir" })
+      /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "px-4 py-3.5 font-JetBrainsMono text-xs leading-relaxed", children: [
+        /* @__PURE__ */ jsxRuntimeExports.jsx("span", { className: "select-none text-emerald-400", children: "$ " }),
+        /* @__PURE__ */ jsxRuntimeExports.jsx("span", { className: "text-semi-muted", children: "pip install " }),
+        indexUrl.trim() && /* @__PURE__ */ jsxRuntimeExports.jsxs("span", { className: "text-sky-400", children: [
+          " --index-url ",
+          indexUrl.trim()
+        ] }),
+        extraOptions.trim() && /* @__PURE__ */ jsxRuntimeExports.jsxs("span", { className: "text-purple-400", children: [
+          " ",
+          extraOptions.trim()
+        ] }),
+        requirementsFilePaths.length > 0 ? /* @__PURE__ */ jsxRuntimeExports.jsx(jsxRuntimeExports.Fragment, { children: requirementsFilePaths.map((path) => /* @__PURE__ */ jsxRuntimeExports.jsxs("span", { children: [
+          /* @__PURE__ */ jsxRuntimeExports.jsx("span", { className: "text-sky-400", children: " -r " }),
+          /* @__PURE__ */ jsxRuntimeExports.jsxs("span", { className: "text-amber-400", children: [
+            '"',
+            path,
+            '"'
+          ] })
+        ] }, path)) }) : packages.map((pkg, i) => {
+          const baseStr = pkg.url ? pkg.originalLine && pkg.originalLine.includes(" @ ") ? `${pkg.name} @ ${pkg.url}` : pkg.url : `${pkg.name}${pkg.extras && pkg.extras.length > 0 ? `[${pkg.extras.join(",")}]` : ""}`;
+          const versionStr = pkg.url ? null : pkg.version ? `${pkg.versionOperator || "=="}${pkg.version}` : null;
+          const markersStr = pkg.markers ? `; ${pkg.markers.replace(/"/g, "'")}` : null;
+          const fullStr = `${baseStr}${versionStr || ""}${markersStr || ""}`;
+          const hasQuotes = fullStr.includes(" ") || fullStr.includes(";");
+          return /* @__PURE__ */ jsxRuntimeExports.jsxs("span", { children: [
+            hasQuotes && /* @__PURE__ */ jsxRuntimeExports.jsx("span", { className: "text-amber-400/70", children: '"' }),
+            /* @__PURE__ */ jsxRuntimeExports.jsx("span", { className: "text-amber-400", children: baseStr }),
+            versionStr && /* @__PURE__ */ jsxRuntimeExports.jsx("span", { className: "text-amber-400/70", children: versionStr }),
+            markersStr && /* @__PURE__ */ jsxRuntimeExports.jsx("span", { className: "text-amber-400/50", children: markersStr }),
+            hasQuotes && /* @__PURE__ */ jsxRuntimeExports.jsx("span", { className: "text-amber-400/70", children: '"' }),
+            i < packages.length - 1 && /* @__PURE__ */ jsxRuntimeExports.jsx("span", { className: "text-white/30", children: " " })
+          ] }, `${pkg.name}-${i}`);
+        })
       ] })
-    ] }),
-    /* @__PURE__ */ jsxRuntimeExports.jsx(Separator$3, {}),
-    /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "flex items-center justify-between", children: [
-      /* @__PURE__ */ jsxRuntimeExports.jsx(Label$c, { children: "Preview" }),
-      /* @__PURE__ */ jsxRuntimeExports.jsx(CopyClipboard, { contentToCopy: `pip install ${generateInstallCommand()}` })
-    ] }),
-    /* @__PURE__ */ jsxRuntimeExports.jsxs("span", { className: "bg-surface-secondary p-4 rounded-xl", children: [
-      "pip install ",
-      /* @__PURE__ */ jsxRuntimeExports.jsx("span", { className: "text-warning-700", children: generateInstallCommand() })
     ] })
   ] });
 }
 
-const {Alert: Alert$1,Button: Button$d,Modal: Modal$5,useOverlayState: useOverlayState$5} = await importShared('@heroui/react');
-const {useState: useState$k} = await importShared('react');
+const {Alert: Alert$1,Button: Button$f,Modal: Modal$5,useOverlayState: useOverlayState$5} = await importShared('@heroui/react');
+const {useEffect: useEffect$i,useState: useState$k} = await importShared('react');
 function InstallerModal$1({ refresh, pythonPath }) {
   const [installing, setInstalling] = useState$k(false);
   const [installCommand, setInstallCommand] = useState$k("");
   const [isInstallDisabled, setIsInstallDisabled] = useState$k(true);
-  const isDarkMode = useAppState("darkMode");
+  const [packageCount, setPackageCount] = useState$k(0);
+  const [requirementsFileCount, setRequirementsFileCount] = useState$k(0);
   const state = useOverlayState$5();
+  useEffect$i(() => {
+    if (!state.isOpen) {
+      setInstallCommand("");
+      setPackageCount(0);
+      setRequirementsFileCount(0);
+    }
+  }, [state.isOpen]);
   const handleInstall = async () => {
     setInstalling(true);
     pIpc.installPackage(pythonPath, installCommand).then((result) => {
@@ -19385,7 +20296,7 @@ function InstallerModal$1({ refresh, pythonPath }) {
       } else {
         topToast.danger("Failed to install packages. Please check your inputs and try again.");
       }
-      close();
+      state.close();
       refresh();
     }).catch((err) => {
       topToast.danger("Failed to install packages. Please check your inputs and try again.");
@@ -19394,44 +20305,47 @@ function InstallerModal$1({ refresh, pythonPath }) {
       setInstalling(false);
     });
   };
+  const isRequirementsInstall = installCommand.trim().includes("-r ");
   return /* @__PURE__ */ jsxRuntimeExports.jsxs(jsxRuntimeExports.Fragment, { children: [
-    /* @__PURE__ */ jsxRuntimeExports.jsxs(Button$d, { size: "sm", variant: "tertiary", onPress: state.open, children: [
+    /* @__PURE__ */ jsxRuntimeExports.jsxs(Button$f, { size: "sm", variant: "tertiary", onPress: state.open, children: [
       /* @__PURE__ */ jsxRuntimeExports.jsx(Plus, { size: 12 }),
-      "Install Package"
+      "Package"
     ] }),
-    /* @__PURE__ */ jsxRuntimeExports.jsxs(TabModal, { size: "lg", isOpen: state.isOpen, onOpenChange: state.setOpen, dialogClassName: "px-4 max-w-2xl", children: [
+    /* @__PURE__ */ jsxRuntimeExports.jsxs(TabModal, { size: "lg", isOpen: state.isOpen, onOpenChange: state.setOpen, dialogClassName: "px-4 max-w-5xl", children: [
       /* @__PURE__ */ jsxRuntimeExports.jsx(Modal$5.CloseTrigger, {}),
-      /* @__PURE__ */ jsxRuntimeExports.jsx(Modal$5.Header, { children: /* @__PURE__ */ jsxRuntimeExports.jsx(Modal$5.Heading, { className: "px-2", children: "Python Package Installer" }) }),
-      /* @__PURE__ */ jsxRuntimeExports.jsx(Modal$5.Body, { className: "scrollbar-hide px-0 pt-0", children: /* @__PURE__ */ jsxRuntimeExports.jsx(
-        g$2,
+      /* @__PURE__ */ jsxRuntimeExports.jsxs(Modal$5.Header, { className: "flex items-center gap-3 px-5 pb-0", children: [
+        /* @__PURE__ */ jsxRuntimeExports.jsx(Modal$5.Heading, { className: "text-base font-semibold", children: "Package Installer" }),
+        (packageCount > 0 || isRequirementsInstall) && /* @__PURE__ */ jsxRuntimeExports.jsx("span", { className: "rounded-full bg-primary/10 px-2 py-0.5 text-xs font-medium text-primary", children: isRequirementsInstall ? `${requirementsFileCount || 1} requirements file${requirementsFileCount !== 1 ? "s" : ""}` : `${packageCount} selected` })
+      ] }),
+      /* @__PURE__ */ jsxRuntimeExports.jsx(Modal$5.Body, { className: "overflow-hidden px-0 pt-0", children: /* @__PURE__ */ jsxRuntimeExports.jsx(LynxScroll, { className: "size-full", children: /* @__PURE__ */ jsxRuntimeExports.jsx(
+        Installer,
         {
-          options: {
-            overflow: { x: "hidden", y: "scroll" },
-            scrollbars: {
-              autoHide: "move",
-              clickScroll: true,
-              theme: isDarkMode ? "os-theme-light" : "os-theme-dark"
-            }
-          },
-          children: /* @__PURE__ */ jsxRuntimeExports.jsx(Installer, { setInstallCommand, setIsInstallDisabled })
+          isOpen: state.isOpen,
+          setPackageCount,
+          setInstallCommand,
+          setIsInstallDisabled,
+          setRequirementsFileCount
         }
-      ) }),
-      /* @__PURE__ */ jsxRuntimeExports.jsxs(Modal$5.Footer, { className: "flex-col", children: [
-        installing && /* @__PURE__ */ jsxRuntimeExports.jsxs(Alert$1, { status: "warning", className: "bg-surface-secondary", children: [
+      ) }) }),
+      /* @__PURE__ */ jsxRuntimeExports.jsxs(Modal$5.Footer, { className: "flex-col gap-y-2.5 px-5 pb-5", children: [
+        installing && /* @__PURE__ */ jsxRuntimeExports.jsxs(Alert$1, { status: "warning", className: "rounded-2xl bg-surface-secondary", children: [
           /* @__PURE__ */ jsxRuntimeExports.jsx(Alert$1.Indicator, {}),
-          /* @__PURE__ */ jsxRuntimeExports.jsx(Alert$1.Content, { children: /* @__PURE__ */ jsxRuntimeExports.jsx(Alert$1.Title, { children: "Installing packages... This may take several minutes depending on the number and size of the packages you selected." }) })
+          /* @__PURE__ */ jsxRuntimeExports.jsx(Alert$1.Content, { children: /* @__PURE__ */ jsxRuntimeExports.jsx(Alert$1.Title, { className: "text-sm", children: "Installing packages… this may take a few minutes." }) })
         ] }),
-        /* @__PURE__ */ jsxRuntimeExports.jsxs(Button$d, { size: "md", isPending: installing, onPress: handleInstall, isDisabled: isInstallDisabled, fullWidth: true, children: [
-          /* @__PURE__ */ jsxRuntimeExports.jsx(i$k, {}),
-          installing ? "Installing..." : "Install Packages"
+        /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "flex gap-2.5 w-full", children: [
+          /* @__PURE__ */ jsxRuntimeExports.jsx(Button$f, { size: "md", variant: "tertiary", className: "flex-none", onPress: state.close, isDisabled: installing, children: "Cancel" }),
+          /* @__PURE__ */ jsxRuntimeExports.jsxs(Button$f, { size: "md", isPending: installing, onPress: handleInstall, isDisabled: isInstallDisabled, fullWidth: true, children: [
+            /* @__PURE__ */ jsxRuntimeExports.jsx(i$p, {}),
+            installing ? "Installing…" : isRequirementsInstall ? "Install Requirements" : `Install${packageCount > 0 ? ` ${packageCount} Package${packageCount !== 1 ? "s" : ""}` : " Packages"}`
+          ] })
         ] })
       ] })
     ] })
   ] });
 }
 
-const {Button: Button$c,ButtonGroup,Description: Description$a,Dropdown: Dropdown$3,Label: Label$b} = await importShared('@heroui/react');
-const {useEffect: useEffect$g,useMemo: useMemo$9,useState: useState$j} = await importShared('react');
+const {Button: Button$e,ButtonGroup,Description: Description$b,Dropdown: Dropdown$3,Label: Label$c} = await importShared('@heroui/react');
+const {useEffect: useEffect$h,useMemo: useMemo$9,useState: useState$j} = await importShared('react');
 function UpdateButton({
   packagesUpdate,
   update,
@@ -19448,13 +20362,13 @@ function UpdateButton({
 }) {
   const [selectedOption, setSelectedOption] = useState$j(/* @__PURE__ */ new Set([isReqAvailable ? "req" : "all"]));
   const [checkedCount, setCheckedCount] = useState$j([]);
-  useEffect$g(() => {
+  useEffect$h(() => {
     const offProgress = pIpc.onUpdateCheckProgress((_, packageName) => {
       setCheckedCount((prevState) => prevState.includes(packageName) ? prevState : [...prevState, packageName]);
     });
     return () => offProgress();
   }, []);
-  useEffect$g(() => {
+  useEffect$h(() => {
     setSelectedOption(/* @__PURE__ */ new Set([isReqAvailable ? "req" : "all"]));
   }, [isReqAvailable]);
   const descriptionsMap = useMemo$9(() => {
@@ -19465,8 +20379,8 @@ function UpdateButton({
   }, []);
   const labelsMap = useMemo$9(() => {
     return {
-      all: checkingUpdates ? `Checking All (${checkedCount.length}/${allPackageCount})...` : `Check for Updates (All)`,
-      req: checkingUpdates ? `Checking Requirements (${checkedCount.length}/${reqPackageCount})...` : `Check for Updates (Requirements)`
+      all: checkingUpdates ? `Checking All (${checkedCount.length}/${allPackageCount})...` : `Check Updates (All)`,
+      req: checkingUpdates ? `Checking Requirements (${checkedCount.length}/${reqPackageCount})...` : `Check Updates (Reqs)`
     };
   }, [checkingUpdates, allPackageCount, reqPackageCount, checkedCount]);
   const selectedOptionValue = useMemo$9(() => {
@@ -19479,7 +20393,7 @@ function UpdateButton({
       checkForUpdates("req");
     }
   };
-  useEffect$g(() => {
+  useEffect$h(() => {
     if (!checkingUpdates) {
       setProgressValue(0);
     } else {
@@ -19499,7 +20413,7 @@ function UpdateButton({
     return selectedKeys === "all" ? selectedFilter === "all" ? packagesUpdate.length : visibleItems.length : selectedKeys.size;
   }, [selectedKeys, selectedFilter, packagesUpdate, visibleItems]);
   return !isEmpty(packagesUpdate) ? /* @__PURE__ */ jsxRuntimeExports.jsxs(
-    Button$c,
+    Button$e,
     {
       size: "sm",
       onPress: update,
@@ -19507,7 +20421,7 @@ function UpdateButton({
       isPending: isUpdating,
       isDisabled: selectedKeys !== "all" && selectedKeys.size === 0,
       children: [
-        !isUpdating && /* @__PURE__ */ jsxRuntimeExports.jsx(i$k, {}),
+        !isUpdating && /* @__PURE__ */ jsxRuntimeExports.jsx(i$p, {}),
         isUpdating ? /* @__PURE__ */ jsxRuntimeExports.jsxs("span", { children: [
           "Updating (",
           selectedCount,
@@ -19519,24 +20433,24 @@ function UpdateButton({
       ]
     }
   ) : /* @__PURE__ */ jsxRuntimeExports.jsxs(ButtonGroup, { children: [
-    /* @__PURE__ */ jsxRuntimeExports.jsxs(Button$c, { size: "sm", variant: "secondary", onPress: checkForUpdate, isPending: checkingUpdates, children: [
-      !checkingUpdates && /* @__PURE__ */ jsxRuntimeExports.jsx(i$b, {}),
+    /* @__PURE__ */ jsxRuntimeExports.jsxs(Button$e, { size: "sm", variant: "secondary", onPress: checkForUpdate, isPending: checkingUpdates, children: [
+      !checkingUpdates && /* @__PURE__ */ jsxRuntimeExports.jsx(i$c, {}),
       labelsMap[selectedOptionValue]
     ] }),
     /* @__PURE__ */ jsxRuntimeExports.jsxs(Dropdown$3, { children: [
-      /* @__PURE__ */ jsxRuntimeExports.jsx(Button$c, { size: "sm", variant: "tertiary", isDisabled: !isReqAvailable || checkingUpdates, isIconOnly: true, children: /* @__PURE__ */ jsxRuntimeExports.jsx(r$2, {}) }),
+      /* @__PURE__ */ jsxRuntimeExports.jsx(Button$e, { size: "sm", variant: "tertiary", isDisabled: !isReqAvailable || checkingUpdates, isIconOnly: true, children: /* @__PURE__ */ jsxRuntimeExports.jsx(r$2, {}) }),
       /* @__PURE__ */ jsxRuntimeExports.jsx(Dropdown$3.Popover, { children: /* @__PURE__ */ jsxRuntimeExports.jsxs(Dropdown$3.Menu, { selectionMode: "single", selectedKeys: selectedOption, onSelectionChange: setSelectedOption, children: [
         /* @__PURE__ */ jsxRuntimeExports.jsxs(Dropdown$3.Item, { id: "all", textValue: labelsMap["all"], children: [
           /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "flex flex-col", children: [
-            /* @__PURE__ */ jsxRuntimeExports.jsx(Label$b, { children: labelsMap["all"] }),
-            /* @__PURE__ */ jsxRuntimeExports.jsx(Description$a, { children: descriptionsMap["all"] })
+            /* @__PURE__ */ jsxRuntimeExports.jsx(Label$c, { children: labelsMap["all"] }),
+            /* @__PURE__ */ jsxRuntimeExports.jsx(Description$b, { children: descriptionsMap["all"] })
           ] }),
           /* @__PURE__ */ jsxRuntimeExports.jsx(Dropdown$3.ItemIndicator, {})
         ] }),
         /* @__PURE__ */ jsxRuntimeExports.jsxs(Dropdown$3.Item, { id: "req", textValue: labelsMap["req"], children: [
           /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "flex flex-col", children: [
-            /* @__PURE__ */ jsxRuntimeExports.jsx(Label$b, { children: labelsMap["req"] }),
-            /* @__PURE__ */ jsxRuntimeExports.jsx(Description$a, { children: descriptionsMap["req"] })
+            /* @__PURE__ */ jsxRuntimeExports.jsx(Label$c, { children: labelsMap["req"] }),
+            /* @__PURE__ */ jsxRuntimeExports.jsx(Description$b, { children: descriptionsMap["req"] })
           ] }),
           /* @__PURE__ */ jsxRuntimeExports.jsx(Dropdown$3.ItemIndicator, {})
         ] })
@@ -19546,7 +20460,7 @@ function UpdateButton({
 }
 
 const {Avatar: Avatar$2,Chip: Chip$2,ProgressBar: ProgressBar$3,SearchField: SearchField$2} = await importShared('@heroui/react');
-const {useEffect: useEffect$f,useState: useState$i} = await importShared('react');
+const {useEffect: useEffect$g,useState: useState$i} = await importShared('react');
 function PackageManagerHeader({
   searchValue,
   setSearchValue,
@@ -19557,7 +20471,6 @@ function PackageManagerHeader({
   updated,
   refresh,
   title,
-  actionButtons,
   isValidPython,
   checkForUpdates,
   id,
@@ -19575,14 +20488,14 @@ function PackageManagerHeader({
   const [progressValue, setProgressValue] = useState$i(0);
   const [avatarUrl, setAvatarUrl] = useState$i(void 0);
   const [pythonVersion, setPythonVersion] = useState$i("");
-  useEffect$f(() => {
+  useEffect$g(() => {
     const url = allCardsExt.find((item) => item.id === id)?.repoUrl;
     if (url) {
       const avatar = extractGitUrl(url).avatarUrl;
-      setAvatarUrl(avatar);
+      setAvatarUrl(cacheUrl(avatar));
     }
-  }, []);
-  useEffect$f(() => {
+  }, [id]);
+  useEffect$g(() => {
     if (pythonPath) {
       pIpc.getPythonVersion(pythonPath).then((version) => {
         setPythonVersion(`${version.major}.${version.minor}.${version.patch}`);
@@ -19635,8 +20548,8 @@ function PackageManagerHeader({
       ] }) }),
       /* @__PURE__ */ jsxRuntimeExports.jsx(FilterButton, { setSelectedFilter, updateAvailable: !isEmpty(packagesUpdate) })
     ] }),
-    /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "gap-x-2 flex justify-between items-center w-full mt-2", children: [
-      isValidPython && /* @__PURE__ */ jsxRuntimeExports.jsx(
+    isValidPython && /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "gap-x-2 flex justify-between items-center w-full mt-2", children: [
+      /* @__PURE__ */ jsxRuntimeExports.jsx(
         UpdateButton,
         {
           update,
@@ -19653,10 +20566,10 @@ function PackageManagerHeader({
           setProgressValue
         }
       ),
-      isValidPython && /* @__PURE__ */ jsxRuntimeExports.jsxs(jsxRuntimeExports.Fragment, { children: [
+      /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "flex items-center gap-x-2", children: [
         /* @__PURE__ */ jsxRuntimeExports.jsx(InstallerModal$1, { refresh, pythonPath }),
         /* @__PURE__ */ jsxRuntimeExports.jsx(
-          RequirementsBtn,
+          RequirementsModal,
           {
             id,
             projectPath,
@@ -19664,8 +20577,7 @@ function PackageManagerHeader({
             setReqPackageCount
           }
         )
-      ] }),
-      isValidPython && actionButtons?.map((ActionButton) => ActionButton)
+      ] })
     ] })
   ] });
 }
@@ -19677,12 +20589,12 @@ function TerminalView() {
   return /* @__PURE__ */ jsxRuntimeExports.jsx(XTermCore, { id, minResizeCols: 0, minResizeRows: 0, className: "overflow-hidden" });
 }
 
-const {Button: Button$b,Modal: Modal$4,Popover: Popover$4} = await importShared('@heroui/react');
-const {memo,useEffect: useEffect$e,useState: useState$h} = await importShared('react');
+const {Button: Button$d,Modal: Modal$4,Popover: Popover$5} = await importShared('@heroui/react');
+const {memo,useEffect: useEffect$f,useState: useState$h} = await importShared('react');
 const UpdateModal = memo(({ state }) => {
   const [isPopoverOpen, setIsPopoverOpen] = useState$h(false);
   const [isDone, setIsDone] = useState$h(false);
-  useEffect$e(() => {
+  useEffect$f(() => {
     const offExit = ptyIpc.onExit((id) => {
       if (id === "python-update") {
         setIsPopoverOpen(true);
@@ -19696,21 +20608,21 @@ const UpdateModal = memo(({ state }) => {
     state.close();
   };
   return /* @__PURE__ */ jsxRuntimeExports.jsxs(TabModal, { isOpen: state.isOpen, onOpenChange: state.setOpen, children: [
-    /* @__PURE__ */ jsxRuntimeExports.jsx(Modal$4.Header, { children: /* @__PURE__ */ jsxRuntimeExports.jsx(Modal$4.Heading, { children: "Console Output..." }) }),
+    /* @__PURE__ */ jsxRuntimeExports.jsx(Modal$4.Header, { children: /* @__PURE__ */ jsxRuntimeExports.jsx(Modal$4.Heading, { children: "Console" }) }),
     /* @__PURE__ */ jsxRuntimeExports.jsx(Modal$4.Body, { children: /* @__PURE__ */ jsxRuntimeExports.jsx(TerminalView, {}) }),
-    /* @__PURE__ */ jsxRuntimeExports.jsx(Modal$4.Footer, { children: /* @__PURE__ */ jsxRuntimeExports.jsxs(Popover$4, { isOpen: isPopoverOpen, onOpenChange: setIsPopoverOpen, children: [
-      /* @__PURE__ */ jsxRuntimeExports.jsx(Button$b, { variant: "danger-soft", children: "Close" }),
-      /* @__PURE__ */ jsxRuntimeExports.jsx(Popover$4.Content, { className: "max-w-xs", children: /* @__PURE__ */ jsxRuntimeExports.jsxs(Popover$4.Dialog, { children: [
-        /* @__PURE__ */ jsxRuntimeExports.jsx(Popover$4.Arrow, {}),
-        /* @__PURE__ */ jsxRuntimeExports.jsx(Popover$4.Heading, { children: isDone ? "The terminal is done and exited, close this window?" : "Are you sure you want to close this window? the command will be still executing in background" }),
-        /* @__PURE__ */ jsxRuntimeExports.jsx(Button$b, { size: "sm", onPress: Close, variant: "danger-soft", fullWidth: true, children: "Close" })
+    /* @__PURE__ */ jsxRuntimeExports.jsx(Modal$4.Footer, { children: /* @__PURE__ */ jsxRuntimeExports.jsxs(Popover$5, { isOpen: isPopoverOpen, onOpenChange: setIsPopoverOpen, children: [
+      /* @__PURE__ */ jsxRuntimeExports.jsx(Button$d, { variant: "danger-soft", children: "Close" }),
+      /* @__PURE__ */ jsxRuntimeExports.jsx(Popover$5.Content, { className: "max-w-xs", children: /* @__PURE__ */ jsxRuntimeExports.jsxs(Popover$5.Dialog, { children: [
+        /* @__PURE__ */ jsxRuntimeExports.jsx(Popover$5.Arrow, {}),
+        /* @__PURE__ */ jsxRuntimeExports.jsx(Popover$5.Heading, { children: isDone ? "The terminal is done and exited, close this window?" : "Are you sure you want to close this window? the command will be still executing in background" }),
+        /* @__PURE__ */ jsxRuntimeExports.jsx(Button$d, { size: "sm", onPress: Close, variant: "danger-soft", fullWidth: true, children: "Close" })
       ] }) })
     ] }) })
   ] });
 });
 
 const {Modal: Modal$3,useOverlayState: useOverlayState$4} = await importShared('@heroui/react');
-const {useEffect: useEffect$d,useState: useState$g} = await importShared('react');
+const {useEffect: useEffect$e,useState: useState$g} = await importShared('react');
 function PackageManagerModal({
   title = "Package Manager",
   actionButtons,
@@ -19735,7 +20647,7 @@ function PackageManagerModal({
   const [items, setItems] = useState$g(searchData);
   const [selectedKeys, setSelectedKeys] = useState$g(/* @__PURE__ */ new Set([]));
   const updateModal = useOverlayState$4();
-  useEffect$d(() => {
+  useEffect$e(() => {
     switch (selectedFilter) {
       case "all":
         setFilteredPackages(packages);
@@ -19790,10 +20702,10 @@ function PackageManagerModal({
         break;
     }
   }, [selectedFilter, packagesUpdate, packages]);
-  useEffect$d(() => {
+  useEffect$e(() => {
     if (isEmpty(pythonPath)) setIsValidPython(false);
   }, [pythonPath]);
-  useEffect$d(() => {
+  useEffect$e(() => {
     setSearchData(filteredPackages.filter((item) => searchInStrings(searchValue, [item.name])));
   }, [searchValue, filteredPackages]);
   const closePackageManager = () => {
@@ -19806,14 +20718,21 @@ function PackageManagerModal({
   };
   const checkForUpdates = (type) => {
     setIsCheckingUpdates(true);
-    const updateData = (result) => {
-      setPackagesUpdate(result);
-      setPackages(
-        (prevState) => prevState.map((item) => {
-          const updateVersion = result.find((update) => update.name === item.name)?.version;
-          return updateVersion ? { ...item, updateVersion } : item;
-        })
-      );
+    const updateData = (updateList) => {
+      if (updateList.length === 0) {
+        topToast.info("No updates found (packages may be up to date, or a connection issue occurred).");
+      }
+      setPackagesUpdate(updateList);
+      setPackages((prevState) => {
+        const newItems = updateList.filter((up) => up.isNew).map((item) => ({ ...item, updateVersion: item.version }));
+        return [...prevState, ...newItems].map((item) => {
+          const reqItem = updateList.find((update) => update.name === item.name);
+          if (!reqItem) return item;
+          const updateVersion = reqItem.version;
+          const isNew = reqItem.isNew;
+          return { ...item, updateVersion, isNew };
+        });
+      });
     };
     if (type === "req") {
       pIpc.getReqPath(id).then((reqPath) => {
@@ -19844,7 +20763,7 @@ function PackageManagerModal({
       setIsLoadingPackages(false);
     });
   };
-  useEffect$d(() => {
+  useEffect$e(() => {
     if (state.isOpen && !isEmpty(pythonPath)) {
       getPackageList();
     } else {
@@ -19887,7 +20806,7 @@ function PackageManagerModal({
     getPackageList();
   };
   return /* @__PURE__ */ jsxRuntimeExports.jsxs(jsxRuntimeExports.Fragment, { children: [
-    /* @__PURE__ */ jsxRuntimeExports.jsxs(TabModal, { isOpen: state.isOpen, onOpenChange: state.setOpen, children: [
+    /* @__PURE__ */ jsxRuntimeExports.jsxs(TabModal, { dialogClassName: "p-0", isOpen: state.isOpen, onOpenChange: state.setOpen, children: [
       /* @__PURE__ */ jsxRuntimeExports.jsx(
         CloseBtn,
         {
@@ -19896,7 +20815,8 @@ function PackageManagerModal({
           closePackageManager
         }
       ),
-      /* @__PURE__ */ jsxRuntimeExports.jsx(Modal$3.Header, { className: "gap-y-2", children: /* @__PURE__ */ jsxRuntimeExports.jsx(
+      /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "absolute top-3.5 right-12", children: actionButtons }),
+      /* @__PURE__ */ jsxRuntimeExports.jsx(Modal$3.Header, { className: "gap-y-2 px-6 pt-6", children: /* @__PURE__ */ jsxRuntimeExports.jsx(
         PackageManagerHeader,
         {
           id,
@@ -19912,7 +20832,6 @@ function PackageManagerModal({
           refresh: refreshAfterInstall,
           setIsUpdating,
           isValidPython,
-          actionButtons,
           selectedFilter,
           packagesUpdate,
           setSearchValue,
@@ -19939,29 +20858,55 @@ function PackageManagerModal({
           setIsUpdateTerminalOpen: updateModal.setOpen
         }
       ),
-      /* @__PURE__ */ jsxRuntimeExports.jsx(Modal$3.Footer, { className: "items-center py-3", children: /* @__PURE__ */ jsxRuntimeExports.jsx(TablePage, { setItems, searchData }) })
+      /* @__PURE__ */ jsxRuntimeExports.jsx(Modal$3.Footer, { className: "items-center px-6 pb-8 pt-2", children: /* @__PURE__ */ jsxRuntimeExports.jsx(TablePage, { setItems, searchData }) })
     ] }),
     /* @__PURE__ */ jsxRuntimeExports.jsx(UpdateModal, { state: updateModal })
   ] });
 }
 
-const {Button: Button$a} = await importShared('@heroui/react');
-const {useMemo: useMemo$7,useState: useState$f} = await importShared('react');
+const {Button: Button$c,Description: Description$a,Popover: Popover$4} = await importShared('@heroui/react');
+const {useEffect: useEffect$d,useMemo: useMemo$7,useState: useState$f} = await importShared('react');
 function CardMenuModal({ useCardOverlayState: useCardOverlayState2, useCardStore }) {
   const id = useCardStore((state2) => state2.id);
   const title = useCardStore((state2) => state2.title);
   const webUI = useInstalledCard(id);
   const state = useCardOverlayState2(DepsModalKey);
   const [pythonPath, setPythonPath] = useState$f("");
+  const [pythonVersion, setPythonVersion] = useState$f("");
+  useEffect$d(() => {
+    if (pythonPath) {
+      pIpc.getPythonVersion(pythonPath).then((version) => {
+        setPythonVersion(`${version.major}.${version.minor}.${version.patch}`);
+      });
+    }
+  }, [pythonPath]);
   const handleDeselect = () => {
     pIpc.removeAssociate(id);
     setPythonPath("");
   };
   const actionButtons = useMemo$7(() => {
-    return pythonPath ? [
-      /* @__PURE__ */ jsxRuntimeExports.jsx(Button$a, { size: "sm", variant: "danger-soft", className: "min-w-32!", onPress: handleDeselect, children: "Deselect" }, "reloacte_venv")
-    ] : [];
-  }, [pythonPath]);
+    return pythonPath ? /* @__PURE__ */ jsxRuntimeExports.jsxs(Popover$4, { children: [
+      /* @__PURE__ */ jsxRuntimeExports.jsxs(Button$c, { size: "sm", variant: "tertiary", className: "h-7 text-warning/70", children: [
+        /* @__PURE__ */ jsxRuntimeExports.jsx(Unplug, {}),
+        "Unassign Python"
+      ] }),
+      /* @__PURE__ */ jsxRuntimeExports.jsx(Popover$4.Content, { className: "max-w-xs", children: /* @__PURE__ */ jsxRuntimeExports.jsxs(Popover$4.Dialog, { className: "flex flex-col", children: [
+        /* @__PURE__ */ jsxRuntimeExports.jsxs(Popover$4.Heading, { className: "text-warning", children: [
+          "Unassign ",
+          title
+        ] }),
+        /* @__PURE__ */ jsxRuntimeExports.jsxs(Description$a, { children: [
+          "This action will deselect ",
+          pythonVersion,
+          " for ",
+          title,
+          "."
+        ] }),
+        /* @__PURE__ */ jsxRuntimeExports.jsx(Description$a, { children: "Are you sure?" }),
+        /* @__PURE__ */ jsxRuntimeExports.jsx(Button$c, { size: "sm", className: "mt-2", variant: "danger-soft", onPress: handleDeselect, fullWidth: true, children: "Unassign" })
+      ] }) })
+    ] }) : null;
+  }, [pythonPath, pythonVersion]);
   return /* @__PURE__ */ jsxRuntimeExports.jsx(
     PackageManagerModal,
     {
@@ -19976,43 +20921,38 @@ function CardMenuModal({ useCardOverlayState: useCardOverlayState2, useCardStore
   );
 }
 
-const {Avatar: Avatar$1,Card: Card$2,Description: Description$9,Label: Label$a} = await importShared('@heroui/react');
+const {Avatar: Avatar$1,Card: Card$1,Description: Description$9,Label: Label$b} = await importShared('@heroui/react');
 function ToolsCard({ title, description, icon, onPress, footer }) {
   return /* @__PURE__ */ jsxRuntimeExports.jsxs(
-    Card$2,
+    Card$1,
     {
       className: `w-75 h-46 relative group transform border border-surface  hover:shadow-lg hover:scale-[1.02] transition-all duration-200 cursor-pointer`,
       onClick: onPress,
       children: [
-        /* @__PURE__ */ jsxRuntimeExports.jsx(Card$2.Header, { children: /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "inline-flex items-center gap-2", children: [
-          /* @__PURE__ */ jsxRuntimeExports.jsxs(Avatar$1, { className: `size-12 shrink-0 ring-LynxPurple ring-2`, children: [
+        /* @__PURE__ */ jsxRuntimeExports.jsx(Card$1.Header, { children: /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "inline-flex items-center gap-2", children: [
+          typeof icon === "string" ? /* @__PURE__ */ jsxRuntimeExports.jsxs(Avatar$1, { className: `size-12 shrink-0 ring-LynxPurple ring-2`, children: [
             /* @__PURE__ */ jsxRuntimeExports.jsx(Avatar$1.Image, { src: icon, alt: title }),
             /* @__PURE__ */ jsxRuntimeExports.jsx(Avatar$1.Fallback, { children: getFallbackString(title) })
-          ] }),
-          /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "flex flex-col", children: /* @__PURE__ */ jsxRuntimeExports.jsx(Label$a, { children: title }) })
+          ] }) : /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "size-12 rounded-full ring-2 ring-LynxPurple flex items-center justify-center", children: icon }),
+          /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "flex flex-col pointer-events-none", children: /* @__PURE__ */ jsxRuntimeExports.jsx(Label$b, { children: title }) })
         ] }) }),
-        /* @__PURE__ */ jsxRuntimeExports.jsx(Card$2.Content, { children: /* @__PURE__ */ jsxRuntimeExports.jsx(Description$9, { className: "line-clamp-3 text-xs", children: description }) }),
-        /* @__PURE__ */ jsxRuntimeExports.jsx(Card$2.Footer, { children: footer })
+        /* @__PURE__ */ jsxRuntimeExports.jsx(Card$1.Content, { children: /* @__PURE__ */ jsxRuntimeExports.jsx(Description$9, { className: "line-clamp-3 text-xs", children: description }) }),
+        /* @__PURE__ */ jsxRuntimeExports.jsx(Card$1.Footer, { children: footer })
       ]
     }
   );
 }
 
-const cacheUrl = (url) => {
-  if (!url) return void 0;
-  return semverExports.gte(window.lynxVersion || "3.3.0", "3.4.0") ? `lynxcache://fetch/${encodeURIComponent(url)}` : url;
-};
-
-const {Avatar,Button: Button$9,Chip: Chip$1,CloseButton,Dropdown: Dropdown$2,Label: Label$9} = await importShared('@heroui/react');
+const {Avatar,Button: Button$b,Chip: Chip$1,CloseButton,Dropdown: Dropdown$2,Label: Label$a} = await importShared('@heroui/react');
 const {useCallback: useCallback$6,useEffect: useEffect$c,useState: useState$e} = await importShared('react');
 
-const {useDispatch: useDispatch$5} = await importShared('react-redux');
+const {useDispatch: useDispatch$6} = await importShared('react-redux');
 function Venv_Associate({ folder, type }) {
   const associates = usePythonToolkitState("associates");
   const installedCards = useCardsState("installedCards");
   const [associated, setAssociated] = useState$e([]);
   const [canBeAssociate, setCanBeAssociate] = useState$e([]);
-  const dispatch = useDispatch$5();
+  const dispatch = useDispatch$6();
   useEffect$c(() => {
     const cardTitleMap = new Map(allCardsExt.map((card) => [card.id, card.title]));
     const cardAvatarMap = new Map(allCardsExt.map((card) => [card.id, cacheUrl(extractGitUrl(card.repoUrl).avatarUrl)]));
@@ -20055,59 +20995,187 @@ function Venv_Associate({ folder, type }) {
     refreshAssociates();
   };
   return /* @__PURE__ */ jsxRuntimeExports.jsx(jsxRuntimeExports.Fragment, { children: /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "flex flex-row justify-between w-full", children: [
-    /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "w-full flex flex-row gap-x-1 gap-y-2 items-center flex-wrap", children: isEmpty(associated) ? /* @__PURE__ */ jsxRuntimeExports.jsx(Chip$1, { variant: "soft", children: "Not Associated" }) : associated.map((item) => /* @__PURE__ */ jsxRuntimeExports.jsxs(Chip$1, { variant: "soft", color: "success", children: [
+    /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "w-full flex flex-row gap-x-1 gap-y-2 items-center flex-wrap", children: isEmpty(associated) ? /* @__PURE__ */ jsxRuntimeExports.jsx(Chip$1, { variant: "soft", children: "Not Associated" }) : associated.map((item) => /* @__PURE__ */ jsxRuntimeExports.jsxs(Chip$1, { variant: "soft", color: "success", className: "gap-x-1", children: [
       /* @__PURE__ */ jsxRuntimeExports.jsxs(Avatar, { className: "size-5", children: [
         /* @__PURE__ */ jsxRuntimeExports.jsx(Avatar.Image, { alt: item.title, src: item.avatarUrl }),
         /* @__PURE__ */ jsxRuntimeExports.jsx(Avatar.Fallback, { className: "text-xs", children: getFallbackString(item.title) })
       ] }),
       item.title,
-      /* @__PURE__ */ jsxRuntimeExports.jsx(CloseButton, { onPress: () => remove(item.id) })
+      /* @__PURE__ */ jsxRuntimeExports.jsx(CloseButton, { className: "size-4", onPress: () => remove(item.id), children: /* @__PURE__ */ jsxRuntimeExports.jsx(X$3, { className: "size-3" }) })
     ] }, `${item.id}_associated`)) }),
     /* @__PURE__ */ jsxRuntimeExports.jsxs(Dropdown$2, { children: [
-      /* @__PURE__ */ jsxRuntimeExports.jsx(Button$9, { size: "sm", variant: "tertiary", className: "shrink-0", isIconOnly: true, children: /* @__PURE__ */ jsxRuntimeExports.jsx(Plus, {}) }),
-      /* @__PURE__ */ jsxRuntimeExports.jsx(Dropdown$2.Popover, { children: /* @__PURE__ */ jsxRuntimeExports.jsx(Dropdown$2.Menu, { items: canBeAssociate, renderEmptyState: () => /* @__PURE__ */ jsxRuntimeExports.jsx("span", { children: "Nothing available to associate!" }), children: (item) => /* @__PURE__ */ jsxRuntimeExports.jsxs(Dropdown$2.Item, { textValue: item.title, onPress: () => add(item.id), children: [
-        /* @__PURE__ */ jsxRuntimeExports.jsxs(Avatar, { className: "size-5", children: [
-          /* @__PURE__ */ jsxRuntimeExports.jsx(Avatar.Image, { alt: item.title, src: item.avatarUrl }),
-          /* @__PURE__ */ jsxRuntimeExports.jsx(Avatar.Fallback, { className: "text-xs", children: getFallbackString(item.title) })
-        ] }),
-        /* @__PURE__ */ jsxRuntimeExports.jsx(Label$9, { children: item.title })
-      ] }) }) })
+      /* @__PURE__ */ jsxRuntimeExports.jsx(LynxTooltip, { delay: 300, content: "Associate card", children: /* @__PURE__ */ jsxRuntimeExports.jsx(Button$b, { size: "sm", variant: "tertiary", className: "shrink-0", isIconOnly: true, children: /* @__PURE__ */ jsxRuntimeExports.jsx(Plus, {}) }) }),
+      /* @__PURE__ */ jsxRuntimeExports.jsx(Dropdown$2.Popover, { children: /* @__PURE__ */ jsxRuntimeExports.jsx(
+        Dropdown$2.Menu,
+        {
+          items: canBeAssociate,
+          renderEmptyState: () => /* @__PURE__ */ jsxRuntimeExports.jsx("span", { className: "px-2", children: "Nothing available to associate!" }),
+          children: (item) => /* @__PURE__ */ jsxRuntimeExports.jsxs(Dropdown$2.Item, { textValue: item.title, onPress: () => add(item.id), children: [
+            /* @__PURE__ */ jsxRuntimeExports.jsxs(Avatar, { className: "size-5", children: [
+              /* @__PURE__ */ jsxRuntimeExports.jsx(Avatar.Image, { alt: item.title, src: item.avatarUrl }),
+              /* @__PURE__ */ jsxRuntimeExports.jsx(Avatar.Fallback, { className: "text-xs", children: getFallbackString(item.title) })
+            ] }),
+            /* @__PURE__ */ jsxRuntimeExports.jsx(Label$a, { children: item.title })
+          ] })
+        }
+      ) })
     ] })
   ] }) });
 }
 
-const {Button: Button$8,Card: Card$1,Chip,Description: Description$8,Dropdown: Dropdown$1,Label: Label$8,Popover: Popover$3,ProgressBar: ProgressBar$2,Separator: Separator$2,Spinner: Spinner$6,useOverlayState: useOverlayState$3} = await importShared('@heroui/react');
+const {Button: Button$a,Card,Label: Label$9,ProgressBar: ProgressBar$2,Spinner: Spinner$6} = await importShared('@heroui/react');
+const {useDispatch: useDispatch$5} = await importShared('react-redux');
+function EnvironmentCard({
+  title,
+  subtitle,
+  badges,
+  actions,
+  path,
+  packages,
+  diskUsage,
+  maxDiskValue,
+  onOpenPath,
+  associationType,
+  condaName,
+  iconClassName = "text-blue-400",
+  footer,
+  isBusy,
+  busyMessage
+}) {
+  const diskValue = diskUsage || 0;
+  const diskMax = Math.max(maxDiskValue || diskValue || 1, 1);
+  const packageCount = Number.isFinite(packages) ? packages : 0;
+  const activeTab = useTabsState("activeTab");
+  const dispatch = useDispatch$5();
+  const openTerminal = () => {
+    pIpc.getEnvironmentActivationCommand({ dir: path, type: associationType, condaName }).then((command) => {
+      const id = `${activeTab}_terminal`;
+      dispatch(cardsActions.addRunningEmpty({ tabId: activeTab, type: "terminal" }));
+      setTimeout(() => ptyIpc.write(id, `${command}${terminalLineEnding}`), 500);
+    }).catch((error) => {
+      console.error("Failed to open terminal in environment:", error);
+    });
+  };
+  return /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "relative", children: [
+    isBusy && /* @__PURE__ */ jsxRuntimeExports.jsx(
+      "div",
+      {
+        className: "absolute inset-0 z-10 flex items-center justify-center rounded-3xl bg-background/70 backdrop-blur-sm",
+        children: /* @__PURE__ */ jsxRuntimeExports.jsxs(
+          "div",
+          {
+            className: "flex flex-col items-center gap-y-2 rounded-3xl border border-divider bg-content1 px-4 py-3 shadow-xl",
+            children: [
+              /* @__PURE__ */ jsxRuntimeExports.jsx(Spinner$6, { size: "md", color: "danger" }),
+              /* @__PURE__ */ jsxRuntimeExports.jsx("span", { className: "text-xs text-muted", children: busyMessage })
+            ]
+          }
+        )
+      }
+    ),
+    /* @__PURE__ */ jsxRuntimeExports.jsxs(
+      Card,
+      {
+        className: "group w-103 overflow-hidden border border-divider/70 bg-content1/90 p-0 shadow-sm transition-all duration-200 hover:border-divider hover:bg-content1 hover:shadow-md",
+        children: [
+          /* @__PURE__ */ jsxRuntimeExports.jsxs(Card.Header, { className: "flex flex-row items-start justify-between gap-x-3 px-4 pb-2.5 pt-3.5", children: [
+            /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "min-w-0 flex-1", children: [
+              /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "flex min-w-0 items-center gap-x-2.5", children: [
+                /* @__PURE__ */ jsxRuntimeExports.jsx(
+                  "div",
+                  {
+                    className: "flex size-10 shrink-0 items-center justify-center rounded-full border border-divider bg-surface-secondary/70",
+                    children: /* @__PURE__ */ jsxRuntimeExports.jsx(PythonIcon, { className: `size-6 ${iconClassName}` })
+                  }
+                ),
+                /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "min-w-0", children: [
+                  /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "flex min-w-0 flex-wrap items-center gap-1.5 text-sm font-semibold text-foreground", children: title }),
+                  /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "mt-0.5 flex min-w-0 flex-wrap items-center gap-1.5 text-xs text-muted", children: subtitle })
+                ] })
+              ] }),
+              badges && /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "mt-2 flex flex-wrap items-center gap-1.5", children: badges })
+            ] }),
+            actions && /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "flex shrink-0 items-center gap-x-1.5", children: actions })
+          ] }),
+          /* @__PURE__ */ jsxRuntimeExports.jsxs(Card.Content, { className: "flex flex-col gap-y-3 px-4 pb-3 pt-0 text-sm", children: [
+            /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "flex min-w-0 gap-2", children: [
+              /* @__PURE__ */ jsxRuntimeExports.jsxs(
+                Button$a,
+                {
+                  size: "sm",
+                  variant: "tertiary",
+                  onPress: onOpenPath,
+                  className: "h-8 min-w-0 justify-start border border-divider/60 bg-surface-secondary/45 px-2.5 text-xs",
+                  fullWidth: true,
+                  children: [
+                    /* @__PURE__ */ jsxRuntimeExports.jsx(i$j, { className: "size-3.5 shrink-0 text-muted" }),
+                    /* @__PURE__ */ jsxRuntimeExports.jsx("span", { className: "truncate font-JetBrainsMono", children: path })
+                  ]
+                }
+              ),
+              /* @__PURE__ */ jsxRuntimeExports.jsx(LynxTooltip, { delay: 300, content: "Open terminal in environment", children: /* @__PURE__ */ jsxRuntimeExports.jsx(
+                Button$a,
+                {
+                  size: "sm",
+                  variant: "tertiary",
+                  onPress: openTerminal,
+                  className: "h-8 w-8 min-w-8 shrink-0 border border-divider/60 bg-surface-secondary/45",
+                  isIconOnly: true,
+                  children: /* @__PURE__ */ jsxRuntimeExports.jsx(Terminal, { className: "size-3.5 text-muted" })
+                }
+              ) })
+            ] }),
+            /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "grid grid-cols-2 gap-2 rounded-3xl border border-divider/60 bg-surface-secondary/35 p-3", children: [
+              /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "min-w-0", children: [
+                /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "mb-1 flex items-center gap-x-1.5 text-xs text-muted", children: [
+                  /* @__PURE__ */ jsxRuntimeExports.jsx(i$8, { className: "size-3.5" }),
+                  /* @__PURE__ */ jsxRuntimeExports.jsx("span", { children: "Packages" })
+                ] }),
+                /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "text-base font-semibold leading-none text-foreground", children: packageCount })
+              ] }),
+              /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "min-w-0 border-l border-divider/60 pl-2.5", children: [
+                /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "mb-1 flex items-center gap-x-1.5 text-xs text-muted", children: [
+                  /* @__PURE__ */ jsxRuntimeExports.jsx(i$k, { className: "size-3.5" }),
+                  /* @__PURE__ */ jsxRuntimeExports.jsx("span", { children: "Disk usage" })
+                ] }),
+                diskUsage === void 0 ? /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "flex h-4 items-center", children: /* @__PURE__ */ jsxRuntimeExports.jsx(Spinner$6, { size: "sm" }) }) : /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "truncate text-base font-semibold leading-none text-foreground", children: formatSizeMB(diskValue) })
+              ] })
+            ] }),
+            /* @__PURE__ */ jsxRuntimeExports.jsxs(
+              ProgressBar$2,
+              {
+                size: "sm",
+                minValue: 0,
+                value: diskValue,
+                maxValue: diskMax,
+                isIndeterminate: diskUsage === void 0,
+                children: [
+                  /* @__PURE__ */ jsxRuntimeExports.jsx(Label$9, { className: "text-xs text-muted", children: "Storage" }),
+                  /* @__PURE__ */ jsxRuntimeExports.jsx(ProgressBar$2.Output, { children: diskUsage === void 0 ? "Calculating..." : formatSizeMB(diskValue) }),
+                  /* @__PURE__ */ jsxRuntimeExports.jsx(ProgressBar$2.Track, { children: /* @__PURE__ */ jsxRuntimeExports.jsx(ProgressBar$2.Fill, {}) })
+                ]
+              }
+            )
+          ] }),
+          /* @__PURE__ */ jsxRuntimeExports.jsxs(Card.Footer, { className: "flex-col gap-y-2 border-t border-divider/60 bg-surface-secondary/20 px-4 py-3", children: [
+            /* @__PURE__ */ jsxRuntimeExports.jsx(Venv_Associate, { folder: path, type: associationType }),
+            footer
+          ] })
+        ]
+      }
+    )
+  ] });
+}
+
+const {AlertDialog,Button: Button$9,Chip,Description: Description$8,Dropdown: Dropdown$1,Label: Label$8,Popover: Popover$3,Separator: Separator$2,useOverlayState: useOverlayState$3} = await importShared('@heroui/react');
 const {useCallback: useCallback$5,useMemo: useMemo$6,useState: useState$d} = await importShared('react');
 function InstalledCard({ python, diskUsage, maxDiskValue, updateDefault, refresh }) {
+  const systemConfirm = useOverlayState$3();
+  const lynxConfirm = useOverlayState$3();
   const size = useMemo$6(() => {
     return diskUsage.find((usage) => usage.path === python.installFolder)?.value;
-  }, [diskUsage]);
+  }, [diskUsage, python.installFolder]);
   const [isUninstalling, setIsUninstalling] = useState$d(false);
-  const makeDefault = () => {
-    pIpc.setDefaultPython(python.installFolder).then(() => {
-      topToast.success(`Python ${python.version} is now the system default.`);
-      updateDefault(python.installFolder, "isDefault");
-    }).catch((error) => {
-      topToast.danger(`Failed to set ${python.version} as system default. Please try again later.`);
-      console.error(error);
-    });
-  };
-  const makeLynxDefault = () => {
-    const showFailedToast = () => {
-      topToast.danger(`Failed to set ${python.version} as LynxHub default. Please try again later.`);
-    };
-    pIpc.replacePythonPath(python.installFolder).then((result) => {
-      if (result) {
-        topToast.success(`Python ${python.version} is now the default for LynxHub.`);
-        updateDefault(python.installFolder, "isLynxHubDefault");
-      } else {
-        showFailedToast();
-      }
-    }).catch((e) => {
-      console.log(e);
-      showFailedToast();
-    });
-  };
   const uninstall = () => {
     setPopoverUninstaller(false);
     setIsUninstalling(true);
@@ -20123,21 +21191,18 @@ function InstalledCard({ python, diskUsage, maxDiskValue, updateDefault, refresh
   const openPath = () => {
     filesIpc.openPath(python.installFolder);
   };
-  const installTypeColor = useMemo$6(() => {
+  const installTypeClassName = useMemo$6(() => {
     switch (python.installationType) {
       case "official":
-        return "text-[#28A745]";
+        return "border-success/30 bg-success/10 text-success";
       case "conda":
-        return "text-[#007BFF]";
+        return "border-accent/30 bg-accent/10 text-accent";
       case "other":
-        return "text-[#FFA500]";
+        return "border-warning/30 bg-warning/10 text-warning";
     }
   }, [python.installationType]);
   const [popoverUninstaller, setPopoverUninstaller] = useState$d(false);
   const packageManagerModal = useOverlayState$3();
-  const borderColor = useMemo$6(() => {
-    return python.isDefault && python.isLynxHubDefault ? "border-2 border-success/60 hover:border-success" : python.isDefault ? "border-2 border-LynxPurple/60 hover:border-LynxPurple" : python.isLynxHubDefault ? "border-2 border-accent/60 hover:border-accent" : "border-2 border-surface-LynxPurple hover:border-surface-tertiary";
-  }, [python]);
   const defaultChip = useMemo$6(() => {
     if (python.isDefault && python.isLynxHubDefault) {
       return /* @__PURE__ */ jsxRuntimeExports.jsxs(Chip, { size: "sm", variant: "soft", color: "success", className: "font-semibold! px-2", children: [
@@ -20159,13 +21224,41 @@ function InstalledCard({ python, diskUsage, maxDiskValue, updateDefault, refresh
     }
     return null;
   }, [python]);
+  const makeDefault = () => {
+    systemConfirm.close();
+    topToast.promise(pIpc.setDefaultPython(python.installFolder), {
+      error: `Failed to set ${python.version} as system default. Please try again later.`,
+      loading: `Changing system default to the ${python.version}...`,
+      success: () => {
+        updateDefault(python.installFolder, "isDefault");
+        return `Python ${python.version} is now the system default.`;
+      }
+    });
+  };
+  const makeLynxDefault = () => {
+    lynxConfirm.close();
+    const showFailedToast = () => {
+      topToast.danger(`Failed to set ${python.version} as LynxHub default. Please try again later.`);
+    };
+    pIpc.replacePythonPath(python.installFolder).then((result) => {
+      if (result) {
+        topToast.success(`Python ${python.version} is now the default for LynxHub.`);
+        updateDefault(python.installFolder, "isLynxHubDefault");
+      } else {
+        showFailedToast();
+      }
+    }).catch((e) => {
+      console.log(e);
+      showFailedToast();
+    });
+  };
   const removeFromList = useCallback$5(() => {
     pIpc.removeAssociatePath(python.installPath);
     pIpc.removeSavedPython(python.installPath);
     setPopoverUninstaller(false);
     refresh(false);
-  }, [python]);
-  return /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "grow relative", children: [
+  }, [python.installPath, refresh]);
+  return /* @__PURE__ */ jsxRuntimeExports.jsxs(jsxRuntimeExports.Fragment, { children: [
     /* @__PURE__ */ jsxRuntimeExports.jsx(
       PackageManagerModal,
       {
@@ -20175,45 +21268,47 @@ function InstalledCard({ python, diskUsage, maxDiskValue, updateDefault, refresh
         onPackagesChanged: () => refresh(false)
       }
     ),
-    isUninstalling && /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "absolute size-full dark:bg-black/50 bg-white/50 z-10 flex justify-center items-center", children: /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "bg-surface-tertiary shadow-lg p-4 rounded-2xl flex flex-col space-y-2 items-center", children: [
-      /* @__PURE__ */ jsxRuntimeExports.jsx(Spinner$6, { size: "lg", color: "danger" }),
-      /* @__PURE__ */ jsxRuntimeExports.jsx(Description$8, { className: "text-sm", children: "Uninstalling, Please wait..." })
-    ] }) }),
-    /* @__PURE__ */ jsxRuntimeExports.jsxs(Card$1, { className: `w-120 transition-all duration-200 ${borderColor}`, children: [
-      /* @__PURE__ */ jsxRuntimeExports.jsxs(Card$1.Header, { className: "flex flex-row justify-between items-center", children: [
-        /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "flex flex-col", children: [
-          /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "flex flex-row items-center gap-x-2", children: [
-            /* @__PURE__ */ jsxRuntimeExports.jsx(Python_Icon, { className: "size-4 text-yellow-300" }),
+    /* @__PURE__ */ jsxRuntimeExports.jsx(
+      EnvironmentCard,
+      {
+        title: /* @__PURE__ */ jsxRuntimeExports.jsxs(jsxRuntimeExports.Fragment, { children: [
+          /* @__PURE__ */ jsxRuntimeExports.jsxs("span", { children: [
             "Python ",
-            python.version,
-            defaultChip
+            python.version
           ] }),
-          /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "flex items-center gap-x-2", children: [
-            /* @__PURE__ */ jsxRuntimeExports.jsx("span", { className: "text-xs text-muted", children: python.architecture }),
-            /* @__PURE__ */ jsxRuntimeExports.jsx(Separator$2, { className: "h-2 w-px" }),
-            /* @__PURE__ */ jsxRuntimeExports.jsx("span", { className: "text-xs " + installTypeColor, children: startCase(python.installationType) }),
-            python.installationType === "conda" && /* @__PURE__ */ jsxRuntimeExports.jsxs(jsxRuntimeExports.Fragment, { children: [
-              /* @__PURE__ */ jsxRuntimeExports.jsx(Separator$2, { className: "h-2 w-px" }),
-              /* @__PURE__ */ jsxRuntimeExports.jsx("span", { className: "text-xs text-cyan-500", children: python.condaName })
-            ] })
-          ] })
+          defaultChip
         ] }),
-        /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "space-x-2 flex items-center", children: [
+        subtitle: /* @__PURE__ */ jsxRuntimeExports.jsxs(jsxRuntimeExports.Fragment, { children: [
+          /* @__PURE__ */ jsxRuntimeExports.jsx("span", { children: python.architecture }),
+          /* @__PURE__ */ jsxRuntimeExports.jsx("span", { className: "text-muted/60", children: "/" }),
+          /* @__PURE__ */ jsxRuntimeExports.jsx("span", { children: python.installationType === "conda" ? "Conda managed runtime" : "Standalone runtime" })
+        ] }),
+        badges: /* @__PURE__ */ jsxRuntimeExports.jsxs(jsxRuntimeExports.Fragment, { children: [
+          /* @__PURE__ */ jsxRuntimeExports.jsx("span", { className: `rounded-full border px-2 py-0.5 text-xs font-medium ${installTypeClassName}`, children: startCase(python.installationType) }),
+          python.installationType === "conda" && python.condaName && /* @__PURE__ */ jsxRuntimeExports.jsx(
+            "span",
+            {
+              className: "rounded-md border border-cyan-500/25 bg-cyan-500/10 px-2 py-0.5 text-xs font-medium text-cyan-500",
+              children: python.condaName
+            }
+          )
+        ] }),
+        actions: /* @__PURE__ */ jsxRuntimeExports.jsxs(jsxRuntimeExports.Fragment, { children: [
           /* @__PURE__ */ jsxRuntimeExports.jsxs(Dropdown$1, { children: [
-            /* @__PURE__ */ jsxRuntimeExports.jsx(Button$8, { size: "sm", variant: "tertiary", isIconOnly: true, children: /* @__PURE__ */ jsxRuntimeExports.jsx(i$3, { className: "rotate-90" }) }),
+            /* @__PURE__ */ jsxRuntimeExports.jsx(LynxTooltip, { delay: 300, content: "Python actions", children: /* @__PURE__ */ jsxRuntimeExports.jsx(Button$9, { size: "sm", variant: "tertiary", isIconOnly: true, children: /* @__PURE__ */ jsxRuntimeExports.jsx(i$3, { className: "rotate-90" }) }) }),
             /* @__PURE__ */ jsxRuntimeExports.jsx(Dropdown$1.Popover, { children: /* @__PURE__ */ jsxRuntimeExports.jsxs(Dropdown$1.Menu, { children: [
-              window.osPlatform === "win32" && /* @__PURE__ */ jsxRuntimeExports.jsxs(jsxRuntimeExports.Fragment, { children: [
-                /* @__PURE__ */ jsxRuntimeExports.jsxs(Dropdown$1.Item, { id: "system-default", onPress: makeDefault, textValue: "Set as System Default", children: [
-                  python.isDefault ? /* @__PURE__ */ jsxRuntimeExports.jsx(i$i, { className: "size-4" }) : /* @__PURE__ */ jsxRuntimeExports.jsx(i$1, { size: 16 }),
+              isWin && /* @__PURE__ */ jsxRuntimeExports.jsxs(jsxRuntimeExports.Fragment, { children: [
+                /* @__PURE__ */ jsxRuntimeExports.jsxs(Dropdown$1.Item, { id: "system-default", onPress: systemConfirm.open, textValue: "Set as System Default", children: [
+                  python.isDefault ? /* @__PURE__ */ jsxRuntimeExports.jsx(i$m, { size: 16 }) : /* @__PURE__ */ jsxRuntimeExports.jsx(i$1, { size: 16 }),
                   /* @__PURE__ */ jsxRuntimeExports.jsxs(Label$8, { children: [
-                    "Set as ",
+                    python.isDefault ? "Reset " : "Set ",
                     /* @__PURE__ */ jsxRuntimeExports.jsx("span", { className: "font-bold text-LynxPurple", children: "System Default" })
                   ] })
                 ] }),
-                /* @__PURE__ */ jsxRuntimeExports.jsxs(Dropdown$1.Item, { id: "lynxhub-default", onPress: makeLynxDefault, textValue: "Set as LynxHub Default", children: [
-                  python.isLynxHubDefault ? /* @__PURE__ */ jsxRuntimeExports.jsx(i$i, { className: "size-4" }) : /* @__PURE__ */ jsxRuntimeExports.jsx(i$1, { size: 16 }),
+                /* @__PURE__ */ jsxRuntimeExports.jsxs(Dropdown$1.Item, { id: "lynxhub-default", onPress: lynxConfirm.open, textValue: "Set as LynxHub Default", children: [
+                  python.isLynxHubDefault ? /* @__PURE__ */ jsxRuntimeExports.jsx(i$m, { size: 16 }) : /* @__PURE__ */ jsxRuntimeExports.jsx(i$1, { size: 16 }),
                   /* @__PURE__ */ jsxRuntimeExports.jsxs(Label$8, { children: [
-                    "Set as ",
+                    python.isDefault ? "Reset " : "Set ",
                     /* @__PURE__ */ jsxRuntimeExports.jsx("span", { className: "font-bold text-accent", children: "LynxHub Default" })
                   ] })
                 ] })
@@ -20224,21 +21319,64 @@ function InstalledCard({ python, diskUsage, maxDiskValue, updateDefault, refresh
               ] })
             ] }) })
           ] }),
+          /* @__PURE__ */ jsxRuntimeExports.jsx(AlertDialog, { isOpen: systemConfirm.isOpen, onOpenChange: systemConfirm.setOpen, children: /* @__PURE__ */ jsxRuntimeExports.jsx(AlertDialog.Backdrop, { children: /* @__PURE__ */ jsxRuntimeExports.jsx(AlertDialog.Container, { children: /* @__PURE__ */ jsxRuntimeExports.jsxs(AlertDialog.Dialog, { children: [
+            /* @__PURE__ */ jsxRuntimeExports.jsx(AlertDialog.CloseTrigger, {}),
+            /* @__PURE__ */ jsxRuntimeExports.jsxs(AlertDialog.Header, { children: [
+              /* @__PURE__ */ jsxRuntimeExports.jsx(AlertDialog.Icon, { status: "danger" }),
+              /* @__PURE__ */ jsxRuntimeExports.jsxs(AlertDialog.Heading, { children: [
+                "Set Python ",
+                /* @__PURE__ */ jsxRuntimeExports.jsx("span", { className: "font-bold", children: python.version }),
+                " as the system default?"
+              ] })
+            ] }),
+            /* @__PURE__ */ jsxRuntimeExports.jsxs(AlertDialog.Body, { className: "flex flex-col gap-y-1", children: [
+              /* @__PURE__ */ jsxRuntimeExports.jsx(Description$8, { className: "text-warning", children: python.installFolder }),
+              /* @__PURE__ */ jsxRuntimeExports.jsx(Description$8, { children: "This updates the Python directory used at the front of PATH for system-default detection. Existing terminals may need to be restarted before they see the change." })
+            ] }),
+            /* @__PURE__ */ jsxRuntimeExports.jsxs(AlertDialog.Footer, { children: [
+              /* @__PURE__ */ jsxRuntimeExports.jsx(Button$9, { slot: "close", variant: "ghost", children: "No" }),
+              /* @__PURE__ */ jsxRuntimeExports.jsx(Button$9, { variant: "danger", onPress: makeDefault, children: "Yes" })
+            ] })
+          ] }) }) }) }),
+          /* @__PURE__ */ jsxRuntimeExports.jsx(AlertDialog, { isOpen: lynxConfirm.isOpen, onOpenChange: lynxConfirm.setOpen, children: /* @__PURE__ */ jsxRuntimeExports.jsx(AlertDialog.Backdrop, { children: /* @__PURE__ */ jsxRuntimeExports.jsx(AlertDialog.Container, { children: /* @__PURE__ */ jsxRuntimeExports.jsxs(AlertDialog.Dialog, { children: [
+            /* @__PURE__ */ jsxRuntimeExports.jsx(AlertDialog.CloseTrigger, {}),
+            /* @__PURE__ */ jsxRuntimeExports.jsxs(AlertDialog.Header, { children: [
+              /* @__PURE__ */ jsxRuntimeExports.jsx(AlertDialog.Icon, { status: "warning" }),
+              /* @__PURE__ */ jsxRuntimeExports.jsxs(AlertDialog.Heading, { children: [
+                "Set Python ",
+                /* @__PURE__ */ jsxRuntimeExports.jsx("span", { className: "font-bold", children: python.version }),
+                " as the LynxHub default?"
+              ] })
+            ] }),
+            /* @__PURE__ */ jsxRuntimeExports.jsxs(AlertDialog.Body, { className: "flex flex-col gap-y-1", children: [
+              /* @__PURE__ */ jsxRuntimeExports.jsx(Description$8, { className: "text-warning", children: python.installFolder }),
+              /* @__PURE__ */ jsxRuntimeExports.jsx(Description$8, { children: "This changes the PATH used by LynxHub-run tools so new Python package operations use this installation first." })
+            ] }),
+            /* @__PURE__ */ jsxRuntimeExports.jsxs(AlertDialog.Footer, { children: [
+              /* @__PURE__ */ jsxRuntimeExports.jsx(Button$9, { slot: "close", variant: "ghost", children: "No" }),
+              /* @__PURE__ */ jsxRuntimeExports.jsx(Button$9, { variant: "danger-soft", onPress: makeLynxDefault, children: "Yes" })
+            ] })
+          ] }) }) }) }),
           /* @__PURE__ */ jsxRuntimeExports.jsxs(Popover$3, { isOpen: popoverUninstaller, onOpenChange: setPopoverUninstaller, children: [
-            /* @__PURE__ */ jsxRuntimeExports.jsx(Button$8, { size: "sm", variant: "danger-soft", isIconOnly: true, children: /* @__PURE__ */ jsxRuntimeExports.jsx(i$2, {}) }),
+            /* @__PURE__ */ jsxRuntimeExports.jsx(LynxTooltip, { delay: 300, content: "Remove Python", children: /* @__PURE__ */ jsxRuntimeExports.jsx(Button$9, { size: "sm", variant: "danger-soft", isIconOnly: true, children: /* @__PURE__ */ jsxRuntimeExports.jsx(i$2, {}) }) }),
             /* @__PURE__ */ jsxRuntimeExports.jsx(Popover$3.Content, { children: /* @__PURE__ */ jsxRuntimeExports.jsxs(Popover$3.Dialog, { className: "max-w-sm", children: [
               /* @__PURE__ */ jsxRuntimeExports.jsx(Popover$3.Arrow, {}),
               /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "p-2 gap-y-3 flex flex-col", children: [
                 /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { children: [
                   /* @__PURE__ */ jsxRuntimeExports.jsx("strong", { className: "text-sm", children: "Complete Uninstall" }),
-                  python.installationType === "conda" ? /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "text-xs text-default-600 mt-1", children: `Permanently deletes the entire Conda environment "${python.condaName}" and all
-                         its packages from your computer. Any AI using this environment will be
-                          disconnected.` }) : window.osPlatform === "darwin" ? /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "text-xs text-default-600 mt-1", children: python.installPath.includes("/Library/Frameworks/Python.framework") ? `Removes Python ${python.version} from /Library/Frameworks and cleans up symlinks.
+                  python.installationType === "conda" ? /* @__PURE__ */ jsxRuntimeExports.jsxs("p", { className: "text-xs text-default-600 mt-1", children: [
+                    'Permanently deletes the entire Conda environment "',
+                    python.condaName,
+                    '" and all its packages from your computer. Any AI using this environment will be disconnected.'
+                  ] }) : window.osPlatform === "darwin" ? /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "text-xs text-default-600 mt-1", children: python.installPath.includes("/Library/Frameworks/Python.framework") ? `Removes Python ${python.version} from /Library/Frameworks and cleans up symlinks.
                              Admin password will be required.` : python.installPath.includes("/opt/homebrew") || python.installPath.includes("/usr/local/Cellar") ? `Uninstalls Python ${python.version} via Homebrew (brew uninstall).
                                Any AI using this installation will be disconnected.` : `Permanently uninstalls Python ${python.version} and all its packages.
-                               Any AI using this installation will be disconnected.` }) : /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "text-xs text-default-600 mt-1", children: `Permanently uninstalls Python version ${python.version} and all its packages
-                         from your computer. Any AI using this installation will be disconnected.` }),
-                  /* @__PURE__ */ jsxRuntimeExports.jsxs(Button$8, { size: "sm", variant: "danger", className: "mt-2", onPress: uninstall, fullWidth: true, children: [
+                               Any AI using this installation will be disconnected.` }) : /* @__PURE__ */ jsxRuntimeExports.jsxs("p", { className: "text-xs text-default-600 mt-1", children: [
+                    "Permanently uninstalls Python version ",
+                    python.version,
+                    " and all its packages from your computer. Any AI using this installation will be disconnected."
+                  ] }),
+                  /* @__PURE__ */ jsxRuntimeExports.jsxs(Button$9, { size: "sm", variant: "danger", className: "mt-2", onPress: uninstall, fullWidth: true, children: [
                     /* @__PURE__ */ jsxRuntimeExports.jsx(i$2, {}),
                     "Uninstall Permanently"
                   ] })
@@ -20247,59 +21385,31 @@ function InstalledCard({ python, diskUsage, maxDiskValue, updateDefault, refresh
                 /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { children: [
                   /* @__PURE__ */ jsxRuntimeExports.jsx("strong", { className: "text-sm", children: "Remove From List Only" }),
                   /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "text-xs text-default-600 mt-1", children: "Removes this entry from the list but does not delete the actual Python installation from your system. Any associated AI will be disconnected, but you can re-link them if you add this installation back later." }),
-                  /* @__PURE__ */ jsxRuntimeExports.jsxs(Button$8, { size: "sm", className: "mt-2", variant: "danger-soft", onPress: removeFromList, fullWidth: true, children: [
-                    /* @__PURE__ */ jsxRuntimeExports.jsx(X$2, {}),
+                  /* @__PURE__ */ jsxRuntimeExports.jsxs(Button$9, { size: "sm", className: "mt-2", variant: "danger-soft", onPress: removeFromList, fullWidth: true, children: [
+                    /* @__PURE__ */ jsxRuntimeExports.jsx(X$3, {}),
                     "Remove from List"
                   ] })
                 ] })
               ] })
             ] }) })
           ] })
-        ] })
-      ] }),
-      /* @__PURE__ */ jsxRuntimeExports.jsxs(Card$1.Content, { className: "gap-y-4 py-2 flex flex-col text-sm", children: [
-        /* @__PURE__ */ jsxRuntimeExports.jsxs(
-          Button$8,
-          {
-            size: "sm",
-            onPress: openPath,
-            variant: "tertiary",
-            className: "flex flex-row justify-start text-xs",
-            fullWidth: true,
-            children: [
-              /* @__PURE__ */ jsxRuntimeExports.jsx(i$e, { className: "shrink-0 size-3" }),
-              /* @__PURE__ */ jsxRuntimeExports.jsx("span", { className: "truncate", children: python.installFolder })
-            ]
-          }
-        ),
-        /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "w-full justify-between flex flex-row", children: [
-          /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "flex flex-row gap-x-2 items-center", children: [
-            /* @__PURE__ */ jsxRuntimeExports.jsx(i$8, { className: "size-3" }),
-            /* @__PURE__ */ jsxRuntimeExports.jsx("span", { children: "Installed Packages:" })
-          ] }),
-          /* @__PURE__ */ jsxRuntimeExports.jsx("span", { children: python.packages })
         ] }),
-        /* @__PURE__ */ jsxRuntimeExports.jsxs(ProgressBar$2, { size: "sm", minValue: 0, value: size, maxValue: maxDiskValue, isIndeterminate: isNil(size), children: [
-          /* @__PURE__ */ jsxRuntimeExports.jsxs(Label$8, { className: "flex flex-row gap-x-2 items-center", children: [
-            /* @__PURE__ */ jsxRuntimeExports.jsx(i$h, { className: "size-3" }),
-            /* @__PURE__ */ jsxRuntimeExports.jsx("span", { children: "Disk Usage:" })
-          ] }),
-          /* @__PURE__ */ jsxRuntimeExports.jsx(ProgressBar$2.Output, { children: formatSizeMB(size || 0) }),
-          /* @__PURE__ */ jsxRuntimeExports.jsx(ProgressBar$2.Track, { children: /* @__PURE__ */ jsxRuntimeExports.jsx(ProgressBar$2.Fill, {}) })
-        ] })
-      ] }),
-      /* @__PURE__ */ jsxRuntimeExports.jsx(Card$1.Footer, { className: "flex-col gap-y-3", children: /* @__PURE__ */ jsxRuntimeExports.jsx(
-        Venv_Associate,
-        {
-          folder: python.installFolder,
-          type: python.installationType === "conda" ? "conda" : "python"
-        }
-      ) })
-    ] })
+        diskUsage: size,
+        onOpenPath: openPath,
+        isBusy: isUninstalling,
+        packages: python.packages,
+        path: python.installFolder,
+        maxDiskValue,
+        iconClassName: "text-blue-400",
+        busyMessage: "Uninstalling, please wait...",
+        associationType: python.installationType === "conda" ? "conda" : "python",
+        condaName: python.installationType === "conda" ? python.condaName : void 0
+      }
+    )
   ] });
 }
 
-const {Button: Button$7,Description: Description$7,Input: Input$1,Label: Label$7,Link: Link$1,Popover: Popover$2,ProgressBar: ProgressBar$1,SearchField: SearchField$1,Spinner: Spinner$5} = await importShared('@heroui/react');
+const {Button: Button$8,Description: Description$7,Input: Input$1,Label: Label$7,Link: Link$1,Popover: Popover$2,ProgressBar: ProgressBar$1,SearchField: SearchField$1,Spinner: Spinner$5} = await importShared('@heroui/react');
 const {useEffect: useEffect$b,useState: useState$c} = await importShared('react');
 function InstallerConda({ refresh, installed, state, setCloseDisabled }) {
   const [versions, setVersions] = useState$c([]);
@@ -20419,7 +21529,7 @@ function InstallerConda({ refresh, installed, state, setCloseDisabled }) {
         /* @__PURE__ */ jsxRuntimeExports.jsx(SearchField$1.Input, { placeholder: "Search..." }),
         /* @__PURE__ */ jsxRuntimeExports.jsx(SearchField$1.ClearButton, {})
       ] }) }),
-      /* @__PURE__ */ jsxRuntimeExports.jsx(LynxTooltip, { delay: 300, content: "Refresh from server", children: /* @__PURE__ */ jsxRuntimeExports.jsx(Button$7, { variant: "tertiary", className: "shrink-0", onPress: () => fetchPythonList(true), isIconOnly: true, children: /* @__PURE__ */ jsxRuntimeExports.jsx(i$i, {}) }) })
+      /* @__PURE__ */ jsxRuntimeExports.jsx(LynxTooltip, { delay: 300, content: "Refresh from server", children: /* @__PURE__ */ jsxRuntimeExports.jsx(Button$8, { variant: "tertiary", className: "shrink-0", onPress: () => fetchPythonList(true), isIconOnly: true, children: /* @__PURE__ */ jsxRuntimeExports.jsx(i$m, {}) }) })
     ] }),
     errorLoadingVersion ? /* @__PURE__ */ jsxRuntimeExports.jsx(
       EmptyStateCard,
@@ -20446,7 +21556,7 @@ function InstallerConda({ refresh, installed, state, setCloseDisabled }) {
       {
         className: "mt-2",
         variant: "secondary",
-        icon: /* @__PURE__ */ jsxRuntimeExports.jsx(i$c, { size: 34 }),
+        icon: /* @__PURE__ */ jsxRuntimeExports.jsx(i$g, { size: 34 }),
         description: "Nothing to install!"
       }
     ) : /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "flex flex-col gap-y-1 my-2", children: searchVersions.map((item) => /* @__PURE__ */ jsxRuntimeExports.jsxs(
@@ -20456,8 +21566,8 @@ function InstallerConda({ refresh, installed, state, setCloseDisabled }) {
         children: [
           /* @__PURE__ */ jsxRuntimeExports.jsx(Label$7, { children: item }),
           /* @__PURE__ */ jsxRuntimeExports.jsxs(Popover$2, { children: [
-            /* @__PURE__ */ jsxRuntimeExports.jsxs(Button$7, { size: "sm", variant: "secondary", children: [
-              /* @__PURE__ */ jsxRuntimeExports.jsx(i$j, {}),
+            /* @__PURE__ */ jsxRuntimeExports.jsxs(Button$8, { size: "sm", variant: "secondary", children: [
+              /* @__PURE__ */ jsxRuntimeExports.jsx(i$o, {}),
               "Install"
             ] }),
             /* @__PURE__ */ jsxRuntimeExports.jsx(Popover$2.Content, { className: "max-w-64", children: /* @__PURE__ */ jsxRuntimeExports.jsxs(Popover$2.Dialog, { className: "gap-y-2 flex flex-col", children: [
@@ -20476,8 +21586,8 @@ function InstallerConda({ refresh, installed, state, setCloseDisabled }) {
                   onChange: (e) => setEnvName(e.target.value)
                 }
               ),
-              /* @__PURE__ */ jsxRuntimeExports.jsxs(Button$7, { size: "sm", onPress: () => installPython(item), fullWidth: true, children: [
-                /* @__PURE__ */ jsxRuntimeExports.jsx(i$j, {}),
+              /* @__PURE__ */ jsxRuntimeExports.jsxs(Button$8, { size: "sm", onPress: () => installPython(item), fullWidth: true, children: [
+                /* @__PURE__ */ jsxRuntimeExports.jsx(i$o, {}),
                 "Install v",
                 item
               ] })
@@ -20490,7 +21600,7 @@ function InstallerConda({ refresh, installed, state, setCloseDisabled }) {
   ] });
 }
 
-const {Button: Button$6,Description: Description$6,Label: Label$6,Link,ProgressBar,SearchField,Spinner: Spinner$4} = await importShared('@heroui/react');
+const {Button: Button$7,Description: Description$6,Label: Label$6,Link,ProgressBar,SearchField,Spinner: Spinner$4} = await importShared('@heroui/react');
 const {useEffect: useEffect$a,useState: useState$b} = await importShared('react');
 function InstallerOfficial({ refresh, installed, state, setCloseDisabled }) {
   const [versions, setVersions] = useState$b([]);
@@ -20578,6 +21688,7 @@ function InstallerOfficial({ refresh, installed, state, setCloseDisabled }) {
       setCloseDisabled(false);
     });
   };
+  const isDownloading = !!downloadProgress?.percentage || downloadProgress?.percentage !== 0;
   return /* @__PURE__ */ jsxRuntimeExports.jsxs(jsxRuntimeExports.Fragment, { children: [
     isEmpty(installingVersion) && /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "flex flex-row gap-x-2 px-4 py-1 items-center", children: [
       /* @__PURE__ */ jsxRuntimeExports.jsx(SearchField, { value: inputValue, variant: "secondary", onChange: setInputValue, fullWidth: true, children: /* @__PURE__ */ jsxRuntimeExports.jsxs(SearchField.Group, { children: [
@@ -20585,9 +21696,9 @@ function InstallerOfficial({ refresh, installed, state, setCloseDisabled }) {
         /* @__PURE__ */ jsxRuntimeExports.jsx(SearchField.Input, { placeholder: "Search..." }),
         /* @__PURE__ */ jsxRuntimeExports.jsx(SearchField.ClearButton, {})
       ] }) }),
-      /* @__PURE__ */ jsxRuntimeExports.jsx(LynxTooltip, { delay: 300, content: "Refresh available Python versions", children: /* @__PURE__ */ jsxRuntimeExports.jsx(Button$6, { variant: "tertiary", onPress: () => fetchPythonList(true), isIconOnly: true, children: /* @__PURE__ */ jsxRuntimeExports.jsx(i$i, {}) }) })
+      /* @__PURE__ */ jsxRuntimeExports.jsx(LynxTooltip, { delay: 300, content: "Refresh available Python versions", children: /* @__PURE__ */ jsxRuntimeExports.jsx(Button$7, { variant: "tertiary", onPress: () => fetchPythonList(true), isIconOnly: true, children: /* @__PURE__ */ jsxRuntimeExports.jsx(i$m, {}) }) })
     ] }),
-    errorLoadingVersion ? /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "size-full py-2 text-danger flex flex-col items-center justify-center gap-4", children: [
+    errorLoadingVersion ? /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "py-2 text-danger flex flex-col items-center justify-center gap-4 px-6", children: [
       /* @__PURE__ */ jsxRuntimeExports.jsx(i$a, { className: "size-20" }),
       /* @__PURE__ */ jsxRuntimeExports.jsx("span", { className: "text-lg", children: errorLoadingVersion.title }),
       /* @__PURE__ */ jsxRuntimeExports.jsx("span", { className: "text-warning text-sm", children: errorLoadingVersion.description })
@@ -20599,19 +21710,23 @@ function InstallerOfficial({ refresh, installed, state, setCloseDisabled }) {
       ] }),
       /* @__PURE__ */ jsxRuntimeExports.jsx(ProgressBar.Output, {}),
       /* @__PURE__ */ jsxRuntimeExports.jsx(ProgressBar.Track, { children: /* @__PURE__ */ jsxRuntimeExports.jsx(ProgressBar.Fill, {}) })
-    ] }) : /* @__PURE__ */ jsxRuntimeExports.jsxs(ProgressBar, { className: "my-4", value: (downloadProgress?.percentage || 0.1) * 100, children: [
-      /* @__PURE__ */ jsxRuntimeExports.jsxs(Label$6, { children: [
-        "Downloading ",
-        installingVersion?.url.split("/").pop(),
-        "..."
-      ] }),
-      /* @__PURE__ */ jsxRuntimeExports.jsxs(ProgressBar.Output, { children: [
-        formatSize(downloadProgress?.downloaded),
-        " / ",
-        formatSize(downloadProgress?.total)
-      ] }),
-      /* @__PURE__ */ jsxRuntimeExports.jsx(ProgressBar.Track, { children: /* @__PURE__ */ jsxRuntimeExports.jsx(ProgressBar.Fill, {}) })
-    ] }) : loadingList ? /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "flex flex-col gap-y-2 items-center mt-4", children: [
+    ] }) : /* @__PURE__ */ jsxRuntimeExports.jsxs(
+      ProgressBar,
+      {
+        className: "my-4",
+        isIndeterminate: !isDownloading,
+        value: (downloadProgress?.percentage || 0) * 100,
+        children: [
+          /* @__PURE__ */ jsxRuntimeExports.jsxs(Label$6, { children: [
+            "Downloading ",
+            installingVersion?.url.split("/").pop(),
+            "..."
+          ] }),
+          /* @__PURE__ */ jsxRuntimeExports.jsx(ProgressBar.Output, { children: isDownloading && `${formatSize(downloadProgress?.downloaded)} / ${formatSize(downloadProgress?.total)}` }),
+          /* @__PURE__ */ jsxRuntimeExports.jsx(ProgressBar.Track, { children: /* @__PURE__ */ jsxRuntimeExports.jsx(ProgressBar.Fill, {}) })
+        ]
+      }
+    ) : loadingList ? /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "flex flex-col gap-y-2 items-center mt-4", children: [
       /* @__PURE__ */ jsxRuntimeExports.jsx(Spinner$4, { size: "lg" }),
       /* @__PURE__ */ jsxRuntimeExports.jsx(Description$6, { className: "text-sm", children: "Loading available python versions..." })
     ] }) : isEmpty(searchVersions) ? /* @__PURE__ */ jsxRuntimeExports.jsx(
@@ -20619,7 +21734,7 @@ function InstallerOfficial({ refresh, installed, state, setCloseDisabled }) {
       {
         className: "mt-2",
         variant: "secondary",
-        icon: /* @__PURE__ */ jsxRuntimeExports.jsx(i$c, { size: 34 }),
+        icon: /* @__PURE__ */ jsxRuntimeExports.jsx(i$g, { size: 34 }),
         description: "Nothing to install!"
       }
     ) : /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "flex flex-col gap-y-1 my-2", children: searchVersions.map((item) => /* @__PURE__ */ jsxRuntimeExports.jsxs(
@@ -20631,8 +21746,8 @@ function InstallerOfficial({ refresh, installed, state, setCloseDisabled }) {
             item.version,
             /* @__PURE__ */ jsxRuntimeExports.jsx(Link.Icon, {})
           ] }),
-          /* @__PURE__ */ jsxRuntimeExports.jsxs(Button$6, { size: "sm", variant: "secondary", onPress: () => installPython(item), children: [
-            /* @__PURE__ */ jsxRuntimeExports.jsx(i$j, {}),
+          /* @__PURE__ */ jsxRuntimeExports.jsxs(Button$7, { size: "sm", variant: "secondary", onPress: () => installPython(item), children: [
+            /* @__PURE__ */ jsxRuntimeExports.jsx(i$o, {}),
             "Install"
           ] })
         ]
@@ -20693,7 +21808,7 @@ function InstallerModal({ state, refresh, installed }) {
   ] });
 }
 
-const {Button: Button$5,Description: Description$5,Spinner: Spinner$3,useOverlayState: useOverlayState$2} = await importShared('@heroui/react');
+const {Button: Button$6,Description: Description$5,Spinner: Spinner$3,useOverlayState: useOverlayState$2} = await importShared('@heroui/react');
 const {useCallback: useCallback$4,useEffect: useEffect$9,useState: useState$9} = await importShared('react');
 function InstalledPythons({
   visible,
@@ -20737,6 +21852,8 @@ function InstalledPythons({
   );
   const getInstalledPythons = (refresh) => {
     setIsLoadingPythons(true);
+    setDiskUsage([]);
+    setMaxDiskValue(0);
     pIpc.getInstalledPythons(refresh).then((result) => {
       setInstalledPythons(result);
       setIsLoadingPythons(false);
@@ -20797,7 +21914,7 @@ function InstalledPythons({
           setIsLocating(false);
         }).catch((e) => {
           console.warn(e);
-          topToast.success("Failed to validate selected python.");
+          topToast.danger("Failed to validate selected python.");
           setIsLocating(false);
         });
       } else {
@@ -20827,16 +21944,16 @@ function InstalledPythons({
     /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "w-full flex flex-row justify-between items-center", children: [
       /* @__PURE__ */ jsxRuntimeExports.jsx("span", { className: "font-bold", children: "Installed Versions" }),
       /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "justify-center items-center flex gap-x-2", children: [
-        /* @__PURE__ */ jsxRuntimeExports.jsxs(Button$5, { variant: "secondary", onPress: installModal.open, children: [
+        /* @__PURE__ */ jsxRuntimeExports.jsxs(Button$6, { variant: "secondary", onPress: installModal.open, children: [
           /* @__PURE__ */ jsxRuntimeExports.jsx(Plus, {}),
           "Install Version"
         ] }),
-        /* @__PURE__ */ jsxRuntimeExports.jsxs(Button$5, { variant: "tertiary", onPress: locateVenv, isPending: isLocating, children: [
-          !isLocating && /* @__PURE__ */ jsxRuntimeExports.jsx(i$e, {}),
+        /* @__PURE__ */ jsxRuntimeExports.jsxs(Button$6, { variant: "tertiary", onPress: locateVenv, isPending: isLocating, children: [
+          !isLocating && /* @__PURE__ */ jsxRuntimeExports.jsx(i$j, {}),
           !isLocating && "Locate"
         ] }),
-        /* @__PURE__ */ jsxRuntimeExports.jsxs(Button$5, { variant: "tertiary", onPress: () => getInstalledPythons(true), children: [
-          /* @__PURE__ */ jsxRuntimeExports.jsx(i$i, {}),
+        /* @__PURE__ */ jsxRuntimeExports.jsxs(Button$6, { variant: "tertiary", onPress: () => getInstalledPythons(true), children: [
+          /* @__PURE__ */ jsxRuntimeExports.jsx(i$m, {}),
           "Refresh List"
         ] })
       ] })
@@ -20847,7 +21964,7 @@ function InstalledPythons({
         className: `flex flex-row flex-wrap gap-4 ${(isLoadingPythons || isEmpty(installedPythons)) && "justify-center"}`,
         children: isLoadingPythons ? /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "flex flex-col gap-y-2 items-center", children: [
           /* @__PURE__ */ jsxRuntimeExports.jsx(Spinner$3, { size: "lg" }),
-          /* @__PURE__ */ jsxRuntimeExports.jsx(Description$5, { className: "text-sm", children: "Loading python installations..." })
+          /* @__PURE__ */ jsxRuntimeExports.jsx(Description$5, { className: "text-sm", children: "Loading Python installations..." })
         ] }) : isEmpty(installedPythons) ? /* @__PURE__ */ jsxRuntimeExports.jsx(EmptyStateCard, { title: `No Python installations found. Use the "Install Version" button to add one.` }) : installedPythons.map((python) => /* @__PURE__ */ jsxRuntimeExports.jsx(
           InstalledCard,
           {
@@ -28378,7 +29495,7 @@ function requireCryptoJs () {
 
 var cryptoJsExports = /*@__PURE__*/ requireCryptoJs();
 
-const {Button: Button$4,Card,Dropdown,Label: Label$5,Popover: Popover$1,Separator: Separator$1,Spinner: Spinner$2,useOverlayState: useOverlayState$1} = await importShared('@heroui/react');
+const {Button: Button$5,Dropdown,Label: Label$5,Popover: Popover$1,Separator: Separator$1,useOverlayState: useOverlayState$1} = await importShared('@heroui/react');
 const {useCallback: useCallback$3,useEffect: useEffect$8,useMemo: useMemo$4,useState: useState$8} = await importShared('react');
 function VenvCard({
   title,
@@ -28386,6 +29503,7 @@ function VenvCard({
   pythonVersion,
   folder,
   diskUsage,
+  maxDiskValue,
   pythonPath,
   refresh,
   isInstallation
@@ -28400,7 +29518,7 @@ function VenvCard({
   }, [folder]);
   const size = useMemo$4(() => {
     return diskUsage.find((usage) => usage.path === folder)?.value;
-  }, [diskUsage]);
+  }, [diskUsage, folder]);
   const [isRemoving, setIsRemoving] = useState$8(false);
   const remove = () => {
     setPopoverUninstaller(false);
@@ -28437,7 +29555,7 @@ function VenvCard({
     pIpc.removeSavedVenv(folder);
     setPopoverUninstaller(false);
     refresh();
-  }, [pythonPath, folder]);
+  }, [pythonPath, folder, refresh]);
   return /* @__PURE__ */ jsxRuntimeExports.jsxs(jsxRuntimeExports.Fragment, { children: [
     /* @__PURE__ */ jsxRuntimeExports.jsx(
       PackageManagerModal,
@@ -28448,45 +29566,48 @@ function VenvCard({
         onPackagesChanged: refresh
       }
     ),
-    /* @__PURE__ */ jsxRuntimeExports.jsxs(Card, { className: "w-120 border-2 transition-all duration-200 py-4 border-surface-secondary", children: [
-      /* @__PURE__ */ jsxRuntimeExports.jsxs(Card.Header, { className: "flex flex-row justify-between items-center", children: [
-        /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "flex flex-col", children: [
-          /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "flex flex-row items-center gap-x-2", children: [
-            /* @__PURE__ */ jsxRuntimeExports.jsx(Env_Icon, { className: "size-[1.2rem] text-yellow-300" }),
-            /* @__PURE__ */ jsxRuntimeExports.jsx(
-              "span",
-              {
-                spellCheck: false,
-                onInput: onTitleChange,
-                className: "pr-7 cursor-text",
-                contentEditable: true,
-                suppressContentEditableWarning: true,
-                children: editedTitle
-              }
-            )
-          ] }),
-          /* @__PURE__ */ jsxRuntimeExports.jsxs("span", { className: "text-xs text-muted", children: [
-            "Python ",
-            pythonVersion
-          ] })
-        ] }),
-        /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "space-x-2 flex items-center", children: [
+    /* @__PURE__ */ jsxRuntimeExports.jsx(
+      EnvironmentCard,
+      {
+        badges: /* @__PURE__ */ jsxRuntimeExports.jsx(
+          "span",
+          {
+            className: "rounded-full border border-amber-500/25 bg-amber-500/10 px-2 py-0.5 text-xs font-medium text-amber-500",
+            children: isInstallation ? "Conda" : "Venv"
+          }
+        ),
+        title: /* @__PURE__ */ jsxRuntimeExports.jsx("span", { className: "min-w-0 truncate", children: /* @__PURE__ */ jsxRuntimeExports.jsx(
+          "span",
+          {
+            spellCheck: false,
+            onInput: onTitleChange,
+            className: "cursor-text rounded-md px-1 outline-none transition-colors focus:bg-surface-secondary",
+            contentEditable: true,
+            suppressContentEditableWarning: true,
+            children: editedTitle
+          }
+        ) }),
+        actions: /* @__PURE__ */ jsxRuntimeExports.jsxs(jsxRuntimeExports.Fragment, { children: [
           /* @__PURE__ */ jsxRuntimeExports.jsxs(Dropdown, { children: [
-            /* @__PURE__ */ jsxRuntimeExports.jsx(Button$4, { size: "sm", variant: "tertiary", isIconOnly: true, children: /* @__PURE__ */ jsxRuntimeExports.jsx(i$3, { className: "rotate-90" }) }),
-            /* @__PURE__ */ jsxRuntimeExports.jsx(Dropdown.Popover, { children: /* @__PURE__ */ jsxRuntimeExports.jsx(Dropdown.Menu, { onAction: (key) => console.log(`Selected: ${key}`), children: /* @__PURE__ */ jsxRuntimeExports.jsxs(Dropdown.Item, { id: "package-manager", textValue: "Manage Packages", onPress: packageManagerModal.open, children: [
+            /* @__PURE__ */ jsxRuntimeExports.jsx(LynxTooltip, { delay: 300, content: "Environment actions", children: /* @__PURE__ */ jsxRuntimeExports.jsx(Button$5, { size: "sm", variant: "tertiary", isIconOnly: true, children: /* @__PURE__ */ jsxRuntimeExports.jsx(i$3, { className: "rotate-90" }) }) }),
+            /* @__PURE__ */ jsxRuntimeExports.jsx(Dropdown.Popover, { children: /* @__PURE__ */ jsxRuntimeExports.jsx(Dropdown.Menu, { children: /* @__PURE__ */ jsxRuntimeExports.jsxs(Dropdown.Item, { id: "package-manager", textValue: "Manage Packages", onPress: packageManagerModal.open, children: [
               /* @__PURE__ */ jsxRuntimeExports.jsx(i$8, { className: "size-4" }),
               /* @__PURE__ */ jsxRuntimeExports.jsx(Label$5, { children: "Manage Packages" })
             ] }) }) })
           ] }),
           !isInstallation && /* @__PURE__ */ jsxRuntimeExports.jsxs(Popover$1, { isOpen: popoverUninstaller, onOpenChange: setPopoverUninstaller, children: [
-            /* @__PURE__ */ jsxRuntimeExports.jsx(Button$4, { size: "sm", variant: "danger-soft", isPending: isRemoving, isIconOnly: true, children: /* @__PURE__ */ jsxRuntimeExports.jsx(i$2, {}) }),
+            /* @__PURE__ */ jsxRuntimeExports.jsx(LynxTooltip, { delay: 300, content: "Remove environment", children: /* @__PURE__ */ jsxRuntimeExports.jsx(Button$5, { size: "sm", variant: "danger-soft", isPending: isRemoving, isIconOnly: true, children: /* @__PURE__ */ jsxRuntimeExports.jsx(i$2, {}) }) }),
             /* @__PURE__ */ jsxRuntimeExports.jsx(Popover$1.Content, { className: "max-w-sm", children: /* @__PURE__ */ jsxRuntimeExports.jsxs(Popover$1.Dialog, { children: [
               /* @__PURE__ */ jsxRuntimeExports.jsx(Popover$1.Arrow, {}),
               /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "p-2 gap-y-3 flex flex-col", children: [
                 /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { children: [
                   /* @__PURE__ */ jsxRuntimeExports.jsx("strong", { className: "text-sm", children: "Delete Environment" }),
-                  /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "text-xs text-default-600 mt-1", children: `Permanently deletes the '${title}' environment folder and all its contents from your computer. Any AI using this environment will be disconnected.` }),
-                  /* @__PURE__ */ jsxRuntimeExports.jsxs(Button$4, { size: "sm", variant: "danger", className: "mt-2", onPress: remove, fullWidth: true, children: [
+                  /* @__PURE__ */ jsxRuntimeExports.jsxs("p", { className: "text-xs text-default-600 mt-1", children: [
+                    'Permanently deletes the "',
+                    title,
+                    '" environment folder and all its contents from your computer. Any AI using this environment will be disconnected.'
+                  ] }),
+                  /* @__PURE__ */ jsxRuntimeExports.jsxs(Button$5, { size: "sm", variant: "danger", className: "mt-2", onPress: remove, fullWidth: true, children: [
                     /* @__PURE__ */ jsxRuntimeExports.jsx(i$2, {}),
                     "Delete Permanently"
                   ] })
@@ -28494,53 +29615,40 @@ function VenvCard({
                 /* @__PURE__ */ jsxRuntimeExports.jsx(Separator$1, {}),
                 /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { children: [
                   /* @__PURE__ */ jsxRuntimeExports.jsx("strong", { className: "text-sm", children: "Remove From List Only" }),
-                  /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "text-xs text-default-600 mt-1", children: `Removes '${title}' from the list but does not delete the environment's files from your system. Any associated AI will be disconnected, but you can re-link them if you add this environment back later.` }),
-                  /* @__PURE__ */ jsxRuntimeExports.jsxs(Button$4, { size: "sm", className: "mt-2", variant: "danger-soft", onPress: removeFromList, fullWidth: true, children: [
-                    /* @__PURE__ */ jsxRuntimeExports.jsx(X$2, {}),
+                  /* @__PURE__ */ jsxRuntimeExports.jsxs("p", { className: "text-xs text-default-600 mt-1", children: [
+                    'Removes "',
+                    title,
+                    `" from the list but does not delete the environment's files from your system. Any associated AI will be disconnected, but you can re-link them if you add this environment back later.`
+                  ] }),
+                  /* @__PURE__ */ jsxRuntimeExports.jsxs(Button$5, { size: "sm", className: "mt-2", variant: "danger-soft", onPress: removeFromList, fullWidth: true, children: [
+                    /* @__PURE__ */ jsxRuntimeExports.jsx(X$3, {}),
                     "Remove from List"
                   ] })
                 ] })
               ] })
             ] }) })
           ] })
-        ] })
-      ] }),
-      /* @__PURE__ */ jsxRuntimeExports.jsxs(Card.Content, { className: "gap-y-4 py-2 flex flex-col text-sm text-foreground", children: [
-        /* @__PURE__ */ jsxRuntimeExports.jsxs(
-          Button$4,
-          {
-            size: "sm",
-            onPress: openPath,
-            variant: "tertiary",
-            className: "flex flex-row justify-start text-xs",
-            fullWidth: true,
-            children: [
-              /* @__PURE__ */ jsxRuntimeExports.jsx(i$f, { className: "shrink-0 size-3" }),
-              /* @__PURE__ */ jsxRuntimeExports.jsx("span", { className: "truncate", children: folder })
-            ]
-          }
-        ),
-        /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "w-full justify-between flex flex-row", children: [
-          /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "flex flex-row gap-x-2 items-center", children: [
-            /* @__PURE__ */ jsxRuntimeExports.jsx(i$8, { className: "size-3" }),
-            /* @__PURE__ */ jsxRuntimeExports.jsx("span", { children: "Installed Packages:" })
-          ] }),
-          /* @__PURE__ */ jsxRuntimeExports.jsx("span", { children: installedPackages })
         ] }),
-        /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "w-full justify-between flex flex-row", children: [
-          /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "flex flex-row gap-x-2 items-center", children: [
-            /* @__PURE__ */ jsxRuntimeExports.jsx(i$h, { className: "size-3" }),
-            /* @__PURE__ */ jsxRuntimeExports.jsx("span", { children: "Disk Usage:" })
-          ] }),
-          isNil(size) ? /* @__PURE__ */ jsxRuntimeExports.jsx(Spinner$2, { size: "lg" }) : /* @__PURE__ */ jsxRuntimeExports.jsx("span", { children: formatSizeMB(size || 0) })
-        ] })
-      ] }),
-      /* @__PURE__ */ jsxRuntimeExports.jsx(Card.Footer, { className: "flex-col gap-y-3", children: /* @__PURE__ */ jsxRuntimeExports.jsx(Venv_Associate, { folder, type: isInstallation ? "conda" : "venv" }) })
-    ] })
+        path: folder,
+        diskUsage: size,
+        isBusy: isRemoving,
+        onOpenPath: openPath,
+        maxDiskValue,
+        packages: installedPackages,
+        busyMessage: "Removing environment...",
+        subtitle: /* @__PURE__ */ jsxRuntimeExports.jsxs("span", { children: [
+          "Python ",
+          pythonVersion
+        ] }),
+        associationType: isInstallation ? "conda" : "venv",
+        condaName: isInstallation ? title : void 0,
+        iconClassName: isInstallation ? "text-emerald-400" : "text-amber-400"
+      }
+    )
   ] });
 }
 
-const {Button: Button$3,Input,Label: Label$4,ListBox: ListBox$1,Popover,Select: Select$1,TextField} = await importShared('@heroui/react');
+const {Button: Button$4,Checkbox,Input,Label: Label$4,ListBox: ListBox$1,Popover,Select: Select$1,Spinner: Spinner$2,TextField} = await importShared('@heroui/react');
 const {useCallback: useCallback$2,useEffect: useEffect$7,useMemo: useMemo$3,useState: useState$7} = await importShared('react');
 function VenvCreator({ installedPythons, refresh, isLoadingPythons }) {
   const [selectedVersion, setSelectedVersion] = useState$7(null);
@@ -28548,12 +29656,20 @@ function VenvCreator({ installedPythons, refresh, isLoadingPythons }) {
   const [envName, setEnvName] = useState$7("");
   const [isCreating, setIsCreating] = useState$7(false);
   const [isOpen, setIsOpen] = useState$7(false);
+  const [updatePip, setUpdatePip] = useState$7(true);
+  const [showUpgrade, setShowUpgrade] = useState$7(false);
   useEffect$7(() => {
     if (!isOpen) {
       setTargetFolder("");
       setEnvName("");
     }
   }, [isOpen]);
+  useEffect$7(() => {
+    if (selectedVersion && typeof selectedVersion !== "number") {
+      const version = semverExports.parse(selectedVersion);
+      if (version && version.major >= 3 && version.minor >= 9) setShowUpgrade(true);
+    }
+  }, [selectedVersion]);
   const disabledCreate = useMemo$3(() => {
     return isEmpty(targetFolder) || isEmpty(envName) || isEmpty(selectedVersion);
   }, [targetFolder, envName, selectedVersion]);
@@ -28576,7 +29692,8 @@ function VenvCreator({ installedPythons, refresh, isLoadingPythons }) {
     const options = {
       destinationFolder: targetFolder,
       venvName: envName,
-      pythonPath
+      pythonPath,
+      upgradeDeps: updatePip
     };
     pIpc.createVenv(options).then((result) => {
       if (result) {
@@ -28588,21 +29705,32 @@ function VenvCreator({ installedPythons, refresh, isLoadingPythons }) {
       }
       setIsCreating(false);
     });
-  }, [targetFolder, envName, selectedVersion, installedPythons]);
-  return /* @__PURE__ */ jsxRuntimeExports.jsxs(Popover, { children: [
-    /* @__PURE__ */ jsxRuntimeExports.jsxs(Button$3, { variant: "secondary", isPending: isLoadingPythons, isDisabled: isEmpty(installedPythons), children: [
+  }, [targetFolder, envName, selectedVersion, installedPythons, updatePip]);
+  return /* @__PURE__ */ jsxRuntimeExports.jsxs(Popover, { isOpen, onOpenChange: setIsOpen, children: [
+    /* @__PURE__ */ jsxRuntimeExports.jsxs(Button$4, { variant: "secondary", isPending: isLoadingPythons, isDisabled: isEmpty(installedPythons), children: [
       !isLoadingPythons && /* @__PURE__ */ jsxRuntimeExports.jsx(Plus, { size: 14 }),
       isLoadingPythons ? "Loading Pythons..." : "New Environment"
     ] }),
-    /* @__PURE__ */ jsxRuntimeExports.jsx(Popover.Content, { children: /* @__PURE__ */ jsxRuntimeExports.jsxs(Popover.Dialog, { children: [
+    /* @__PURE__ */ jsxRuntimeExports.jsx(Popover.Content, { children: /* @__PURE__ */ jsxRuntimeExports.jsxs(Popover.Dialog, { className: "w-75", children: [
       /* @__PURE__ */ jsxRuntimeExports.jsx(Popover.Arrow, {}),
-      /* @__PURE__ */ jsxRuntimeExports.jsx(Popover.Heading, { children: "Create New Virtual Environment" }),
+      /* @__PURE__ */ jsxRuntimeExports.jsx(Popover.Heading, { className: "mb-2", children: "Create New Virtual Environment" }),
       /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "flex flex-col gap-y-4 py-2", children: [
-        /* @__PURE__ */ jsxRuntimeExports.jsxs(TextField, { type: "text", value: envName, variant: "secondary", onChange: setEnvName, children: [
-          /* @__PURE__ */ jsxRuntimeExports.jsx(Label$4, { children: "Environment Name" }),
-          /* @__PURE__ */ jsxRuntimeExports.jsx(Input, { placeholder: "e.g., my_env" })
-        ] }),
-        /* @__PURE__ */ jsxRuntimeExports.jsxs(Select$1, { variant: "secondary", value: selectedVersion, onChange: setSelectedVersion, children: [
+        /* @__PURE__ */ jsxRuntimeExports.jsxs(
+          TextField,
+          {
+            type: "text",
+            value: envName,
+            variant: "secondary",
+            onChange: setEnvName,
+            isDisabled: isCreating,
+            autoFocus: true,
+            children: [
+              /* @__PURE__ */ jsxRuntimeExports.jsx(Label$4, { children: "Environment Name" }),
+              /* @__PURE__ */ jsxRuntimeExports.jsx(Input, { placeholder: "e.g., my_env" })
+            ]
+          }
+        ),
+        /* @__PURE__ */ jsxRuntimeExports.jsxs(Select$1, { variant: "secondary", isDisabled: isCreating, value: selectedVersion, onChange: setSelectedVersion, children: [
           /* @__PURE__ */ jsxRuntimeExports.jsx(Label$4, { children: "Python Version" }),
           /* @__PURE__ */ jsxRuntimeExports.jsxs(Select$1.Trigger, { children: [
             /* @__PURE__ */ jsxRuntimeExports.jsx(Select$1.Value, {}),
@@ -28621,17 +29749,26 @@ function VenvCreator({ installedPythons, refresh, isLoadingPythons }) {
             item.version
           ) }) })
         ] }),
-        /* @__PURE__ */ jsxRuntimeExports.jsxs(Button$3, { size: "sm", variant: "secondary", onPress: selectFolder, fullWidth: true, children: [
-          /* @__PURE__ */ jsxRuntimeExports.jsx(i$e, {}),
-          targetFolder || "Choose Destination Folder"
+        showUpgrade && /* @__PURE__ */ jsxRuntimeExports.jsxs(Checkbox, { variant: "secondary", isSelected: updatePip, isDisabled: isCreating, onChange: setUpdatePip, children: [
+          /* @__PURE__ */ jsxRuntimeExports.jsx(Checkbox.Control, { children: /* @__PURE__ */ jsxRuntimeExports.jsx(Checkbox.Indicator, {}) }),
+          /* @__PURE__ */ jsxRuntimeExports.jsx(Checkbox.Content, { children: /* @__PURE__ */ jsxRuntimeExports.jsx(Label$4, { className: "cursor-pointer", children: "Upgrade core packages" }) })
         ] }),
-        /* @__PURE__ */ jsxRuntimeExports.jsx(Button$3, { size: "sm", onPress: createEnv, isPending: isCreating, isDisabled: disabledCreate, fullWidth: true, children: "Create Environment" })
+        /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "flex flex-col gap-y-2", children: [
+          /* @__PURE__ */ jsxRuntimeExports.jsxs(Button$4, { variant: "secondary", isPending: isCreating, onPress: selectFolder, fullWidth: true, children: [
+            /* @__PURE__ */ jsxRuntimeExports.jsx(i$j, {}),
+            targetFolder || "Choose Destination Folder"
+          ] }),
+          /* @__PURE__ */ jsxRuntimeExports.jsxs(Button$4, { onPress: createEnv, isPending: isCreating, isDisabled: disabledCreate, fullWidth: true, children: [
+            isCreating && /* @__PURE__ */ jsxRuntimeExports.jsx(Spinner$2, { size: "sm", color: "current" }),
+            "Create Environment"
+          ] })
+        ] })
       ] })
     ] }) })
   ] });
 }
 
-const {Button: Button$2,Description: Description$4,Spinner: Spinner$1} = await importShared('@heroui/react');
+const {Button: Button$3,Description: Description$4,Spinner: Spinner$1} = await importShared('@heroui/react');
 const {useCallback: useCallback$1,useEffect: useEffect$6,useState: useState$6} = await importShared('react');
 function Venv({ visible, installedPythons, isLoadingPythons }) {
   const cacheStorageUsage = usePythonToolkitState("cacheStorageUsage");
@@ -28639,6 +29776,19 @@ function Venv({ visible, installedPythons, isLoadingPythons }) {
   const [isLoading, setIsLoading] = useState$6(true);
   const [isLocating, setIsLocating] = useState$6(false);
   const [diskUsage, setDiskUsage] = useState$6([]);
+  const [maxDiskValue, setMaxDiskValue] = useState$6(0);
+  useEffect$6(() => {
+    diskUsage.forEach((disk) => {
+      setMaxDiskValue((prevState) => {
+        const size = disk.value || 0;
+        if (prevState >= size) {
+          return prevState;
+        } else {
+          return size < 500 ? size + 500 : size + 1e3;
+        }
+      });
+    });
+  }, [diskUsage]);
   const calcDiskUsage = useCallback$1((venv) => {
     filesIpc.calcFolderSize(venv.folder).then((value) => {
       if (value) {
@@ -28655,6 +29805,8 @@ function Venv({ visible, installedPythons, isLoadingPythons }) {
   }, []);
   const getVenvs = useCallback$1(() => {
     setIsLoading(true);
+    setDiskUsage([]);
+    setMaxDiskValue(0);
     const condaVenvs = installedPythons.filter((pt) => pt.installationType === "conda");
     pIpc.getVenvs().then((venvs) => {
       const resultVenvs = [
@@ -28725,8 +29877,8 @@ function Venv({ visible, installedPythons, isLoadingPythons }) {
       /* @__PURE__ */ jsxRuntimeExports.jsx("span", { className: "font-bold", children: "Virtual Environments" }),
       /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "gap-x-2 flex flex-row", children: [
         /* @__PURE__ */ jsxRuntimeExports.jsx(VenvCreator, { refresh: getVenvs, installedPythons, isLoadingPythons }),
-        /* @__PURE__ */ jsxRuntimeExports.jsxs(Button$2, { variant: "tertiary", onPress: locateVenv, isPending: isLocating, children: [
-          !isLocating && /* @__PURE__ */ jsxRuntimeExports.jsx(i$e, {}),
+        /* @__PURE__ */ jsxRuntimeExports.jsxs(Button$3, { variant: "tertiary", onPress: locateVenv, isPending: isLocating, children: [
+          !isLocating && /* @__PURE__ */ jsxRuntimeExports.jsx(i$j, {}),
           "Locate"
         ] })
       ] })
@@ -28747,6 +29899,7 @@ function Venv({ visible, installedPythons, isLoadingPythons }) {
         title: venv.title,
         folder: venv.folder,
         diskUsage,
+        maxDiskValue,
         pythonPath: venv.pythonPath,
         pythonVersion: venv.pythonVersion,
         isInstallation: venv.isFromInstallation,
@@ -28791,7 +29944,7 @@ function PythonToolkitModal({ state }) {
   ] });
 }
 
-const {Button: Button$1} = await importShared('@heroui/react');
+const {Button: Button$2} = await importShared('@heroui/react');
 const {useEffect: useEffect$5,useState: useState$4} = await importShared('react');
 
 const {useDispatch: useDispatch$4} = await importShared('react-redux');
@@ -28828,7 +29981,7 @@ function CacheDirUsage() {
       }
     ),
     /* @__PURE__ */ jsxRuntimeExports.jsxs(
-      Button$1,
+      Button$2,
       {
         isPending: clearing,
         onPress: clearCache,
@@ -29003,16 +30156,13 @@ function SettingsModal({ state }) {
   );
 }
 
-const {Button} = await importShared('@heroui/react');
-
+const {Button: Button$1} = await importShared('@heroui/react');
 const {useOverlayState} = await importShared('@heroui/react');
 const {useDispatch: useDispatch$2} = await importShared('react-redux');
 const title = "Python Toolkit";
-const desc = "Manage Python versions, virtual environments, packages, requirements files, and more.";
-const iconUrl = "https://raw.githubusercontent.com/KindaBrazy/LynxHub-Python-Toolkit/refs/heads/metadata/icon.png";
+const desc = "Manage Python versions, virtual environments, packages, requirements and more.";
 function ToolsPage() {
   const dispatch = useDispatch$2();
-  const icon = cacheUrl(iconUrl);
   const settingsModal = useOverlayState();
   const packageManagerModal = useOverlayState();
   const openModal = () => {
@@ -29024,11 +30174,11 @@ function ToolsPage() {
     /* @__PURE__ */ jsxRuntimeExports.jsx(
       ToolsCard,
       {
-        footer: /* @__PURE__ */ jsxRuntimeExports.jsx(Button, { variant: "tertiary", onPress: settingsModal.open, isIconOnly: true, children: /* @__PURE__ */ jsxRuntimeExports.jsx(i$9, {}) }),
-        icon,
+        footer: /* @__PURE__ */ jsxRuntimeExports.jsx(LynxTooltip, { delay: 300, content: "Settings", children: /* @__PURE__ */ jsxRuntimeExports.jsx(Button$1, { variant: "tertiary", onPress: settingsModal.open, isIconOnly: true, children: /* @__PURE__ */ jsxRuntimeExports.jsx(i$9, {}) }) }),
         title,
         description: desc,
-        onPress: openModal
+        onPress: openModal,
+        icon: /* @__PURE__ */ jsxRuntimeExports.jsx(PythonIcon, { className: "size-full p-0.5 text-yellow-400" })
       }
     ),
     /* @__PURE__ */ jsxRuntimeExports.jsx(PythonToolkitModal, { state: packageManagerModal })
@@ -29076,7 +30226,7 @@ Details:
   return /* @__PURE__ */ jsxRuntimeExports.jsx(Fragment, {});
 }
 
-const {Alert,Description,Label,ListBox,Select,Spinner} = await importShared('@heroui/react');
+const {Alert,Button,Description,Label,ListBox,Select,Spinner} = await importShared('@heroui/react');
 const {useCallback,useEffect,useMemo,useState} = await importShared('react');
 
 const {useDispatch} = await importShared('react-redux');
@@ -29090,10 +30240,26 @@ const Installer_PythonSelector = (id, addAssociate) => function Selector() {
     dispatch(PythonToolkitActions.setSelectedPythonVenv(resultItem));
     addAssociate(id, "add", item);
   }, []);
-  useEffect(() => {
+  const fetchList = useCallback(() => {
     setIsLoading(true);
-    fetchAndSetPythonVenvs(setList, setIsLoading, onSelected);
+    fetchAndSetPythonVenvs(
+      (items2) => {
+        if (items2.length > 0) {
+          const labels = getUniqueLabels(items2.map((item) => item.dir));
+          const updated = items2.map((item, idx) => ({
+            ...item,
+            label: labels[idx]
+          }));
+          setList(updated);
+        } else {
+          setList([]);
+        }
+      },
+      setIsLoading,
+      onSelected
+    );
   }, []);
+  useEffect(() => fetchList(), []);
   const onSelectionChange = (key) => {
     if (!key || typeof key === "number") return;
     if (key === "skip") {
@@ -29111,15 +30277,15 @@ const Installer_PythonSelector = (id, addAssociate) => function Selector() {
     return [
       /* @__PURE__ */ jsxRuntimeExports.jsx(ListBox.Item, { id: "skip", textValue: "Skip", children: /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "flex flex-col", children: [
         /* @__PURE__ */ jsxRuntimeExports.jsxs(Label, { className: "flex flex-row items-center gap-x-2", children: [
-          /* @__PURE__ */ jsxRuntimeExports.jsx(i$l, { className: "size-4 text-semi-muted" }),
+          /* @__PURE__ */ jsxRuntimeExports.jsx(i$q, { className: "size-4 text-semi-muted" }),
           /* @__PURE__ */ jsxRuntimeExports.jsx("span", { children: "Skip" })
         ] }),
         /* @__PURE__ */ jsxRuntimeExports.jsx(Description, { children: "Do not assign a specific environment. The LynxHub or system default will be used if required." })
       ] }) }, "skip"),
       ...list.map((item) => {
         const defaultTextMap = {
-          lynx: /* @__PURE__ */ jsxRuntimeExports.jsx("span", { className: "text-accent/50", children: "LynxHub Default" }),
-          system: /* @__PURE__ */ jsxRuntimeExports.jsx("span", { className: "text-LynxPurple/50", children: "System Default" })
+          lynx: /* @__PURE__ */ jsxRuntimeExports.jsx("span", { className: "text-accent", children: "LynxHub Default" }),
+          system: /* @__PURE__ */ jsxRuntimeExports.jsx("span", { className: "text-LynxPurple", children: "System Default" })
         };
         const nameText = item.condaName;
         const defaultTextNode = item.isDefault ? defaultTextMap[item.isDefault] : null;
@@ -29135,11 +30301,11 @@ const Installer_PythonSelector = (id, addAssociate) => function Selector() {
             id: `${item.version}_${item.dir}`,
             children: /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "flex flex-col", children: [
               item.type === "python" ? /* @__PURE__ */ jsxRuntimeExports.jsxs("span", { className: "flex flex-row items-center gap-x-2", children: [
-                /* @__PURE__ */ jsxRuntimeExports.jsx(Python_Icon, { className: "text-yellow-300 size-4" }),
+                /* @__PURE__ */ jsxRuntimeExports.jsx(PythonIcon, { className: "text-blue-400 size-4" }),
                 " ",
                 item.version
               ] }) : /* @__PURE__ */ jsxRuntimeExports.jsxs("span", { className: "flex flex-row items-center gap-x-2", children: [
-                /* @__PURE__ */ jsxRuntimeExports.jsx(Env_Icon, { className: "text-green-300 size-4.5" }),
+                /* @__PURE__ */ jsxRuntimeExports.jsx(PythonIcon, { className: "text-yellow-400 size-4.5" }),
                 " ",
                 item.version
               ] }),
@@ -29159,28 +30325,35 @@ const Installer_PythonSelector = (id, addAssociate) => function Selector() {
     isLoading ? /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "flex w-full items-center justify-center flex-col gap-y-2", children: [
       /* @__PURE__ */ jsxRuntimeExports.jsx(Spinner, { size: "lg" }),
       /* @__PURE__ */ jsxRuntimeExports.jsx(Description, { className: "text-sm", children: "Searching for python environments..." })
-    ] }) : /* @__PURE__ */ jsxRuntimeExports.jsxs(
-      Select,
-      {
-        defaultValue: "skip",
-        variant: "secondary",
-        value: selectedKey,
-        selectionMode: "single",
-        onChange: onSelectionChange,
-        children: [
-          /* @__PURE__ */ jsxRuntimeExports.jsxs(Select.Trigger, { children: [
-            /* @__PURE__ */ jsxRuntimeExports.jsx(Select.Value, {}),
-            /* @__PURE__ */ jsxRuntimeExports.jsx(Select.Indicator, {})
-          ] }),
-          /* @__PURE__ */ jsxRuntimeExports.jsx(Select.Popover, { children: /* @__PURE__ */ jsxRuntimeExports.jsx(ListBox, { children: items }) })
-        ]
-      }
-    ),
-    /* @__PURE__ */ jsxRuntimeExports.jsxs(Alert, { status: "accent", className: "bg-surface-secondary shadow-none", children: [
+    ] }) : /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "w-full flex items-center gap-x-2", children: [
+      /* @__PURE__ */ jsxRuntimeExports.jsxs(
+        Select,
+        {
+          defaultValue: "skip",
+          variant: "secondary",
+          value: selectedKey,
+          selectionMode: "single",
+          onChange: onSelectionChange,
+          fullWidth: true,
+          children: [
+            /* @__PURE__ */ jsxRuntimeExports.jsxs(Select.Trigger, { children: [
+              /* @__PURE__ */ jsxRuntimeExports.jsx(Select.Value, {}),
+              /* @__PURE__ */ jsxRuntimeExports.jsx(Select.Indicator, {})
+            ] }),
+            /* @__PURE__ */ jsxRuntimeExports.jsx(Select.Popover, { children: /* @__PURE__ */ jsxRuntimeExports.jsx(ListBox, { children: items }) })
+          ]
+        }
+      ),
+      /* @__PURE__ */ jsxRuntimeExports.jsxs(Button, { variant: "tertiary", onPress: fetchList, children: [
+        /* @__PURE__ */ jsxRuntimeExports.jsx(i$l, {}),
+        "Refresh"
+      ] })
+    ] }),
+    /* @__PURE__ */ jsxRuntimeExports.jsxs(Alert, { className: "bg-surface-secondary shadow-none", children: [
       /* @__PURE__ */ jsxRuntimeExports.jsx(Alert.Indicator, {}),
       /* @__PURE__ */ jsxRuntimeExports.jsxs(Alert.Content, { children: [
         /* @__PURE__ */ jsxRuntimeExports.jsx(Alert.Title, { children: "Don't see the environment you need?" }),
-        /* @__PURE__ */ jsxRuntimeExports.jsx(Alert.Description, { children: "Use the Python Toolkit in the Tools page to install new Python versions or create virtual environments. You can then return here to select it." })
+        /* @__PURE__ */ jsxRuntimeExports.jsx(Alert.Description, { className: "text-sm", children: "Use the Python Toolkit in the Tools page to install new Python versions or create virtual environments." })
       ] })
     ] })
   ] });
