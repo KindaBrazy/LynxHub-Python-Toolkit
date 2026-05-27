@@ -1,6 +1,19 @@
 {
   "versions": [
     {
+      "version": "0.15.0",
+      "commit": "d7b1f67",
+      "engines": {
+        "extensionApi": "^2.0.0"
+      },
+      "stage": "early_access",
+      "platforms": [
+        "win32",
+        "linux",
+        "darwin"
+      ]
+    },
+    {
       "version": "0.14.2",
       "commit": "93719d1",
       "engines": {
@@ -77,6 +90,51 @@
     }
   ],
   "changes": [
+    {
+      "version": "0.15.0",
+      "date": "2026-05-27",
+      "items": [
+        {
+          "✨ New Features": [
+            "Added the option to view and install missing packages during the requirements check.",
+            "Added an option to automatically upgrade dependencies during virtual environment (venv) creation.",
+            "Added a button to open a terminal directly within the selected environment.",
+            "Added a button to quickly deselect the active requirements file.",
+            "Added the ability to edit raw lines individually in the requirements editor.",
+            "Added support for installing a 'requirements.txt' file directly.",
+            "Added support for selecting and importing multiple requirements files.",
+            "Added conflict resolution support when importing multiple requirements."
+          ],
+          "⚡ Improvements": [
+            "Improved package version detection by adopting PEP 440 standards.",
+            "Display Python or virtual environment names in the installation and dependency selectors.",
+            "Added a refresh button for Python and virtual environment selections.",
+            "Display the parent folder name when duplicate environment names exist in the selection list.",
+            "Redesigned the package installer modal.",
+            "Updated the visual design of installation and virtual environment cards.",
+            "Rewrote the requirements parser to address various parsing errors.",
+            "Enhanced requirements saving to preserve comments, blank lines, pip options, constraints, VCS/local paths, and original line endings."
+          ],
+          "🪲 Bug Fixes": [
+            "Fixed an issue that prevented requirements from saving correctly.",
+            "Fixed a UI rendering issue when adding empty requirement items.",
+            "Fixed system default Python detection on Windows.",
+            "Fixed setting the default Python path (LynxHub/System) on Windows."
+          ],
+          "📌 Minor Changes": [
+            "Adjusted various UI texts and sizing for better readability.",
+            "Updated the position and style of the dependency unassign buttons on cards.",
+            "Added auto-focus to the text input when opening the 'New Virtual Environment' popover.",
+            "Updated icons and color schemes for Python and virtual environments.",
+            "Added a notification when no updates are found during package checks.",
+            "Optimized performance and rendering of the requirements modal table.",
+            "Cached the header avatar image URL in the package manager.",
+            "Added descriptive tooltips to icon-only buttons.",
+            "Updated confirmation dialogs for destructive actions to provide more detail."
+          ]
+        }
+      ]
+    },
     {
       "version": "0.14.2",
       "date": "2026-05-09",
