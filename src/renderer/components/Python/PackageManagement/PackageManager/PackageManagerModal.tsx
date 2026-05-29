@@ -1,12 +1,12 @@
 import {Modal, Selection, useOverlayState, UseOverlayStateReturn} from '@heroui/react';
 import TabModal from '@lynx/components/TabModal';
-import {topToast} from '@lynx/layouts/ToastProviders';
 import {isEmpty} from 'lodash-es';
 import {Dispatch, ReactNode, SetStateAction, useEffect, useState} from 'react';
 
 import {searchInStrings} from '../../../../../../../src/renderer/mainWindow/utils';
 import {FilterKeys, PackageInfo, PackageUpdate, SitePackages_Info} from '../../../../../cross/CrossExtTypes';
 import {getUpdateType} from '../../../../../cross/CrossExtUtils';
+import {toastHolder} from '../../../../DataHolder';
 import pIpc from '../../../../PIpc';
 import PackageManagerBody from './Body/Body';
 import Footer_Close from './Footer/CloseBtn';
@@ -135,7 +135,7 @@ export default function PackageManagerModal({
 
     const updateData = (updateList: SitePackages_Info[]) => {
       if (updateList.length === 0) {
-        topToast.info('No updates found (packages may be up to date, or a connection issue occurred).');
+        toastHolder?.top.info('No updates found (packages may be up to date, or a connection issue occurred).');
       }
 
       setPackagesUpdate(updateList);

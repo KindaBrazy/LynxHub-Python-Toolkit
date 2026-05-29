@@ -10,7 +10,6 @@ import {
   useOverlayState,
 } from '@heroui/react';
 import LynxTooltip from '@lynx/components/LynxTooltip';
-import {topToast} from '@lynx/layouts/ToastProviders';
 import {isWin} from '@lynx_common/utils';
 import filesIpc from '@lynx_shared/ipc/files';
 import {BoxMinimalistic, CheckCircle, MenuDots, Refresh, TrashBin2} from '@solar-icons/react-perf/BoldDuotone';
@@ -20,6 +19,7 @@ import {X} from 'lucide-react';
 import {useCallback, useMemo, useState} from 'react';
 
 import {PythonInstallation} from '../../../../cross/CrossExtTypes';
+import {toastHolder} from '../../../DataHolder';
 import pIpc from '../../../PIpc';
 import EnvironmentCard from '../EnvironmentCard';
 import PackageManagerModal from '../PackageManagement/PackageManager/PackageManagerModal';
@@ -110,7 +110,7 @@ export default function InstalledCard({python, diskUsage, maxDiskValue, updateDe
 
   const makeDefault = () => {
     systemConfirm.close();
-    topToast.promise(pIpc.setDefaultPython(python.installFolder), {
+    toastHolder?.top.promise(pIpc.setDefaultPython(python.installFolder), {
       error: `Failed to set ${python.version} as system default. Please try again later.`,
       loading: `Changing system default to the ${python.version}...`,
       success: () => {
@@ -124,14 +124,14 @@ export default function InstalledCard({python, diskUsage, maxDiskValue, updateDe
     lynxConfirm.close();
 
     const showFailedToast = () => {
-      topToast.danger(`Failed to set ${python.version} as LynxHub default. Please try again later.`);
+      toastHolder?.top.danger(`Failed to set ${python.version} as LynxHub default. Please try again later.`);
     };
 
     pIpc
       .replacePythonPath(python.installFolder)
       .then(result => {
         if (result) {
-          topToast.success(`Python ${python.version} is now the default for LynxHub.`);
+          toastHolder?.top.success(`Python ${python.version} is now the default for LynxHub.`);
           updateDefault(python.installFolder, 'isLynxHubDefault');
         } else {
           showFailedToast();

@@ -1,12 +1,12 @@
 import {Button, Dropdown, Label, Popover, Separator, useOverlayState} from '@heroui/react';
 import LynxTooltip from '@lynx/components/LynxTooltip';
-import {topToast} from '@lynx/layouts/ToastProviders';
 import filesIpc from '@lynx_shared/ipc/files';
 import {BoxMinimalistic, MenuDots, TrashBin2} from '@solar-icons/react-perf/BoldDuotone';
 import {SHA256} from 'crypto-js';
 import {X} from 'lucide-react';
 import {FormEvent, useCallback, useEffect, useMemo, useState} from 'react';
 
+import {toastHolder} from '../../../DataHolder';
 import pIpc from '../../../PIpc';
 import EnvironmentCard from '../EnvironmentCard';
 import PackageManagerModal from '../PackageManagement/PackageManager/PackageManagerModal';
@@ -57,13 +57,13 @@ export default function VenvCard({
     filesIpc
       .trashDir(folder)
       .then(() => {
-        topToast.success(`Environment "${title}" removed successfully.`);
+        toastHolder?.top.success(`Environment "${title}" removed successfully.`);
         pIpc.removeAssociatePath(pythonPath);
         refresh();
       })
       .catch(error => {
         console.error(error);
-        topToast.danger(`Failed to remove environment "${title}".`);
+        toastHolder?.top.danger(`Failed to remove environment "${title}".`);
       })
       .finally(() => {
         setIsRemoving(false);
@@ -201,8 +201,8 @@ export default function VenvCard({
         packages={installedPackages}
         busyMessage="Removing environment..."
         subtitle={<span>Python {pythonVersion}</span>}
-        associationType={isInstallation ? 'conda' : 'venv'}
         condaName={isInstallation ? title : undefined}
+        associationType={isInstallation ? 'conda' : 'venv'}
         iconClassName={isInstallation ? 'text-emerald-400' : 'text-amber-400'}
       />
     </>

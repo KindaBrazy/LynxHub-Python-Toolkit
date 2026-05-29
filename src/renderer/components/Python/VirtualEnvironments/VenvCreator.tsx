@@ -1,5 +1,4 @@
 import {Button, Checkbox, Input, Key, Label, ListBox, Popover, Select, Spinner, TextField} from '@heroui/react';
-import {topToast} from '@lynx/layouts/ToastProviders';
 import filesIpc from '@lynx_shared/ipc/files';
 import {FolderOpen} from '@solar-icons/react-perf/BoldDuotone';
 import {capitalize, isEmpty} from 'lodash-es';
@@ -8,6 +7,7 @@ import {useCallback, useEffect, useMemo, useState} from 'react';
 import {parse} from 'semver';
 
 import {PythonInstallation, VenvCreateOptions} from '../../../../cross/CrossExtTypes';
+import {toastHolder} from '../../../DataHolder';
 import pIpc from '../../../PIpc';
 
 type Props = {refresh: () => void; installedPythons: PythonInstallation[]; isLoadingPythons: boolean};
@@ -57,7 +57,7 @@ export default function VenvCreator({installedPythons, refresh, isLoadingPythons
     const pythonPath = installedPythons.find(item => item.version === selectedVersion)?.installPath;
     if (!pythonPath) {
       setIsCreating(false);
-      topToast.danger('Failed to find Python path. Please restart app and try again.');
+      toastHolder?.top.danger('Failed to find Python path. Please restart app and try again.');
       return;
     }
     const options: VenvCreateOptions = {
@@ -71,9 +71,9 @@ export default function VenvCreator({installedPythons, refresh, isLoadingPythons
       if (result) {
         refresh();
         setIsOpen(false);
-        topToast.success(`Python environment "${envName}" created successfully.`);
+        toastHolder?.top.success(`Python environment "${envName}" created successfully.`);
       } else {
-        topToast.danger('Failed to create Python environment. Please try again.');
+        toastHolder?.top.danger('Failed to create Python environment. Please try again.');
       }
 
       setIsCreating(false);

@@ -1,11 +1,11 @@
 import {Button, Chip, TableCell} from '@heroui/react';
-import {topToast} from '@lynx/layouts/ToastProviders';
 import {DownloadMinimalistic, Refresh, ShieldWarning} from '@solar-icons/react-perf/BoldDuotone';
 import {capitalize, startCase} from 'lodash-es';
 import {useCallback, useMemo, useState} from 'react';
 
 import {PackageInfo, PackageUpdate} from '../../../../../../cross/CrossExtTypes';
 import {getUpdateVersionColor} from '../../../../../../cross/CrossExtUtils';
+import {toastHolder} from '../../../../../DataHolder';
 import pIpc from '../../../../../PIpc';
 import {usePythonToolkitState} from '../../../../../reducer';
 import ActionButtons from './ActionButtons';
@@ -52,10 +52,10 @@ export default function TableItem({
       .updatePackage(pythonPath, item.name, item.updateVersion)
       .then(() => {
         updated(item);
-        topToast.success(`Package "${item.name}" updated successfully.`);
+        toastHolder?.top.success(`Package "${item.name}" updated successfully.`);
       })
       .catch(() => {
-        topToast.danger(`Failed to update package "${item.name}".`);
+        toastHolder?.top.danger(`Failed to update package "${item.name}".`);
       })
       .finally(() => {
         setIsUpdating(false);

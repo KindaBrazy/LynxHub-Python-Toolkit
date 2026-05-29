@@ -2,7 +2,6 @@ import {Button, Chip, Modal, SearchField, Spinner, useOverlayState} from '@herou
 import EmptyStateCard from '@lynx/components/EmptyStateCard';
 import LynxTooltip from '@lynx/components/LynxTooltip';
 import TabModal from '@lynx/components/TabModal';
-import {topToast} from '@lynx/layouts/ToastProviders';
 import {searchInStrings} from '@lynx/utils';
 import filesIpc from '@lynx_shared/ipc/files';
 import {
@@ -19,6 +18,7 @@ import {OverlayScrollbarsComponentRef} from 'overlayscrollbars-react';
 import {Dispatch, SetStateAction, useEffect, useMemo, useRef, useState} from 'react';
 
 import {RequirementData} from '../../../../../cross/CrossExtTypes';
+import {toastHolder} from '../../../../DataHolder';
 import pIpc from '../../../../PIpc';
 import RenderTable from './RenderTable';
 
@@ -156,9 +156,9 @@ export default function RequirementsModal({id, projectPath, setIsReqAvailable, s
       setIsSaving(true);
       pIpc.saveReqs(filePath, requirements).then(success => {
         if (success) {
-          topToast.success('Requirements saved successfully!');
+          toastHolder?.top.success('Requirements saved successfully!');
         } else {
-          topToast.danger('Failed to save requirements.');
+          toastHolder?.top.danger('Failed to save requirements.');
         }
         setIsSaving(false);
       });
@@ -232,20 +232,20 @@ export default function RequirementsModal({id, projectPath, setIsReqAvailable, s
 
         const addedCount = importedCount - skippedCount - nextConflicts.length;
         if (nextConflicts.length > 0) {
-          topToast.warning(
+          toastHolder?.top.warning(
             `Imported ${addedCount} package${addedCount === 1 ? '' : 's'} with ${nextConflicts.length} conflict${
               nextConflicts.length === 1 ? '' : 's'
             } to resolve.`,
           );
         } else {
-          topToast.success(
+          toastHolder?.top.success(
             files.length === 1 ? 'Requirements file imported successfully' : 'Requirements files imported successfully',
           );
         }
       })
       .catch(() => {
         setIsImporting(false);
-        topToast.danger('Error importing requirements files');
+        toastHolder?.top.danger('Error importing requirements files');
       });
   };
 

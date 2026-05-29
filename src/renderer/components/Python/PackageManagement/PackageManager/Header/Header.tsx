@@ -1,11 +1,10 @@
 import {Avatar, Chip, ProgressBar, SearchField, Selection} from '@heroui/react';
-import {topToast} from '@lynx/layouts/ToastProviders';
 import {extractGitUrl, getFallbackString} from '@lynx_common/utils';
 import {compact, isEmpty} from 'lodash-es';
 import {Dispatch, SetStateAction, useEffect, useState} from 'react';
 
 import {FilterKeys, PackageInfo, PackageUpdate, SitePackages_Info} from '../../../../../../cross/CrossExtTypes';
-import {allCardsExt} from '../../../../../DataHolder';
+import {allCardsExt, toastHolder} from '../../../../../DataHolder';
 import pIpc from '../../../../../PIpc';
 import {cacheUrl} from '../../../../../Utils';
 import RequirementsModal from '../../Requirements';
@@ -107,11 +106,11 @@ export default function PackageManagerHeader({
     pIpc
       .updatePackages(pythonPath, updateList)
       .then(() => {
-        topToast.success(`Successfully updated all selected packages (${updateList.length} total).`);
+        toastHolder?.top.success(`Successfully updated all selected packages (${updateList.length} total).`);
         updated(updateList);
       })
       .catch(() => {
-        topToast.danger(`Failed to update packages`);
+        toastHolder?.top.danger(`Failed to update packages`);
       })
       .finally(() => {
         setIsUpdating(false);

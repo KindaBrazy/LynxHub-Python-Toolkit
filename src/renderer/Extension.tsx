@@ -1,6 +1,6 @@
 import './index.css';
 
-import {ExtensionRendererApi} from '@lynx/plugins/extensions/types/api';
+import type {ExtensionRendererApi} from '@lynx/plugins/extensions/types/api';
 import {APP_BUILD_NUMBER} from '@lynx_common/consts';
 import {isDev} from '@lynx_common/utils';
 
@@ -9,7 +9,7 @@ import CardMenuModal from './components/CardMenuModal';
 import ToolsPage from './components/ToolsPage';
 import {DepsModalKey} from './consts';
 import CustomHook from './CustomHook';
-import {setCards} from './DataHolder';
+import {setCards, setToast} from './DataHolder';
 import listenForEvents from './ListenForEvents';
 import pIpc from './PIpc';
 import pythonToolkitReducer from './reducer';
@@ -17,6 +17,7 @@ import pythonToolkitReducer from './reducer';
 export function InitialExtensions(lynxAPI: ExtensionRendererApi) {
   listenForEvents(lynxAPI);
   setCards(lynxAPI.modulesData?.allCards || []);
+  if (lynxAPI.toast) setToast(lynxAPI.toast);
 
   lynxAPI.addReducer([{name: 'pythonToolkit', reducer: pythonToolkitReducer}]);
 

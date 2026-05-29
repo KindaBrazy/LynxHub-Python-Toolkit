@@ -1,11 +1,11 @@
 import {Alert, Button, Modal, useOverlayState} from '@heroui/react';
 import LynxScroll from '@lynx/components/LynxScroll';
 import TabModal from '@lynx/components/TabModal';
-import {topToast} from '@lynx/layouts/ToastProviders';
 import {Download} from '@solar-icons/react-perf/BoldDuotone';
 import {Plus} from 'lucide-react';
 import {useEffect, useState} from 'react';
 
+import {toastHolder} from '../../../../../DataHolder';
 import pIpc from '../../../../../PIpc';
 import Installer from './Installer';
 
@@ -38,15 +38,15 @@ export default function InstallerModal({refresh, pythonPath}: Props) {
       .installPackage(pythonPath, installCommand)
       .then(result => {
         if (result) {
-          topToast.success('Packages installed successfully!');
+          toastHolder?.top.success('Packages installed successfully!');
         } else {
-          topToast.danger('Failed to install packages. Please check your inputs and try again.');
+          toastHolder?.top.danger('Failed to install packages. Please check your inputs and try again.');
         }
         state.close();
         refresh();
       })
       .catch(err => {
-        topToast.danger('Failed to install packages. Please check your inputs and try again.');
+        toastHolder?.top.danger('Failed to install packages. Please check your inputs and try again.');
         console.error(err);
       })
       .finally(() => {

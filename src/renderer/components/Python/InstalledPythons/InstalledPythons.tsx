@@ -1,6 +1,5 @@
 import {Button, Description, Spinner, useOverlayState} from '@heroui/react';
 import EmptyStateCard from '@lynx/components/EmptyStateCard';
-import {topToast} from '@lynx/layouts/ToastProviders';
 import filesIpc from '@lynx_shared/ipc/files';
 import {FolderOpen, Refresh} from '@solar-icons/react-perf/BoldDuotone';
 import {cloneDeep, isEmpty} from 'lodash-es';
@@ -9,6 +8,7 @@ import {Dispatch, SetStateAction, useCallback, useEffect, useState} from 'react'
 
 import {PythonInstallation} from '../../../../cross/CrossExtTypes';
 import {bytesToMegabytes} from '../../../../cross/CrossExtUtils';
+import {toastHolder} from '../../../DataHolder';
 import pIpc from '../../../PIpc';
 import {usePythonToolkitState} from '../../../reducer';
 import InstalledCard from './InstalledCard';
@@ -131,16 +131,16 @@ export default function InstalledPythons({
             .locatePython(pPath)
             .then(installation => {
               if (installation) {
-                topToast.success('Selected Python validated successfully.');
+                toastHolder?.top.success('Selected Python validated successfully.');
                 getInstalledPythons(false);
               } else {
-                topToast.danger('Failed to validate selected python.');
+                toastHolder?.top.danger('Failed to validate selected python.');
               }
               setIsLocating(false);
             })
             .catch(e => {
               console.warn(e);
-              topToast.danger('Failed to validate selected python.');
+              toastHolder?.top.danger('Failed to validate selected python.');
               setIsLocating(false);
             });
         } else {

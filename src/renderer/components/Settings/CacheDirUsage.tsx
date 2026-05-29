@@ -1,10 +1,10 @@
 import {Button} from '@heroui/react';
-import {topToast} from '@lynx/layouts/ToastProviders';
 import {Broom} from '@solar-icons/react-perf/BoldDuotone';
 import {useEffect, useState} from 'react';
 import {useDispatch} from 'react-redux';
 
 import LynxSwitch from '../../../../../src/renderer/mainWindow/components/LynxSwitch';
+import {toastHolder} from '../../DataHolder';
 import pIpc from '../../PIpc';
 import {PythonToolkitActions, usePythonToolkitState} from '../../reducer';
 
@@ -34,7 +34,7 @@ export default function CacheDirUsage() {
 
     setTimeout(() => {
       setClearing(false);
-      topToast.success('Disk usage cache cleared successfully');
+      toastHolder?.top.success('Disk usage cache cleared successfully');
     }, 700);
   };
 

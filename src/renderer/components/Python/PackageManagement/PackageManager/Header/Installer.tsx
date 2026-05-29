@@ -1,7 +1,6 @@
 import {Button, Chip, Description, Disclosure, Input, Label, Surface, TextField} from '@heroui/react';
 import CopyClipboard from '@lynx/components/CopyClipboard';
 import LynxTooltip from '@lynx/components/LynxTooltip';
-import {topToast} from '@lynx/layouts/ToastProviders';
 import filesIpc from '@lynx_shared/ipc/files';
 import {BoxMinimalistic, Broom, Download, Import, Pen} from '@solar-icons/react-perf/BoldDuotone';
 import {isEmpty} from 'lodash-es';
@@ -10,6 +9,7 @@ import {KeyboardEvent, useEffect, useRef, useState} from 'react';
 
 import {RequirementData} from '../../../../../../cross/CrossExtTypes';
 import {parseRequirementLine} from '../../../../../../cross/CrossExtUtils';
+import {toastHolder} from '../../../../../DataHolder';
 import pIpc from '../../../../../PIpc';
 
 const buildPackageString = (pkg: RequirementData) => {
@@ -173,13 +173,13 @@ export default function Installer({
             return [...prev, ...newPackages];
           });
           setRequirementsFilePaths([]);
-          topToast.success(
+          toastHolder?.top.success(
             files.length === 1 ? 'Requirements file loaded successfully' : 'Requirements files loaded successfully',
           );
         }
       })
       .catch(() => {
-        topToast.danger('Error reading requirements file');
+        toastHolder?.top.danger('Error reading requirements file');
       });
   };
 
@@ -191,13 +191,13 @@ export default function Installer({
           setPackages([]);
           setPackageString('');
           setRequirementsFilePaths(files);
-          topToast.success(
+          toastHolder?.top.success(
             files.length === 1 ? 'Requirements file selected for install' : 'Requirements files selected for install',
           );
         }
       })
       .catch(() => {
-        topToast.danger('Error selecting requirements file');
+        toastHolder?.top.danger('Error selecting requirements file');
       });
   };
 

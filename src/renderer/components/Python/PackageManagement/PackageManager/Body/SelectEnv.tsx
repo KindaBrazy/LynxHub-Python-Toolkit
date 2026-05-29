@@ -1,9 +1,9 @@
 import {Button, Description, Dropdown, Label, Spinner} from '@heroui/react';
-import {topToast} from '@lynx/layouts/ToastProviders';
 import {Restart} from '@solar-icons/react-perf/BoldDuotone';
 import {Dispatch, SetStateAction, useCallback, useEffect, useState} from 'react';
 
 import {AssociateItem, PythonVenvSelectItem} from '../../../../../../cross/CrossExtTypes';
+import {toastHolder} from '../../../../../DataHolder';
 import pIpc from '../../../../../PIpc';
 import {getUniqueLabels} from '../../../../../Utils';
 import {PythonIcon} from '../../../../SvgIcons';
@@ -24,7 +24,7 @@ export default function SelectEnv({id, setPythonPath}: Props) {
       .then(exePath => {
         if (setPythonPath && exePath) {
           setPythonPath(exePath);
-          topToast.success(`${python.condaName || python.version} associated successfully!`);
+          toastHolder?.top.success(`${python.condaName || python.version} associated successfully!`);
         } else {
           console.warn('PythonToolkit: Exe path or setPythonPath is not defined.');
         }

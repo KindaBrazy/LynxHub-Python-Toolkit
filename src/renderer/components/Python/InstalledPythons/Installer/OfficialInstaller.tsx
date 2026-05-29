@@ -10,13 +10,13 @@ import {
 } from '@heroui/react';
 import EmptyStateCard from '@lynx/components/EmptyStateCard';
 import LynxTooltip from '@lynx/components/LynxTooltip';
-import {topToast} from '@lynx/layouts/ToastProviders';
 import {formatSize} from '@lynx_common/utils';
 import {DownloadMinimalistic, Inbox, Refresh, ShieldWarning} from '@solar-icons/react-perf/BoldDuotone';
 import {isEmpty, isNil, isString} from 'lodash-es';
 import {Dispatch, SetStateAction, useEffect, useState} from 'react';
 
 import {DlProgressOfficial, PythonVersion} from '../../../../../cross/CrossExtTypes';
+import {toastHolder} from '../../../../DataHolder';
 import pIpc from '../../../../PIpc';
 
 type Props = {
@@ -125,11 +125,11 @@ export default function InstallerOfficial({refresh, installed, state, setCloseDi
         refresh(true);
         state.close();
         console.log('installed', version);
-        topToast.success(`Python${version.version} installed successfully.`);
+        toastHolder?.top.success(`Python${version.version} installed successfully.`);
       })
       .catch(err => {
         console.log(err);
-        topToast.danger(`Failed to install python${version.version}!`);
+        toastHolder?.top.danger(`Failed to install python${version.version}!`);
       })
       .finally(() => {
         setInstallingVersion(undefined);

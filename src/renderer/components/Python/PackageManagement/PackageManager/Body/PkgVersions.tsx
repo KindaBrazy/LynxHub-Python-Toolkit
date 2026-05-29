@@ -1,7 +1,6 @@
 import {Button, ButtonProps, Chip, Description, Input, Modal, Popover, ProgressBar} from '@heroui/react';
 import LynxTooltip from '@lynx/components/LynxTooltip';
 import TabModal from '@lynx/components/TabModal';
-import {topToast} from '@lynx/layouts/ToastProviders';
 import {compare as pepCompare} from '@renovatebot/pep440';
 import {AltArrowDown, AltArrowUp} from '@solar-icons/react-perf/Bold';
 import {BoxMinimalistic} from '@solar-icons/react-perf/BoldDuotone';
@@ -10,6 +9,7 @@ import {memo, useCallback, useEffect, useState} from 'react';
 
 import LynxScroll from '../../../../../../../../src/renderer/mainWindow/components/LynxScroll';
 import {PackageInfo, PackageUpdate} from '../../../../../../cross/CrossExtTypes';
+import {toastHolder} from '../../../../../DataHolder';
 import pIpc from '../../../../../PIpc';
 
 type updateType = {color: ButtonProps['variant']; disabled: boolean; isUpgrade: boolean | undefined};
@@ -37,7 +37,7 @@ const PkgVersions = memo(({updated, item, pythonPath}: Props) => {
           setAvailableVersion(uniqueVersions);
         })
         .catch(() => {
-          topToast.warning('Failed to fetch available versions!');
+          toastHolder?.top.warning('Failed to fetch available versions!');
         })
         .finally(() => {
           setIsLoadingVersions(false);
@@ -56,11 +56,11 @@ const PkgVersions = memo(({updated, item, pythonPath}: Props) => {
         .changePackageVersion(pythonPath, item.name, item.version, targetVersion)
         .then(() => {
           updated({name: item.name, targetVersion: targetVersion});
-          topToast.success(`${item.name} package changed to ${targetVersion}`);
+          toastHolder?.top.success(`${item.name} package changed to ${targetVersion}`);
         })
         .catch(e => {
           console.info(e);
-          topToast.danger(`Failed change version to ${targetVersion}!`);
+          toastHolder?.top.danger(`Failed change version to ${targetVersion}!`);
         })
         .finally(() => {
           setChangingTo(undefined);

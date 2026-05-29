@@ -1,8 +1,8 @@
-import {bottomToast} from '@lynx/layouts/ToastProviders';
 import {isString} from 'lodash-es';
 import {Fragment, useEffect} from 'react';
 import {useDispatch} from 'react-redux';
 
+import {toastHolder} from './DataHolder';
 import pIpc from './PIpc';
 import {PythonToolkitActions} from './reducer';
 
@@ -21,7 +21,7 @@ export default function CustomHook() {
       const message = e.message;
       if (message && isString(message)) {
         if (message.toLowerCase().includes('no python at')) {
-          bottomToast.danger('Python Not Found', {
+          toastHolder?.bottom.danger('Python Not Found', {
             timeout: 0,
             description: (
               <div>

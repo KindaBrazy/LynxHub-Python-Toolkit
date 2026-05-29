@@ -1,6 +1,5 @@
 import {Button, Description, Spinner} from '@heroui/react';
 import EmptyStateCard from '@lynx/components/EmptyStateCard';
-import {topToast} from '@lynx/layouts/ToastProviders';
 import filesIpc from '@lynx_shared/ipc/files';
 import {FolderOpen} from '@solar-icons/react-perf/BoldDuotone';
 import {isEmpty} from 'lodash-es';
@@ -8,6 +7,7 @@ import {useCallback, useEffect, useState} from 'react';
 
 import {PythonInstallation, PythonVenvs, VenvInfo} from '../../../../cross/CrossExtTypes';
 import {bytesToMegabytes} from '../../../../cross/CrossExtUtils';
+import {toastHolder} from '../../../DataHolder';
 import pIpc from '../../../PIpc';
 import {usePythonToolkitState} from '../../../reducer';
 import VenvCard from './VenvCard';
@@ -122,10 +122,10 @@ export default function Venv({visible, installedPythons, isLoadingPythons}: Prop
     setIsLocating(true);
     pIpc.locateVenv().then((isLocated: boolean) => {
       if (isLocated) {
-        topToast.success('Environment validated successfully.');
+        toastHolder?.top.success('Environment validated successfully.');
         getVenvs();
       } else {
-        topToast.danger('Failed to validate environment.');
+        toastHolder?.top.danger('Failed to validate environment.');
       }
       setIsLocating(false);
     });
