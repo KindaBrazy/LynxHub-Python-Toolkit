@@ -1,53 +1,97 @@
-import {Button, ButtonProps, Chip, Description, Input, Modal, Popover, ProgressBar} from '@heroui/react';
+import {Button, ButtonProps, Chip, Description, Input, Modal, ProgressBar} from '@heroui/react';
 import LynxTooltip from '@lynx/components/LynxTooltip';
 import TabModal from '@lynx/components/TabModal';
 import {compare as pepCompare} from '@renovatebot/pep440';
 import {AltArrowDown, AltArrowUp} from '@solar-icons/react-perf/Bold';
 import {BoxMinimalistic} from '@solar-icons/react-perf/BoldDuotone';
 import {isEmpty} from 'lodash-es';
-import {memo, useCallback, useEffect, useState} from 'react';
+import {memo, useCallback, useEffect, useMemo, useState} from 'react';
 
 import LynxScroll from '../../../../../../../../src/renderer/mainWindow/components/LynxScroll';
 import {PackageInfo, PackageUpdate} from '../../../../../../cross/CrossExtTypes';
 import {toastHolder} from '../../../../../DataHolder';
 import pIpc from '../../../../../PIpc';
 
-type updateType = {color: ButtonProps['variant']; disabled: boolean; isUpgrade: boolean | undefined};
+type UpdateType = {color: ButtonProps['variant']; disabled: boolean; isUpgrade: boolean | undefined};
+
+type VersionInfo = {
+  version: string;
+} & UpdateType;
+
 type Props = {
   pythonPath: string;
   item: PackageInfo;
   updated: (list: PackageUpdate | PackageUpdate[]) => void;
 };
-const PkgVersions = memo(({updated, item, pythonPath}: Props) => {
-  const [availableVersion, setAvailableVersion] = useState<string[] | null>(null);
 
+// Pure utility defined outside the component to prevent re-creation
+const calculateUpdateType = (current: string, target: string): UpdateType => {
+  if (isEmpty(target) || isEmpty(current)) {
+    return {color: 'tertiary', isUpgrade: undefined, disabled: true};
+  }
+
+  try {
+    const cmp = pepCompare(current, target);
+    if (cmp === 0) {
+      return {color: 'tertiary', isUpgrade: undefined, disabled: true};
+    }
+
+    const isUpgrade = cmp < 0; // current < target -> upgrade
+    return {
+      color: isUpgrade ? 'primary' : 'danger-soft',
+      isUpgrade,
+      disabled: false,
+    };
+  } catch (e) {
+    // Fallback for non-compliant PEP 440 version schemes
+    return {color: 'tertiary', isUpgrade: undefined, disabled: true};
+  }
+};
+
+const PkgVersions = memo(({updated, item, pythonPath}: Props) => {
+  const [availableVersion, setAvailableVersion] = useState<VersionInfo[] | null>(null);
   const [changingTo, setChangingTo] = useState<string | undefined>(undefined);
   const [isLoadingVersions, setIsLoadingVersions] = useState<boolean>(false);
   const [isOpen, setIsOpen] = useState<boolean>(false);
-
   const [customVersion, setCustomVersion] = useState<string>(item.version);
+  const [confirmTarget, setConfirmTarget] = useState<VersionInfo | null>(null);
 
   useEffect(() => {
+    let isMounted = true;
+
     if (isOpen) {
       setIsLoadingVersions(true);
       pIpc
         .getPackageAllVersions(item.name)
         .then(versions => {
+          if (!isMounted) return;
           const uniqueVersions = [...new Set(versions)];
-          setAvailableVersion(uniqueVersions);
+
+          // Map versions and pre-calculate update properties once
+          const mappedVersions = uniqueVersions.map(v => ({
+            version: v,
+            ...calculateUpdateType(item.version, v),
+          }));
+
+          setAvailableVersion(mappedVersions);
         })
         .catch(() => {
+          if (!isMounted) return;
           toastHolder?.top.warning('Failed to fetch available versions!');
         })
         .finally(() => {
-          setIsLoadingVersions(false);
+          if (isMounted) {
+            setIsLoadingVersions(false);
+          }
         });
     }
 
     return () => {
+      isMounted = false;
       setAvailableVersion(null);
+      setConfirmTarget(null);
     };
-  }, [isOpen]);
+  }, [isOpen, item.name, item.version]);
 
   const changeVersion = useCallback(
     (targetVersion: string) => {
@@ -67,30 +111,23 @@ const PkgVersions = memo(({updated, item, pythonPath}: Props) => {
           setIsOpen(false);
         });
     },
-    [pythonPath, item],
+    [pythonPath, item, updated],
   );
 
-  const getUpdateType = useCallback(
-    (version: string): updateType => {
-      const current = item.version; // the package's current version
+  // Evaluate custom version inputs dynamically
+  const customUpdateType = useMemo(() => {
+    return calculateUpdateType(item.version, customVersion);
+  }, [item.version, customVersion]);
 
-      if (isEmpty(version) || isEmpty(current)) return {color: 'tertiary', isUpgrade: undefined, disabled: true};
-
-      const cmp = pepCompare(current, version);
-
-      if (cmp === 0) {
-        return {color: 'tertiary', isUpgrade: undefined, disabled: true};
-      }
-
-      const isUpgrade = cmp < 0; // current < target → upgrade
-      return {
-        color: isUpgrade ? 'primary' : 'danger-soft',
-        isUpgrade,
-        disabled: false,
-      };
-    },
-    [item],
-  );
+  // Filter version array dynamically based on custom version typing
+  const filteredVersions = useMemo(() => {
+    if (!availableVersion) return [];
+    const query = customVersion.trim().toLowerCase();
+    if (isEmpty(query) || query === item.version.toLowerCase()) {
+      return availableVersion;
+    }
+    return availableVersion.filter(v => v.version.toLowerCase().includes(query));
+  }, [availableVersion, customVersion, item.version]);
 
   return (
     <>
@@ -120,6 +157,23 @@ const PkgVersions = memo(({updated, item, pythonPath}: Props) => {
                     : ''}
               </Description>
             </div>
+          ) : confirmTarget ? (
+            /* Inline Confirmation Interface (replaces the heavy popover trees) */
+            <div className="flex flex-col items-center justify-center p-6 gap-y-4">
+              <p className="text-center text-sm text-semi-muted">
+                Are you sure you want to {confirmTarget.isUpgrade ? 'upgrade' : 'downgrade'}{' '}
+                <strong className="text-foreground">{item.name}</strong> to{' '}
+                <strong className="text-accent">{confirmTarget.version}</strong>?
+              </p>
+              <div className="flex flex-row gap-x-2 justify-center w-full max-w-xs">
+                <Button variant="tertiary" onPress={() => setConfirmTarget(null)} fullWidth>
+                  Cancel
+                </Button>
+                <Button variant={confirmTarget.color} onPress={() => changeVersion(confirmTarget.version)} fullWidth>
+                  Confirm
+                </Button>
+              </div>
+            </div>
           ) : (
             <LynxScroll className="size-full">
               <div className="flex flex-row items-center w-full gap-x-2 px-4 py-2">
@@ -130,40 +184,35 @@ const PkgVersions = memo(({updated, item, pythonPath}: Props) => {
                   onChange={e => setCustomVersion(e.target.value)}
                   fullWidth
                 />
-                {getUpdateType(customVersion).isUpgrade !== undefined && (
-                  <Button variant={getUpdateType(customVersion).color} onPress={() => changeVersion(customVersion)}>
-                    {getUpdateType(customVersion).isUpgrade ? 'Upgrade' : 'Downgrade'}
+                {customUpdateType.isUpgrade !== undefined && (
+                  <Button
+                    variant={customUpdateType.color}
+                    onPress={() => setConfirmTarget({version: customVersion, ...customUpdateType})}>
+                    {customUpdateType.isUpgrade ? 'Upgrade' : 'Downgrade'}
                   </Button>
                 )}
               </div>
-              <div className="flex flex-row gap-2 flex-wrap pl-10 mt-2">
-                {availableVersion?.map(version => {
-                  const updateType = getUpdateType(version);
-                  const icon = updateType.disabled ? null : updateType.isUpgrade ? <AltArrowUp /> : <AltArrowDown />;
+              <div className="flex flex-row gap-2 flex-wrap pl-10 mt-2 pr-4">
+                {filteredVersions.slice(0, 150).map(v => {
+                  const icon = v.disabled ? null : v.isUpgrade ? <AltArrowUp /> : <AltArrowDown />;
                   return (
-                    <Popover key={`${item.name}_${version}`}>
-                      <Button
-                        variant={updateType.color}
-                        className="shrink-0 max-w-34"
-                        isDisabled={updateType.disabled}
-                        fullWidth>
-                        {icon}
-                        {version}
-                      </Button>
-                      <Popover.Content className="max-w-68">
-                        <Popover.Dialog className="gap-y-2 flex flex-col">
-                          <Popover.Arrow />
-                          <Popover.Heading>
-                            Are you sure you want to {updateType.isUpgrade ? 'upgrade' : 'downgrade'} to {version}?
-                          </Popover.Heading>
-                          <Button size="sm" onPress={() => changeVersion(version)} fullWidth>
-                            Confirm
-                          </Button>
-                        </Popover.Dialog>
-                      </Popover.Content>
-                    </Popover>
+                    <Button
+                      variant={v.color}
+                      isDisabled={v.disabled}
+                      className="shrink-0 max-w-34"
+                      key={`${item.name}_${v.version}`}
+                      onPress={() => setConfirmTarget(v)}
+                      fullWidth>
+                      {icon}
+                      {v.version}
+                    </Button>
                   );
                 })}
+                {filteredVersions.length > 150 && (
+                  <p className="text-xs text-foreground-400 w-full text-center mt-2">
+                    Showing first 150 versions. Use search to narrow down.
+                  </p>
+                )}
               </div>
             </LynxScroll>
           )}
