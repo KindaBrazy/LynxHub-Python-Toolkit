@@ -1,7 +1,9 @@
-import {Button, Modal, Popover} from '@heroui/react';
+import {Button, Modal} from '@heroui/react';
 import {UseOverlayStateReturn} from '@heroui/react';
+import EmptyStateCard from '@lynx/components/EmptyStateCard';
 import TabModal from '@lynx/components/TabModal';
 import ptyIpc from '@lynx_shared/ipc/pty';
+import {ShieldWarning} from '@solar-icons/react-perf/BoldDuotone';
 import {memo, useEffect, useState} from 'react';
 
 import TerminalView from './Terminal-View';
@@ -9,23 +11,37 @@ import TerminalView from './Terminal-View';
 type Props = {state: UseOverlayStateReturn};
 
 const UpdateModal = memo(({state}: Props) => {
-  const [isPopoverOpen, setIsPopoverOpen] = useState<boolean>(false);
   const [isDone, setIsDone] = useState<boolean>(false);
+  const [showConfirm, setShowConfirm] = useState<boolean>(false);
 
   useEffect(() => {
     const offExit = ptyIpc.onExit(id => {
       if (id === 'python-update') {
-        setIsPopoverOpen(true);
         setIsDone(true);
+        setShowConfirm(true);
       }
     });
 
     return () => offExit();
   }, []);
 
-  const Close = () => {
-    setIsPopoverOpen(false);
+  // Reset confirmation state when modal is closed/opened
+  useEffect(() => {
+    if (!state.isOpen) {
+      setShowConfirm(false);
+    }
+  }, [state.isOpen]);
+
+  const handleCloseClick = () => {
+    setShowConfirm(true);
+  };
+
+  const confirmClose = () => {
     state.close();
+  };
+
+  const cancelClose = () => {
+    setShowConfirm(false);
   };
 
   return (
@@ -34,25 +50,36 @@ const UpdateModal = memo(({state}: Props) => {
         <Modal.Heading>Console</Modal.Heading>
       </Modal.Header>
       <Modal.Body>
-        <TerminalView />
+        {showConfirm && (
+          <div className="flex flex-col items-center justify-center py-8 text-center">
+            <EmptyStateCard
+              variant="secondary"
+              className="size-full py-8"
+              icon={<ShieldWarning className="size-14 text-warning" />}
+              description={isDone ? 'Close this window?' : 'The command will still execute in the background.'}
+              title={isDone ? 'The terminal is done and exited' : 'Are you sure you want to close this window?'}
+            />
+          </div>
+        )}
+        <div className={showConfirm ? 'hidden' : 'block'}>
+          <TerminalView />
+        </div>
       </Modal.Body>
       <Modal.Footer>
-        <Popover isOpen={isPopoverOpen} onOpenChange={setIsPopoverOpen}>
-          <Button variant="danger-soft">Close</Button>
-          <Popover.Content className="max-w-xs">
-            <Popover.Dialog>
-              <Popover.Arrow />
-              <Popover.Heading>
-                {isDone
-                  ? 'The terminal is done and exited, close this window?'
-                  : 'Are you sure you want to close this window? the command will be still executing in background'}
-              </Popover.Heading>
-              <Button size="sm" onPress={Close} variant="danger-soft" fullWidth>
-                Close
-              </Button>
-            </Popover.Dialog>
-          </Popover.Content>
-        </Popover>
+        {showConfirm ? (
+          <div className="flex w-full gap-2 justify-end">
+            <Button size="sm" variant="ghost" onPress={cancelClose}>
+              Back to Terminal
+            </Button>
+            <Button size="sm" variant="danger-soft" onPress={confirmClose}>
+              Close Window
+            </Button>
+          </div>
+        ) : (
+          <Button size="sm" variant="danger-soft" onPress={handleCloseClick}>
+            Close
+          </Button>
+        )}
       </Modal.Footer>
     </TabModal>
   );
