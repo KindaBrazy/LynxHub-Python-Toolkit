@@ -1,9 +1,10 @@
 import {Button, ButtonProps, Chip, Description, Input, Modal, ProgressBar} from '@heroui/react';
+import EmptyStateCard from '@lynx/components/EmptyStateCard';
 import LynxTooltip from '@lynx/components/LynxTooltip';
 import TabModal from '@lynx/components/TabModal';
 import {compare as pepCompare} from '@renovatebot/pep440';
 import {AltArrowDown, AltArrowUp} from '@solar-icons/react-perf/Bold';
-import {BoxMinimalistic} from '@solar-icons/react-perf/BoldDuotone';
+import {BoxMinimalistic, ShieldWarning} from '@solar-icons/react-perf/BoldDuotone';
 import {isEmpty} from 'lodash-es';
 import {memo, useCallback, useEffect, useMemo, useState} from 'react';
 
@@ -121,7 +122,7 @@ const PkgVersions = memo(({updated, item, pythonPath}: Props) => {
 
   // Filter version array dynamically based on custom version typing
   const filteredVersions = useMemo(() => {
-    if (!availableVersion) return [];
+    if (!availableVersion || !customVersion) return [];
     const query = customVersion.trim().toLowerCase();
     if (isEmpty(query) || query === item.version.toLowerCase()) {
       return availableVersion;
@@ -193,21 +194,30 @@ const PkgVersions = memo(({updated, item, pythonPath}: Props) => {
                 )}
               </div>
               <div className="flex flex-row gap-2 flex-wrap pl-10 mt-2 pr-4">
-                {filteredVersions.slice(0, 150).map(v => {
-                  const icon = v.disabled ? null : v.isUpgrade ? <AltArrowUp /> : <AltArrowDown />;
-                  return (
-                    <Button
-                      variant={v.color}
-                      isDisabled={v.disabled}
-                      className="shrink-0 max-w-34"
-                      key={`${item.name}_${v.version}`}
-                      onPress={() => setConfirmTarget(v)}
-                      fullWidth>
-                      {icon}
-                      {v.version}
-                    </Button>
-                  );
-                })}
+                {filteredVersions.length > 0 ? (
+                  filteredVersions.slice(0, 150).map(v => {
+                    const icon = v.disabled ? null : v.isUpgrade ? <AltArrowUp /> : <AltArrowDown />;
+                    return (
+                      <Button
+                        variant={v.color}
+                        isDisabled={v.disabled}
+                        className="shrink-0 max-w-34"
+                        key={`${item.name}_${v.version}`}
+                        onPress={() => setConfirmTarget(v)}
+                        fullWidth>
+                        {icon}
+                        {v.version}
+                      </Button>
+                    );
+                  })
+                ) : (
+                  <EmptyStateCard
+                    variant="secondary"
+                    className="size-full mr-6"
+                    description="Something goes wrong, please try again!"
+                    icon={<ShieldWarning className="size-10 text-warning" />}
+                  />
+                )}
                 {filteredVersions.length > 150 && (
                   <p className="text-xs text-foreground-400 w-full text-center mt-2">
                     Showing first 150 versions. Use search to narrow down.
