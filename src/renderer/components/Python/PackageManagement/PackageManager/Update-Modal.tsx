@@ -54,14 +54,14 @@ const UpdateModal = memo(({state}: Props) => {
           <div className="flex flex-col items-center justify-center py-8 text-center">
             <EmptyStateCard
               variant="secondary"
-              className="size-full py-8"
+              className="size-full py-4"
               icon={<ShieldWarning className="size-14 text-warning" />}
               description={isDone ? 'Close this window?' : 'The command will still execute in the background.'}
               title={isDone ? 'The terminal is done and exited' : 'Are you sure you want to close this window?'}
             />
           </div>
         )}
-        <div className={showConfirm ? 'hidden' : 'block'}>
+        <div className={`size-full ${showConfirm ? 'hidden' : 'block'}`}>
           <TerminalView />
         </div>
       </Modal.Body>
