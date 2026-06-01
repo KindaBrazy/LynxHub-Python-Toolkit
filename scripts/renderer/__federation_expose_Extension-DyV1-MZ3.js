@@ -6265,6 +6265,112 @@ const storageUtilsIpc = {
   }
 };
 
+const {DEFAULT_TOAST_TIMEOUT} = await importShared('@heroui/react');
+
+function createToastFunction(queue) {
+  const toastFn = (message, options) => {
+    const timeout = options?.timeout !== void 0 ? options.timeout : DEFAULT_TOAST_TIMEOUT;
+    return queue.add(
+      {
+        title: message,
+        description: options?.description,
+        indicator: options?.indicator,
+        variant: options?.variant || "default",
+        actionProps: options?.actionProps,
+        isLoading: options?.isLoading
+      },
+      {
+        timeout,
+        onClose: () => {
+          requestAnimationFrame(() => {
+            options?.onClose?.();
+          });
+        }
+      }
+    );
+  };
+  toastFn.success = (message, options) => {
+    return toastFn(message, { ...options, variant: "success" });
+  };
+  toastFn.danger = (message, options) => {
+    return toastFn(message, { ...options, variant: "danger" });
+  };
+  toastFn.info = (message, options) => {
+    return toastFn(message, { ...options, variant: "accent" });
+  };
+  toastFn.warning = (message, options) => {
+    return toastFn(message, { ...options, variant: "warning" });
+  };
+  toastFn.promise = (promise, options) => {
+    const promiseFn = typeof promise === "function" ? promise() : promise;
+    const loadingId = queue.add(
+      {
+        title: options.loading,
+        variant: "default",
+        isLoading: true
+      },
+      {
+        timeout: 0
+        // Don't auto-close loading toasts
+      }
+    );
+    promiseFn.then((data) => {
+      const successMessage = typeof options.success === "function" ? options.success(data) : options.success;
+      queue.close(loadingId);
+      return toastFn.success(successMessage);
+    }).catch((error) => {
+      const errorMessage = typeof options.error === "function" ? options.error(error) : options.error;
+      queue.close(loadingId);
+      return toastFn.danger(errorMessage);
+    });
+    return loadingId;
+  };
+  toastFn.getQueue = () => queue.getQueue();
+  toastFn.close = (key) => queue.close(key);
+  toastFn.pauseAll = () => queue.pauseAll();
+  toastFn.resumeAll = () => queue.resumeAll();
+  toastFn.clear = () => queue.clear();
+  return toastFn;
+}
+
+const {Toast,ToastContent,ToastDescription,ToastIndicator,ToastQueue,ToastTitle} = await importShared('@heroui/react');
+const {memo: memo$7} = await importShared('react');
+
+const bottomQueue = new ToastQueue({ maxVisibleToasts: 3 });
+const topQueue = new ToastQueue({ maxVisibleToasts: 3 });
+const topToast = createToastFunction(topQueue);
+const bottomToast = createToastFunction(bottomQueue);
+memo$7(() => {
+  return /* @__PURE__ */ jsxRuntimeExports.jsxs(jsxRuntimeExports.Fragment, { children: [
+    /* @__PURE__ */ jsxRuntimeExports.jsx(Toast.Provider, { placement: "top", queue: topQueue, children: ({ toast: toastItem }) => {
+      const content = toastItem.content;
+      return /* @__PURE__ */ jsxRuntimeExports.jsxs(Toast, { toast: toastItem, variant: content.variant, className: "border notDraggable", children: [
+        /* @__PURE__ */ jsxRuntimeExports.jsx(ToastContent, { children: /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "flex items-center gap-2", children: [
+          /* @__PURE__ */ jsxRuntimeExports.jsx(ToastIndicator, { variant: content.variant }),
+          /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "flex flex-col pr-6", children: [
+            content.title ? /* @__PURE__ */ jsxRuntimeExports.jsx(ToastTitle, { children: content.title }) : null,
+            content.description ? /* @__PURE__ */ jsxRuntimeExports.jsx(ToastDescription, { children: content.description }) : null
+          ] })
+        ] }) }),
+        /* @__PURE__ */ jsxRuntimeExports.jsx(Toast.CloseButton, { className: "notDraggable" })
+      ] });
+    } }),
+    /* @__PURE__ */ jsxRuntimeExports.jsx(Toast.Provider, { queue: bottomQueue, placement: "bottom end", children: ({ toast: toastItem }) => {
+      const content = toastItem.content;
+      return /* @__PURE__ */ jsxRuntimeExports.jsxs(Toast, { toast: toastItem, className: "border", variant: content.variant, children: [
+        /* @__PURE__ */ jsxRuntimeExports.jsx(ToastContent, { children: /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "flex items-center gap-2", children: [
+          /* @__PURE__ */ jsxRuntimeExports.jsx(ToastIndicator, { variant: content.variant }),
+          /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "flex flex-col pr-6", children: [
+            content.title ? /* @__PURE__ */ jsxRuntimeExports.jsx(ToastTitle, { children: content.title }) : null,
+            content.description ? /* @__PURE__ */ jsxRuntimeExports.jsx(ToastDescription, { children: content.description }) : null
+          ] })
+        ] }) }),
+        /* @__PURE__ */ jsxRuntimeExports.jsx(Toast.CloseButton, {})
+      ] });
+    } })
+  ] });
+});
+
 const {useSelector: useSelector$5} = await importShared('react-redux');
 
 const initialState$5 = {
@@ -9462,112 +9568,6 @@ function LynxScroll({ children, className, overflow = { x: "hidden", y: "scroll"
     }
   );
 }
-
-const {DEFAULT_TOAST_TIMEOUT} = await importShared('@heroui/react');
-
-function createToastFunction(queue) {
-  const toastFn = (message, options) => {
-    const timeout = options?.timeout !== void 0 ? options.timeout : DEFAULT_TOAST_TIMEOUT;
-    return queue.add(
-      {
-        title: message,
-        description: options?.description,
-        indicator: options?.indicator,
-        variant: options?.variant || "default",
-        actionProps: options?.actionProps,
-        isLoading: options?.isLoading
-      },
-      {
-        timeout,
-        onClose: () => {
-          requestAnimationFrame(() => {
-            options?.onClose?.();
-          });
-        }
-      }
-    );
-  };
-  toastFn.success = (message, options) => {
-    return toastFn(message, { ...options, variant: "success" });
-  };
-  toastFn.danger = (message, options) => {
-    return toastFn(message, { ...options, variant: "danger" });
-  };
-  toastFn.info = (message, options) => {
-    return toastFn(message, { ...options, variant: "accent" });
-  };
-  toastFn.warning = (message, options) => {
-    return toastFn(message, { ...options, variant: "warning" });
-  };
-  toastFn.promise = (promise, options) => {
-    const promiseFn = typeof promise === "function" ? promise() : promise;
-    const loadingId = queue.add(
-      {
-        title: options.loading,
-        variant: "default",
-        isLoading: true
-      },
-      {
-        timeout: 0
-        // Don't auto-close loading toasts
-      }
-    );
-    promiseFn.then((data) => {
-      const successMessage = typeof options.success === "function" ? options.success(data) : options.success;
-      queue.close(loadingId);
-      return toastFn.success(successMessage);
-    }).catch((error) => {
-      const errorMessage = typeof options.error === "function" ? options.error(error) : options.error;
-      queue.close(loadingId);
-      return toastFn.danger(errorMessage);
-    });
-    return loadingId;
-  };
-  toastFn.getQueue = () => queue.getQueue();
-  toastFn.close = (key) => queue.close(key);
-  toastFn.pauseAll = () => queue.pauseAll();
-  toastFn.resumeAll = () => queue.resumeAll();
-  toastFn.clear = () => queue.clear();
-  return toastFn;
-}
-
-const {Toast,ToastContent,ToastDescription,ToastIndicator,ToastQueue,ToastTitle} = await importShared('@heroui/react');
-const {memo: memo$7} = await importShared('react');
-
-const bottomQueue = new ToastQueue({ maxVisibleToasts: 3 });
-const topQueue = new ToastQueue({ maxVisibleToasts: 3 });
-const topToast = createToastFunction(topQueue);
-const bottomToast = createToastFunction(bottomQueue);
-memo$7(() => {
-  return /* @__PURE__ */ jsxRuntimeExports.jsxs(jsxRuntimeExports.Fragment, { children: [
-    /* @__PURE__ */ jsxRuntimeExports.jsx(Toast.Provider, { placement: "top", queue: topQueue, children: ({ toast: toastItem }) => {
-      const content = toastItem.content;
-      return /* @__PURE__ */ jsxRuntimeExports.jsxs(Toast, { toast: toastItem, variant: content.variant, className: "border notDraggable", children: [
-        /* @__PURE__ */ jsxRuntimeExports.jsx(ToastContent, { children: /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "flex items-center gap-2", children: [
-          /* @__PURE__ */ jsxRuntimeExports.jsx(ToastIndicator, { variant: content.variant }),
-          /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "flex flex-col pr-6", children: [
-            content.title ? /* @__PURE__ */ jsxRuntimeExports.jsx(ToastTitle, { children: content.title }) : null,
-            content.description ? /* @__PURE__ */ jsxRuntimeExports.jsx(ToastDescription, { children: content.description }) : null
-          ] })
-        ] }) }),
-        /* @__PURE__ */ jsxRuntimeExports.jsx(Toast.CloseButton, { className: "notDraggable" })
-      ] });
-    } }),
-    /* @__PURE__ */ jsxRuntimeExports.jsx(Toast.Provider, { queue: bottomQueue, placement: "bottom end", children: ({ toast: toastItem }) => {
-      const content = toastItem.content;
-      return /* @__PURE__ */ jsxRuntimeExports.jsxs(Toast, { toast: toastItem, className: "border", variant: content.variant, children: [
-        /* @__PURE__ */ jsxRuntimeExports.jsx(ToastContent, { children: /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "flex items-center gap-2", children: [
-          /* @__PURE__ */ jsxRuntimeExports.jsx(ToastIndicator, { variant: content.variant }),
-          /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "flex flex-col pr-6", children: [
-            content.title ? /* @__PURE__ */ jsxRuntimeExports.jsx(ToastTitle, { children: content.title }) : null,
-            content.description ? /* @__PURE__ */ jsxRuntimeExports.jsx(ToastDescription, { children: content.description }) : null
-          ] })
-        ] }) }),
-        /* @__PURE__ */ jsxRuntimeExports.jsx(Toast.CloseButton, {})
-      ] });
-    } })
-  ] });
-});
 
 var main = {exports: {}};
 
@@ -18552,6 +18552,11 @@ function parseRequirementLine(line) {
   return { name, versionOperator, version, originalLine, extras, markers };
 }
 
+let allCardsExt = [];
+let toastHolder;
+const setCards = (cards) => allCardsExt = cards;
+const setToast = (t) => toastHolder = t;
+
 const cacheUrl = (url) => {
   if (!url) return void 0;
   return semverExports.gte(window.lynxVersion || "3.3.0", "3.4.0") ? `lynxcache://fetch/${encodeURIComponent(url)}` : url;
@@ -18618,7 +18623,7 @@ function SelectEnv({ id, setPythonPath }) {
     pIpc.getExePathAssociate(result).then((exePath) => {
       if (setPythonPath && exePath) {
         setPythonPath(exePath);
-        topToast.success(`${python.condaName || python.version} associated successfully!`);
+        toastHolder?.top.success(`${python.condaName || python.version} associated successfully!`);
       } else {
         console.warn("PythonToolkit: Exe path or setPythonPath is not defined.");
       }
@@ -18910,63 +18915,88 @@ function calculateKey(input) {
   return [epoch, release, pre, post, dev, local];
 }
 
-const {Button: Button$n,Chip: Chip$6,Description: Description$f,Input: Input$4,Modal: Modal$7,Popover: Popover$9,ProgressBar: ProgressBar$4} = await importShared('@heroui/react');
-const {memo: memo$4,useCallback: useCallback$c,useEffect: useEffect$o,useState: useState$t} = await importShared('react');
+const {Button: Button$n,Chip: Chip$6,Description: Description$f,Input: Input$4,Modal: Modal$7,ProgressBar: ProgressBar$4} = await importShared('@heroui/react');
+const {memo: memo$4,useCallback: useCallback$c,useEffect: useEffect$o,useMemo: useMemo$d,useState: useState$t} = await importShared('react');
+const calculateUpdateType = (current, target) => {
+  if (isEmpty(target) || isEmpty(current)) {
+    return { color: "tertiary", isUpgrade: void 0, disabled: true };
+  }
+  try {
+    const cmp = compare(current, target);
+    if (cmp === 0) {
+      return { color: "tertiary", isUpgrade: void 0, disabled: true };
+    }
+    const isUpgrade = cmp < 0;
+    return {
+      color: isUpgrade ? "primary" : "danger-soft",
+      isUpgrade,
+      disabled: false
+    };
+  } catch (e) {
+    return { color: "tertiary", isUpgrade: void 0, disabled: true };
+  }
+};
 const PkgVersions = memo$4(({ updated, item, pythonPath }) => {
   const [availableVersion, setAvailableVersion] = useState$t(null);
   const [changingTo, setChangingTo] = useState$t(void 0);
   const [isLoadingVersions, setIsLoadingVersions] = useState$t(false);
   const [isOpen, setIsOpen] = useState$t(false);
   const [customVersion, setCustomVersion] = useState$t(item.version);
+  const [confirmTarget, setConfirmTarget] = useState$t(null);
   useEffect$o(() => {
+    let isMounted = true;
     if (isOpen) {
       setIsLoadingVersions(true);
       pIpc.getPackageAllVersions(item.name).then((versions) => {
+        if (!isMounted) return;
         const uniqueVersions = [...new Set(versions)];
-        setAvailableVersion(uniqueVersions);
+        const mappedVersions = uniqueVersions.map((v) => ({
+          version: v,
+          ...calculateUpdateType(item.version, v)
+        }));
+        setAvailableVersion(mappedVersions);
       }).catch(() => {
-        topToast.warning("Failed to fetch available versions!");
+        if (!isMounted) return;
+        toastHolder?.top.warning("Failed to fetch available versions!");
       }).finally(() => {
-        setIsLoadingVersions(false);
+        if (isMounted) {
+          setIsLoadingVersions(false);
+        }
       });
     }
     return () => {
+      isMounted = false;
       setAvailableVersion(null);
+      setConfirmTarget(null);
     };
-  }, [isOpen]);
+  }, [isOpen, item.name, item.version]);
   const changeVersion = useCallback$c(
     (targetVersion) => {
       setChangingTo(targetVersion);
       pIpc.changePackageVersion(pythonPath, item.name, item.version, targetVersion).then(() => {
         updated({ name: item.name, targetVersion });
-        topToast.success(`${item.name} package changed to ${targetVersion}`);
+        toastHolder?.top.success(`${item.name} package changed to ${targetVersion}`);
       }).catch((e) => {
         console.info(e);
-        topToast.danger(`Failed change version to ${targetVersion}!`);
+        toastHolder?.top.danger(`Failed change version to ${targetVersion}!`);
       }).finally(() => {
         setChangingTo(void 0);
         setIsOpen(false);
       });
     },
-    [pythonPath, item]
+    [pythonPath, item, updated]
   );
-  const getUpdateType = useCallback$c(
-    (version) => {
-      if (isEmpty(version)) return { color: "tertiary", isUpgrade: void 0, disabled: true };
-      const current = item.version;
-      const cmp = compare(current, version);
-      if (cmp === 0) {
-        return { color: "tertiary", isUpgrade: void 0, disabled: true };
-      }
-      const isUpgrade = cmp < 0;
-      return {
-        color: isUpgrade ? "primary" : "danger-soft",
-        isUpgrade,
-        disabled: false
-      };
-    },
-    [item]
-  );
+  const customUpdateType = useMemo$d(() => {
+    return calculateUpdateType(item.version, customVersion);
+  }, [item.version, customVersion]);
+  const filteredVersions = useMemo$d(() => {
+    if (!availableVersion || !customVersion) return [];
+    const query = customVersion.trim().toLowerCase();
+    if (isEmpty(query) || query === item.version.toLowerCase()) {
+      return availableVersion;
+    }
+    return availableVersion.filter((v) => v.version.toLowerCase().includes(query));
+  }, [availableVersion, customVersion, item.version]);
   return /* @__PURE__ */ jsxRuntimeExports.jsxs(jsxRuntimeExports.Fragment, { children: [
     /* @__PURE__ */ jsxRuntimeExports.jsxs(TabModal, { size: "lg", isOpen, onOpenChange: setIsOpen, dialogClassName: "p-0 py-4", children: [
       /* @__PURE__ */ jsxRuntimeExports.jsx(Modal$7.CloseTrigger, {}),
@@ -18981,7 +19011,25 @@ const PkgVersions = memo$4(({ updated, item, pythonPath }) => {
           /* @__PURE__ */ jsxRuntimeExports.jsx(ProgressBar$4.Track, { children: /* @__PURE__ */ jsxRuntimeExports.jsx(ProgressBar$4.Fill, {}) })
         ] }),
         /* @__PURE__ */ jsxRuntimeExports.jsx(Description$f, { children: isLoadingVersions ? "Fetching available versions..." : changingTo ? `Changing from "${item.version}" to "${changingTo}"` : "" })
-      ] }) : /* @__PURE__ */ jsxRuntimeExports.jsxs(LynxScroll, { className: "size-full", children: [
+      ] }) : confirmTarget ? (
+        /* Inline Confirmation Interface (replaces the heavy popover trees) */
+        /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "flex flex-col items-center justify-center p-6 gap-y-4", children: [
+          /* @__PURE__ */ jsxRuntimeExports.jsxs("p", { className: "text-center text-sm text-semi-muted", children: [
+            "Are you sure you want to ",
+            confirmTarget.isUpgrade ? "upgrade" : "downgrade",
+            " ",
+            /* @__PURE__ */ jsxRuntimeExports.jsx("strong", { className: "text-foreground", children: item.name }),
+            " to",
+            " ",
+            /* @__PURE__ */ jsxRuntimeExports.jsx("strong", { className: "text-accent", children: confirmTarget.version }),
+            "?"
+          ] }),
+          /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "flex flex-row gap-x-2 justify-center w-full max-w-xs", children: [
+            /* @__PURE__ */ jsxRuntimeExports.jsx(Button$n, { variant: "tertiary", onPress: () => setConfirmTarget(null), fullWidth: true, children: "Cancel" }),
+            /* @__PURE__ */ jsxRuntimeExports.jsx(Button$n, { variant: confirmTarget.color, onPress: () => changeVersion(confirmTarget.version), fullWidth: true, children: "Confirm" })
+          ] })
+        ] })
+      ) : /* @__PURE__ */ jsxRuntimeExports.jsxs(LynxScroll, { className: "size-full", children: [
         /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "flex flex-row items-center w-full gap-x-2 px-4 py-2", children: [
           /* @__PURE__ */ jsxRuntimeExports.jsx(
             Input$4,
@@ -18993,45 +19041,51 @@ const PkgVersions = memo$4(({ updated, item, pythonPath }) => {
               fullWidth: true
             }
           ),
-          getUpdateType(customVersion).isUpgrade !== void 0 && /* @__PURE__ */ jsxRuntimeExports.jsx(Button$n, { variant: getUpdateType(customVersion).color, onPress: () => changeVersion(customVersion), children: getUpdateType(customVersion).isUpgrade ? "Upgrade" : "Downgrade" })
+          customUpdateType.isUpgrade !== void 0 && /* @__PURE__ */ jsxRuntimeExports.jsx(
+            Button$n,
+            {
+              variant: customUpdateType.color,
+              onPress: () => setConfirmTarget({ version: customVersion, ...customUpdateType }),
+              children: customUpdateType.isUpgrade ? "Upgrade" : "Downgrade"
+            }
+          )
         ] }),
-        /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "flex flex-row gap-2 flex-wrap pl-10 mt-2", children: availableVersion?.map((version) => {
-          const updateType = getUpdateType(version);
-          const icon = updateType.disabled ? null : updateType.isUpgrade ? /* @__PURE__ */ jsxRuntimeExports.jsx(r$1, {}) : /* @__PURE__ */ jsxRuntimeExports.jsx(r$2, {});
-          return /* @__PURE__ */ jsxRuntimeExports.jsxs(Popover$9, { children: [
-            /* @__PURE__ */ jsxRuntimeExports.jsxs(
+        /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "flex flex-row gap-2 flex-wrap pl-10 mt-2 pr-4", children: [
+          filteredVersions.length > 0 ? filteredVersions.slice(0, 150).map((v) => {
+            const icon = v.disabled ? null : v.isUpgrade ? /* @__PURE__ */ jsxRuntimeExports.jsx(r$1, {}) : /* @__PURE__ */ jsxRuntimeExports.jsx(r$2, {});
+            return /* @__PURE__ */ jsxRuntimeExports.jsxs(
               Button$n,
               {
-                variant: updateType.color,
+                variant: v.color,
+                isDisabled: v.disabled,
                 className: "shrink-0 max-w-34",
-                isDisabled: updateType.disabled,
+                onPress: () => setConfirmTarget(v),
                 fullWidth: true,
                 children: [
                   icon,
-                  version
+                  v.version
                 ]
-              }
-            ),
-            /* @__PURE__ */ jsxRuntimeExports.jsx(Popover$9.Content, { className: "max-w-68", children: /* @__PURE__ */ jsxRuntimeExports.jsxs(Popover$9.Dialog, { className: "gap-y-2 flex flex-col", children: [
-              /* @__PURE__ */ jsxRuntimeExports.jsx(Popover$9.Arrow, {}),
-              /* @__PURE__ */ jsxRuntimeExports.jsxs(Popover$9.Heading, { children: [
-                "Are you sure you want to ",
-                updateType.isUpgrade ? "upgrade" : "downgrade",
-                " to ",
-                version,
-                "?"
-              ] }),
-              /* @__PURE__ */ jsxRuntimeExports.jsx(Button$n, { size: "sm", onPress: () => changeVersion(version), fullWidth: true, children: "Confirm" })
-            ] }) })
-          ] }, `${item.name}_${version}`);
-        }) })
+              },
+              `${item.name}_${v.version}`
+            );
+          }) : /* @__PURE__ */ jsxRuntimeExports.jsx(
+            EmptyStateCard,
+            {
+              variant: "secondary",
+              className: "size-full mr-6",
+              description: "Something goes wrong, please try again!",
+              icon: /* @__PURE__ */ jsxRuntimeExports.jsx(i$a, { className: "size-10 text-warning" })
+            }
+          ),
+          filteredVersions.length > 150 && /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "text-xs text-foreground-400 w-full text-center mt-2", children: "Showing first 150 versions. Use search to narrow down." })
+        ] })
       ] }) })
     ] }),
     /* @__PURE__ */ jsxRuntimeExports.jsx(LynxTooltip, { delay: 300, content: "Change package version", children: /* @__PURE__ */ jsxRuntimeExports.jsx(Button$n, { size: "sm", variant: "tertiary", isPending: !!changingTo, onPress: () => setIsOpen(true), isIconOnly: true, children: /* @__PURE__ */ jsxRuntimeExports.jsx(i$8, { className: "size-3.5" }) }) })
   ] });
 });
 
-const {Button: Button$m,Popover: Popover$8} = await importShared('@heroui/react');
+const {Button: Button$m,Popover: Popover$7} = await importShared('@heroui/react');
 const {useCallback: useCallback$b,useState: useState$s} = await importShared('react');
 function ActionButtons({ item, removed, pythonPath, isUninstalling, setIsUninstalling, updated }) {
   const [isUninstallOpen, setIsUninstallOpen] = useState$s(false);
@@ -19040,18 +19094,18 @@ function ActionButtons({ item, removed, pythonPath, isUninstalling, setIsUninsta
     setIsUninstalling(true);
     pIpc.uninstallPackage(pythonPath, item.name).then(() => {
       removed(item.name);
-      topToast.success(`Package "${item.name}" removed successfully.`);
+      toastHolder?.top.success(`Package "${item.name}" removed successfully.`);
     }).catch(() => {
-      topToast.danger(`Failed to remove package "${item.name}".`);
+      toastHolder?.top.danger(`Failed to remove package "${item.name}".`);
     }).finally(() => {
       setIsUninstalling(false);
     });
   }, [item]);
   return /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "flex flex-row items-center justify-center gap-x-2", children: [
-    /* @__PURE__ */ jsxRuntimeExports.jsxs(Popover$8, { isOpen: isUninstallOpen, onOpenChange: setIsUninstallOpen, children: [
+    /* @__PURE__ */ jsxRuntimeExports.jsxs(Popover$7, { isOpen: isUninstallOpen, onOpenChange: setIsUninstallOpen, children: [
       /* @__PURE__ */ jsxRuntimeExports.jsx(LynxTooltip, { delay: 300, content: "Remove package", children: /* @__PURE__ */ jsxRuntimeExports.jsx(Button$m, { size: "sm", variant: "danger-soft", isPending: isUninstalling, isIconOnly: true, children: /* @__PURE__ */ jsxRuntimeExports.jsx(i$2, {}) }) }),
-      /* @__PURE__ */ jsxRuntimeExports.jsx(Popover$8.Content, { className: "max-w-sm", children: /* @__PURE__ */ jsxRuntimeExports.jsxs(Popover$8.Dialog, { className: "gap-y-2 flex flex-col", children: [
-        /* @__PURE__ */ jsxRuntimeExports.jsx(Popover$8.Arrow, {}),
+      /* @__PURE__ */ jsxRuntimeExports.jsx(Popover$7.Content, { className: "max-w-sm", children: /* @__PURE__ */ jsxRuntimeExports.jsxs(Popover$7.Dialog, { className: "gap-y-2 flex flex-col", children: [
+        /* @__PURE__ */ jsxRuntimeExports.jsx(Popover$7.Arrow, {}),
         /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "gap-y-2 flex flex-col", children: [
           /* @__PURE__ */ jsxRuntimeExports.jsx("strong", { className: "text-sm", children: "Uninstall Package" }),
           /* @__PURE__ */ jsxRuntimeExports.jsxs("p", { className: "text-xs text-default-600", children: [
@@ -19082,7 +19136,7 @@ function ActionButtons({ item, removed, pythonPath, isUninstalling, setIsUninsta
 }
 
 const {Button: Button$l,Chip: Chip$5,TableCell} = await importShared('@heroui/react');
-const {useCallback: useCallback$a,useMemo: useMemo$d,useState: useState$r} = await importShared('react');
+const {useCallback: useCallback$a,useMemo: useMemo$c,useState: useState$r} = await importShared('react');
 function TableItem({
   item,
   pythonPath,
@@ -19095,7 +19149,7 @@ function TableItem({
   const [isUpdating, setIsUpdating] = useState$r(false);
   const [isUninstalling, setIsUninstalling] = useState$r(false);
   const pkgNameDisplay = usePythonToolkitState("pkgNameDisplay");
-  const itemName = useMemo$d(() => {
+  const itemName = useMemo$c(() => {
     switch (pkgNameDisplay) {
       case "capitalize":
         return capitalize(item.name);
@@ -19111,9 +19165,9 @@ function TableItem({
     setIsUpdateTerminalOpen(true);
     pIpc.updatePackage(pythonPath, item.name, item.updateVersion).then(() => {
       updated(item);
-      topToast.success(`Package "${item.name}" updated successfully.`);
+      toastHolder?.top.success(`Package "${item.name}" updated successfully.`);
     }).catch(() => {
-      topToast.danger(`Failed to update package "${item.name}".`);
+      toastHolder?.top.danger(`Failed to update package "${item.name}".`);
     }).finally(() => {
       setIsUpdating(false);
     });
@@ -19170,7 +19224,7 @@ function TableItem({
 }
 
 const {Checkbox: Checkbox$1,Description: Description$e,ModalBody,Spinner: Spinner$8,Table: Table$2} = await importShared('@heroui/react');
-const {useMemo: useMemo$c} = await importShared('react');
+const {useMemo: useMemo$b} = await importShared('react');
 function PackageManagerBody({
   id,
   items,
@@ -19185,12 +19239,12 @@ function PackageManagerBody({
   setPythonPath,
   setIsUpdateTerminalOpen
 }) {
-  const anyUpdateAvailable = useMemo$c(() => packagesUpdate.length !== 0, [packagesUpdate]);
-  const disabledKeys = useMemo$c(() => {
+  const anyUpdateAvailable = useMemo$b(() => packagesUpdate.length !== 0, [packagesUpdate]);
+  const disabledKeys = useMemo$b(() => {
     if (isEmpty(packagesUpdate)) return [];
     return items.filter((item) => !packagesUpdate.some((update) => update.name === item.name)).map((item) => item.name);
   }, [items, packagesUpdate]);
-  const refreshedItems = useMemo$c(() => cloneDeep(items), [items, selectedKeys, anyUpdateAvailable]);
+  const refreshedItems = useMemo$b(() => cloneDeep(items), [items, selectedKeys, anyUpdateAvailable]);
   return /* @__PURE__ */ jsxRuntimeExports.jsx(ModalBody, { className: "overflow-hidden", children: /* @__PURE__ */ jsxRuntimeExports.jsx(LynxScroll, { className: "size-full px-6 pt-2 pb-6", children: /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "w-full flex flex-col gap-y-4 size-full", children: /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "flex flex-row gap-8 flex-wrap justify-center size-full", children: isLoading ? /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "flex flex-col gap-y-2 items-center mt-4", children: [
     /* @__PURE__ */ jsxRuntimeExports.jsx(Spinner$8, { size: "xl" }),
     /* @__PURE__ */ jsxRuntimeExports.jsx(Description$e, { className: "text-sm", children: "Please wait, loading package data..." })
@@ -19263,7 +19317,7 @@ function PackageManagerBody({
   ) }) }) }) });
 }
 
-const {Button: Button$k,CloseButton: CloseButton$1,Description: Description$d,Popover: Popover$7} = await importShared('@heroui/react');
+const {Button: Button$k,CloseButton: CloseButton$1,Description: Description$d,Popover: Popover$6} = await importShared('@heroui/react');
 
 const {memo: memo$3,useCallback: useCallback$9,useState: useState$q} = await importShared('react');
 const CloseBtn = memo$3(({ isCheckingUpdates, isUpdating, closePackageManager }) => {
@@ -19281,11 +19335,11 @@ const CloseBtn = memo$3(({ isCheckingUpdates, isUpdating, closePackageManager })
     closePackageManager();
   }, [isCheckingUpdates, isUpdating]);
   if (isUpdating || isCheckingUpdates) {
-    return /* @__PURE__ */ jsxRuntimeExports.jsxs(Popover$7, { isOpen, onOpenChange: setIsOpen, children: [
+    return /* @__PURE__ */ jsxRuntimeExports.jsxs(Popover$6, { isOpen, onOpenChange: setIsOpen, children: [
       /* @__PURE__ */ jsxRuntimeExports.jsx(CloseButton$1, { className: "absolute top-4 right-4" }),
-      /* @__PURE__ */ jsxRuntimeExports.jsx(Popover$7.Content, { className: "max-w-sm", children: /* @__PURE__ */ jsxRuntimeExports.jsxs(Popover$7.Dialog, { children: [
-        /* @__PURE__ */ jsxRuntimeExports.jsx(Popover$7.Arrow, {}),
-        /* @__PURE__ */ jsxRuntimeExports.jsxs(Popover$7.Heading, { children: [
+      /* @__PURE__ */ jsxRuntimeExports.jsx(Popover$6.Content, { className: "max-w-sm", children: /* @__PURE__ */ jsxRuntimeExports.jsxs(Popover$6.Dialog, { children: [
+        /* @__PURE__ */ jsxRuntimeExports.jsx(Popover$6.Arrow, {}),
+        /* @__PURE__ */ jsxRuntimeExports.jsxs(Popover$6.Heading, { children: [
           isUpdating ? "Update" : "Update check",
           " in progress"
         ] }),
@@ -19305,12 +19359,12 @@ const CloseBtn = memo$3(({ isCheckingUpdates, isUpdating, closePackageManager })
 });
 
 const {Pagination} = await importShared('@heroui/react');
-const {useEffect: useEffect$n,useMemo: useMemo$b,useState: useState$p} = await importShared('react');
+const {useEffect: useEffect$n,useMemo: useMemo$a,useState: useState$p} = await importShared('react');
 
 function TablePage({ searchData, setItems }) {
   const [page, setPage] = useState$p(1);
   const [rowsPerPage] = useState$p(50);
-  const pages = useMemo$b(() => Math.ceil(searchData.length / rowsPerPage), [searchData, rowsPerPage]);
+  const pages = useMemo$a(() => Math.ceil(searchData.length / rowsPerPage), [searchData, rowsPerPage]);
   useEffect$n(() => {
     const start = (page - 1) * rowsPerPage;
     const end = start + rowsPerPage;
@@ -19330,10 +19384,7 @@ function TablePage({ searchData, setItems }) {
   ] }) }) });
 }
 
-let allCardsExt = [];
-const setCards = (cards) => allCardsExt = cards;
-
-const {Button: Button$j,Input: Input$3,ListBox: ListBox$2,Popover: Popover$6,Select: Select$2,Table: Table$1,TextArea,useOverlayState: useOverlayState$7} = await importShared('@heroui/react');
+const {Button: Button$j,Input: Input$3,ListBox: ListBox$2,Popover: Popover$5,Select: Select$2,Table: Table$1,TextArea,useOverlayState: useOverlayState$7} = await importShared('@heroui/react');
 const {memo: memo$2,useCallback: useCallback$8,useEffect: useEffect$m,useRef: useRef$2,useState: useState$o} = await importShared('react');
 const OPERATORS = [
   { id: "all", label: "Any" },
@@ -19451,7 +19502,7 @@ const RenderRow = memo$2(({ item, index, onDelete, onUpdate }) => {
     /* @__PURE__ */ jsxRuntimeExports.jsxs(Table$1.Cell, { className: "w-30", children: [
       /* @__PURE__ */ jsxRuntimeExports.jsx(LynxTooltip, { delay: 300, content: "Delete Line", children: /* @__PURE__ */ jsxRuntimeExports.jsx(Button$j, { size: "sm", className: "ml-2", variant: "tertiary", onPress: handleDelete, isIconOnly: true, children: /* @__PURE__ */ jsxRuntimeExports.jsx(X$3, {}) }) }),
       /* @__PURE__ */ jsxRuntimeExports.jsxs(
-        Popover$6,
+        Popover$5,
         {
           onOpenChange: (isOpen) => {
             if (!isOpen) handleRawBlur();
@@ -19460,8 +19511,8 @@ const RenderRow = memo$2(({ item, index, onDelete, onUpdate }) => {
           isOpen: editPop.isOpen,
           children: [
             /* @__PURE__ */ jsxRuntimeExports.jsx(LynxTooltip, { delay: 300, content: "Edit Raw Line", children: /* @__PURE__ */ jsxRuntimeExports.jsx(Button$j, { size: "sm", className: "ml-2", variant: "tertiary", isIconOnly: true, children: /* @__PURE__ */ jsxRuntimeExports.jsx(i$f, {}) }) }),
-            /* @__PURE__ */ jsxRuntimeExports.jsx(Popover$6.Content, { placement: "left", children: /* @__PURE__ */ jsxRuntimeExports.jsxs(Popover$6.Dialog, { className: "min-w-xl p-2", children: [
-              /* @__PURE__ */ jsxRuntimeExports.jsx(Popover$6.Arrow, {}),
+            /* @__PURE__ */ jsxRuntimeExports.jsx(Popover$5.Content, { placement: "left", children: /* @__PURE__ */ jsxRuntimeExports.jsxs(Popover$5.Dialog, { className: "min-w-xl p-2", children: [
+              /* @__PURE__ */ jsxRuntimeExports.jsx(Popover$5.Arrow, {}),
               /* @__PURE__ */ jsxRuntimeExports.jsx(
                 TextArea,
                 {
@@ -19549,7 +19600,7 @@ const RenderTable = memo$1(({ filteredReqs, setRequirements, scrollRef }) => {
 RenderTable.displayName = "RenderTable";
 
 const {Button: Button$i,Chip: Chip$4,Modal: Modal$6,SearchField: SearchField$3,Spinner: Spinner$7,useOverlayState: useOverlayState$6} = await importShared('@heroui/react');
-const {useEffect: useEffect$l,useMemo: useMemo$a,useRef: useRef$1,useState: useState$n} = await importShared('react');
+const {useEffect: useEffect$l,useMemo: useMemo$9,useRef: useRef$1,useState: useState$n} = await importShared('react');
 const reqFileFilters$1 = [{ name: "Text", extensions: ["txt"] }];
 const normalizeReqName = (name) => name.trim().replace(/[-_.]+/g, "-").toLowerCase();
 const getBasename = (path) => path.split(/[\/\\]/).pop() || path;
@@ -19579,7 +19630,7 @@ function RequirementsModal({ id, projectPath, setIsReqAvailable, setReqPackageCo
   const [searchValue, setSearchValue] = useState$n("");
   const [conflicts, setConflicts] = useState$n([]);
   const requirementsRef = useRef$1([]);
-  const filteredReqs = useMemo$a(
+  const filteredReqs = useMemo$9(
     () => requirements.filter((item) => searchInStrings(searchValue, [item.name])),
     [searchValue, requirements]
   );
@@ -19640,9 +19691,9 @@ function RequirementsModal({ id, projectPath, setIsReqAvailable, setReqPackageCo
       setIsSaving(true);
       pIpc.saveReqs(filePath, requirements).then((success) => {
         if (success) {
-          topToast.success("Requirements saved successfully!");
+          toastHolder?.top.success("Requirements saved successfully!");
         } else {
-          topToast.danger("Failed to save requirements.");
+          toastHolder?.top.danger("Failed to save requirements.");
         }
         setIsSaving(false);
       });
@@ -19701,17 +19752,17 @@ function RequirementsModal({ id, projectPath, setIsReqAvailable, setReqPackageCo
       setIsImporting(false);
       const addedCount = importedCount - skippedCount - nextConflicts.length;
       if (nextConflicts.length > 0) {
-        topToast.warning(
+        toastHolder?.top.warning(
           `Imported ${addedCount} package${addedCount === 1 ? "" : "s"} with ${nextConflicts.length} conflict${nextConflicts.length === 1 ? "" : "s"} to resolve.`
         );
       } else {
-        topToast.success(
+        toastHolder?.top.success(
           files.length === 1 ? "Requirements file imported successfully" : "Requirements files imported successfully"
         );
       }
     }).catch(() => {
       setIsImporting(false);
-      topToast.danger("Error importing requirements files");
+      toastHolder?.top.danger("Error importing requirements files");
     });
   };
   const applyConflictResolution = (conflict, resolution) => {
@@ -20051,12 +20102,12 @@ function Installer({
           return [...prev, ...newPackages];
         });
         setRequirementsFilePaths([]);
-        topToast.success(
+        toastHolder?.top.success(
           files.length === 1 ? "Requirements file loaded successfully" : "Requirements files loaded successfully"
         );
       }
     }).catch(() => {
-      topToast.danger("Error reading requirements file");
+      toastHolder?.top.danger("Error reading requirements file");
     });
   };
   const handleRequirementsInstallSelect = () => {
@@ -20065,12 +20116,12 @@ function Installer({
         setPackages([]);
         setPackageString("");
         setRequirementsFilePaths(files);
-        topToast.success(
+        toastHolder?.top.success(
           files.length === 1 ? "Requirements file selected for install" : "Requirements files selected for install"
         );
       }
     }).catch(() => {
-      topToast.danger("Error selecting requirements file");
+      toastHolder?.top.danger("Error selecting requirements file");
     });
   };
   const handleEditItem = (pkgToEdit) => {
@@ -20292,14 +20343,14 @@ function InstallerModal$1({ refresh, pythonPath }) {
     setInstalling(true);
     pIpc.installPackage(pythonPath, installCommand).then((result) => {
       if (result) {
-        topToast.success("Packages installed successfully!");
+        toastHolder?.top.success("Packages installed successfully!");
       } else {
-        topToast.danger("Failed to install packages. Please check your inputs and try again.");
+        toastHolder?.top.danger("Failed to install packages. Please check your inputs and try again.");
       }
       state.close();
       refresh();
     }).catch((err) => {
-      topToast.danger("Failed to install packages. Please check your inputs and try again.");
+      toastHolder?.top.danger("Failed to install packages. Please check your inputs and try again.");
       console.error(err);
     }).finally(() => {
       setInstalling(false);
@@ -20345,7 +20396,7 @@ function InstallerModal$1({ refresh, pythonPath }) {
 }
 
 const {Button: Button$e,ButtonGroup,Description: Description$b,Dropdown: Dropdown$3,Label: Label$c} = await importShared('@heroui/react');
-const {useEffect: useEffect$h,useMemo: useMemo$9,useState: useState$j} = await importShared('react');
+const {useEffect: useEffect$h,useMemo: useMemo$8,useState: useState$j} = await importShared('react');
 function UpdateButton({
   packagesUpdate,
   update,
@@ -20371,19 +20422,19 @@ function UpdateButton({
   useEffect$h(() => {
     setSelectedOption(/* @__PURE__ */ new Set([isReqAvailable ? "req" : "all"]));
   }, [isReqAvailable]);
-  const descriptionsMap = useMemo$9(() => {
+  const descriptionsMap = useMemo$8(() => {
     return {
       all: "Check all installed packages for updates.",
       req: `Check for updates based on your project's requirements file.`
     };
   }, []);
-  const labelsMap = useMemo$9(() => {
+  const labelsMap = useMemo$8(() => {
     return {
       all: checkingUpdates ? `Checking All (${checkedCount.length}/${allPackageCount})...` : `Check Updates (All)`,
       req: checkingUpdates ? `Checking Requirements (${checkedCount.length}/${reqPackageCount})...` : `Check Updates (Reqs)`
     };
   }, [checkingUpdates, allPackageCount, reqPackageCount, checkedCount]);
-  const selectedOptionValue = useMemo$9(() => {
+  const selectedOptionValue = useMemo$8(() => {
     return Array.from(selectedOption)[0];
   }, [selectedOption]);
   const checkForUpdate = () => {
@@ -20409,7 +20460,7 @@ function UpdateButton({
       setProgressValue(percentage * 100);
     }
   }, [selectedOptionValue, checkedCount, allPackageCount, reqPackageCount, checkingUpdates]);
-  const selectedCount = useMemo$9(() => {
+  const selectedCount = useMemo$8(() => {
     return selectedKeys === "all" ? selectedFilter === "all" ? packagesUpdate.length : visibleItems.length : selectedKeys.size;
   }, [selectedKeys, selectedFilter, packagesUpdate, visibleItems]);
   return !isEmpty(packagesUpdate) ? /* @__PURE__ */ jsxRuntimeExports.jsxs(
@@ -20517,10 +20568,10 @@ function PackageManagerHeader({
       );
     }
     pIpc.updatePackages(pythonPath, updateList).then(() => {
-      topToast.success(`Successfully updated all selected packages (${updateList.length} total).`);
+      toastHolder?.top.success(`Successfully updated all selected packages (${updateList.length} total).`);
       updated(updateList);
     }).catch(() => {
-      topToast.danger(`Failed to update packages`);
+      toastHolder?.top.danger(`Failed to update packages`);
     }).finally(() => {
       setIsUpdating(false);
     });
@@ -20582,42 +20633,68 @@ function PackageManagerHeader({
   ] });
 }
 
-const {useMemo: useMemo$8} = await importShared('react');
-
 function TerminalView() {
-  const id = useMemo$8(() => "python-update", []);
-  return /* @__PURE__ */ jsxRuntimeExports.jsx(XTermCore, { id, minResizeCols: 0, minResizeRows: 0, className: "overflow-hidden" });
+  const onReady = (api) => {
+    const terminalElement = api.terminal.element;
+    if (terminalElement) {
+      terminalElement.classList.add("size-full", "overflow-hidden");
+      const xViewport = terminalElement.querySelector(".xterm-viewport");
+      if (xViewport) {
+        xViewport.classList.add("bottom-3!");
+      }
+    }
+    api.fitAddon.fit();
+  };
+  return /* @__PURE__ */ jsxRuntimeExports.jsx(XTermCore, { type: "terminal", onReady, id: "python-update", className: "overflow-hidden" });
 }
 
-const {Button: Button$d,Modal: Modal$4,Popover: Popover$5} = await importShared('@heroui/react');
+const {Button: Button$d,Modal: Modal$4} = await importShared('@heroui/react');
 const {memo,useEffect: useEffect$f,useState: useState$h} = await importShared('react');
 const UpdateModal = memo(({ state }) => {
-  const [isPopoverOpen, setIsPopoverOpen] = useState$h(false);
   const [isDone, setIsDone] = useState$h(false);
+  const [showConfirm, setShowConfirm] = useState$h(false);
   useEffect$f(() => {
     const offExit = ptyIpc.onExit((id) => {
       if (id === "python-update") {
-        setIsPopoverOpen(true);
         setIsDone(true);
+        setShowConfirm(true);
       }
     });
     return () => offExit();
   }, []);
-  const Close = () => {
-    setIsPopoverOpen(false);
+  useEffect$f(() => {
+    if (!state.isOpen) {
+      setShowConfirm(false);
+    }
+  }, [state.isOpen]);
+  const handleCloseClick = () => {
+    setShowConfirm(true);
+  };
+  const confirmClose = () => {
     state.close();
+  };
+  const cancelClose = () => {
+    setShowConfirm(false);
   };
   return /* @__PURE__ */ jsxRuntimeExports.jsxs(TabModal, { isOpen: state.isOpen, onOpenChange: state.setOpen, children: [
     /* @__PURE__ */ jsxRuntimeExports.jsx(Modal$4.Header, { children: /* @__PURE__ */ jsxRuntimeExports.jsx(Modal$4.Heading, { children: "Console" }) }),
-    /* @__PURE__ */ jsxRuntimeExports.jsx(Modal$4.Body, { children: /* @__PURE__ */ jsxRuntimeExports.jsx(TerminalView, {}) }),
-    /* @__PURE__ */ jsxRuntimeExports.jsx(Modal$4.Footer, { children: /* @__PURE__ */ jsxRuntimeExports.jsxs(Popover$5, { isOpen: isPopoverOpen, onOpenChange: setIsPopoverOpen, children: [
-      /* @__PURE__ */ jsxRuntimeExports.jsx(Button$d, { variant: "danger-soft", children: "Close" }),
-      /* @__PURE__ */ jsxRuntimeExports.jsx(Popover$5.Content, { className: "max-w-xs", children: /* @__PURE__ */ jsxRuntimeExports.jsxs(Popover$5.Dialog, { children: [
-        /* @__PURE__ */ jsxRuntimeExports.jsx(Popover$5.Arrow, {}),
-        /* @__PURE__ */ jsxRuntimeExports.jsx(Popover$5.Heading, { children: isDone ? "The terminal is done and exited, close this window?" : "Are you sure you want to close this window? the command will be still executing in background" }),
-        /* @__PURE__ */ jsxRuntimeExports.jsx(Button$d, { size: "sm", onPress: Close, variant: "danger-soft", fullWidth: true, children: "Close" })
-      ] }) })
-    ] }) })
+    /* @__PURE__ */ jsxRuntimeExports.jsxs(Modal$4.Body, { children: [
+      showConfirm && /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "flex flex-col items-center justify-center py-8 text-center", children: /* @__PURE__ */ jsxRuntimeExports.jsx(
+        EmptyStateCard,
+        {
+          variant: "secondary",
+          className: "size-full py-4",
+          icon: /* @__PURE__ */ jsxRuntimeExports.jsx(i$a, { className: "size-14 text-warning" }),
+          description: isDone ? "Close this window?" : "The command will still execute in the background.",
+          title: isDone ? "The terminal is done and exited" : "Are you sure you want to close this window?"
+        }
+      ) }),
+      /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: `size-full ${showConfirm ? "hidden" : "block"}`, children: /* @__PURE__ */ jsxRuntimeExports.jsx(TerminalView, {}) })
+    ] }),
+    /* @__PURE__ */ jsxRuntimeExports.jsx(Modal$4.Footer, { children: showConfirm ? /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "flex w-full gap-2 justify-end", children: [
+      /* @__PURE__ */ jsxRuntimeExports.jsx(Button$d, { size: "sm", variant: "ghost", onPress: cancelClose, children: "Back to Terminal" }),
+      /* @__PURE__ */ jsxRuntimeExports.jsx(Button$d, { size: "sm", variant: "danger-soft", onPress: confirmClose, children: "Close Window" })
+    ] }) : /* @__PURE__ */ jsxRuntimeExports.jsx(Button$d, { size: "sm", variant: "danger-soft", onPress: handleCloseClick, children: "Close" }) })
   ] });
 });
 
@@ -20720,7 +20797,7 @@ function PackageManagerModal({
     setIsCheckingUpdates(true);
     const updateData = (updateList) => {
       if (updateList.length === 0) {
-        topToast.info("No updates found (packages may be up to date, or a connection issue occurred).");
+        toastHolder?.top.info("No updates found (packages may be up to date, or a connection issue occurred).");
       }
       setPackagesUpdate(updateList);
       setPackages((prevState) => {
@@ -21226,7 +21303,7 @@ function InstalledCard({ python, diskUsage, maxDiskValue, updateDefault, refresh
   }, [python]);
   const makeDefault = () => {
     systemConfirm.close();
-    topToast.promise(pIpc.setDefaultPython(python.installFolder), {
+    toastHolder?.top.promise(pIpc.setDefaultPython(python.installFolder), {
       error: `Failed to set ${python.version} as system default. Please try again later.`,
       loading: `Changing system default to the ${python.version}...`,
       success: () => {
@@ -21238,11 +21315,11 @@ function InstalledCard({ python, diskUsage, maxDiskValue, updateDefault, refresh
   const makeLynxDefault = () => {
     lynxConfirm.close();
     const showFailedToast = () => {
-      topToast.danger(`Failed to set ${python.version} as LynxHub default. Please try again later.`);
+      toastHolder?.top.danger(`Failed to set ${python.version} as LynxHub default. Please try again later.`);
     };
     pIpc.replacePythonPath(python.installFolder).then((result) => {
       if (result) {
-        topToast.success(`Python ${python.version} is now the default for LynxHub.`);
+        toastHolder?.top.success(`Python ${python.version} is now the default for LynxHub.`);
         updateDefault(python.installFolder, "isLynxHubDefault");
       } else {
         showFailedToast();
@@ -21679,10 +21756,10 @@ function InstallerOfficial({ refresh, installed, state, setCloseDisabled }) {
       refresh(true);
       state.close();
       console.log("installed", version);
-      topToast.success(`Python${version.version} installed successfully.`);
+      toastHolder?.top.success(`Python${version.version} installed successfully.`);
     }).catch((err) => {
       console.log(err);
-      topToast.danger(`Failed to install python${version.version}!`);
+      toastHolder?.top.danger(`Failed to install python${version.version}!`);
     }).finally(() => {
       setInstallingVersion(void 0);
       setCloseDisabled(false);
@@ -21906,15 +21983,15 @@ function InstalledPythons({
       if (pPath) {
         pIpc.locatePython(pPath).then((installation) => {
           if (installation) {
-            topToast.success("Selected Python validated successfully.");
+            toastHolder?.top.success("Selected Python validated successfully.");
             getInstalledPythons(false);
           } else {
-            topToast.danger("Failed to validate selected python.");
+            toastHolder?.top.danger("Failed to validate selected python.");
           }
           setIsLocating(false);
         }).catch((e) => {
           console.warn(e);
-          topToast.danger("Failed to validate selected python.");
+          toastHolder?.top.danger("Failed to validate selected python.");
           setIsLocating(false);
         });
       } else {
@@ -29524,12 +29601,12 @@ function VenvCard({
     setPopoverUninstaller(false);
     setIsRemoving(true);
     filesIpc.trashDir(folder).then(() => {
-      topToast.success(`Environment "${title}" removed successfully.`);
+      toastHolder?.top.success(`Environment "${title}" removed successfully.`);
       pIpc.removeAssociatePath(pythonPath);
       refresh();
     }).catch((error) => {
       console.error(error);
-      topToast.danger(`Failed to remove environment "${title}".`);
+      toastHolder?.top.danger(`Failed to remove environment "${title}".`);
     }).finally(() => {
       setIsRemoving(false);
     });
@@ -29640,8 +29717,8 @@ function VenvCard({
           "Python ",
           pythonVersion
         ] }),
-        associationType: isInstallation ? "conda" : "venv",
         condaName: isInstallation ? title : void 0,
+        associationType: isInstallation ? "conda" : "venv",
         iconClassName: isInstallation ? "text-emerald-400" : "text-amber-400"
       }
     )
@@ -29686,7 +29763,7 @@ function VenvCreator({ installedPythons, refresh, isLoadingPythons }) {
     const pythonPath = installedPythons.find((item) => item.version === selectedVersion)?.installPath;
     if (!pythonPath) {
       setIsCreating(false);
-      topToast.danger("Failed to find Python path. Please restart app and try again.");
+      toastHolder?.top.danger("Failed to find Python path. Please restart app and try again.");
       return;
     }
     const options = {
@@ -29699,9 +29776,9 @@ function VenvCreator({ installedPythons, refresh, isLoadingPythons }) {
       if (result) {
         refresh();
         setIsOpen(false);
-        topToast.success(`Python environment "${envName}" created successfully.`);
+        toastHolder?.top.success(`Python environment "${envName}" created successfully.`);
       } else {
-        topToast.danger("Failed to create Python environment. Please try again.");
+        toastHolder?.top.danger("Failed to create Python environment. Please try again.");
       }
       setIsCreating(false);
     });
@@ -29863,10 +29940,10 @@ function Venv({ visible, installedPythons, isLoadingPythons }) {
     setIsLocating(true);
     pIpc.locateVenv().then((isLocated) => {
       if (isLocated) {
-        topToast.success("Environment validated successfully.");
+        toastHolder?.top.success("Environment validated successfully.");
         getVenvs();
       } else {
-        topToast.danger("Failed to validate environment.");
+        toastHolder?.top.danger("Failed to validate environment.");
       }
       setIsLocating(false);
     });
@@ -29967,7 +30044,7 @@ function CacheDirUsage() {
     pIpc.storage.clearCachedUsage();
     setTimeout(() => {
       setClearing(false);
-      topToast.success("Disk usage cache cleared successfully");
+      toastHolder?.top.success("Disk usage cache cleared successfully");
     }, 700);
   };
   return /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "w-full flex flex-col gap-y-2", children: [
@@ -30201,7 +30278,7 @@ function CustomHook() {
       const message = e.message;
       if (message && isString$1(message)) {
         if (message.toLowerCase().includes("no python at")) {
-          bottomToast.danger("Python Not Found", {
+          toastHolder?.bottom.danger("Python Not Found", {
             timeout: 0,
             description: /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { children: [
               /* @__PURE__ */ jsxRuntimeExports.jsx("span", { className: "whitespace-pre-line", children: `Required Python version is missing. Please install it, so LynxHub can validate your environment.
@@ -30419,6 +30496,7 @@ function listenForEvents(lynxAPI) {
 function InitialExtensions(lynxAPI) {
   listenForEvents(lynxAPI);
   setCards(lynxAPI.modulesData?.allCards || []);
+  if (lynxAPI.toast) setToast(lynxAPI.toast);
   lynxAPI.addReducer([{ name: "pythonToolkit", reducer: pythonToolkitReducer$1 }]);
   if (typeof window.LynxHub !== "undefined" && window.LynxHub.buildNumber && window.LynxHub.buildNumber > 45 || isDev()) {
     lynxAPI.customizePages.tools.add.cardsContainer(ToolsPage);
