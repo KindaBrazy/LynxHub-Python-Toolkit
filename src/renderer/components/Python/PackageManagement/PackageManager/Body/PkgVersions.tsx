@@ -72,9 +72,9 @@ const PkgVersions = memo(({updated, item, pythonPath}: Props) => {
 
   const getUpdateType = useCallback(
     (version: string): updateType => {
-      if (isEmpty(version)) return {color: 'tertiary', isUpgrade: undefined, disabled: true};
-
       const current = item.version; // the package's current version
+
+      if (isEmpty(version) || isEmpty(current)) return {color: 'tertiary', isUpgrade: undefined, disabled: true};
 
       const cmp = pepCompare(current, version);
 
