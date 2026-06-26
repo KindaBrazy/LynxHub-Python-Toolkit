@@ -1,5 +1,4 @@
-import {Alert, Button, Modal, useOverlayState} from '@heroui/react';
-import LynxScroll from '@lynx/components/LynxScroll';
+import {Alert, Button, Modal, ScrollShadow, useOverlayState} from '@heroui/react';
 import TabModal from '@lynx/components/TabModal';
 import {Download} from '@solar-icons/react-perf/BoldDuotone';
 import {Plus} from 'lucide-react';
@@ -78,7 +77,7 @@ export default function InstallerModal({refresh, pythonPath}: Props) {
         </Modal.Header>
 
         <Modal.Body className="overflow-hidden px-0 pt-0">
-          <LynxScroll className="size-full">
+          <ScrollShadow className="size-full">
             <Installer
               isOpen={state.isOpen}
               setPackageCount={setPackageCount}
@@ -86,7 +85,7 @@ export default function InstallerModal({refresh, pythonPath}: Props) {
               setIsInstallDisabled={setIsInstallDisabled}
               setRequirementsFileCount={setRequirementsFileCount}
             />
-          </LynxScroll>
+          </ScrollShadow>
         </Modal.Body>
 
         <Modal.Footer className="flex-col gap-y-2.5 px-5 pb-5">

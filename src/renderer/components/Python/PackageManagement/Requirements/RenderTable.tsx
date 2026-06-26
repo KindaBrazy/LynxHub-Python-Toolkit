@@ -1,7 +1,5 @@
-import {EmptyState, Table} from '@heroui/react';
-import LynxScroll from '@lynx/components/LynxScroll';
+import {EmptyState, ScrollShadow, Table} from '@heroui/react';
 import {ListCross} from '@solar-icons/react-perf/BoldDuotone';
-import {OverlayScrollbarsComponentRef} from 'overlayscrollbars-react';
 import {Dispatch, memo, RefObject, SetStateAction, useCallback} from 'react';
 
 import {RequirementData} from '../../../../../cross/CrossExtTypes';
@@ -10,7 +8,7 @@ import RenderRow from './RenderRow';
 type Props = {
   filteredReqs: RequirementData[];
   setRequirements: Dispatch<SetStateAction<RequirementData[]>>;
-  scrollRef: RefObject<OverlayScrollbarsComponentRef | null>;
+  scrollRef: RefObject<HTMLDivElement | null>;
 };
 
 const RenderTable = memo(({filteredReqs, setRequirements, scrollRef}: Props) => {
@@ -47,7 +45,7 @@ const RenderTable = memo(({filteredReqs, setRequirements, scrollRef}: Props) => 
   );
 
   return (
-    <LynxScroll ref={scrollRef} className="pr-4">
+    <ScrollShadow ref={scrollRef} className="pr-4">
       <Table>
         <Table.ScrollContainer>
           <Table.Content aria-label="Requirements table">
@@ -78,7 +76,7 @@ const RenderTable = memo(({filteredReqs, setRequirements, scrollRef}: Props) => 
           </Table.Content>
         </Table.ScrollContainer>
       </Table>
-    </LynxScroll>
+    </ScrollShadow>
   );
 });
 

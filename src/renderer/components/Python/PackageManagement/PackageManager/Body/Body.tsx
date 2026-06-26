@@ -1,6 +1,5 @@
-import {Checkbox, Description, ModalBody, Selection, Spinner, Table} from '@heroui/react';
+import {Checkbox, Description, ModalBody, ScrollShadow, Selection, Spinner, Table} from '@heroui/react';
 import EmptyStateCard from '@lynx/components/EmptyStateCard';
-import LynxScroll from '@lynx/components/LynxScroll';
 import {ObjectScan} from '@solar-icons/react-perf/BoldDuotone';
 import {cloneDeep, isEmpty} from 'lodash-es';
 import {Dispatch, SetStateAction, useMemo} from 'react';
@@ -49,7 +48,7 @@ export default function PackageManagerBody({
 
   return (
     <ModalBody className="overflow-hidden">
-      <LynxScroll className="size-full px-6 pt-2 pb-6">
+      <ScrollShadow className="size-full px-6 pt-2 pb-6">
         <div className="w-full flex flex-col gap-y-4 size-full">
           <div className="flex flex-row gap-8 flex-wrap justify-center size-full">
             {isLoading ? (
@@ -139,7 +138,7 @@ export default function PackageManagerBody({
             )}
           </div>
         </div>
-      </LynxScroll>
+      </ScrollShadow>
     </ModalBody>
   );
 }

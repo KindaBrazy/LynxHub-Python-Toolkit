@@ -1,4 +1,4 @@
-import {Button, ButtonProps, Chip, Description, Input, Modal, ProgressBar} from '@heroui/react';
+import {Button, ButtonProps, Chip, Description, Input, Modal, ProgressBar, ScrollShadow} from '@heroui/react';
 import EmptyStateCard from '@lynx/components/EmptyStateCard';
 import LynxTooltip from '@lynx/components/LynxTooltip';
 import TabModal from '@lynx/components/TabModal';
@@ -8,7 +8,6 @@ import {BoxMinimalistic, ShieldWarning} from '@solar-icons/react-perf/BoldDuoton
 import {isEmpty} from 'lodash-es';
 import {memo, useCallback, useEffect, useMemo, useState} from 'react';
 
-import LynxScroll from '../../../../../../../../src/renderer/mainWindow/components/LynxScroll';
 import {PackageInfo, PackageUpdate} from '../../../../../../cross/CrossExtTypes';
 import {toastHolder} from '../../../../../DataHolder';
 import pIpc from '../../../../../PIpc';
@@ -176,7 +175,7 @@ const PkgVersions = memo(({updated, item, pythonPath}: Props) => {
               </div>
             </div>
           ) : (
-            <LynxScroll className="size-full">
+            <ScrollShadow className="size-full">
               <div className="flex flex-row items-center w-full gap-x-2 px-4 py-2">
                 <Input
                   variant="secondary"
@@ -224,7 +223,7 @@ const PkgVersions = memo(({updated, item, pythonPath}: Props) => {
                   </p>
                 )}
               </div>
-            </LynxScroll>
+            </ScrollShadow>
           )}
         </Modal.Body>
       </TabModal>

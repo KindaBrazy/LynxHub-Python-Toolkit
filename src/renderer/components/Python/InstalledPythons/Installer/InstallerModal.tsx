@@ -1,6 +1,5 @@
-import {Key, Modal, Tabs} from '@heroui/react';
+import {Key, Modal, ScrollShadow, Tabs} from '@heroui/react';
 import {UseOverlayStateReturn} from '@heroui/react';
-import LynxScroll from '@lynx/components/LynxScroll';
 import TabModal from '@lynx/components/TabModal';
 import {useMemo, useState} from 'react';
 
@@ -50,7 +49,7 @@ export default function InstallerModal({state, refresh, installed}: Props) {
         </Tabs>
       </Modal.Header>
       <Modal.Body className="overflow-hidden">
-        <LynxScroll className="size-full">
+        <ScrollShadow className="size-full">
           {currentTab === 'official' && (
             <InstallerOfficial
               state={state}
@@ -67,7 +66,7 @@ export default function InstallerModal({state, refresh, installed}: Props) {
               setCloseDisabled={setCloseDisabled}
             />
           )}
-        </LynxScroll>
+        </ScrollShadow>
       </Modal.Body>
     </TabModal>
   );
