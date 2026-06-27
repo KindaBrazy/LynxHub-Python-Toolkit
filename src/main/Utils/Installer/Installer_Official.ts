@@ -31,7 +31,7 @@ async function installPython(filePath: string, version: PythonVersion): Promise<
     console.log(`Python ${version.version} installed successfully`);
   } catch (err: any) {
     console.error(`Failed to install Python ${version.version}: ${err.message}`);
-    throw new Error(`Failed to install Python ${version.version}: ${err.message}`);
+    throw new Error(`Failed to install Python ${version.version}: ${err.message}`, {cause: err});
   }
 }
 

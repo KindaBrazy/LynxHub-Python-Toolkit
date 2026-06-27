@@ -277,7 +277,7 @@ async function getSitePackagesPath(pythonPath: string): Promise<string> {
     // Return the first site-packages directory if there's only one
     return sitePackages.length > 1 ? sitePackages[1] : sitePackages[0];
   } catch (error) {
-    throw new Error(`Failed to get site-packages location: ${error}`);
+    throw new Error(`Failed to get site-packages location: ${error}`, {cause: error});
   }
 }
 

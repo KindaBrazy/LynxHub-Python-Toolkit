@@ -51,7 +51,7 @@ async function ensureSoftwarePropertiesCommon(): Promise<void> {
       throw new Error(`Failed to install software-properties-common: ${stderr}`);
     }
   } catch (err: any) {
-    throw new Error(`Error ensuring software-properties-common is installed: ${err.message}`);
+    throw new Error(`Error ensuring software-properties-common is installed: ${err.message}`, {cause: err});
   }
 }
 
@@ -69,7 +69,7 @@ async function ensureDeadsnakesPPA(): Promise<void> {
 
     await execAsync('pkexec apt update');
   } catch (err: any) {
-    throw new Error(`Error ensuring Deadsnakes PPA is added: ${err.message}`);
+    throw new Error(`Error ensuring Deadsnakes PPA is added: ${err.message}`, {cause: err});
   }
 }
 
@@ -142,7 +142,7 @@ export async function getAvailablePythonVersions(): Promise<PythonVersion[]> {
       return [];
     }
   } catch (error: any) {
-    throw new Error(`Failed to fetch Python versions: ${error.message}`);
+    throw new Error(`Failed to fetch Python versions: ${error.message}`, {cause: error});
   }
 }
 

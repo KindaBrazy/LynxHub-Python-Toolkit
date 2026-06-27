@@ -45,6 +45,6 @@ export async function getCondaEnvName(pythonPath: string): Promise<string> {
     const {stdout} = await execAsync(`"${pythonPath}" -c "import os, sys; print(os.path.basename(sys.prefix))"`);
     return basename(stdout.trim());
   } catch (err: any) {
-    throw new Error(`Failed to get conda environment name: ${err.message}`);
+    throw new Error(`Failed to get conda environment name: ${err.message}`, {cause: err});
   }
 }
