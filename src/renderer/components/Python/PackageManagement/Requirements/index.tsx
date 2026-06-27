@@ -14,7 +14,6 @@ import {
 } from '@solar-icons/react-perf/BoldDuotone';
 import {isEmpty} from 'lodash-es';
 import {Plus, X} from 'lucide-react';
-import {OverlayScrollbarsComponentRef} from 'overlayscrollbars-react';
 import {Dispatch, SetStateAction, useEffect, useMemo, useRef, useState} from 'react';
 
 import {RequirementData} from '../../../../../cross/CrossExtTypes';
@@ -73,7 +72,7 @@ const toImportedRequirement = (req: RequirementData, sourcePath: string): Import
 
 export default function RequirementsModal({id, projectPath, setIsReqAvailable, setReqPackageCount}: Props) {
   const state = useOverlayState();
-  const scrollRef = useRef<OverlayScrollbarsComponentRef>(null);
+  const scrollRef = useRef<HTMLDivElement>(null);
 
   const [requirements, setRequirements] = useState<RequirementData[]>([]);
   const [filePath, setFilePath] = useState<string>('');
@@ -117,13 +116,11 @@ export default function RequirementsModal({id, projectPath, setIsReqAvailable, s
 
   const scrollToBottom = () => {
     const {current} = scrollRef;
-    const osInstance = current?.osInstance();
-    if (!osInstance) {
-      return;
-    }
-    const {scrollOffsetElement} = osInstance.elements();
-    const {scrollHeight} = scrollOffsetElement;
-    scrollOffsetElement.scrollTo({behavior: 'smooth', top: scrollHeight + 100});
+    if (!current) return;
+
+    const {scrollHeight} = current;
+
+    current.scrollTo({behavior: 'smooth', top: scrollHeight + 100});
   };
 
   useEffect(() => {

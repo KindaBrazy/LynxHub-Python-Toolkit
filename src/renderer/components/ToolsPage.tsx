@@ -1,6 +1,6 @@
 import {Button} from '@heroui/react';
-import LynxTooltip from '@lynx/components/LynxTooltip';
 import {useOverlayState} from '@heroui/react';
+import LynxTooltip from '@lynx/components/LynxTooltip';
 import {SettingsMinimalistic} from '@solar-icons/react-perf/BoldDuotone';
 import {useDispatch} from 'react-redux';
 
