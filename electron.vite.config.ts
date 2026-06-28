@@ -11,7 +11,7 @@ export default defineConfig({
       externalizeDeps: {exclude: ['which', 'graceful-fs', 'electron-dl', 'semver', 'axios']},
       emptyOutDir: true,
       outDir: resolve('extension_out/main'),
-      rollupOptions: {
+      rolldownOptions: {
         input: resolve('extension/src/main/lynxExtension.ts'),
         output: {entryFileNames: 'mainEntry.cjs', format: 'cjs'},
       },
@@ -46,7 +46,7 @@ export default defineConfig({
     ],
     build: {
       outDir: resolve('extension_out/renderer'),
-      rollupOptions: {
+      rolldownOptions: {
         input: resolve('extension/src/renderer/index.html'),
         treeshake: {moduleSideEffects: false},
       },
