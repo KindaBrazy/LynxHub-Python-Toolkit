@@ -51,27 +51,27 @@ export default function PkgString() {
         onChange={onValueChange}
         orientation="horizontal">
         <Radio value="default">
-          <Radio.Control>
-            <Radio.Indicator />
-          </Radio.Control>
           <Radio.Content>
-            <Label>Default</Label>
+            <Radio.Control>
+              <Radio.Indicator />
+            </Radio.Control>
+            Default
           </Radio.Content>
         </Radio>
         <Radio value="capitalize">
-          <Radio.Control>
-            <Radio.Indicator />
-          </Radio.Control>
           <Radio.Content>
-            <Label>Capitalize</Label>
+            <Radio.Control>
+              <Radio.Indicator />
+            </Radio.Control>
+            Capitalize
           </Radio.Content>
         </Radio>
         <Radio value="startCase">
-          <Radio.Control>
-            <Radio.Indicator />
-          </Radio.Control>
           <Radio.Content>
-            <Label>Start Case</Label>
+            <Radio.Control>
+              <Radio.Indicator />
+            </Radio.Control>
+            Start Case
           </Radio.Content>
         </Radio>
       </RadioGroup>

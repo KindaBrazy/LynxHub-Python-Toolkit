@@ -126,11 +126,11 @@ export default function VenvCreator({installedPythons, refresh, isLoadingPythons
 
             {showUpgrade && (
               <Checkbox variant="secondary" isSelected={updatePip} isDisabled={isCreating} onChange={setUpdatePip}>
-                <Checkbox.Control>
-                  <Checkbox.Indicator />
-                </Checkbox.Control>
                 <Checkbox.Content>
-                  <Label className="cursor-pointer">Upgrade core packages</Label>
+                  <Checkbox.Control>
+                    <Checkbox.Indicator />
+                  </Checkbox.Control>
+                  Upgrade core packages
                 </Checkbox.Content>
               </Checkbox>
             )}

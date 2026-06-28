@@ -67,10 +67,12 @@ export default function PackageManagerBody({
                     <Table.Header>
                       {anyUpdateAvailable && (
                         <Table.Column className="pr-0">
-                          <Checkbox slot="selection">
-                            <Checkbox.Control>
-                              <Checkbox.Indicator />
-                            </Checkbox.Control>
+                          <Checkbox slot="selection" aria-label="Select all">
+                            <Checkbox.Content>
+                              <Checkbox.Control>
+                                <Checkbox.Indicator />
+                              </Checkbox.Control>
+                            </Checkbox.Content>
                           </Checkbox>
                         </Table.Column>
                       )}
@@ -83,10 +85,12 @@ export default function PackageManagerBody({
                         <Table.Row id={item.name} key={item.name}>
                           {anyUpdateAvailable ? (
                             <Table.Cell className="pr-0">
-                              <Checkbox slot="selection" variant="secondary">
-                                <Checkbox.Control>
-                                  <Checkbox.Indicator />
-                                </Checkbox.Control>
+                              <Checkbox slot="selection" variant="secondary" aria-label="Select row">
+                                <Checkbox.Content>
+                                  <Checkbox.Control>
+                                    <Checkbox.Indicator />
+                                  </Checkbox.Control>
+                                </Checkbox.Content>
                               </Checkbox>
                             </Table.Cell>
                           ) : null}
