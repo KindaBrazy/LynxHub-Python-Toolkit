@@ -1,6 +1,15 @@
 {
   "versions": [
     {
+      "version": "0.15.2",
+      "commit": "dffadbc",
+      "engines": {
+        "extensionApi": "^2.0.0"
+      },
+      "stage": "early_access",
+      "platforms": ["win32", "linux", "darwin"]
+    },
+    {
       "version": "0.15.1",
       "commit": "3f50549",
       "engines": {
@@ -74,6 +83,18 @@
     }
   ],
   "changes": [
+    {
+      "version": "0.15.2",
+      "date": "2026-06-30",
+      "items": [
+        {
+          "📌 Improvements": [
+            "Refined scrollbar styling for a cleaner UI.",
+            "Added official support for LynxHub v3.5.5"
+          ]
+        }
+      ]
+    },
     {
       "version": "0.15.1",
       "date": "2026-06-01",
