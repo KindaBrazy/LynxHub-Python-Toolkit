@@ -6,20 +6,31 @@ import {isDev} from '@lynx_common/utils';
 
 import CardMenu from './components/CardMenu';
 import CardMenuModal from './components/CardMenuModal';
+import PythonToolkitPage from './components/Python/PythonToolkitPage';
+import {PythonIcon} from './components/SvgIcons';
 import ToolsPage from './components/ToolsPage';
 import {DepsModalKey} from './consts';
 import CustomHook from './CustomHook';
-import {setCards, setToast} from './DataHolder';
+import {setCards, setTheActivePage, setToast} from './DataHolder';
 import listenForEvents from './ListenForEvents';
 import pIpc from './PIpc';
 import pythonToolkitReducer from './reducer';
 
 export function InitialExtensions(lynxAPI: ExtensionRendererApi) {
-  listenForEvents(lynxAPI);
+  if (lynxAPI.tabs) setTheActivePage(lynxAPI.tabs.setActivePage);
   setCards(lynxAPI.modulesData?.allCards || []);
   if (lynxAPI.toast) setToast(lynxAPI.toast);
 
+  listenForEvents(lynxAPI);
+
   lynxAPI.addReducer([{name: 'pythonToolkit', reducer: pythonToolkitReducer}]);
+  lynxAPI.router.addPage({
+    id: 'python-toolkit',
+    title: 'Python Toolkit',
+    component: PythonToolkitPage,
+    icon: <PythonIcon className="size-full p-0.5 text-yellow-400" />,
+    position: 'hidden',
+  });
 
   if (
     (typeof window.LynxHub !== 'undefined' && window.LynxHub.buildNumber && window.LynxHub.buildNumber > 45) ||

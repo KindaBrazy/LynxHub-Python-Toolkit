@@ -6,6 +6,7 @@ import {useDispatch} from 'react-redux';
 
 import {ToolsCard} from '../../../../src/renderer/mainWindow/components/ToolsCard';
 import {AppDispatch} from '../../../../src/renderer/mainWindow/redux/store';
+import {setActivePage} from '../DataHolder';
 import pIpc from '../PIpc';
 import {PythonToolkitActions} from '../reducer';
 import PythonToolkitModal from './Python/PythonToolkitModal';
@@ -21,9 +22,13 @@ export default function ToolsPage() {
   const settingsModal = useOverlayState();
   const packageManagerModal = useOverlayState();
 
-  const openModal = () => {
-    packageManagerModal.open();
+  const handleOpen = () => {
     pIpc.getAssociates().then(associates => dispatch(PythonToolkitActions.setAssociates(associates || [])));
+    if (setActivePage) {
+      setActivePage('python-toolkit', 'Python Toolkit');
+    } else {
+      packageManagerModal.open();
+    }
   };
 
   return (
@@ -39,7 +44,7 @@ export default function ToolsPage() {
         }
         title={title}
         description={desc}
-        onPress={openModal}
+        onPress={handleOpen}
         icon={<PythonIcon className="size-full p-0.5 text-yellow-400" />}
       />
       <PythonToolkitModal state={packageManagerModal} />
