@@ -28,7 +28,7 @@ export function InitialExtensions(lynxAPI: ExtensionRendererApi) {
     id: 'python-toolkit',
     title: 'Python Toolkit',
     component: PythonToolkitPage,
-    icon: <PythonIcon className="size-full p-0.5 text-yellow-400" />,
+    icon: <PythonIcon />,
     position: 'hidden',
   });
 
