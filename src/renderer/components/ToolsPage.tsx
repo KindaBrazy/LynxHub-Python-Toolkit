@@ -1,11 +1,11 @@
 import {Button} from '@heroui/react';
 import {useOverlayState} from '@heroui/react';
 import LynxTooltip from '@lynx/components/LynxTooltip';
+import {ToolsCard} from '@lynx/components/ToolsCard';
+import {AppDispatch} from '@lynx/redux/store';
 import {SettingsMinimalistic} from '@solar-icons/react-perf/BoldDuotone';
 import {useDispatch} from 'react-redux';
 
-import {ToolsCard} from '../../../../src/renderer/mainWindow/components/ToolsCard';
-import {AppDispatch} from '../../../../src/renderer/mainWindow/redux/store';
 import {setActivePage} from '../DataHolder';
 import pIpc from '../PIpc';
 import {PythonToolkitActions} from '../reducer';
@@ -16,7 +16,7 @@ import {PythonIcon} from './SvgIcons';
 const title: string = 'Python Toolkit';
 const desc: string = 'Manage Python versions, virtual environments, packages, requirements and more.';
 
-export default function ToolsPage() {
+export function PythonToolkitCard() {
   const dispatch = useDispatch<AppDispatch>();
 
   const settingsModal = useOverlayState();
@@ -44,6 +44,7 @@ export default function ToolsPage() {
         }
         title={title}
         description={desc}
+        id="python-toolkit"
         onPress={handleOpen}
         icon={<PythonIcon className="size-full p-0.5 text-yellow-400" />}
       />
@@ -51,3 +52,5 @@ export default function ToolsPage() {
     </>
   );
 }
+
+export default PythonToolkitCard;

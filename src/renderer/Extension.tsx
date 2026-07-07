@@ -8,7 +8,7 @@ import CardMenu from './components/CardMenu';
 import CardMenuModal from './components/CardMenuModal';
 import PythonToolkitPage from './components/Python/PythonToolkitPage';
 import {PythonIcon} from './components/SvgIcons';
-import ToolsPage from './components/ToolsPage';
+import PythonToolkitCard from './components/ToolsPage';
 import {DepsModalKey} from './consts';
 import CustomHook from './CustomHook';
 import {setCards, setTheActivePage, setToast} from './DataHolder';
@@ -32,14 +32,16 @@ export function InitialExtensions(lynxAPI: ExtensionRendererApi) {
     position: 'hidden',
   });
 
-  if (
-    (typeof window.LynxHub !== 'undefined' && window.LynxHub.buildNumber && window.LynxHub.buildNumber > 45) ||
-    (isDev() && APP_BUILD_NUMBER > 44)
-  ) {
-    lynxAPI.customizePages.tools.add.cardsContainer(ToolsPage);
-  } else {
-    // @ts-expect-error in old versions api provides addComponent
-    lynxAPI.customizePages.tools.addComponent(ToolsPage);
+  lynxAPI.cards.registerToolsCard?.({
+    id: 'python-toolkit',
+    title: 'Python Toolkit',
+    description: 'Manage Python versions, virtual environments, packages, requirements and more.',
+    component: PythonToolkitCard,
+    where: 'tools_page',
+  });
+
+  if (!lynxAPI.cards.registerToolsCard) {
+    lynxAPI.customizePages.tools.add.cardsContainer(PythonToolkitCard);
   }
 
   lynxAPI.cards.customize.menu.addSection([{index: 1, components: [CardMenu]}]);
