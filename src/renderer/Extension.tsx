@@ -1,8 +1,6 @@
 import './index.css';
 
 import type {ExtensionRendererApi} from '@lynx/plugins/extensions/types/api';
-import {APP_BUILD_NUMBER} from '@lynx_common/consts';
-import {isDev} from '@lynx_common/utils';
 
 import CardMenu from './components/CardMenu';
 import CardMenuModal from './components/CardMenuModal';
