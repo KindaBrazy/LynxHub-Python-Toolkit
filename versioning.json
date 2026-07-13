@@ -1,6 +1,15 @@
 {
   "versions": [
     {
+      "version": "0.15.3",
+      "commit": "8f77e08",
+      "engines": {
+        "extensionApi": "^2.2.0"
+      },
+      "stage": "early_access",
+      "platforms": ["win32", "linux", "darwin"]
+    },
+    {
       "version": "0.15.2",
       "commit": "dffadbc",
       "engines": {
@@ -83,6 +92,18 @@
     }
   ],
   "changes": [
+    {
+      "version": "0.15.3",
+      "date": "2026-07-13",
+      "items": [
+        {
+          "📌 Improvements": [
+            "Toolkit now opens in page instead of modal.",
+            "Card now can be pinned and shows in home categories."
+          ]
+        }
+      ]
+    },
     {
       "version": "0.15.2",
       "date": "2026-06-30",
