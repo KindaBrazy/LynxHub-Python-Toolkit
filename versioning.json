@@ -98,8 +98,8 @@
       "items": [
         {
           "📌 Improvements": [
-            "Toolkit now opens in page instead of modal.",
-            "Card now can be pinned and shows in home categories."
+            "The toolkit now opens directly on the page instead of in a modal.",
+            "Cards can now be pinned and displayed within home categories."
           ]
         }
       ]
