@@ -1,3604 +1,6 @@
 import { i as __toESM, n as __commonJSMin, r as __require, t as require_react } from "./react-Cp8GNDZx.js";
 import { r as importShared } from "./_virtual___federation_fn_import-ChPcBYrR.js";
 import { t as require_jsx_runtime } from "./jsx-runtime-DwPxM6n2.js";
-//#region node_modules/lodash-es/_freeGlobal.js
-/** Detect free variable `global` from Node.js. */
-var freeGlobal = typeof global == "object" && global && global.Object === Object && global;
-//#endregion
-//#region node_modules/lodash-es/_root.js
-/** Detect free variable `self`. */
-var freeSelf = typeof self == "object" && self && self.Object === Object && self;
-/** Used as a reference to the global object. */
-var root = freeGlobal || freeSelf || Function("return this")();
-//#endregion
-//#region node_modules/lodash-es/_Symbol.js
-/** Built-in value references. */
-var Symbol$1 = root.Symbol;
-//#endregion
-//#region node_modules/lodash-es/_arrayMap.js
-/**
-* A specialized version of `_.map` for arrays without support for iteratee
-* shorthands.
-*
-* @private
-* @param {Array} [array] The array to iterate over.
-* @param {Function} iteratee The function invoked per iteration.
-* @returns {Array} Returns the new mapped array.
-*/
-function arrayMap(array, iteratee) {
-	var index = -1, length = array == null ? 0 : array.length, result = Array(length);
-	while (++index < length) result[index] = iteratee(array[index], index, array);
-	return result;
-}
-//#endregion
-//#region node_modules/lodash-es/isArray.js
-/**
-* Checks if `value` is classified as an `Array` object.
-*
-* @static
-* @memberOf _
-* @since 0.1.0
-* @category Lang
-* @param {*} value The value to check.
-* @returns {boolean} Returns `true` if `value` is an array, else `false`.
-* @example
-*
-* _.isArray([1, 2, 3]);
-* // => true
-*
-* _.isArray(document.body.children);
-* // => false
-*
-* _.isArray('abc');
-* // => false
-*
-* _.isArray(_.noop);
-* // => false
-*/
-var isArray$1 = Array.isArray;
-//#endregion
-//#region node_modules/lodash-es/_getRawTag.js
-/** Used for built-in method references. */
-var objectProto$3 = Object.prototype;
-/** Used to check objects for own properties. */
-var hasOwnProperty$12 = objectProto$3.hasOwnProperty;
-/**
-* Used to resolve the
-* [`toStringTag`](http://ecma-international.org/ecma-262/7.0/#sec-object.prototype.tostring)
-* of values.
-*/
-var nativeObjectToString$1 = objectProto$3.toString;
-/** Built-in value references. */
-var symToStringTag$1 = Symbol$1 ? Symbol$1.toStringTag : void 0;
-/**
-* A specialized version of `baseGetTag` which ignores `Symbol.toStringTag` values.
-*
-* @private
-* @param {*} value The value to query.
-* @returns {string} Returns the raw `toStringTag`.
-*/
-function getRawTag(value) {
-	var isOwn = hasOwnProperty$12.call(value, symToStringTag$1), tag = value[symToStringTag$1];
-	try {
-		value[symToStringTag$1] = void 0;
-		var unmasked = true;
-	} catch (e) {}
-	var result = nativeObjectToString$1.call(value);
-	if (unmasked) if (isOwn) value[symToStringTag$1] = tag;
-	else delete value[symToStringTag$1];
-	return result;
-}
-//#endregion
-//#region node_modules/lodash-es/_objectToString.js
-/**
-* Used to resolve the
-* [`toStringTag`](http://ecma-international.org/ecma-262/7.0/#sec-object.prototype.tostring)
-* of values.
-*/
-var nativeObjectToString = Object.prototype.toString;
-/**
-* Converts `value` to a string using `Object.prototype.toString`.
-*
-* @private
-* @param {*} value The value to convert.
-* @returns {string} Returns the converted string.
-*/
-function objectToString(value) {
-	return nativeObjectToString.call(value);
-}
-//#endregion
-//#region node_modules/lodash-es/_baseGetTag.js
-/** `Object#toString` result references. */
-var nullTag = "[object Null]", undefinedTag = "[object Undefined]";
-/** Built-in value references. */
-var symToStringTag = Symbol$1 ? Symbol$1.toStringTag : void 0;
-/**
-* The base implementation of `getTag` without fallbacks for buggy environments.
-*
-* @private
-* @param {*} value The value to query.
-* @returns {string} Returns the `toStringTag`.
-*/
-function baseGetTag(value) {
-	if (value == null) return value === void 0 ? undefinedTag : nullTag;
-	return symToStringTag && symToStringTag in Object(value) ? getRawTag(value) : objectToString(value);
-}
-//#endregion
-//#region node_modules/lodash-es/isObjectLike.js
-/**
-* Checks if `value` is object-like. A value is object-like if it's not `null`
-* and has a `typeof` result of "object".
-*
-* @static
-* @memberOf _
-* @since 4.0.0
-* @category Lang
-* @param {*} value The value to check.
-* @returns {boolean} Returns `true` if `value` is object-like, else `false`.
-* @example
-*
-* _.isObjectLike({});
-* // => true
-*
-* _.isObjectLike([1, 2, 3]);
-* // => true
-*
-* _.isObjectLike(_.noop);
-* // => false
-*
-* _.isObjectLike(null);
-* // => false
-*/
-function isObjectLike(value) {
-	return value != null && typeof value == "object";
-}
-//#endregion
-//#region node_modules/lodash-es/isSymbol.js
-/** `Object#toString` result references. */
-var symbolTag$3 = "[object Symbol]";
-/**
-* Checks if `value` is classified as a `Symbol` primitive or object.
-*
-* @static
-* @memberOf _
-* @since 4.0.0
-* @category Lang
-* @param {*} value The value to check.
-* @returns {boolean} Returns `true` if `value` is a symbol, else `false`.
-* @example
-*
-* _.isSymbol(Symbol.iterator);
-* // => true
-*
-* _.isSymbol('abc');
-* // => false
-*/
-function isSymbol(value) {
-	return typeof value == "symbol" || isObjectLike(value) && baseGetTag(value) == symbolTag$3;
-}
-//#endregion
-//#region node_modules/lodash-es/_baseToString.js
-/** Used as references for various `Number` constants. */
-var INFINITY = Infinity;
-/** Used to convert symbols to primitives and strings. */
-var symbolProto$2 = Symbol$1 ? Symbol$1.prototype : void 0, symbolToString = symbolProto$2 ? symbolProto$2.toString : void 0;
-/**
-* The base implementation of `_.toString` which doesn't convert nullish
-* values to empty strings.
-*
-* @private
-* @param {*} value The value to process.
-* @returns {string} Returns the string.
-*/
-function baseToString(value) {
-	if (typeof value == "string") return value;
-	if (isArray$1(value)) return arrayMap(value, baseToString) + "";
-	if (isSymbol(value)) return symbolToString ? symbolToString.call(value) : "";
-	var result = value + "";
-	return result == "0" && 1 / value == -INFINITY ? "-0" : result;
-}
-//#endregion
-//#region node_modules/lodash-es/toString.js
-/**
-* Converts `value` to a string. An empty string is returned for `null`
-* and `undefined` values. The sign of `-0` is preserved.
-*
-* @static
-* @memberOf _
-* @since 4.0.0
-* @category Lang
-* @param {*} value The value to convert.
-* @returns {string} Returns the converted string.
-* @example
-*
-* _.toString(null);
-* // => ''
-*
-* _.toString(-0);
-* // => '-0'
-*
-* _.toString([1, 2, 3]);
-* // => '1,2,3'
-*/
-function toString(value) {
-	return value == null ? "" : baseToString(value);
-}
-//#endregion
-//#region node_modules/lodash-es/_baseSlice.js
-/**
-* The base implementation of `_.slice` without an iteratee call guard.
-*
-* @private
-* @param {Array} array The array to slice.
-* @param {number} [start=0] The start position.
-* @param {number} [end=array.length] The end position.
-* @returns {Array} Returns the slice of `array`.
-*/
-function baseSlice(array, start, end) {
-	var index = -1, length = array.length;
-	if (start < 0) start = -start > length ? 0 : length + start;
-	end = end > length ? length : end;
-	if (end < 0) end += length;
-	length = start > end ? 0 : end - start >>> 0;
-	start >>>= 0;
-	var result = Array(length);
-	while (++index < length) result[index] = array[index + start];
-	return result;
-}
-//#endregion
-//#region node_modules/lodash-es/_castSlice.js
-/**
-* Casts `array` to a slice if it's needed.
-*
-* @private
-* @param {Array} array The array to inspect.
-* @param {number} start The start position.
-* @param {number} [end=array.length] The end position.
-* @returns {Array} Returns the cast slice.
-*/
-function castSlice(array, start, end) {
-	var length = array.length;
-	end = end === void 0 ? length : end;
-	return !start && end >= length ? array : baseSlice(array, start, end);
-}
-//#endregion
-//#region node_modules/lodash-es/_hasUnicode.js
-/** Used to detect strings with [zero-width joiners or code points from the astral planes](http://eev.ee/blog/2015/09/12/dark-corners-of-unicode/). */
-var reHasUnicode = RegExp("[\\u200d\\ud800-\\udfff\\u0300-\\u036f\\ufe20-\\ufe2f\\u20d0-\\u20ff\\ufe0e\\ufe0f]");
-/**
-* Checks if `string` contains Unicode symbols.
-*
-* @private
-* @param {string} string The string to inspect.
-* @returns {boolean} Returns `true` if a symbol is found, else `false`.
-*/
-function hasUnicode(string) {
-	return reHasUnicode.test(string);
-}
-//#endregion
-//#region node_modules/lodash-es/_asciiToArray.js
-/**
-* Converts an ASCII `string` to an array.
-*
-* @private
-* @param {string} string The string to convert.
-* @returns {Array} Returns the converted array.
-*/
-function asciiToArray(string) {
-	return string.split("");
-}
-//#endregion
-//#region node_modules/lodash-es/_unicodeToArray.js
-/** Used to compose unicode character classes. */
-var rsAstralRange$1 = "\\ud800-\\udfff", rsComboRange$1 = "\\u0300-\\u036f\\ufe20-\\ufe2f\\u20d0-\\u20ff", rsVarRange$1 = "\\ufe0e\\ufe0f";
-/** Used to compose unicode capture groups. */
-var rsAstral = "[" + rsAstralRange$1 + "]", rsCombo$1 = "[" + rsComboRange$1 + "]", rsFitz = "\\ud83c[\\udffb-\\udfff]", rsModifier$1 = "(?:" + rsCombo$1 + "|" + rsFitz + ")", rsNonAstral$1 = "[^" + rsAstralRange$1 + "]", rsRegional$1 = "(?:\\ud83c[\\udde6-\\uddff]){2}", rsSurrPair$1 = "[\\ud800-\\udbff][\\udc00-\\udfff]", rsZWJ$1 = "\\u200d";
-/** Used to compose unicode regexes. */
-var reOptMod$1 = rsModifier$1 + "?", rsOptVar$1 = "[" + rsVarRange$1 + "]?", rsOptJoin$1 = "(?:" + rsZWJ$1 + "(?:" + [
-	rsNonAstral$1,
-	rsRegional$1,
-	rsSurrPair$1
-].join("|") + ")" + rsOptVar$1 + reOptMod$1 + ")*", rsSeq$1 = rsOptVar$1 + reOptMod$1 + rsOptJoin$1, rsSymbol = "(?:" + [
-	rsNonAstral$1 + rsCombo$1 + "?",
-	rsCombo$1,
-	rsRegional$1,
-	rsSurrPair$1,
-	rsAstral
-].join("|") + ")";
-/** Used to match [string symbols](https://mathiasbynens.be/notes/javascript-unicode). */
-var reUnicode = RegExp(rsFitz + "(?=" + rsFitz + ")|" + rsSymbol + rsSeq$1, "g");
-/**
-* Converts a Unicode `string` to an array.
-*
-* @private
-* @param {string} string The string to convert.
-* @returns {Array} Returns the converted array.
-*/
-function unicodeToArray(string) {
-	return string.match(reUnicode) || [];
-}
-//#endregion
-//#region node_modules/lodash-es/_stringToArray.js
-/**
-* Converts `string` to an array.
-*
-* @private
-* @param {string} string The string to convert.
-* @returns {Array} Returns the converted array.
-*/
-function stringToArray(string) {
-	return hasUnicode(string) ? unicodeToArray(string) : asciiToArray(string);
-}
-//#endregion
-//#region node_modules/lodash-es/_createCaseFirst.js
-/**
-* Creates a function like `_.lowerFirst`.
-*
-* @private
-* @param {string} methodName The name of the `String` case method to use.
-* @returns {Function} Returns the new case function.
-*/
-function createCaseFirst(methodName) {
-	return function(string) {
-		string = toString(string);
-		var strSymbols = hasUnicode(string) ? stringToArray(string) : void 0;
-		var chr = strSymbols ? strSymbols[0] : string.charAt(0);
-		var trailing = strSymbols ? castSlice(strSymbols, 1).join("") : string.slice(1);
-		return chr[methodName]() + trailing;
-	};
-}
-//#endregion
-//#region node_modules/lodash-es/upperFirst.js
-/**
-* Converts the first character of `string` to upper case.
-*
-* @static
-* @memberOf _
-* @since 4.0.0
-* @category String
-* @param {string} [string=''] The string to convert.
-* @returns {string} Returns the converted string.
-* @example
-*
-* _.upperFirst('fred');
-* // => 'Fred'
-*
-* _.upperFirst('FRED');
-* // => 'FRED'
-*/
-var upperFirst = createCaseFirst("toUpperCase");
-//#endregion
-//#region node_modules/lodash-es/capitalize.js
-/**
-* Converts the first character of `string` to upper case and the remaining
-* to lower case.
-*
-* @static
-* @memberOf _
-* @since 3.0.0
-* @category String
-* @param {string} [string=''] The string to capitalize.
-* @returns {string} Returns the capitalized string.
-* @example
-*
-* _.capitalize('FRED');
-* // => 'Fred'
-*/
-function capitalize(string) {
-	return upperFirst(toString(string).toLowerCase());
-}
-//#endregion
-//#region node_modules/lodash-es/_listCacheClear.js
-/**
-* Removes all key-value entries from the list cache.
-*
-* @private
-* @name clear
-* @memberOf ListCache
-*/
-function listCacheClear() {
-	this.__data__ = [];
-	this.size = 0;
-}
-//#endregion
-//#region node_modules/lodash-es/eq.js
-/**
-* Performs a
-* [`SameValueZero`](http://ecma-international.org/ecma-262/7.0/#sec-samevaluezero)
-* comparison between two values to determine if they are equivalent.
-*
-* @static
-* @memberOf _
-* @since 4.0.0
-* @category Lang
-* @param {*} value The value to compare.
-* @param {*} other The other value to compare.
-* @returns {boolean} Returns `true` if the values are equivalent, else `false`.
-* @example
-*
-* var object = { 'a': 1 };
-* var other = { 'a': 1 };
-*
-* _.eq(object, object);
-* // => true
-*
-* _.eq(object, other);
-* // => false
-*
-* _.eq('a', 'a');
-* // => true
-*
-* _.eq('a', Object('a'));
-* // => false
-*
-* _.eq(NaN, NaN);
-* // => true
-*/
-function eq(value, other) {
-	return value === other || value !== value && other !== other;
-}
-//#endregion
-//#region node_modules/lodash-es/_assocIndexOf.js
-/**
-* Gets the index at which the `key` is found in `array` of key-value pairs.
-*
-* @private
-* @param {Array} array The array to inspect.
-* @param {*} key The key to search for.
-* @returns {number} Returns the index of the matched value, else `-1`.
-*/
-function assocIndexOf(array, key) {
-	var length = array.length;
-	while (length--) if (eq(array[length][0], key)) return length;
-	return -1;
-}
-//#endregion
-//#region node_modules/lodash-es/_listCacheDelete.js
-/** Built-in value references. */
-var splice = Array.prototype.splice;
-/**
-* Removes `key` and its value from the list cache.
-*
-* @private
-* @name delete
-* @memberOf ListCache
-* @param {string} key The key of the value to remove.
-* @returns {boolean} Returns `true` if the entry was removed, else `false`.
-*/
-function listCacheDelete(key) {
-	var data = this.__data__, index = assocIndexOf(data, key);
-	if (index < 0) return false;
-	if (index == data.length - 1) data.pop();
-	else splice.call(data, index, 1);
-	--this.size;
-	return true;
-}
-//#endregion
-//#region node_modules/lodash-es/_listCacheGet.js
-/**
-* Gets the list cache value for `key`.
-*
-* @private
-* @name get
-* @memberOf ListCache
-* @param {string} key The key of the value to get.
-* @returns {*} Returns the entry value.
-*/
-function listCacheGet(key) {
-	var data = this.__data__, index = assocIndexOf(data, key);
-	return index < 0 ? void 0 : data[index][1];
-}
-//#endregion
-//#region node_modules/lodash-es/_listCacheHas.js
-/**
-* Checks if a list cache value for `key` exists.
-*
-* @private
-* @name has
-* @memberOf ListCache
-* @param {string} key The key of the entry to check.
-* @returns {boolean} Returns `true` if an entry for `key` exists, else `false`.
-*/
-function listCacheHas(key) {
-	return assocIndexOf(this.__data__, key) > -1;
-}
-//#endregion
-//#region node_modules/lodash-es/_listCacheSet.js
-/**
-* Sets the list cache `key` to `value`.
-*
-* @private
-* @name set
-* @memberOf ListCache
-* @param {string} key The key of the value to set.
-* @param {*} value The value to set.
-* @returns {Object} Returns the list cache instance.
-*/
-function listCacheSet(key, value) {
-	var data = this.__data__, index = assocIndexOf(data, key);
-	if (index < 0) {
-		++this.size;
-		data.push([key, value]);
-	} else data[index][1] = value;
-	return this;
-}
-//#endregion
-//#region node_modules/lodash-es/_ListCache.js
-/**
-* Creates an list cache object.
-*
-* @private
-* @constructor
-* @param {Array} [entries] The key-value pairs to cache.
-*/
-function ListCache(entries) {
-	var index = -1, length = entries == null ? 0 : entries.length;
-	this.clear();
-	while (++index < length) {
-		var entry = entries[index];
-		this.set(entry[0], entry[1]);
-	}
-}
-ListCache.prototype.clear = listCacheClear;
-ListCache.prototype["delete"] = listCacheDelete;
-ListCache.prototype.get = listCacheGet;
-ListCache.prototype.has = listCacheHas;
-ListCache.prototype.set = listCacheSet;
-//#endregion
-//#region node_modules/lodash-es/_stackClear.js
-/**
-* Removes all key-value entries from the stack.
-*
-* @private
-* @name clear
-* @memberOf Stack
-*/
-function stackClear() {
-	this.__data__ = new ListCache();
-	this.size = 0;
-}
-//#endregion
-//#region node_modules/lodash-es/_stackDelete.js
-/**
-* Removes `key` and its value from the stack.
-*
-* @private
-* @name delete
-* @memberOf Stack
-* @param {string} key The key of the value to remove.
-* @returns {boolean} Returns `true` if the entry was removed, else `false`.
-*/
-function stackDelete(key) {
-	var data = this.__data__, result = data["delete"](key);
-	this.size = data.size;
-	return result;
-}
-//#endregion
-//#region node_modules/lodash-es/_stackGet.js
-/**
-* Gets the stack value for `key`.
-*
-* @private
-* @name get
-* @memberOf Stack
-* @param {string} key The key of the value to get.
-* @returns {*} Returns the entry value.
-*/
-function stackGet(key) {
-	return this.__data__.get(key);
-}
-//#endregion
-//#region node_modules/lodash-es/_stackHas.js
-/**
-* Checks if a stack value for `key` exists.
-*
-* @private
-* @name has
-* @memberOf Stack
-* @param {string} key The key of the entry to check.
-* @returns {boolean} Returns `true` if an entry for `key` exists, else `false`.
-*/
-function stackHas(key) {
-	return this.__data__.has(key);
-}
-//#endregion
-//#region node_modules/lodash-es/isObject.js
-/**
-* Checks if `value` is the
-* [language type](http://www.ecma-international.org/ecma-262/7.0/#sec-ecmascript-language-types)
-* of `Object`. (e.g. arrays, functions, objects, regexes, `new Number(0)`, and `new String('')`)
-*
-* @static
-* @memberOf _
-* @since 0.1.0
-* @category Lang
-* @param {*} value The value to check.
-* @returns {boolean} Returns `true` if `value` is an object, else `false`.
-* @example
-*
-* _.isObject({});
-* // => true
-*
-* _.isObject([1, 2, 3]);
-* // => true
-*
-* _.isObject(_.noop);
-* // => true
-*
-* _.isObject(null);
-* // => false
-*/
-function isObject(value) {
-	var type = typeof value;
-	return value != null && (type == "object" || type == "function");
-}
-//#endregion
-//#region node_modules/lodash-es/isFunction.js
-/** `Object#toString` result references. */
-var asyncTag = "[object AsyncFunction]", funcTag$2 = "[object Function]", genTag$1 = "[object GeneratorFunction]", proxyTag = "[object Proxy]";
-/**
-* Checks if `value` is classified as a `Function` object.
-*
-* @static
-* @memberOf _
-* @since 0.1.0
-* @category Lang
-* @param {*} value The value to check.
-* @returns {boolean} Returns `true` if `value` is a function, else `false`.
-* @example
-*
-* _.isFunction(_);
-* // => true
-*
-* _.isFunction(/abc/);
-* // => false
-*/
-function isFunction$1(value) {
-	if (!isObject(value)) return false;
-	var tag = baseGetTag(value);
-	return tag == funcTag$2 || tag == genTag$1 || tag == asyncTag || tag == proxyTag;
-}
-//#endregion
-//#region node_modules/lodash-es/_coreJsData.js
-/** Used to detect overreaching core-js shims. */
-var coreJsData = root["__core-js_shared__"];
-//#endregion
-//#region node_modules/lodash-es/_isMasked.js
-/** Used to detect methods masquerading as native. */
-var maskSrcKey = function() {
-	var uid = /[^.]+$/.exec(coreJsData && coreJsData.keys && coreJsData.keys.IE_PROTO || "");
-	return uid ? "Symbol(src)_1." + uid : "";
-}();
-/**
-* Checks if `func` has its source masked.
-*
-* @private
-* @param {Function} func The function to check.
-* @returns {boolean} Returns `true` if `func` is masked, else `false`.
-*/
-function isMasked(func) {
-	return !!maskSrcKey && maskSrcKey in func;
-}
-//#endregion
-//#region node_modules/lodash-es/_toSource.js
-/** Used to resolve the decompiled source of functions. */
-var funcToString$1 = Function.prototype.toString;
-/**
-* Converts `func` to its source code.
-*
-* @private
-* @param {Function} func The function to convert.
-* @returns {string} Returns the source code.
-*/
-function toSource(func) {
-	if (func != null) {
-		try {
-			return funcToString$1.call(func);
-		} catch (e) {}
-		try {
-			return func + "";
-		} catch (e) {}
-	}
-	return "";
-}
-//#endregion
-//#region node_modules/lodash-es/_baseIsNative.js
-/**
-* Used to match `RegExp`
-* [syntax characters](http://ecma-international.org/ecma-262/7.0/#sec-patterns).
-*/
-var reRegExpChar = /[\\^$.*+?()[\]{}|]/g;
-/** Used to detect host constructors (Safari). */
-var reIsHostCtor = /^\[object .+?Constructor\]$/;
-/** Used for built-in method references. */
-var funcProto = Function.prototype, objectProto$2 = Object.prototype;
-/** Used to resolve the decompiled source of functions. */
-var funcToString = funcProto.toString;
-/** Used to check objects for own properties. */
-var hasOwnProperty$11 = objectProto$2.hasOwnProperty;
-/** Used to detect if a method is native. */
-var reIsNative = RegExp("^" + funcToString.call(hasOwnProperty$11).replace(reRegExpChar, "\\$&").replace(/hasOwnProperty|(function).*?(?=\\\()| for .+?(?=\\\])/g, "$1.*?") + "$");
-/**
-* The base implementation of `_.isNative` without bad shim checks.
-*
-* @private
-* @param {*} value The value to check.
-* @returns {boolean} Returns `true` if `value` is a native function,
-*  else `false`.
-*/
-function baseIsNative(value) {
-	if (!isObject(value) || isMasked(value)) return false;
-	return (isFunction$1(value) ? reIsNative : reIsHostCtor).test(toSource(value));
-}
-//#endregion
-//#region node_modules/lodash-es/_getValue.js
-/**
-* Gets the value at `key` of `object`.
-*
-* @private
-* @param {Object} [object] The object to query.
-* @param {string} key The key of the property to get.
-* @returns {*} Returns the property value.
-*/
-function getValue(object, key) {
-	return object == null ? void 0 : object[key];
-}
-//#endregion
-//#region node_modules/lodash-es/_getNative.js
-/**
-* Gets the native function at `key` of `object`.
-*
-* @private
-* @param {Object} object The object to query.
-* @param {string} key The key of the method to get.
-* @returns {*} Returns the function if it's native, else `undefined`.
-*/
-function getNative(object, key) {
-	var value = getValue(object, key);
-	return baseIsNative(value) ? value : void 0;
-}
-//#endregion
-//#region node_modules/lodash-es/_Map.js
-var Map$1 = getNative(root, "Map");
-//#endregion
-//#region node_modules/lodash-es/_nativeCreate.js
-var nativeCreate = getNative(Object, "create");
-//#endregion
-//#region node_modules/lodash-es/_hashClear.js
-/**
-* Removes all key-value entries from the hash.
-*
-* @private
-* @name clear
-* @memberOf Hash
-*/
-function hashClear() {
-	this.__data__ = nativeCreate ? nativeCreate(null) : {};
-	this.size = 0;
-}
-//#endregion
-//#region node_modules/lodash-es/_hashDelete.js
-/**
-* Removes `key` and its value from the hash.
-*
-* @private
-* @name delete
-* @memberOf Hash
-* @param {Object} hash The hash to modify.
-* @param {string} key The key of the value to remove.
-* @returns {boolean} Returns `true` if the entry was removed, else `false`.
-*/
-function hashDelete(key) {
-	var result = this.has(key) && delete this.__data__[key];
-	this.size -= result ? 1 : 0;
-	return result;
-}
-//#endregion
-//#region node_modules/lodash-es/_hashGet.js
-/** Used to stand-in for `undefined` hash values. */
-var HASH_UNDEFINED$2 = "__lodash_hash_undefined__";
-/** Used to check objects for own properties. */
-var hasOwnProperty$10 = Object.prototype.hasOwnProperty;
-/**
-* Gets the hash value for `key`.
-*
-* @private
-* @name get
-* @memberOf Hash
-* @param {string} key The key of the value to get.
-* @returns {*} Returns the entry value.
-*/
-function hashGet(key) {
-	var data = this.__data__;
-	if (nativeCreate) {
-		var result = data[key];
-		return result === HASH_UNDEFINED$2 ? void 0 : result;
-	}
-	return hasOwnProperty$10.call(data, key) ? data[key] : void 0;
-}
-//#endregion
-//#region node_modules/lodash-es/_hashHas.js
-/** Used to check objects for own properties. */
-var hasOwnProperty$9 = Object.prototype.hasOwnProperty;
-/**
-* Checks if a hash value for `key` exists.
-*
-* @private
-* @name has
-* @memberOf Hash
-* @param {string} key The key of the entry to check.
-* @returns {boolean} Returns `true` if an entry for `key` exists, else `false`.
-*/
-function hashHas(key) {
-	var data = this.__data__;
-	return nativeCreate ? data[key] !== void 0 : hasOwnProperty$9.call(data, key);
-}
-//#endregion
-//#region node_modules/lodash-es/_hashSet.js
-/** Used to stand-in for `undefined` hash values. */
-var HASH_UNDEFINED$1 = "__lodash_hash_undefined__";
-/**
-* Sets the hash `key` to `value`.
-*
-* @private
-* @name set
-* @memberOf Hash
-* @param {string} key The key of the value to set.
-* @param {*} value The value to set.
-* @returns {Object} Returns the hash instance.
-*/
-function hashSet(key, value) {
-	var data = this.__data__;
-	this.size += this.has(key) ? 0 : 1;
-	data[key] = nativeCreate && value === void 0 ? HASH_UNDEFINED$1 : value;
-	return this;
-}
-//#endregion
-//#region node_modules/lodash-es/_Hash.js
-/**
-* Creates a hash object.
-*
-* @private
-* @constructor
-* @param {Array} [entries] The key-value pairs to cache.
-*/
-function Hash(entries) {
-	var index = -1, length = entries == null ? 0 : entries.length;
-	this.clear();
-	while (++index < length) {
-		var entry = entries[index];
-		this.set(entry[0], entry[1]);
-	}
-}
-Hash.prototype.clear = hashClear;
-Hash.prototype["delete"] = hashDelete;
-Hash.prototype.get = hashGet;
-Hash.prototype.has = hashHas;
-Hash.prototype.set = hashSet;
-//#endregion
-//#region node_modules/lodash-es/_mapCacheClear.js
-/**
-* Removes all key-value entries from the map.
-*
-* @private
-* @name clear
-* @memberOf MapCache
-*/
-function mapCacheClear() {
-	this.size = 0;
-	this.__data__ = {
-		"hash": new Hash(),
-		"map": new (Map$1 || ListCache)(),
-		"string": new Hash()
-	};
-}
-//#endregion
-//#region node_modules/lodash-es/_isKeyable.js
-/**
-* Checks if `value` is suitable for use as unique object key.
-*
-* @private
-* @param {*} value The value to check.
-* @returns {boolean} Returns `true` if `value` is suitable, else `false`.
-*/
-function isKeyable(value) {
-	var type = typeof value;
-	return type == "string" || type == "number" || type == "symbol" || type == "boolean" ? value !== "__proto__" : value === null;
-}
-//#endregion
-//#region node_modules/lodash-es/_getMapData.js
-/**
-* Gets the data for `map`.
-*
-* @private
-* @param {Object} map The map to query.
-* @param {string} key The reference key.
-* @returns {*} Returns the map data.
-*/
-function getMapData(map, key) {
-	var data = map.__data__;
-	return isKeyable(key) ? data[typeof key == "string" ? "string" : "hash"] : data.map;
-}
-//#endregion
-//#region node_modules/lodash-es/_mapCacheDelete.js
-/**
-* Removes `key` and its value from the map.
-*
-* @private
-* @name delete
-* @memberOf MapCache
-* @param {string} key The key of the value to remove.
-* @returns {boolean} Returns `true` if the entry was removed, else `false`.
-*/
-function mapCacheDelete(key) {
-	var result = getMapData(this, key)["delete"](key);
-	this.size -= result ? 1 : 0;
-	return result;
-}
-//#endregion
-//#region node_modules/lodash-es/_mapCacheGet.js
-/**
-* Gets the map value for `key`.
-*
-* @private
-* @name get
-* @memberOf MapCache
-* @param {string} key The key of the value to get.
-* @returns {*} Returns the entry value.
-*/
-function mapCacheGet(key) {
-	return getMapData(this, key).get(key);
-}
-//#endregion
-//#region node_modules/lodash-es/_mapCacheHas.js
-/**
-* Checks if a map value for `key` exists.
-*
-* @private
-* @name has
-* @memberOf MapCache
-* @param {string} key The key of the entry to check.
-* @returns {boolean} Returns `true` if an entry for `key` exists, else `false`.
-*/
-function mapCacheHas(key) {
-	return getMapData(this, key).has(key);
-}
-//#endregion
-//#region node_modules/lodash-es/_mapCacheSet.js
-/**
-* Sets the map `key` to `value`.
-*
-* @private
-* @name set
-* @memberOf MapCache
-* @param {string} key The key of the value to set.
-* @param {*} value The value to set.
-* @returns {Object} Returns the map cache instance.
-*/
-function mapCacheSet(key, value) {
-	var data = getMapData(this, key), size = data.size;
-	data.set(key, value);
-	this.size += data.size == size ? 0 : 1;
-	return this;
-}
-//#endregion
-//#region node_modules/lodash-es/_MapCache.js
-/**
-* Creates a map cache object to store key-value pairs.
-*
-* @private
-* @constructor
-* @param {Array} [entries] The key-value pairs to cache.
-*/
-function MapCache(entries) {
-	var index = -1, length = entries == null ? 0 : entries.length;
-	this.clear();
-	while (++index < length) {
-		var entry = entries[index];
-		this.set(entry[0], entry[1]);
-	}
-}
-MapCache.prototype.clear = mapCacheClear;
-MapCache.prototype["delete"] = mapCacheDelete;
-MapCache.prototype.get = mapCacheGet;
-MapCache.prototype.has = mapCacheHas;
-MapCache.prototype.set = mapCacheSet;
-//#endregion
-//#region node_modules/lodash-es/_stackSet.js
-/** Used as the size to enable large array optimizations. */
-var LARGE_ARRAY_SIZE = 200;
-/**
-* Sets the stack `key` to `value`.
-*
-* @private
-* @name set
-* @memberOf Stack
-* @param {string} key The key of the value to set.
-* @param {*} value The value to set.
-* @returns {Object} Returns the stack cache instance.
-*/
-function stackSet(key, value) {
-	var data = this.__data__;
-	if (data instanceof ListCache) {
-		var pairs = data.__data__;
-		if (!Map$1 || pairs.length < LARGE_ARRAY_SIZE - 1) {
-			pairs.push([key, value]);
-			this.size = ++data.size;
-			return this;
-		}
-		data = this.__data__ = new MapCache(pairs);
-	}
-	data.set(key, value);
-	this.size = data.size;
-	return this;
-}
-//#endregion
-//#region node_modules/lodash-es/_Stack.js
-/**
-* Creates a stack cache object to store key-value pairs.
-*
-* @private
-* @constructor
-* @param {Array} [entries] The key-value pairs to cache.
-*/
-function Stack(entries) {
-	var data = this.__data__ = new ListCache(entries);
-	this.size = data.size;
-}
-Stack.prototype.clear = stackClear;
-Stack.prototype["delete"] = stackDelete;
-Stack.prototype.get = stackGet;
-Stack.prototype.has = stackHas;
-Stack.prototype.set = stackSet;
-//#endregion
-//#region node_modules/lodash-es/_arrayEach.js
-/**
-* A specialized version of `_.forEach` for arrays without support for
-* iteratee shorthands.
-*
-* @private
-* @param {Array} [array] The array to iterate over.
-* @param {Function} iteratee The function invoked per iteration.
-* @returns {Array} Returns `array`.
-*/
-function arrayEach(array, iteratee) {
-	var index = -1, length = array == null ? 0 : array.length;
-	while (++index < length) if (iteratee(array[index], index, array) === false) break;
-	return array;
-}
-//#endregion
-//#region node_modules/lodash-es/_defineProperty.js
-var defineProperty = function() {
-	try {
-		var func = getNative(Object, "defineProperty");
-		func({}, "", {});
-		return func;
-	} catch (e) {}
-}();
-//#endregion
-//#region node_modules/lodash-es/_baseAssignValue.js
-/**
-* The base implementation of `assignValue` and `assignMergeValue` without
-* value checks.
-*
-* @private
-* @param {Object} object The object to modify.
-* @param {string} key The key of the property to assign.
-* @param {*} value The value to assign.
-*/
-function baseAssignValue(object, key, value) {
-	if (key == "__proto__" && defineProperty) defineProperty(object, key, {
-		"configurable": true,
-		"enumerable": true,
-		"value": value,
-		"writable": true
-	});
-	else object[key] = value;
-}
-//#endregion
-//#region node_modules/lodash-es/_assignValue.js
-/** Used to check objects for own properties. */
-var hasOwnProperty$8 = Object.prototype.hasOwnProperty;
-/**
-* Assigns `value` to `key` of `object` if the existing value is not equivalent
-* using [`SameValueZero`](http://ecma-international.org/ecma-262/7.0/#sec-samevaluezero)
-* for equality comparisons.
-*
-* @private
-* @param {Object} object The object to modify.
-* @param {string} key The key of the property to assign.
-* @param {*} value The value to assign.
-*/
-function assignValue(object, key, value) {
-	var objValue = object[key];
-	if (!(hasOwnProperty$8.call(object, key) && eq(objValue, value)) || value === void 0 && !(key in object)) baseAssignValue(object, key, value);
-}
-//#endregion
-//#region node_modules/lodash-es/_copyObject.js
-/**
-* Copies properties of `source` to `object`.
-*
-* @private
-* @param {Object} source The object to copy properties from.
-* @param {Array} props The property identifiers to copy.
-* @param {Object} [object={}] The object to copy properties to.
-* @param {Function} [customizer] The function to customize copied values.
-* @returns {Object} Returns `object`.
-*/
-function copyObject(source, props, object, customizer) {
-	var isNew = !object;
-	object || (object = {});
-	var index = -1, length = props.length;
-	while (++index < length) {
-		var key = props[index];
-		var newValue = customizer ? customizer(object[key], source[key], key, object, source) : void 0;
-		if (newValue === void 0) newValue = source[key];
-		if (isNew) baseAssignValue(object, key, newValue);
-		else assignValue(object, key, newValue);
-	}
-	return object;
-}
-//#endregion
-//#region node_modules/lodash-es/_baseTimes.js
-/**
-* The base implementation of `_.times` without support for iteratee shorthands
-* or max array length checks.
-*
-* @private
-* @param {number} n The number of times to invoke `iteratee`.
-* @param {Function} iteratee The function invoked per iteration.
-* @returns {Array} Returns the array of results.
-*/
-function baseTimes(n, iteratee) {
-	var index = -1, result = Array(n);
-	while (++index < n) result[index] = iteratee(index);
-	return result;
-}
-//#endregion
-//#region node_modules/lodash-es/_baseIsArguments.js
-/** `Object#toString` result references. */
-var argsTag$3 = "[object Arguments]";
-/**
-* The base implementation of `_.isArguments`.
-*
-* @private
-* @param {*} value The value to check.
-* @returns {boolean} Returns `true` if `value` is an `arguments` object,
-*/
-function baseIsArguments(value) {
-	return isObjectLike(value) && baseGetTag(value) == argsTag$3;
-}
-//#endregion
-//#region node_modules/lodash-es/isArguments.js
-/** Used for built-in method references. */
-var objectProto$1 = Object.prototype;
-/** Used to check objects for own properties. */
-var hasOwnProperty$7 = objectProto$1.hasOwnProperty;
-/** Built-in value references. */
-var propertyIsEnumerable$1 = objectProto$1.propertyIsEnumerable;
-/**
-* Checks if `value` is likely an `arguments` object.
-*
-* @static
-* @memberOf _
-* @since 0.1.0
-* @category Lang
-* @param {*} value The value to check.
-* @returns {boolean} Returns `true` if `value` is an `arguments` object,
-*  else `false`.
-* @example
-*
-* _.isArguments(function() { return arguments; }());
-* // => true
-*
-* _.isArguments([1, 2, 3]);
-* // => false
-*/
-var isArguments = baseIsArguments(function() {
-	return arguments;
-}()) ? baseIsArguments : function(value) {
-	return isObjectLike(value) && hasOwnProperty$7.call(value, "callee") && !propertyIsEnumerable$1.call(value, "callee");
-};
-//#endregion
-//#region node_modules/lodash-es/stubFalse.js
-/**
-* This method returns `false`.
-*
-* @static
-* @memberOf _
-* @since 4.13.0
-* @category Util
-* @returns {boolean} Returns `false`.
-* @example
-*
-* _.times(2, _.stubFalse);
-* // => [false, false]
-*/
-function stubFalse() {
-	return false;
-}
-//#endregion
-//#region node_modules/lodash-es/isBuffer.js
-/** Detect free variable `exports`. */
-var freeExports$2 = typeof exports == "object" && exports && !exports.nodeType && exports;
-/** Detect free variable `module`. */
-var freeModule$2 = freeExports$2 && typeof module == "object" && module && !module.nodeType && module;
-/** Built-in value references. */
-var Buffer$2 = freeModule$2 && freeModule$2.exports === freeExports$2 ? root.Buffer : void 0;
-/**
-* Checks if `value` is a buffer.
-*
-* @static
-* @memberOf _
-* @since 4.3.0
-* @category Lang
-* @param {*} value The value to check.
-* @returns {boolean} Returns `true` if `value` is a buffer, else `false`.
-* @example
-*
-* _.isBuffer(new Buffer(2));
-* // => true
-*
-* _.isBuffer(new Uint8Array(2));
-* // => false
-*/
-var isBuffer = (Buffer$2 ? Buffer$2.isBuffer : void 0) || stubFalse;
-//#endregion
-//#region node_modules/lodash-es/_isIndex.js
-/** Used as references for various `Number` constants. */
-var MAX_SAFE_INTEGER$1 = 9007199254740991;
-/** Used to detect unsigned integer values. */
-var reIsUint = /^(?:0|[1-9]\d*)$/;
-/**
-* Checks if `value` is a valid array-like index.
-*
-* @private
-* @param {*} value The value to check.
-* @param {number} [length=MAX_SAFE_INTEGER] The upper bounds of a valid index.
-* @returns {boolean} Returns `true` if `value` is a valid index, else `false`.
-*/
-function isIndex(value, length) {
-	var type = typeof value;
-	length = length == null ? MAX_SAFE_INTEGER$1 : length;
-	return !!length && (type == "number" || type != "symbol" && reIsUint.test(value)) && value > -1 && value % 1 == 0 && value < length;
-}
-//#endregion
-//#region node_modules/lodash-es/isLength.js
-/** Used as references for various `Number` constants. */
-var MAX_SAFE_INTEGER = 9007199254740991;
-/**
-* Checks if `value` is a valid array-like length.
-*
-* **Note:** This method is loosely based on
-* [`ToLength`](http://ecma-international.org/ecma-262/7.0/#sec-tolength).
-*
-* @static
-* @memberOf _
-* @since 4.0.0
-* @category Lang
-* @param {*} value The value to check.
-* @returns {boolean} Returns `true` if `value` is a valid length, else `false`.
-* @example
-*
-* _.isLength(3);
-* // => true
-*
-* _.isLength(Number.MIN_VALUE);
-* // => false
-*
-* _.isLength(Infinity);
-* // => false
-*
-* _.isLength('3');
-* // => false
-*/
-function isLength(value) {
-	return typeof value == "number" && value > -1 && value % 1 == 0 && value <= MAX_SAFE_INTEGER;
-}
-//#endregion
-//#region node_modules/lodash-es/_baseIsTypedArray.js
-/** `Object#toString` result references. */
-var argsTag$2 = "[object Arguments]", arrayTag$2 = "[object Array]", boolTag$3 = "[object Boolean]", dateTag$3 = "[object Date]", errorTag$2 = "[object Error]", funcTag$1 = "[object Function]", mapTag$6 = "[object Map]", numberTag$3 = "[object Number]", objectTag$3 = "[object Object]", regexpTag$3 = "[object RegExp]", setTag$6 = "[object Set]", stringTag$4 = "[object String]", weakMapTag$2 = "[object WeakMap]";
-var arrayBufferTag$3 = "[object ArrayBuffer]", dataViewTag$4 = "[object DataView]", float32Tag$2 = "[object Float32Array]", float64Tag$2 = "[object Float64Array]", int8Tag$2 = "[object Int8Array]", int16Tag$2 = "[object Int16Array]", int32Tag$2 = "[object Int32Array]", uint8Tag$2 = "[object Uint8Array]", uint8ClampedTag$2 = "[object Uint8ClampedArray]", uint16Tag$2 = "[object Uint16Array]", uint32Tag$2 = "[object Uint32Array]";
-/** Used to identify `toStringTag` values of typed arrays. */
-var typedArrayTags = {};
-typedArrayTags[float32Tag$2] = typedArrayTags[float64Tag$2] = typedArrayTags[int8Tag$2] = typedArrayTags[int16Tag$2] = typedArrayTags[int32Tag$2] = typedArrayTags[uint8Tag$2] = typedArrayTags[uint8ClampedTag$2] = typedArrayTags[uint16Tag$2] = typedArrayTags[uint32Tag$2] = true;
-typedArrayTags[argsTag$2] = typedArrayTags[arrayTag$2] = typedArrayTags[arrayBufferTag$3] = typedArrayTags[boolTag$3] = typedArrayTags[dataViewTag$4] = typedArrayTags[dateTag$3] = typedArrayTags[errorTag$2] = typedArrayTags[funcTag$1] = typedArrayTags[mapTag$6] = typedArrayTags[numberTag$3] = typedArrayTags[objectTag$3] = typedArrayTags[regexpTag$3] = typedArrayTags[setTag$6] = typedArrayTags[stringTag$4] = typedArrayTags[weakMapTag$2] = false;
-/**
-* The base implementation of `_.isTypedArray` without Node.js optimizations.
-*
-* @private
-* @param {*} value The value to check.
-* @returns {boolean} Returns `true` if `value` is a typed array, else `false`.
-*/
-function baseIsTypedArray(value) {
-	return isObjectLike(value) && isLength(value.length) && !!typedArrayTags[baseGetTag(value)];
-}
-//#endregion
-//#region node_modules/lodash-es/_baseUnary.js
-/**
-* The base implementation of `_.unary` without support for storing metadata.
-*
-* @private
-* @param {Function} func The function to cap arguments for.
-* @returns {Function} Returns the new capped function.
-*/
-function baseUnary(func) {
-	return function(value) {
-		return func(value);
-	};
-}
-//#endregion
-//#region node_modules/lodash-es/_nodeUtil.js
-/** Detect free variable `exports`. */
-var freeExports$1 = typeof exports == "object" && exports && !exports.nodeType && exports;
-/** Detect free variable `module`. */
-var freeModule$1 = freeExports$1 && typeof module == "object" && module && !module.nodeType && module;
-/** Detect free variable `process` from Node.js. */
-var freeProcess = freeModule$1 && freeModule$1.exports === freeExports$1 && freeGlobal.process;
-/** Used to access faster Node.js helpers. */
-var nodeUtil = function() {
-	try {
-		var types = freeModule$1 && freeModule$1.require && freeModule$1.require("util").types;
-		if (types) return types;
-		return freeProcess && freeProcess.binding && freeProcess.binding("util");
-	} catch (e) {}
-}();
-//#endregion
-//#region node_modules/lodash-es/isTypedArray.js
-var nodeIsTypedArray = nodeUtil && nodeUtil.isTypedArray;
-/**
-* Checks if `value` is classified as a typed array.
-*
-* @static
-* @memberOf _
-* @since 3.0.0
-* @category Lang
-* @param {*} value The value to check.
-* @returns {boolean} Returns `true` if `value` is a typed array, else `false`.
-* @example
-*
-* _.isTypedArray(new Uint8Array);
-* // => true
-*
-* _.isTypedArray([]);
-* // => false
-*/
-var isTypedArray = nodeIsTypedArray ? baseUnary(nodeIsTypedArray) : baseIsTypedArray;
-//#endregion
-//#region node_modules/lodash-es/_arrayLikeKeys.js
-/** Used to check objects for own properties. */
-var hasOwnProperty$6 = Object.prototype.hasOwnProperty;
-/**
-* Creates an array of the enumerable property names of the array-like `value`.
-*
-* @private
-* @param {*} value The value to query.
-* @param {boolean} inherited Specify returning inherited property names.
-* @returns {Array} Returns the array of property names.
-*/
-function arrayLikeKeys(value, inherited) {
-	var isArr = isArray$1(value), isArg = !isArr && isArguments(value), isBuff = !isArr && !isArg && isBuffer(value), isType = !isArr && !isArg && !isBuff && isTypedArray(value), skipIndexes = isArr || isArg || isBuff || isType, result = skipIndexes ? baseTimes(value.length, String) : [], length = result.length;
-	for (var key in value) if ((inherited || hasOwnProperty$6.call(value, key)) && !(skipIndexes && (key == "length" || isBuff && (key == "offset" || key == "parent") || isType && (key == "buffer" || key == "byteLength" || key == "byteOffset") || isIndex(key, length)))) result.push(key);
-	return result;
-}
-//#endregion
-//#region node_modules/lodash-es/_isPrototype.js
-/** Used for built-in method references. */
-var objectProto = Object.prototype;
-/**
-* Checks if `value` is likely a prototype object.
-*
-* @private
-* @param {*} value The value to check.
-* @returns {boolean} Returns `true` if `value` is a prototype, else `false`.
-*/
-function isPrototype(value) {
-	var Ctor = value && value.constructor;
-	return value === (typeof Ctor == "function" && Ctor.prototype || objectProto);
-}
-//#endregion
-//#region node_modules/lodash-es/_overArg.js
-/**
-* Creates a unary function that invokes `func` with its argument transformed.
-*
-* @private
-* @param {Function} func The function to wrap.
-* @param {Function} transform The argument transform.
-* @returns {Function} Returns the new function.
-*/
-function overArg(func, transform) {
-	return function(arg) {
-		return func(transform(arg));
-	};
-}
-//#endregion
-//#region node_modules/lodash-es/_nativeKeys.js
-var nativeKeys = overArg(Object.keys, Object);
-//#endregion
-//#region node_modules/lodash-es/_baseKeys.js
-/** Used to check objects for own properties. */
-var hasOwnProperty$5 = Object.prototype.hasOwnProperty;
-/**
-* The base implementation of `_.keys` which doesn't treat sparse arrays as dense.
-*
-* @private
-* @param {Object} object The object to query.
-* @returns {Array} Returns the array of property names.
-*/
-function baseKeys(object) {
-	if (!isPrototype(object)) return nativeKeys(object);
-	var result = [];
-	for (var key in Object(object)) if (hasOwnProperty$5.call(object, key) && key != "constructor") result.push(key);
-	return result;
-}
-//#endregion
-//#region node_modules/lodash-es/isArrayLike.js
-/**
-* Checks if `value` is array-like. A value is considered array-like if it's
-* not a function and has a `value.length` that's an integer greater than or
-* equal to `0` and less than or equal to `Number.MAX_SAFE_INTEGER`.
-*
-* @static
-* @memberOf _
-* @since 4.0.0
-* @category Lang
-* @param {*} value The value to check.
-* @returns {boolean} Returns `true` if `value` is array-like, else `false`.
-* @example
-*
-* _.isArrayLike([1, 2, 3]);
-* // => true
-*
-* _.isArrayLike(document.body.children);
-* // => true
-*
-* _.isArrayLike('abc');
-* // => true
-*
-* _.isArrayLike(_.noop);
-* // => false
-*/
-function isArrayLike(value) {
-	return value != null && isLength(value.length) && !isFunction$1(value);
-}
-//#endregion
-//#region node_modules/lodash-es/keys.js
-/**
-* Creates an array of the own enumerable property names of `object`.
-*
-* **Note:** Non-object values are coerced to objects. See the
-* [ES spec](http://ecma-international.org/ecma-262/7.0/#sec-object.keys)
-* for more details.
-*
-* @static
-* @since 0.1.0
-* @memberOf _
-* @category Object
-* @param {Object} object The object to query.
-* @returns {Array} Returns the array of property names.
-* @example
-*
-* function Foo() {
-*   this.a = 1;
-*   this.b = 2;
-* }
-*
-* Foo.prototype.c = 3;
-*
-* _.keys(new Foo);
-* // => ['a', 'b'] (iteration order is not guaranteed)
-*
-* _.keys('hi');
-* // => ['0', '1']
-*/
-function keys(object) {
-	return isArrayLike(object) ? arrayLikeKeys(object) : baseKeys(object);
-}
-//#endregion
-//#region node_modules/lodash-es/_baseAssign.js
-/**
-* The base implementation of `_.assign` without support for multiple sources
-* or `customizer` functions.
-*
-* @private
-* @param {Object} object The destination object.
-* @param {Object} source The source object.
-* @returns {Object} Returns `object`.
-*/
-function baseAssign(object, source) {
-	return object && copyObject(source, keys(source), object);
-}
-//#endregion
-//#region node_modules/lodash-es/_nativeKeysIn.js
-/**
-* This function is like
-* [`Object.keys`](http://ecma-international.org/ecma-262/7.0/#sec-object.keys)
-* except that it includes inherited enumerable properties.
-*
-* @private
-* @param {Object} object The object to query.
-* @returns {Array} Returns the array of property names.
-*/
-function nativeKeysIn(object) {
-	var result = [];
-	if (object != null) for (var key in Object(object)) result.push(key);
-	return result;
-}
-//#endregion
-//#region node_modules/lodash-es/_baseKeysIn.js
-/** Used to check objects for own properties. */
-var hasOwnProperty$4 = Object.prototype.hasOwnProperty;
-/**
-* The base implementation of `_.keysIn` which doesn't treat sparse arrays as dense.
-*
-* @private
-* @param {Object} object The object to query.
-* @returns {Array} Returns the array of property names.
-*/
-function baseKeysIn(object) {
-	if (!isObject(object)) return nativeKeysIn(object);
-	var isProto = isPrototype(object), result = [];
-	for (var key in object) if (!(key == "constructor" && (isProto || !hasOwnProperty$4.call(object, key)))) result.push(key);
-	return result;
-}
-//#endregion
-//#region node_modules/lodash-es/keysIn.js
-/**
-* Creates an array of the own and inherited enumerable property names of `object`.
-*
-* **Note:** Non-object values are coerced to objects.
-*
-* @static
-* @memberOf _
-* @since 3.0.0
-* @category Object
-* @param {Object} object The object to query.
-* @returns {Array} Returns the array of property names.
-* @example
-*
-* function Foo() {
-*   this.a = 1;
-*   this.b = 2;
-* }
-*
-* Foo.prototype.c = 3;
-*
-* _.keysIn(new Foo);
-* // => ['a', 'b', 'c'] (iteration order is not guaranteed)
-*/
-function keysIn(object) {
-	return isArrayLike(object) ? arrayLikeKeys(object, true) : baseKeysIn(object);
-}
-//#endregion
-//#region node_modules/lodash-es/_baseAssignIn.js
-/**
-* The base implementation of `_.assignIn` without support for multiple sources
-* or `customizer` functions.
-*
-* @private
-* @param {Object} object The destination object.
-* @param {Object} source The source object.
-* @returns {Object} Returns `object`.
-*/
-function baseAssignIn(object, source) {
-	return object && copyObject(source, keysIn(source), object);
-}
-//#endregion
-//#region node_modules/lodash-es/_cloneBuffer.js
-/** Detect free variable `exports`. */
-var freeExports = typeof exports == "object" && exports && !exports.nodeType && exports;
-/** Detect free variable `module`. */
-var freeModule = freeExports && typeof module == "object" && module && !module.nodeType && module;
-/** Built-in value references. */
-var Buffer$1 = freeModule && freeModule.exports === freeExports ? root.Buffer : void 0, allocUnsafe = Buffer$1 ? Buffer$1.allocUnsafe : void 0;
-/**
-* Creates a clone of  `buffer`.
-*
-* @private
-* @param {Buffer} buffer The buffer to clone.
-* @param {boolean} [isDeep] Specify a deep clone.
-* @returns {Buffer} Returns the cloned buffer.
-*/
-function cloneBuffer(buffer, isDeep) {
-	if (isDeep) return buffer.slice();
-	var length = buffer.length, result = allocUnsafe ? allocUnsafe(length) : new buffer.constructor(length);
-	buffer.copy(result);
-	return result;
-}
-//#endregion
-//#region node_modules/lodash-es/_copyArray.js
-/**
-* Copies the values of `source` to `array`.
-*
-* @private
-* @param {Array} source The array to copy values from.
-* @param {Array} [array=[]] The array to copy values to.
-* @returns {Array} Returns `array`.
-*/
-function copyArray(source, array) {
-	var index = -1, length = source.length;
-	array || (array = Array(length));
-	while (++index < length) array[index] = source[index];
-	return array;
-}
-//#endregion
-//#region node_modules/lodash-es/_arrayFilter.js
-/**
-* A specialized version of `_.filter` for arrays without support for
-* iteratee shorthands.
-*
-* @private
-* @param {Array} [array] The array to iterate over.
-* @param {Function} predicate The function invoked per iteration.
-* @returns {Array} Returns the new filtered array.
-*/
-function arrayFilter(array, predicate) {
-	var index = -1, length = array == null ? 0 : array.length, resIndex = 0, result = [];
-	while (++index < length) {
-		var value = array[index];
-		if (predicate(value, index, array)) result[resIndex++] = value;
-	}
-	return result;
-}
-//#endregion
-//#region node_modules/lodash-es/stubArray.js
-/**
-* This method returns a new empty array.
-*
-* @static
-* @memberOf _
-* @since 4.13.0
-* @category Util
-* @returns {Array} Returns the new empty array.
-* @example
-*
-* var arrays = _.times(2, _.stubArray);
-*
-* console.log(arrays);
-* // => [[], []]
-*
-* console.log(arrays[0] === arrays[1]);
-* // => false
-*/
-function stubArray() {
-	return [];
-}
-//#endregion
-//#region node_modules/lodash-es/_getSymbols.js
-/** Built-in value references. */
-var propertyIsEnumerable = Object.prototype.propertyIsEnumerable;
-var nativeGetSymbols = Object.getOwnPropertySymbols;
-/**
-* Creates an array of the own enumerable symbols of `object`.
-*
-* @private
-* @param {Object} object The object to query.
-* @returns {Array} Returns the array of symbols.
-*/
-var getSymbols = !nativeGetSymbols ? stubArray : function(object) {
-	if (object == null) return [];
-	object = Object(object);
-	return arrayFilter(nativeGetSymbols(object), function(symbol) {
-		return propertyIsEnumerable.call(object, symbol);
-	});
-};
-//#endregion
-//#region node_modules/lodash-es/_copySymbols.js
-/**
-* Copies own symbols of `source` to `object`.
-*
-* @private
-* @param {Object} source The object to copy symbols from.
-* @param {Object} [object={}] The object to copy symbols to.
-* @returns {Object} Returns `object`.
-*/
-function copySymbols(source, object) {
-	return copyObject(source, getSymbols(source), object);
-}
-//#endregion
-//#region node_modules/lodash-es/_arrayPush.js
-/**
-* Appends the elements of `values` to `array`.
-*
-* @private
-* @param {Array} array The array to modify.
-* @param {Array} values The values to append.
-* @returns {Array} Returns `array`.
-*/
-function arrayPush(array, values) {
-	var index = -1, length = values.length, offset = array.length;
-	while (++index < length) array[offset + index] = values[index];
-	return array;
-}
-//#endregion
-//#region node_modules/lodash-es/_getPrototype.js
-/** Built-in value references. */
-var getPrototype = overArg(Object.getPrototypeOf, Object);
-//#endregion
-//#region node_modules/lodash-es/_getSymbolsIn.js
-/**
-* Creates an array of the own and inherited enumerable symbols of `object`.
-*
-* @private
-* @param {Object} object The object to query.
-* @returns {Array} Returns the array of symbols.
-*/
-var getSymbolsIn = !Object.getOwnPropertySymbols ? stubArray : function(object) {
-	var result = [];
-	while (object) {
-		arrayPush(result, getSymbols(object));
-		object = getPrototype(object);
-	}
-	return result;
-};
-//#endregion
-//#region node_modules/lodash-es/_copySymbolsIn.js
-/**
-* Copies own and inherited symbols of `source` to `object`.
-*
-* @private
-* @param {Object} source The object to copy symbols from.
-* @param {Object} [object={}] The object to copy symbols to.
-* @returns {Object} Returns `object`.
-*/
-function copySymbolsIn(source, object) {
-	return copyObject(source, getSymbolsIn(source), object);
-}
-//#endregion
-//#region node_modules/lodash-es/_baseGetAllKeys.js
-/**
-* The base implementation of `getAllKeys` and `getAllKeysIn` which uses
-* `keysFunc` and `symbolsFunc` to get the enumerable property names and
-* symbols of `object`.
-*
-* @private
-* @param {Object} object The object to query.
-* @param {Function} keysFunc The function to get the keys of `object`.
-* @param {Function} symbolsFunc The function to get the symbols of `object`.
-* @returns {Array} Returns the array of property names and symbols.
-*/
-function baseGetAllKeys(object, keysFunc, symbolsFunc) {
-	var result = keysFunc(object);
-	return isArray$1(object) ? result : arrayPush(result, symbolsFunc(object));
-}
-//#endregion
-//#region node_modules/lodash-es/_getAllKeys.js
-/**
-* Creates an array of own enumerable property names and symbols of `object`.
-*
-* @private
-* @param {Object} object The object to query.
-* @returns {Array} Returns the array of property names and symbols.
-*/
-function getAllKeys(object) {
-	return baseGetAllKeys(object, keys, getSymbols);
-}
-//#endregion
-//#region node_modules/lodash-es/_getAllKeysIn.js
-/**
-* Creates an array of own and inherited enumerable property names and
-* symbols of `object`.
-*
-* @private
-* @param {Object} object The object to query.
-* @returns {Array} Returns the array of property names and symbols.
-*/
-function getAllKeysIn(object) {
-	return baseGetAllKeys(object, keysIn, getSymbolsIn);
-}
-//#endregion
-//#region node_modules/lodash-es/_DataView.js
-var DataView$1 = getNative(root, "DataView");
-//#endregion
-//#region node_modules/lodash-es/_Promise.js
-var Promise$1 = getNative(root, "Promise");
-//#endregion
-//#region node_modules/lodash-es/_Set.js
-var Set$1 = getNative(root, "Set");
-//#endregion
-//#region node_modules/lodash-es/_WeakMap.js
-var WeakMap$1 = getNative(root, "WeakMap");
-//#endregion
-//#region node_modules/lodash-es/_getTag.js
-/** `Object#toString` result references. */
-var mapTag$5 = "[object Map]", objectTag$2 = "[object Object]", promiseTag = "[object Promise]", setTag$5 = "[object Set]", weakMapTag$1 = "[object WeakMap]";
-var dataViewTag$3 = "[object DataView]";
-/** Used to detect maps, sets, and weakmaps. */
-var dataViewCtorString = toSource(DataView$1), mapCtorString = toSource(Map$1), promiseCtorString = toSource(Promise$1), setCtorString = toSource(Set$1), weakMapCtorString = toSource(WeakMap$1);
-/**
-* Gets the `toStringTag` of `value`.
-*
-* @private
-* @param {*} value The value to query.
-* @returns {string} Returns the `toStringTag`.
-*/
-var getTag = baseGetTag;
-if (DataView$1 && getTag(new DataView$1(/* @__PURE__ */ new ArrayBuffer(1))) != dataViewTag$3 || Map$1 && getTag(new Map$1()) != mapTag$5 || Promise$1 && getTag(Promise$1.resolve()) != promiseTag || Set$1 && getTag(new Set$1()) != setTag$5 || WeakMap$1 && getTag(new WeakMap$1()) != weakMapTag$1) getTag = function(value) {
-	var result = baseGetTag(value), Ctor = result == objectTag$2 ? value.constructor : void 0, ctorString = Ctor ? toSource(Ctor) : "";
-	if (ctorString) switch (ctorString) {
-		case dataViewCtorString: return dataViewTag$3;
-		case mapCtorString: return mapTag$5;
-		case promiseCtorString: return promiseTag;
-		case setCtorString: return setTag$5;
-		case weakMapCtorString: return weakMapTag$1;
-	}
-	return result;
-};
-var _getTag_default = getTag;
-//#endregion
-//#region node_modules/lodash-es/_initCloneArray.js
-/** Used to check objects for own properties. */
-var hasOwnProperty$3 = Object.prototype.hasOwnProperty;
-/**
-* Initializes an array clone.
-*
-* @private
-* @param {Array} array The array to clone.
-* @returns {Array} Returns the initialized clone.
-*/
-function initCloneArray(array) {
-	var length = array.length, result = new array.constructor(length);
-	if (length && typeof array[0] == "string" && hasOwnProperty$3.call(array, "index")) {
-		result.index = array.index;
-		result.input = array.input;
-	}
-	return result;
-}
-//#endregion
-//#region node_modules/lodash-es/_Uint8Array.js
-/** Built-in value references. */
-var Uint8Array$1 = root.Uint8Array;
-//#endregion
-//#region node_modules/lodash-es/_cloneArrayBuffer.js
-/**
-* Creates a clone of `arrayBuffer`.
-*
-* @private
-* @param {ArrayBuffer} arrayBuffer The array buffer to clone.
-* @returns {ArrayBuffer} Returns the cloned array buffer.
-*/
-function cloneArrayBuffer(arrayBuffer) {
-	var result = new arrayBuffer.constructor(arrayBuffer.byteLength);
-	new Uint8Array$1(result).set(new Uint8Array$1(arrayBuffer));
-	return result;
-}
-//#endregion
-//#region node_modules/lodash-es/_cloneDataView.js
-/**
-* Creates a clone of `dataView`.
-*
-* @private
-* @param {Object} dataView The data view to clone.
-* @param {boolean} [isDeep] Specify a deep clone.
-* @returns {Object} Returns the cloned data view.
-*/
-function cloneDataView(dataView, isDeep) {
-	var buffer = isDeep ? cloneArrayBuffer(dataView.buffer) : dataView.buffer;
-	return new dataView.constructor(buffer, dataView.byteOffset, dataView.byteLength);
-}
-//#endregion
-//#region node_modules/lodash-es/_cloneRegExp.js
-/** Used to match `RegExp` flags from their coerced string values. */
-var reFlags = /\w*$/;
-/**
-* Creates a clone of `regexp`.
-*
-* @private
-* @param {Object} regexp The regexp to clone.
-* @returns {Object} Returns the cloned regexp.
-*/
-function cloneRegExp(regexp) {
-	var result = new regexp.constructor(regexp.source, reFlags.exec(regexp));
-	result.lastIndex = regexp.lastIndex;
-	return result;
-}
-//#endregion
-//#region node_modules/lodash-es/_cloneSymbol.js
-/** Used to convert symbols to primitives and strings. */
-var symbolProto$1 = Symbol$1 ? Symbol$1.prototype : void 0, symbolValueOf$1 = symbolProto$1 ? symbolProto$1.valueOf : void 0;
-/**
-* Creates a clone of the `symbol` object.
-*
-* @private
-* @param {Object} symbol The symbol object to clone.
-* @returns {Object} Returns the cloned symbol object.
-*/
-function cloneSymbol(symbol) {
-	return symbolValueOf$1 ? Object(symbolValueOf$1.call(symbol)) : {};
-}
-//#endregion
-//#region node_modules/lodash-es/_cloneTypedArray.js
-/**
-* Creates a clone of `typedArray`.
-*
-* @private
-* @param {Object} typedArray The typed array to clone.
-* @param {boolean} [isDeep] Specify a deep clone.
-* @returns {Object} Returns the cloned typed array.
-*/
-function cloneTypedArray(typedArray, isDeep) {
-	var buffer = isDeep ? cloneArrayBuffer(typedArray.buffer) : typedArray.buffer;
-	return new typedArray.constructor(buffer, typedArray.byteOffset, typedArray.length);
-}
-//#endregion
-//#region node_modules/lodash-es/_initCloneByTag.js
-/** `Object#toString` result references. */
-var boolTag$2 = "[object Boolean]", dateTag$2 = "[object Date]", mapTag$4 = "[object Map]", numberTag$2 = "[object Number]", regexpTag$2 = "[object RegExp]", setTag$4 = "[object Set]", stringTag$3 = "[object String]", symbolTag$2 = "[object Symbol]";
-var arrayBufferTag$2 = "[object ArrayBuffer]", dataViewTag$2 = "[object DataView]", float32Tag$1 = "[object Float32Array]", float64Tag$1 = "[object Float64Array]", int8Tag$1 = "[object Int8Array]", int16Tag$1 = "[object Int16Array]", int32Tag$1 = "[object Int32Array]", uint8Tag$1 = "[object Uint8Array]", uint8ClampedTag$1 = "[object Uint8ClampedArray]", uint16Tag$1 = "[object Uint16Array]", uint32Tag$1 = "[object Uint32Array]";
-/**
-* Initializes an object clone based on its `toStringTag`.
-*
-* **Note:** This function only supports cloning values with tags of
-* `Boolean`, `Date`, `Error`, `Map`, `Number`, `RegExp`, `Set`, or `String`.
-*
-* @private
-* @param {Object} object The object to clone.
-* @param {string} tag The `toStringTag` of the object to clone.
-* @param {boolean} [isDeep] Specify a deep clone.
-* @returns {Object} Returns the initialized clone.
-*/
-function initCloneByTag(object, tag, isDeep) {
-	var Ctor = object.constructor;
-	switch (tag) {
-		case arrayBufferTag$2: return cloneArrayBuffer(object);
-		case boolTag$2:
-		case dateTag$2: return new Ctor(+object);
-		case dataViewTag$2: return cloneDataView(object, isDeep);
-		case float32Tag$1:
-		case float64Tag$1:
-		case int8Tag$1:
-		case int16Tag$1:
-		case int32Tag$1:
-		case uint8Tag$1:
-		case uint8ClampedTag$1:
-		case uint16Tag$1:
-		case uint32Tag$1: return cloneTypedArray(object, isDeep);
-		case mapTag$4: return new Ctor();
-		case numberTag$2:
-		case stringTag$3: return new Ctor(object);
-		case regexpTag$2: return cloneRegExp(object);
-		case setTag$4: return new Ctor();
-		case symbolTag$2: return cloneSymbol(object);
-	}
-}
-//#endregion
-//#region node_modules/lodash-es/_baseCreate.js
-/** Built-in value references. */
-var objectCreate = Object.create;
-/**
-* The base implementation of `_.create` without support for assigning
-* properties to the created object.
-*
-* @private
-* @param {Object} proto The object to inherit from.
-* @returns {Object} Returns the new object.
-*/
-var baseCreate = function() {
-	function object() {}
-	return function(proto) {
-		if (!isObject(proto)) return {};
-		if (objectCreate) return objectCreate(proto);
-		object.prototype = proto;
-		var result = new object();
-		object.prototype = void 0;
-		return result;
-	};
-}();
-//#endregion
-//#region node_modules/lodash-es/_initCloneObject.js
-/**
-* Initializes an object clone.
-*
-* @private
-* @param {Object} object The object to clone.
-* @returns {Object} Returns the initialized clone.
-*/
-function initCloneObject(object) {
-	return typeof object.constructor == "function" && !isPrototype(object) ? baseCreate(getPrototype(object)) : {};
-}
-//#endregion
-//#region node_modules/lodash-es/_baseIsMap.js
-/** `Object#toString` result references. */
-var mapTag$3 = "[object Map]";
-/**
-* The base implementation of `_.isMap` without Node.js optimizations.
-*
-* @private
-* @param {*} value The value to check.
-* @returns {boolean} Returns `true` if `value` is a map, else `false`.
-*/
-function baseIsMap(value) {
-	return isObjectLike(value) && _getTag_default(value) == mapTag$3;
-}
-//#endregion
-//#region node_modules/lodash-es/isMap.js
-var nodeIsMap = nodeUtil && nodeUtil.isMap;
-/**
-* Checks if `value` is classified as a `Map` object.
-*
-* @static
-* @memberOf _
-* @since 4.3.0
-* @category Lang
-* @param {*} value The value to check.
-* @returns {boolean} Returns `true` if `value` is a map, else `false`.
-* @example
-*
-* _.isMap(new Map);
-* // => true
-*
-* _.isMap(new WeakMap);
-* // => false
-*/
-var isMap$1 = nodeIsMap ? baseUnary(nodeIsMap) : baseIsMap;
-//#endregion
-//#region node_modules/lodash-es/_baseIsSet.js
-/** `Object#toString` result references. */
-var setTag$3 = "[object Set]";
-/**
-* The base implementation of `_.isSet` without Node.js optimizations.
-*
-* @private
-* @param {*} value The value to check.
-* @returns {boolean} Returns `true` if `value` is a set, else `false`.
-*/
-function baseIsSet(value) {
-	return isObjectLike(value) && _getTag_default(value) == setTag$3;
-}
-//#endregion
-//#region node_modules/lodash-es/isSet.js
-var nodeIsSet = nodeUtil && nodeUtil.isSet;
-/**
-* Checks if `value` is classified as a `Set` object.
-*
-* @static
-* @memberOf _
-* @since 4.3.0
-* @category Lang
-* @param {*} value The value to check.
-* @returns {boolean} Returns `true` if `value` is a set, else `false`.
-* @example
-*
-* _.isSet(new Set);
-* // => true
-*
-* _.isSet(new WeakSet);
-* // => false
-*/
-var isSet$1 = nodeIsSet ? baseUnary(nodeIsSet) : baseIsSet;
-//#endregion
-//#region node_modules/lodash-es/_baseClone.js
-/** Used to compose bitmasks for cloning. */
-var CLONE_DEEP_FLAG$1 = 1, CLONE_FLAT_FLAG = 2, CLONE_SYMBOLS_FLAG$1 = 4;
-/** `Object#toString` result references. */
-var argsTag$1 = "[object Arguments]", arrayTag$1 = "[object Array]", boolTag$1 = "[object Boolean]", dateTag$1 = "[object Date]", errorTag$1 = "[object Error]", funcTag = "[object Function]", genTag = "[object GeneratorFunction]", mapTag$2 = "[object Map]", numberTag$1 = "[object Number]", objectTag$1 = "[object Object]", regexpTag$1 = "[object RegExp]", setTag$2 = "[object Set]", stringTag$2 = "[object String]", symbolTag$1 = "[object Symbol]", weakMapTag = "[object WeakMap]";
-var arrayBufferTag$1 = "[object ArrayBuffer]", dataViewTag$1 = "[object DataView]", float32Tag = "[object Float32Array]", float64Tag = "[object Float64Array]", int8Tag = "[object Int8Array]", int16Tag = "[object Int16Array]", int32Tag = "[object Int32Array]", uint8Tag = "[object Uint8Array]", uint8ClampedTag = "[object Uint8ClampedArray]", uint16Tag = "[object Uint16Array]", uint32Tag = "[object Uint32Array]";
-/** Used to identify `toStringTag` values supported by `_.clone`. */
-var cloneableTags = {};
-cloneableTags[argsTag$1] = cloneableTags[arrayTag$1] = cloneableTags[arrayBufferTag$1] = cloneableTags[dataViewTag$1] = cloneableTags[boolTag$1] = cloneableTags[dateTag$1] = cloneableTags[float32Tag] = cloneableTags[float64Tag] = cloneableTags[int8Tag] = cloneableTags[int16Tag] = cloneableTags[int32Tag] = cloneableTags[mapTag$2] = cloneableTags[numberTag$1] = cloneableTags[objectTag$1] = cloneableTags[regexpTag$1] = cloneableTags[setTag$2] = cloneableTags[stringTag$2] = cloneableTags[symbolTag$1] = cloneableTags[uint8Tag] = cloneableTags[uint8ClampedTag] = cloneableTags[uint16Tag] = cloneableTags[uint32Tag] = true;
-cloneableTags[errorTag$1] = cloneableTags[funcTag] = cloneableTags[weakMapTag] = false;
-/**
-* The base implementation of `_.clone` and `_.cloneDeep` which tracks
-* traversed objects.
-*
-* @private
-* @param {*} value The value to clone.
-* @param {boolean} bitmask The bitmask flags.
-*  1 - Deep clone
-*  2 - Flatten inherited properties
-*  4 - Clone symbols
-* @param {Function} [customizer] The function to customize cloning.
-* @param {string} [key] The key of `value`.
-* @param {Object} [object] The parent object of `value`.
-* @param {Object} [stack] Tracks traversed objects and their clone counterparts.
-* @returns {*} Returns the cloned value.
-*/
-function baseClone(value, bitmask, customizer, key, object, stack) {
-	var result, isDeep = bitmask & CLONE_DEEP_FLAG$1, isFlat = bitmask & CLONE_FLAT_FLAG, isFull = bitmask & CLONE_SYMBOLS_FLAG$1;
-	if (customizer) result = object ? customizer(value, key, object, stack) : customizer(value);
-	if (result !== void 0) return result;
-	if (!isObject(value)) return value;
-	var isArr = isArray$1(value);
-	if (isArr) {
-		result = initCloneArray(value);
-		if (!isDeep) return copyArray(value, result);
-	} else {
-		var tag = _getTag_default(value), isFunc = tag == funcTag || tag == genTag;
-		if (isBuffer(value)) return cloneBuffer(value, isDeep);
-		if (tag == objectTag$1 || tag == argsTag$1 || isFunc && !object) {
-			result = isFlat || isFunc ? {} : initCloneObject(value);
-			if (!isDeep) return isFlat ? copySymbolsIn(value, baseAssignIn(result, value)) : copySymbols(value, baseAssign(result, value));
-		} else {
-			if (!cloneableTags[tag]) return object ? value : {};
-			result = initCloneByTag(value, tag, isDeep);
-		}
-	}
-	stack || (stack = new Stack());
-	var stacked = stack.get(value);
-	if (stacked) return stacked;
-	stack.set(value, result);
-	if (isSet$1(value)) value.forEach(function(subValue) {
-		result.add(baseClone(subValue, bitmask, customizer, subValue, value, stack));
-	});
-	else if (isMap$1(value)) value.forEach(function(subValue, key) {
-		result.set(key, baseClone(subValue, bitmask, customizer, key, value, stack));
-	});
-	var props = isArr ? void 0 : (isFull ? isFlat ? getAllKeysIn : getAllKeys : isFlat ? keysIn : keys)(value);
-	arrayEach(props || value, function(subValue, key) {
-		if (props) {
-			key = subValue;
-			subValue = value[key];
-		}
-		assignValue(result, key, baseClone(subValue, bitmask, customizer, key, value, stack));
-	});
-	return result;
-}
-//#endregion
-//#region node_modules/lodash-es/cloneDeep.js
-/** Used to compose bitmasks for cloning. */
-var CLONE_DEEP_FLAG = 1, CLONE_SYMBOLS_FLAG = 4;
-/**
-* This method is like `_.clone` except that it recursively clones `value`.
-*
-* @static
-* @memberOf _
-* @since 1.0.0
-* @category Lang
-* @param {*} value The value to recursively clone.
-* @returns {*} Returns the deep cloned value.
-* @see _.clone
-* @example
-*
-* var objects = [{ 'a': 1 }, { 'b': 2 }];
-*
-* var deep = _.cloneDeep(objects);
-* console.log(deep[0] === objects[0]);
-* // => false
-*/
-function cloneDeep(value) {
-	return baseClone(value, CLONE_DEEP_FLAG | CLONE_SYMBOLS_FLAG);
-}
-//#endregion
-//#region node_modules/lodash-es/compact.js
-/**
-* Creates an array with all falsey values removed. The values `false`, `null`,
-* `0`, `-0`, `0n`, `""`, `undefined`, and `NaN` are falsy.
-*
-* @static
-* @memberOf _
-* @since 0.1.0
-* @category Array
-* @param {Array} array The array to compact.
-* @returns {Array} Returns the new array of filtered values.
-* @example
-*
-* _.compact([0, 1, false, 2, '', 3]);
-* // => [1, 2, 3]
-*/
-function compact(array) {
-	var index = -1, length = array == null ? 0 : array.length, resIndex = 0, result = [];
-	while (++index < length) {
-		var value = array[index];
-		if (value) result[resIndex++] = value;
-	}
-	return result;
-}
-//#endregion
-//#region node_modules/lodash-es/now.js
-/**
-* Gets the timestamp of the number of milliseconds that have elapsed since
-* the Unix epoch (1 January 1970 00:00:00 UTC).
-*
-* @static
-* @memberOf _
-* @since 2.4.0
-* @category Date
-* @returns {number} Returns the timestamp.
-* @example
-*
-* _.defer(function(stamp) {
-*   console.log(_.now() - stamp);
-* }, _.now());
-* // => Logs the number of milliseconds it took for the deferred invocation.
-*/
-var now = function() {
-	return root.Date.now();
-};
-//#endregion
-//#region node_modules/lodash-es/_trimmedEndIndex.js
-/** Used to match a single whitespace character. */
-var reWhitespace = /\s/;
-/**
-* Used by `_.trim` and `_.trimEnd` to get the index of the last non-whitespace
-* character of `string`.
-*
-* @private
-* @param {string} string The string to inspect.
-* @returns {number} Returns the index of the last non-whitespace character.
-*/
-function trimmedEndIndex(string) {
-	var index = string.length;
-	while (index-- && reWhitespace.test(string.charAt(index)));
-	return index;
-}
-//#endregion
-//#region node_modules/lodash-es/_baseTrim.js
-/** Used to match leading whitespace. */
-var reTrimStart = /^\s+/;
-/**
-* The base implementation of `_.trim`.
-*
-* @private
-* @param {string} string The string to trim.
-* @returns {string} Returns the trimmed string.
-*/
-function baseTrim(string) {
-	return string ? string.slice(0, trimmedEndIndex(string) + 1).replace(reTrimStart, "") : string;
-}
-//#endregion
-//#region node_modules/lodash-es/toNumber.js
-/** Used as references for various `Number` constants. */
-var NAN = NaN;
-/** Used to detect bad signed hexadecimal string values. */
-var reIsBadHex = /^[-+]0x[0-9a-f]+$/i;
-/** Used to detect binary string values. */
-var reIsBinary = /^0b[01]+$/i;
-/** Used to detect octal string values. */
-var reIsOctal = /^0o[0-7]+$/i;
-/** Built-in method references without a dependency on `root`. */
-var freeParseInt = parseInt;
-/**
-* Converts `value` to a number.
-*
-* @static
-* @memberOf _
-* @since 4.0.0
-* @category Lang
-* @param {*} value The value to process.
-* @returns {number} Returns the number.
-* @example
-*
-* _.toNumber(3.2);
-* // => 3.2
-*
-* _.toNumber(Number.MIN_VALUE);
-* // => 5e-324
-*
-* _.toNumber(Infinity);
-* // => Infinity
-*
-* _.toNumber('3.2');
-* // => 3.2
-*/
-function toNumber(value) {
-	if (typeof value == "number") return value;
-	if (isSymbol(value)) return NAN;
-	if (isObject(value)) {
-		var other = typeof value.valueOf == "function" ? value.valueOf() : value;
-		value = isObject(other) ? other + "" : other;
-	}
-	if (typeof value != "string") return value === 0 ? value : +value;
-	value = baseTrim(value);
-	var isBinary = reIsBinary.test(value);
-	return isBinary || reIsOctal.test(value) ? freeParseInt(value.slice(2), isBinary ? 2 : 8) : reIsBadHex.test(value) ? NAN : +value;
-}
-//#endregion
-//#region node_modules/lodash-es/debounce.js
-/** Error message constants. */
-var FUNC_ERROR_TEXT = "Expected a function";
-var nativeMax = Math.max, nativeMin = Math.min;
-/**
-* Creates a debounced function that delays invoking `func` until after `wait`
-* milliseconds have elapsed since the last time the debounced function was
-* invoked. The debounced function comes with a `cancel` method to cancel
-* delayed `func` invocations and a `flush` method to immediately invoke them.
-* Provide `options` to indicate whether `func` should be invoked on the
-* leading and/or trailing edge of the `wait` timeout. The `func` is invoked
-* with the last arguments provided to the debounced function. Subsequent
-* calls to the debounced function return the result of the last `func`
-* invocation.
-*
-* **Note:** If `leading` and `trailing` options are `true`, `func` is
-* invoked on the trailing edge of the timeout only if the debounced function
-* is invoked more than once during the `wait` timeout.
-*
-* If `wait` is `0` and `leading` is `false`, `func` invocation is deferred
-* until to the next tick, similar to `setTimeout` with a timeout of `0`.
-*
-* See [David Corbacho's article](https://css-tricks.com/debouncing-throttling-explained-examples/)
-* for details over the differences between `_.debounce` and `_.throttle`.
-*
-* @static
-* @memberOf _
-* @since 0.1.0
-* @category Function
-* @param {Function} func The function to debounce.
-* @param {number} [wait=0] The number of milliseconds to delay.
-* @param {Object} [options={}] The options object.
-* @param {boolean} [options.leading=false]
-*  Specify invoking on the leading edge of the timeout.
-* @param {number} [options.maxWait]
-*  The maximum time `func` is allowed to be delayed before it's invoked.
-* @param {boolean} [options.trailing=true]
-*  Specify invoking on the trailing edge of the timeout.
-* @returns {Function} Returns the new debounced function.
-* @example
-*
-* // Avoid costly calculations while the window size is in flux.
-* jQuery(window).on('resize', _.debounce(calculateLayout, 150));
-*
-* // Invoke `sendMail` when clicked, debouncing subsequent calls.
-* jQuery(element).on('click', _.debounce(sendMail, 300, {
-*   'leading': true,
-*   'trailing': false
-* }));
-*
-* // Ensure `batchLog` is invoked once after 1 second of debounced calls.
-* var debounced = _.debounce(batchLog, 250, { 'maxWait': 1000 });
-* var source = new EventSource('/stream');
-* jQuery(source).on('message', debounced);
-*
-* // Cancel the trailing debounced invocation.
-* jQuery(window).on('popstate', debounced.cancel);
-*/
-function debounce(func, wait, options) {
-	var lastArgs, lastThis, maxWait, result, timerId, lastCallTime, lastInvokeTime = 0, leading = false, maxing = false, trailing = true;
-	if (typeof func != "function") throw new TypeError(FUNC_ERROR_TEXT);
-	wait = toNumber(wait) || 0;
-	if (isObject(options)) {
-		leading = !!options.leading;
-		maxing = "maxWait" in options;
-		maxWait = maxing ? nativeMax(toNumber(options.maxWait) || 0, wait) : maxWait;
-		trailing = "trailing" in options ? !!options.trailing : trailing;
-	}
-	function invokeFunc(time) {
-		var args = lastArgs, thisArg = lastThis;
-		lastArgs = lastThis = void 0;
-		lastInvokeTime = time;
-		result = func.apply(thisArg, args);
-		return result;
-	}
-	function leadingEdge(time) {
-		lastInvokeTime = time;
-		timerId = setTimeout(timerExpired, wait);
-		return leading ? invokeFunc(time) : result;
-	}
-	function remainingWait(time) {
-		var timeSinceLastCall = time - lastCallTime, timeSinceLastInvoke = time - lastInvokeTime, timeWaiting = wait - timeSinceLastCall;
-		return maxing ? nativeMin(timeWaiting, maxWait - timeSinceLastInvoke) : timeWaiting;
-	}
-	function shouldInvoke(time) {
-		var timeSinceLastCall = time - lastCallTime, timeSinceLastInvoke = time - lastInvokeTime;
-		return lastCallTime === void 0 || timeSinceLastCall >= wait || timeSinceLastCall < 0 || maxing && timeSinceLastInvoke >= maxWait;
-	}
-	function timerExpired() {
-		var time = now();
-		if (shouldInvoke(time)) return trailingEdge(time);
-		timerId = setTimeout(timerExpired, remainingWait(time));
-	}
-	function trailingEdge(time) {
-		timerId = void 0;
-		if (trailing && lastArgs) return invokeFunc(time);
-		lastArgs = lastThis = void 0;
-		return result;
-	}
-	function cancel() {
-		if (timerId !== void 0) clearTimeout(timerId);
-		lastInvokeTime = 0;
-		lastArgs = lastCallTime = lastThis = timerId = void 0;
-	}
-	function flush() {
-		return timerId === void 0 ? result : trailingEdge(now());
-	}
-	function debounced() {
-		var time = now(), isInvoking = shouldInvoke(time);
-		lastArgs = arguments;
-		lastThis = this;
-		lastCallTime = time;
-		if (isInvoking) {
-			if (timerId === void 0) return leadingEdge(lastCallTime);
-			if (maxing) {
-				clearTimeout(timerId);
-				timerId = setTimeout(timerExpired, wait);
-				return invokeFunc(lastCallTime);
-			}
-		}
-		if (timerId === void 0) timerId = setTimeout(timerExpired, wait);
-		return result;
-	}
-	debounced.cancel = cancel;
-	debounced.flush = flush;
-	return debounced;
-}
-//#endregion
-//#region node_modules/lodash-es/isEmpty.js
-/** `Object#toString` result references. */
-var mapTag$1 = "[object Map]", setTag$1 = "[object Set]";
-/** Used to check objects for own properties. */
-var hasOwnProperty$2 = Object.prototype.hasOwnProperty;
-/**
-* Checks if `value` is an empty object, collection, map, or set.
-*
-* Objects are considered empty if they have no own enumerable string keyed
-* properties.
-*
-* Array-like values such as `arguments` objects, arrays, buffers, strings, or
-* jQuery-like collections are considered empty if they have a `length` of `0`.
-* Similarly, maps and sets are considered empty if they have a `size` of `0`.
-*
-* @static
-* @memberOf _
-* @since 0.1.0
-* @category Lang
-* @param {*} value The value to check.
-* @returns {boolean} Returns `true` if `value` is empty, else `false`.
-* @example
-*
-* _.isEmpty(null);
-* // => true
-*
-* _.isEmpty(true);
-* // => true
-*
-* _.isEmpty(1);
-* // => true
-*
-* _.isEmpty([1, 2, 3]);
-* // => false
-*
-* _.isEmpty({ 'a': 1 });
-* // => false
-*/
-function isEmpty(value) {
-	if (value == null) return true;
-	if (isArrayLike(value) && (isArray$1(value) || typeof value == "string" || typeof value.splice == "function" || isBuffer(value) || isTypedArray(value) || isArguments(value))) return !value.length;
-	var tag = _getTag_default(value);
-	if (tag == mapTag$1 || tag == setTag$1) return !value.size;
-	if (isPrototype(value)) return !baseKeys(value).length;
-	for (var key in value) if (hasOwnProperty$2.call(value, key)) return false;
-	return true;
-}
-//#endregion
-//#region node_modules/lodash-es/_setCacheAdd.js
-/** Used to stand-in for `undefined` hash values. */
-var HASH_UNDEFINED = "__lodash_hash_undefined__";
-/**
-* Adds `value` to the array cache.
-*
-* @private
-* @name add
-* @memberOf SetCache
-* @alias push
-* @param {*} value The value to cache.
-* @returns {Object} Returns the cache instance.
-*/
-function setCacheAdd(value) {
-	this.__data__.set(value, HASH_UNDEFINED);
-	return this;
-}
-//#endregion
-//#region node_modules/lodash-es/_setCacheHas.js
-/**
-* Checks if `value` is in the array cache.
-*
-* @private
-* @name has
-* @memberOf SetCache
-* @param {*} value The value to search for.
-* @returns {boolean} Returns `true` if `value` is found, else `false`.
-*/
-function setCacheHas(value) {
-	return this.__data__.has(value);
-}
-//#endregion
-//#region node_modules/lodash-es/_SetCache.js
-/**
-*
-* Creates an array cache object to store unique values.
-*
-* @private
-* @constructor
-* @param {Array} [values] The values to cache.
-*/
-function SetCache(values) {
-	var index = -1, length = values == null ? 0 : values.length;
-	this.__data__ = new MapCache();
-	while (++index < length) this.add(values[index]);
-}
-SetCache.prototype.add = SetCache.prototype.push = setCacheAdd;
-SetCache.prototype.has = setCacheHas;
-//#endregion
-//#region node_modules/lodash-es/_arraySome.js
-/**
-* A specialized version of `_.some` for arrays without support for iteratee
-* shorthands.
-*
-* @private
-* @param {Array} [array] The array to iterate over.
-* @param {Function} predicate The function invoked per iteration.
-* @returns {boolean} Returns `true` if any element passes the predicate check,
-*  else `false`.
-*/
-function arraySome(array, predicate) {
-	var index = -1, length = array == null ? 0 : array.length;
-	while (++index < length) if (predicate(array[index], index, array)) return true;
-	return false;
-}
-//#endregion
-//#region node_modules/lodash-es/_cacheHas.js
-/**
-* Checks if a `cache` value for `key` exists.
-*
-* @private
-* @param {Object} cache The cache to query.
-* @param {string} key The key of the entry to check.
-* @returns {boolean} Returns `true` if an entry for `key` exists, else `false`.
-*/
-function cacheHas(cache, key) {
-	return cache.has(key);
-}
-//#endregion
-//#region node_modules/lodash-es/_equalArrays.js
-/** Used to compose bitmasks for value comparisons. */
-var COMPARE_PARTIAL_FLAG$3 = 1, COMPARE_UNORDERED_FLAG$1 = 2;
-/**
-* A specialized version of `baseIsEqualDeep` for arrays with support for
-* partial deep comparisons.
-*
-* @private
-* @param {Array} array The array to compare.
-* @param {Array} other The other array to compare.
-* @param {number} bitmask The bitmask flags. See `baseIsEqual` for more details.
-* @param {Function} customizer The function to customize comparisons.
-* @param {Function} equalFunc The function to determine equivalents of values.
-* @param {Object} stack Tracks traversed `array` and `other` objects.
-* @returns {boolean} Returns `true` if the arrays are equivalent, else `false`.
-*/
-function equalArrays(array, other, bitmask, customizer, equalFunc, stack) {
-	var isPartial = bitmask & COMPARE_PARTIAL_FLAG$3, arrLength = array.length, othLength = other.length;
-	if (arrLength != othLength && !(isPartial && othLength > arrLength)) return false;
-	var arrStacked = stack.get(array);
-	var othStacked = stack.get(other);
-	if (arrStacked && othStacked) return arrStacked == other && othStacked == array;
-	var index = -1, result = true, seen = bitmask & COMPARE_UNORDERED_FLAG$1 ? new SetCache() : void 0;
-	stack.set(array, other);
-	stack.set(other, array);
-	while (++index < arrLength) {
-		var arrValue = array[index], othValue = other[index];
-		if (customizer) var compared = isPartial ? customizer(othValue, arrValue, index, other, array, stack) : customizer(arrValue, othValue, index, array, other, stack);
-		if (compared !== void 0) {
-			if (compared) continue;
-			result = false;
-			break;
-		}
-		if (seen) {
-			if (!arraySome(other, function(othValue, othIndex) {
-				if (!cacheHas(seen, othIndex) && (arrValue === othValue || equalFunc(arrValue, othValue, bitmask, customizer, stack))) return seen.push(othIndex);
-			})) {
-				result = false;
-				break;
-			}
-		} else if (!(arrValue === othValue || equalFunc(arrValue, othValue, bitmask, customizer, stack))) {
-			result = false;
-			break;
-		}
-	}
-	stack["delete"](array);
-	stack["delete"](other);
-	return result;
-}
-//#endregion
-//#region node_modules/lodash-es/_mapToArray.js
-/**
-* Converts `map` to its key-value pairs.
-*
-* @private
-* @param {Object} map The map to convert.
-* @returns {Array} Returns the key-value pairs.
-*/
-function mapToArray(map) {
-	var index = -1, result = Array(map.size);
-	map.forEach(function(value, key) {
-		result[++index] = [key, value];
-	});
-	return result;
-}
-//#endregion
-//#region node_modules/lodash-es/_setToArray.js
-/**
-* Converts `set` to an array of its values.
-*
-* @private
-* @param {Object} set The set to convert.
-* @returns {Array} Returns the values.
-*/
-function setToArray(set) {
-	var index = -1, result = Array(set.size);
-	set.forEach(function(value) {
-		result[++index] = value;
-	});
-	return result;
-}
-//#endregion
-//#region node_modules/lodash-es/_equalByTag.js
-/** Used to compose bitmasks for value comparisons. */
-var COMPARE_PARTIAL_FLAG$2 = 1, COMPARE_UNORDERED_FLAG = 2;
-/** `Object#toString` result references. */
-var boolTag = "[object Boolean]", dateTag = "[object Date]", errorTag = "[object Error]", mapTag = "[object Map]", numberTag = "[object Number]", regexpTag = "[object RegExp]", setTag = "[object Set]", stringTag$1 = "[object String]", symbolTag = "[object Symbol]";
-var arrayBufferTag = "[object ArrayBuffer]", dataViewTag = "[object DataView]";
-/** Used to convert symbols to primitives and strings. */
-var symbolProto = Symbol$1 ? Symbol$1.prototype : void 0, symbolValueOf = symbolProto ? symbolProto.valueOf : void 0;
-/**
-* A specialized version of `baseIsEqualDeep` for comparing objects of
-* the same `toStringTag`.
-*
-* **Note:** This function only supports comparing values with tags of
-* `Boolean`, `Date`, `Error`, `Number`, `RegExp`, or `String`.
-*
-* @private
-* @param {Object} object The object to compare.
-* @param {Object} other The other object to compare.
-* @param {string} tag The `toStringTag` of the objects to compare.
-* @param {number} bitmask The bitmask flags. See `baseIsEqual` for more details.
-* @param {Function} customizer The function to customize comparisons.
-* @param {Function} equalFunc The function to determine equivalents of values.
-* @param {Object} stack Tracks traversed `object` and `other` objects.
-* @returns {boolean} Returns `true` if the objects are equivalent, else `false`.
-*/
-function equalByTag(object, other, tag, bitmask, customizer, equalFunc, stack) {
-	switch (tag) {
-		case dataViewTag:
-			if (object.byteLength != other.byteLength || object.byteOffset != other.byteOffset) return false;
-			object = object.buffer;
-			other = other.buffer;
-		case arrayBufferTag:
-			if (object.byteLength != other.byteLength || !equalFunc(new Uint8Array$1(object), new Uint8Array$1(other))) return false;
-			return true;
-		case boolTag:
-		case dateTag:
-		case numberTag: return eq(+object, +other);
-		case errorTag: return object.name == other.name && object.message == other.message;
-		case regexpTag:
-		case stringTag$1: return object == other + "";
-		case mapTag: var convert = mapToArray;
-		case setTag:
-			var isPartial = bitmask & COMPARE_PARTIAL_FLAG$2;
-			convert || (convert = setToArray);
-			if (object.size != other.size && !isPartial) return false;
-			var stacked = stack.get(object);
-			if (stacked) return stacked == other;
-			bitmask |= COMPARE_UNORDERED_FLAG;
-			stack.set(object, other);
-			var result = equalArrays(convert(object), convert(other), bitmask, customizer, equalFunc, stack);
-			stack["delete"](object);
-			return result;
-		case symbolTag: if (symbolValueOf) return symbolValueOf.call(object) == symbolValueOf.call(other);
-	}
-	return false;
-}
-//#endregion
-//#region node_modules/lodash-es/_equalObjects.js
-/** Used to compose bitmasks for value comparisons. */
-var COMPARE_PARTIAL_FLAG$1 = 1;
-/** Used to check objects for own properties. */
-var hasOwnProperty$1 = Object.prototype.hasOwnProperty;
-/**
-* A specialized version of `baseIsEqualDeep` for objects with support for
-* partial deep comparisons.
-*
-* @private
-* @param {Object} object The object to compare.
-* @param {Object} other The other object to compare.
-* @param {number} bitmask The bitmask flags. See `baseIsEqual` for more details.
-* @param {Function} customizer The function to customize comparisons.
-* @param {Function} equalFunc The function to determine equivalents of values.
-* @param {Object} stack Tracks traversed `object` and `other` objects.
-* @returns {boolean} Returns `true` if the objects are equivalent, else `false`.
-*/
-function equalObjects(object, other, bitmask, customizer, equalFunc, stack) {
-	var isPartial = bitmask & COMPARE_PARTIAL_FLAG$1, objProps = getAllKeys(object), objLength = objProps.length;
-	if (objLength != getAllKeys(other).length && !isPartial) return false;
-	var index = objLength;
-	while (index--) {
-		var key = objProps[index];
-		if (!(isPartial ? key in other : hasOwnProperty$1.call(other, key))) return false;
-	}
-	var objStacked = stack.get(object);
-	var othStacked = stack.get(other);
-	if (objStacked && othStacked) return objStacked == other && othStacked == object;
-	var result = true;
-	stack.set(object, other);
-	stack.set(other, object);
-	var skipCtor = isPartial;
-	while (++index < objLength) {
-		key = objProps[index];
-		var objValue = object[key], othValue = other[key];
-		if (customizer) var compared = isPartial ? customizer(othValue, objValue, key, other, object, stack) : customizer(objValue, othValue, key, object, other, stack);
-		if (!(compared === void 0 ? objValue === othValue || equalFunc(objValue, othValue, bitmask, customizer, stack) : compared)) {
-			result = false;
-			break;
-		}
-		skipCtor || (skipCtor = key == "constructor");
-	}
-	if (result && !skipCtor) {
-		var objCtor = object.constructor, othCtor = other.constructor;
-		if (objCtor != othCtor && "constructor" in object && "constructor" in other && !(typeof objCtor == "function" && objCtor instanceof objCtor && typeof othCtor == "function" && othCtor instanceof othCtor)) result = false;
-	}
-	stack["delete"](object);
-	stack["delete"](other);
-	return result;
-}
-//#endregion
-//#region node_modules/lodash-es/_baseIsEqualDeep.js
-/** Used to compose bitmasks for value comparisons. */
-var COMPARE_PARTIAL_FLAG = 1;
-/** `Object#toString` result references. */
-var argsTag = "[object Arguments]", arrayTag = "[object Array]", objectTag = "[object Object]";
-/** Used to check objects for own properties. */
-var hasOwnProperty = Object.prototype.hasOwnProperty;
-/**
-* A specialized version of `baseIsEqual` for arrays and objects which performs
-* deep comparisons and tracks traversed objects enabling objects with circular
-* references to be compared.
-*
-* @private
-* @param {Object} object The object to compare.
-* @param {Object} other The other object to compare.
-* @param {number} bitmask The bitmask flags. See `baseIsEqual` for more details.
-* @param {Function} customizer The function to customize comparisons.
-* @param {Function} equalFunc The function to determine equivalents of values.
-* @param {Object} [stack] Tracks traversed `object` and `other` objects.
-* @returns {boolean} Returns `true` if the objects are equivalent, else `false`.
-*/
-function baseIsEqualDeep(object, other, bitmask, customizer, equalFunc, stack) {
-	var objIsArr = isArray$1(object), othIsArr = isArray$1(other), objTag = objIsArr ? arrayTag : _getTag_default(object), othTag = othIsArr ? arrayTag : _getTag_default(other);
-	objTag = objTag == argsTag ? objectTag : objTag;
-	othTag = othTag == argsTag ? objectTag : othTag;
-	var objIsObj = objTag == objectTag, othIsObj = othTag == objectTag, isSameTag = objTag == othTag;
-	if (isSameTag && isBuffer(object)) {
-		if (!isBuffer(other)) return false;
-		objIsArr = true;
-		objIsObj = false;
-	}
-	if (isSameTag && !objIsObj) {
-		stack || (stack = new Stack());
-		return objIsArr || isTypedArray(object) ? equalArrays(object, other, bitmask, customizer, equalFunc, stack) : equalByTag(object, other, objTag, bitmask, customizer, equalFunc, stack);
-	}
-	if (!(bitmask & COMPARE_PARTIAL_FLAG)) {
-		var objIsWrapped = objIsObj && hasOwnProperty.call(object, "__wrapped__"), othIsWrapped = othIsObj && hasOwnProperty.call(other, "__wrapped__");
-		if (objIsWrapped || othIsWrapped) {
-			var objUnwrapped = objIsWrapped ? object.value() : object, othUnwrapped = othIsWrapped ? other.value() : other;
-			stack || (stack = new Stack());
-			return equalFunc(objUnwrapped, othUnwrapped, bitmask, customizer, stack);
-		}
-	}
-	if (!isSameTag) return false;
-	stack || (stack = new Stack());
-	return equalObjects(object, other, bitmask, customizer, equalFunc, stack);
-}
-//#endregion
-//#region node_modules/lodash-es/_baseIsEqual.js
-/**
-* The base implementation of `_.isEqual` which supports partial comparisons
-* and tracks traversed objects.
-*
-* @private
-* @param {*} value The value to compare.
-* @param {*} other The other value to compare.
-* @param {boolean} bitmask The bitmask flags.
-*  1 - Unordered comparison
-*  2 - Partial comparison
-* @param {Function} [customizer] The function to customize comparisons.
-* @param {Object} [stack] Tracks traversed `value` and `other` objects.
-* @returns {boolean} Returns `true` if the values are equivalent, else `false`.
-*/
-function baseIsEqual(value, other, bitmask, customizer, stack) {
-	if (value === other) return true;
-	if (value == null || other == null || !isObjectLike(value) && !isObjectLike(other)) return value !== value && other !== other;
-	return baseIsEqualDeep(value, other, bitmask, customizer, baseIsEqual, stack);
-}
-//#endregion
-//#region node_modules/lodash-es/isEqual.js
-/**
-* Performs a deep comparison between two values to determine if they are
-* equivalent.
-*
-* **Note:** This method supports comparing arrays, array buffers, booleans,
-* date objects, error objects, maps, numbers, `Object` objects, regexes,
-* sets, strings, symbols, and typed arrays. `Object` objects are compared
-* by their own, not inherited, enumerable properties. Functions and DOM
-* nodes are compared by strict equality, i.e. `===`.
-*
-* @static
-* @memberOf _
-* @since 0.1.0
-* @category Lang
-* @param {*} value The value to compare.
-* @param {*} other The other value to compare.
-* @returns {boolean} Returns `true` if the values are equivalent, else `false`.
-* @example
-*
-* var object = { 'a': 1 };
-* var other = { 'a': 1 };
-*
-* _.isEqual(object, other);
-* // => true
-*
-* object === other;
-* // => false
-*/
-function isEqual(value, other) {
-	return baseIsEqual(value, other);
-}
-//#endregion
-//#region node_modules/lodash-es/isNil.js
-/**
-* Checks if `value` is `null` or `undefined`.
-*
-* @static
-* @memberOf _
-* @since 4.0.0
-* @category Lang
-* @param {*} value The value to check.
-* @returns {boolean} Returns `true` if `value` is nullish, else `false`.
-* @example
-*
-* _.isNil(null);
-* // => true
-*
-* _.isNil(void 0);
-* // => true
-*
-* _.isNil(NaN);
-* // => false
-*/
-function isNil(value) {
-	return value == null;
-}
-//#endregion
-//#region node_modules/lodash-es/isString.js
-/** `Object#toString` result references. */
-var stringTag = "[object String]";
-/**
-* Checks if `value` is classified as a `String` primitive or object.
-*
-* @static
-* @since 0.1.0
-* @memberOf _
-* @category Lang
-* @param {*} value The value to check.
-* @returns {boolean} Returns `true` if `value` is a string, else `false`.
-* @example
-*
-* _.isString('abc');
-* // => true
-*
-* _.isString(1);
-* // => false
-*/
-function isString(value) {
-	return typeof value == "string" || !isArray$1(value) && isObjectLike(value) && baseGetTag(value) == stringTag;
-}
-//#endregion
-//#region node_modules/lodash-es/_arrayReduce.js
-/**
-* A specialized version of `_.reduce` for arrays without support for
-* iteratee shorthands.
-*
-* @private
-* @param {Array} [array] The array to iterate over.
-* @param {Function} iteratee The function invoked per iteration.
-* @param {*} [accumulator] The initial value.
-* @param {boolean} [initAccum] Specify using the first element of `array` as
-*  the initial value.
-* @returns {*} Returns the accumulated value.
-*/
-function arrayReduce(array, iteratee, accumulator, initAccum) {
-	var index = -1, length = array == null ? 0 : array.length;
-	if (initAccum && length) accumulator = array[++index];
-	while (++index < length) accumulator = iteratee(accumulator, array[index], index, array);
-	return accumulator;
-}
-//#endregion
-//#region node_modules/lodash-es/_basePropertyOf.js
-/**
-* The base implementation of `_.propertyOf` without support for deep paths.
-*
-* @private
-* @param {Object} object The object to query.
-* @returns {Function} Returns the new accessor function.
-*/
-function basePropertyOf(object) {
-	return function(key) {
-		return object == null ? void 0 : object[key];
-	};
-}
-//#endregion
-//#region node_modules/lodash-es/_deburrLetter.js
-/**
-* Used by `_.deburr` to convert Latin-1 Supplement and Latin Extended-A
-* letters to basic Latin letters.
-*
-* @private
-* @param {string} letter The matched letter to deburr.
-* @returns {string} Returns the deburred letter.
-*/
-var deburrLetter = basePropertyOf({
-	"À": "A",
-	"Á": "A",
-	"Â": "A",
-	"Ã": "A",
-	"Ä": "A",
-	"Å": "A",
-	"à": "a",
-	"á": "a",
-	"â": "a",
-	"ã": "a",
-	"ä": "a",
-	"å": "a",
-	"Ç": "C",
-	"ç": "c",
-	"Ð": "D",
-	"ð": "d",
-	"È": "E",
-	"É": "E",
-	"Ê": "E",
-	"Ë": "E",
-	"è": "e",
-	"é": "e",
-	"ê": "e",
-	"ë": "e",
-	"Ì": "I",
-	"Í": "I",
-	"Î": "I",
-	"Ï": "I",
-	"ì": "i",
-	"í": "i",
-	"î": "i",
-	"ï": "i",
-	"Ñ": "N",
-	"ñ": "n",
-	"Ò": "O",
-	"Ó": "O",
-	"Ô": "O",
-	"Õ": "O",
-	"Ö": "O",
-	"Ø": "O",
-	"ò": "o",
-	"ó": "o",
-	"ô": "o",
-	"õ": "o",
-	"ö": "o",
-	"ø": "o",
-	"Ù": "U",
-	"Ú": "U",
-	"Û": "U",
-	"Ü": "U",
-	"ù": "u",
-	"ú": "u",
-	"û": "u",
-	"ü": "u",
-	"Ý": "Y",
-	"ý": "y",
-	"ÿ": "y",
-	"Æ": "Ae",
-	"æ": "ae",
-	"Þ": "Th",
-	"þ": "th",
-	"ß": "ss",
-	"Ā": "A",
-	"Ă": "A",
-	"Ą": "A",
-	"ā": "a",
-	"ă": "a",
-	"ą": "a",
-	"Ć": "C",
-	"Ĉ": "C",
-	"Ċ": "C",
-	"Č": "C",
-	"ć": "c",
-	"ĉ": "c",
-	"ċ": "c",
-	"č": "c",
-	"Ď": "D",
-	"Đ": "D",
-	"ď": "d",
-	"đ": "d",
-	"Ē": "E",
-	"Ĕ": "E",
-	"Ė": "E",
-	"Ę": "E",
-	"Ě": "E",
-	"ē": "e",
-	"ĕ": "e",
-	"ė": "e",
-	"ę": "e",
-	"ě": "e",
-	"Ĝ": "G",
-	"Ğ": "G",
-	"Ġ": "G",
-	"Ģ": "G",
-	"ĝ": "g",
-	"ğ": "g",
-	"ġ": "g",
-	"ģ": "g",
-	"Ĥ": "H",
-	"Ħ": "H",
-	"ĥ": "h",
-	"ħ": "h",
-	"Ĩ": "I",
-	"Ī": "I",
-	"Ĭ": "I",
-	"Į": "I",
-	"İ": "I",
-	"ĩ": "i",
-	"ī": "i",
-	"ĭ": "i",
-	"į": "i",
-	"ı": "i",
-	"Ĵ": "J",
-	"ĵ": "j",
-	"Ķ": "K",
-	"ķ": "k",
-	"ĸ": "k",
-	"Ĺ": "L",
-	"Ļ": "L",
-	"Ľ": "L",
-	"Ŀ": "L",
-	"Ł": "L",
-	"ĺ": "l",
-	"ļ": "l",
-	"ľ": "l",
-	"ŀ": "l",
-	"ł": "l",
-	"Ń": "N",
-	"Ņ": "N",
-	"Ň": "N",
-	"Ŋ": "N",
-	"ń": "n",
-	"ņ": "n",
-	"ň": "n",
-	"ŋ": "n",
-	"Ō": "O",
-	"Ŏ": "O",
-	"Ő": "O",
-	"ō": "o",
-	"ŏ": "o",
-	"ő": "o",
-	"Ŕ": "R",
-	"Ŗ": "R",
-	"Ř": "R",
-	"ŕ": "r",
-	"ŗ": "r",
-	"ř": "r",
-	"Ś": "S",
-	"Ŝ": "S",
-	"Ş": "S",
-	"Š": "S",
-	"ś": "s",
-	"ŝ": "s",
-	"ş": "s",
-	"š": "s",
-	"Ţ": "T",
-	"Ť": "T",
-	"Ŧ": "T",
-	"ţ": "t",
-	"ť": "t",
-	"ŧ": "t",
-	"Ũ": "U",
-	"Ū": "U",
-	"Ŭ": "U",
-	"Ů": "U",
-	"Ű": "U",
-	"Ų": "U",
-	"ũ": "u",
-	"ū": "u",
-	"ŭ": "u",
-	"ů": "u",
-	"ű": "u",
-	"ų": "u",
-	"Ŵ": "W",
-	"ŵ": "w",
-	"Ŷ": "Y",
-	"ŷ": "y",
-	"Ÿ": "Y",
-	"Ź": "Z",
-	"Ż": "Z",
-	"Ž": "Z",
-	"ź": "z",
-	"ż": "z",
-	"ž": "z",
-	"Ĳ": "IJ",
-	"ĳ": "ij",
-	"Œ": "Oe",
-	"œ": "oe",
-	"ŉ": "'n",
-	"ſ": "s"
-});
-//#endregion
-//#region node_modules/lodash-es/deburr.js
-/** Used to match Latin Unicode letters (excluding mathematical operators). */
-var reLatin = /[\xc0-\xd6\xd8-\xf6\xf8-\xff\u0100-\u017f]/g;
-/**
-* Used to match [combining diacritical marks](https://en.wikipedia.org/wiki/Combining_Diacritical_Marks) and
-* [combining diacritical marks for symbols](https://en.wikipedia.org/wiki/Combining_Diacritical_Marks_for_Symbols).
-*/
-var reComboMark = RegExp("[\\u0300-\\u036f\\ufe20-\\ufe2f\\u20d0-\\u20ff]", "g");
-/**
-* Deburrs `string` by converting
-* [Latin-1 Supplement](https://en.wikipedia.org/wiki/Latin-1_Supplement_(Unicode_block)#Character_table)
-* and [Latin Extended-A](https://en.wikipedia.org/wiki/Latin_Extended-A)
-* letters to basic Latin letters and removing
-* [combining diacritical marks](https://en.wikipedia.org/wiki/Combining_Diacritical_Marks).
-*
-* @static
-* @memberOf _
-* @since 3.0.0
-* @category String
-* @param {string} [string=''] The string to deburr.
-* @returns {string} Returns the deburred string.
-* @example
-*
-* _.deburr('déjà vu');
-* // => 'deja vu'
-*/
-function deburr(string) {
-	string = toString(string);
-	return string && string.replace(reLatin, deburrLetter).replace(reComboMark, "");
-}
-//#endregion
-//#region node_modules/lodash-es/_asciiWords.js
-/** Used to match words composed of alphanumeric characters. */
-var reAsciiWord = /[^\x00-\x2f\x3a-\x40\x5b-\x60\x7b-\x7f]+/g;
-/**
-* Splits an ASCII `string` into an array of its words.
-*
-* @private
-* @param {string} The string to inspect.
-* @returns {Array} Returns the words of `string`.
-*/
-function asciiWords(string) {
-	return string.match(reAsciiWord) || [];
-}
-//#endregion
-//#region node_modules/lodash-es/_hasUnicodeWord.js
-/** Used to detect strings that need a more robust regexp to match words. */
-var reHasUnicodeWord = /[a-z][A-Z]|[A-Z]{2}[a-z]|[0-9][a-zA-Z]|[a-zA-Z][0-9]|[^a-zA-Z0-9 ]/;
-/**
-* Checks if `string` contains a word composed of Unicode symbols.
-*
-* @private
-* @param {string} string The string to inspect.
-* @returns {boolean} Returns `true` if a word is found, else `false`.
-*/
-function hasUnicodeWord(string) {
-	return reHasUnicodeWord.test(string);
-}
-//#endregion
-//#region node_modules/lodash-es/_unicodeWords.js
-/** Used to compose unicode character classes. */
-var rsAstralRange = "\\ud800-\\udfff", rsComboRange = "\\u0300-\\u036f\\ufe20-\\ufe2f\\u20d0-\\u20ff", rsDingbatRange = "\\u2700-\\u27bf", rsLowerRange = "a-z\\xdf-\\xf6\\xf8-\\xff", rsMathOpRange = "\\xac\\xb1\\xd7\\xf7", rsNonCharRange = "\\x00-\\x2f\\x3a-\\x40\\x5b-\\x60\\x7b-\\xbf", rsPunctuationRange = "\\u2000-\\u206f", rsSpaceRange = " \\t\\x0b\\f\\xa0\\ufeff\\n\\r\\u2028\\u2029\\u1680\\u180e\\u2000\\u2001\\u2002\\u2003\\u2004\\u2005\\u2006\\u2007\\u2008\\u2009\\u200a\\u202f\\u205f\\u3000", rsUpperRange = "A-Z\\xc0-\\xd6\\xd8-\\xde", rsVarRange = "\\ufe0e\\ufe0f", rsBreakRange = rsMathOpRange + rsNonCharRange + rsPunctuationRange + rsSpaceRange;
-/** Used to compose unicode capture groups. */
-var rsApos = "['’]", rsBreak = "[" + rsBreakRange + "]", rsCombo = "[" + rsComboRange + "]", rsDigits = "\\d+", rsDingbat = "[" + rsDingbatRange + "]", rsLower = "[" + rsLowerRange + "]", rsMisc = "[^" + rsAstralRange + rsBreakRange + rsDigits + rsDingbatRange + rsLowerRange + rsUpperRange + "]", rsModifier = "(?:" + rsCombo + "|\\ud83c[\\udffb-\\udfff])", rsNonAstral = "[^" + rsAstralRange + "]", rsRegional = "(?:\\ud83c[\\udde6-\\uddff]){2}", rsSurrPair = "[\\ud800-\\udbff][\\udc00-\\udfff]", rsUpper = "[" + rsUpperRange + "]", rsZWJ = "\\u200d";
-/** Used to compose unicode regexes. */
-var rsMiscLower = "(?:" + rsLower + "|" + rsMisc + ")", rsMiscUpper = "(?:" + rsUpper + "|" + rsMisc + ")", rsOptContrLower = "(?:" + rsApos + "(?:d|ll|m|re|s|t|ve))?", rsOptContrUpper = "(?:" + rsApos + "(?:D|LL|M|RE|S|T|VE))?", reOptMod = rsModifier + "?", rsOptVar = "[" + rsVarRange + "]?", rsOptJoin = "(?:" + rsZWJ + "(?:" + [
-	rsNonAstral,
-	rsRegional,
-	rsSurrPair
-].join("|") + ")" + rsOptVar + reOptMod + ")*", rsOrdLower = "\\d*(?:1st|2nd|3rd|(?![123])\\dth)(?=\\b|[A-Z_])", rsOrdUpper = "\\d*(?:1ST|2ND|3RD|(?![123])\\dTH)(?=\\b|[a-z_])", rsSeq = rsOptVar + reOptMod + rsOptJoin, rsEmoji = "(?:" + [
-	rsDingbat,
-	rsRegional,
-	rsSurrPair
-].join("|") + ")" + rsSeq;
-/** Used to match complex or compound words. */
-var reUnicodeWord = RegExp([
-	rsUpper + "?" + rsLower + "+" + rsOptContrLower + "(?=" + [
-		rsBreak,
-		rsUpper,
-		"$"
-	].join("|") + ")",
-	rsMiscUpper + "+" + rsOptContrUpper + "(?=" + [
-		rsBreak,
-		rsUpper + rsMiscLower,
-		"$"
-	].join("|") + ")",
-	rsUpper + "?" + rsMiscLower + "+" + rsOptContrLower,
-	rsUpper + "+" + rsOptContrUpper,
-	rsOrdUpper,
-	rsOrdLower,
-	rsDigits,
-	rsEmoji
-].join("|"), "g");
-/**
-* Splits a Unicode `string` into an array of its words.
-*
-* @private
-* @param {string} The string to inspect.
-* @returns {Array} Returns the words of `string`.
-*/
-function unicodeWords(string) {
-	return string.match(reUnicodeWord) || [];
-}
-//#endregion
-//#region node_modules/lodash-es/words.js
-/**
-* Splits `string` into an array of its words.
-*
-* @static
-* @memberOf _
-* @since 3.0.0
-* @category String
-* @param {string} [string=''] The string to inspect.
-* @param {RegExp|string} [pattern] The pattern to match words.
-* @param- {Object} [guard] Enables use as an iteratee for methods like `_.map`.
-* @returns {Array} Returns the words of `string`.
-* @example
-*
-* _.words('fred, barney, & pebbles');
-* // => ['fred', 'barney', 'pebbles']
-*
-* _.words('fred, barney, & pebbles', /[^, ]+/g);
-* // => ['fred', 'barney', '&', 'pebbles']
-*/
-function words(string, pattern, guard) {
-	string = toString(string);
-	pattern = guard ? void 0 : pattern;
-	if (pattern === void 0) return hasUnicodeWord(string) ? unicodeWords(string) : asciiWords(string);
-	return string.match(pattern) || [];
-}
-//#endregion
-//#region node_modules/lodash-es/_createCompounder.js
-/** Used to match apostrophes. */
-var reApos = RegExp("['’]", "g");
-/**
-* Creates a function like `_.camelCase`.
-*
-* @private
-* @param {Function} callback The function to combine each word.
-* @returns {Function} Returns the new compounder function.
-*/
-function createCompounder(callback) {
-	return function(string) {
-		return arrayReduce(words(deburr(string).replace(reApos, "")), callback, "");
-	};
-}
-//#endregion
-//#region node_modules/lodash-es/startCase.js
-/**
-* Converts `string` to
-* [start case](https://en.wikipedia.org/wiki/Letter_case#Stylistic_or_specialised_usage).
-*
-* @static
-* @memberOf _
-* @since 3.1.0
-* @category String
-* @param {string} [string=''] The string to convert.
-* @returns {string} Returns the start cased string.
-* @example
-*
-* _.startCase('--foo-bar--');
-* // => 'Foo Bar'
-*
-* _.startCase('fooBar');
-* // => 'Foo Bar'
-*
-* _.startCase('__FOO_BAR__');
-* // => 'FOO BAR'
-*/
-var startCase = createCompounder(function(result, word, index) {
-	return result + (index ? " " : "") + upperFirst(word);
-});
-var package_default = {
-	name: "lynxhub",
-	productName: "LynxHub",
-	desktopName: "ai.kindabrazy.lynxhub.desktop",
-	version: "3.5.5",
-	type: "module",
-	description: "Cross-platform, extensible terminal/browser for AI management",
-	main: "./out/main/index.cjs",
-	author: {
-		"name": "KindaBrazy",
-		"email": "kindofbrazy@gmail.com"
-	},
-	repository: {
-		"type": "git",
-		"url": "https://github.com/KindaBrazy/LynxHub"
-	},
-	license: "AGPL-3.0",
-	homepage: "https://github.com/KindaBrazy/LynxHub",
-	appDetails: {
-		"title": "LynxHub",
-		"buildNumber": 52,
-		"detailedDescription": "Open-source, cross-platform terminal and browser, designed for managing AI. Highly modular and extensible, it's the all-in-one environment for AI power users.",
-		"moduleApiVersion": "2.1.0",
-		"extensionApiVersion": "2.0.0"
-	},
-	scripts: {
-		"typecheck:node": "tsc --noEmit -p tsconfig.node.json --composite false",
-		"typecheck:web": "tsc --noEmit -p tsconfig.web.json --composite false",
-		"typecheck": "npm run typecheck:node && npm run typecheck:web",
-		"fix-linter:web": "prettier --write src/renderer --list-different && eslint --fix src/renderer",
-		"fix-linter:node": "prettier --write src/main --list-different && eslint --fix src/main",
-		"fix-linter": "prettier --write src --list-different && eslint --fix src",
-		"fix-linter-ext": "prettier --write extension --list-different && eslint --fix extension",
-		"validate:web": "npm run fix-linter:web && npm run typecheck:web",
-		"validate:node": "npm run fix-linter:node && npm run typecheck:node",
-		"validate:ext": "npm run fix-linter-ext && npm run typecheck",
-		"validate": "npm run fix-linter && npm run typecheck",
-		"preview": "electron-vite preview --noSandbox",
-		"preview:skip": "electron-vite preview --noSandbox --skipBuild",
-		"dev": "run-script-os",
-		"dev:win32": "electron-vite dev",
-		"dev:default": "electron-vite dev --noSandbox",
-		"prof": "electron-vite dev -w --noSandbox -- --js-flags=\"--prof\"",
-		"dev:srouce": "electron-vite dev -w --noSandbox --sourcemap",
-		"postinstall": "node node_modules/electron/install.js && electron-builder install-app-deps",
-		"build": "electron-vite build",
-		"rebuild": "electron-builder node-gyp-rebuild",
-		"removeDotExtension": "node fixExtension.js",
-		"build:extension": "rimraf extension_out && electron-vite build --config extension/electron.vite.config.ts && npm run removeDotExtension",
-		"build:module": "rimraf module_out && npx --prefix module rolldown --config module/rolldown.config.mjs",
-		"build:unpack": "npm run build && electron-builder --dir --config electron-builder_x64.config.cjs",
-		"build:win_x64": "npm run build && electron-builder --win --config electron-builder_x64.config.cjs --publish never",
-		"build:win_arm": "npm run build && electron-builder --win --config electron-builder_arm.config.cjs --publish never",
-		"build:win_portable_x64": "npm run build && electron-builder --win --config electron-builder-portable_x64.config.cjs --publish never",
-		"build:win_portable_arm": "npm run build && electron-builder --win --config electron-builder-portable_arm.config.cjs --publish never",
-		"build:linux_x64": "npm run build && electron-builder --linux --config electron-builder_x64.config.cjs --publish never",
-		"build:linux_arm": "npm run build && electron-builder --linux --config electron-builder_arm.config.cjs --publish never",
-		"build:linux_portable_x64": "npm run build && electron-builder --linux --config electron-builder-portable_x64.config.cjs --publish never",
-		"build:linux_portable_arm": "npm run build && electron-builder --linux --config electron-builder-portable_arm.config.cjs --publish never",
-		"build:mac_x64": "npm run build && electron-builder --mac --config electron-builder_x64.config.cjs --publish never",
-		"build:mac_arm": "npm run build && electron-builder --mac --config electron-builder_arm.config.cjs --publish never",
-		"build:linux-test": "npm run build && electron-builder --linux --config electron-builder-test.config.cjs --publish never",
-		"release": "electron-builder",
-		"publish": "electron-builder -p always --config electron-builder_x64.config.cjs"
-	},
-	dependencies: {
-		"@electron-toolkit/preload": "^3.0.2",
-		"@electron-toolkit/utils": "^4.0.0",
-		"@originjs/vite-plugin-federation": "^1.4.1",
-		"@sentry/electron": "^7.14.0",
-		"@sentry/react": "^10.60.0",
-		"axios": "^1.18.1",
-		"fix-path": "^5.0.0",
-		"graceful-fs": "^4.2.11",
-		"lowdb": "^7.0.1",
-		"node-pty": "^1.2.0-beta.13",
-		"prism-react-renderer": "^2.4.1",
-		"react-syntax-highlighter": "^16.1.1",
-		"semver": "^7.8.5",
-		"tree-kill": "^1.2.2",
-		"zustand": "^5.0.14"
-	},
-	devDependencies: {
-		"@electron-toolkit/eslint-config-prettier": "^3.0.0",
-		"@electron-toolkit/tsconfig": "^2.0.0",
-		"@eslint/js": "^10.0.1",
-		"@heroui/react": "^3.2.1",
-		"@heroui/styles": "^3.2.1",
-		"@icons-pack/react-simple-icons": "^13.13.0",
-		"@number-flow/react": "^0.6.0",
-		"@reduxjs/toolkit": "^2.12.0",
-		"@sentry/vite-plugin": "^5.3.0",
-		"@solar-icons/react-perf": "^2.1.1",
-		"@tailwindcss/typography": "^0.5.20",
-		"@tailwindcss/vite": "^4.3.1",
-		"@types/decompress": "^4.2.7",
-		"@types/fontfaceobserver": "^2.1.3",
-		"@types/graceful-fs": "^4.1.9",
-		"@types/lodash-es": "^4.17.12",
-		"@types/node": "^24.13.2",
-		"@types/react": "^19.2.17",
-		"@types/react-dom": "^19.2.3",
-		"@types/react-highlight-words": "^0.20.1",
-		"@types/react-syntax-highlighter": "^15.5.13",
-		"@types/semver": "^7.7.1",
-		"@types/serve-handler": "^6.1.4",
-		"@vitejs/plugin-react": "^6.0.3",
-		"@xterm/addon-canvas": "^0.7.0",
-		"@xterm/addon-clipboard": "^0.2.0",
-		"@xterm/addon-fit": "^0.11.0",
-		"@xterm/addon-ligatures": "^0.10.0",
-		"@xterm/addon-progress": "^0.2.0",
-		"@xterm/addon-search": "^0.16.0",
-		"@xterm/addon-serialize": "^0.14.0",
-		"@xterm/addon-unicode11": "^0.9.0",
-		"@xterm/addon-web-links": "^0.12.0",
-		"@xterm/addon-webgl": "^0.19.0",
-		"@xterm/xterm": "^6.0.0",
-		"chokidar": "^5.0.0",
-		"decompress": "^4.2.1",
-		"electron": "^42.5.0",
-		"electron-builder": "^26.15.3",
-		"electron-dl": "^4.0.0",
-		"electron-log": "^5.4.4",
-		"electron-updater": "^6.8.9",
-		"electron-vite": "^6.0.0-beta.1",
-		"eslint": "^10.5.0",
-		"eslint-plugin-jsx-a11y": "^6.10.2",
-		"eslint-plugin-perfectionist": "^5.9.1",
-		"eslint-plugin-react": "^7.37.5",
-		"eslint-plugin-react-hooks": "^7.1.1",
-		"eslint-plugin-simple-import-sort": "^13.0.0",
-		"fontfaceobserver": "^2.3.0",
-		"framer-motion": "^12.41.0",
-		"globals": "^17.7.0",
-		"lodash-es": "^4.18.1",
-		"lucide-react": "^1.21.0",
-		"normalize-url": "^9.0.1",
-		"ogl": "^1.0.11",
-		"prettier": "^3.8.4",
-		"react": "^19.2.7",
-		"react-dom": "^19.2.7",
-		"react-error-boundary": "^6.1.2",
-		"react-highlight-words": "^0.21.0",
-		"react-intersection-observer": "^10.0.3",
-		"react-markdown": "^10.1.0",
-		"react-redux": "^9.3.0",
-		"rehype-highlight": "^7.0.2",
-		"rehype-raw": "^7.0.0",
-		"rehype-slug": "^6.0.0",
-		"remark-gfm": "^4.0.1",
-		"run-script-os": "^1.1.6",
-		"simple-git": "^3.36.0",
-		"tailwindcss": "^4.3.1",
-		"three": "^0.184.0",
-		"typescript": "^6.0.3",
-		"typescript-eslint": "^8.62.0",
-		"vite": "^8.1.0"
-	},
-	allowScripts: {
-		"electron": true,
-		"esbuild": true,
-		"node-pty": true,
-		"@sentry/cli": true
-	}
-};
-//#endregion
-//#region src/common/consts/index.ts
-/** Application name from package.json */
-var APP_NAME = package_default.appDetails.title;
-/** Application version from package.json */
-var APP_VERSION = package_default.version;
-/** Application build number from package.json */
-var APP_BUILD_NUMBER = package_default.appDetails.buildNumber;
-package_default.description;
-package_default.author.name;
-package_default.appDetails.detailedDescription;
-`${package_default.homepage}`;
-package_default.author.email;
-`${package_default.repository.url}`;
-`${package_default.repository.url}`;
-package_default.license;
-package_default.appDetails.moduleApiVersion;
-package_default.appDetails.extensionApiVersion;
-/** Application version with 'V' prefix */
-var APP_VERSION_V = `V${APP_VERSION}`;
-`${APP_NAME}${APP_VERSION}`;
-`${APP_NAME}${APP_VERSION_V}`;
-APP_VERSION_V.split("-").map((v) => capitalize(v)).join(" ");
-/**
-* Page IDs used for navigation.
-*/
-var PageID = {
-	home: "home_page",
-	imageGen: "imageGen_page",
-	textGen: "textGen_page",
-	audioGen: "audioGen_page",
-	tools: "tools_page",
-	games: "games_page",
-	others: "others_page",
-	agents: "agents_page",
-	dashboard: "dashboard_page",
-	plugins: "plugins_page",
-	settings: "settings_page"
-};
-PageID.home, PageID.imageGen, PageID.textGen, PageID.audioGen, PageID.tools, PageID.games, PageID.others, PageID.agents, PageID.dashboard, PageID.plugins, PageID.settings;
-//#endregion
-//#region src/common/utils/env.ts
-/**
-* Environment utilities.
-*/
-/**
-* Checks if the application is running in development mode.
-* Uses Vite's import.meta.env.DEV.
-*
-* @returns {boolean} True if in development mode, false otherwise.
-*/
-function isDev() {
-	return false;
-}
-//#endregion
-//#region src/common/utils/formatting.ts
-/**
-* Formatting utilities.
-*/
-/**
-* Formats the total size into a human-readable format (MB or GB).
-*
-* @param {number} size - The total size in bytes.
-* @returns {string} The formatted size with the appropriate unit (MB or GB).
-*/
-function formatSize(size) {
-	if (!size) return "0KB";
-	if (size < 1024 * 1024) return `${(size / 1024).toFixed(2)} KB`;
-	else if (size < 1024 * 1024 * 1024) return `${(size / (1024 * 1024)).toFixed(2)} MB`;
-	else return `${(size / (1024 * 1024 * 1024)).toFixed(2)} GB`;
-}
-//#endregion
-//#region src/common/utils/platform.ts
-/**
-* Platform detection utilities.
-*
-* This module provides a safe way to detect the operating system
-* in both Main (Node.js) and Renderer (Browser) environments.
-*/
-var isElectronRenderer = typeof window !== "undefined";
-var isElectronMain = typeof process !== "undefined";
-/**
-* Detects if the current platform is Windows.
-* @returns {boolean} True if running on Windows.
-*/
-function detectIsWin() {
-	if (isElectronRenderer && window.osPlatform) return window.osPlatform === "win32";
-	if (isElectronMain && process.platform) return process.platform === "win32";
-	return true;
-}
-/**
-* Detects if the current platform is macOS.
-* @returns {boolean} True if running on macOS.
-*/
-function detectIsMac() {
-	if (isElectronRenderer && window.osPlatform) return window.osPlatform === "darwin";
-	if (isElectronMain && process.platform) return process.platform === "darwin";
-	return false;
-}
-/**
-* Detects if the current platform is Linux.
-* @returns {boolean} True if running on Linux.
-*/
-function detectIsLinux() {
-	if (isElectronRenderer && window.osPlatform) return window.osPlatform === "linux";
-	if (isElectronMain && process.platform) return process.platform === "linux";
-	return false;
-}
-/**
-* True if the current platform is Windows.
-*/
-var isWin = detectIsWin();
-detectIsMac();
-detectIsLinux();
-/**
-* The line ending character for the current platform.
-* '\r' for Windows, '\n' for others.
-*/
-var terminalLineEnding = isWin ? "\r" : "\n";
-//#endregion
-//#region src/common/utils/strings.ts
-function getFallbackString(value) {
-	return value.replace(/[^a-zA-Z0-9\s]/g, "").split(" ").map((item) => item.slice(0, 1).toUpperCase()).join("");
-}
-//#endregion
-//#region src/common/utils/urlUtils.ts
-/**
-* Extracts the owner and repository name from a given GitHub | GitLab URL.
-* @param {string} url - The GitHub repository URL.
-* @returns {{owner: string, repo: string, platform: 'github' | 'gitlab', avatarUrl: string}} An object containing the owner and repository name.
-* @throws {Error} If the provided URL is not a valid GitHub repository URL.
-*/
-function extractGitUrl(url) {
-	const match = url.match(/^(https?:\/\/)?(www\.)?(github|gitlab)\.com\/([^/]+)\/([^/]+?)(?:\.git)?$/);
-	if (!match) throw new Error(`Invalid Git repository URL: ${url}`);
-	const [, , , platform, owner, repo] = match;
-	return {
-		owner,
-		repo,
-		platform,
-		avatarUrl: `https://github.com/${owner}.png`
-	};
-}
-//#endregion
 //#region extension/src/cross/CrossExtConstants.ts
 var ModulesThatSupportPython = [
 	"LSHQQYTIGER_SD",
@@ -4097,7 +499,7 @@ var VALUE = "value";
 var isDraft = (value) => !!value && !!value[DRAFT_STATE];
 function isDraftable(value) {
 	if (!value) return false;
-	return isPlainObject(value) || isArray(value) || !!value[DRAFTABLE] || !!value[CONSTRUCTOR]?.[DRAFTABLE] || isMap(value) || isSet(value);
+	return isPlainObject(value) || isArray$2(value) || !!value[DRAFTABLE] || !!value[CONSTRUCTOR]?.[DRAFTABLE] || isMap$1(value) || isSet$1(value);
 }
 var objectCtorString = O$3[PROTOTYPE][CONSTRUCTOR].toString();
 var cachedCtorStrings = /* @__PURE__ */ new WeakMap();
@@ -4107,7 +509,7 @@ function isPlainObject(value) {
 	if (proto === null || proto === O$3[PROTOTYPE]) return true;
 	const Ctor = O$3.hasOwnProperty.call(proto, CONSTRUCTOR) && proto[CONSTRUCTOR];
 	if (Ctor === Object) return true;
-	if (!isFunction(Ctor)) return false;
+	if (!isFunction$1(Ctor)) return false;
 	let ctorString = cachedCtorStrings.get(Ctor);
 	if (ctorString === void 0) {
 		ctorString = Function.toString.call(Ctor);
@@ -4123,10 +525,10 @@ function each(obj, iter, strict = true) {
 }
 function getArchtype(thing) {
 	const state = thing[DRAFT_STATE];
-	return state ? state.type_ : isArray(thing) ? 1 : isMap(thing) ? 2 : isSet(thing) ? 3 : 0;
+	return state ? state.type_ : isArray$2(thing) ? 1 : isMap$1(thing) ? 2 : isSet$1(thing) ? 3 : 0;
 }
 var has = (thing, prop, type = getArchtype(thing)) => type === 2 ? thing.has(prop) : O$3[PROTOTYPE].hasOwnProperty.call(thing, prop);
-var get = (thing, prop, type = getArchtype(thing)) => type === 2 ? thing.get(prop) : thing[prop];
+var get$1 = (thing, prop, type = getArchtype(thing)) => type === 2 ? thing.get(prop) : thing[prop];
 var set = (thing, propOrOldValue, value, type = getArchtype(thing)) => {
 	if (type === 2) thing.set(propOrOldValue, value);
 	else if (type === 3) thing.add(value);
@@ -4136,12 +538,12 @@ function is$3(x, y) {
 	if (x === y) return x !== 0 || 1 / x === 1 / y;
 	else return x !== x && y !== y;
 }
-var isArray = Array.isArray;
-var isMap = (target) => target instanceof Map;
-var isSet = (target) => target instanceof Set;
+var isArray$2 = Array.isArray;
+var isMap$1 = (target) => target instanceof Map;
+var isSet$1 = (target) => target instanceof Set;
 var isObjectish = (target) => typeof target === "object";
-var isFunction = (target) => typeof target === "function";
-var isBoolean = (target) => typeof target === "boolean";
+var isFunction$1 = (target) => typeof target === "function";
+var isBoolean$1 = (target) => typeof target === "boolean";
 function isArrayIndex(value) {
 	const n = +value;
 	return Number.isInteger(n) && String(n) === value;
@@ -4149,9 +551,9 @@ function isArrayIndex(value) {
 var latest = (state) => state.copy_ || state.base_;
 var getFinalValue = (state) => state.modified_ ? state.copy_ : state.base_;
 function shallowCopy(base, strict) {
-	if (isMap(base)) return new Map(base);
-	if (isSet(base)) return new Set(base);
-	if (isArray(base)) return Array[PROTOTYPE].slice.call(base);
+	if (isMap$1(base)) return new Map(base);
+	if (isSet$1(base)) return new Set(base);
+	if (isArray$2(base)) return Array[PROTOTYPE].slice.call(base);
 	const isPlain = isPlainObject(base);
 	if (strict === true || strict === "class_only" && !isPlain) {
 		const descriptors = O$3.getOwnPropertyDescriptors(base);
@@ -4289,7 +691,7 @@ function updateDraftInParent(parent, draftValue, finalizedValue, originalKey) {
 	const parentCopy = latest(parent);
 	const parentType = parent.type_;
 	if (originalKey !== void 0) {
-		if (get(parentCopy, originalKey, parentType) === draftValue) {
+		if (get$1(parentCopy, originalKey, parentType) === draftValue) {
 			set(parentCopy, originalKey, finalizedValue, parentType);
 			return;
 		}
@@ -4339,8 +741,8 @@ function handleCrossReference(target, key, value) {
 		const targetCopy = latest(target);
 		if (target.type_ === 3) {
 			if (targetCopy.has(value)) handleValue(value, scope_.handledSet_, scope_);
-		} else if (get(targetCopy, key, target.type_) === value) {
-			if (scope_.drafts_.length > 1 && (target.assigned_.get(key) ?? false) === true && target.copy_) handleValue(get(target.copy_, key, target.type_), scope_.handledSet_, scope_);
+		} else if (get$1(targetCopy, key, target.type_) === value) {
+			if (scope_.drafts_.length > 1 && (target.assigned_.get(key) ?? false) === true && target.copy_) handleValue(get$1(target.copy_, key, target.type_), scope_.handledSet_, scope_);
 		}
 	});
 }
@@ -4360,7 +762,7 @@ function handleValue(target, handledSet, rootScope) {
 	return target;
 }
 function createProxyProxy(base, parent) {
-	const baseIsArray = isArray(base);
+	const baseIsArray = isArray$2(base);
 	const state = {
 		type_: baseIsArray ? 1 : 0,
 		scope_: parent ? parent.scope_ : getCurrentScope(),
@@ -4536,7 +938,7 @@ var Immer2 = class {
 		* @returns {any} a new state, or the initial state if nothing was modified
 		*/
 		this.produce = (base, recipe, patchListener) => {
-			if (isFunction(base) && !isFunction(recipe)) {
+			if (isFunction$1(base) && !isFunction$1(recipe)) {
 				const defaultBase = recipe;
 				recipe = base;
 				const self = this;
@@ -4544,8 +946,8 @@ var Immer2 = class {
 					return self.produce(base2, (draft) => recipe.call(this, draft, ...args));
 				};
 			}
-			if (!isFunction(recipe)) die(6);
-			if (patchListener !== void 0 && !isFunction(patchListener)) die(7);
+			if (!isFunction$1(recipe)) die(6);
+			if (patchListener !== void 0 && !isFunction$1(patchListener)) die(7);
 			let result;
 			if (isDraftable(base)) {
 				const scope = enterScope(this);
@@ -4578,7 +980,7 @@ var Immer2 = class {
 			} else die(1, base);
 		};
 		this.produceWithPatches = (base, recipe) => {
-			if (isFunction(base)) return (state, ...args) => this.produceWithPatches(state, (draft) => base(draft, ...args));
+			if (isFunction$1(base)) return (state, ...args) => this.produceWithPatches(state, (draft) => base(draft, ...args));
 			let patches, inversePatches;
 			return [
 				this.produce(base, recipe, (p, ip) => {
@@ -4589,9 +991,9 @@ var Immer2 = class {
 				inversePatches
 			];
 		};
-		if (isBoolean(config?.autoFreeze)) this.setAutoFreeze(config.autoFreeze);
-		if (isBoolean(config?.useStrictShallowCopy)) this.setUseStrictShallowCopy(config.useStrictShallowCopy);
-		if (isBoolean(config?.useStrictIteration)) this.setUseStrictIteration(config.useStrictIteration);
+		if (isBoolean$1(config?.autoFreeze)) this.setAutoFreeze(config.autoFreeze);
+		if (isBoolean$1(config?.useStrictShallowCopy)) this.setUseStrictShallowCopy(config.useStrictShallowCopy);
+		if (isBoolean$1(config?.useStrictIteration)) this.setUseStrictIteration(config.useStrictIteration);
 	}
 	createDraft(base) {
 		if (!isDraftable(base)) die(8);
@@ -4653,7 +1055,7 @@ var Immer2 = class {
 	}
 };
 function createProxy(rootScope, value, parent, key) {
-	const [draft, state] = isMap(value) ? getPlugin(PluginMapSet).proxyMap_(value, parent) : isSet(value) ? getPlugin(PluginMapSet).proxySet_(value, parent) : createProxyProxy(value, parent);
+	const [draft, state] = isMap$1(value) ? getPlugin(PluginMapSet).proxyMap_(value, parent) : isSet$1(value) ? getPlugin(PluginMapSet).proxySet_(value, parent) : createProxyProxy(value, parent);
 	(parent?.scope_ ?? getCurrentScope()).drafts_.push(draft);
 	state.callbacks_ = parent?.callbacks_ ?? [];
 	state.key_ = key;
@@ -5209,8 +1611,3297 @@ var useSettingsState = (name) => useSelector$5((state) => state.settings[name]);
 settingsSlice.actions;
 settingsSlice.reducer;
 //#endregion
+//#region node_modules/lodash-es/_freeGlobal.js
+/** Detect free variable `global` from Node.js. */
+var freeGlobal = typeof global == "object" && global && global.Object === Object && global;
+//#endregion
+//#region node_modules/lodash-es/_root.js
+/** Detect free variable `self`. */
+var freeSelf = typeof self == "object" && self && self.Object === Object && self;
+/** Used as a reference to the global object. */
+var root = freeGlobal || freeSelf || Function("return this")();
+//#endregion
+//#region node_modules/lodash-es/_Symbol.js
+/** Built-in value references. */
+var Symbol$1 = root.Symbol;
+//#endregion
+//#region node_modules/lodash-es/_getRawTag.js
+/** Used for built-in method references. */
+var objectProto$3 = Object.prototype;
+/** Used to check objects for own properties. */
+var hasOwnProperty$12 = objectProto$3.hasOwnProperty;
+/**
+* Used to resolve the
+* [`toStringTag`](http://ecma-international.org/ecma-262/7.0/#sec-object.prototype.tostring)
+* of values.
+*/
+var nativeObjectToString$1 = objectProto$3.toString;
+/** Built-in value references. */
+var symToStringTag$1 = Symbol$1 ? Symbol$1.toStringTag : void 0;
+/**
+* A specialized version of `baseGetTag` which ignores `Symbol.toStringTag` values.
+*
+* @private
+* @param {*} value The value to query.
+* @returns {string} Returns the raw `toStringTag`.
+*/
+function getRawTag(value) {
+	var isOwn = hasOwnProperty$12.call(value, symToStringTag$1), tag = value[symToStringTag$1];
+	try {
+		value[symToStringTag$1] = void 0;
+		var unmasked = true;
+	} catch (e) {}
+	var result = nativeObjectToString$1.call(value);
+	if (unmasked) if (isOwn) value[symToStringTag$1] = tag;
+	else delete value[symToStringTag$1];
+	return result;
+}
+//#endregion
+//#region node_modules/lodash-es/_objectToString.js
+/**
+* Used to resolve the
+* [`toStringTag`](http://ecma-international.org/ecma-262/7.0/#sec-object.prototype.tostring)
+* of values.
+*/
+var nativeObjectToString = Object.prototype.toString;
+/**
+* Converts `value` to a string using `Object.prototype.toString`.
+*
+* @private
+* @param {*} value The value to convert.
+* @returns {string} Returns the converted string.
+*/
+function objectToString(value) {
+	return nativeObjectToString.call(value);
+}
+//#endregion
+//#region node_modules/lodash-es/_baseGetTag.js
+/** `Object#toString` result references. */
+var nullTag = "[object Null]", undefinedTag = "[object Undefined]";
+/** Built-in value references. */
+var symToStringTag = Symbol$1 ? Symbol$1.toStringTag : void 0;
+/**
+* The base implementation of `getTag` without fallbacks for buggy environments.
+*
+* @private
+* @param {*} value The value to query.
+* @returns {string} Returns the `toStringTag`.
+*/
+function baseGetTag(value) {
+	if (value == null) return value === void 0 ? undefinedTag : nullTag;
+	return symToStringTag && symToStringTag in Object(value) ? getRawTag(value) : objectToString(value);
+}
+//#endregion
+//#region node_modules/lodash-es/isObjectLike.js
+/**
+* Checks if `value` is object-like. A value is object-like if it's not `null`
+* and has a `typeof` result of "object".
+*
+* @static
+* @memberOf _
+* @since 4.0.0
+* @category Lang
+* @param {*} value The value to check.
+* @returns {boolean} Returns `true` if `value` is object-like, else `false`.
+* @example
+*
+* _.isObjectLike({});
+* // => true
+*
+* _.isObjectLike([1, 2, 3]);
+* // => true
+*
+* _.isObjectLike(_.noop);
+* // => false
+*
+* _.isObjectLike(null);
+* // => false
+*/
+function isObjectLike$1(value) {
+	return value != null && typeof value == "object";
+}
+//#endregion
+//#region node_modules/lodash-es/isSymbol.js
+/** `Object#toString` result references. */
+var symbolTag$3 = "[object Symbol]";
+/**
+* Checks if `value` is classified as a `Symbol` primitive or object.
+*
+* @static
+* @memberOf _
+* @since 4.0.0
+* @category Lang
+* @param {*} value The value to check.
+* @returns {boolean} Returns `true` if `value` is a symbol, else `false`.
+* @example
+*
+* _.isSymbol(Symbol.iterator);
+* // => true
+*
+* _.isSymbol('abc');
+* // => false
+*/
+function isSymbol(value) {
+	return typeof value == "symbol" || isObjectLike$1(value) && baseGetTag(value) == symbolTag$3;
+}
+//#endregion
+//#region node_modules/lodash-es/_arrayMap.js
+/**
+* A specialized version of `_.map` for arrays without support for iteratee
+* shorthands.
+*
+* @private
+* @param {Array} [array] The array to iterate over.
+* @param {Function} iteratee The function invoked per iteration.
+* @returns {Array} Returns the new mapped array.
+*/
+function arrayMap(array, iteratee) {
+	var index = -1, length = array == null ? 0 : array.length, result = Array(length);
+	while (++index < length) result[index] = iteratee(array[index], index, array);
+	return result;
+}
+//#endregion
+//#region node_modules/lodash-es/isArray.js
+/**
+* Checks if `value` is classified as an `Array` object.
+*
+* @static
+* @memberOf _
+* @since 0.1.0
+* @category Lang
+* @param {*} value The value to check.
+* @returns {boolean} Returns `true` if `value` is an array, else `false`.
+* @example
+*
+* _.isArray([1, 2, 3]);
+* // => true
+*
+* _.isArray(document.body.children);
+* // => false
+*
+* _.isArray('abc');
+* // => false
+*
+* _.isArray(_.noop);
+* // => false
+*/
+var isArray$1 = Array.isArray;
+//#endregion
+//#region node_modules/lodash-es/_baseToString.js
+/** Used as references for various `Number` constants. */
+var INFINITY = Infinity;
+/** Used to convert symbols to primitives and strings. */
+var symbolProto$2 = Symbol$1 ? Symbol$1.prototype : void 0, symbolToString = symbolProto$2 ? symbolProto$2.toString : void 0;
+/**
+* The base implementation of `_.toString` which doesn't convert nullish
+* values to empty strings.
+*
+* @private
+* @param {*} value The value to process.
+* @returns {string} Returns the string.
+*/
+function baseToString$1(value) {
+	if (typeof value == "string") return value;
+	if (isArray$1(value)) return arrayMap(value, baseToString$1) + "";
+	if (isSymbol(value)) return symbolToString ? symbolToString.call(value) : "";
+	var result = value + "";
+	return result == "0" && 1 / value == -INFINITY ? "-0" : result;
+}
+//#endregion
+//#region node_modules/lodash-es/_trimmedEndIndex.js
+/** Used to match a single whitespace character. */
+var reWhitespace = /\s/;
+/**
+* Used by `_.trim` and `_.trimEnd` to get the index of the last non-whitespace
+* character of `string`.
+*
+* @private
+* @param {string} string The string to inspect.
+* @returns {number} Returns the index of the last non-whitespace character.
+*/
+function trimmedEndIndex(string) {
+	var index = string.length;
+	while (index-- && reWhitespace.test(string.charAt(index)));
+	return index;
+}
+//#endregion
+//#region node_modules/lodash-es/_baseTrim.js
+/** Used to match leading whitespace. */
+var reTrimStart = /^\s+/;
+/**
+* The base implementation of `_.trim`.
+*
+* @private
+* @param {string} string The string to trim.
+* @returns {string} Returns the trimmed string.
+*/
+function baseTrim(string) {
+	return string ? string.slice(0, trimmedEndIndex(string) + 1).replace(reTrimStart, "") : string;
+}
+//#endregion
+//#region node_modules/lodash-es/isObject.js
+/**
+* Checks if `value` is the
+* [language type](http://www.ecma-international.org/ecma-262/7.0/#sec-ecmascript-language-types)
+* of `Object`. (e.g. arrays, functions, objects, regexes, `new Number(0)`, and `new String('')`)
+*
+* @static
+* @memberOf _
+* @since 0.1.0
+* @category Lang
+* @param {*} value The value to check.
+* @returns {boolean} Returns `true` if `value` is an object, else `false`.
+* @example
+*
+* _.isObject({});
+* // => true
+*
+* _.isObject([1, 2, 3]);
+* // => true
+*
+* _.isObject(_.noop);
+* // => true
+*
+* _.isObject(null);
+* // => false
+*/
+function isObject$1(value) {
+	var type = typeof value;
+	return value != null && (type == "object" || type == "function");
+}
+//#endregion
+//#region node_modules/lodash-es/toNumber.js
+/** Used as references for various `Number` constants. */
+var NAN = NaN;
+/** Used to detect bad signed hexadecimal string values. */
+var reIsBadHex = /^[-+]0x[0-9a-f]+$/i;
+/** Used to detect binary string values. */
+var reIsBinary = /^0b[01]+$/i;
+/** Used to detect octal string values. */
+var reIsOctal = /^0o[0-7]+$/i;
+/** Built-in method references without a dependency on `root`. */
+var freeParseInt = parseInt;
+/**
+* Converts `value` to a number.
+*
+* @static
+* @memberOf _
+* @since 4.0.0
+* @category Lang
+* @param {*} value The value to process.
+* @returns {number} Returns the number.
+* @example
+*
+* _.toNumber(3.2);
+* // => 3.2
+*
+* _.toNumber(Number.MIN_VALUE);
+* // => 5e-324
+*
+* _.toNumber(Infinity);
+* // => Infinity
+*
+* _.toNumber('3.2');
+* // => 3.2
+*/
+function toNumber(value) {
+	if (typeof value == "number") return value;
+	if (isSymbol(value)) return NAN;
+	if (isObject$1(value)) {
+		var other = typeof value.valueOf == "function" ? value.valueOf() : value;
+		value = isObject$1(other) ? other + "" : other;
+	}
+	if (typeof value != "string") return value === 0 ? value : +value;
+	value = baseTrim(value);
+	var isBinary = reIsBinary.test(value);
+	return isBinary || reIsOctal.test(value) ? freeParseInt(value.slice(2), isBinary ? 2 : 8) : reIsBadHex.test(value) ? NAN : +value;
+}
+//#endregion
+//#region node_modules/lodash-es/isFunction.js
+/** `Object#toString` result references. */
+var asyncTag = "[object AsyncFunction]", funcTag$2 = "[object Function]", genTag$1 = "[object GeneratorFunction]", proxyTag = "[object Proxy]";
+/**
+* Checks if `value` is classified as a `Function` object.
+*
+* @static
+* @memberOf _
+* @since 0.1.0
+* @category Lang
+* @param {*} value The value to check.
+* @returns {boolean} Returns `true` if `value` is a function, else `false`.
+* @example
+*
+* _.isFunction(_);
+* // => true
+*
+* _.isFunction(/abc/);
+* // => false
+*/
+function isFunction(value) {
+	if (!isObject$1(value)) return false;
+	var tag = baseGetTag(value);
+	return tag == funcTag$2 || tag == genTag$1 || tag == asyncTag || tag == proxyTag;
+}
+//#endregion
+//#region node_modules/lodash-es/_coreJsData.js
+/** Used to detect overreaching core-js shims. */
+var coreJsData = root["__core-js_shared__"];
+//#endregion
+//#region node_modules/lodash-es/_isMasked.js
+/** Used to detect methods masquerading as native. */
+var maskSrcKey = function() {
+	var uid = /[^.]+$/.exec(coreJsData && coreJsData.keys && coreJsData.keys.IE_PROTO || "");
+	return uid ? "Symbol(src)_1." + uid : "";
+}();
+/**
+* Checks if `func` has its source masked.
+*
+* @private
+* @param {Function} func The function to check.
+* @returns {boolean} Returns `true` if `func` is masked, else `false`.
+*/
+function isMasked(func) {
+	return !!maskSrcKey && maskSrcKey in func;
+}
+//#endregion
+//#region node_modules/lodash-es/_toSource.js
+/** Used to resolve the decompiled source of functions. */
+var funcToString$1 = Function.prototype.toString;
+/**
+* Converts `func` to its source code.
+*
+* @private
+* @param {Function} func The function to convert.
+* @returns {string} Returns the source code.
+*/
+function toSource(func) {
+	if (func != null) {
+		try {
+			return funcToString$1.call(func);
+		} catch (e) {}
+		try {
+			return func + "";
+		} catch (e) {}
+	}
+	return "";
+}
+//#endregion
+//#region node_modules/lodash-es/_baseIsNative.js
+/**
+* Used to match `RegExp`
+* [syntax characters](http://ecma-international.org/ecma-262/7.0/#sec-patterns).
+*/
+var reRegExpChar = /[\\^$.*+?()[\]{}|]/g;
+/** Used to detect host constructors (Safari). */
+var reIsHostCtor = /^\[object .+?Constructor\]$/;
+/** Used for built-in method references. */
+var funcProto = Function.prototype, objectProto$2 = Object.prototype;
+/** Used to resolve the decompiled source of functions. */
+var funcToString = funcProto.toString;
+/** Used to check objects for own properties. */
+var hasOwnProperty$11 = objectProto$2.hasOwnProperty;
+/** Used to detect if a method is native. */
+var reIsNative = RegExp("^" + funcToString.call(hasOwnProperty$11).replace(reRegExpChar, "\\$&").replace(/hasOwnProperty|(function).*?(?=\\\()| for .+?(?=\\\])/g, "$1.*?") + "$");
+/**
+* The base implementation of `_.isNative` without bad shim checks.
+*
+* @private
+* @param {*} value The value to check.
+* @returns {boolean} Returns `true` if `value` is a native function,
+*  else `false`.
+*/
+function baseIsNative(value) {
+	if (!isObject$1(value) || isMasked(value)) return false;
+	return (isFunction(value) ? reIsNative : reIsHostCtor).test(toSource(value));
+}
+//#endregion
+//#region node_modules/lodash-es/_getValue.js
+/**
+* Gets the value at `key` of `object`.
+*
+* @private
+* @param {Object} [object] The object to query.
+* @param {string} key The key of the property to get.
+* @returns {*} Returns the property value.
+*/
+function getValue(object, key) {
+	return object == null ? void 0 : object[key];
+}
+//#endregion
+//#region node_modules/lodash-es/_getNative.js
+/**
+* Gets the native function at `key` of `object`.
+*
+* @private
+* @param {Object} object The object to query.
+* @param {string} key The key of the method to get.
+* @returns {*} Returns the function if it's native, else `undefined`.
+*/
+function getNative(object, key) {
+	var value = getValue(object, key);
+	return baseIsNative(value) ? value : void 0;
+}
+//#endregion
+//#region node_modules/lodash-es/_WeakMap.js
+var WeakMap$1 = getNative(root, "WeakMap");
+//#endregion
+//#region node_modules/lodash-es/_baseCreate.js
+/** Built-in value references. */
+var objectCreate = Object.create;
+/**
+* The base implementation of `_.create` without support for assigning
+* properties to the created object.
+*
+* @private
+* @param {Object} proto The object to inherit from.
+* @returns {Object} Returns the new object.
+*/
+var baseCreate = function() {
+	function object() {}
+	return function(proto) {
+		if (!isObject$1(proto)) return {};
+		if (objectCreate) return objectCreate(proto);
+		object.prototype = proto;
+		var result = new object();
+		object.prototype = void 0;
+		return result;
+	};
+}();
+//#endregion
+//#region node_modules/lodash-es/_copyArray.js
+/**
+* Copies the values of `source` to `array`.
+*
+* @private
+* @param {Array} source The array to copy values from.
+* @param {Array} [array=[]] The array to copy values to.
+* @returns {Array} Returns `array`.
+*/
+function copyArray(source, array) {
+	var index = -1, length = source.length;
+	array || (array = Array(length));
+	while (++index < length) array[index] = source[index];
+	return array;
+}
+//#endregion
+//#region node_modules/lodash-es/_defineProperty.js
+var defineProperty = function() {
+	try {
+		var func = getNative(Object, "defineProperty");
+		func({}, "", {});
+		return func;
+	} catch (e) {}
+}();
+//#endregion
+//#region node_modules/lodash-es/_arrayEach.js
+/**
+* A specialized version of `_.forEach` for arrays without support for
+* iteratee shorthands.
+*
+* @private
+* @param {Array} [array] The array to iterate over.
+* @param {Function} iteratee The function invoked per iteration.
+* @returns {Array} Returns `array`.
+*/
+function arrayEach(array, iteratee) {
+	var index = -1, length = array == null ? 0 : array.length;
+	while (++index < length) if (iteratee(array[index], index, array) === false) break;
+	return array;
+}
+//#endregion
+//#region node_modules/lodash-es/_isIndex.js
+/** Used as references for various `Number` constants. */
+var MAX_SAFE_INTEGER$1 = 9007199254740991;
+/** Used to detect unsigned integer values. */
+var reIsUint = /^(?:0|[1-9]\d*)$/;
+/**
+* Checks if `value` is a valid array-like index.
+*
+* @private
+* @param {*} value The value to check.
+* @param {number} [length=MAX_SAFE_INTEGER] The upper bounds of a valid index.
+* @returns {boolean} Returns `true` if `value` is a valid index, else `false`.
+*/
+function isIndex(value, length) {
+	var type = typeof value;
+	length = length == null ? MAX_SAFE_INTEGER$1 : length;
+	return !!length && (type == "number" || type != "symbol" && reIsUint.test(value)) && value > -1 && value % 1 == 0 && value < length;
+}
+//#endregion
+//#region node_modules/lodash-es/_baseAssignValue.js
+/**
+* The base implementation of `assignValue` and `assignMergeValue` without
+* value checks.
+*
+* @private
+* @param {Object} object The object to modify.
+* @param {string} key The key of the property to assign.
+* @param {*} value The value to assign.
+*/
+function baseAssignValue(object, key, value) {
+	if (key == "__proto__" && defineProperty) defineProperty(object, key, {
+		"configurable": true,
+		"enumerable": true,
+		"value": value,
+		"writable": true
+	});
+	else object[key] = value;
+}
+//#endregion
+//#region node_modules/lodash-es/eq.js
+/**
+* Performs a
+* [`SameValueZero`](http://ecma-international.org/ecma-262/7.0/#sec-samevaluezero)
+* comparison between two values to determine if they are equivalent.
+*
+* @static
+* @memberOf _
+* @since 4.0.0
+* @category Lang
+* @param {*} value The value to compare.
+* @param {*} other The other value to compare.
+* @returns {boolean} Returns `true` if the values are equivalent, else `false`.
+* @example
+*
+* var object = { 'a': 1 };
+* var other = { 'a': 1 };
+*
+* _.eq(object, object);
+* // => true
+*
+* _.eq(object, other);
+* // => false
+*
+* _.eq('a', 'a');
+* // => true
+*
+* _.eq('a', Object('a'));
+* // => false
+*
+* _.eq(NaN, NaN);
+* // => true
+*/
+function eq(value, other) {
+	return value === other || value !== value && other !== other;
+}
+//#endregion
+//#region node_modules/lodash-es/_assignValue.js
+/** Used to check objects for own properties. */
+var hasOwnProperty$10 = Object.prototype.hasOwnProperty;
+/**
+* Assigns `value` to `key` of `object` if the existing value is not equivalent
+* using [`SameValueZero`](http://ecma-international.org/ecma-262/7.0/#sec-samevaluezero)
+* for equality comparisons.
+*
+* @private
+* @param {Object} object The object to modify.
+* @param {string} key The key of the property to assign.
+* @param {*} value The value to assign.
+*/
+function assignValue(object, key, value) {
+	var objValue = object[key];
+	if (!(hasOwnProperty$10.call(object, key) && eq(objValue, value)) || value === void 0 && !(key in object)) baseAssignValue(object, key, value);
+}
+//#endregion
+//#region node_modules/lodash-es/_copyObject.js
+/**
+* Copies properties of `source` to `object`.
+*
+* @private
+* @param {Object} source The object to copy properties from.
+* @param {Array} props The property identifiers to copy.
+* @param {Object} [object={}] The object to copy properties to.
+* @param {Function} [customizer] The function to customize copied values.
+* @returns {Object} Returns `object`.
+*/
+function copyObject(source, props, object, customizer) {
+	var isNew = !object;
+	object || (object = {});
+	var index = -1, length = props.length;
+	while (++index < length) {
+		var key = props[index];
+		var newValue = customizer ? customizer(object[key], source[key], key, object, source) : void 0;
+		if (newValue === void 0) newValue = source[key];
+		if (isNew) baseAssignValue(object, key, newValue);
+		else assignValue(object, key, newValue);
+	}
+	return object;
+}
+//#endregion
+//#region node_modules/lodash-es/isLength.js
+/** Used as references for various `Number` constants. */
+var MAX_SAFE_INTEGER = 9007199254740991;
+/**
+* Checks if `value` is a valid array-like length.
+*
+* **Note:** This method is loosely based on
+* [`ToLength`](http://ecma-international.org/ecma-262/7.0/#sec-tolength).
+*
+* @static
+* @memberOf _
+* @since 4.0.0
+* @category Lang
+* @param {*} value The value to check.
+* @returns {boolean} Returns `true` if `value` is a valid length, else `false`.
+* @example
+*
+* _.isLength(3);
+* // => true
+*
+* _.isLength(Number.MIN_VALUE);
+* // => false
+*
+* _.isLength(Infinity);
+* // => false
+*
+* _.isLength('3');
+* // => false
+*/
+function isLength(value) {
+	return typeof value == "number" && value > -1 && value % 1 == 0 && value <= MAX_SAFE_INTEGER;
+}
+//#endregion
+//#region node_modules/lodash-es/isArrayLike.js
+/**
+* Checks if `value` is array-like. A value is considered array-like if it's
+* not a function and has a `value.length` that's an integer greater than or
+* equal to `0` and less than or equal to `Number.MAX_SAFE_INTEGER`.
+*
+* @static
+* @memberOf _
+* @since 4.0.0
+* @category Lang
+* @param {*} value The value to check.
+* @returns {boolean} Returns `true` if `value` is array-like, else `false`.
+* @example
+*
+* _.isArrayLike([1, 2, 3]);
+* // => true
+*
+* _.isArrayLike(document.body.children);
+* // => true
+*
+* _.isArrayLike('abc');
+* // => true
+*
+* _.isArrayLike(_.noop);
+* // => false
+*/
+function isArrayLike(value) {
+	return value != null && isLength(value.length) && !isFunction(value);
+}
+//#endregion
+//#region node_modules/lodash-es/_isPrototype.js
+/** Used for built-in method references. */
+var objectProto$1 = Object.prototype;
+/**
+* Checks if `value` is likely a prototype object.
+*
+* @private
+* @param {*} value The value to check.
+* @returns {boolean} Returns `true` if `value` is a prototype, else `false`.
+*/
+function isPrototype(value) {
+	var Ctor = value && value.constructor;
+	return value === (typeof Ctor == "function" && Ctor.prototype || objectProto$1);
+}
+//#endregion
+//#region node_modules/lodash-es/_baseTimes.js
+/**
+* The base implementation of `_.times` without support for iteratee shorthands
+* or max array length checks.
+*
+* @private
+* @param {number} n The number of times to invoke `iteratee`.
+* @param {Function} iteratee The function invoked per iteration.
+* @returns {Array} Returns the array of results.
+*/
+function baseTimes(n, iteratee) {
+	var index = -1, result = Array(n);
+	while (++index < n) result[index] = iteratee(index);
+	return result;
+}
+//#endregion
+//#region node_modules/lodash-es/_baseIsArguments.js
+/** `Object#toString` result references. */
+var argsTag$3 = "[object Arguments]";
+/**
+* The base implementation of `_.isArguments`.
+*
+* @private
+* @param {*} value The value to check.
+* @returns {boolean} Returns `true` if `value` is an `arguments` object,
+*/
+function baseIsArguments(value) {
+	return isObjectLike$1(value) && baseGetTag(value) == argsTag$3;
+}
+//#endregion
+//#region node_modules/lodash-es/isArguments.js
+/** Used for built-in method references. */
+var objectProto = Object.prototype;
+/** Used to check objects for own properties. */
+var hasOwnProperty$9 = objectProto.hasOwnProperty;
+/** Built-in value references. */
+var propertyIsEnumerable$1 = objectProto.propertyIsEnumerable;
+/**
+* Checks if `value` is likely an `arguments` object.
+*
+* @static
+* @memberOf _
+* @since 0.1.0
+* @category Lang
+* @param {*} value The value to check.
+* @returns {boolean} Returns `true` if `value` is an `arguments` object,
+*  else `false`.
+* @example
+*
+* _.isArguments(function() { return arguments; }());
+* // => true
+*
+* _.isArguments([1, 2, 3]);
+* // => false
+*/
+var isArguments = baseIsArguments(function() {
+	return arguments;
+}()) ? baseIsArguments : function(value) {
+	return isObjectLike$1(value) && hasOwnProperty$9.call(value, "callee") && !propertyIsEnumerable$1.call(value, "callee");
+};
+//#endregion
+//#region node_modules/lodash-es/stubFalse.js
+/**
+* This method returns `false`.
+*
+* @static
+* @memberOf _
+* @since 4.13.0
+* @category Util
+* @returns {boolean} Returns `false`.
+* @example
+*
+* _.times(2, _.stubFalse);
+* // => [false, false]
+*/
+function stubFalse() {
+	return false;
+}
+//#endregion
+//#region node_modules/lodash-es/isBuffer.js
+/** Detect free variable `exports`. */
+var freeExports$2 = typeof exports == "object" && exports && !exports.nodeType && exports;
+/** Detect free variable `module`. */
+var freeModule$2 = freeExports$2 && typeof module == "object" && module && !module.nodeType && module;
+/** Built-in value references. */
+var Buffer$2 = freeModule$2 && freeModule$2.exports === freeExports$2 ? root.Buffer : void 0;
+/**
+* Checks if `value` is a buffer.
+*
+* @static
+* @memberOf _
+* @since 4.3.0
+* @category Lang
+* @param {*} value The value to check.
+* @returns {boolean} Returns `true` if `value` is a buffer, else `false`.
+* @example
+*
+* _.isBuffer(new Buffer(2));
+* // => true
+*
+* _.isBuffer(new Uint8Array(2));
+* // => false
+*/
+var isBuffer = (Buffer$2 ? Buffer$2.isBuffer : void 0) || stubFalse;
+//#endregion
+//#region node_modules/lodash-es/_baseIsTypedArray.js
+/** `Object#toString` result references. */
+var argsTag$2 = "[object Arguments]", arrayTag$2 = "[object Array]", boolTag$3 = "[object Boolean]", dateTag$3 = "[object Date]", errorTag$2 = "[object Error]", funcTag$1 = "[object Function]", mapTag$6 = "[object Map]", numberTag$3 = "[object Number]", objectTag$3 = "[object Object]", regexpTag$3 = "[object RegExp]", setTag$6 = "[object Set]", stringTag$4 = "[object String]", weakMapTag$2 = "[object WeakMap]";
+var arrayBufferTag$3 = "[object ArrayBuffer]", dataViewTag$4 = "[object DataView]", float32Tag$2 = "[object Float32Array]", float64Tag$2 = "[object Float64Array]", int8Tag$2 = "[object Int8Array]", int16Tag$2 = "[object Int16Array]", int32Tag$2 = "[object Int32Array]", uint8Tag$2 = "[object Uint8Array]", uint8ClampedTag$2 = "[object Uint8ClampedArray]", uint16Tag$2 = "[object Uint16Array]", uint32Tag$2 = "[object Uint32Array]";
+/** Used to identify `toStringTag` values of typed arrays. */
+var typedArrayTags = {};
+typedArrayTags[float32Tag$2] = typedArrayTags[float64Tag$2] = typedArrayTags[int8Tag$2] = typedArrayTags[int16Tag$2] = typedArrayTags[int32Tag$2] = typedArrayTags[uint8Tag$2] = typedArrayTags[uint8ClampedTag$2] = typedArrayTags[uint16Tag$2] = typedArrayTags[uint32Tag$2] = true;
+typedArrayTags[argsTag$2] = typedArrayTags[arrayTag$2] = typedArrayTags[arrayBufferTag$3] = typedArrayTags[boolTag$3] = typedArrayTags[dataViewTag$4] = typedArrayTags[dateTag$3] = typedArrayTags[errorTag$2] = typedArrayTags[funcTag$1] = typedArrayTags[mapTag$6] = typedArrayTags[numberTag$3] = typedArrayTags[objectTag$3] = typedArrayTags[regexpTag$3] = typedArrayTags[setTag$6] = typedArrayTags[stringTag$4] = typedArrayTags[weakMapTag$2] = false;
+/**
+* The base implementation of `_.isTypedArray` without Node.js optimizations.
+*
+* @private
+* @param {*} value The value to check.
+* @returns {boolean} Returns `true` if `value` is a typed array, else `false`.
+*/
+function baseIsTypedArray(value) {
+	return isObjectLike$1(value) && isLength(value.length) && !!typedArrayTags[baseGetTag(value)];
+}
+//#endregion
+//#region node_modules/lodash-es/_baseUnary.js
+/**
+* The base implementation of `_.unary` without support for storing metadata.
+*
+* @private
+* @param {Function} func The function to cap arguments for.
+* @returns {Function} Returns the new capped function.
+*/
+function baseUnary(func) {
+	return function(value) {
+		return func(value);
+	};
+}
+//#endregion
+//#region node_modules/lodash-es/_nodeUtil.js
+/** Detect free variable `exports`. */
+var freeExports$1 = typeof exports == "object" && exports && !exports.nodeType && exports;
+/** Detect free variable `module`. */
+var freeModule$1 = freeExports$1 && typeof module == "object" && module && !module.nodeType && module;
+/** Detect free variable `process` from Node.js. */
+var freeProcess = freeModule$1 && freeModule$1.exports === freeExports$1 && freeGlobal.process;
+/** Used to access faster Node.js helpers. */
+var nodeUtil = function() {
+	try {
+		var types = freeModule$1 && freeModule$1.require && freeModule$1.require("util").types;
+		if (types) return types;
+		return freeProcess && freeProcess.binding && freeProcess.binding("util");
+	} catch (e) {}
+}();
+//#endregion
+//#region node_modules/lodash-es/isTypedArray.js
+var nodeIsTypedArray = nodeUtil && nodeUtil.isTypedArray;
+/**
+* Checks if `value` is classified as a typed array.
+*
+* @static
+* @memberOf _
+* @since 3.0.0
+* @category Lang
+* @param {*} value The value to check.
+* @returns {boolean} Returns `true` if `value` is a typed array, else `false`.
+* @example
+*
+* _.isTypedArray(new Uint8Array);
+* // => true
+*
+* _.isTypedArray([]);
+* // => false
+*/
+var isTypedArray = nodeIsTypedArray ? baseUnary(nodeIsTypedArray) : baseIsTypedArray;
+//#endregion
+//#region node_modules/lodash-es/_arrayLikeKeys.js
+/** Used to check objects for own properties. */
+var hasOwnProperty$8 = Object.prototype.hasOwnProperty;
+/**
+* Creates an array of the enumerable property names of the array-like `value`.
+*
+* @private
+* @param {*} value The value to query.
+* @param {boolean} inherited Specify returning inherited property names.
+* @returns {Array} Returns the array of property names.
+*/
+function arrayLikeKeys(value, inherited) {
+	var isArr = isArray$1(value), isArg = !isArr && isArguments(value), isBuff = !isArr && !isArg && isBuffer(value), isType = !isArr && !isArg && !isBuff && isTypedArray(value), skipIndexes = isArr || isArg || isBuff || isType, result = skipIndexes ? baseTimes(value.length, String) : [], length = result.length;
+	for (var key in value) if ((inherited || hasOwnProperty$8.call(value, key)) && !(skipIndexes && (key == "length" || isBuff && (key == "offset" || key == "parent") || isType && (key == "buffer" || key == "byteLength" || key == "byteOffset") || isIndex(key, length)))) result.push(key);
+	return result;
+}
+//#endregion
+//#region node_modules/lodash-es/_overArg.js
+/**
+* Creates a unary function that invokes `func` with its argument transformed.
+*
+* @private
+* @param {Function} func The function to wrap.
+* @param {Function} transform The argument transform.
+* @returns {Function} Returns the new function.
+*/
+function overArg(func, transform) {
+	return function(arg) {
+		return func(transform(arg));
+	};
+}
+//#endregion
+//#region node_modules/lodash-es/_nativeKeys.js
+var nativeKeys = overArg(Object.keys, Object);
+//#endregion
+//#region node_modules/lodash-es/_baseKeys.js
+/** Used to check objects for own properties. */
+var hasOwnProperty$7 = Object.prototype.hasOwnProperty;
+/**
+* The base implementation of `_.keys` which doesn't treat sparse arrays as dense.
+*
+* @private
+* @param {Object} object The object to query.
+* @returns {Array} Returns the array of property names.
+*/
+function baseKeys(object) {
+	if (!isPrototype(object)) return nativeKeys(object);
+	var result = [];
+	for (var key in Object(object)) if (hasOwnProperty$7.call(object, key) && key != "constructor") result.push(key);
+	return result;
+}
+//#endregion
+//#region node_modules/lodash-es/keys.js
+/**
+* Creates an array of the own enumerable property names of `object`.
+*
+* **Note:** Non-object values are coerced to objects. See the
+* [ES spec](http://ecma-international.org/ecma-262/7.0/#sec-object.keys)
+* for more details.
+*
+* @static
+* @since 0.1.0
+* @memberOf _
+* @category Object
+* @param {Object} object The object to query.
+* @returns {Array} Returns the array of property names.
+* @example
+*
+* function Foo() {
+*   this.a = 1;
+*   this.b = 2;
+* }
+*
+* Foo.prototype.c = 3;
+*
+* _.keys(new Foo);
+* // => ['a', 'b'] (iteration order is not guaranteed)
+*
+* _.keys('hi');
+* // => ['0', '1']
+*/
+function keys(object) {
+	return isArrayLike(object) ? arrayLikeKeys(object) : baseKeys(object);
+}
+//#endregion
+//#region node_modules/lodash-es/_nativeKeysIn.js
+/**
+* This function is like
+* [`Object.keys`](http://ecma-international.org/ecma-262/7.0/#sec-object.keys)
+* except that it includes inherited enumerable properties.
+*
+* @private
+* @param {Object} object The object to query.
+* @returns {Array} Returns the array of property names.
+*/
+function nativeKeysIn(object) {
+	var result = [];
+	if (object != null) for (var key in Object(object)) result.push(key);
+	return result;
+}
+//#endregion
+//#region node_modules/lodash-es/_baseKeysIn.js
+/** Used to check objects for own properties. */
+var hasOwnProperty$6 = Object.prototype.hasOwnProperty;
+/**
+* The base implementation of `_.keysIn` which doesn't treat sparse arrays as dense.
+*
+* @private
+* @param {Object} object The object to query.
+* @returns {Array} Returns the array of property names.
+*/
+function baseKeysIn(object) {
+	if (!isObject$1(object)) return nativeKeysIn(object);
+	var isProto = isPrototype(object), result = [];
+	for (var key in object) if (!(key == "constructor" && (isProto || !hasOwnProperty$6.call(object, key)))) result.push(key);
+	return result;
+}
+//#endregion
+//#region node_modules/lodash-es/keysIn.js
+/**
+* Creates an array of the own and inherited enumerable property names of `object`.
+*
+* **Note:** Non-object values are coerced to objects.
+*
+* @static
+* @memberOf _
+* @since 3.0.0
+* @category Object
+* @param {Object} object The object to query.
+* @returns {Array} Returns the array of property names.
+* @example
+*
+* function Foo() {
+*   this.a = 1;
+*   this.b = 2;
+* }
+*
+* Foo.prototype.c = 3;
+*
+* _.keysIn(new Foo);
+* // => ['a', 'b', 'c'] (iteration order is not guaranteed)
+*/
+function keysIn(object) {
+	return isArrayLike(object) ? arrayLikeKeys(object, true) : baseKeysIn(object);
+}
+//#endregion
+//#region node_modules/lodash-es/_nativeCreate.js
+var nativeCreate = getNative(Object, "create");
+//#endregion
+//#region node_modules/lodash-es/_hashClear.js
+/**
+* Removes all key-value entries from the hash.
+*
+* @private
+* @name clear
+* @memberOf Hash
+*/
+function hashClear() {
+	this.__data__ = nativeCreate ? nativeCreate(null) : {};
+	this.size = 0;
+}
+//#endregion
+//#region node_modules/lodash-es/_hashDelete.js
+/**
+* Removes `key` and its value from the hash.
+*
+* @private
+* @name delete
+* @memberOf Hash
+* @param {Object} hash The hash to modify.
+* @param {string} key The key of the value to remove.
+* @returns {boolean} Returns `true` if the entry was removed, else `false`.
+*/
+function hashDelete(key) {
+	var result = this.has(key) && delete this.__data__[key];
+	this.size -= result ? 1 : 0;
+	return result;
+}
+//#endregion
+//#region node_modules/lodash-es/_hashGet.js
+/** Used to stand-in for `undefined` hash values. */
+var HASH_UNDEFINED$2 = "__lodash_hash_undefined__";
+/** Used to check objects for own properties. */
+var hasOwnProperty$5 = Object.prototype.hasOwnProperty;
+/**
+* Gets the hash value for `key`.
+*
+* @private
+* @name get
+* @memberOf Hash
+* @param {string} key The key of the value to get.
+* @returns {*} Returns the entry value.
+*/
+function hashGet(key) {
+	var data = this.__data__;
+	if (nativeCreate) {
+		var result = data[key];
+		return result === HASH_UNDEFINED$2 ? void 0 : result;
+	}
+	return hasOwnProperty$5.call(data, key) ? data[key] : void 0;
+}
+//#endregion
+//#region node_modules/lodash-es/_hashHas.js
+/** Used to check objects for own properties. */
+var hasOwnProperty$4 = Object.prototype.hasOwnProperty;
+/**
+* Checks if a hash value for `key` exists.
+*
+* @private
+* @name has
+* @memberOf Hash
+* @param {string} key The key of the entry to check.
+* @returns {boolean} Returns `true` if an entry for `key` exists, else `false`.
+*/
+function hashHas(key) {
+	var data = this.__data__;
+	return nativeCreate ? data[key] !== void 0 : hasOwnProperty$4.call(data, key);
+}
+//#endregion
+//#region node_modules/lodash-es/_hashSet.js
+/** Used to stand-in for `undefined` hash values. */
+var HASH_UNDEFINED$1 = "__lodash_hash_undefined__";
+/**
+* Sets the hash `key` to `value`.
+*
+* @private
+* @name set
+* @memberOf Hash
+* @param {string} key The key of the value to set.
+* @param {*} value The value to set.
+* @returns {Object} Returns the hash instance.
+*/
+function hashSet(key, value) {
+	var data = this.__data__;
+	this.size += this.has(key) ? 0 : 1;
+	data[key] = nativeCreate && value === void 0 ? HASH_UNDEFINED$1 : value;
+	return this;
+}
+//#endregion
+//#region node_modules/lodash-es/_Hash.js
+/**
+* Creates a hash object.
+*
+* @private
+* @constructor
+* @param {Array} [entries] The key-value pairs to cache.
+*/
+function Hash(entries) {
+	var index = -1, length = entries == null ? 0 : entries.length;
+	this.clear();
+	while (++index < length) {
+		var entry = entries[index];
+		this.set(entry[0], entry[1]);
+	}
+}
+Hash.prototype.clear = hashClear;
+Hash.prototype["delete"] = hashDelete;
+Hash.prototype.get = hashGet;
+Hash.prototype.has = hashHas;
+Hash.prototype.set = hashSet;
+//#endregion
+//#region node_modules/lodash-es/_listCacheClear.js
+/**
+* Removes all key-value entries from the list cache.
+*
+* @private
+* @name clear
+* @memberOf ListCache
+*/
+function listCacheClear() {
+	this.__data__ = [];
+	this.size = 0;
+}
+//#endregion
+//#region node_modules/lodash-es/_assocIndexOf.js
+/**
+* Gets the index at which the `key` is found in `array` of key-value pairs.
+*
+* @private
+* @param {Array} array The array to inspect.
+* @param {*} key The key to search for.
+* @returns {number} Returns the index of the matched value, else `-1`.
+*/
+function assocIndexOf(array, key) {
+	var length = array.length;
+	while (length--) if (eq(array[length][0], key)) return length;
+	return -1;
+}
+//#endregion
+//#region node_modules/lodash-es/_listCacheDelete.js
+/** Built-in value references. */
+var splice = Array.prototype.splice;
+/**
+* Removes `key` and its value from the list cache.
+*
+* @private
+* @name delete
+* @memberOf ListCache
+* @param {string} key The key of the value to remove.
+* @returns {boolean} Returns `true` if the entry was removed, else `false`.
+*/
+function listCacheDelete(key) {
+	var data = this.__data__, index = assocIndexOf(data, key);
+	if (index < 0) return false;
+	if (index == data.length - 1) data.pop();
+	else splice.call(data, index, 1);
+	--this.size;
+	return true;
+}
+//#endregion
+//#region node_modules/lodash-es/_listCacheGet.js
+/**
+* Gets the list cache value for `key`.
+*
+* @private
+* @name get
+* @memberOf ListCache
+* @param {string} key The key of the value to get.
+* @returns {*} Returns the entry value.
+*/
+function listCacheGet(key) {
+	var data = this.__data__, index = assocIndexOf(data, key);
+	return index < 0 ? void 0 : data[index][1];
+}
+//#endregion
+//#region node_modules/lodash-es/_listCacheHas.js
+/**
+* Checks if a list cache value for `key` exists.
+*
+* @private
+* @name has
+* @memberOf ListCache
+* @param {string} key The key of the entry to check.
+* @returns {boolean} Returns `true` if an entry for `key` exists, else `false`.
+*/
+function listCacheHas(key) {
+	return assocIndexOf(this.__data__, key) > -1;
+}
+//#endregion
+//#region node_modules/lodash-es/_listCacheSet.js
+/**
+* Sets the list cache `key` to `value`.
+*
+* @private
+* @name set
+* @memberOf ListCache
+* @param {string} key The key of the value to set.
+* @param {*} value The value to set.
+* @returns {Object} Returns the list cache instance.
+*/
+function listCacheSet(key, value) {
+	var data = this.__data__, index = assocIndexOf(data, key);
+	if (index < 0) {
+		++this.size;
+		data.push([key, value]);
+	} else data[index][1] = value;
+	return this;
+}
+//#endregion
+//#region node_modules/lodash-es/_ListCache.js
+/**
+* Creates an list cache object.
+*
+* @private
+* @constructor
+* @param {Array} [entries] The key-value pairs to cache.
+*/
+function ListCache(entries) {
+	var index = -1, length = entries == null ? 0 : entries.length;
+	this.clear();
+	while (++index < length) {
+		var entry = entries[index];
+		this.set(entry[0], entry[1]);
+	}
+}
+ListCache.prototype.clear = listCacheClear;
+ListCache.prototype["delete"] = listCacheDelete;
+ListCache.prototype.get = listCacheGet;
+ListCache.prototype.has = listCacheHas;
+ListCache.prototype.set = listCacheSet;
+//#endregion
+//#region node_modules/lodash-es/_Map.js
+var Map$1 = getNative(root, "Map");
+//#endregion
+//#region node_modules/lodash-es/_mapCacheClear.js
+/**
+* Removes all key-value entries from the map.
+*
+* @private
+* @name clear
+* @memberOf MapCache
+*/
+function mapCacheClear() {
+	this.size = 0;
+	this.__data__ = {
+		"hash": new Hash(),
+		"map": new (Map$1 || ListCache)(),
+		"string": new Hash()
+	};
+}
+//#endregion
+//#region node_modules/lodash-es/_isKeyable.js
+/**
+* Checks if `value` is suitable for use as unique object key.
+*
+* @private
+* @param {*} value The value to check.
+* @returns {boolean} Returns `true` if `value` is suitable, else `false`.
+*/
+function isKeyable(value) {
+	var type = typeof value;
+	return type == "string" || type == "number" || type == "symbol" || type == "boolean" ? value !== "__proto__" : value === null;
+}
+//#endregion
+//#region node_modules/lodash-es/_getMapData.js
+/**
+* Gets the data for `map`.
+*
+* @private
+* @param {Object} map The map to query.
+* @param {string} key The reference key.
+* @returns {*} Returns the map data.
+*/
+function getMapData(map, key) {
+	var data = map.__data__;
+	return isKeyable(key) ? data[typeof key == "string" ? "string" : "hash"] : data.map;
+}
+//#endregion
+//#region node_modules/lodash-es/_mapCacheDelete.js
+/**
+* Removes `key` and its value from the map.
+*
+* @private
+* @name delete
+* @memberOf MapCache
+* @param {string} key The key of the value to remove.
+* @returns {boolean} Returns `true` if the entry was removed, else `false`.
+*/
+function mapCacheDelete(key) {
+	var result = getMapData(this, key)["delete"](key);
+	this.size -= result ? 1 : 0;
+	return result;
+}
+//#endregion
+//#region node_modules/lodash-es/_mapCacheGet.js
+/**
+* Gets the map value for `key`.
+*
+* @private
+* @name get
+* @memberOf MapCache
+* @param {string} key The key of the value to get.
+* @returns {*} Returns the entry value.
+*/
+function mapCacheGet(key) {
+	return getMapData(this, key).get(key);
+}
+//#endregion
+//#region node_modules/lodash-es/_mapCacheHas.js
+/**
+* Checks if a map value for `key` exists.
+*
+* @private
+* @name has
+* @memberOf MapCache
+* @param {string} key The key of the entry to check.
+* @returns {boolean} Returns `true` if an entry for `key` exists, else `false`.
+*/
+function mapCacheHas(key) {
+	return getMapData(this, key).has(key);
+}
+//#endregion
+//#region node_modules/lodash-es/_mapCacheSet.js
+/**
+* Sets the map `key` to `value`.
+*
+* @private
+* @name set
+* @memberOf MapCache
+* @param {string} key The key of the value to set.
+* @param {*} value The value to set.
+* @returns {Object} Returns the map cache instance.
+*/
+function mapCacheSet(key, value) {
+	var data = getMapData(this, key), size = data.size;
+	data.set(key, value);
+	this.size += data.size == size ? 0 : 1;
+	return this;
+}
+//#endregion
+//#region node_modules/lodash-es/_MapCache.js
+/**
+* Creates a map cache object to store key-value pairs.
+*
+* @private
+* @constructor
+* @param {Array} [entries] The key-value pairs to cache.
+*/
+function MapCache(entries) {
+	var index = -1, length = entries == null ? 0 : entries.length;
+	this.clear();
+	while (++index < length) {
+		var entry = entries[index];
+		this.set(entry[0], entry[1]);
+	}
+}
+MapCache.prototype.clear = mapCacheClear;
+MapCache.prototype["delete"] = mapCacheDelete;
+MapCache.prototype.get = mapCacheGet;
+MapCache.prototype.has = mapCacheHas;
+MapCache.prototype.set = mapCacheSet;
+//#endregion
+//#region node_modules/lodash-es/toString.js
+/**
+* Converts `value` to a string. An empty string is returned for `null`
+* and `undefined` values. The sign of `-0` is preserved.
+*
+* @static
+* @memberOf _
+* @since 4.0.0
+* @category Lang
+* @param {*} value The value to convert.
+* @returns {string} Returns the converted string.
+* @example
+*
+* _.toString(null);
+* // => ''
+*
+* _.toString(-0);
+* // => '-0'
+*
+* _.toString([1, 2, 3]);
+* // => '1,2,3'
+*/
+function toString$1(value) {
+	return value == null ? "" : baseToString$1(value);
+}
+//#endregion
+//#region node_modules/lodash-es/_arrayPush.js
+/**
+* Appends the elements of `values` to `array`.
+*
+* @private
+* @param {Array} array The array to modify.
+* @param {Array} values The values to append.
+* @returns {Array} Returns `array`.
+*/
+function arrayPush(array, values) {
+	var index = -1, length = values.length, offset = array.length;
+	while (++index < length) array[offset + index] = values[index];
+	return array;
+}
+//#endregion
+//#region node_modules/lodash-es/_getPrototype.js
+/** Built-in value references. */
+var getPrototype = overArg(Object.getPrototypeOf, Object);
+//#endregion
+//#region node_modules/lodash-es/_baseSlice.js
+/**
+* The base implementation of `_.slice` without an iteratee call guard.
+*
+* @private
+* @param {Array} array The array to slice.
+* @param {number} [start=0] The start position.
+* @param {number} [end=array.length] The end position.
+* @returns {Array} Returns the slice of `array`.
+*/
+function baseSlice(array, start, end) {
+	var index = -1, length = array.length;
+	if (start < 0) start = -start > length ? 0 : length + start;
+	end = end > length ? length : end;
+	if (end < 0) end += length;
+	length = start > end ? 0 : end - start >>> 0;
+	start >>>= 0;
+	var result = Array(length);
+	while (++index < length) result[index] = array[index + start];
+	return result;
+}
+//#endregion
+//#region node_modules/lodash-es/_castSlice.js
+/**
+* Casts `array` to a slice if it's needed.
+*
+* @private
+* @param {Array} array The array to inspect.
+* @param {number} start The start position.
+* @param {number} [end=array.length] The end position.
+* @returns {Array} Returns the cast slice.
+*/
+function castSlice(array, start, end) {
+	var length = array.length;
+	end = end === void 0 ? length : end;
+	return !start && end >= length ? array : baseSlice(array, start, end);
+}
+//#endregion
+//#region node_modules/lodash-es/_hasUnicode.js
+/** Used to detect strings with [zero-width joiners or code points from the astral planes](http://eev.ee/blog/2015/09/12/dark-corners-of-unicode/). */
+var reHasUnicode = RegExp("[\\u200d\\ud800-\\udfff\\u0300-\\u036f\\ufe20-\\ufe2f\\u20d0-\\u20ff\\ufe0e\\ufe0f]");
+/**
+* Checks if `string` contains Unicode symbols.
+*
+* @private
+* @param {string} string The string to inspect.
+* @returns {boolean} Returns `true` if a symbol is found, else `false`.
+*/
+function hasUnicode(string) {
+	return reHasUnicode.test(string);
+}
+//#endregion
+//#region node_modules/lodash-es/_asciiToArray.js
+/**
+* Converts an ASCII `string` to an array.
+*
+* @private
+* @param {string} string The string to convert.
+* @returns {Array} Returns the converted array.
+*/
+function asciiToArray(string) {
+	return string.split("");
+}
+//#endregion
+//#region node_modules/lodash-es/_unicodeToArray.js
+/** Used to compose unicode character classes. */
+var rsAstralRange$1 = "\\ud800-\\udfff", rsComboRange$1 = "\\u0300-\\u036f\\ufe20-\\ufe2f\\u20d0-\\u20ff", rsVarRange$1 = "\\ufe0e\\ufe0f";
+/** Used to compose unicode capture groups. */
+var rsAstral = "[" + rsAstralRange$1 + "]", rsCombo$1 = "[" + rsComboRange$1 + "]", rsFitz = "\\ud83c[\\udffb-\\udfff]", rsModifier$1 = "(?:" + rsCombo$1 + "|" + rsFitz + ")", rsNonAstral$1 = "[^" + rsAstralRange$1 + "]", rsRegional$1 = "(?:\\ud83c[\\udde6-\\uddff]){2}", rsSurrPair$1 = "[\\ud800-\\udbff][\\udc00-\\udfff]", rsZWJ$1 = "\\u200d";
+/** Used to compose unicode regexes. */
+var reOptMod$1 = rsModifier$1 + "?", rsOptVar$1 = "[" + rsVarRange$1 + "]?", rsOptJoin$1 = "(?:" + rsZWJ$1 + "(?:" + [
+	rsNonAstral$1,
+	rsRegional$1,
+	rsSurrPair$1
+].join("|") + ")" + rsOptVar$1 + reOptMod$1 + ")*", rsSeq$1 = rsOptVar$1 + reOptMod$1 + rsOptJoin$1, rsSymbol = "(?:" + [
+	rsNonAstral$1 + rsCombo$1 + "?",
+	rsCombo$1,
+	rsRegional$1,
+	rsSurrPair$1,
+	rsAstral
+].join("|") + ")";
+/** Used to match [string symbols](https://mathiasbynens.be/notes/javascript-unicode). */
+var reUnicode = RegExp(rsFitz + "(?=" + rsFitz + ")|" + rsSymbol + rsSeq$1, "g");
+/**
+* Converts a Unicode `string` to an array.
+*
+* @private
+* @param {string} string The string to convert.
+* @returns {Array} Returns the converted array.
+*/
+function unicodeToArray(string) {
+	return string.match(reUnicode) || [];
+}
+//#endregion
+//#region node_modules/lodash-es/_stringToArray.js
+/**
+* Converts `string` to an array.
+*
+* @private
+* @param {string} string The string to convert.
+* @returns {Array} Returns the converted array.
+*/
+function stringToArray(string) {
+	return hasUnicode(string) ? unicodeToArray(string) : asciiToArray(string);
+}
+//#endregion
+//#region node_modules/lodash-es/_createCaseFirst.js
+/**
+* Creates a function like `_.lowerFirst`.
+*
+* @private
+* @param {string} methodName The name of the `String` case method to use.
+* @returns {Function} Returns the new case function.
+*/
+function createCaseFirst(methodName) {
+	return function(string) {
+		string = toString$1(string);
+		var strSymbols = hasUnicode(string) ? stringToArray(string) : void 0;
+		var chr = strSymbols ? strSymbols[0] : string.charAt(0);
+		var trailing = strSymbols ? castSlice(strSymbols, 1).join("") : string.slice(1);
+		return chr[methodName]() + trailing;
+	};
+}
+//#endregion
+//#region node_modules/lodash-es/upperFirst.js
+/**
+* Converts the first character of `string` to upper case.
+*
+* @static
+* @memberOf _
+* @since 4.0.0
+* @category String
+* @param {string} [string=''] The string to convert.
+* @returns {string} Returns the converted string.
+* @example
+*
+* _.upperFirst('fred');
+* // => 'Fred'
+*
+* _.upperFirst('FRED');
+* // => 'FRED'
+*/
+var upperFirst = createCaseFirst("toUpperCase");
+//#endregion
+//#region node_modules/lodash-es/capitalize.js
+/**
+* Converts the first character of `string` to upper case and the remaining
+* to lower case.
+*
+* @static
+* @memberOf _
+* @since 3.0.0
+* @category String
+* @param {string} [string=''] The string to capitalize.
+* @returns {string} Returns the capitalized string.
+* @example
+*
+* _.capitalize('FRED');
+* // => 'Fred'
+*/
+function capitalize(string) {
+	return upperFirst(toString$1(string).toLowerCase());
+}
+//#endregion
+//#region node_modules/lodash-es/_arrayReduce.js
+/**
+* A specialized version of `_.reduce` for arrays without support for
+* iteratee shorthands.
+*
+* @private
+* @param {Array} [array] The array to iterate over.
+* @param {Function} iteratee The function invoked per iteration.
+* @param {*} [accumulator] The initial value.
+* @param {boolean} [initAccum] Specify using the first element of `array` as
+*  the initial value.
+* @returns {*} Returns the accumulated value.
+*/
+function arrayReduce(array, iteratee, accumulator, initAccum) {
+	var index = -1, length = array == null ? 0 : array.length;
+	if (initAccum && length) accumulator = array[++index];
+	while (++index < length) accumulator = iteratee(accumulator, array[index], index, array);
+	return accumulator;
+}
+//#endregion
+//#region node_modules/lodash-es/_basePropertyOf.js
+/**
+* The base implementation of `_.propertyOf` without support for deep paths.
+*
+* @private
+* @param {Object} object The object to query.
+* @returns {Function} Returns the new accessor function.
+*/
+function basePropertyOf(object) {
+	return function(key) {
+		return object == null ? void 0 : object[key];
+	};
+}
+//#endregion
+//#region node_modules/lodash-es/_deburrLetter.js
+/**
+* Used by `_.deburr` to convert Latin-1 Supplement and Latin Extended-A
+* letters to basic Latin letters.
+*
+* @private
+* @param {string} letter The matched letter to deburr.
+* @returns {string} Returns the deburred letter.
+*/
+var deburrLetter = basePropertyOf({
+	"À": "A",
+	"Á": "A",
+	"Â": "A",
+	"Ã": "A",
+	"Ä": "A",
+	"Å": "A",
+	"à": "a",
+	"á": "a",
+	"â": "a",
+	"ã": "a",
+	"ä": "a",
+	"å": "a",
+	"Ç": "C",
+	"ç": "c",
+	"Ð": "D",
+	"ð": "d",
+	"È": "E",
+	"É": "E",
+	"Ê": "E",
+	"Ë": "E",
+	"è": "e",
+	"é": "e",
+	"ê": "e",
+	"ë": "e",
+	"Ì": "I",
+	"Í": "I",
+	"Î": "I",
+	"Ï": "I",
+	"ì": "i",
+	"í": "i",
+	"î": "i",
+	"ï": "i",
+	"Ñ": "N",
+	"ñ": "n",
+	"Ò": "O",
+	"Ó": "O",
+	"Ô": "O",
+	"Õ": "O",
+	"Ö": "O",
+	"Ø": "O",
+	"ò": "o",
+	"ó": "o",
+	"ô": "o",
+	"õ": "o",
+	"ö": "o",
+	"ø": "o",
+	"Ù": "U",
+	"Ú": "U",
+	"Û": "U",
+	"Ü": "U",
+	"ù": "u",
+	"ú": "u",
+	"û": "u",
+	"ü": "u",
+	"Ý": "Y",
+	"ý": "y",
+	"ÿ": "y",
+	"Æ": "Ae",
+	"æ": "ae",
+	"Þ": "Th",
+	"þ": "th",
+	"ß": "ss",
+	"Ā": "A",
+	"Ă": "A",
+	"Ą": "A",
+	"ā": "a",
+	"ă": "a",
+	"ą": "a",
+	"Ć": "C",
+	"Ĉ": "C",
+	"Ċ": "C",
+	"Č": "C",
+	"ć": "c",
+	"ĉ": "c",
+	"ċ": "c",
+	"č": "c",
+	"Ď": "D",
+	"Đ": "D",
+	"ď": "d",
+	"đ": "d",
+	"Ē": "E",
+	"Ĕ": "E",
+	"Ė": "E",
+	"Ę": "E",
+	"Ě": "E",
+	"ē": "e",
+	"ĕ": "e",
+	"ė": "e",
+	"ę": "e",
+	"ě": "e",
+	"Ĝ": "G",
+	"Ğ": "G",
+	"Ġ": "G",
+	"Ģ": "G",
+	"ĝ": "g",
+	"ğ": "g",
+	"ġ": "g",
+	"ģ": "g",
+	"Ĥ": "H",
+	"Ħ": "H",
+	"ĥ": "h",
+	"ħ": "h",
+	"Ĩ": "I",
+	"Ī": "I",
+	"Ĭ": "I",
+	"Į": "I",
+	"İ": "I",
+	"ĩ": "i",
+	"ī": "i",
+	"ĭ": "i",
+	"į": "i",
+	"ı": "i",
+	"Ĵ": "J",
+	"ĵ": "j",
+	"Ķ": "K",
+	"ķ": "k",
+	"ĸ": "k",
+	"Ĺ": "L",
+	"Ļ": "L",
+	"Ľ": "L",
+	"Ŀ": "L",
+	"Ł": "L",
+	"ĺ": "l",
+	"ļ": "l",
+	"ľ": "l",
+	"ŀ": "l",
+	"ł": "l",
+	"Ń": "N",
+	"Ņ": "N",
+	"Ň": "N",
+	"Ŋ": "N",
+	"ń": "n",
+	"ņ": "n",
+	"ň": "n",
+	"ŋ": "n",
+	"Ō": "O",
+	"Ŏ": "O",
+	"Ő": "O",
+	"ō": "o",
+	"ŏ": "o",
+	"ő": "o",
+	"Ŕ": "R",
+	"Ŗ": "R",
+	"Ř": "R",
+	"ŕ": "r",
+	"ŗ": "r",
+	"ř": "r",
+	"Ś": "S",
+	"Ŝ": "S",
+	"Ş": "S",
+	"Š": "S",
+	"ś": "s",
+	"ŝ": "s",
+	"ş": "s",
+	"š": "s",
+	"Ţ": "T",
+	"Ť": "T",
+	"Ŧ": "T",
+	"ţ": "t",
+	"ť": "t",
+	"ŧ": "t",
+	"Ũ": "U",
+	"Ū": "U",
+	"Ŭ": "U",
+	"Ů": "U",
+	"Ű": "U",
+	"Ų": "U",
+	"ũ": "u",
+	"ū": "u",
+	"ŭ": "u",
+	"ů": "u",
+	"ű": "u",
+	"ų": "u",
+	"Ŵ": "W",
+	"ŵ": "w",
+	"Ŷ": "Y",
+	"ŷ": "y",
+	"Ÿ": "Y",
+	"Ź": "Z",
+	"Ż": "Z",
+	"Ž": "Z",
+	"ź": "z",
+	"ż": "z",
+	"ž": "z",
+	"Ĳ": "IJ",
+	"ĳ": "ij",
+	"Œ": "Oe",
+	"œ": "oe",
+	"ŉ": "'n",
+	"ſ": "s"
+});
+//#endregion
+//#region node_modules/lodash-es/deburr.js
+/** Used to match Latin Unicode letters (excluding mathematical operators). */
+var reLatin = /[\xc0-\xd6\xd8-\xf6\xf8-\xff\u0100-\u017f]/g;
+/**
+* Used to match [combining diacritical marks](https://en.wikipedia.org/wiki/Combining_Diacritical_Marks) and
+* [combining diacritical marks for symbols](https://en.wikipedia.org/wiki/Combining_Diacritical_Marks_for_Symbols).
+*/
+var reComboMark = RegExp("[\\u0300-\\u036f\\ufe20-\\ufe2f\\u20d0-\\u20ff]", "g");
+/**
+* Deburrs `string` by converting
+* [Latin-1 Supplement](https://en.wikipedia.org/wiki/Latin-1_Supplement_(Unicode_block)#Character_table)
+* and [Latin Extended-A](https://en.wikipedia.org/wiki/Latin_Extended-A)
+* letters to basic Latin letters and removing
+* [combining diacritical marks](https://en.wikipedia.org/wiki/Combining_Diacritical_Marks).
+*
+* @static
+* @memberOf _
+* @since 3.0.0
+* @category String
+* @param {string} [string=''] The string to deburr.
+* @returns {string} Returns the deburred string.
+* @example
+*
+* _.deburr('déjà vu');
+* // => 'deja vu'
+*/
+function deburr(string) {
+	string = toString$1(string);
+	return string && string.replace(reLatin, deburrLetter).replace(reComboMark, "");
+}
+//#endregion
+//#region node_modules/lodash-es/_asciiWords.js
+/** Used to match words composed of alphanumeric characters. */
+var reAsciiWord = /[^\x00-\x2f\x3a-\x40\x5b-\x60\x7b-\x7f]+/g;
+/**
+* Splits an ASCII `string` into an array of its words.
+*
+* @private
+* @param {string} The string to inspect.
+* @returns {Array} Returns the words of `string`.
+*/
+function asciiWords(string) {
+	return string.match(reAsciiWord) || [];
+}
+//#endregion
+//#region node_modules/lodash-es/_hasUnicodeWord.js
+/** Used to detect strings that need a more robust regexp to match words. */
+var reHasUnicodeWord = /[a-z][A-Z]|[A-Z]{2}[a-z]|[0-9][a-zA-Z]|[a-zA-Z][0-9]|[^a-zA-Z0-9 ]/;
+/**
+* Checks if `string` contains a word composed of Unicode symbols.
+*
+* @private
+* @param {string} string The string to inspect.
+* @returns {boolean} Returns `true` if a word is found, else `false`.
+*/
+function hasUnicodeWord(string) {
+	return reHasUnicodeWord.test(string);
+}
+//#endregion
+//#region node_modules/lodash-es/_unicodeWords.js
+/** Used to compose unicode character classes. */
+var rsAstralRange = "\\ud800-\\udfff", rsComboRange = "\\u0300-\\u036f\\ufe20-\\ufe2f\\u20d0-\\u20ff", rsDingbatRange = "\\u2700-\\u27bf", rsLowerRange = "a-z\\xdf-\\xf6\\xf8-\\xff", rsMathOpRange = "\\xac\\xb1\\xd7\\xf7", rsNonCharRange = "\\x00-\\x2f\\x3a-\\x40\\x5b-\\x60\\x7b-\\xbf", rsPunctuationRange = "\\u2000-\\u206f", rsSpaceRange = " \\t\\x0b\\f\\xa0\\ufeff\\n\\r\\u2028\\u2029\\u1680\\u180e\\u2000\\u2001\\u2002\\u2003\\u2004\\u2005\\u2006\\u2007\\u2008\\u2009\\u200a\\u202f\\u205f\\u3000", rsUpperRange = "A-Z\\xc0-\\xd6\\xd8-\\xde", rsVarRange = "\\ufe0e\\ufe0f", rsBreakRange = rsMathOpRange + rsNonCharRange + rsPunctuationRange + rsSpaceRange;
+/** Used to compose unicode capture groups. */
+var rsApos = "['’]", rsBreak = "[" + rsBreakRange + "]", rsCombo = "[" + rsComboRange + "]", rsDigits = "\\d+", rsDingbat = "[" + rsDingbatRange + "]", rsLower = "[" + rsLowerRange + "]", rsMisc = "[^" + rsAstralRange + rsBreakRange + rsDigits + rsDingbatRange + rsLowerRange + rsUpperRange + "]", rsModifier = "(?:" + rsCombo + "|\\ud83c[\\udffb-\\udfff])", rsNonAstral = "[^" + rsAstralRange + "]", rsRegional = "(?:\\ud83c[\\udde6-\\uddff]){2}", rsSurrPair = "[\\ud800-\\udbff][\\udc00-\\udfff]", rsUpper = "[" + rsUpperRange + "]", rsZWJ = "\\u200d";
+/** Used to compose unicode regexes. */
+var rsMiscLower = "(?:" + rsLower + "|" + rsMisc + ")", rsMiscUpper = "(?:" + rsUpper + "|" + rsMisc + ")", rsOptContrLower = "(?:" + rsApos + "(?:d|ll|m|re|s|t|ve))?", rsOptContrUpper = "(?:" + rsApos + "(?:D|LL|M|RE|S|T|VE))?", reOptMod = rsModifier + "?", rsOptVar = "[" + rsVarRange + "]?", rsOptJoin = "(?:" + rsZWJ + "(?:" + [
+	rsNonAstral,
+	rsRegional,
+	rsSurrPair
+].join("|") + ")" + rsOptVar + reOptMod + ")*", rsOrdLower = "\\d*(?:1st|2nd|3rd|(?![123])\\dth)(?=\\b|[A-Z_])", rsOrdUpper = "\\d*(?:1ST|2ND|3RD|(?![123])\\dTH)(?=\\b|[a-z_])", rsSeq = rsOptVar + reOptMod + rsOptJoin, rsEmoji = "(?:" + [
+	rsDingbat,
+	rsRegional,
+	rsSurrPair
+].join("|") + ")" + rsSeq;
+/** Used to match complex or compound words. */
+var reUnicodeWord = RegExp([
+	rsUpper + "?" + rsLower + "+" + rsOptContrLower + "(?=" + [
+		rsBreak,
+		rsUpper,
+		"$"
+	].join("|") + ")",
+	rsMiscUpper + "+" + rsOptContrUpper + "(?=" + [
+		rsBreak,
+		rsUpper + rsMiscLower,
+		"$"
+	].join("|") + ")",
+	rsUpper + "?" + rsMiscLower + "+" + rsOptContrLower,
+	rsUpper + "+" + rsOptContrUpper,
+	rsOrdUpper,
+	rsOrdLower,
+	rsDigits,
+	rsEmoji
+].join("|"), "g");
+/**
+* Splits a Unicode `string` into an array of its words.
+*
+* @private
+* @param {string} The string to inspect.
+* @returns {Array} Returns the words of `string`.
+*/
+function unicodeWords(string) {
+	return string.match(reUnicodeWord) || [];
+}
+//#endregion
+//#region node_modules/lodash-es/words.js
+/**
+* Splits `string` into an array of its words.
+*
+* @static
+* @memberOf _
+* @since 3.0.0
+* @category String
+* @param {string} [string=''] The string to inspect.
+* @param {RegExp|string} [pattern] The pattern to match words.
+* @param- {Object} [guard] Enables use as an iteratee for methods like `_.map`.
+* @returns {Array} Returns the words of `string`.
+* @example
+*
+* _.words('fred, barney, & pebbles');
+* // => ['fred', 'barney', 'pebbles']
+*
+* _.words('fred, barney, & pebbles', /[^, ]+/g);
+* // => ['fred', 'barney', '&', 'pebbles']
+*/
+function words(string, pattern, guard) {
+	string = toString$1(string);
+	pattern = guard ? void 0 : pattern;
+	if (pattern === void 0) return hasUnicodeWord(string) ? unicodeWords(string) : asciiWords(string);
+	return string.match(pattern) || [];
+}
+//#endregion
+//#region node_modules/lodash-es/_createCompounder.js
+/** Used to match apostrophes. */
+var reApos = RegExp("['’]", "g");
+/**
+* Creates a function like `_.camelCase`.
+*
+* @private
+* @param {Function} callback The function to combine each word.
+* @returns {Function} Returns the new compounder function.
+*/
+function createCompounder(callback) {
+	return function(string) {
+		return arrayReduce(words(deburr(string).replace(reApos, "")), callback, "");
+	};
+}
+//#endregion
+//#region node_modules/lodash-es/_stackClear.js
+/**
+* Removes all key-value entries from the stack.
+*
+* @private
+* @name clear
+* @memberOf Stack
+*/
+function stackClear() {
+	this.__data__ = new ListCache();
+	this.size = 0;
+}
+//#endregion
+//#region node_modules/lodash-es/_stackDelete.js
+/**
+* Removes `key` and its value from the stack.
+*
+* @private
+* @name delete
+* @memberOf Stack
+* @param {string} key The key of the value to remove.
+* @returns {boolean} Returns `true` if the entry was removed, else `false`.
+*/
+function stackDelete(key) {
+	var data = this.__data__, result = data["delete"](key);
+	this.size = data.size;
+	return result;
+}
+//#endregion
+//#region node_modules/lodash-es/_stackGet.js
+/**
+* Gets the stack value for `key`.
+*
+* @private
+* @name get
+* @memberOf Stack
+* @param {string} key The key of the value to get.
+* @returns {*} Returns the entry value.
+*/
+function stackGet(key) {
+	return this.__data__.get(key);
+}
+//#endregion
+//#region node_modules/lodash-es/_stackHas.js
+/**
+* Checks if a stack value for `key` exists.
+*
+* @private
+* @name has
+* @memberOf Stack
+* @param {string} key The key of the entry to check.
+* @returns {boolean} Returns `true` if an entry for `key` exists, else `false`.
+*/
+function stackHas(key) {
+	return this.__data__.has(key);
+}
+//#endregion
+//#region node_modules/lodash-es/_stackSet.js
+/** Used as the size to enable large array optimizations. */
+var LARGE_ARRAY_SIZE = 200;
+/**
+* Sets the stack `key` to `value`.
+*
+* @private
+* @name set
+* @memberOf Stack
+* @param {string} key The key of the value to set.
+* @param {*} value The value to set.
+* @returns {Object} Returns the stack cache instance.
+*/
+function stackSet(key, value) {
+	var data = this.__data__;
+	if (data instanceof ListCache) {
+		var pairs = data.__data__;
+		if (!Map$1 || pairs.length < LARGE_ARRAY_SIZE - 1) {
+			pairs.push([key, value]);
+			this.size = ++data.size;
+			return this;
+		}
+		data = this.__data__ = new MapCache(pairs);
+	}
+	data.set(key, value);
+	this.size = data.size;
+	return this;
+}
+//#endregion
+//#region node_modules/lodash-es/_Stack.js
+/**
+* Creates a stack cache object to store key-value pairs.
+*
+* @private
+* @constructor
+* @param {Array} [entries] The key-value pairs to cache.
+*/
+function Stack(entries) {
+	var data = this.__data__ = new ListCache(entries);
+	this.size = data.size;
+}
+Stack.prototype.clear = stackClear;
+Stack.prototype["delete"] = stackDelete;
+Stack.prototype.get = stackGet;
+Stack.prototype.has = stackHas;
+Stack.prototype.set = stackSet;
+//#endregion
+//#region node_modules/lodash-es/_baseAssign.js
+/**
+* The base implementation of `_.assign` without support for multiple sources
+* or `customizer` functions.
+*
+* @private
+* @param {Object} object The destination object.
+* @param {Object} source The source object.
+* @returns {Object} Returns `object`.
+*/
+function baseAssign(object, source) {
+	return object && copyObject(source, keys(source), object);
+}
+//#endregion
+//#region node_modules/lodash-es/_baseAssignIn.js
+/**
+* The base implementation of `_.assignIn` without support for multiple sources
+* or `customizer` functions.
+*
+* @private
+* @param {Object} object The destination object.
+* @param {Object} source The source object.
+* @returns {Object} Returns `object`.
+*/
+function baseAssignIn(object, source) {
+	return object && copyObject(source, keysIn(source), object);
+}
+//#endregion
+//#region node_modules/lodash-es/_cloneBuffer.js
+/** Detect free variable `exports`. */
+var freeExports = typeof exports == "object" && exports && !exports.nodeType && exports;
+/** Detect free variable `module`. */
+var freeModule = freeExports && typeof module == "object" && module && !module.nodeType && module;
+/** Built-in value references. */
+var Buffer$1 = freeModule && freeModule.exports === freeExports ? root.Buffer : void 0, allocUnsafe = Buffer$1 ? Buffer$1.allocUnsafe : void 0;
+/**
+* Creates a clone of  `buffer`.
+*
+* @private
+* @param {Buffer} buffer The buffer to clone.
+* @param {boolean} [isDeep] Specify a deep clone.
+* @returns {Buffer} Returns the cloned buffer.
+*/
+function cloneBuffer(buffer, isDeep) {
+	if (isDeep) return buffer.slice();
+	var length = buffer.length, result = allocUnsafe ? allocUnsafe(length) : new buffer.constructor(length);
+	buffer.copy(result);
+	return result;
+}
+//#endregion
+//#region node_modules/lodash-es/_arrayFilter.js
+/**
+* A specialized version of `_.filter` for arrays without support for
+* iteratee shorthands.
+*
+* @private
+* @param {Array} [array] The array to iterate over.
+* @param {Function} predicate The function invoked per iteration.
+* @returns {Array} Returns the new filtered array.
+*/
+function arrayFilter(array, predicate) {
+	var index = -1, length = array == null ? 0 : array.length, resIndex = 0, result = [];
+	while (++index < length) {
+		var value = array[index];
+		if (predicate(value, index, array)) result[resIndex++] = value;
+	}
+	return result;
+}
+//#endregion
+//#region node_modules/lodash-es/stubArray.js
+/**
+* This method returns a new empty array.
+*
+* @static
+* @memberOf _
+* @since 4.13.0
+* @category Util
+* @returns {Array} Returns the new empty array.
+* @example
+*
+* var arrays = _.times(2, _.stubArray);
+*
+* console.log(arrays);
+* // => [[], []]
+*
+* console.log(arrays[0] === arrays[1]);
+* // => false
+*/
+function stubArray() {
+	return [];
+}
+//#endregion
+//#region node_modules/lodash-es/_getSymbols.js
+/** Built-in value references. */
+var propertyIsEnumerable = Object.prototype.propertyIsEnumerable;
+var nativeGetSymbols = Object.getOwnPropertySymbols;
+/**
+* Creates an array of the own enumerable symbols of `object`.
+*
+* @private
+* @param {Object} object The object to query.
+* @returns {Array} Returns the array of symbols.
+*/
+var getSymbols = !nativeGetSymbols ? stubArray : function(object) {
+	if (object == null) return [];
+	object = Object(object);
+	return arrayFilter(nativeGetSymbols(object), function(symbol) {
+		return propertyIsEnumerable.call(object, symbol);
+	});
+};
+//#endregion
+//#region node_modules/lodash-es/_copySymbols.js
+/**
+* Copies own symbols of `source` to `object`.
+*
+* @private
+* @param {Object} source The object to copy symbols from.
+* @param {Object} [object={}] The object to copy symbols to.
+* @returns {Object} Returns `object`.
+*/
+function copySymbols(source, object) {
+	return copyObject(source, getSymbols(source), object);
+}
+//#endregion
+//#region node_modules/lodash-es/_getSymbolsIn.js
+/**
+* Creates an array of the own and inherited enumerable symbols of `object`.
+*
+* @private
+* @param {Object} object The object to query.
+* @returns {Array} Returns the array of symbols.
+*/
+var getSymbolsIn = !Object.getOwnPropertySymbols ? stubArray : function(object) {
+	var result = [];
+	while (object) {
+		arrayPush(result, getSymbols(object));
+		object = getPrototype(object);
+	}
+	return result;
+};
+//#endregion
+//#region node_modules/lodash-es/_copySymbolsIn.js
+/**
+* Copies own and inherited symbols of `source` to `object`.
+*
+* @private
+* @param {Object} source The object to copy symbols from.
+* @param {Object} [object={}] The object to copy symbols to.
+* @returns {Object} Returns `object`.
+*/
+function copySymbolsIn(source, object) {
+	return copyObject(source, getSymbolsIn(source), object);
+}
+//#endregion
+//#region node_modules/lodash-es/_baseGetAllKeys.js
+/**
+* The base implementation of `getAllKeys` and `getAllKeysIn` which uses
+* `keysFunc` and `symbolsFunc` to get the enumerable property names and
+* symbols of `object`.
+*
+* @private
+* @param {Object} object The object to query.
+* @param {Function} keysFunc The function to get the keys of `object`.
+* @param {Function} symbolsFunc The function to get the symbols of `object`.
+* @returns {Array} Returns the array of property names and symbols.
+*/
+function baseGetAllKeys(object, keysFunc, symbolsFunc) {
+	var result = keysFunc(object);
+	return isArray$1(object) ? result : arrayPush(result, symbolsFunc(object));
+}
+//#endregion
+//#region node_modules/lodash-es/_getAllKeys.js
+/**
+* Creates an array of own enumerable property names and symbols of `object`.
+*
+* @private
+* @param {Object} object The object to query.
+* @returns {Array} Returns the array of property names and symbols.
+*/
+function getAllKeys(object) {
+	return baseGetAllKeys(object, keys, getSymbols);
+}
+//#endregion
+//#region node_modules/lodash-es/_getAllKeysIn.js
+/**
+* Creates an array of own and inherited enumerable property names and
+* symbols of `object`.
+*
+* @private
+* @param {Object} object The object to query.
+* @returns {Array} Returns the array of property names and symbols.
+*/
+function getAllKeysIn(object) {
+	return baseGetAllKeys(object, keysIn, getSymbolsIn);
+}
+//#endregion
+//#region node_modules/lodash-es/_DataView.js
+var DataView$1 = getNative(root, "DataView");
+//#endregion
+//#region node_modules/lodash-es/_Promise.js
+var Promise$1 = getNative(root, "Promise");
+//#endregion
+//#region node_modules/lodash-es/_Set.js
+var Set$1 = getNative(root, "Set");
+//#endregion
+//#region node_modules/lodash-es/_getTag.js
+/** `Object#toString` result references. */
+var mapTag$5 = "[object Map]", objectTag$2 = "[object Object]", promiseTag = "[object Promise]", setTag$5 = "[object Set]", weakMapTag$1 = "[object WeakMap]";
+var dataViewTag$3 = "[object DataView]";
+/** Used to detect maps, sets, and weakmaps. */
+var dataViewCtorString = toSource(DataView$1), mapCtorString = toSource(Map$1), promiseCtorString = toSource(Promise$1), setCtorString = toSource(Set$1), weakMapCtorString = toSource(WeakMap$1);
+/**
+* Gets the `toStringTag` of `value`.
+*
+* @private
+* @param {*} value The value to query.
+* @returns {string} Returns the `toStringTag`.
+*/
+var getTag$1 = baseGetTag;
+if (DataView$1 && getTag$1(new DataView$1(/* @__PURE__ */ new ArrayBuffer(1))) != dataViewTag$3 || Map$1 && getTag$1(new Map$1()) != mapTag$5 || Promise$1 && getTag$1(Promise$1.resolve()) != promiseTag || Set$1 && getTag$1(new Set$1()) != setTag$5 || WeakMap$1 && getTag$1(new WeakMap$1()) != weakMapTag$1) getTag$1 = function(value) {
+	var result = baseGetTag(value), Ctor = result == objectTag$2 ? value.constructor : void 0, ctorString = Ctor ? toSource(Ctor) : "";
+	if (ctorString) switch (ctorString) {
+		case dataViewCtorString: return dataViewTag$3;
+		case mapCtorString: return mapTag$5;
+		case promiseCtorString: return promiseTag;
+		case setCtorString: return setTag$5;
+		case weakMapCtorString: return weakMapTag$1;
+	}
+	return result;
+};
+var _getTag_default = getTag$1;
+//#endregion
+//#region node_modules/lodash-es/_initCloneArray.js
+/** Used to check objects for own properties. */
+var hasOwnProperty$3 = Object.prototype.hasOwnProperty;
+/**
+* Initializes an array clone.
+*
+* @private
+* @param {Array} array The array to clone.
+* @returns {Array} Returns the initialized clone.
+*/
+function initCloneArray(array) {
+	var length = array.length, result = new array.constructor(length);
+	if (length && typeof array[0] == "string" && hasOwnProperty$3.call(array, "index")) {
+		result.index = array.index;
+		result.input = array.input;
+	}
+	return result;
+}
+//#endregion
+//#region node_modules/lodash-es/_Uint8Array.js
+/** Built-in value references. */
+var Uint8Array$1 = root.Uint8Array;
+//#endregion
+//#region node_modules/lodash-es/_cloneArrayBuffer.js
+/**
+* Creates a clone of `arrayBuffer`.
+*
+* @private
+* @param {ArrayBuffer} arrayBuffer The array buffer to clone.
+* @returns {ArrayBuffer} Returns the cloned array buffer.
+*/
+function cloneArrayBuffer(arrayBuffer) {
+	var result = new arrayBuffer.constructor(arrayBuffer.byteLength);
+	new Uint8Array$1(result).set(new Uint8Array$1(arrayBuffer));
+	return result;
+}
+//#endregion
+//#region node_modules/lodash-es/_cloneDataView.js
+/**
+* Creates a clone of `dataView`.
+*
+* @private
+* @param {Object} dataView The data view to clone.
+* @param {boolean} [isDeep] Specify a deep clone.
+* @returns {Object} Returns the cloned data view.
+*/
+function cloneDataView(dataView, isDeep) {
+	var buffer = isDeep ? cloneArrayBuffer(dataView.buffer) : dataView.buffer;
+	return new dataView.constructor(buffer, dataView.byteOffset, dataView.byteLength);
+}
+//#endregion
+//#region node_modules/lodash-es/_cloneRegExp.js
+/** Used to match `RegExp` flags from their coerced string values. */
+var reFlags = /\w*$/;
+/**
+* Creates a clone of `regexp`.
+*
+* @private
+* @param {Object} regexp The regexp to clone.
+* @returns {Object} Returns the cloned regexp.
+*/
+function cloneRegExp(regexp) {
+	var result = new regexp.constructor(regexp.source, reFlags.exec(regexp));
+	result.lastIndex = regexp.lastIndex;
+	return result;
+}
+//#endregion
+//#region node_modules/lodash-es/_cloneSymbol.js
+/** Used to convert symbols to primitives and strings. */
+var symbolProto$1 = Symbol$1 ? Symbol$1.prototype : void 0, symbolValueOf$1 = symbolProto$1 ? symbolProto$1.valueOf : void 0;
+/**
+* Creates a clone of the `symbol` object.
+*
+* @private
+* @param {Object} symbol The symbol object to clone.
+* @returns {Object} Returns the cloned symbol object.
+*/
+function cloneSymbol(symbol) {
+	return symbolValueOf$1 ? Object(symbolValueOf$1.call(symbol)) : {};
+}
+//#endregion
+//#region node_modules/lodash-es/_cloneTypedArray.js
+/**
+* Creates a clone of `typedArray`.
+*
+* @private
+* @param {Object} typedArray The typed array to clone.
+* @param {boolean} [isDeep] Specify a deep clone.
+* @returns {Object} Returns the cloned typed array.
+*/
+function cloneTypedArray(typedArray, isDeep) {
+	var buffer = isDeep ? cloneArrayBuffer(typedArray.buffer) : typedArray.buffer;
+	return new typedArray.constructor(buffer, typedArray.byteOffset, typedArray.length);
+}
+//#endregion
+//#region node_modules/lodash-es/_initCloneByTag.js
+/** `Object#toString` result references. */
+var boolTag$2 = "[object Boolean]", dateTag$2 = "[object Date]", mapTag$4 = "[object Map]", numberTag$2 = "[object Number]", regexpTag$2 = "[object RegExp]", setTag$4 = "[object Set]", stringTag$3 = "[object String]", symbolTag$2 = "[object Symbol]";
+var arrayBufferTag$2 = "[object ArrayBuffer]", dataViewTag$2 = "[object DataView]", float32Tag$1 = "[object Float32Array]", float64Tag$1 = "[object Float64Array]", int8Tag$1 = "[object Int8Array]", int16Tag$1 = "[object Int16Array]", int32Tag$1 = "[object Int32Array]", uint8Tag$1 = "[object Uint8Array]", uint8ClampedTag$1 = "[object Uint8ClampedArray]", uint16Tag$1 = "[object Uint16Array]", uint32Tag$1 = "[object Uint32Array]";
+/**
+* Initializes an object clone based on its `toStringTag`.
+*
+* **Note:** This function only supports cloning values with tags of
+* `Boolean`, `Date`, `Error`, `Map`, `Number`, `RegExp`, `Set`, or `String`.
+*
+* @private
+* @param {Object} object The object to clone.
+* @param {string} tag The `toStringTag` of the object to clone.
+* @param {boolean} [isDeep] Specify a deep clone.
+* @returns {Object} Returns the initialized clone.
+*/
+function initCloneByTag(object, tag, isDeep) {
+	var Ctor = object.constructor;
+	switch (tag) {
+		case arrayBufferTag$2: return cloneArrayBuffer(object);
+		case boolTag$2:
+		case dateTag$2: return new Ctor(+object);
+		case dataViewTag$2: return cloneDataView(object, isDeep);
+		case float32Tag$1:
+		case float64Tag$1:
+		case int8Tag$1:
+		case int16Tag$1:
+		case int32Tag$1:
+		case uint8Tag$1:
+		case uint8ClampedTag$1:
+		case uint16Tag$1:
+		case uint32Tag$1: return cloneTypedArray(object, isDeep);
+		case mapTag$4: return new Ctor();
+		case numberTag$2:
+		case stringTag$3: return new Ctor(object);
+		case regexpTag$2: return cloneRegExp(object);
+		case setTag$4: return new Ctor();
+		case symbolTag$2: return cloneSymbol(object);
+	}
+}
+//#endregion
+//#region node_modules/lodash-es/_initCloneObject.js
+/**
+* Initializes an object clone.
+*
+* @private
+* @param {Object} object The object to clone.
+* @returns {Object} Returns the initialized clone.
+*/
+function initCloneObject(object) {
+	return typeof object.constructor == "function" && !isPrototype(object) ? baseCreate(getPrototype(object)) : {};
+}
+//#endregion
+//#region node_modules/lodash-es/_baseIsMap.js
+/** `Object#toString` result references. */
+var mapTag$3 = "[object Map]";
+/**
+* The base implementation of `_.isMap` without Node.js optimizations.
+*
+* @private
+* @param {*} value The value to check.
+* @returns {boolean} Returns `true` if `value` is a map, else `false`.
+*/
+function baseIsMap(value) {
+	return isObjectLike$1(value) && _getTag_default(value) == mapTag$3;
+}
+//#endregion
+//#region node_modules/lodash-es/isMap.js
+var nodeIsMap = nodeUtil && nodeUtil.isMap;
+/**
+* Checks if `value` is classified as a `Map` object.
+*
+* @static
+* @memberOf _
+* @since 4.3.0
+* @category Lang
+* @param {*} value The value to check.
+* @returns {boolean} Returns `true` if `value` is a map, else `false`.
+* @example
+*
+* _.isMap(new Map);
+* // => true
+*
+* _.isMap(new WeakMap);
+* // => false
+*/
+var isMap = nodeIsMap ? baseUnary(nodeIsMap) : baseIsMap;
+//#endregion
+//#region node_modules/lodash-es/_baseIsSet.js
+/** `Object#toString` result references. */
+var setTag$3 = "[object Set]";
+/**
+* The base implementation of `_.isSet` without Node.js optimizations.
+*
+* @private
+* @param {*} value The value to check.
+* @returns {boolean} Returns `true` if `value` is a set, else `false`.
+*/
+function baseIsSet(value) {
+	return isObjectLike$1(value) && _getTag_default(value) == setTag$3;
+}
+//#endregion
+//#region node_modules/lodash-es/isSet.js
+var nodeIsSet = nodeUtil && nodeUtil.isSet;
+/**
+* Checks if `value` is classified as a `Set` object.
+*
+* @static
+* @memberOf _
+* @since 4.3.0
+* @category Lang
+* @param {*} value The value to check.
+* @returns {boolean} Returns `true` if `value` is a set, else `false`.
+* @example
+*
+* _.isSet(new Set);
+* // => true
+*
+* _.isSet(new WeakSet);
+* // => false
+*/
+var isSet = nodeIsSet ? baseUnary(nodeIsSet) : baseIsSet;
+//#endregion
+//#region node_modules/lodash-es/_baseClone.js
+/** Used to compose bitmasks for cloning. */
+var CLONE_DEEP_FLAG$1 = 1, CLONE_FLAT_FLAG = 2, CLONE_SYMBOLS_FLAG$1 = 4;
+/** `Object#toString` result references. */
+var argsTag$1 = "[object Arguments]", arrayTag$1 = "[object Array]", boolTag$1 = "[object Boolean]", dateTag$1 = "[object Date]", errorTag$1 = "[object Error]", funcTag = "[object Function]", genTag = "[object GeneratorFunction]", mapTag$2 = "[object Map]", numberTag$1 = "[object Number]", objectTag$1 = "[object Object]", regexpTag$1 = "[object RegExp]", setTag$2 = "[object Set]", stringTag$2 = "[object String]", symbolTag$1 = "[object Symbol]", weakMapTag = "[object WeakMap]";
+var arrayBufferTag$1 = "[object ArrayBuffer]", dataViewTag$1 = "[object DataView]", float32Tag = "[object Float32Array]", float64Tag = "[object Float64Array]", int8Tag = "[object Int8Array]", int16Tag = "[object Int16Array]", int32Tag = "[object Int32Array]", uint8Tag = "[object Uint8Array]", uint8ClampedTag = "[object Uint8ClampedArray]", uint16Tag = "[object Uint16Array]", uint32Tag = "[object Uint32Array]";
+/** Used to identify `toStringTag` values supported by `_.clone`. */
+var cloneableTags = {};
+cloneableTags[argsTag$1] = cloneableTags[arrayTag$1] = cloneableTags[arrayBufferTag$1] = cloneableTags[dataViewTag$1] = cloneableTags[boolTag$1] = cloneableTags[dateTag$1] = cloneableTags[float32Tag] = cloneableTags[float64Tag] = cloneableTags[int8Tag] = cloneableTags[int16Tag] = cloneableTags[int32Tag] = cloneableTags[mapTag$2] = cloneableTags[numberTag$1] = cloneableTags[objectTag$1] = cloneableTags[regexpTag$1] = cloneableTags[setTag$2] = cloneableTags[stringTag$2] = cloneableTags[symbolTag$1] = cloneableTags[uint8Tag] = cloneableTags[uint8ClampedTag] = cloneableTags[uint16Tag] = cloneableTags[uint32Tag] = true;
+cloneableTags[errorTag$1] = cloneableTags[funcTag] = cloneableTags[weakMapTag] = false;
+/**
+* The base implementation of `_.clone` and `_.cloneDeep` which tracks
+* traversed objects.
+*
+* @private
+* @param {*} value The value to clone.
+* @param {boolean} bitmask The bitmask flags.
+*  1 - Deep clone
+*  2 - Flatten inherited properties
+*  4 - Clone symbols
+* @param {Function} [customizer] The function to customize cloning.
+* @param {string} [key] The key of `value`.
+* @param {Object} [object] The parent object of `value`.
+* @param {Object} [stack] Tracks traversed objects and their clone counterparts.
+* @returns {*} Returns the cloned value.
+*/
+function baseClone(value, bitmask, customizer, key, object, stack) {
+	var result, isDeep = bitmask & CLONE_DEEP_FLAG$1, isFlat = bitmask & CLONE_FLAT_FLAG, isFull = bitmask & CLONE_SYMBOLS_FLAG$1;
+	if (customizer) result = object ? customizer(value, key, object, stack) : customizer(value);
+	if (result !== void 0) return result;
+	if (!isObject$1(value)) return value;
+	var isArr = isArray$1(value);
+	if (isArr) {
+		result = initCloneArray(value);
+		if (!isDeep) return copyArray(value, result);
+	} else {
+		var tag = _getTag_default(value), isFunc = tag == funcTag || tag == genTag;
+		if (isBuffer(value)) return cloneBuffer(value, isDeep);
+		if (tag == objectTag$1 || tag == argsTag$1 || isFunc && !object) {
+			result = isFlat || isFunc ? {} : initCloneObject(value);
+			if (!isDeep) return isFlat ? copySymbolsIn(value, baseAssignIn(result, value)) : copySymbols(value, baseAssign(result, value));
+		} else {
+			if (!cloneableTags[tag]) return object ? value : {};
+			result = initCloneByTag(value, tag, isDeep);
+		}
+	}
+	stack || (stack = new Stack());
+	var stacked = stack.get(value);
+	if (stacked) return stacked;
+	stack.set(value, result);
+	if (isSet(value)) value.forEach(function(subValue) {
+		result.add(baseClone(subValue, bitmask, customizer, subValue, value, stack));
+	});
+	else if (isMap(value)) value.forEach(function(subValue, key) {
+		result.set(key, baseClone(subValue, bitmask, customizer, key, value, stack));
+	});
+	var props = isArr ? void 0 : (isFull ? isFlat ? getAllKeysIn : getAllKeys : isFlat ? keysIn : keys)(value);
+	arrayEach(props || value, function(subValue, key) {
+		if (props) {
+			key = subValue;
+			subValue = value[key];
+		}
+		assignValue(result, key, baseClone(subValue, bitmask, customizer, key, value, stack));
+	});
+	return result;
+}
+//#endregion
+//#region node_modules/lodash-es/cloneDeep.js
+/** Used to compose bitmasks for cloning. */
+var CLONE_DEEP_FLAG = 1, CLONE_SYMBOLS_FLAG = 4;
+/**
+* This method is like `_.clone` except that it recursively clones `value`.
+*
+* @static
+* @memberOf _
+* @since 1.0.0
+* @category Lang
+* @param {*} value The value to recursively clone.
+* @returns {*} Returns the deep cloned value.
+* @see _.clone
+* @example
+*
+* var objects = [{ 'a': 1 }, { 'b': 2 }];
+*
+* var deep = _.cloneDeep(objects);
+* console.log(deep[0] === objects[0]);
+* // => false
+*/
+function cloneDeep(value) {
+	return baseClone(value, CLONE_DEEP_FLAG | CLONE_SYMBOLS_FLAG);
+}
+//#endregion
+//#region node_modules/lodash-es/compact.js
+/**
+* Creates an array with all falsey values removed. The values `false`, `null`,
+* `0`, `-0`, `0n`, `""`, `undefined`, and `NaN` are falsy.
+*
+* @static
+* @memberOf _
+* @since 0.1.0
+* @category Array
+* @param {Array} array The array to compact.
+* @returns {Array} Returns the new array of filtered values.
+* @example
+*
+* _.compact([0, 1, false, 2, '', 3]);
+* // => [1, 2, 3]
+*/
+function compact(array) {
+	var index = -1, length = array == null ? 0 : array.length, resIndex = 0, result = [];
+	while (++index < length) {
+		var value = array[index];
+		if (value) result[resIndex++] = value;
+	}
+	return result;
+}
+//#endregion
+//#region node_modules/lodash-es/_setCacheAdd.js
+/** Used to stand-in for `undefined` hash values. */
+var HASH_UNDEFINED = "__lodash_hash_undefined__";
+/**
+* Adds `value` to the array cache.
+*
+* @private
+* @name add
+* @memberOf SetCache
+* @alias push
+* @param {*} value The value to cache.
+* @returns {Object} Returns the cache instance.
+*/
+function setCacheAdd(value) {
+	this.__data__.set(value, HASH_UNDEFINED);
+	return this;
+}
+//#endregion
+//#region node_modules/lodash-es/_setCacheHas.js
+/**
+* Checks if `value` is in the array cache.
+*
+* @private
+* @name has
+* @memberOf SetCache
+* @param {*} value The value to search for.
+* @returns {boolean} Returns `true` if `value` is found, else `false`.
+*/
+function setCacheHas(value) {
+	return this.__data__.has(value);
+}
+//#endregion
+//#region node_modules/lodash-es/_SetCache.js
+/**
+*
+* Creates an array cache object to store unique values.
+*
+* @private
+* @constructor
+* @param {Array} [values] The values to cache.
+*/
+function SetCache(values) {
+	var index = -1, length = values == null ? 0 : values.length;
+	this.__data__ = new MapCache();
+	while (++index < length) this.add(values[index]);
+}
+SetCache.prototype.add = SetCache.prototype.push = setCacheAdd;
+SetCache.prototype.has = setCacheHas;
+//#endregion
+//#region node_modules/lodash-es/_arraySome.js
+/**
+* A specialized version of `_.some` for arrays without support for iteratee
+* shorthands.
+*
+* @private
+* @param {Array} [array] The array to iterate over.
+* @param {Function} predicate The function invoked per iteration.
+* @returns {boolean} Returns `true` if any element passes the predicate check,
+*  else `false`.
+*/
+function arraySome(array, predicate) {
+	var index = -1, length = array == null ? 0 : array.length;
+	while (++index < length) if (predicate(array[index], index, array)) return true;
+	return false;
+}
+//#endregion
+//#region node_modules/lodash-es/_cacheHas.js
+/**
+* Checks if a `cache` value for `key` exists.
+*
+* @private
+* @param {Object} cache The cache to query.
+* @param {string} key The key of the entry to check.
+* @returns {boolean} Returns `true` if an entry for `key` exists, else `false`.
+*/
+function cacheHas(cache, key) {
+	return cache.has(key);
+}
+//#endregion
+//#region node_modules/lodash-es/_equalArrays.js
+/** Used to compose bitmasks for value comparisons. */
+var COMPARE_PARTIAL_FLAG$3 = 1, COMPARE_UNORDERED_FLAG$1 = 2;
+/**
+* A specialized version of `baseIsEqualDeep` for arrays with support for
+* partial deep comparisons.
+*
+* @private
+* @param {Array} array The array to compare.
+* @param {Array} other The other array to compare.
+* @param {number} bitmask The bitmask flags. See `baseIsEqual` for more details.
+* @param {Function} customizer The function to customize comparisons.
+* @param {Function} equalFunc The function to determine equivalents of values.
+* @param {Object} stack Tracks traversed `array` and `other` objects.
+* @returns {boolean} Returns `true` if the arrays are equivalent, else `false`.
+*/
+function equalArrays(array, other, bitmask, customizer, equalFunc, stack) {
+	var isPartial = bitmask & COMPARE_PARTIAL_FLAG$3, arrLength = array.length, othLength = other.length;
+	if (arrLength != othLength && !(isPartial && othLength > arrLength)) return false;
+	var arrStacked = stack.get(array);
+	var othStacked = stack.get(other);
+	if (arrStacked && othStacked) return arrStacked == other && othStacked == array;
+	var index = -1, result = true, seen = bitmask & COMPARE_UNORDERED_FLAG$1 ? new SetCache() : void 0;
+	stack.set(array, other);
+	stack.set(other, array);
+	while (++index < arrLength) {
+		var arrValue = array[index], othValue = other[index];
+		if (customizer) var compared = isPartial ? customizer(othValue, arrValue, index, other, array, stack) : customizer(arrValue, othValue, index, array, other, stack);
+		if (compared !== void 0) {
+			if (compared) continue;
+			result = false;
+			break;
+		}
+		if (seen) {
+			if (!arraySome(other, function(othValue, othIndex) {
+				if (!cacheHas(seen, othIndex) && (arrValue === othValue || equalFunc(arrValue, othValue, bitmask, customizer, stack))) return seen.push(othIndex);
+			})) {
+				result = false;
+				break;
+			}
+		} else if (!(arrValue === othValue || equalFunc(arrValue, othValue, bitmask, customizer, stack))) {
+			result = false;
+			break;
+		}
+	}
+	stack["delete"](array);
+	stack["delete"](other);
+	return result;
+}
+//#endregion
+//#region node_modules/lodash-es/_mapToArray.js
+/**
+* Converts `map` to its key-value pairs.
+*
+* @private
+* @param {Object} map The map to convert.
+* @returns {Array} Returns the key-value pairs.
+*/
+function mapToArray(map) {
+	var index = -1, result = Array(map.size);
+	map.forEach(function(value, key) {
+		result[++index] = [key, value];
+	});
+	return result;
+}
+//#endregion
+//#region node_modules/lodash-es/_setToArray.js
+/**
+* Converts `set` to an array of its values.
+*
+* @private
+* @param {Object} set The set to convert.
+* @returns {Array} Returns the values.
+*/
+function setToArray(set) {
+	var index = -1, result = Array(set.size);
+	set.forEach(function(value) {
+		result[++index] = value;
+	});
+	return result;
+}
+//#endregion
+//#region node_modules/lodash-es/_equalByTag.js
+/** Used to compose bitmasks for value comparisons. */
+var COMPARE_PARTIAL_FLAG$2 = 1, COMPARE_UNORDERED_FLAG = 2;
+/** `Object#toString` result references. */
+var boolTag = "[object Boolean]", dateTag = "[object Date]", errorTag = "[object Error]", mapTag$1 = "[object Map]", numberTag = "[object Number]", regexpTag = "[object RegExp]", setTag$1 = "[object Set]", stringTag$1 = "[object String]", symbolTag = "[object Symbol]";
+var arrayBufferTag = "[object ArrayBuffer]", dataViewTag = "[object DataView]";
+/** Used to convert symbols to primitives and strings. */
+var symbolProto = Symbol$1 ? Symbol$1.prototype : void 0, symbolValueOf = symbolProto ? symbolProto.valueOf : void 0;
+/**
+* A specialized version of `baseIsEqualDeep` for comparing objects of
+* the same `toStringTag`.
+*
+* **Note:** This function only supports comparing values with tags of
+* `Boolean`, `Date`, `Error`, `Number`, `RegExp`, or `String`.
+*
+* @private
+* @param {Object} object The object to compare.
+* @param {Object} other The other object to compare.
+* @param {string} tag The `toStringTag` of the objects to compare.
+* @param {number} bitmask The bitmask flags. See `baseIsEqual` for more details.
+* @param {Function} customizer The function to customize comparisons.
+* @param {Function} equalFunc The function to determine equivalents of values.
+* @param {Object} stack Tracks traversed `object` and `other` objects.
+* @returns {boolean} Returns `true` if the objects are equivalent, else `false`.
+*/
+function equalByTag(object, other, tag, bitmask, customizer, equalFunc, stack) {
+	switch (tag) {
+		case dataViewTag:
+			if (object.byteLength != other.byteLength || object.byteOffset != other.byteOffset) return false;
+			object = object.buffer;
+			other = other.buffer;
+		case arrayBufferTag:
+			if (object.byteLength != other.byteLength || !equalFunc(new Uint8Array$1(object), new Uint8Array$1(other))) return false;
+			return true;
+		case boolTag:
+		case dateTag:
+		case numberTag: return eq(+object, +other);
+		case errorTag: return object.name == other.name && object.message == other.message;
+		case regexpTag:
+		case stringTag$1: return object == other + "";
+		case mapTag$1: var convert = mapToArray;
+		case setTag$1:
+			var isPartial = bitmask & COMPARE_PARTIAL_FLAG$2;
+			convert || (convert = setToArray);
+			if (object.size != other.size && !isPartial) return false;
+			var stacked = stack.get(object);
+			if (stacked) return stacked == other;
+			bitmask |= COMPARE_UNORDERED_FLAG;
+			stack.set(object, other);
+			var result = equalArrays(convert(object), convert(other), bitmask, customizer, equalFunc, stack);
+			stack["delete"](object);
+			return result;
+		case symbolTag: if (symbolValueOf) return symbolValueOf.call(object) == symbolValueOf.call(other);
+	}
+	return false;
+}
+//#endregion
+//#region node_modules/lodash-es/_equalObjects.js
+/** Used to compose bitmasks for value comparisons. */
+var COMPARE_PARTIAL_FLAG$1 = 1;
+/** Used to check objects for own properties. */
+var hasOwnProperty$2 = Object.prototype.hasOwnProperty;
+/**
+* A specialized version of `baseIsEqualDeep` for objects with support for
+* partial deep comparisons.
+*
+* @private
+* @param {Object} object The object to compare.
+* @param {Object} other The other object to compare.
+* @param {number} bitmask The bitmask flags. See `baseIsEqual` for more details.
+* @param {Function} customizer The function to customize comparisons.
+* @param {Function} equalFunc The function to determine equivalents of values.
+* @param {Object} stack Tracks traversed `object` and `other` objects.
+* @returns {boolean} Returns `true` if the objects are equivalent, else `false`.
+*/
+function equalObjects(object, other, bitmask, customizer, equalFunc, stack) {
+	var isPartial = bitmask & COMPARE_PARTIAL_FLAG$1, objProps = getAllKeys(object), objLength = objProps.length;
+	if (objLength != getAllKeys(other).length && !isPartial) return false;
+	var index = objLength;
+	while (index--) {
+		var key = objProps[index];
+		if (!(isPartial ? key in other : hasOwnProperty$2.call(other, key))) return false;
+	}
+	var objStacked = stack.get(object);
+	var othStacked = stack.get(other);
+	if (objStacked && othStacked) return objStacked == other && othStacked == object;
+	var result = true;
+	stack.set(object, other);
+	stack.set(other, object);
+	var skipCtor = isPartial;
+	while (++index < objLength) {
+		key = objProps[index];
+		var objValue = object[key], othValue = other[key];
+		if (customizer) var compared = isPartial ? customizer(othValue, objValue, key, other, object, stack) : customizer(objValue, othValue, key, object, other, stack);
+		if (!(compared === void 0 ? objValue === othValue || equalFunc(objValue, othValue, bitmask, customizer, stack) : compared)) {
+			result = false;
+			break;
+		}
+		skipCtor || (skipCtor = key == "constructor");
+	}
+	if (result && !skipCtor) {
+		var objCtor = object.constructor, othCtor = other.constructor;
+		if (objCtor != othCtor && "constructor" in object && "constructor" in other && !(typeof objCtor == "function" && objCtor instanceof objCtor && typeof othCtor == "function" && othCtor instanceof othCtor)) result = false;
+	}
+	stack["delete"](object);
+	stack["delete"](other);
+	return result;
+}
+//#endregion
+//#region node_modules/lodash-es/_baseIsEqualDeep.js
+/** Used to compose bitmasks for value comparisons. */
+var COMPARE_PARTIAL_FLAG = 1;
+/** `Object#toString` result references. */
+var argsTag = "[object Arguments]", arrayTag = "[object Array]", objectTag = "[object Object]";
+/** Used to check objects for own properties. */
+var hasOwnProperty$1 = Object.prototype.hasOwnProperty;
+/**
+* A specialized version of `baseIsEqual` for arrays and objects which performs
+* deep comparisons and tracks traversed objects enabling objects with circular
+* references to be compared.
+*
+* @private
+* @param {Object} object The object to compare.
+* @param {Object} other The other object to compare.
+* @param {number} bitmask The bitmask flags. See `baseIsEqual` for more details.
+* @param {Function} customizer The function to customize comparisons.
+* @param {Function} equalFunc The function to determine equivalents of values.
+* @param {Object} [stack] Tracks traversed `object` and `other` objects.
+* @returns {boolean} Returns `true` if the objects are equivalent, else `false`.
+*/
+function baseIsEqualDeep(object, other, bitmask, customizer, equalFunc, stack) {
+	var objIsArr = isArray$1(object), othIsArr = isArray$1(other), objTag = objIsArr ? arrayTag : _getTag_default(object), othTag = othIsArr ? arrayTag : _getTag_default(other);
+	objTag = objTag == argsTag ? objectTag : objTag;
+	othTag = othTag == argsTag ? objectTag : othTag;
+	var objIsObj = objTag == objectTag, othIsObj = othTag == objectTag, isSameTag = objTag == othTag;
+	if (isSameTag && isBuffer(object)) {
+		if (!isBuffer(other)) return false;
+		objIsArr = true;
+		objIsObj = false;
+	}
+	if (isSameTag && !objIsObj) {
+		stack || (stack = new Stack());
+		return objIsArr || isTypedArray(object) ? equalArrays(object, other, bitmask, customizer, equalFunc, stack) : equalByTag(object, other, objTag, bitmask, customizer, equalFunc, stack);
+	}
+	if (!(bitmask & COMPARE_PARTIAL_FLAG)) {
+		var objIsWrapped = objIsObj && hasOwnProperty$1.call(object, "__wrapped__"), othIsWrapped = othIsObj && hasOwnProperty$1.call(other, "__wrapped__");
+		if (objIsWrapped || othIsWrapped) {
+			var objUnwrapped = objIsWrapped ? object.value() : object, othUnwrapped = othIsWrapped ? other.value() : other;
+			stack || (stack = new Stack());
+			return equalFunc(objUnwrapped, othUnwrapped, bitmask, customizer, stack);
+		}
+	}
+	if (!isSameTag) return false;
+	stack || (stack = new Stack());
+	return equalObjects(object, other, bitmask, customizer, equalFunc, stack);
+}
+//#endregion
+//#region node_modules/lodash-es/_baseIsEqual.js
+/**
+* The base implementation of `_.isEqual` which supports partial comparisons
+* and tracks traversed objects.
+*
+* @private
+* @param {*} value The value to compare.
+* @param {*} other The other value to compare.
+* @param {boolean} bitmask The bitmask flags.
+*  1 - Unordered comparison
+*  2 - Partial comparison
+* @param {Function} [customizer] The function to customize comparisons.
+* @param {Object} [stack] Tracks traversed `value` and `other` objects.
+* @returns {boolean} Returns `true` if the values are equivalent, else `false`.
+*/
+function baseIsEqual(value, other, bitmask, customizer, stack) {
+	if (value === other) return true;
+	if (value == null || other == null || !isObjectLike$1(value) && !isObjectLike$1(other)) return value !== value && other !== other;
+	return baseIsEqualDeep(value, other, bitmask, customizer, baseIsEqual, stack);
+}
+//#endregion
+//#region node_modules/lodash-es/now.js
+/**
+* Gets the timestamp of the number of milliseconds that have elapsed since
+* the Unix epoch (1 January 1970 00:00:00 UTC).
+*
+* @static
+* @memberOf _
+* @since 2.4.0
+* @category Date
+* @returns {number} Returns the timestamp.
+* @example
+*
+* _.defer(function(stamp) {
+*   console.log(_.now() - stamp);
+* }, _.now());
+* // => Logs the number of milliseconds it took for the deferred invocation.
+*/
+var now = function() {
+	return root.Date.now();
+};
+//#endregion
+//#region node_modules/lodash-es/debounce.js
+/** Error message constants. */
+var FUNC_ERROR_TEXT = "Expected a function";
+var nativeMax = Math.max, nativeMin = Math.min;
+/**
+* Creates a debounced function that delays invoking `func` until after `wait`
+* milliseconds have elapsed since the last time the debounced function was
+* invoked. The debounced function comes with a `cancel` method to cancel
+* delayed `func` invocations and a `flush` method to immediately invoke them.
+* Provide `options` to indicate whether `func` should be invoked on the
+* leading and/or trailing edge of the `wait` timeout. The `func` is invoked
+* with the last arguments provided to the debounced function. Subsequent
+* calls to the debounced function return the result of the last `func`
+* invocation.
+*
+* **Note:** If `leading` and `trailing` options are `true`, `func` is
+* invoked on the trailing edge of the timeout only if the debounced function
+* is invoked more than once during the `wait` timeout.
+*
+* If `wait` is `0` and `leading` is `false`, `func` invocation is deferred
+* until to the next tick, similar to `setTimeout` with a timeout of `0`.
+*
+* See [David Corbacho's article](https://css-tricks.com/debouncing-throttling-explained-examples/)
+* for details over the differences between `_.debounce` and `_.throttle`.
+*
+* @static
+* @memberOf _
+* @since 0.1.0
+* @category Function
+* @param {Function} func The function to debounce.
+* @param {number} [wait=0] The number of milliseconds to delay.
+* @param {Object} [options={}] The options object.
+* @param {boolean} [options.leading=false]
+*  Specify invoking on the leading edge of the timeout.
+* @param {number} [options.maxWait]
+*  The maximum time `func` is allowed to be delayed before it's invoked.
+* @param {boolean} [options.trailing=true]
+*  Specify invoking on the trailing edge of the timeout.
+* @returns {Function} Returns the new debounced function.
+* @example
+*
+* // Avoid costly calculations while the window size is in flux.
+* jQuery(window).on('resize', _.debounce(calculateLayout, 150));
+*
+* // Invoke `sendMail` when clicked, debouncing subsequent calls.
+* jQuery(element).on('click', _.debounce(sendMail, 300, {
+*   'leading': true,
+*   'trailing': false
+* }));
+*
+* // Ensure `batchLog` is invoked once after 1 second of debounced calls.
+* var debounced = _.debounce(batchLog, 250, { 'maxWait': 1000 });
+* var source = new EventSource('/stream');
+* jQuery(source).on('message', debounced);
+*
+* // Cancel the trailing debounced invocation.
+* jQuery(window).on('popstate', debounced.cancel);
+*/
+function debounce(func, wait, options) {
+	var lastArgs, lastThis, maxWait, result, timerId, lastCallTime, lastInvokeTime = 0, leading = false, maxing = false, trailing = true;
+	if (typeof func != "function") throw new TypeError(FUNC_ERROR_TEXT);
+	wait = toNumber(wait) || 0;
+	if (isObject$1(options)) {
+		leading = !!options.leading;
+		maxing = "maxWait" in options;
+		maxWait = maxing ? nativeMax(toNumber(options.maxWait) || 0, wait) : maxWait;
+		trailing = "trailing" in options ? !!options.trailing : trailing;
+	}
+	function invokeFunc(time) {
+		var args = lastArgs, thisArg = lastThis;
+		lastArgs = lastThis = void 0;
+		lastInvokeTime = time;
+		result = func.apply(thisArg, args);
+		return result;
+	}
+	function leadingEdge(time) {
+		lastInvokeTime = time;
+		timerId = setTimeout(timerExpired, wait);
+		return leading ? invokeFunc(time) : result;
+	}
+	function remainingWait(time) {
+		var timeSinceLastCall = time - lastCallTime, timeSinceLastInvoke = time - lastInvokeTime, timeWaiting = wait - timeSinceLastCall;
+		return maxing ? nativeMin(timeWaiting, maxWait - timeSinceLastInvoke) : timeWaiting;
+	}
+	function shouldInvoke(time) {
+		var timeSinceLastCall = time - lastCallTime, timeSinceLastInvoke = time - lastInvokeTime;
+		return lastCallTime === void 0 || timeSinceLastCall >= wait || timeSinceLastCall < 0 || maxing && timeSinceLastInvoke >= maxWait;
+	}
+	function timerExpired() {
+		var time = now();
+		if (shouldInvoke(time)) return trailingEdge(time);
+		timerId = setTimeout(timerExpired, remainingWait(time));
+	}
+	function trailingEdge(time) {
+		timerId = void 0;
+		if (trailing && lastArgs) return invokeFunc(time);
+		lastArgs = lastThis = void 0;
+		return result;
+	}
+	function cancel() {
+		if (timerId !== void 0) clearTimeout(timerId);
+		lastInvokeTime = 0;
+		lastArgs = lastCallTime = lastThis = timerId = void 0;
+	}
+	function flush() {
+		return timerId === void 0 ? result : trailingEdge(now());
+	}
+	function debounced() {
+		var time = now(), isInvoking = shouldInvoke(time);
+		lastArgs = arguments;
+		lastThis = this;
+		lastCallTime = time;
+		if (isInvoking) {
+			if (timerId === void 0) return leadingEdge(lastCallTime);
+			if (maxing) {
+				clearTimeout(timerId);
+				timerId = setTimeout(timerExpired, wait);
+				return invokeFunc(lastCallTime);
+			}
+		}
+		if (timerId === void 0) timerId = setTimeout(timerExpired, wait);
+		return result;
+	}
+	debounced.cancel = cancel;
+	debounced.flush = flush;
+	return debounced;
+}
+//#endregion
+//#region node_modules/lodash-es/isString.js
+/** `Object#toString` result references. */
+var stringTag = "[object String]";
+/**
+* Checks if `value` is classified as a `String` primitive or object.
+*
+* @static
+* @since 0.1.0
+* @memberOf _
+* @category Lang
+* @param {*} value The value to check.
+* @returns {boolean} Returns `true` if `value` is a string, else `false`.
+* @example
+*
+* _.isString('abc');
+* // => true
+*
+* _.isString(1);
+* // => false
+*/
+function isString$1(value) {
+	return typeof value == "string" || !isArray$1(value) && isObjectLike$1(value) && baseGetTag(value) == stringTag;
+}
+//#endregion
+//#region node_modules/lodash-es/isEmpty.js
+/** `Object#toString` result references. */
+var mapTag = "[object Map]", setTag = "[object Set]";
+/** Used to check objects for own properties. */
+var hasOwnProperty = Object.prototype.hasOwnProperty;
+/**
+* Checks if `value` is an empty object, collection, map, or set.
+*
+* Objects are considered empty if they have no own enumerable string keyed
+* properties.
+*
+* Array-like values such as `arguments` objects, arrays, buffers, strings, or
+* jQuery-like collections are considered empty if they have a `length` of `0`.
+* Similarly, maps and sets are considered empty if they have a `size` of `0`.
+*
+* @static
+* @memberOf _
+* @since 0.1.0
+* @category Lang
+* @param {*} value The value to check.
+* @returns {boolean} Returns `true` if `value` is empty, else `false`.
+* @example
+*
+* _.isEmpty(null);
+* // => true
+*
+* _.isEmpty(true);
+* // => true
+*
+* _.isEmpty(1);
+* // => true
+*
+* _.isEmpty([1, 2, 3]);
+* // => false
+*
+* _.isEmpty({ 'a': 1 });
+* // => false
+*/
+function isEmpty(value) {
+	if (value == null) return true;
+	if (isArrayLike(value) && (isArray$1(value) || typeof value == "string" || typeof value.splice == "function" || isBuffer(value) || isTypedArray(value) || isArguments(value))) return !value.length;
+	var tag = _getTag_default(value);
+	if (tag == mapTag || tag == setTag) return !value.size;
+	if (isPrototype(value)) return !baseKeys(value).length;
+	for (var key in value) if (hasOwnProperty.call(value, key)) return false;
+	return true;
+}
+//#endregion
+//#region node_modules/lodash-es/isEqual.js
+/**
+* Performs a deep comparison between two values to determine if they are
+* equivalent.
+*
+* **Note:** This method supports comparing arrays, array buffers, booleans,
+* date objects, error objects, maps, numbers, `Object` objects, regexes,
+* sets, strings, symbols, and typed arrays. `Object` objects are compared
+* by their own, not inherited, enumerable properties. Functions and DOM
+* nodes are compared by strict equality, i.e. `===`.
+*
+* @static
+* @memberOf _
+* @since 0.1.0
+* @category Lang
+* @param {*} value The value to compare.
+* @param {*} other The other value to compare.
+* @returns {boolean} Returns `true` if the values are equivalent, else `false`.
+* @example
+*
+* var object = { 'a': 1 };
+* var other = { 'a': 1 };
+*
+* _.isEqual(object, other);
+* // => true
+*
+* object === other;
+* // => false
+*/
+function isEqual(value, other) {
+	return baseIsEqual(value, other);
+}
+//#endregion
+//#region node_modules/lodash-es/isNil.js
+/**
+* Checks if `value` is `null` or `undefined`.
+*
+* @static
+* @memberOf _
+* @since 4.0.0
+* @category Lang
+* @param {*} value The value to check.
+* @returns {boolean} Returns `true` if `value` is nullish, else `false`.
+* @example
+*
+* _.isNil(null);
+* // => true
+*
+* _.isNil(void 0);
+* // => true
+*
+* _.isNil(NaN);
+* // => false
+*/
+function isNil(value) {
+	return value == null;
+}
+//#endregion
+//#region node_modules/lodash-es/startCase.js
+/**
+* Converts `string` to
+* [start case](https://en.wikipedia.org/wiki/Letter_case#Stylistic_or_specialised_usage).
+*
+* @static
+* @memberOf _
+* @since 3.1.0
+* @category String
+* @param {string} [string=''] The string to convert.
+* @returns {string} Returns the start cased string.
+* @example
+*
+* _.startCase('--foo-bar--');
+* // => 'Foo Bar'
+*
+* _.startCase('fooBar');
+* // => 'Foo Bar'
+*
+* _.startCase('__FOO_BAR__');
+* // => 'FOO BAR'
+*/
+var startCase = createCompounder(function(result, word, index) {
+	return result + (index ? " " : "") + upperFirst(word);
+});
+//#endregion
 //#region src/renderer/mainWindow/utils/hooks.tsx
-var { Fragment: Fragment$1, useEffect: useEffect$30, useRef: useRef$6, useState: useState$34 } = await importShared("react");
+var { Fragment: Fragment$1, useEffect: useEffect$31, useRef: useRef$7, useState: useState$35 } = await importShared("react");
 /**
 * Hook to get an installed card by its ID.
 * @param cardId - The ID of the card to find
@@ -5219,11 +4910,19 @@ var { Fragment: Fragment$1, useEffect: useEffect$30, useRef: useRef$6, useState:
 function useInstalledCard(cardId) {
 	return useCardsState("installedCards").find((card) => card.id === cardId);
 }
+/**
+* Hook to check if a card is pinned.
+* @param cardId - The ID of the card to check
+* @returns Boolean indicating if the card is pinned
+*/
+function useIsPinnedCard(cardId) {
+	return useCardsState("pinnedCards").includes(cardId);
+}
 window.isPortable;
 //#endregion
 //#region node_modules/lucide-react/dist/esm/shared/src/utils/mergeClasses.mjs
 /**
-* @license lucide-react v1.21.0 - ISC
+* @license lucide-react v1.24.0 - ISC
 *
 * This source code is licensed under the ISC license.
 * See the LICENSE file in the root directory of this source tree.
@@ -5234,7 +4933,7 @@ var mergeClasses = (...classes) => classes.filter((className, index, array) => {
 //#endregion
 //#region node_modules/lucide-react/dist/esm/shared/src/utils/toKebabCase.mjs
 /**
-* @license lucide-react v1.21.0 - ISC
+* @license lucide-react v1.24.0 - ISC
 *
 * This source code is licensed under the ISC license.
 * See the LICENSE file in the root directory of this source tree.
@@ -5243,7 +4942,7 @@ var toKebabCase = (string) => string.replace(/([a-z0-9])([A-Z])/g, "$1-$2").toLo
 //#endregion
 //#region node_modules/lucide-react/dist/esm/shared/src/utils/toCamelCase.mjs
 /**
-* @license lucide-react v1.21.0 - ISC
+* @license lucide-react v1.24.0 - ISC
 *
 * This source code is licensed under the ISC license.
 * See the LICENSE file in the root directory of this source tree.
@@ -5252,7 +4951,7 @@ var toCamelCase = (string) => string.replace(/^([A-Z])|[\s-_]+(\w)/g, (match, p1
 //#endregion
 //#region node_modules/lucide-react/dist/esm/shared/src/utils/toPascalCase.mjs
 /**
-* @license lucide-react v1.21.0 - ISC
+* @license lucide-react v1.24.0 - ISC
 *
 * This source code is licensed under the ISC license.
 * See the LICENSE file in the root directory of this source tree.
@@ -5264,7 +4963,7 @@ var toPascalCase = (string) => {
 //#endregion
 //#region node_modules/lucide-react/dist/esm/defaultAttributes.mjs
 /**
-* @license lucide-react v1.21.0 - ISC
+* @license lucide-react v1.24.0 - ISC
 *
 * This source code is licensed under the ISC license.
 * See the LICENSE file in the root directory of this source tree.
@@ -5283,7 +4982,7 @@ var defaultAttributes = {
 //#endregion
 //#region node_modules/lucide-react/dist/esm/shared/src/utils/hasA11yProp.mjs
 /**
-* @license lucide-react v1.21.0 - ISC
+* @license lucide-react v1.24.0 - ISC
 *
 * This source code is licensed under the ISC license.
 * See the LICENSE file in the root directory of this source tree.
@@ -5295,7 +4994,7 @@ var hasA11yProp = (props) => {
 //#endregion
 //#region node_modules/lucide-react/dist/esm/context.mjs
 /**
-* @license lucide-react v1.21.0 - ISC
+* @license lucide-react v1.24.0 - ISC
 *
 * This source code is licensed under the ISC license.
 * See the LICENSE file in the root directory of this source tree.
@@ -5306,7 +5005,7 @@ var useLucideContext = () => useContext(LucideContext);
 //#endregion
 //#region node_modules/lucide-react/dist/esm/Icon.mjs
 /**
-* @license lucide-react v1.21.0 - ISC
+* @license lucide-react v1.24.0 - ISC
 *
 * This source code is licensed under the ISC license.
 * See the LICENSE file in the root directory of this source tree.
@@ -5330,7 +5029,7 @@ var Icon = forwardRef$2(({ color, size, strokeWidth, absoluteStrokeWidth, classN
 //#endregion
 //#region node_modules/lucide-react/dist/esm/createLucideIcon.mjs
 /**
-* @license lucide-react v1.21.0 - ISC
+* @license lucide-react v1.24.0 - ISC
 *
 * This source code is licensed under the ISC license.
 * See the LICENSE file in the root directory of this source tree.
@@ -5347,7 +5046,7 @@ var createLucideIcon = (iconName, iconNode) => {
 	return Component;
 };
 /**
-* @license lucide-react v1.21.0 - ISC
+* @license lucide-react v1.24.0 - ISC
 *
 * This source code is licensed under the ISC license.
 * See the LICENSE file in the root directory of this source tree.
@@ -5360,7 +5059,7 @@ var Plus = createLucideIcon("plus", [["path", {
 	key: "s699le"
 }]]);
 /**
-* @license lucide-react v1.21.0 - ISC
+* @license lucide-react v1.24.0 - ISC
 *
 * This source code is licensed under the ISC license.
 * See the LICENSE file in the root directory of this source tree.
@@ -5373,7 +5072,7 @@ var Terminal = createLucideIcon("terminal", [["path", {
 	key: "1yngyt"
 }]]);
 /**
-* @license lucide-react v1.21.0 - ISC
+* @license lucide-react v1.24.0 - ISC
 *
 * This source code is licensed under the ISC license.
 * See the LICENSE file in the root directory of this source tree.
@@ -5405,7 +5104,7 @@ var Unplug = createLucideIcon("unplug", [
 	}]
 ]);
 /**
-* @license lucide-react v1.21.0 - ISC
+* @license lucide-react v1.24.0 - ISC
 *
 * This source code is licensed under the ISC license.
 * See the LICENSE file in the root directory of this source tree.
@@ -5563,6 +5262,213 @@ var pIpc = {
 		setVenvCustomTitle: (value) => ipc.send(pythonStorageChannels.setVenvCustomTitle, value)
 	}
 };
+var package_default = {
+	name: "lynxhub",
+	productName: "LynxHub",
+	desktopName: "ai.kindabrazy.lynxhub.desktop",
+	version: "3.5.6",
+	type: "module",
+	description: "Cross-platform, extensible terminal/browser for AI management",
+	main: "./out/main/index.cjs",
+	author: {
+		"name": "KindaBrazy",
+		"email": "kindofbrazy@gmail.com"
+	},
+	repository: {
+		"type": "git",
+		"url": "https://github.com/KindaBrazy/LynxHub"
+	},
+	license: "AGPL-3.0",
+	homepage: "https://github.com/KindaBrazy/LynxHub",
+	appDetails: {
+		"title": "LynxHub",
+		"buildNumber": 53,
+		"detailedDescription": "Open-source, cross-platform terminal and browser, designed for managing AI. Highly modular and extensible, it's the all-in-one environment for AI power users.",
+		"moduleApiVersion": "2.1.0",
+		"extensionApiVersion": "2.2.0"
+	},
+	scripts: {
+		"typecheck:node": "tsc --noEmit -p tsconfig.node.json --composite false",
+		"typecheck:web": "tsc --noEmit -p tsconfig.web.json --composite false",
+		"typecheck": "npm run typecheck:node && npm run typecheck:web",
+		"fix-linter:web": "prettier --write src/renderer --list-different && eslint --fix src/renderer && tailwind-lint --auto --fix",
+		"fix-linter:node": "prettier --write src/main --list-different && eslint --fix src/main",
+		"fix-linter": "prettier --write src --list-different && eslint --fix src && tailwind-lint --auto --fix",
+		"fix-linter-ext": "prettier --write extension --list-different && eslint --fix extension && tailwind-lint --config ./extension/src/renderer/index.css --fix",
+		"validate:web": "npm run fix-linter:web && npm run typecheck:web",
+		"validate:node": "npm run fix-linter:node && npm run typecheck:node",
+		"validate:ext": "npm run fix-linter-ext && npm run typecheck",
+		"validate": "npm run fix-linter && npm run typecheck",
+		"preview": "electron-vite preview --noSandbox",
+		"preview:skip": "electron-vite preview --noSandbox --skipBuild",
+		"dev": "run-script-os",
+		"dev:win32": "electron-vite dev",
+		"dev:default": "electron-vite dev --noSandbox",
+		"prof": "electron-vite dev -w --noSandbox -- --js-flags=\"--prof\"",
+		"dev:srouce": "electron-vite dev -w --noSandbox --sourcemap",
+		"postinstall": "node node_modules/electron/install.js && electron-builder install-app-deps",
+		"build": "electron-vite build",
+		"rebuild": "electron-builder node-gyp-rebuild",
+		"removeDotExtension": "node fixExtension.js",
+		"build:extension": "rimraf extension_out && electron-vite build --config extension/electron.vite.config.ts && npm run removeDotExtension",
+		"build:module": "rimraf module_out && npx --prefix module rolldown --config module/rolldown.config.mjs",
+		"build:unpack": "npm run build && electron-builder --dir --config electron-builder_x64.config.cjs",
+		"build:win_x64": "npm run build && electron-builder --win --config electron-builder_x64.config.cjs --publish never",
+		"build:win_arm": "npm run build && electron-builder --win --config electron-builder_arm.config.cjs --publish never",
+		"build:win_portable_x64": "npm run build && electron-builder --win --config electron-builder-portable_x64.config.cjs --publish never",
+		"build:win_portable_arm": "npm run build && electron-builder --win --config electron-builder-portable_arm.config.cjs --publish never",
+		"build:linux_x64": "npm run build && electron-builder --linux --config electron-builder_x64.config.cjs --publish never",
+		"build:linux_arm": "npm run build && electron-builder --linux --config electron-builder_arm.config.cjs --publish never",
+		"build:linux_portable_x64": "npm run build && electron-builder --linux --config electron-builder-portable_x64.config.cjs --publish never",
+		"build:linux_portable_arm": "npm run build && electron-builder --linux --config electron-builder-portable_arm.config.cjs --publish never",
+		"build:mac_x64": "npm run build && electron-builder --mac --config electron-builder_x64.config.cjs --publish never",
+		"build:mac_arm": "npm run build && electron-builder --mac --config electron-builder_arm.config.cjs --publish never",
+		"build:linux-test": "npm run build && electron-builder --linux --config electron-builder-test.config.cjs --publish never",
+		"release": "electron-builder",
+		"publish": "electron-builder -p always --config electron-builder_x64.config.cjs"
+	},
+	dependencies: {
+		"@electron-toolkit/preload": "^3.0.2",
+		"@electron-toolkit/utils": "^4.0.0",
+		"@originjs/vite-plugin-federation": "^1.4.1",
+		"@sentry/electron": "^7.15.0",
+		"@sentry/react": "^10.62.0",
+		"axios": "^1.18.1",
+		"fix-path": "^5.0.0",
+		"fuse.js": "^7.4.2",
+		"graceful-fs": "^4.2.11",
+		"lowdb": "^7.0.1",
+		"node-pty": "^1.2.0-beta.13",
+		"prism-react-renderer": "^2.4.1",
+		"react-syntax-highlighter": "^16.1.1",
+		"semver": "^7.8.5",
+		"tree-kill": "^1.2.2",
+		"zustand": "^5.0.14"
+	},
+	devDependencies: {
+		"@electron-toolkit/eslint-config-prettier": "^3.0.0",
+		"@electron-toolkit/tsconfig": "^2.0.0",
+		"@eslint/js": "^10.0.1",
+		"@heroui/react": "^3.2.2",
+		"@heroui/styles": "^3.2.2",
+		"@icons-pack/react-simple-icons": "^13.13.0",
+		"@number-flow/react": "^0.6.1",
+		"@reduxjs/toolkit": "^2.12.0",
+		"@sentry/vite-plugin": "^5.3.0",
+		"@solar-icons/react-perf": "^2.1.1",
+		"@tailwindcss/typography": "^0.5.20",
+		"@tailwindcss/vite": "^4.3.2",
+		"@types/decompress": "^4.2.7",
+		"@types/fontfaceobserver": "^2.1.3",
+		"@types/graceful-fs": "^4.1.9",
+		"@types/lodash-es": "^4.17.12",
+		"@types/node": "^24.13.2",
+		"@types/react": "^19.2.17",
+		"@types/react-dom": "^19.2.3",
+		"@types/react-highlight-words": "^0.20.1",
+		"@types/react-syntax-highlighter": "^15.5.13",
+		"@types/semver": "^7.7.1",
+		"@types/serve-handler": "^6.1.4",
+		"@vitejs/plugin-react": "^6.0.3",
+		"@xterm/addon-canvas": "^0.7.0",
+		"@xterm/addon-clipboard": "^0.2.0",
+		"@xterm/addon-fit": "^0.11.0",
+		"@xterm/addon-ligatures": "^0.10.0",
+		"@xterm/addon-progress": "^0.2.0",
+		"@xterm/addon-search": "^0.16.0",
+		"@xterm/addon-serialize": "^0.14.0",
+		"@xterm/addon-unicode11": "^0.9.0",
+		"@xterm/addon-web-links": "^0.12.0",
+		"@xterm/addon-webgl": "^0.19.0",
+		"@xterm/xterm": "^6.0.0",
+		"chokidar": "^5.0.0",
+		"decompress": "^4.2.1",
+		"electron": "^43.1.0",
+		"electron-builder": "^26.15.3",
+		"electron-dl": "^4.0.0",
+		"electron-log": "^5.4.4",
+		"electron-updater": "^6.8.9",
+		"electron-vite": "^6.0.0-beta.1",
+		"eslint": "^10.6.0",
+		"eslint-plugin-jsx-a11y": "^6.10.2",
+		"eslint-plugin-perfectionist": "^5.10.0",
+		"eslint-plugin-react": "^7.37.5",
+		"eslint-plugin-react-hooks": "^7.1.1",
+		"eslint-plugin-simple-import-sort": "^13.0.0",
+		"fontfaceobserver": "^2.3.0",
+		"framer-motion": "^12.42.2",
+		"globals": "^17.7.0",
+		"lodash-es": "^4.18.1",
+		"lucide-react": "^1.24.0",
+		"normalize-url": "^9.0.1",
+		"ogl": "^1.0.11",
+		"prettier": "^3.9.5",
+		"react": "^19.2.7",
+		"react-dom": "^19.2.7",
+		"react-error-boundary": "^6.1.2",
+		"react-highlight-words": "^0.21.0",
+		"react-intersection-observer": "^10.0.3",
+		"react-markdown": "^10.1.0",
+		"react-redux": "^9.3.0",
+		"rehype-highlight": "^7.0.2",
+		"rehype-raw": "^7.0.0",
+		"rehype-slug": "^6.0.0",
+		"remark-gfm": "^4.0.1",
+		"run-script-os": "^1.1.6",
+		"simple-git": "^3.36.0",
+		"tailwind-lint": "^0.12.0",
+		"tailwindcss": "^4.3.2",
+		"three": "^0.185.1",
+		"typescript": "^6.0.3",
+		"typescript-eslint": "^8.63.0",
+		"vite": "^8.1.4"
+	},
+	allowScripts: {
+		"electron": true,
+		"esbuild": true,
+		"node-pty": true,
+		"@sentry/cli": true
+	}
+};
+//#endregion
+//#region src/common/consts/index.ts
+/** Application name from package.json */
+var APP_NAME = package_default.appDetails.title;
+/** Application version from package.json */
+var APP_VERSION = package_default.version;
+package_default.appDetails.buildNumber;
+package_default.description;
+package_default.author.name;
+package_default.appDetails.detailedDescription;
+`${package_default.homepage}`;
+package_default.author.email;
+`${package_default.repository.url}`;
+`${package_default.repository.url}`;
+package_default.license;
+package_default.appDetails.moduleApiVersion;
+package_default.appDetails.extensionApiVersion;
+/** Application version with 'V' prefix */
+var APP_VERSION_V = `V${APP_VERSION}`;
+`${APP_NAME}${APP_VERSION}`;
+`${APP_NAME}${APP_VERSION_V}`;
+APP_VERSION_V.split("-").map((v) => capitalize(v)).join(" ");
+/**
+* Page IDs used for navigation.
+*/
+var PageID = {
+	home: "home_page",
+	imageGen: "imageGen_page",
+	textGen: "textGen_page",
+	audioGen: "audioGen_page",
+	tools: "tools_page",
+	games: "games_page",
+	others: "others_page",
+	agents: "agents_page",
+	dashboard: "dashboard_page",
+	plugins: "plugins_page",
+	settings: "settings_page"
+};
+PageID.home, PageID.imageGen, PageID.textGen, PageID.audioGen, PageID.tools, PageID.games, PageID.others, PageID.agents, PageID.dashboard, PageID.plugins, PageID.settings;
 //#endregion
 //#region src/renderer/mainWindow/utils/constants.tsx
 /**
@@ -5750,12 +5656,12 @@ tabsSlice.reducer;
 //#endregion
 //#region src/renderer/mainWindow/components/TabModal.tsx
 var { Modal: Modal$8 } = await importShared("@heroui/react");
-var { useEffect: useEffect$29, useState: useState$33 } = await importShared("react");
+var { useEffect: useEffect$30, useState: useState$34 } = await importShared("react");
 var { UNSAFE_PortalProvider: UNSAFE_PortalProvider$1 } = await importShared("react-aria");
 function TabModal({ isOpen, onOpenChange, children, size = "cover", isDismissable = false, backdropVariant, dialogClassName, containerClassName, isKeyboardDismissDisabled }) {
 	const activeTab = useTabsState("activeTab");
-	const [targetContainer, setTargetContainer] = useState$33(null);
-	useEffect$29(() => {
+	const [targetContainer, setTargetContainer] = useState$34(null);
+	useEffect$30(() => {
 		setTargetContainer(isOpen ? document.getElementById(`${activeTab}_wrapper`) : null);
 	}, [isOpen]);
 	return /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Modal$8, {
@@ -5785,6 +5691,1637 @@ function TabModal({ isOpen, onOpenChange, children, size = "cover", isDismissabl
 	});
 }
 //#endregion
+//#region src/common/utils/platform.ts
+/**
+* Platform detection utilities.
+*
+* This module provides a safe way to detect the operating system
+* in both Main (Node.js) and Renderer (Browser) environments.
+*/
+var isElectronRenderer = typeof window !== "undefined";
+var isElectronMain = typeof process !== "undefined";
+/**
+* Detects if the current platform is Windows.
+* @returns {boolean} True if running on Windows.
+*/
+function detectIsWin() {
+	if (isElectronRenderer && window.osPlatform) return window.osPlatform === "win32";
+	if (isElectronMain && process.platform) return process.platform === "win32";
+	return true;
+}
+/**
+* Detects if the current platform is macOS.
+* @returns {boolean} True if running on macOS.
+*/
+function detectIsMac() {
+	if (isElectronRenderer && window.osPlatform) return window.osPlatform === "darwin";
+	if (isElectronMain && process.platform) return process.platform === "darwin";
+	return false;
+}
+/**
+* Detects if the current platform is Linux.
+* @returns {boolean} True if running on Linux.
+*/
+function detectIsLinux() {
+	if (isElectronRenderer && window.osPlatform) return window.osPlatform === "linux";
+	if (isElectronMain && process.platform) return process.platform === "linux";
+	return false;
+}
+/**
+* True if the current platform is Windows.
+*/
+var isWin = detectIsWin();
+detectIsMac();
+detectIsLinux();
+/**
+* The line ending character for the current platform.
+* '\r' for Windows, '\n' for others.
+*/
+var terminalLineEnding = isWin ? "\r" : "\n";
+//#endregion
+//#region src/common/utils/formatting.ts
+/**
+* Formatting utilities.
+*/
+/**
+* Formats the total size into a human-readable format (MB or GB).
+*
+* @param {number} size - The total size in bytes.
+* @returns {string} The formatted size with the appropriate unit (MB or GB).
+*/
+function formatSize(size) {
+	if (!size) return "0KB";
+	if (size < 1024 * 1024) return `${(size / 1024).toFixed(2)} KB`;
+	else if (size < 1024 * 1024 * 1024) return `${(size / (1024 * 1024)).toFixed(2)} MB`;
+	else return `${(size / (1024 * 1024 * 1024)).toFixed(2)} GB`;
+}
+//#endregion
+//#region src/common/utils/urlUtils.ts
+/**
+* Extracts the owner and repository name from a given GitHub | GitLab URL.
+* @param {string} url - The GitHub repository URL.
+* @returns {{owner: string, repo: string, platform: 'github' | 'gitlab', avatarUrl: string}} An object containing the owner and repository name.
+* @throws {Error} If the provided URL is not a valid GitHub repository URL.
+*/
+function extractGitUrl(url) {
+	const match = url.match(/^(https?:\/\/)?(www\.)?(github|gitlab)\.com\/([^/]+)\/([^/]+?)(?:\.git)?$/);
+	if (!match) throw new Error(`Invalid Git repository URL: ${url}`);
+	const [, , , platform, owner, repo] = match;
+	return {
+		owner,
+		repo,
+		platform,
+		avatarUrl: `https://github.com/${owner}.png`
+	};
+}
+//#endregion
+//#region src/common/utils/strings.ts
+function getFallbackString(value) {
+	return value.replace(/[^a-zA-Z0-9\s]/g, "").split(" ").map((item) => item.slice(0, 1).toUpperCase()).join("");
+}
+//#endregion
+//#region node_modules/fuse.js/dist/fuse.mjs
+/**
+* Fuse.js v7.4.2 - Lightweight fuzzy-search (http://fusejs.io)
+*
+* Copyright (c) 2026 Kiro Risk (http://kiro.me)
+* All Rights Reserved. Apache Software License 2.0
+*
+* http://www.apache.org/licenses/LICENSE-2.0
+*/
+function isArray(value) {
+	return !Array.isArray ? getTag(value) === "[object Array]" : Array.isArray(value);
+}
+function baseToString(value) {
+	if (typeof value == "string") return value;
+	if (typeof value === "bigint") return value.toString();
+	const result = value + "";
+	return result == "0" && 1 / value == -Infinity ? "-0" : result;
+}
+function toString(value) {
+	return value == null ? "" : baseToString(value);
+}
+function isString(value) {
+	return typeof value === "string";
+}
+function isNumber(value) {
+	return typeof value === "number";
+}
+function isBoolean(value) {
+	return value === true || value === false || isObjectLike(value) && getTag(value) == "[object Boolean]";
+}
+function isObject(value) {
+	return typeof value === "object";
+}
+function isObjectLike(value) {
+	return isObject(value) && value !== null;
+}
+function isDefined(value) {
+	return value !== void 0 && value !== null;
+}
+function isBlank(value) {
+	return !value.trim().length;
+}
+function getTag(value) {
+	return value == null ? value === void 0 ? "[object Undefined]" : "[object Null]" : Object.prototype.toString.call(value);
+}
+var INCORRECT_INDEX_TYPE = "Incorrect 'index' type";
+var INVALID_DOC_INDEX = "Invalid doc index: must be a non-negative integer within the bounds of the docs array";
+var LOGICAL_SEARCH_INVALID_QUERY_FOR_KEY = (key) => `Invalid value for key ${key}`;
+var PATTERN_LENGTH_TOO_LARGE = (max) => `Pattern length exceeds max of ${max}.`;
+var MISSING_KEY_PROPERTY = (name) => `Missing ${name} property in key`;
+var INVALID_KEY_WEIGHT_VALUE = (key) => `Property 'weight' in key '${key}' must be a positive integer`;
+var FUSE_MATCH_TOKEN_SEARCH_UNSUPPORTED = "Fuse.match does not support useTokenSearch: token search requires corpus-level statistics (df, fieldCount) that a one-off string comparison does not have. Use new Fuse(...).search(...) instead.";
+var hasOwn = Object.prototype.hasOwnProperty;
+var KeyStore = class {
+	constructor(keys) {
+		this._keys = [];
+		this._keyMap = {};
+		let totalWeight = 0;
+		keys.forEach((key) => {
+			const obj = createKey(key);
+			this._keys.push(obj);
+			this._keyMap[obj.id] = obj;
+			totalWeight += obj.weight;
+		});
+		this._keys.forEach((key) => {
+			key.weight /= totalWeight;
+		});
+	}
+	get(keyId) {
+		return this._keyMap[keyId];
+	}
+	keys() {
+		return this._keys;
+	}
+	toJSON() {
+		return JSON.stringify(this._keys);
+	}
+};
+function createKey(key) {
+	let path = null;
+	let id = null;
+	let src = null;
+	let weight = 1;
+	let getFn = null;
+	if (isString(key) || isArray(key)) {
+		src = key;
+		path = createKeyPath(key);
+		id = createKeyId(key);
+	} else {
+		if (!hasOwn.call(key, "name")) throw new Error(MISSING_KEY_PROPERTY("name"));
+		const name = key.name;
+		src = name;
+		if (hasOwn.call(key, "weight") && key.weight !== void 0) {
+			weight = key.weight;
+			if (weight <= 0) throw new Error(INVALID_KEY_WEIGHT_VALUE(createKeyId(name)));
+		}
+		path = createKeyPath(name);
+		id = createKeyId(name);
+		getFn = key.getFn ?? null;
+	}
+	return {
+		path,
+		id,
+		weight,
+		src,
+		getFn
+	};
+}
+function createKeyPath(key) {
+	return isArray(key) ? key : key.split(".");
+}
+function createKeyId(key) {
+	return isArray(key) ? key.join(".") : key;
+}
+function get(obj, path) {
+	const list = [];
+	let arr = false;
+	const deepGet = (obj, path, index, arrayIndex) => {
+		if (!isDefined(obj)) return;
+		if (!path[index]) list.push(arrayIndex !== void 0 ? {
+			v: obj,
+			i: arrayIndex
+		} : obj);
+		else {
+			const value = obj[path[index]];
+			if (!isDefined(value)) return;
+			if (index === path.length - 1 && (isString(value) || isNumber(value) || isBoolean(value) || typeof value === "bigint")) list.push(arrayIndex !== void 0 ? {
+				v: toString(value),
+				i: arrayIndex
+			} : toString(value));
+			else if (isArray(value)) {
+				arr = true;
+				for (let i = 0, len = value.length; i < len; i += 1) deepGet(value[i], path, index + 1, i);
+			} else if (path.length) deepGet(value, path, index + 1, arrayIndex);
+		}
+	};
+	deepGet(obj, isString(path) ? path.split(".") : path, 0);
+	return arr ? list : list[0];
+}
+var MatchOptions = {
+	includeMatches: false,
+	findAllMatches: false,
+	minMatchCharLength: 1
+};
+var BasicOptions = {
+	isCaseSensitive: false,
+	ignoreDiacritics: false,
+	includeScore: false,
+	keys: [],
+	shouldSort: true,
+	sortFn: (a, b) => a.score === b.score ? a.idx < b.idx ? -1 : 1 : a.score < b.score ? -1 : 1
+};
+var FuzzyOptions = {
+	location: 0,
+	threshold: .6,
+	distance: 100
+};
+var AdvancedOptions = {
+	useExtendedSearch: false,
+	useTokenSearch: false,
+	tokenize: void 0,
+	tokenMatch: "any",
+	getFn: get,
+	ignoreLocation: false,
+	ignoreFieldNorm: false,
+	fieldNormWeight: 1
+};
+var Config = Object.freeze({
+	...BasicOptions,
+	...MatchOptions,
+	...FuzzyOptions,
+	...AdvancedOptions
+});
+function norm(weight = 1, mantissa = 3) {
+	const cache = /* @__PURE__ */ new Map();
+	const m = Math.pow(10, mantissa);
+	return {
+		get(value) {
+			let numTokens = 1;
+			let inSpace = false;
+			for (let i = 0; i < value.length; i++) if (value.charCodeAt(i) === 32) {
+				if (!inSpace) {
+					numTokens++;
+					inSpace = true;
+				}
+			} else inSpace = false;
+			if (cache.has(numTokens)) return cache.get(numTokens);
+			const n = Math.round(m / Math.pow(numTokens, .5 * weight)) / m;
+			cache.set(numTokens, n);
+			return n;
+		},
+		clear() {
+			cache.clear();
+		}
+	};
+}
+var FuseIndex = class {
+	constructor({ getFn = Config.getFn, fieldNormWeight = Config.fieldNormWeight } = {}) {
+		this.norm = norm(fieldNormWeight, 3);
+		this.getFn = getFn;
+		this.isCreated = false;
+		this.docs = [];
+		this.keys = [];
+		this._keysMap = {};
+		this.setIndexRecords();
+	}
+	setSources(docs = []) {
+		this.docs = docs;
+	}
+	setIndexRecords(records = []) {
+		this.records = records;
+	}
+	setKeys(keys = []) {
+		this.keys = keys;
+		this._keysMap = {};
+		keys.forEach((key, idx) => {
+			this._keysMap[key.id] = idx;
+		});
+	}
+	create() {
+		if (this.isCreated || !this.docs.length) return;
+		this.isCreated = true;
+		const len = this.docs.length;
+		this.records = new Array(len);
+		let recordCount = 0;
+		if (isString(this.docs[0])) for (let i = 0; i < len; i++) {
+			const record = this._createStringRecord(this.docs[i], i);
+			if (record) this.records[recordCount++] = record;
+		}
+		else for (let i = 0; i < len; i++) this.records[recordCount++] = this._createObjectRecord(this.docs[i], i);
+		this.records.length = recordCount;
+		this.norm.clear();
+	}
+	add(doc, docIndex) {
+		if (!Number.isInteger(docIndex) || docIndex < 0) throw new Error(INVALID_DOC_INDEX);
+		if (isString(doc)) {
+			const record = this._createStringRecord(doc, docIndex);
+			if (record) this.records.push(record);
+			return record;
+		}
+		const record = this._createObjectRecord(doc, docIndex);
+		this.records.push(record);
+		return record;
+	}
+	removeAt(idx) {
+		if (!Number.isInteger(idx) || idx < 0) throw new Error(INVALID_DOC_INDEX);
+		for (let i = 0, len = this.records.length; i < len; i += 1) if (this.records[i].i === idx) {
+			this.records.splice(i, 1);
+			break;
+		}
+		for (let i = 0, len = this.records.length; i < len; i += 1) if (this.records[i].i > idx) this.records[i].i -= 1;
+	}
+	removeAll(indices) {
+		const toRemove = /* @__PURE__ */ new Set();
+		for (const v of indices) if (Number.isInteger(v) && v >= 0) toRemove.add(v);
+		if (toRemove.size === 0) return;
+		this.records = this.records.filter((r) => !toRemove.has(r.i));
+		const sorted = Array.from(toRemove).sort((a, b) => a - b);
+		for (const record of this.records) {
+			let lo = 0;
+			let hi = sorted.length;
+			while (lo < hi) {
+				const mid = lo + hi >>> 1;
+				if (sorted[mid] < record.i) lo = mid + 1;
+				else hi = mid;
+			}
+			record.i -= lo;
+		}
+	}
+	getValueForItemAtKeyId(item, keyId) {
+		return item[this._keysMap[keyId]];
+	}
+	size() {
+		return this.records.length;
+	}
+	_createStringRecord(doc, docIndex) {
+		if (!isDefined(doc) || isBlank(doc)) return null;
+		return {
+			v: doc,
+			i: docIndex,
+			n: this.norm.get(doc)
+		};
+	}
+	_createObjectRecord(doc, docIndex) {
+		const record = {
+			i: docIndex,
+			$: {}
+		};
+		for (let keyIndex = 0, keyLen = this.keys.length; keyIndex < keyLen; keyIndex++) {
+			const key = this.keys[keyIndex];
+			const value = key.getFn ? key.getFn(doc) : this.getFn(doc, key.path);
+			if (!isDefined(value)) continue;
+			if (isArray(value)) {
+				const subRecords = [];
+				for (let i = 0, len = value.length; i < len; i += 1) {
+					const item = value[i];
+					if (!isDefined(item)) continue;
+					if (isString(item)) {
+						if (!isBlank(item)) {
+							const subRecord = {
+								v: item,
+								i,
+								n: this.norm.get(item)
+							};
+							subRecords.push(subRecord);
+						}
+					} else if (isDefined(item.v)) {
+						const text = isString(item.v) ? item.v : toString(item.v);
+						if (!isBlank(text)) {
+							const subRecord = {
+								v: text,
+								i: item.i,
+								n: this.norm.get(text)
+							};
+							subRecords.push(subRecord);
+						}
+					}
+				}
+				record.$[keyIndex] = subRecords;
+			} else if (isString(value) && !isBlank(value)) {
+				const subRecord = {
+					v: value,
+					n: this.norm.get(value)
+				};
+				record.$[keyIndex] = subRecord;
+			}
+		}
+		return record;
+	}
+	toJSON() {
+		return {
+			keys: this.keys.map(({ getFn, ...key }) => key),
+			records: this.records
+		};
+	}
+};
+function createIndex(keys, docs, { getFn = Config.getFn, fieldNormWeight = Config.fieldNormWeight } = {}) {
+	const myIndex = new FuseIndex({
+		getFn,
+		fieldNormWeight
+	});
+	myIndex.setKeys(keys.map(createKey));
+	myIndex.setSources(docs);
+	myIndex.create();
+	return myIndex;
+}
+function parseIndex(data, { getFn = Config.getFn, fieldNormWeight = Config.fieldNormWeight } = {}) {
+	const { keys, records } = data;
+	const myIndex = new FuseIndex({
+		getFn,
+		fieldNormWeight
+	});
+	myIndex.setKeys(keys);
+	myIndex.setIndexRecords(records);
+	return myIndex;
+}
+function convertMaskToIndices(matchmask = [], minMatchCharLength = Config.minMatchCharLength) {
+	const indices = [];
+	let start = -1;
+	let end = -1;
+	let i = 0;
+	for (let len = matchmask.length; i < len; i += 1) {
+		const match = matchmask[i];
+		if (match && start === -1) start = i;
+		else if (!match && start !== -1) {
+			end = i - 1;
+			if (end - start + 1 >= minMatchCharLength) indices.push([start, end]);
+			start = -1;
+		}
+	}
+	if (matchmask[i - 1] && i - start >= minMatchCharLength) indices.push([start, i - 1]);
+	return indices;
+}
+function search(text, pattern, patternAlphabet, { location = Config.location, distance = Config.distance, threshold = Config.threshold, findAllMatches = Config.findAllMatches, minMatchCharLength = Config.minMatchCharLength, includeMatches = Config.includeMatches, ignoreLocation = Config.ignoreLocation } = {}) {
+	if (pattern.length > 32) throw new Error(PATTERN_LENGTH_TOO_LARGE(32));
+	const patternLen = pattern.length;
+	const textLen = text.length;
+	const expectedLocation = Math.max(0, Math.min(location, textLen));
+	let currentThreshold = threshold;
+	let bestLocation = expectedLocation;
+	const calcScore = (errors, currentLocation) => {
+		const accuracy = errors / patternLen;
+		if (ignoreLocation) return accuracy;
+		const proximity = Math.abs(expectedLocation - currentLocation);
+		if (!distance) return proximity ? 1 : accuracy;
+		return accuracy + proximity / distance;
+	};
+	const computeMatches = minMatchCharLength > 1 || includeMatches;
+	const matchMask = computeMatches ? Array(textLen) : [];
+	let index;
+	while ((index = text.indexOf(pattern, bestLocation)) > -1) {
+		const score = calcScore(0, index);
+		currentThreshold = Math.min(score, currentThreshold);
+		bestLocation = index + patternLen;
+		if (computeMatches) {
+			let i = 0;
+			while (i < patternLen) {
+				matchMask[index + i] = 1;
+				i += 1;
+			}
+		}
+	}
+	bestLocation = -1;
+	let lastBitArr = [];
+	let finalScore = 1;
+	let bestErrors = 0;
+	let binMax = patternLen + textLen;
+	const mask = 1 << patternLen - 1;
+	for (let i = 0; i < patternLen; i += 1) {
+		let binMin = 0;
+		let binMid = binMax;
+		while (binMin < binMid) {
+			if (calcScore(i, expectedLocation + binMid) <= currentThreshold) binMin = binMid;
+			else binMax = binMid;
+			binMid = Math.floor((binMax - binMin) / 2 + binMin);
+		}
+		binMax = binMid;
+		let start = Math.max(1, expectedLocation - binMid + 1);
+		const finish = findAllMatches ? textLen : Math.min(expectedLocation + binMid, textLen) + patternLen;
+		const bitArr = Array(finish + 2);
+		bitArr[finish + 1] = (1 << i) - 1;
+		for (let j = finish; j >= start; j -= 1) {
+			const currentLocation = j - 1;
+			const charMatch = patternAlphabet[text[currentLocation]];
+			bitArr[j] = (bitArr[j + 1] << 1 | 1) & charMatch;
+			if (i) bitArr[j] |= (lastBitArr[j + 1] | lastBitArr[j]) << 1 | 1 | lastBitArr[j + 1];
+			if (bitArr[j] & mask) {
+				finalScore = calcScore(i, currentLocation);
+				if (finalScore <= currentThreshold) {
+					currentThreshold = finalScore;
+					bestLocation = currentLocation;
+					bestErrors = i;
+					if (bestLocation <= expectedLocation) break;
+					start = Math.max(1, 2 * expectedLocation - bestLocation);
+				}
+			}
+		}
+		if (calcScore(i + 1, expectedLocation) > currentThreshold) break;
+		lastBitArr = bitArr;
+	}
+	if (computeMatches && bestLocation >= 0) {
+		const matchEnd = Math.min(textLen - 1, bestLocation + patternLen - 1 + bestErrors);
+		for (let k = bestLocation; k <= matchEnd; k += 1) if (patternAlphabet[text[k]]) matchMask[k] = 1;
+	}
+	const result = {
+		isMatch: bestLocation >= 0,
+		score: Math.max(.001, finalScore)
+	};
+	if (computeMatches) {
+		const indices = convertMaskToIndices(matchMask, minMatchCharLength);
+		if (!indices.length) result.isMatch = false;
+		else if (includeMatches) result.indices = indices;
+	}
+	return result;
+}
+function createPatternAlphabet(pattern) {
+	const mask = {};
+	for (let i = 0, len = pattern.length; i < len; i += 1) {
+		const char = pattern.charAt(i);
+		mask[char] = (mask[char] || 0) | 1 << len - i - 1;
+	}
+	return mask;
+}
+function mergeIndices(indices) {
+	if (indices.length <= 1) return indices;
+	indices.sort((a, b) => a[0] - b[0] || a[1] - b[1]);
+	const merged = [indices[0]];
+	for (let i = 1, len = indices.length; i < len; i += 1) {
+		const last = merged[merged.length - 1];
+		const curr = indices[i];
+		if (curr[0] <= last[1] + 1) last[1] = Math.max(last[1], curr[1]);
+		else merged.push(curr);
+	}
+	return merged;
+}
+var NON_DECOMPOSABLE_MAP = {
+	"ł": "l",
+	"Ł": "L",
+	"đ": "d",
+	"Đ": "D",
+	"ø": "o",
+	"Ø": "O",
+	"ħ": "h",
+	"Ħ": "H",
+	"ŧ": "t",
+	"Ŧ": "T",
+	"ı": "i",
+	"ß": "ss"
+};
+var NON_DECOMPOSABLE_RE = new RegExp("[" + Object.keys(NON_DECOMPOSABLE_MAP).join("") + "]", "g");
+var stripDiacritics = typeof String.prototype.normalize === "function" ? (str) => str.normalize("NFD").replace(/[\u0300-\u036F\u0483-\u0489\u0591-\u05BD\u05BF\u05C1\u05C2\u05C4\u05C5\u05C7\u0610-\u061A\u064B-\u065F\u0670\u06D6-\u06DC\u06DF-\u06E4\u06E7\u06E8\u06EA-\u06ED\u0711\u0730-\u074A\u07A6-\u07B0\u07EB-\u07F3\u07FD\u0816-\u0819\u081B-\u0823\u0825-\u0827\u0829-\u082D\u0859-\u085B\u08D3-\u08E1\u08E3-\u0903\u093A-\u093C\u093E-\u094F\u0951-\u0957\u0962\u0963\u0981-\u0983\u09BC\u09BE-\u09C4\u09C7\u09C8\u09CB-\u09CD\u09D7\u09E2\u09E3\u09FE\u0A01-\u0A03\u0A3C\u0A3E-\u0A42\u0A47\u0A48\u0A4B-\u0A4D\u0A51\u0A70\u0A71\u0A75\u0A81-\u0A83\u0ABC\u0ABE-\u0AC5\u0AC7-\u0AC9\u0ACB-\u0ACD\u0AE2\u0AE3\u0AFA-\u0AFF\u0B01-\u0B03\u0B3C\u0B3E-\u0B44\u0B47\u0B48\u0B4B-\u0B4D\u0B56\u0B57\u0B62\u0B63\u0B82\u0BBE-\u0BC2\u0BC6-\u0BC8\u0BCA-\u0BCD\u0BD7\u0C00-\u0C04\u0C3E-\u0C44\u0C46-\u0C48\u0C4A-\u0C4D\u0C55\u0C56\u0C62\u0C63\u0C81-\u0C83\u0CBC\u0CBE-\u0CC4\u0CC6-\u0CC8\u0CCA-\u0CCD\u0CD5\u0CD6\u0CE2\u0CE3\u0D00-\u0D03\u0D3B\u0D3C\u0D3E-\u0D44\u0D46-\u0D48\u0D4A-\u0D4D\u0D57\u0D62\u0D63\u0D82\u0D83\u0DCA\u0DCF-\u0DD4\u0DD6\u0DD8-\u0DDF\u0DF2\u0DF3\u0E31\u0E34-\u0E3A\u0E47-\u0E4E\u0EB1\u0EB4-\u0EB9\u0EBB\u0EBC\u0EC8-\u0ECD\u0F18\u0F19\u0F35\u0F37\u0F39\u0F3E\u0F3F\u0F71-\u0F84\u0F86\u0F87\u0F8D-\u0F97\u0F99-\u0FBC\u0FC6\u102B-\u103E\u1056-\u1059\u105E-\u1060\u1062-\u1064\u1067-\u106D\u1071-\u1074\u1082-\u108D\u108F\u109A-\u109D\u135D-\u135F\u1712-\u1714\u1732-\u1734\u1752\u1753\u1772\u1773\u17B4-\u17D3\u17DD\u180B-\u180D\u1885\u1886\u18A9\u1920-\u192B\u1930-\u193B\u1A17-\u1A1B\u1A55-\u1A5E\u1A60-\u1A7C\u1A7F\u1AB0-\u1ABE\u1B00-\u1B04\u1B34-\u1B44\u1B6B-\u1B73\u1B80-\u1B82\u1BA1-\u1BAD\u1BE6-\u1BF3\u1C24-\u1C37\u1CD0-\u1CD2\u1CD4-\u1CE8\u1CED\u1CF2-\u1CF4\u1CF7-\u1CF9\u1DC0-\u1DF9\u1DFB-\u1DFF\u20D0-\u20F0\u2CEF-\u2CF1\u2D7F\u2DE0-\u2DFF\u302A-\u302F\u3099\u309A\uA66F-\uA672\uA674-\uA67D\uA69E\uA69F\uA6F0\uA6F1\uA802\uA806\uA80B\uA823-\uA827\uA880\uA881\uA8B4-\uA8C5\uA8E0-\uA8F1\uA8FF\uA926-\uA92D\uA947-\uA953\uA980-\uA983\uA9B3-\uA9C0\uA9E5\uAA29-\uAA36\uAA43\uAA4C\uAA4D\uAA7B-\uAA7D\uAAB0\uAAB2-\uAAB4\uAAB7\uAAB8\uAABE\uAABF\uAAC1\uAAEB-\uAAEF\uAAF5\uAAF6\uABE3-\uABEA\uABEC\uABED\uFB1E\uFE00-\uFE0F\uFE20-\uFE2F]/g, "").replace(NON_DECOMPOSABLE_RE, (ch) => NON_DECOMPOSABLE_MAP[ch]) : (str) => str;
+var BitapSearch = class {
+	constructor(pattern, { location = Config.location, threshold = Config.threshold, distance = Config.distance, includeMatches = Config.includeMatches, findAllMatches = Config.findAllMatches, minMatchCharLength = Config.minMatchCharLength, isCaseSensitive = Config.isCaseSensitive, ignoreDiacritics = Config.ignoreDiacritics, ignoreLocation = Config.ignoreLocation } = {}) {
+		this.options = {
+			location,
+			threshold,
+			distance,
+			includeMatches,
+			findAllMatches,
+			minMatchCharLength,
+			isCaseSensitive,
+			ignoreDiacritics,
+			ignoreLocation
+		};
+		pattern = isCaseSensitive ? pattern : pattern.toLowerCase();
+		pattern = ignoreDiacritics ? stripDiacritics(pattern) : pattern;
+		this.pattern = pattern;
+		this.chunks = [];
+		if (!this.pattern.length) return;
+		const addChunk = (pattern, startIndex) => {
+			this.chunks.push({
+				pattern,
+				alphabet: createPatternAlphabet(pattern),
+				startIndex
+			});
+		};
+		const len = this.pattern.length;
+		if (len > 32) {
+			let i = 0;
+			const remainder = len % 32;
+			const end = len - remainder;
+			while (i < end) {
+				addChunk(this.pattern.substr(i, 32), i);
+				i += 32;
+			}
+			if (remainder) {
+				const startIndex = len - 32;
+				addChunk(this.pattern.substr(startIndex), startIndex);
+			}
+		} else addChunk(this.pattern, 0);
+	}
+	searchIn(text) {
+		const { isCaseSensitive, ignoreDiacritics, includeMatches } = this.options;
+		text = isCaseSensitive ? text : text.toLowerCase();
+		text = ignoreDiacritics ? stripDiacritics(text) : text;
+		if (this.pattern === text) {
+			const result = {
+				isMatch: true,
+				score: 0
+			};
+			if (includeMatches) result.indices = [[0, text.length - 1]];
+			return result;
+		}
+		const { location, distance, threshold, findAllMatches, minMatchCharLength, ignoreLocation } = this.options;
+		const allIndices = [];
+		let totalScore = 0;
+		let hasMatches = false;
+		this.chunks.forEach(({ pattern, alphabet, startIndex }) => {
+			const { isMatch, score, indices } = search(text, pattern, alphabet, {
+				location: location + startIndex,
+				distance,
+				threshold,
+				findAllMatches,
+				minMatchCharLength,
+				includeMatches,
+				ignoreLocation
+			});
+			if (isMatch) hasMatches = true;
+			totalScore += score;
+			if (isMatch && indices) allIndices.push(...indices);
+		});
+		const result = {
+			isMatch: hasMatches,
+			score: hasMatches ? totalScore / this.chunks.length : 1
+		};
+		if (hasMatches && includeMatches) result.indices = mergeIndices(allIndices);
+		return result;
+	}
+};
+var MULTI_MATCH_TYPES = /* @__PURE__ */ new Set(["fuzzy", "include"]);
+function isInverse(type) {
+	return type.startsWith("inverse");
+}
+var matchers = [
+	{
+		type: "exact",
+		multiRegex: /^="(.*)"$/,
+		singleRegex: /^=(.*)$/,
+		create: (pattern) => ({
+			type: "exact",
+			search(text) {
+				const isMatch = text === pattern;
+				return {
+					isMatch,
+					score: isMatch ? 0 : 1,
+					indices: [0, pattern.length - 1]
+				};
+			}
+		})
+	},
+	{
+		type: "include",
+		multiRegex: /^'"(.*)"$/,
+		singleRegex: /^'(.*)$/,
+		create: (pattern) => ({
+			type: "include",
+			search(text) {
+				let location = 0;
+				let index;
+				const indices = [];
+				const patternLen = pattern.length;
+				while ((index = text.indexOf(pattern, location)) > -1) {
+					location = index + patternLen;
+					indices.push([index, location - 1]);
+				}
+				const isMatch = !!indices.length;
+				return {
+					isMatch,
+					score: isMatch ? 0 : 1,
+					indices
+				};
+			}
+		})
+	},
+	{
+		type: "prefix-exact",
+		multiRegex: /^\^"(.*)"$/,
+		singleRegex: /^\^(.*)$/,
+		create: (pattern) => ({
+			type: "prefix-exact",
+			search(text) {
+				const isMatch = text.startsWith(pattern);
+				return {
+					isMatch,
+					score: isMatch ? 0 : 1,
+					indices: [0, pattern.length - 1]
+				};
+			}
+		})
+	},
+	{
+		type: "inverse-prefix-exact",
+		multiRegex: /^!\^"(.*)"$/,
+		singleRegex: /^!\^(.*)$/,
+		create: (pattern) => ({
+			type: "inverse-prefix-exact",
+			search(text) {
+				const isMatch = !text.startsWith(pattern);
+				return {
+					isMatch,
+					score: isMatch ? 0 : 1,
+					indices: [0, text.length - 1]
+				};
+			}
+		})
+	},
+	{
+		type: "inverse-suffix-exact",
+		multiRegex: /^!"(.*)"\$$/,
+		singleRegex: /^!(.*)\$$/,
+		create: (pattern) => ({
+			type: "inverse-suffix-exact",
+			search(text) {
+				const isMatch = !text.endsWith(pattern);
+				return {
+					isMatch,
+					score: isMatch ? 0 : 1,
+					indices: [0, text.length - 1]
+				};
+			}
+		})
+	},
+	{
+		type: "suffix-exact",
+		multiRegex: /^"(.*)"\$$/,
+		singleRegex: /^(.*)\$$/,
+		create: (pattern) => ({
+			type: "suffix-exact",
+			search(text) {
+				const isMatch = text.endsWith(pattern);
+				return {
+					isMatch,
+					score: isMatch ? 0 : 1,
+					indices: [text.length - pattern.length, text.length - 1]
+				};
+			}
+		})
+	},
+	{
+		type: "inverse-exact",
+		multiRegex: /^!"(.*)"$/,
+		singleRegex: /^!(.*)$/,
+		create: (pattern) => ({
+			type: "inverse-exact",
+			search(text) {
+				const isMatch = text.indexOf(pattern) === -1;
+				return {
+					isMatch,
+					score: isMatch ? 0 : 1,
+					indices: [0, text.length - 1]
+				};
+			}
+		})
+	},
+	{
+		type: "fuzzy",
+		multiRegex: /^"(.*)"$/,
+		singleRegex: /^(.*)$/,
+		create: (pattern, options = {}) => {
+			const bitap = new BitapSearch(pattern, {
+				location: options.location ?? Config.location,
+				threshold: options.threshold ?? Config.threshold,
+				distance: options.distance ?? Config.distance,
+				includeMatches: options.includeMatches ?? Config.includeMatches,
+				findAllMatches: options.findAllMatches ?? Config.findAllMatches,
+				minMatchCharLength: options.minMatchCharLength ?? Config.minMatchCharLength,
+				isCaseSensitive: options.isCaseSensitive ?? Config.isCaseSensitive,
+				ignoreDiacritics: options.ignoreDiacritics ?? Config.ignoreDiacritics,
+				ignoreLocation: options.ignoreLocation ?? Config.ignoreLocation
+			});
+			return {
+				type: "fuzzy",
+				search(text) {
+					return bitap.searchIn(text);
+				}
+			};
+		}
+	}
+];
+var matchersLen = matchers.length;
+var ESCAPED_PIPE = "\0";
+var OR_TOKEN = "|";
+function tokenize(pattern) {
+	const tokens = [];
+	const len = pattern.length;
+	let i = 0;
+	while (i < len) {
+		while (i < len && pattern[i] === " ") i++;
+		if (i >= len) break;
+		let j = i;
+		while (j < len && pattern[j] !== " " && pattern[j] !== "\"") j++;
+		if (j < len && pattern[j] === "\"") {
+			j++;
+			while (j < len) {
+				if (pattern[j] === "\"") {
+					const next = j + 1;
+					if (next >= len || pattern[next] === " ") {
+						j++;
+						break;
+					}
+					if (pattern[next] === "$" && (next + 1 >= len || pattern[next + 1] === " ")) {
+						j += 2;
+						break;
+					}
+				}
+				j++;
+			}
+			tokens.push(pattern.substring(i, j));
+			i = j;
+		} else {
+			while (j < len && pattern[j] !== " ") j++;
+			tokens.push(pattern.substring(i, j));
+			i = j;
+		}
+	}
+	return tokens;
+}
+function getMatch(pattern, exp) {
+	const matches = pattern.match(exp);
+	return matches ? matches[1] : null;
+}
+function parseQuery(pattern, options = {}) {
+	return pattern.replace(/\\\|/g, ESCAPED_PIPE).split(OR_TOKEN).map((item) => {
+		const query = tokenize(item.replace(/\u0000/g, "|").trim()).filter((item) => item && !!item.trim());
+		const results = [];
+		for (let i = 0, len = query.length; i < len; i += 1) {
+			const queryItem = query[i];
+			let found = false;
+			let idx = -1;
+			while (!found && ++idx < matchersLen) {
+				const def = matchers[idx];
+				const token = getMatch(queryItem, def.multiRegex);
+				if (token) {
+					results.push(def.create(token, options));
+					found = true;
+				}
+			}
+			if (found) continue;
+			idx = -1;
+			while (++idx < matchersLen) {
+				const def = matchers[idx];
+				const token = getMatch(queryItem, def.singleRegex);
+				if (token) {
+					results.push(def.create(token, options));
+					break;
+				}
+			}
+		}
+		return results;
+	});
+}
+var ExtendedSearch = class {
+	constructor(pattern, { isCaseSensitive = Config.isCaseSensitive, ignoreDiacritics = Config.ignoreDiacritics, includeMatches = Config.includeMatches, minMatchCharLength = Config.minMatchCharLength, ignoreLocation = Config.ignoreLocation, findAllMatches = Config.findAllMatches, location = Config.location, threshold = Config.threshold, distance = Config.distance } = {}) {
+		this.query = null;
+		this.options = {
+			isCaseSensitive,
+			ignoreDiacritics,
+			includeMatches,
+			minMatchCharLength,
+			findAllMatches,
+			ignoreLocation,
+			location,
+			threshold,
+			distance
+		};
+		pattern = isCaseSensitive ? pattern : pattern.toLowerCase();
+		pattern = ignoreDiacritics ? stripDiacritics(pattern) : pattern;
+		this.pattern = pattern;
+		this.query = parseQuery(this.pattern, this.options);
+	}
+	static condition(_, options) {
+		return options.useExtendedSearch;
+	}
+	searchIn(text) {
+		const query = this.query;
+		if (!query) return {
+			isMatch: false,
+			score: 1
+		};
+		const { includeMatches, isCaseSensitive, ignoreDiacritics } = this.options;
+		text = isCaseSensitive ? text : text.toLowerCase();
+		text = ignoreDiacritics ? stripDiacritics(text) : text;
+		let numMatches = 0;
+		const allIndices = [];
+		let totalScore = 0;
+		let hasInverse = false;
+		for (let i = 0, qLen = query.length; i < qLen; i += 1) {
+			const searchers = query[i];
+			allIndices.length = 0;
+			numMatches = 0;
+			hasInverse = false;
+			for (let j = 0, pLen = searchers.length; j < pLen; j += 1) {
+				const matcher = searchers[j];
+				const { isMatch, indices, score } = matcher.search(text);
+				if (isMatch) {
+					numMatches += 1;
+					totalScore += score;
+					if (isInverse(matcher.type)) hasInverse = true;
+					if (includeMatches) if (MULTI_MATCH_TYPES.has(matcher.type)) allIndices.push(...indices);
+					else allIndices.push(indices);
+				} else {
+					totalScore = 0;
+					numMatches = 0;
+					allIndices.length = 0;
+					hasInverse = false;
+					break;
+				}
+			}
+			if (numMatches) {
+				const result = {
+					isMatch: true,
+					score: totalScore / numMatches
+				};
+				if (hasInverse) result.hasInverse = true;
+				if (includeMatches) result.indices = mergeIndices(allIndices);
+				return result;
+			}
+		}
+		return {
+			isMatch: false,
+			score: 1
+		};
+	}
+};
+var registeredSearchers = [];
+function register(...args) {
+	registeredSearchers.push(...args);
+}
+function createSearcher(pattern, options) {
+	for (let i = 0, len = registeredSearchers.length; i < len; i += 1) {
+		const searcherClass = registeredSearchers[i];
+		if (searcherClass.condition(pattern, options)) return new searcherClass(pattern, options);
+	}
+	return new BitapSearch(pattern, options);
+}
+var LogicalOperator = {
+	AND: "$and",
+	OR: "$or"
+};
+var KeyType = {
+	PATH: "$path",
+	PATTERN: "$val"
+};
+var isExpression = (query) => !!(query[LogicalOperator.AND] || query[LogicalOperator.OR]);
+var isPath = (query) => !!query[KeyType.PATH];
+var isLeaf = (query) => !isArray(query) && isObject(query) && !isExpression(query);
+var convertToExplicit = (query) => ({ [LogicalOperator.AND]: Object.keys(query).map((key) => ({ [key]: query[key] })) });
+function parse$2(query, options, { auto = true } = {}) {
+	const next = (query) => {
+		if (isString(query)) {
+			const obj = {
+				keyId: null,
+				pattern: query
+			};
+			if (auto) obj.searcher = createSearcher(query, options);
+			return obj;
+		}
+		const keys = Object.keys(query);
+		const isQueryPath = isPath(query);
+		if (!isQueryPath && keys.length > 1 && !isExpression(query)) return next(convertToExplicit(query));
+		if (isLeaf(query)) {
+			const key = isQueryPath ? query[KeyType.PATH] : keys[0];
+			const pattern = isQueryPath ? query[KeyType.PATTERN] : query[key];
+			if (!isString(pattern)) throw new Error(LOGICAL_SEARCH_INVALID_QUERY_FOR_KEY(key));
+			const obj = {
+				keyId: createKeyId(key),
+				pattern
+			};
+			if (auto) obj.searcher = createSearcher(pattern, options);
+			return obj;
+		}
+		const node = {
+			children: [],
+			operator: keys[0]
+		};
+		keys.forEach((key) => {
+			const value = query[key];
+			if (isArray(value)) value.forEach((item) => {
+				node.children.push(next(item));
+			});
+		});
+		return node;
+	};
+	if (!isExpression(query)) query = convertToExplicit(query);
+	return next(query);
+}
+function computeScoreSingle(matches, { ignoreFieldNorm = Config.ignoreFieldNorm }) {
+	let totalScore = 1;
+	matches.forEach(({ key, norm, score }) => {
+		const weight = key ? key.weight : null;
+		totalScore *= Math.pow(score === 0 && weight ? Number.EPSILON : score, (weight || 1) * (ignoreFieldNorm ? 1 : norm));
+	});
+	return totalScore;
+}
+function computeScore(results, { ignoreFieldNorm = Config.ignoreFieldNorm }) {
+	results.forEach((result) => {
+		result.score = computeScoreSingle(result.matches, { ignoreFieldNorm });
+	});
+}
+var MaxHeap = class {
+	constructor(limit) {
+		this.limit = limit;
+		this.heap = [];
+	}
+	get size() {
+		return this.heap.length;
+	}
+	shouldInsert(score) {
+		return this.size < this.limit || score < this.heap[0].score;
+	}
+	insert(item) {
+		if (this.size < this.limit) {
+			this.heap.push(item);
+			this._bubbleUp(this.size - 1);
+		} else if (item.score < this.heap[0].score) {
+			this.heap[0] = item;
+			this._sinkDown(0);
+		}
+	}
+	extractSorted(sortFn) {
+		return this.heap.sort(sortFn);
+	}
+	_bubbleUp(i) {
+		const heap = this.heap;
+		while (i > 0) {
+			const parent = i - 1 >> 1;
+			if (heap[i].score <= heap[parent].score) break;
+			const tmp = heap[i];
+			heap[i] = heap[parent];
+			heap[parent] = tmp;
+			i = parent;
+		}
+	}
+	_sinkDown(i) {
+		const heap = this.heap;
+		const len = heap.length;
+		let largest = i;
+		do {
+			i = largest;
+			const left = 2 * i + 1;
+			const right = 2 * i + 2;
+			if (left < len && heap[left].score > heap[largest].score) largest = left;
+			if (right < len && heap[right].score > heap[largest].score) largest = right;
+			if (largest !== i) {
+				const tmp = heap[i];
+				heap[i] = heap[largest];
+				heap[largest] = tmp;
+			}
+		} while (largest !== i);
+	}
+};
+function formatMatches(result) {
+	const matches = [];
+	result.matches.forEach((match) => {
+		if (!isDefined(match.indices) || !match.indices.length) return;
+		const obj = {
+			indices: match.indices,
+			value: match.value
+		};
+		if (match.key) obj.key = match.key.id;
+		if (match.idx > -1) obj.refIndex = match.idx;
+		matches.push(obj);
+	});
+	return matches;
+}
+function format(results, docs, { includeMatches = Config.includeMatches, includeScore = Config.includeScore } = {}) {
+	return results.map((result) => {
+		const { idx } = result;
+		const data = {
+			item: docs[idx],
+			refIndex: idx
+		};
+		if (includeMatches) data.matches = formatMatches(result);
+		if (includeScore) data.score = result.score;
+		return data;
+	});
+}
+var DEFAULT_TOKEN = /[\p{L}\p{M}\p{N}_]+/gu;
+var warned = /* @__PURE__ */ new WeakSet();
+function warnNonGlobal(regex) {
+	if (!warned.has(regex)) {
+		warned.add(regex);
+		console.warn(`[Fuse] tokenize regex ${regex} lacks the global flag; only the first match per text will be returned. Add the 'g' flag.`);
+	}
+}
+function resolveTokenize(tokenize) {
+	if (typeof tokenize === "function") {
+		let validated = false;
+		return (text) => {
+			const result = tokenize(text);
+			if (!validated) {
+				validated = true;
+				if (!Array.isArray(result) || result.some((t) => typeof t !== "string")) throw new Error(`[Fuse] tokenize function must return string[]; received ${Array.isArray(result) ? "array containing non-strings" : typeof result}.`);
+			}
+			return result;
+		};
+	}
+	if (tokenize instanceof RegExp) {
+		if (!tokenize.global) warnNonGlobal(tokenize);
+		return (text) => text.match(tokenize) || [];
+	}
+	return (text) => text.match(DEFAULT_TOKEN) || [];
+}
+function createAnalyzer({ isCaseSensitive = false, ignoreDiacritics = false, tokenize } = {}) {
+	const tokenizeFn = resolveTokenize(tokenize);
+	return { tokenize(text) {
+		if (!isCaseSensitive) text = text.toLowerCase();
+		if (ignoreDiacritics) text = stripDiacritics(text);
+		return tokenizeFn(text);
+	} };
+}
+var TokenSearch = class {
+	static condition(_, options) {
+		return options.useTokenSearch;
+	}
+	constructor(pattern, options) {
+		this.options = options;
+		this.analyzer = createAnalyzer({
+			isCaseSensitive: options.isCaseSensitive,
+			ignoreDiacritics: options.ignoreDiacritics,
+			tokenize: options.tokenize
+		});
+		const queryTerms = this.analyzer.tokenize(pattern);
+		const { df, fieldCount } = options._invertedIndex;
+		this.termSearchers = [];
+		this.idfWeights = [];
+		for (const term of queryTerms) {
+			this.termSearchers.push(new BitapSearch(term, {
+				location: options.location,
+				threshold: options.threshold,
+				distance: options.distance,
+				includeMatches: options.includeMatches,
+				findAllMatches: options.findAllMatches,
+				minMatchCharLength: options.minMatchCharLength,
+				isCaseSensitive: options.isCaseSensitive,
+				ignoreDiacritics: options.ignoreDiacritics,
+				ignoreLocation: true
+			}));
+			const docFreq = df.get(term) || 0;
+			const idf = Math.log(1 + (fieldCount - docFreq + .5) / (docFreq + .5));
+			this.idfWeights.push(idf);
+		}
+		this.combineAll = options.tokenMatch === "all";
+		this.numTerms = this.termSearchers.length;
+		this.useMask = this.numTerms <= 31;
+	}
+	searchIn(text) {
+		if (!this.termSearchers.length) return {
+			isMatch: false,
+			score: 1
+		};
+		const allIndices = [];
+		let weightedScore = 0;
+		let maxPossibleScore = 0;
+		let matchedCount = 0;
+		let matchedMask = 0;
+		const matchedTerms = this.combineAll && !this.useMask ? /* @__PURE__ */ new Set() : null;
+		for (let i = 0; i < this.termSearchers.length; i++) {
+			const result = this.termSearchers[i].searchIn(text);
+			const idf = this.idfWeights[i];
+			maxPossibleScore += idf;
+			if (result.isMatch) {
+				matchedCount++;
+				weightedScore += idf * (1 - result.score);
+				if (result.indices) allIndices.push(...result.indices);
+				if (this.combineAll) if (this.useMask) matchedMask |= 1 << i;
+				else matchedTerms.add(i);
+			}
+		}
+		if (matchedCount === 0) return {
+			isMatch: false,
+			score: 1
+		};
+		const normalized = maxPossibleScore > 0 ? 1 - weightedScore / maxPossibleScore : 0;
+		const searchResult = {
+			isMatch: true,
+			score: Math.max(.001, normalized)
+		};
+		if (this.options.includeMatches && allIndices.length) searchResult.indices = mergeIndices(allIndices);
+		if (this.combineAll) {
+			if (this.useMask) searchResult.matchedMask = matchedMask;
+			else searchResult.matchedTerms = matchedTerms;
+			searchResult.termCount = this.numTerms;
+		}
+		return searchResult;
+	}
+};
+function addField(index, text, docIdx, analyzer) {
+	const tokens = analyzer.tokenize(text);
+	if (!tokens.length) return;
+	index.fieldCount++;
+	index.docFieldCount.set(docIdx, (index.docFieldCount.get(docIdx) || 0) + 1);
+	const distinctTerms = new Set(tokens);
+	let perDocTerms = index.docTermFieldHits.get(docIdx);
+	if (!perDocTerms) {
+		perDocTerms = /* @__PURE__ */ new Map();
+		index.docTermFieldHits.set(docIdx, perDocTerms);
+	}
+	for (const term of distinctTerms) {
+		perDocTerms.set(term, (perDocTerms.get(term) || 0) + 1);
+		index.df.set(term, (index.df.get(term) || 0) + 1);
+	}
+}
+function ingestRecord(index, record, keyCount, analyzer) {
+	const { i: docIdx, v, $: fields } = record;
+	if (v !== void 0) {
+		addField(index, v, docIdx, analyzer);
+		return;
+	}
+	if (!fields) return;
+	for (let keyIdx = 0; keyIdx < keyCount; keyIdx++) {
+		const value = fields[keyIdx];
+		if (!value) continue;
+		if (Array.isArray(value)) for (const sub of value) addField(index, sub.v, docIdx, analyzer);
+		else addField(index, value.v, docIdx, analyzer);
+	}
+}
+function buildInvertedIndex(records, keyCount, analyzer) {
+	const index = {
+		fieldCount: 0,
+		df: /* @__PURE__ */ new Map(),
+		docFieldCount: /* @__PURE__ */ new Map(),
+		docTermFieldHits: /* @__PURE__ */ new Map()
+	};
+	for (const record of records) ingestRecord(index, record, keyCount, analyzer);
+	return index;
+}
+function addToInvertedIndex(index, record, keyCount, analyzer) {
+	ingestRecord(index, record, keyCount, analyzer);
+}
+function removeFromInvertedIndex(index, docIdx) {
+	const fieldCount = index.docFieldCount.get(docIdx);
+	if (fieldCount === void 0) return;
+	index.fieldCount -= fieldCount;
+	index.docFieldCount.delete(docIdx);
+	const perDocTerms = index.docTermFieldHits.get(docIdx);
+	if (!perDocTerms) return;
+	for (const [term, hits] of perDocTerms) {
+		const next = (index.df.get(term) || 0) - hits;
+		if (next <= 0) index.df.delete(term);
+		else index.df.set(term, next);
+	}
+	index.docTermFieldHits.delete(docIdx);
+}
+function removeAndShiftInvertedIndex(index, removedIndices) {
+	if (removedIndices.length === 0) return;
+	const sorted = Array.from(new Set(removedIndices)).sort((a, b) => a - b);
+	for (const idx of sorted) removeFromInvertedIndex(index, idx);
+	const shift = (oldIdx) => {
+		let lo = 0;
+		let hi = sorted.length;
+		while (lo < hi) {
+			const mid = lo + hi >>> 1;
+			if (sorted[mid] < oldIdx) lo = mid + 1;
+			else hi = mid;
+		}
+		return oldIdx - lo;
+	};
+	const firstRemoved = sorted[0];
+	const shiftedDocFieldCount = /* @__PURE__ */ new Map();
+	for (const [oldKey, count] of index.docFieldCount) shiftedDocFieldCount.set(oldKey > firstRemoved ? shift(oldKey) : oldKey, count);
+	index.docFieldCount = shiftedDocFieldCount;
+	const shiftedDocTermFieldHits = /* @__PURE__ */ new Map();
+	for (const [oldKey, terms] of index.docTermFieldHits) shiftedDocTermFieldHits.set(oldKey > firstRemoved ? shift(oldKey) : oldKey, terms);
+	index.docTermFieldHits = shiftedDocTermFieldHits;
+}
+var Fuse = class {
+	constructor(docs, options, index) {
+		this.options = {
+			...Config,
+			...options
+		};
+		if (this.options.useExtendedSearch && false);
+		if (this.options.useTokenSearch && false);
+		this._keyStore = new KeyStore(this.options.keys);
+		this._docs = docs;
+		this._myIndex = null;
+		this._invertedIndex = null;
+		this.setCollection(docs, index);
+		this._lastQuery = null;
+		this._lastSearcher = null;
+	}
+	_getSearcher(query) {
+		if (this._lastQuery === query) return this._lastSearcher;
+		const searcher = createSearcher(query, this._invertedIndex ? {
+			...this.options,
+			_invertedIndex: this._invertedIndex
+		} : this.options);
+		this._lastQuery = query;
+		this._lastSearcher = searcher;
+		return searcher;
+	}
+	setCollection(docs, index) {
+		this._docs = docs;
+		if (index && !(index instanceof FuseIndex)) throw new Error(INCORRECT_INDEX_TYPE);
+		this._myIndex = index || createIndex(this.options.keys, this._docs, {
+			getFn: this.options.getFn,
+			fieldNormWeight: this.options.fieldNormWeight
+		});
+		if (this.options.useTokenSearch) {
+			const analyzer = createAnalyzer({
+				isCaseSensitive: this.options.isCaseSensitive,
+				ignoreDiacritics: this.options.ignoreDiacritics,
+				tokenize: this.options.tokenize
+			});
+			this._invertedIndex = buildInvertedIndex(this._myIndex.records, this._myIndex.keys.length, analyzer);
+		}
+		this._invalidateSearcherCache();
+	}
+	add(doc) {
+		if (!isDefined(doc)) return;
+		this._docs.push(doc);
+		const record = this._myIndex.add(doc, this._docs.length - 1);
+		if (this._invertedIndex && record) {
+			const analyzer = createAnalyzer({
+				isCaseSensitive: this.options.isCaseSensitive,
+				ignoreDiacritics: this.options.ignoreDiacritics,
+				tokenize: this.options.tokenize
+			});
+			addToInvertedIndex(this._invertedIndex, record, this._myIndex.keys.length, analyzer);
+		}
+		this._invalidateSearcherCache();
+	}
+	remove(predicate = () => false) {
+		const results = [];
+		const indicesToRemove = [];
+		for (let i = 0, len = this._docs.length; i < len; i += 1) if (predicate(this._docs[i], i)) {
+			results.push(this._docs[i]);
+			indicesToRemove.push(i);
+		}
+		if (indicesToRemove.length) {
+			if (this._invertedIndex) removeAndShiftInvertedIndex(this._invertedIndex, indicesToRemove);
+			const toRemove = new Set(indicesToRemove);
+			this._docs = this._docs.filter((_, i) => !toRemove.has(i));
+			this._myIndex.removeAll(indicesToRemove);
+			this._invalidateSearcherCache();
+		}
+		return results;
+	}
+	removeAt(idx) {
+		if (!Number.isInteger(idx) || idx < 0 || idx >= this._docs.length) throw new Error(INVALID_DOC_INDEX);
+		if (this._invertedIndex) removeAndShiftInvertedIndex(this._invertedIndex, [idx]);
+		const doc = this._docs.splice(idx, 1)[0];
+		this._myIndex.removeAt(idx);
+		this._invalidateSearcherCache();
+		return doc;
+	}
+	_invalidateSearcherCache() {
+		this._lastQuery = null;
+		this._lastSearcher = null;
+	}
+	getIndex() {
+		return this._myIndex;
+	}
+	search(query, options) {
+		const { limit = -1 } = options || {};
+		const { includeMatches, includeScore, shouldSort, sortFn, ignoreFieldNorm } = this.options;
+		if (isString(query) && !query.trim()) {
+			let docs = this._docs.map((item, idx) => ({
+				item,
+				refIndex: idx
+			}));
+			if (isNumber(limit) && limit > -1) docs = docs.slice(0, limit);
+			return docs;
+		}
+		const useHeap = isNumber(limit) && limit > 0 && isString(query);
+		let results;
+		if (useHeap) {
+			const heap = new MaxHeap(limit);
+			if (isString(this._docs[0])) this._searchStringList(query, {
+				heap,
+				ignoreFieldNorm
+			});
+			else this._searchObjectList(query, {
+				heap,
+				ignoreFieldNorm
+			});
+			results = heap.extractSorted(sortFn);
+		} else {
+			results = isString(query) ? isString(this._docs[0]) ? this._searchStringList(query) : this._searchObjectList(query) : this._searchLogical(query);
+			computeScore(results, { ignoreFieldNorm });
+			if (shouldSort) results.sort(sortFn);
+			if (isNumber(limit) && limit > -1) results = results.slice(0, limit);
+		}
+		return format(results, this._docs, {
+			includeMatches,
+			includeScore
+		});
+	}
+	_searchStringList(query, { heap, ignoreFieldNorm } = {}) {
+		const searcher = this._getSearcher(query);
+		const requireAllTokens = this.options.useTokenSearch && this.options.tokenMatch === "all";
+		const { records } = this._myIndex;
+		const results = heap ? null : [];
+		records.forEach(({ v: text, i: idx, n: norm }) => {
+			if (!isDefined(text)) return;
+			const searchResult = searcher.searchIn(text);
+			if (searchResult.isMatch) {
+				const match = {
+					score: searchResult.score,
+					value: text,
+					norm,
+					indices: searchResult.indices
+				};
+				if (requireAllTokens) {
+					match.matchedMask = searchResult.matchedMask;
+					match.matchedTerms = searchResult.matchedTerms;
+					match.termCount = searchResult.termCount;
+				}
+				const matches = [match];
+				if (!requireAllTokens || this._coversAllTokens(matches)) {
+					const result = {
+						item: text,
+						idx,
+						matches
+					};
+					if (heap) {
+						result.score = computeScoreSingle(result.matches, { ignoreFieldNorm });
+						if (heap.shouldInsert(result.score)) heap.insert(result);
+					} else results.push(result);
+				}
+			}
+		});
+		return results;
+	}
+	_searchLogical(query) {
+		const expression = parse$2(query, this.options);
+		const evaluate = (node, item, idx) => {
+			if (!("children" in node)) {
+				const { keyId, searcher } = node;
+				let matches;
+				if (keyId === null) {
+					matches = [];
+					this._myIndex.keys.forEach((key, keyIndex) => {
+						matches.push(...this._findMatches({
+							key,
+							value: item[keyIndex],
+							searcher
+						}));
+					});
+				} else matches = this._findMatches({
+					key: this._keyStore.get(keyId),
+					value: this._myIndex.getValueForItemAtKeyId(item, keyId),
+					searcher
+				});
+				if (matches && matches.length) return [{
+					idx,
+					item,
+					matches
+				}];
+				return [];
+			}
+			const { children, operator } = node;
+			const res = [];
+			for (let i = 0, len = children.length; i < len; i += 1) {
+				const child = children[i];
+				const result = evaluate(child, item, idx);
+				if (result.length) res.push(...result);
+				else if (operator === LogicalOperator.AND) return [];
+			}
+			return res;
+		};
+		const records = this._myIndex.records;
+		const resultMap = /* @__PURE__ */ new Map();
+		const results = [];
+		records.forEach(({ $: item, i: idx }) => {
+			if (isDefined(item)) {
+				const expResults = evaluate(expression, item, idx);
+				if (expResults.length) {
+					if (!resultMap.has(idx)) {
+						resultMap.set(idx, {
+							idx,
+							item,
+							matches: []
+						});
+						results.push(resultMap.get(idx));
+					}
+					expResults.forEach(({ matches }) => {
+						resultMap.get(idx).matches.push(...matches);
+					});
+				}
+			}
+		});
+		return results;
+	}
+	_searchObjectList(query, { heap, ignoreFieldNorm } = {}) {
+		const searcher = this._getSearcher(query);
+		const requireAllTokens = this.options.useTokenSearch && this.options.tokenMatch === "all";
+		const { keys, records } = this._myIndex;
+		const results = heap ? null : [];
+		records.forEach(({ $: item, i: idx }) => {
+			if (!isDefined(item)) return;
+			const matches = [];
+			let anyKeyFailed = false;
+			let hasInverse = false;
+			keys.forEach((key, keyIndex) => {
+				const keyMatches = this._findMatches({
+					key,
+					value: item[keyIndex],
+					searcher
+				});
+				if (keyMatches.length) {
+					matches.push(...keyMatches);
+					if (keyMatches[0].hasInverse) hasInverse = true;
+				} else anyKeyFailed = true;
+			});
+			if (hasInverse && anyKeyFailed) return;
+			if (matches.length && (!requireAllTokens || this._coversAllTokens(matches))) {
+				const result = {
+					idx,
+					item,
+					matches
+				};
+				if (heap) {
+					result.score = computeScoreSingle(result.matches, { ignoreFieldNorm });
+					if (heap.shouldInsert(result.score)) heap.insert(result);
+				} else results.push(result);
+			}
+		});
+		return results;
+	}
+	_findMatches({ key, value, searcher }) {
+		if (!isDefined(value)) return [];
+		const matches = [];
+		if (isArray(value)) value.forEach(({ v: text, i: idx, n: norm }) => {
+			if (!isDefined(text)) return;
+			const searchResult = searcher.searchIn(text);
+			if (searchResult.isMatch) {
+				const match = {
+					score: searchResult.score,
+					key,
+					value: text,
+					idx,
+					norm,
+					indices: searchResult.indices,
+					hasInverse: searchResult.hasInverse
+				};
+				if (searchResult.termCount !== void 0) {
+					match.matchedMask = searchResult.matchedMask;
+					match.matchedTerms = searchResult.matchedTerms;
+					match.termCount = searchResult.termCount;
+				}
+				matches.push(match);
+			}
+		});
+		else {
+			const { v: text, n: norm } = value;
+			const searchResult = searcher.searchIn(text);
+			if (searchResult.isMatch) {
+				const match = {
+					score: searchResult.score,
+					key,
+					value: text,
+					norm,
+					indices: searchResult.indices,
+					hasInverse: searchResult.hasInverse
+				};
+				if (searchResult.termCount !== void 0) {
+					match.matchedMask = searchResult.matchedMask;
+					match.matchedTerms = searchResult.matchedTerms;
+					match.termCount = searchResult.termCount;
+				}
+				matches.push(match);
+			}
+		}
+		return matches;
+	}
+	_coversAllTokens(matches) {
+		const termCount = matches.length ? matches[0].termCount : void 0;
+		if (termCount === void 0) return true;
+		if (termCount <= 31) {
+			let coverage = 0;
+			for (let i = 0; i < matches.length; i++) coverage |= matches[i].matchedMask || 0;
+			return coverage === 2 ** termCount - 1;
+		}
+		const coverage = /* @__PURE__ */ new Set();
+		for (let i = 0; i < matches.length; i++) {
+			const terms = matches[i].matchedTerms;
+			if (terms) for (const t of terms) coverage.add(t);
+		}
+		return coverage.size === termCount;
+	}
+};
+Fuse.version = "7.4.2";
+Fuse.createIndex = createIndex;
+Fuse.parseIndex = parseIndex;
+Fuse.config = Config;
+Fuse.match = function(pattern, text, options) {
+	if (options && options.useTokenSearch) throw new Error(FUSE_MATCH_TOKEN_SEARCH_UNSUPPORTED);
+	return createSearcher(pattern, {
+		...Config,
+		...options
+	}).searchIn(text);
+};
+Fuse.parseQuery = parse$2;
+register(ExtendedSearch);
+register(TokenSearch);
+Fuse.use = function(...plugins) {
+	plugins.forEach((plugin) => register(plugin));
+};
+var entry_default = Fuse;
+//#endregion
 //#region src/renderer/mainWindow/utils/index.ts
 /**
 * Checks if WebGL2 is supported in the current environment.
@@ -5805,9 +7342,9 @@ function isWebgl2Supported() {
 */
 function searchInStrings(searchText, targetTexts) {
 	if (isEmpty(searchText) || !targetTexts) return true;
-	const searchWords = searchText.toLowerCase().split(/\s+/);
-	const lowerTargetTexts = targetTexts.filter(Boolean).map((text) => text.toLowerCase());
-	return searchWords.every((word) => lowerTargetTexts.some((text) => text.includes(word)));
+	const filteredTexts = targetTexts.filter(Boolean);
+	if (filteredTexts.length === 0) return false;
+	return new entry_default(filteredTexts, { threshold: .4 }).search(searchText).length > 0;
 }
 //#endregion
 //#region node_modules/semver/internal/constants.js
@@ -7296,19 +8833,21 @@ function parseRequirementLine(line) {
 //#region extension/src/renderer/DataHolder.tsx
 var allCardsExt = [];
 var toastHolder;
+var setActivePage;
 var setCards = (cards) => allCardsExt = cards;
 var setToast = (t) => toastHolder = t;
+var setTheActivePage = (api) => setActivePage = api;
 //#endregion
 //#region src/renderer/mainWindow/components/EmptyStateCard.tsx
-var { Card: Card$2, cn: cn$3 } = await importShared("@heroui/react");
+var { Card: Card$3, cn: cn$3 } = await importShared("@heroui/react");
 /**
 * Reusable empty-state container with consistent HeroUI card styling.
 */
 function EmptyStateCard({ className, bodyClassName, icon, title, description, action, children, variant }) {
-	return /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Card$2, {
+	return /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Card$3, {
 		variant,
 		className: cn$3("border border-surface-secondary/70 p-0", className),
-		children: /* @__PURE__ */ (0, import_jsx_runtime.jsxs)(Card$2.Content, {
+		children: /* @__PURE__ */ (0, import_jsx_runtime.jsxs)(Card$3.Content, {
 			className: cn$3("flex items-center justify-center gap-y-2 px-6 py-10 text-center", bodyClassName),
 			children: [
 				icon,
@@ -7329,7 +8868,7 @@ function EmptyStateCard({ className, bodyClassName, icon, title, description, ac
 //#endregion
 //#region node_modules/@solar-icons/react-perf/dist/lib/IconBase.mjs
 var { forwardRef: e } = await importShared("react");
-var r$28 = e((e, r) => {
+var r$30 = e((e, r) => {
 	let { alt: i, color: a = `currentColor`, size: o = `1em`, mirrored: s = !1, children: c, ...l } = e;
 	return (0, import_jsx_runtime.jsxs)(`svg`, {
 		ref: r,
@@ -7344,11 +8883,11 @@ var r$28 = e((e, r) => {
 		children: [!!i && (0, import_jsx_runtime.jsx)(`title`, { children: i }), c]
 	});
 });
-r$28.displayName = `IconBase`;
+r$30.displayName = `IconBase`;
 //#endregion
 //#region node_modules/@solar-icons/react-perf/dist/icons/arrows-action/BoldDuotone/Download.mjs
-var { forwardRef: t$27 } = await importShared("react");
-var i$25 = t$27((t, i) => (0, import_jsx_runtime.jsxs)(r$28, {
+var { forwardRef: t$29 } = await importShared("react");
+var i$26 = t$29((t, i) => (0, import_jsx_runtime.jsxs)(r$30, {
 	ref: i,
 	...t,
 	children: [(0, import_jsx_runtime.jsx)(`path`, {
@@ -7362,11 +8901,11 @@ var i$25 = t$27((t, i) => (0, import_jsx_runtime.jsxs)(r$28, {
 		fill: `currentColor`
 	})]
 }));
-i$25.displayName = `Download`;
+i$26.displayName = `Download`;
 //#endregion
 //#region node_modules/@solar-icons/react-perf/dist/icons/arrows-action/BoldDuotone/DownloadMinimalistic.mjs
-var { forwardRef: t$26 } = await importShared("react");
-var i$24 = t$26((t, i) => (0, import_jsx_runtime.jsxs)(r$28, {
+var { forwardRef: t$28 } = await importShared("react");
+var i$25 = t$28((t, i) => (0, import_jsx_runtime.jsxs)(r$30, {
 	ref: i,
 	...t,
 	children: [(0, import_jsx_runtime.jsx)(`path`, {
@@ -7382,11 +8921,11 @@ var i$24 = t$26((t, i) => (0, import_jsx_runtime.jsxs)(r$28, {
 		fill: `currentColor`
 	})]
 }));
-i$24.displayName = `DownloadMinimalistic`;
+i$25.displayName = `DownloadMinimalistic`;
 //#endregion
 //#region node_modules/@solar-icons/react-perf/dist/icons/arrows-action/BoldDuotone/Import.mjs
-var { forwardRef: t$25 } = await importShared("react");
-var i$23 = t$25((t, i) => (0, import_jsx_runtime.jsxs)(r$28, {
+var { forwardRef: t$27 } = await importShared("react");
+var i$24 = t$27((t, i) => (0, import_jsx_runtime.jsxs)(r$30, {
 	ref: i,
 	...t,
 	children: [(0, import_jsx_runtime.jsx)(`path`, {
@@ -7400,11 +8939,11 @@ var i$23 = t$25((t, i) => (0, import_jsx_runtime.jsxs)(r$28, {
 		fill: `currentColor`
 	})]
 }));
-i$23.displayName = `Import`;
+i$24.displayName = `Import`;
 //#endregion
 //#region node_modules/@solar-icons/react-perf/dist/icons/arrows/BoldDuotone/Refresh.mjs
-var { forwardRef: t$24 } = await importShared("react");
-var i$22 = t$24((t, i) => (0, import_jsx_runtime.jsxs)(r$28, {
+var { forwardRef: t$26 } = await importShared("react");
+var i$23 = t$26((t, i) => (0, import_jsx_runtime.jsxs)(r$30, {
 	ref: i,
 	...t,
 	children: [(0, import_jsx_runtime.jsx)(`path`, {
@@ -7416,11 +8955,11 @@ var i$22 = t$24((t, i) => (0, import_jsx_runtime.jsxs)(r$28, {
 		fill: `currentColor`
 	})]
 }));
-i$22.displayName = `Refresh`;
+i$23.displayName = `Refresh`;
 //#endregion
 //#region node_modules/@solar-icons/react-perf/dist/icons/arrows/BoldDuotone/Restart.mjs
-var { forwardRef: t$23 } = await importShared("react");
-var i$21 = t$23((t, i) => (0, import_jsx_runtime.jsxs)(r$28, {
+var { forwardRef: t$25 } = await importShared("react");
+var i$22 = t$25((t, i) => (0, import_jsx_runtime.jsxs)(r$30, {
 	ref: i,
 	...t,
 	children: [(0, import_jsx_runtime.jsx)(`path`, {
@@ -7434,11 +8973,11 @@ var i$21 = t$23((t, i) => (0, import_jsx_runtime.jsxs)(r$28, {
 		fill: `currentColor`
 	})]
 }));
-i$21.displayName = `Restart`;
+i$22.displayName = `Restart`;
 //#endregion
 //#region node_modules/@solar-icons/react-perf/dist/icons/devices/BoldDuotone/Diskette.mjs
-var { forwardRef: t$22 } = await importShared("react");
-var i$20 = t$22((t, i) => (0, import_jsx_runtime.jsxs)(r$28, {
+var { forwardRef: t$24 } = await importShared("react");
+var i$21 = t$24((t, i) => (0, import_jsx_runtime.jsxs)(r$30, {
 	ref: i,
 	...t,
 	children: [
@@ -7457,11 +8996,11 @@ var i$20 = t$22((t, i) => (0, import_jsx_runtime.jsxs)(r$28, {
 		})
 	]
 }));
-i$20.displayName = `Diskette`;
+i$21.displayName = `Diskette`;
 //#endregion
 //#region node_modules/@solar-icons/react-perf/dist/icons/folders/BoldDuotone/FolderOpen.mjs
-var { forwardRef: t$21 } = await importShared("react");
-var i$19 = t$21((t, i) => (0, import_jsx_runtime.jsxs)(r$28, {
+var { forwardRef: t$23 } = await importShared("react");
+var i$20 = t$23((t, i) => (0, import_jsx_runtime.jsxs)(r$30, {
 	ref: i,
 	...t,
 	children: [(0, import_jsx_runtime.jsx)(`path`, {
@@ -7475,11 +9014,11 @@ var i$19 = t$21((t, i) => (0, import_jsx_runtime.jsxs)(r$28, {
 		fill: `currentColor`
 	})]
 }));
-i$19.displayName = `FolderOpen`;
+i$20.displayName = `FolderOpen`;
 //#endregion
 //#region node_modules/@solar-icons/react-perf/dist/icons/list/BoldDuotone/Checklist.mjs
-var { forwardRef: t$20 } = await importShared("react");
-var i$18 = t$20((t, i) => (0, import_jsx_runtime.jsxs)(r$28, {
+var { forwardRef: t$22 } = await importShared("react");
+var i$19 = t$22((t, i) => (0, import_jsx_runtime.jsxs)(r$30, {
 	ref: i,
 	...t,
 	children: [(0, import_jsx_runtime.jsx)(`path`, {
@@ -7498,11 +9037,11 @@ var i$18 = t$20((t, i) => (0, import_jsx_runtime.jsxs)(r$28, {
 		})]
 	})]
 }));
-i$18.displayName = `Checklist`;
+i$19.displayName = `Checklist`;
 //#endregion
 //#region node_modules/@solar-icons/react-perf/dist/icons/list/BoldDuotone/ListCross.mjs
-var { forwardRef: t$19 } = await importShared("react");
-var i$17 = t$19((t, i) => (0, import_jsx_runtime.jsxs)(r$28, {
+var { forwardRef: t$21 } = await importShared("react");
+var i$18 = t$21((t, i) => (0, import_jsx_runtime.jsxs)(r$30, {
 	ref: i,
 	...t,
 	children: [(0, import_jsx_runtime.jsx)(`path`, {
@@ -7516,11 +9055,11 @@ var i$17 = t$19((t, i) => (0, import_jsx_runtime.jsxs)(r$28, {
 		fill: `currentColor`
 	})]
 }));
-i$17.displayName = `ListCross`;
+i$18.displayName = `ListCross`;
 //#endregion
 //#region node_modules/@solar-icons/react-perf/dist/icons/messages/BoldDuotone/Inbox.mjs
-var { forwardRef: t$18 } = await importShared("react");
-var i$16 = t$18((t, i) => (0, import_jsx_runtime.jsxs)(r$28, {
+var { forwardRef: t$20 } = await importShared("react");
+var i$17 = t$20((t, i) => (0, import_jsx_runtime.jsxs)(r$30, {
 	ref: i,
 	...t,
 	children: [(0, import_jsx_runtime.jsx)(`path`, {
@@ -7532,11 +9071,11 @@ var i$16 = t$18((t, i) => (0, import_jsx_runtime.jsxs)(r$28, {
 		fill: `currentColor`
 	})]
 }));
-i$16.displayName = `Inbox`;
+i$17.displayName = `Inbox`;
 //#endregion
 //#region node_modules/@solar-icons/react-perf/dist/icons/messages/BoldDuotone/Pen.mjs
-var { forwardRef: t$17 } = await importShared("react");
-var i$15 = t$17((t, i) => (0, import_jsx_runtime.jsxs)(r$28, {
+var { forwardRef: t$19 } = await importShared("react");
+var i$16 = t$19((t, i) => (0, import_jsx_runtime.jsxs)(r$30, {
 	ref: i,
 	...t,
 	children: [(0, import_jsx_runtime.jsx)(`path`, {
@@ -7548,11 +9087,11 @@ var i$15 = t$17((t, i) => (0, import_jsx_runtime.jsxs)(r$28, {
 		fill: `currentColor`
 	})]
 }));
-i$15.displayName = `Pen`;
+i$16.displayName = `Pen`;
 //#endregion
 //#region node_modules/@solar-icons/react-perf/dist/icons/notes/BoldDuotone/DocumentText.mjs
-var { forwardRef: t$16 } = await importShared("react");
-var i$14 = t$16((t, i) => (0, import_jsx_runtime.jsxs)(r$28, {
+var { forwardRef: t$18 } = await importShared("react");
+var i$15 = t$18((t, i) => (0, import_jsx_runtime.jsxs)(r$30, {
 	ref: i,
 	...t,
 	children: [
@@ -7581,11 +9120,11 @@ var i$14 = t$16((t, i) => (0, import_jsx_runtime.jsxs)(r$28, {
 		})
 	]
 }));
-i$14.displayName = `DocumentText`;
+i$15.displayName = `DocumentText`;
 //#endregion
 //#region node_modules/@solar-icons/react-perf/dist/icons/notes/BoldDuotone/DocumentsMinimalistic.mjs
-var { forwardRef: t$15 } = await importShared("react");
-var i$13 = t$15((t, i) => (0, import_jsx_runtime.jsxs)(r$28, {
+var { forwardRef: t$17 } = await importShared("react");
+var i$14 = t$17((t, i) => (0, import_jsx_runtime.jsxs)(r$30, {
 	ref: i,
 	...t,
 	children: [(0, import_jsx_runtime.jsx)(`path`, {
@@ -7608,11 +9147,11 @@ var i$13 = t$15((t, i) => (0, import_jsx_runtime.jsxs)(r$28, {
 		})]
 	})]
 }));
-i$13.displayName = `DocumentsMinimalistic`;
+i$14.displayName = `DocumentsMinimalistic`;
 //#endregion
 //#region node_modules/@solar-icons/react-perf/dist/icons/search/BoldDuotone/Magnifier.mjs
-var { forwardRef: t$14 } = await importShared("react");
-var i$12 = t$14((t, i) => (0, import_jsx_runtime.jsxs)(r$28, {
+var { forwardRef: t$16 } = await importShared("react");
+var i$13 = t$16((t, i) => (0, import_jsx_runtime.jsxs)(r$30, {
 	ref: i,
 	...t,
 	children: [(0, import_jsx_runtime.jsx)(`path`, {
@@ -7624,11 +9163,11 @@ var i$12 = t$14((t, i) => (0, import_jsx_runtime.jsxs)(r$28, {
 		fill: `currentColor`
 	})]
 }));
-i$12.displayName = `Magnifier`;
+i$13.displayName = `Magnifier`;
 //#endregion
 //#region node_modules/@solar-icons/react-perf/dist/icons/security/BoldDuotone/ObjectScan.mjs
-var { forwardRef: t$13 } = await importShared("react");
-var i$11 = t$13((t, i) => (0, import_jsx_runtime.jsxs)(r$28, {
+var { forwardRef: t$15 } = await importShared("react");
+var i$12 = t$15((t, i) => (0, import_jsx_runtime.jsxs)(r$30, {
 	ref: i,
 	...t,
 	children: [
@@ -7649,11 +9188,11 @@ var i$11 = t$13((t, i) => (0, import_jsx_runtime.jsxs)(r$28, {
 		})
 	]
 }));
-i$11.displayName = `ObjectScan`;
+i$12.displayName = `ObjectScan`;
 //#endregion
 //#region node_modules/@solar-icons/react-perf/dist/icons/security/BoldDuotone/ShieldWarning.mjs
-var { forwardRef: t$12 } = await importShared("react");
-var i$10 = t$12((t, i) => (0, import_jsx_runtime.jsxs)(r$28, {
+var { forwardRef: t$14 } = await importShared("react");
+var i$11 = t$14((t, i) => (0, import_jsx_runtime.jsxs)(r$30, {
 	ref: i,
 	...t,
 	children: [
@@ -7672,11 +9211,11 @@ var i$10 = t$12((t, i) => (0, import_jsx_runtime.jsxs)(r$28, {
 		})
 	]
 }));
-i$10.displayName = `ShieldWarning`;
+i$11.displayName = `ShieldWarning`;
 //#endregion
 //#region node_modules/@solar-icons/react-perf/dist/icons/settings/BoldDuotone/SettingsMinimalistic.mjs
-var { forwardRef: t$11 } = await importShared("react");
-var i$9 = t$11((t, i) => (0, import_jsx_runtime.jsxs)(r$28, {
+var { forwardRef: t$13 } = await importShared("react");
+var i$10 = t$13((t, i) => (0, import_jsx_runtime.jsxs)(r$30, {
 	ref: i,
 	...t,
 	children: [(0, import_jsx_runtime.jsx)(`path`, {
@@ -7690,11 +9229,11 @@ var i$9 = t$11((t, i) => (0, import_jsx_runtime.jsxs)(r$28, {
 		fill: `currentColor`
 	})]
 }));
-i$9.displayName = `SettingsMinimalistic`;
+i$10.displayName = `SettingsMinimalistic`;
 //#endregion
 //#region node_modules/@solar-icons/react-perf/dist/icons/ui/BoldDuotone/BoxMinimalistic.mjs
-var { forwardRef: t$10 } = await importShared("react");
-var i$8 = t$10((t, i) => (0, import_jsx_runtime.jsxs)(r$28, {
+var { forwardRef: t$12 } = await importShared("react");
+var i$9 = t$12((t, i) => (0, import_jsx_runtime.jsxs)(r$30, {
 	ref: i,
 	...t,
 	children: [
@@ -7714,11 +9253,11 @@ var i$8 = t$10((t, i) => (0, import_jsx_runtime.jsxs)(r$28, {
 		})
 	]
 }));
-i$8.displayName = `BoxMinimalistic`;
+i$9.displayName = `BoxMinimalistic`;
 //#endregion
 //#region node_modules/@solar-icons/react-perf/dist/icons/ui/BoldDuotone/Broom.mjs
-var { forwardRef: t$9 } = await importShared("react");
-var i$7 = t$9((t, i) => (0, import_jsx_runtime.jsxs)(r$28, {
+var { forwardRef: t$11 } = await importShared("react");
+var i$8 = t$11((t, i) => (0, import_jsx_runtime.jsxs)(r$30, {
 	ref: i,
 	...t,
 	children: [
@@ -7738,11 +9277,11 @@ var i$7 = t$9((t, i) => (0, import_jsx_runtime.jsxs)(r$28, {
 		})
 	]
 }));
-i$7.displayName = `Broom`;
+i$8.displayName = `Broom`;
 //#endregion
 //#region node_modules/@solar-icons/react-perf/dist/icons/ui/BoldDuotone/CheckCircle.mjs
-var { forwardRef: t$8 } = await importShared("react");
-var i$6 = t$8((t, i) => (0, import_jsx_runtime.jsxs)(r$28, {
+var { forwardRef: t$10 } = await importShared("react");
+var i$7 = t$10((t, i) => (0, import_jsx_runtime.jsxs)(r$30, {
 	ref: i,
 	...t,
 	children: [(0, import_jsx_runtime.jsx)(`path`, {
@@ -7754,11 +9293,11 @@ var i$6 = t$8((t, i) => (0, import_jsx_runtime.jsxs)(r$28, {
 		fill: `currentColor`
 	})]
 }));
-i$6.displayName = `CheckCircle`;
+i$7.displayName = `CheckCircle`;
 //#endregion
 //#region node_modules/@solar-icons/react-perf/dist/icons/ui/BoldDuotone/Copy.mjs
-var { forwardRef: t$7 } = await importShared("react");
-var i$5 = t$7((t, i) => (0, import_jsx_runtime.jsxs)(r$28, {
+var { forwardRef: t$9 } = await importShared("react");
+var i$6 = t$9((t, i) => (0, import_jsx_runtime.jsxs)(r$30, {
 	ref: i,
 	...t,
 	children: [(0, import_jsx_runtime.jsx)(`path`, {
@@ -7770,11 +9309,11 @@ var i$5 = t$7((t, i) => (0, import_jsx_runtime.jsxs)(r$28, {
 		fill: `currentColor`
 	})]
 }));
-i$5.displayName = `Copy`;
+i$6.displayName = `Copy`;
 //#endregion
 //#region node_modules/@solar-icons/react-perf/dist/icons/ui/BoldDuotone/Filter.mjs
-var { forwardRef: t$6 } = await importShared("react");
-var i$4 = t$6((t, i) => (0, import_jsx_runtime.jsxs)(r$28, {
+var { forwardRef: t$8 } = await importShared("react");
+var i$5 = t$8((t, i) => (0, import_jsx_runtime.jsxs)(r$30, {
 	ref: i,
 	...t,
 	children: [(0, import_jsx_runtime.jsx)(`path`, {
@@ -7788,11 +9327,11 @@ var i$4 = t$6((t, i) => (0, import_jsx_runtime.jsxs)(r$28, {
 		fill: `currentColor`
 	})]
 }));
-i$4.displayName = `Filter`;
+i$5.displayName = `Filter`;
 //#endregion
 //#region node_modules/@solar-icons/react-perf/dist/icons/ui/BoldDuotone/MenuDots.mjs
-var { forwardRef: t$5 } = await importShared("react");
-var i$3 = t$5((t, i) => (0, import_jsx_runtime.jsxs)(r$28, {
+var { forwardRef: t$7 } = await importShared("react");
+var i$4 = t$7((t, i) => (0, import_jsx_runtime.jsxs)(r$30, {
 	ref: i,
 	...t,
 	children: [
@@ -7811,11 +9350,11 @@ var i$3 = t$5((t, i) => (0, import_jsx_runtime.jsxs)(r$28, {
 		})
 	]
 }));
-i$3.displayName = `MenuDots`;
+i$4.displayName = `MenuDots`;
 //#endregion
 //#region node_modules/@solar-icons/react-perf/dist/icons/ui/BoldDuotone/TrashBin2.mjs
-var { forwardRef: t$4 } = await importShared("react");
-var i$2 = t$4((t, i) => (0, import_jsx_runtime.jsxs)(r$28, {
+var { forwardRef: t$6 } = await importShared("react");
+var i$3 = t$6((t, i) => (0, import_jsx_runtime.jsxs)(r$30, {
 	ref: i,
 	...t,
 	children: [(0, import_jsx_runtime.jsx)(`path`, {
@@ -7827,7 +9366,7 @@ var i$2 = t$4((t, i) => (0, import_jsx_runtime.jsxs)(r$28, {
 		fill: `currentColor`
 	})]
 }));
-i$2.displayName = `TrashBin2`;
+i$3.displayName = `TrashBin2`;
 //#endregion
 //#region extension/src/renderer/Utils.ts
 var cacheUrl = (url) => {
@@ -7880,11 +9419,11 @@ function fetchAndSetPythonVenvs(setList, setIsLoading, onSelected) {
 }
 //#endregion
 //#region extension/src/renderer/components/Python/PackageManagement/PackageManager/Body/SelectEnv.tsx
-var { Button: Button$25, Description: Description$17, Dropdown: Dropdown$5, Label: Label$15, Spinner: Spinner$9 } = await importShared("@heroui/react");
-var { useCallback: useCallback$16, useEffect: useEffect$28, useState: useState$32 } = await importShared("react");
+var { Button: Button$26, Description: Description$18, Dropdown: Dropdown$5, Label: Label$16, Spinner: Spinner$9 } = await importShared("@heroui/react");
+var { useCallback: useCallback$16, useEffect: useEffect$29, useState: useState$33 } = await importShared("react");
 function SelectEnv({ id, setPythonPath }) {
-	const [list, setList] = useState$32([]);
-	const [isLoading, setIsLoading] = useState$32(true);
+	const [list, setList] = useState$33([]);
+	const [isLoading, setIsLoading] = useState$33(true);
 	const onPress = (python) => {
 		const result = {
 			id,
@@ -7906,26 +9445,27 @@ function SelectEnv({ id, setPythonPath }) {
 		fetchAndSetPythonVenvs((items) => {
 			if (items.length > 0) {
 				const labels = getUniqueLabels(items.map((item) => item.dir));
-				setList(items.map((item, idx) => ({
+				const updated = items.map((item, idx) => ({
 					...item,
 					label: labels[idx]
-				})));
+				}));
+				setList(updated);
 			} else setList([]);
 		}, setIsLoading);
 	}, []);
-	useEffect$28(() => fetchList(), []);
+	useEffect$29(() => fetchList(), []);
 	return isLoading ? /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
 		className: "flex flex-col gap-y-2 mt-4 items-center",
-		children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)(Spinner$9, { size: "lg" }), /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Description$17, { children: "Loading available pythons and venvs..." })]
+		children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)(Spinner$9, { size: "lg" }), /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Description$18, { children: "Loading available pythons and venvs..." })]
 	}) : /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
 		className: "flex items-center gap-x-2 mt-4",
-		children: [/* @__PURE__ */ (0, import_jsx_runtime.jsxs)(Dropdown$5, { children: [/* @__PURE__ */ (0, import_jsx_runtime.jsxs)(Button$25, { children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)(PythonIcon, {}), "Select Environment"] }), /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Dropdown$5.Popover, { children: /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Dropdown$5.Menu, {
+		children: [/* @__PURE__ */ (0, import_jsx_runtime.jsxs)(Dropdown$5, { children: [/* @__PURE__ */ (0, import_jsx_runtime.jsxs)(Button$26, { children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)(PythonIcon, {}), "Select Environment"] }), /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Dropdown$5.Popover, { children: /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Dropdown$5.Menu, {
 			items: list,
 			children: (item) => /* @__PURE__ */ (0, import_jsx_runtime.jsxs)(Dropdown$5.Item, {
 				onPress: () => onPress(item),
 				id: `${item.version}_${item.dir}`,
 				className: "flex flex-col items-start gap-0",
-				children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)(Label$15, { children: item.type === "python" ? /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("span", {
+				children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)(Label$16, { children: item.type === "python" ? /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("span", {
 					className: "flex flex-row items-center gap-x-2",
 					children: [
 						/* @__PURE__ */ (0, import_jsx_runtime.jsx)(PythonIcon, { className: "text-blue-400" }),
@@ -7939,12 +9479,12 @@ function SelectEnv({ id, setPythonPath }) {
 						" ",
 						item.version
 					]
-				}) }), /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Description$17, { children: item.label })]
+				}) }), /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Description$18, { children: item.label })]
 			})
-		}) })] }), /* @__PURE__ */ (0, import_jsx_runtime.jsxs)(Button$25, {
+		}) })] }), /* @__PURE__ */ (0, import_jsx_runtime.jsxs)(Button$26, {
 			variant: "tertiary",
 			onPress: fetchList,
-			children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)(i$21, {}), "Refresh"]
+			children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)(i$22, {}), "Refresh"]
 		})]
 	});
 }
@@ -8125,8 +9665,8 @@ function calculateKey(input) {
 }
 //#endregion
 //#region node_modules/@solar-icons/react-perf/dist/icons/arrows/Bold/AltArrowDown.mjs
-var { forwardRef: t$3 } = await importShared("react");
-var r$3 = t$3((t, r) => (0, import_jsx_runtime.jsx)(r$28, {
+var { forwardRef: t$5 } = await importShared("react");
+var r$5 = t$5((t, r) => (0, import_jsx_runtime.jsx)(r$30, {
 	ref: r,
 	...t,
 	children: (0, import_jsx_runtime.jsx)(`path`, {
@@ -8134,11 +9674,11 @@ var r$3 = t$3((t, r) => (0, import_jsx_runtime.jsx)(r$28, {
 		fill: `currentColor`
 	})
 }));
-r$3.displayName = `AltArrowDown`;
+r$5.displayName = `AltArrowDown`;
 //#endregion
 //#region node_modules/@solar-icons/react-perf/dist/icons/arrows/Bold/AltArrowUp.mjs
-var { forwardRef: t$2 } = await importShared("react");
-var r$2 = t$2((t, r) => (0, import_jsx_runtime.jsx)(r$28, {
+var { forwardRef: t$4 } = await importShared("react");
+var r$4 = t$4((t, r) => (0, import_jsx_runtime.jsx)(r$30, {
 	ref: r,
 	...t,
 	children: (0, import_jsx_runtime.jsx)(`path`, {
@@ -8146,11 +9686,23 @@ var r$2 = t$2((t, r) => (0, import_jsx_runtime.jsx)(r$28, {
 		fill: `currentColor`
 	})
 }));
-r$2.displayName = `AltArrowUp`;
+r$4.displayName = `AltArrowUp`;
+//#endregion
+//#region node_modules/@solar-icons/react-perf/dist/icons/ui/Bold/Pin.mjs
+var { forwardRef: t$3 } = await importShared("react");
+var r$3 = t$3((t, r) => (0, import_jsx_runtime.jsx)(r$30, {
+	ref: r,
+	...t,
+	children: (0, import_jsx_runtime.jsx)(`path`, {
+		d: `M19.1835 7.80516L16.2188 4.83755C14.1921 2.8089 13.1788 1.79457 12.0904 2.03468C11.0021 2.2748 10.5086 3.62155 9.5217 6.31506L8.85373 8.1381C8.59063 8.85617 8.45908 9.2152 8.22239 9.49292C8.11619 9.61754 7.99536 9.72887 7.86251 9.82451C7.56644 10.0377 7.19811 10.1392 6.46145 10.3423C4.80107 10.8 3.97088 11.0289 3.65804 11.5721C3.5228 11.8069 3.45242 12.0735 3.45413 12.3446C3.45809 12.9715 4.06698 13.581 5.28476 14.8L6.69935 16.2163L2.22345 20.6964C1.92552 20.9946 1.92552 21.4782 2.22345 21.7764C2.52138 22.0746 3.00443 22.0746 3.30236 21.7764L7.77841 17.2961L9.24441 18.7635C10.4699 19.9902 11.0827 20.6036 11.7134 20.6045C11.9792 20.6049 12.2404 20.5358 12.4713 20.4041C13.0192 20.0914 13.2493 19.2551 13.7095 17.5825C13.9119 16.8472 14.013 16.4795 14.2254 16.1835C14.3184 16.054 14.4262 15.9358 14.5468 15.8314C14.8221 15.593 15.1788 15.459 15.8922 15.191L17.7362 14.4981C20.4 13.4973 21.7319 12.9969 21.9667 11.9115C22.2014 10.826 21.1954 9.81905 19.1835 7.80516Z`,
+		fill: `currentColor`
+	})
+}));
+r$3.displayName = `Pin`;
 //#endregion
 //#region node_modules/@solar-icons/react-perf/dist/icons/video/Bold/SkipNext.mjs
-var { forwardRef: t$1 } = await importShared("react");
-var i$1 = t$1((t, i) => (0, import_jsx_runtime.jsxs)(r$28, {
+var { forwardRef: t$2 } = await importShared("react");
+var i$2 = t$2((t, i) => (0, import_jsx_runtime.jsxs)(r$30, {
 	ref: i,
 	...t,
 	children: [(0, import_jsx_runtime.jsx)(`path`, {
@@ -8161,11 +9713,11 @@ var i$1 = t$1((t, i) => (0, import_jsx_runtime.jsxs)(r$28, {
 		fill: `currentColor`
 	})]
 }));
-i$1.displayName = `SkipNext`;
+i$2.displayName = `SkipNext`;
 //#endregion
 //#region extension/src/renderer/components/Python/PackageManagement/PackageManager/Body/PkgVersions.tsx
-var { Button: Button$24, Chip: Chip$6, Description: Description$16, Input: Input$4, Modal: Modal$7, ProgressBar: ProgressBar$4, ScrollShadow: ScrollShadow$4 } = await importShared("@heroui/react");
-var { memo: memo$7, useCallback: useCallback$15, useEffect: useEffect$27, useMemo: useMemo$13, useState: useState$31 } = await importShared("react");
+var { Button: Button$25, Chip: Chip$6, Description: Description$17, Input: Input$4, Modal: Modal$7, ProgressBar: ProgressBar$4, ScrollShadow: ScrollShadow$5 } = await importShared("@heroui/react");
+var { memo: memo$7, useCallback: useCallback$15, useEffect: useEffect$28, useMemo: useMemo$13, useState: useState$32 } = await importShared("react");
 var calculateUpdateType = (current, target) => {
 	if (isEmpty(target) || isEmpty(current)) return {
 		color: "tertiary",
@@ -8194,22 +9746,23 @@ var calculateUpdateType = (current, target) => {
 	}
 };
 var PkgVersions = memo$7(({ updated, item, pythonPath }) => {
-	const [availableVersion, setAvailableVersion] = useState$31(null);
-	const [changingTo, setChangingTo] = useState$31(void 0);
-	const [isLoadingVersions, setIsLoadingVersions] = useState$31(false);
-	const [isOpen, setIsOpen] = useState$31(false);
-	const [customVersion, setCustomVersion] = useState$31(item.version);
-	const [confirmTarget, setConfirmTarget] = useState$31(null);
-	useEffect$27(() => {
+	const [availableVersion, setAvailableVersion] = useState$32(null);
+	const [changingTo, setChangingTo] = useState$32(void 0);
+	const [isLoadingVersions, setIsLoadingVersions] = useState$32(false);
+	const [isOpen, setIsOpen] = useState$32(false);
+	const [customVersion, setCustomVersion] = useState$32(item.version);
+	const [confirmTarget, setConfirmTarget] = useState$32(null);
+	useEffect$28(() => {
 		let isMounted = true;
 		if (isOpen) {
 			setIsLoadingVersions(true);
 			pIpc.getPackageAllVersions(item.name).then((versions) => {
 				if (!isMounted) return;
-				setAvailableVersion([...new Set(versions)].map((v) => ({
+				const mappedVersions = [...new Set(versions)].map((v) => ({
 					version: v,
 					...calculateUpdateType(item.version, v)
-				})));
+				}));
+				setAvailableVersion(mappedVersions);
 			}).catch(() => {
 				if (!isMounted) return;
 				toastHolder?.top.warning("Failed to fetch available versions!");
@@ -8290,7 +9843,7 @@ var PkgVersions = memo$7(({ updated, item, pythonPath }) => {
 					children: [/* @__PURE__ */ (0, import_jsx_runtime.jsxs)(ProgressBar$4, {
 						isIndeterminate: true,
 						children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)(ProgressBar$4.Output, {}), /* @__PURE__ */ (0, import_jsx_runtime.jsx)(ProgressBar$4.Track, { children: /* @__PURE__ */ (0, import_jsx_runtime.jsx)(ProgressBar$4.Fill, {}) })]
-					}), /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Description$16, { children: isLoadingVersions ? "Fetching available versions..." : changingTo ? `Changing from "${item.version}" to "${changingTo}"` : "" })]
+					}), /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Description$17, { children: isLoadingVersions ? "Fetching available versions..." : changingTo ? `Changing from "${item.version}" to "${changingTo}"` : "" })]
 				}) : confirmTarget ? /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
 					className: "flex flex-col items-center justify-center p-6 gap-y-4",
 					children: [/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("p", {
@@ -8313,19 +9866,19 @@ var PkgVersions = memo$7(({ updated, item, pythonPath }) => {
 						]
 					}), /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
 						className: "flex flex-row gap-x-2 justify-center w-full max-w-xs",
-						children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)(Button$24, {
+						children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)(Button$25, {
 							variant: "tertiary",
 							onPress: () => setConfirmTarget(null),
 							fullWidth: true,
 							children: "Cancel"
-						}), /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Button$24, {
+						}), /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Button$25, {
 							variant: confirmTarget.color,
 							onPress: () => changeVersion(confirmTarget.version),
 							fullWidth: true,
 							children: "Confirm"
 						})]
 					})]
-				}) : /* @__PURE__ */ (0, import_jsx_runtime.jsxs)(ScrollShadow$4, {
+				}) : /* @__PURE__ */ (0, import_jsx_runtime.jsxs)(ScrollShadow$5, {
 					className: "size-full",
 					children: [/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
 						className: "flex flex-row items-center w-full gap-x-2 px-4 py-2",
@@ -8335,7 +9888,7 @@ var PkgVersions = memo$7(({ updated, item, pythonPath }) => {
 							placeholder: "Enter custom version...",
 							onChange: (e) => setCustomVersion(e.target.value),
 							fullWidth: true
-						}), customUpdateType.isUpgrade !== void 0 && /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Button$24, {
+						}), customUpdateType.isUpgrade !== void 0 && /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Button$25, {
 							variant: customUpdateType.color,
 							onPress: () => setConfirmTarget({
 								version: customVersion,
@@ -8346,8 +9899,8 @@ var PkgVersions = memo$7(({ updated, item, pythonPath }) => {
 					}), /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
 						className: "flex flex-row gap-2 flex-wrap pl-10 mt-2 pr-4",
 						children: [filteredVersions.length > 0 ? filteredVersions.slice(0, 150).map((v) => {
-							const icon = v.disabled ? null : v.isUpgrade ? /* @__PURE__ */ (0, import_jsx_runtime.jsx)(r$2, {}) : /* @__PURE__ */ (0, import_jsx_runtime.jsx)(r$3, {});
-							return /* @__PURE__ */ (0, import_jsx_runtime.jsxs)(Button$24, {
+							const icon = v.disabled ? null : v.isUpgrade ? /* @__PURE__ */ (0, import_jsx_runtime.jsx)(r$4, {}) : /* @__PURE__ */ (0, import_jsx_runtime.jsx)(r$5, {});
+							return /* @__PURE__ */ (0, import_jsx_runtime.jsxs)(Button$25, {
 								variant: v.color,
 								isDisabled: v.disabled,
 								className: "shrink-0 max-w-34",
@@ -8359,7 +9912,7 @@ var PkgVersions = memo$7(({ updated, item, pythonPath }) => {
 							variant: "secondary",
 							className: "size-full mr-6",
 							description: "Something goes wrong, please try again!",
-							icon: /* @__PURE__ */ (0, import_jsx_runtime.jsx)(i$10, { className: "size-10 text-warning" })
+							icon: /* @__PURE__ */ (0, import_jsx_runtime.jsx)(i$11, { className: "size-10 text-warning" })
 						}), filteredVersions.length > 150 && /* @__PURE__ */ (0, import_jsx_runtime.jsx)("p", {
 							className: "text-xs text-foreground-400 w-full text-center mt-2",
 							children: "Showing first 150 versions. Use search to narrow down."
@@ -8371,22 +9924,22 @@ var PkgVersions = memo$7(({ updated, item, pythonPath }) => {
 	}), /* @__PURE__ */ (0, import_jsx_runtime.jsx)(LynxTooltip, {
 		delay: 300,
 		content: "Change package version",
-		children: /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Button$24, {
+		children: /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Button$25, {
 			size: "sm",
 			variant: "tertiary",
 			isPending: !!changingTo,
 			onPress: () => setIsOpen(true),
 			isIconOnly: true,
-			children: /* @__PURE__ */ (0, import_jsx_runtime.jsx)(i$8, { className: "size-3.5" })
+			children: /* @__PURE__ */ (0, import_jsx_runtime.jsx)(i$9, { className: "size-3.5" })
 		})
 	})] });
 });
 //#endregion
 //#region extension/src/renderer/components/Python/PackageManagement/PackageManager/Body/ActionButtons.tsx
-var { Button: Button$23, Popover: Popover$7 } = await importShared("@heroui/react");
-var { useCallback: useCallback$14, useState: useState$30 } = await importShared("react");
+var { Button: Button$24, Popover: Popover$7 } = await importShared("@heroui/react");
+var { useCallback: useCallback$14, useState: useState$31 } = await importShared("react");
 function ActionButtons({ item, removed, pythonPath, isUninstalling, setIsUninstalling, updated }) {
-	const [isUninstallOpen, setIsUninstallOpen] = useState$30(false);
+	const [isUninstallOpen, setIsUninstallOpen] = useState$31(false);
 	const remove = useCallback$14(() => {
 		setIsUninstallOpen(false);
 		setIsUninstalling(true);
@@ -8407,12 +9960,12 @@ function ActionButtons({ item, removed, pythonPath, isUninstalling, setIsUninsta
 			children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)(LynxTooltip, {
 				delay: 300,
 				content: "Remove package",
-				children: /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Button$23, {
+				children: /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Button$24, {
 					size: "sm",
 					variant: "danger-soft",
 					isPending: isUninstalling,
 					isIconOnly: true,
-					children: /* @__PURE__ */ (0, import_jsx_runtime.jsx)(i$2, {})
+					children: /* @__PURE__ */ (0, import_jsx_runtime.jsx)(i$3, {})
 				})
 			}), /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Popover$7.Content, {
 				className: "max-w-sm",
@@ -8472,7 +10025,7 @@ function ActionButtons({ item, removed, pythonPath, isUninstalling, setIsUninsta
 								})
 							]
 						}),
-						/* @__PURE__ */ (0, import_jsx_runtime.jsx)(Button$23, {
+						/* @__PURE__ */ (0, import_jsx_runtime.jsx)(Button$24, {
 							size: "sm",
 							variant: "danger",
 							onPress: remove,
@@ -8491,11 +10044,11 @@ function ActionButtons({ item, removed, pythonPath, isUninstalling, setIsUninsta
 }
 //#endregion
 //#region extension/src/renderer/components/Python/PackageManagement/PackageManager/Body/TableItem.tsx
-var { Button: Button$22, Chip: Chip$5, TableCell } = await importShared("@heroui/react");
-var { useCallback: useCallback$13, useMemo: useMemo$12, useState: useState$29 } = await importShared("react");
+var { Button: Button$23, Chip: Chip$5, TableCell } = await importShared("@heroui/react");
+var { useCallback: useCallback$13, useMemo: useMemo$12, useState: useState$30 } = await importShared("react");
 function TableItem({ item, pythonPath, updated, removed, columnKey, isSelected, setIsUpdateTerminalOpen }) {
-	const [isUpdating, setIsUpdating] = useState$29(false);
-	const [isUninstalling, setIsUninstalling] = useState$29(false);
+	const [isUpdating, setIsUpdating] = useState$30(false);
+	const [isUninstalling, setIsUninstalling] = useState$30(false);
 	const pkgNameDisplay = usePythonToolkitState("pkgNameDisplay");
 	const itemName = useMemo$12(() => {
 		switch (pkgNameDisplay) {
@@ -8524,13 +10077,13 @@ function TableItem({ item, pythonPath, updated, removed, columnKey, isSelected, 
 		isUninstalling,
 		setIsUninstalling
 	}) }) : /* @__PURE__ */ (0, import_jsx_runtime.jsx)(TableCell, {});
-	else if (columnKey === "update") return !isSelected && !isUninstalling && item.updateVersion ? /* @__PURE__ */ (0, import_jsx_runtime.jsx)(TableCell, { children: /* @__PURE__ */ (0, import_jsx_runtime.jsxs)(Button$22, {
+	else if (columnKey === "update") return !isSelected && !isUninstalling && item.updateVersion ? /* @__PURE__ */ (0, import_jsx_runtime.jsx)(TableCell, { children: /* @__PURE__ */ (0, import_jsx_runtime.jsxs)(Button$23, {
 		size: "sm",
 		variant: "ghost",
 		onPress: update,
 		isPending: isUpdating,
 		className: item.isNew ? "text-accent-hover" : "text-success",
-		children: [item.isNew ? /* @__PURE__ */ (0, import_jsx_runtime.jsx)(i$24, {}) : /* @__PURE__ */ (0, import_jsx_runtime.jsx)(i$22, {}), isUpdating ? "Updating..." : item.isNew ? "Install" : "Update"]
+		children: [item.isNew ? /* @__PURE__ */ (0, import_jsx_runtime.jsx)(i$25, {}) : /* @__PURE__ */ (0, import_jsx_runtime.jsx)(i$23, {}), isUpdating ? "Updating..." : item.isNew ? "Install" : "Update"]
 	}) }) : /* @__PURE__ */ (0, import_jsx_runtime.jsx)(TableCell, {});
 	else if (columnKey === "name") return /* @__PURE__ */ (0, import_jsx_runtime.jsx)(TableCell, { children: /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
 		className: "flex flex-col",
@@ -8543,7 +10096,7 @@ function TableItem({ item, pythonPath, updated, removed, columnKey, isSelected, 
 					color: "accent",
 					variant: "tertiary",
 					children: "New"
-				}) : item.updateVersion && /* @__PURE__ */ (0, import_jsx_runtime.jsx)(i$10, { className: `${getUpdateVersionColor(item.version, item.updateVersion)} size-[1.1rem]` })]
+				}) : item.updateVersion && /* @__PURE__ */ (0, import_jsx_runtime.jsx)(i$11, { className: `${getUpdateVersionColor(item.version, item.updateVersion)} size-[1.1rem]` })]
 			})
 		}), /* @__PURE__ */ (0, import_jsx_runtime.jsx)("div", {
 			className: "text-bold text-sm text-default-400",
@@ -8564,7 +10117,7 @@ function TableItem({ item, pythonPath, updated, removed, columnKey, isSelected, 
 }
 //#endregion
 //#region extension/src/renderer/components/Python/PackageManagement/PackageManager/Body/Body.tsx
-var { Checkbox: Checkbox$1, Description: Description$15, ModalBody, ScrollShadow: ScrollShadow$3, Spinner: Spinner$8, Table: Table$2 } = await importShared("@heroui/react");
+var { Checkbox: Checkbox$1, Description: Description$16, ModalBody, ScrollShadow: ScrollShadow$4, Spinner: Spinner$8, Table: Table$2 } = await importShared("@heroui/react");
 var { useMemo: useMemo$11 } = await importShared("react");
 function PackageManagerBody({ id, items, isLoading, pythonPath, updated, removed, isValidPython, setSelectedKeys, packagesUpdate, selectedKeys, setPythonPath, setIsUpdateTerminalOpen }) {
 	const anyUpdateAvailable = useMemo$11(() => packagesUpdate.length !== 0, [packagesUpdate]);
@@ -8579,7 +10132,7 @@ function PackageManagerBody({ id, items, isLoading, pythonPath, updated, removed
 	]);
 	return /* @__PURE__ */ (0, import_jsx_runtime.jsx)(ModalBody, {
 		className: "overflow-hidden",
-		children: /* @__PURE__ */ (0, import_jsx_runtime.jsx)(ScrollShadow$3, {
+		children: /* @__PURE__ */ (0, import_jsx_runtime.jsx)(ScrollShadow$4, {
 			className: "size-full px-6 pt-2 pb-6",
 			children: /* @__PURE__ */ (0, import_jsx_runtime.jsx)("div", {
 				className: "w-full flex flex-col gap-y-4 size-full",
@@ -8587,7 +10140,7 @@ function PackageManagerBody({ id, items, isLoading, pythonPath, updated, removed
 					className: "flex flex-row gap-8 flex-wrap justify-center size-full",
 					children: isLoading ? /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
 						className: "flex flex-col gap-y-2 items-center mt-4",
-						children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)(Spinner$8, { size: "xl" }), /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Description$15, {
+						children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)(Spinner$8, { size: "xl" }), /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Description$16, {
 							className: "text-sm",
 							children: "Please wait, loading package data..."
 						})]
@@ -8665,7 +10218,7 @@ function PackageManagerBody({ id, items, isLoading, pythonPath, updated, removed
 							id,
 							setPythonPath
 						}),
-						icon: /* @__PURE__ */ (0, import_jsx_runtime.jsx)(i$11, { className: "size-24 mb-4 text-warning-hover" })
+						icon: /* @__PURE__ */ (0, import_jsx_runtime.jsx)(i$12, { className: "size-24 mb-4 text-warning-hover" })
 					})
 				})
 			})
@@ -8674,10 +10227,10 @@ function PackageManagerBody({ id, items, isLoading, pythonPath, updated, removed
 }
 //#endregion
 //#region extension/src/renderer/components/Python/PackageManagement/PackageManager/Footer/CloseBtn.tsx
-var { Button: Button$21, CloseButton: CloseButton$1, Description: Description$14, Popover: Popover$6 } = await importShared("@heroui/react");
-var { memo: memo$6, useCallback: useCallback$12, useState: useState$28 } = await importShared("react");
+var { Button: Button$22, CloseButton: CloseButton$1, Description: Description$15, Popover: Popover$6 } = await importShared("@heroui/react");
+var { memo: memo$6, useCallback: useCallback$12, useState: useState$29 } = await importShared("react");
 var CloseBtn = memo$6(({ isCheckingUpdates, isUpdating, closePackageManager }) => {
-	const [isOpen, setIsOpen] = useState$28(false);
+	const [isOpen, setIsOpen] = useState$29(false);
 	const closePopover = useCallback$12(() => {
 		setIsOpen(false);
 	}, []);
@@ -8695,19 +10248,19 @@ var CloseBtn = memo$6(({ isCheckingUpdates, isUpdating, closePackageManager }) =
 			children: /* @__PURE__ */ (0, import_jsx_runtime.jsxs)(Popover$6.Dialog, { children: [
 				/* @__PURE__ */ (0, import_jsx_runtime.jsx)(Popover$6.Arrow, {}),
 				/* @__PURE__ */ (0, import_jsx_runtime.jsxs)(Popover$6.Heading, { children: [isUpdating ? "Update" : "Update check", " in progress"] }),
-				/* @__PURE__ */ (0, import_jsx_runtime.jsxs)(Description$14, { children: [
+				/* @__PURE__ */ (0, import_jsx_runtime.jsxs)(Description$15, { children: [
 					"Closing now will abort the ",
 					isUpdating ? "update" : "update check",
 					". Are you sure you want to continue?"
 				] }),
 				/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
 					className: "flex flex-row justify-end gap-x-2",
-					children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)(Button$21, {
+					children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)(Button$22, {
 						size: "sm",
 						variant: "secondary",
 						onPress: closePopover,
 						children: "Cancel"
-					}), /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Button$21, {
+					}), /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Button$22, {
 						size: "sm",
 						onPress: abort,
 						variant: "danger-soft",
@@ -8725,12 +10278,12 @@ var CloseBtn = memo$6(({ isCheckingUpdates, isUpdating, closePackageManager }) =
 //#endregion
 //#region extension/src/renderer/components/Python/PackageManagement/PackageManager/Footer/TablePage.tsx
 var { Pagination } = await importShared("@heroui/react");
-var { useEffect: useEffect$26, useMemo: useMemo$10, useState: useState$27 } = await importShared("react");
+var { useEffect: useEffect$27, useMemo: useMemo$10, useState: useState$28 } = await importShared("react");
 function TablePage({ searchData, setItems }) {
-	const [page, setPage] = useState$27(1);
-	const [rowsPerPage] = useState$27(50);
+	const [page, setPage] = useState$28(1);
+	const [rowsPerPage] = useState$28(50);
 	const pages = useMemo$10(() => Math.ceil(searchData.length / rowsPerPage), [searchData, rowsPerPage]);
-	useEffect$26(() => {
+	useEffect$27(() => {
 		const start = (page - 1) * rowsPerPage;
 		const end = start + rowsPerPage;
 		setItems(searchData.slice(start, end));
@@ -8790,7 +10343,7 @@ var filesIpc = {
 		properties: Array.from(/* @__PURE__ */ new Set([...option.properties || [], "multiSelections"]))
 	}).then((result) => Array.isArray(result) ? result : result ? [result] : []),
 	openPath: (dir) => lynxIpc.send(fileChannels.openPath, dir),
-	saveToFile: (content) => lynxIpc.invoke(fileChannels.saveToFile, content),
+	saveToFile: (content, defaultFilename) => lynxIpc.invoke(fileChannels.saveToFile, content, defaultFilename),
 	getAppDirectories: (name) => lynxIpc.invoke(fileChannels.getAppDirectories, name),
 	removeDir: (dir) => lynxIpc.invoke(fileChannels.removeDir, dir),
 	trashDir: (dir) => lynxIpc.invoke(fileChannels.trashDir, dir),
@@ -8804,8 +10357,8 @@ var filesIpc = {
 };
 //#endregion
 //#region extension/src/renderer/components/Python/PackageManagement/Requirements/RenderRow.tsx
-var { Button: Button$20, Input: Input$3, ListBox: ListBox$2, Popover: Popover$5, Select: Select$2, Table: Table$1, TextArea, useOverlayState: useOverlayState$7 } = await importShared("@heroui/react");
-var { memo: memo$5, useCallback: useCallback$11, useEffect: useEffect$25, useRef: useRef$5, useState: useState$26 } = await importShared("react");
+var { Button: Button$21, Input: Input$3, ListBox: ListBox$2, Popover: Popover$5, Select: Select$2, Table: Table$1, TextArea, useOverlayState: useOverlayState$7 } = await importShared("@heroui/react");
+var { memo: memo$5, useCallback: useCallback$11, useEffect: useEffect$26, useRef: useRef$6, useState: useState$27 } = await importShared("react");
 var OPERATORS = [
 	{
 		id: "all",
@@ -8841,13 +10394,13 @@ var OPERATORS = [
 	}
 ];
 var RenderRow = memo$5(({ item, index, onDelete, onUpdate }) => {
-	const [localName, setLocalName] = useState$26(item.name || "");
-	const [localVersion, setLocalVersion] = useState$26(item.version || "");
-	const [localOperator, setLocalOperator] = useState$26(item.versionOperator || "all");
-	const [localRaw, setLocalRaw] = useState$26(item.originalLine || "");
-	const isFocusedRef = useRef$5(false);
-	const prevItemRef = useRef$5(item);
-	useEffect$25(() => {
+	const [localName, setLocalName] = useState$27(item.name || "");
+	const [localVersion, setLocalVersion] = useState$27(item.version || "");
+	const [localOperator, setLocalOperator] = useState$27(item.versionOperator || "all");
+	const [localRaw, setLocalRaw] = useState$27(item.originalLine || "");
+	const isFocusedRef = useRef$6(false);
+	const prevItemRef = useRef$6(item);
+	useEffect$26(() => {
 		if (isFocusedRef.current) return;
 		if (prevItemRef.current !== item) {
 			prevItemRef.current = item;
@@ -8958,7 +10511,7 @@ var RenderRow = memo$5(({ item, index, onDelete, onUpdate }) => {
 				children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)(LynxTooltip, {
 					delay: 300,
 					content: "Delete Line",
-					children: /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Button$20, {
+					children: /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Button$21, {
 						size: "sm",
 						className: "ml-2",
 						variant: "tertiary",
@@ -8975,12 +10528,12 @@ var RenderRow = memo$5(({ item, index, onDelete, onUpdate }) => {
 					children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)(LynxTooltip, {
 						delay: 300,
 						content: "Edit Raw Line",
-						children: /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Button$20, {
+						children: /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Button$21, {
 							size: "sm",
 							className: "ml-2",
 							variant: "tertiary",
 							isIconOnly: true,
-							children: /* @__PURE__ */ (0, import_jsx_runtime.jsx)(i$15, {})
+							children: /* @__PURE__ */ (0, import_jsx_runtime.jsx)(i$16, {})
 						})
 					}), /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Popover$5.Content, {
 						placement: "left",
@@ -9004,7 +10557,7 @@ var RenderRow = memo$5(({ item, index, onDelete, onUpdate }) => {
 RenderRow.displayName = "RenderRow";
 //#endregion
 //#region extension/src/renderer/components/Python/PackageManagement/Requirements/RenderTable.tsx
-var { EmptyState, ScrollShadow: ScrollShadow$2, Table } = await importShared("@heroui/react");
+var { EmptyState, ScrollShadow: ScrollShadow$3, Table } = await importShared("@heroui/react");
 var { memo: memo$4, useCallback: useCallback$10 } = await importShared("react");
 var RenderTable = memo$4(({ filteredReqs, setRequirements, scrollRef }) => {
 	const handleUpdate = useCallback$10((index, updated) => {
@@ -9026,7 +10579,7 @@ var RenderTable = memo$4(({ filteredReqs, setRequirements, scrollRef }) => {
 			return newState;
 		});
 	}, [filteredReqs, setRequirements]);
-	return /* @__PURE__ */ (0, import_jsx_runtime.jsx)(ScrollShadow$2, {
+	return /* @__PURE__ */ (0, import_jsx_runtime.jsx)(ScrollShadow$3, {
 		ref: scrollRef,
 		className: "pr-4",
 		children: /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Table, { children: /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Table.ScrollContainer, { children: /* @__PURE__ */ (0, import_jsx_runtime.jsxs)(Table.Content, {
@@ -9042,7 +10595,7 @@ var RenderTable = memo$4(({ filteredReqs, setRequirements, scrollRef }) => {
 			] }), /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Table.Body, {
 				renderEmptyState: () => /* @__PURE__ */ (0, import_jsx_runtime.jsxs)(EmptyState, {
 					className: "flex h-full w-full flex-col items-center justify-center gap-y-2 text-center my-4",
-					children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)(i$17, { className: "size-12" }), /* @__PURE__ */ (0, import_jsx_runtime.jsx)("span", {
+					children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)(i$18, { className: "size-12" }), /* @__PURE__ */ (0, import_jsx_runtime.jsx)("span", {
 						className: "text-sm text-muted",
 						children: "No results found"
 					})]
@@ -9060,8 +10613,8 @@ var RenderTable = memo$4(({ filteredReqs, setRequirements, scrollRef }) => {
 RenderTable.displayName = "RenderTable";
 //#endregion
 //#region extension/src/renderer/components/Python/PackageManagement/Requirements/index.tsx
-var { Button: Button$19, Chip: Chip$4, Modal: Modal$6, SearchField: SearchField$3, Spinner: Spinner$7, useOverlayState: useOverlayState$6 } = await importShared("@heroui/react");
-var { useEffect: useEffect$24, useMemo: useMemo$9, useRef: useRef$4, useState: useState$25 } = await importShared("react");
+var { Button: Button$20, Chip: Chip$4, Modal: Modal$6, SearchField: SearchField$3, Spinner: Spinner$7, useOverlayState: useOverlayState$6 } = await importShared("@heroui/react");
+var { useEffect: useEffect$25, useMemo: useMemo$9, useRef: useRef$5, useState: useState$26 } = await importShared("react");
 var reqFileFilters$1 = [{
 	name: "Text",
 	extensions: ["txt"]
@@ -9093,16 +10646,16 @@ var toImportedRequirement = (req, sourcePath) => {
 };
 function RequirementsModal({ id, projectPath, setIsReqAvailable, setReqPackageCount }) {
 	const state = useOverlayState$6();
-	const scrollRef = useRef$4(null);
-	const [requirements, setRequirements] = useState$25([]);
-	const [filePath, setFilePath] = useState$25("");
-	const [isSaving, setIsSaving] = useState$25(false);
-	const [isImporting, setIsImporting] = useState$25(false);
-	const [searchValue, setSearchValue] = useState$25("");
-	const [conflicts, setConflicts] = useState$25([]);
-	const requirementsRef = useRef$4([]);
+	const scrollRef = useRef$5(null);
+	const [requirements, setRequirements] = useState$26([]);
+	const [filePath, setFilePath] = useState$26("");
+	const [isSaving, setIsSaving] = useState$26(false);
+	const [isImporting, setIsImporting] = useState$26(false);
+	const [searchValue, setSearchValue] = useState$26("");
+	const [conflicts, setConflicts] = useState$26([]);
+	const requirementsRef = useRef$5([]);
 	const filteredReqs = useMemo$9(() => requirements.filter((item) => searchInStrings(searchValue, [item.name])), [searchValue, requirements]);
-	useEffect$24(() => {
+	useEffect$25(() => {
 		const findReqs = () => {
 			if (projectPath) pIpc.findReq(projectPath).then((reqPath) => {
 				if (reqPath) {
@@ -9131,17 +10684,17 @@ function RequirementsModal({ id, projectPath, setIsReqAvailable, setReqPackageCo
 			top: scrollHeight + 100
 		});
 	};
-	useEffect$24(() => {
+	useEffect$25(() => {
 		pIpc.readReqs(filePath).then((result) => {
 			setRequirements(result);
 			setConflicts([]);
 		});
 		setIsReqAvailable(!!filePath);
 	}, [filePath]);
-	useEffect$24(() => {
+	useEffect$25(() => {
 		setReqPackageCount(requirements.length);
 	}, [requirements.length, setReqPackageCount]);
-	useEffect$24(() => {
+	useEffect$25(() => {
 		requirementsRef.current = requirements;
 	}, [requirements]);
 	const handleAddRequirement = () => {
@@ -9269,15 +10822,15 @@ function RequirementsModal({ id, projectPath, setIsReqAvailable, setReqPackageCo
 					}),
 					/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
 						className: "flex flex-row gap-x-1 items-center w-full",
-						children: [/* @__PURE__ */ (0, import_jsx_runtime.jsxs)(Button$19, {
+						children: [/* @__PURE__ */ (0, import_jsx_runtime.jsxs)(Button$20, {
 							variant: "tertiary",
 							onPress: openFilePath,
 							fullWidth: true,
-							children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)(i$14, {}), filePath || "Select or create requirements file"]
+							children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)(i$15, {}), filePath || "Select or create requirements file"]
 						}), /* @__PURE__ */ (0, import_jsx_runtime.jsx)(LynxTooltip, {
 							delay: 300,
 							content: "Deselect requirements file",
-							children: /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Button$19, {
+							children: /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Button$20, {
 								onPress: deselect,
 								variant: "tertiary",
 								className: "shrink-0",
@@ -9299,15 +10852,15 @@ function RequirementsModal({ id, projectPath, setIsReqAvailable, setReqPackageCo
 								/* @__PURE__ */ (0, import_jsx_runtime.jsx)(SearchField$3.Input, { placeholder: "Search..." }),
 								/* @__PURE__ */ (0, import_jsx_runtime.jsx)(SearchField$3.ClearButton, {})
 							] })
-						}), !isEmpty(filePath) && /* @__PURE__ */ (0, import_jsx_runtime.jsxs)(import_jsx_runtime.Fragment, { children: [/* @__PURE__ */ (0, import_jsx_runtime.jsxs)(Button$19, {
+						}), !isEmpty(filePath) && /* @__PURE__ */ (0, import_jsx_runtime.jsxs)(import_jsx_runtime.Fragment, { children: [/* @__PURE__ */ (0, import_jsx_runtime.jsxs)(Button$20, {
 							variant: "secondary",
 							isPending: isImporting,
 							onPress: handleImportRequirements,
 							children: [isImporting ? /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Spinner$7, {
 								size: "sm",
 								color: "current"
-							}) : /* @__PURE__ */ (0, import_jsx_runtime.jsx)(i$23, { className: "size-3.5" }), "Import"]
-						}), /* @__PURE__ */ (0, import_jsx_runtime.jsxs)(Button$19, {
+							}) : /* @__PURE__ */ (0, import_jsx_runtime.jsx)(i$24, { className: "size-3.5" }), "Import"]
+						}), /* @__PURE__ */ (0, import_jsx_runtime.jsxs)(Button$20, {
 							variant: "secondary",
 							onPress: handleAddRequirement,
 							children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)(Plus, { size: 14 }), "Add"]
@@ -9323,7 +10876,7 @@ function RequirementsModal({ id, projectPath, setIsReqAvailable, setReqPackageCo
 						className: "flex flex-wrap items-center justify-between gap-2",
 						children: [/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
 							className: "flex items-center gap-2 text-warning",
-							children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)(i$10, { className: "size-5" }), /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("span", {
+							children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)(i$11, { className: "size-5" }), /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("span", {
 								className: "text-sm font-medium",
 								children: [
 									conflicts.length,
@@ -9334,19 +10887,19 @@ function RequirementsModal({ id, projectPath, setIsReqAvailable, setReqPackageCo
 						}), /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
 							className: "flex flex-wrap gap-1.5",
 							children: [
-								/* @__PURE__ */ (0, import_jsx_runtime.jsx)(Button$19, {
+								/* @__PURE__ */ (0, import_jsx_runtime.jsx)(Button$20, {
 									size: "sm",
 									variant: "tertiary",
 									onPress: () => applyAllConflictResolutions("current"),
 									children: "Keep current"
 								}),
-								/* @__PURE__ */ (0, import_jsx_runtime.jsx)(Button$19, {
+								/* @__PURE__ */ (0, import_jsx_runtime.jsx)(Button$20, {
 									size: "sm",
 									variant: "tertiary",
 									onPress: () => applyAllConflictResolutions("imported"),
 									children: "Use imported"
 								}),
-								/* @__PURE__ */ (0, import_jsx_runtime.jsx)(Button$19, {
+								/* @__PURE__ */ (0, import_jsx_runtime.jsx)(Button$20, {
 									size: "sm",
 									variant: "tertiary",
 									onPress: () => applyAllConflictResolutions("both"),
@@ -9400,19 +10953,19 @@ function RequirementsModal({ id, projectPath, setIsReqAvailable, setReqPackageCo
 								}), /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
 									className: "flex shrink-0 flex-wrap gap-1.5",
 									children: [
-										/* @__PURE__ */ (0, import_jsx_runtime.jsx)(Button$19, {
+										/* @__PURE__ */ (0, import_jsx_runtime.jsx)(Button$20, {
 											size: "sm",
 											variant: "tertiary",
 											onPress: () => applyConflictResolution(conflict, "current"),
 											children: "Current"
 										}),
-										/* @__PURE__ */ (0, import_jsx_runtime.jsx)(Button$19, {
+										/* @__PURE__ */ (0, import_jsx_runtime.jsx)(Button$20, {
 											size: "sm",
 											variant: "secondary",
 											onPress: () => applyConflictResolution(conflict, "imported"),
 											children: "Imported"
 										}),
-										/* @__PURE__ */ (0, import_jsx_runtime.jsx)(Button$19, {
+										/* @__PURE__ */ (0, import_jsx_runtime.jsx)(Button$20, {
 											size: "sm",
 											variant: "tertiary",
 											onPress: () => applyConflictResolution(conflict, "both"),
@@ -9428,7 +10981,7 @@ function RequirementsModal({ id, projectPath, setIsReqAvailable, setReqPackageCo
 					children: /* @__PURE__ */ (0, import_jsx_runtime.jsx)(EmptyStateCard, {
 						variant: "transparent",
 						className: "size-full",
-						icon: /* @__PURE__ */ (0, import_jsx_runtime.jsx)(i$13, { className: "size-20" }),
+						icon: /* @__PURE__ */ (0, import_jsx_runtime.jsx)(i$14, { className: "size-20" }),
 						title: "Select or create a requirements file to continue."
 					})
 				}) : isEmpty(requirements) ? /* @__PURE__ */ (0, import_jsx_runtime.jsx)("div", {
@@ -9455,7 +11008,7 @@ function RequirementsModal({ id, projectPath, setIsReqAvailable, setReqPackageCo
 						}),
 						variant: "transparent",
 						className: "size-full",
-						icon: /* @__PURE__ */ (0, import_jsx_runtime.jsx)(i$14, { className: "size-20" })
+						icon: /* @__PURE__ */ (0, import_jsx_runtime.jsx)(i$15, { className: "size-20" })
 					})
 				}) : /* @__PURE__ */ (0, import_jsx_runtime.jsx)(RenderTable, {
 					scrollRef,
@@ -9465,33 +11018,33 @@ function RequirementsModal({ id, projectPath, setIsReqAvailable, setReqPackageCo
 			}),
 			/* @__PURE__ */ (0, import_jsx_runtime.jsx)(Modal$6.Footer, {
 				className: "py-3",
-				children: /* @__PURE__ */ (0, import_jsx_runtime.jsxs)(Button$19, {
+				children: /* @__PURE__ */ (0, import_jsx_runtime.jsxs)(Button$20, {
 					isPending: isSaving,
 					onPress: handleSaveRequirements,
 					children: [isSaving ? /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Spinner$7, {
 						size: "sm",
 						color: "current"
-					}) : /* @__PURE__ */ (0, import_jsx_runtime.jsx)(i$20, { className: "size-3.5" }), !isSaving && "Save"]
+					}) : /* @__PURE__ */ (0, import_jsx_runtime.jsx)(i$21, { className: "size-3.5" }), !isSaving && "Save"]
 				})
 			})
 		]
-	}), /* @__PURE__ */ (0, import_jsx_runtime.jsxs)(Button$19, {
+	}), /* @__PURE__ */ (0, import_jsx_runtime.jsxs)(Button$20, {
 		size: "sm",
 		variant: "tertiary",
 		onPress: state.open,
-		children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)(i$18, {}), "Requirements"]
+		children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)(i$19, {}), "Requirements"]
 	})] });
 }
 //#endregion
 //#region extension/src/renderer/components/Python/PackageManagement/PackageManager/Header/FilterButton.tsx
-var { Button: Button$18, cn: cn$2, Dropdown: Dropdown$4, Label: Label$14 } = await importShared("@heroui/react");
-var { useEffect: useEffect$23, useState: useState$24 } = await importShared("react");
+var { Button: Button$19, cn: cn$2, Dropdown: Dropdown$4, Label: Label$15 } = await importShared("@heroui/react");
+var { useEffect: useEffect$24, useState: useState$25 } = await importShared("react");
 function FilterButton({ setSelectedFilter, updateAvailable, className }) {
-	const [selectedKeys, setSelectedKeys] = useState$24(/* @__PURE__ */ new Set(["all"]));
-	useEffect$23(() => {
+	const [selectedKeys, setSelectedKeys] = useState$25(/* @__PURE__ */ new Set(["all"]));
+	useEffect$24(() => {
 		setSelectedFilter(Array.from(selectedKeys).join(", ").replace(/_/g, ""));
 	}, [selectedKeys]);
-	useEffect$23(() => {
+	useEffect$24(() => {
 		if (updateAvailable) setSelectedKeys(/* @__PURE__ */ new Set(["updates"]));
 		else setSelectedKeys((prevState) => {
 			if (prevState !== "all" && prevState.values().next().value === "updates") return /* @__PURE__ */ new Set(["all"]);
@@ -9501,11 +11054,11 @@ function FilterButton({ setSelectedFilter, updateAvailable, className }) {
 	return /* @__PURE__ */ (0, import_jsx_runtime.jsxs)(Dropdown$4, { children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)(LynxTooltip, {
 		delay: 300,
 		content: "Filter packages",
-		children: /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Button$18, {
+		children: /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Button$19, {
 			variant: "tertiary",
 			className: cn$2("shrink-0", className),
 			isIconOnly: true,
-			children: /* @__PURE__ */ (0, import_jsx_runtime.jsx)(i$4, {})
+			children: /* @__PURE__ */ (0, import_jsx_runtime.jsx)(i$5, {})
 		})
 	}), /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Dropdown$4.Popover, { children: /* @__PURE__ */ (0, import_jsx_runtime.jsxs)(Dropdown$4.Menu, {
 		selectionMode: "single",
@@ -9517,38 +11070,38 @@ function FilterButton({ setSelectedFilter, updateAvailable, className }) {
 			/* @__PURE__ */ (0, import_jsx_runtime.jsxs)(Dropdown$4.Item, {
 				id: "all",
 				textValue: "All",
-				children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)(Dropdown$4.ItemIndicator, {}), /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Label$14, { children: "All" })]
+				children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)(Dropdown$4.ItemIndicator, {}), /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Label$15, { children: "All" })]
 			}),
 			/* @__PURE__ */ (0, import_jsx_runtime.jsxs)(Dropdown$4.Item, {
 				id: "updates",
 				textValue: "Updates",
-				children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)(Dropdown$4.ItemIndicator, {}), /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Label$14, { children: "Updates" })]
+				children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)(Dropdown$4.ItemIndicator, {}), /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Label$15, { children: "Updates" })]
 			}),
 			updateAvailable && /* @__PURE__ */ (0, import_jsx_runtime.jsxs)(import_jsx_runtime.Fragment, { children: [
 				/* @__PURE__ */ (0, import_jsx_runtime.jsxs)(Dropdown$4.Item, {
 					id: "prerelease",
 					textValue: "Pre Release",
-					children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)(Dropdown$4.ItemIndicator, {}), /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Label$14, { children: "Pre Release" })]
+					children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)(Dropdown$4.ItemIndicator, {}), /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Label$15, { children: "Pre Release" })]
 				}),
 				/* @__PURE__ */ (0, import_jsx_runtime.jsxs)(Dropdown$4.Item, {
 					id: "major",
 					textValue: "Major",
-					children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)(Dropdown$4.ItemIndicator, {}), /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Label$14, { children: "Major" })]
+					children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)(Dropdown$4.ItemIndicator, {}), /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Label$15, { children: "Major" })]
 				}),
 				/* @__PURE__ */ (0, import_jsx_runtime.jsxs)(Dropdown$4.Item, {
 					id: "minor",
 					textValue: "Minor",
-					children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)(Dropdown$4.ItemIndicator, {}), /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Label$14, { children: "Minor" })]
+					children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)(Dropdown$4.ItemIndicator, {}), /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Label$15, { children: "Minor" })]
 				}),
 				/* @__PURE__ */ (0, import_jsx_runtime.jsxs)(Dropdown$4.Item, {
 					id: "patch",
 					textValue: "Patch",
-					children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)(Dropdown$4.ItemIndicator, {}), /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Label$14, { children: "Patch" })]
+					children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)(Dropdown$4.ItemIndicator, {}), /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Label$15, { children: "Patch" })]
 				}),
 				/* @__PURE__ */ (0, import_jsx_runtime.jsxs)(Dropdown$4.Item, {
 					id: "others",
 					textValue: "Others",
-					children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)(Dropdown$4.ItemIndicator, {}), /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Label$14, { children: "Others" })]
+					children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)(Dropdown$4.ItemIndicator, {}), /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Label$15, { children: "Others" })]
 				})
 			] })
 		]
@@ -9556,8 +11109,8 @@ function FilterButton({ setSelectedFilter, updateAvailable, className }) {
 }
 //#endregion
 //#region node_modules/@solar-icons/react-perf/dist/icons/messages/LineDuotone/CheckRead.mjs
-var { forwardRef: t } = await importShared("react");
-var i = t((t, i) => (0, import_jsx_runtime.jsxs)(r$28, {
+var { forwardRef: t$1 } = await importShared("react");
+var i$1 = t$1((t, i) => (0, import_jsx_runtime.jsxs)(r$30, {
 	ref: i,
 	...t,
 	children: [(0, import_jsx_runtime.jsx)(`path`, {
@@ -9575,18 +11128,34 @@ var i = t((t, i) => (0, import_jsx_runtime.jsxs)(r$28, {
 		strokeLinejoin: `round`
 	})]
 }));
-i.displayName = `CheckRead`;
+i$1.displayName = `CheckRead`;
+//#endregion
+//#region node_modules/@solar-icons/react-perf/dist/icons/ui/LineDuotone/Pin.mjs
+var { forwardRef: t } = await importShared("react");
+var i = t((t, i) => (0, import_jsx_runtime.jsxs)(r$30, {
+	ref: i,
+	...t,
+	children: [(0, import_jsx_runtime.jsx)(`path`, {
+		d: `M15.9894 4.9502L16.52 4.42014L16.52 4.42014L15.9894 4.9502ZM19.0717 8.03562L18.5411 8.56568L18.5411 8.56568L19.0717 8.03562ZM8.73845 19.429L8.20785 19.9591L8.73845 19.429ZM4.62176 15.3081L5.15236 14.7781L4.62176 15.3081ZM17.567 14.9943L17.3032 14.2922L17.567 14.9943ZM15.6499 15.7146L15.9137 16.4167L15.6499 15.7146ZM8.33227 8.38177L7.62805 8.12375H7.62805L8.33227 8.38177ZM9.02673 6.48636L9.73095 6.74438L9.02673 6.48636ZM5.84512 10.6735L6.04445 11.3965H6.04445L5.84512 10.6735ZM7.30174 10.1351L6.86354 9.52646L6.86354 9.52646L7.30174 10.1351ZM7.6759 9.79038L8.24673 10.2768H8.24673L7.6759 9.79038ZM14.2511 16.3805L14.7421 16.9475L14.7421 16.9475L14.2511 16.3805ZM13.3807 18.2012L12.6575 18.0022V18.0022L13.3807 18.2012ZM13.917 16.7466L13.3076 16.3094L13.3076 16.3094L13.917 16.7466ZM2.71854 12.7552L1.96855 12.76V12.76L2.71854 12.7552ZM2.93053 11.9521L2.28061 11.5778H2.28061L2.93053 11.9521ZM11.3053 21.3431L11.3064 20.5931H11.3064L11.3053 21.3431ZM12.0933 21.1347L11.7216 20.4833L11.7216 20.4833L12.0933 21.1347ZM11.6973 2.03606L11.8589 2.76845L11.6973 2.03606ZM15.4588 5.48026L18.5411 8.56568L19.6023 7.50556L16.52 4.42014L15.4588 5.48026ZM9.26905 18.8989L5.15236 14.7781L4.09116 15.8382L8.20785 19.9591L9.26905 18.8989ZM17.3032 14.2922L15.3861 15.0125L15.9137 16.4167L17.8308 15.6964L17.3032 14.2922ZM9.03649 8.63979L9.73095 6.74438L8.32251 6.22834L7.62805 8.12375L9.03649 8.63979ZM6.04445 11.3965C6.75591 11.2003 7.29726 11.0625 7.73995 10.7438L6.86354 9.52646C6.6906 9.65097 6.46608 9.72428 5.64578 9.95044L6.04445 11.3965ZM7.62805 8.12375C7.3351 8.92332 7.24345 9.14153 7.10507 9.30391L8.24673 10.2768C8.60048 9.86175 8.78237 9.33337 9.03649 8.63979L7.62805 8.12375ZM7.73995 10.7438C7.92704 10.6091 8.09719 10.4523 8.24673 10.2768L7.10507 9.30391C7.03377 9.38757 6.95268 9.46229 6.86354 9.52646L7.73995 10.7438ZM15.3861 15.0125C14.697 15.2714 14.1717 15.4571 13.7601 15.8135L14.7421 16.9475C14.9029 16.8082 15.1193 16.7152 15.9137 16.4167L15.3861 15.0125ZM14.1038 18.4001C14.3291 17.5813 14.4022 17.3569 14.5263 17.1838L13.3076 16.3094C12.9903 16.7517 12.853 17.2919 12.6575 18.0022L14.1038 18.4001ZM13.7601 15.8135C13.5904 15.9605 13.4385 16.1269 13.3076 16.3094L14.5263 17.1838C14.5888 17.0968 14.6612 17.0175 14.7421 16.9475L13.7601 15.8135ZM5.15236 14.7781C4.50623 14.1313 4.06806 13.691 3.78374 13.3338C3.49842 12.9753 3.46896 12.8201 3.46852 12.7505L1.96855 12.76C1.97223 13.3422 2.26135 13.8297 2.6101 14.2679C2.95984 14.7073 3.47123 15.2176 4.09116 15.8382L5.15236 14.7781ZM5.64578 9.95044C4.80056 10.1835 4.10403 10.3743 3.58304 10.5835C3.06349 10.792 2.57124 11.0732 2.28061 11.5778L3.58045 12.3264C3.61507 12.2663 3.717 12.146 4.14187 11.9755C4.56531 11.8055 5.16345 11.6394 6.04445 11.3965L5.64578 9.95044ZM3.46852 12.7505C3.46758 12.6016 3.50623 12.4553 3.58045 12.3264L2.28061 11.5778C2.07362 11.9372 1.96593 12.3452 1.96855 12.76L3.46852 12.7505ZM8.20785 19.9591C8.83172 20.5836 9.34472 21.0987 9.78654 21.4506C10.2271 21.8015 10.718 22.0922 11.3042 22.0931L11.3064 20.5931C11.237 20.593 11.0815 20.5644 10.7211 20.2773C10.3619 19.9912 9.91931 19.5499 9.26905 18.8989L8.20785 19.9591ZM12.6575 18.0022C12.4133 18.8897 12.2463 19.4924 12.0752 19.9188C11.9034 20.3467 11.7822 20.4487 11.7216 20.4833L12.4651 21.7861C12.9741 21.4956 13.2573 21.0004 13.4672 20.4775C13.6777 19.9532 13.8695 19.2516 14.1038 18.4001L12.6575 18.0022ZM11.3042 22.0931C11.7113 22.0937 12.1115 21.9879 12.4651 21.7861L11.7216 20.4833C11.5951 20.5555 11.452 20.5933 11.3064 20.5931L11.3042 22.0931ZM18.5411 8.56568C19.6046 9.63022 20.3403 10.3695 20.7918 10.9788C21.2353 11.5774 21.2864 11.8959 21.2322 12.1464L22.6983 12.4634C22.8882 11.5854 22.5383 10.8162 21.997 10.0857C21.4636 9.36592 20.6306 8.53486 19.6023 7.50556L18.5411 8.56568ZM17.8308 15.6964C19.1922 15.1849 20.2941 14.773 21.0771 14.3384C21.8719 13.8973 22.5084 13.3416 22.6983 12.4634L21.2322 12.1464C21.178 12.3968 21.0002 12.6655 20.3492 13.0268C19.6865 13.3946 18.7113 13.7632 17.3032 14.2922L17.8308 15.6964ZM16.52 4.42014C15.4841 3.3832 14.6481 2.54353 13.9246 2.00638C13.1909 1.46165 12.4175 1.10912 11.5357 1.30367L11.8589 2.76845C12.1086 2.71335 12.4278 2.7633 13.0305 3.21075C13.6434 3.66579 14.3877 4.40801 15.4588 5.48026L16.52 4.42014ZM9.73095 6.74438C10.2526 5.32075 10.6162 4.33403 10.9813 3.66315C11.3403 3.00338 11.6091 2.82357 11.8589 2.76845L11.5357 1.30367C10.6541 1.49819 10.1006 2.14332 9.6637 2.94618C9.23286 3.73793 8.82695 4.85154 8.32251 6.22834L9.73095 6.74438Z`,
+		fill: `currentColor`
+	}), (0, import_jsx_runtime.jsx)(`path`, {
+		opacity: `0.5`,
+		d: `M1.4694 21.4697C1.17666 21.7627 1.1769 22.2376 1.46994 22.5304C1.76298 22.8231 2.23786 22.8229 2.5306 22.5298L1.4694 21.4697ZM7.18383 17.8719C7.47657 17.5788 7.47633 17.1039 7.18329 16.8112C6.89024 16.5185 6.41537 16.5187 6.12263 16.8117L7.18383 17.8719ZM2.5306 22.5298L7.18383 17.8719L6.12263 16.8117L1.4694 21.4697L2.5306 22.5298Z`,
+		fill: `currentColor`
+	})]
+}));
+i.displayName = `Pin`;
 //#endregion
 //#region src/renderer/mainWindow/components/CopyClipboard.tsx
-var { Button: Button$17 } = await importShared("@heroui/react");
-var { memo: memo$3, useCallback: useCallback$9, useEffect: useEffect$22, useRef: useRef$3, useState: useState$23 } = await importShared("react");
+var { Button: Button$18 } = await importShared("@heroui/react");
+var { memo: memo$3, useCallback: useCallback$9, useEffect: useEffect$23, useRef: useRef$4, useState: useState$24 } = await importShared("react");
 /**
 * A reusable button component that copies text to clipboard and shows a success state.
 */
 var CopyClipboard = memo$3(({ showTooltip = true, tooltipTitle, contentToCopy, className, onCopy }) => {
-	const [copied, setCopied] = useState$23(false);
-	const timeoutRef = useRef$3(null);
-	useEffect$22(() => {
+	const [copied, setCopied] = useState$24(false);
+	const timeoutRef = useRef$4(null);
+	useEffect$23(() => {
 		return () => {
 			if (timeoutRef.current) clearTimeout(timeoutRef.current);
 		};
@@ -9606,20 +11175,20 @@ var CopyClipboard = memo$3(({ showTooltip = true, tooltipTitle, contentToCopy, c
 		delay: 500,
 		isDisabled: !showTooltip,
 		content: copied ? "Copied!" : tooltipTitle || "Copy to clipboard",
-		children: /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Button$17, {
+		children: /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Button$18, {
 			size: "sm",
 			variant: "ghost",
 			onPress: handleCopy,
 			className,
 			isIconOnly: true,
-			children: copied ? /* @__PURE__ */ (0, import_jsx_runtime.jsx)(i, { className: "size-5 animate-appearance-in" }) : /* @__PURE__ */ (0, import_jsx_runtime.jsx)(i$5, { className: "size-4 animate-appearance-in" })
+			children: copied ? /* @__PURE__ */ (0, import_jsx_runtime.jsx)(i$1, { className: "size-5 animate-appearance-in" }) : /* @__PURE__ */ (0, import_jsx_runtime.jsx)(i$6, { className: "size-4 animate-appearance-in" })
 		})
 	});
 });
 //#endregion
 //#region extension/src/renderer/components/Python/PackageManagement/PackageManager/Header/Installer.tsx
-var { Button: Button$16, Chip: Chip$3, Description: Description$13, Disclosure, Input: Input$2, Label: Label$13, Surface: Surface$1, TextField: TextField$1 } = await importShared("@heroui/react");
-var { useEffect: useEffect$21, useRef: useRef$2, useState: useState$22 } = await importShared("react");
+var { Button: Button$17, Chip: Chip$3, Description: Description$14, Disclosure, Input: Input$2, Label: Label$14, Surface: Surface$1, TextField: TextField$1 } = await importShared("@heroui/react");
+var { useEffect: useEffect$22, useRef: useRef$3, useState: useState$23 } = await importShared("react");
 var buildPackageString = (pkg) => {
 	let pkgStr;
 	if (pkg.url) if (pkg.originalLine && pkg.originalLine.includes(" @ ")) pkgStr = `${pkg.name} @ ${pkg.url}`;
@@ -9639,14 +11208,14 @@ var reqFileFilters = [{
 	extensions: ["txt"]
 }];
 function Installer({ isOpen, setInstallCommand, setIsInstallDisabled, setPackageCount, setRequirementsFileCount }) {
-	const [packageString, setPackageString] = useState$22("");
-	const [packages, setPackages] = useState$22([]);
-	const [requirementsFilePaths, setRequirementsFilePaths] = useState$22([]);
-	const [indexUrl, setIndexUrl] = useState$22("");
-	const [extraOptions, setExtraOptions] = useState$22("");
-	const [showAdvanced, setShowAdvanced] = useState$22(false);
-	const inputRef = useRef$2(null);
-	useEffect$21(() => {
+	const [packageString, setPackageString] = useState$23("");
+	const [packages, setPackages] = useState$23([]);
+	const [requirementsFilePaths, setRequirementsFilePaths] = useState$23([]);
+	const [indexUrl, setIndexUrl] = useState$23("");
+	const [extraOptions, setExtraOptions] = useState$23("");
+	const [showAdvanced, setShowAdvanced] = useState$23(false);
+	const inputRef = useRef$3(null);
+	useEffect$22(() => {
 		if (isOpen) return;
 		setPackageString("");
 		setPackages([]);
@@ -9664,7 +11233,7 @@ function Installer({ isOpen, setInstallCommand, setIsInstallDisabled, setPackage
 		setPackageCount,
 		setRequirementsFileCount
 	]);
-	useEffect$21(() => {
+	useEffect$22(() => {
 		const parts = [];
 		if (indexUrl.trim()) parts.push(`--index-url ${indexUrl.trim()}`);
 		if (extraOptions.trim()) parts.push(extraOptions.trim());
@@ -9770,18 +11339,18 @@ function Installer({ isOpen, setInstallCommand, setIsInstallDisabled, setPackage
 				className: "flex items-center justify-between",
 				children: [/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
 					className: "flex flex-wrap items-center gap-2",
-					children: [/* @__PURE__ */ (0, import_jsx_runtime.jsxs)(Button$16, {
+					children: [/* @__PURE__ */ (0, import_jsx_runtime.jsxs)(Button$17, {
 						size: "sm",
 						variant: "tertiary",
 						onPress: handleFileSelect,
-						children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)(i$23, {}), "Import requirements files"]
-					}), /* @__PURE__ */ (0, import_jsx_runtime.jsxs)(Button$16, {
+						children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)(i$24, {}), "Import requirements files"]
+					}), /* @__PURE__ */ (0, import_jsx_runtime.jsxs)(Button$17, {
 						size: "sm",
 						variant: "tertiary",
 						onPress: handleRequirementsInstallSelect,
-						children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)(i$25, {}), "Install requirements files"]
+						children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)(i$26, {}), "Install requirements files"]
 					})]
-				}), (!isEmpty(packages) || requirementsFilePaths.length > 0) && /* @__PURE__ */ (0, import_jsx_runtime.jsxs)(Button$16, {
+				}), (!isEmpty(packages) || requirementsFilePaths.length > 0) && /* @__PURE__ */ (0, import_jsx_runtime.jsxs)(Button$17, {
 					onPress: () => {
 						setPackages([]);
 						setRequirementsFilePaths([]);
@@ -9791,7 +11360,7 @@ function Installer({ isOpen, setInstallCommand, setIsInstallDisabled, setPackage
 					},
 					size: "sm",
 					variant: "danger-soft",
-					children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)(i$7, { className: "size-3.5" }), "Clear all"]
+					children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)(i$8, { className: "size-3.5" }), "Clear all"]
 				})]
 			}),
 			/* @__PURE__ */ (0, import_jsx_runtime.jsxs)(TextField$1, {
@@ -9801,9 +11370,9 @@ function Installer({ isOpen, setInstallCommand, setIsInstallDisabled, setPackage
 				onKeyDown: handleKeyDown,
 				onChange: handlePackageStringChange,
 				children: [
-					/* @__PURE__ */ (0, import_jsx_runtime.jsx)(Label$13, { children: "Add packages" }),
+					/* @__PURE__ */ (0, import_jsx_runtime.jsx)(Label$14, { children: "Add packages" }),
 					/* @__PURE__ */ (0, import_jsx_runtime.jsx)(Input$2, { placeholder: "e.g. numpy  pandas@2.0  torch==2.1.0" }),
-					/* @__PURE__ */ (0, import_jsx_runtime.jsxs)(Description$13, { children: [
+					/* @__PURE__ */ (0, import_jsx_runtime.jsxs)(Description$14, { children: [
 						"Press ",
 						/* @__PURE__ */ (0, import_jsx_runtime.jsx)("kbd", {
 							className: "px-1 py-0.5 text-xs rounded bg-surface-tertiary font-JetBrainsMono",
@@ -9860,19 +11429,19 @@ function Installer({ isOpen, setInstallCommand, setIsInstallDisabled, setPackage
 							/* @__PURE__ */ (0, import_jsx_runtime.jsx)(LynxTooltip, {
 								delay: 300,
 								content: "Edit package",
-								children: /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Button$16, {
+								children: /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Button$17, {
 									size: "sm",
 									variant: "ghost",
 									onPress: () => handleEditItem(pkg),
 									className: "size-4 shrink-0 opacity-50 transition-opacity group-hover:opacity-100 text-foreground",
 									isIconOnly: true,
-									children: /* @__PURE__ */ (0, import_jsx_runtime.jsx)(i$15, { className: "size-3" })
+									children: /* @__PURE__ */ (0, import_jsx_runtime.jsx)(i$16, { className: "size-3" })
 								})
 							}),
 							/* @__PURE__ */ (0, import_jsx_runtime.jsx)(LynxTooltip, {
 								delay: 300,
 								content: "Remove package",
-								children: /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Button$16, {
+								children: /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Button$17, {
 									size: "sm",
 									variant: "ghost",
 									onPress: () => removePackage(pkg),
@@ -9896,7 +11465,7 @@ function Installer({ isOpen, setInstallCommand, setIsInstallDisabled, setPackage
 				className: "flex flex-col items-center justify-center gap-2 rounded-2xl p-8 text-center border-2 border-dashed border-content-quaternary/30",
 				variant: "secondary",
 				children: [
-					/* @__PURE__ */ (0, import_jsx_runtime.jsx)(i$8, { className: "size-10 text-yellow-600" }),
+					/* @__PURE__ */ (0, import_jsx_runtime.jsx)(i$9, { className: "size-10 text-yellow-600" }),
 					/* @__PURE__ */ (0, import_jsx_runtime.jsx)("p", {
 						className: "text-sm text-content-secondary",
 						children: "No packages added yet"
@@ -9910,7 +11479,7 @@ function Installer({ isOpen, setInstallCommand, setIsInstallDisabled, setPackage
 			/* @__PURE__ */ (0, import_jsx_runtime.jsxs)(Disclosure, {
 				isExpanded: showAdvanced,
 				onExpandedChange: setShowAdvanced,
-				children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)(Disclosure.Heading, { children: /* @__PURE__ */ (0, import_jsx_runtime.jsxs)(Button$16, {
+				children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)(Disclosure.Heading, { children: /* @__PURE__ */ (0, import_jsx_runtime.jsxs)(Button$17, {
 					slot: "trigger",
 					variant: "tertiary",
 					className: "justify-between",
@@ -9924,14 +11493,14 @@ function Installer({ isOpen, setInstallCommand, setIsInstallDisabled, setPackage
 							value: indexUrl,
 							onChange: setIndexUrl,
 							children: [
-								/* @__PURE__ */ (0, import_jsx_runtime.jsx)(Label$13, { children: "Index URL" }),
+								/* @__PURE__ */ (0, import_jsx_runtime.jsx)(Label$14, { children: "Index URL" }),
 								/* @__PURE__ */ (0, import_jsx_runtime.jsx)(Input$2, { placeholder: "https://pypi.org/simple (optional)" }),
-								/* @__PURE__ */ (0, import_jsx_runtime.jsx)(Description$13, { children: "Override the default PyPI index" })
+								/* @__PURE__ */ (0, import_jsx_runtime.jsx)(Description$14, { children: "Override the default PyPI index" })
 							]
 						}), /* @__PURE__ */ (0, import_jsx_runtime.jsxs)(TextField$1, {
 							value: extraOptions,
 							onChange: setExtraOptions,
-							children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)(Label$13, { children: "Extra flags" }), /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Input$2, { placeholder: "--user --no-cache-dir" })]
+							children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)(Label$14, { children: "Extra flags" }), /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Input$2, { placeholder: "--user --no-cache-dir" })]
 						})]
 					})
 				}) })]
@@ -10018,16 +11587,16 @@ function Installer({ isOpen, setInstallCommand, setIsInstallDisabled, setPackage
 }
 //#endregion
 //#region extension/src/renderer/components/Python/PackageManagement/PackageManager/Header/InstallerModal.tsx
-var { Alert: Alert$1, Button: Button$15, Modal: Modal$5, ScrollShadow: ScrollShadow$1, useOverlayState: useOverlayState$5 } = await importShared("@heroui/react");
-var { useEffect: useEffect$20, useState: useState$21 } = await importShared("react");
+var { Alert: Alert$1, Button: Button$16, Modal: Modal$5, ScrollShadow: ScrollShadow$2, useOverlayState: useOverlayState$5 } = await importShared("@heroui/react");
+var { useEffect: useEffect$21, useState: useState$22 } = await importShared("react");
 function InstallerModal$1({ refresh, pythonPath }) {
-	const [installing, setInstalling] = useState$21(false);
-	const [installCommand, setInstallCommand] = useState$21("");
-	const [isInstallDisabled, setIsInstallDisabled] = useState$21(true);
-	const [packageCount, setPackageCount] = useState$21(0);
-	const [requirementsFileCount, setRequirementsFileCount] = useState$21(0);
+	const [installing, setInstalling] = useState$22(false);
+	const [installCommand, setInstallCommand] = useState$22("");
+	const [isInstallDisabled, setIsInstallDisabled] = useState$22(true);
+	const [packageCount, setPackageCount] = useState$22(0);
+	const [requirementsFileCount, setRequirementsFileCount] = useState$22(0);
 	const state = useOverlayState$5();
-	useEffect$20(() => {
+	useEffect$21(() => {
 		if (!state.isOpen) {
 			setInstallCommand("");
 			setPackageCount(0);
@@ -10049,7 +11618,7 @@ function InstallerModal$1({ refresh, pythonPath }) {
 		});
 	};
 	const isRequirementsInstall = installCommand.trim().includes("-r ");
-	return /* @__PURE__ */ (0, import_jsx_runtime.jsxs)(import_jsx_runtime.Fragment, { children: [/* @__PURE__ */ (0, import_jsx_runtime.jsxs)(Button$15, {
+	return /* @__PURE__ */ (0, import_jsx_runtime.jsxs)(import_jsx_runtime.Fragment, { children: [/* @__PURE__ */ (0, import_jsx_runtime.jsxs)(Button$16, {
 		size: "sm",
 		variant: "tertiary",
 		onPress: state.open,
@@ -10073,7 +11642,7 @@ function InstallerModal$1({ refresh, pythonPath }) {
 			}),
 			/* @__PURE__ */ (0, import_jsx_runtime.jsx)(Modal$5.Body, {
 				className: "overflow-hidden px-0 pt-0",
-				children: /* @__PURE__ */ (0, import_jsx_runtime.jsx)(ScrollShadow$1, {
+				children: /* @__PURE__ */ (0, import_jsx_runtime.jsx)(ScrollShadow$2, {
 					className: "size-full",
 					children: /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Installer, {
 						isOpen: state.isOpen,
@@ -10095,20 +11664,20 @@ function InstallerModal$1({ refresh, pythonPath }) {
 					}) })]
 				}), /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
 					className: "flex gap-2.5 w-full",
-					children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)(Button$15, {
+					children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)(Button$16, {
 						size: "md",
 						variant: "tertiary",
 						className: "flex-none",
 						onPress: state.close,
 						isDisabled: installing,
 						children: "Cancel"
-					}), /* @__PURE__ */ (0, import_jsx_runtime.jsxs)(Button$15, {
+					}), /* @__PURE__ */ (0, import_jsx_runtime.jsxs)(Button$16, {
 						size: "md",
 						isPending: installing,
 						onPress: handleInstall,
 						isDisabled: isInstallDisabled,
 						fullWidth: true,
-						children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)(i$25, {}), installing ? "Installing…" : isRequirementsInstall ? "Install Requirements" : `Install${packageCount > 0 ? ` ${packageCount} Package${packageCount !== 1 ? "s" : ""}` : " Packages"}`]
+						children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)(i$26, {}), installing ? "Installing…" : isRequirementsInstall ? "Install Requirements" : `Install${packageCount > 0 ? ` ${packageCount} Package${packageCount !== 1 ? "s" : ""}` : " Packages"}`]
 					})]
 				})]
 			})
@@ -10117,18 +11686,18 @@ function InstallerModal$1({ refresh, pythonPath }) {
 }
 //#endregion
 //#region extension/src/renderer/components/Python/PackageManagement/PackageManager/Header/UpdateButton.tsx
-var { Button: Button$14, ButtonGroup, Description: Description$12, Dropdown: Dropdown$3, Label: Label$12 } = await importShared("@heroui/react");
-var { useEffect: useEffect$19, useMemo: useMemo$8, useState: useState$20 } = await importShared("react");
+var { Button: Button$15, ButtonGroup, Description: Description$13, Dropdown: Dropdown$3, Label: Label$13 } = await importShared("@heroui/react");
+var { useEffect: useEffect$20, useMemo: useMemo$8, useState: useState$21 } = await importShared("react");
 function UpdateButton({ packagesUpdate, update, isUpdating, checkForUpdates, checkingUpdates, isReqAvailable, selectedKeys, visibleItems, selectedFilter, allPackageCount, reqPackageCount, setProgressValue }) {
-	const [selectedOption, setSelectedOption] = useState$20(/* @__PURE__ */ new Set([isReqAvailable ? "req" : "all"]));
-	const [checkedCount, setCheckedCount] = useState$20([]);
-	useEffect$19(() => {
+	const [selectedOption, setSelectedOption] = useState$21(/* @__PURE__ */ new Set([isReqAvailable ? "req" : "all"]));
+	const [checkedCount, setCheckedCount] = useState$21([]);
+	useEffect$20(() => {
 		const offProgress = pIpc.onUpdateCheckProgress((_, packageName) => {
 			setCheckedCount((prevState) => prevState.includes(packageName) ? prevState : [...prevState, packageName]);
 		});
 		return () => offProgress();
 	}, []);
-	useEffect$19(() => {
+	useEffect$20(() => {
 		setSelectedOption(/* @__PURE__ */ new Set([isReqAvailable ? "req" : "all"]));
 	}, [isReqAvailable]);
 	const descriptionsMap = useMemo$8(() => {
@@ -10155,7 +11724,7 @@ function UpdateButton({ packagesUpdate, update, isUpdating, checkForUpdates, che
 		if (selectedOptionValue === "all") checkForUpdates("normal");
 		else checkForUpdates("req");
 	};
-	useEffect$19(() => {
+	useEffect$20(() => {
 		if (!checkingUpdates) setProgressValue(0);
 		else {
 			let percentage = 0;
@@ -10184,29 +11753,29 @@ function UpdateButton({ packagesUpdate, update, isUpdating, checkForUpdates, che
 		packagesUpdate,
 		visibleItems
 	]);
-	return !isEmpty(packagesUpdate) ? /* @__PURE__ */ (0, import_jsx_runtime.jsxs)(Button$14, {
+	return !isEmpty(packagesUpdate) ? /* @__PURE__ */ (0, import_jsx_runtime.jsxs)(Button$15, {
 		size: "sm",
 		onPress: update,
 		variant: "secondary",
 		isPending: isUpdating,
 		isDisabled: selectedKeys !== "all" && selectedKeys.size === 0,
-		children: [!isUpdating && /* @__PURE__ */ (0, import_jsx_runtime.jsx)(i$25, {}), isUpdating ? /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("span", { children: [
+		children: [!isUpdating && /* @__PURE__ */ (0, import_jsx_runtime.jsx)(i$26, {}), isUpdating ? /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("span", { children: [
 			"Updating (",
 			selectedCount,
 			")..."
 		] }) : /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("span", { children: ["Update ", selectedCount] })]
-	}) : /* @__PURE__ */ (0, import_jsx_runtime.jsxs)(ButtonGroup, { children: [/* @__PURE__ */ (0, import_jsx_runtime.jsxs)(Button$14, {
+	}) : /* @__PURE__ */ (0, import_jsx_runtime.jsxs)(ButtonGroup, { children: [/* @__PURE__ */ (0, import_jsx_runtime.jsxs)(Button$15, {
 		size: "sm",
 		variant: "secondary",
 		onPress: checkForUpdate,
 		isPending: checkingUpdates,
-		children: [!checkingUpdates && /* @__PURE__ */ (0, import_jsx_runtime.jsx)(i$12, {}), labelsMap[selectedOptionValue]]
-	}), /* @__PURE__ */ (0, import_jsx_runtime.jsxs)(Dropdown$3, { children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)(Button$14, {
+		children: [!checkingUpdates && /* @__PURE__ */ (0, import_jsx_runtime.jsx)(i$13, {}), labelsMap[selectedOptionValue]]
+	}), /* @__PURE__ */ (0, import_jsx_runtime.jsxs)(Dropdown$3, { children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)(Button$15, {
 		size: "sm",
 		variant: "tertiary",
 		isDisabled: !isReqAvailable || checkingUpdates,
 		isIconOnly: true,
-		children: /* @__PURE__ */ (0, import_jsx_runtime.jsx)(r$3, {})
+		children: /* @__PURE__ */ (0, import_jsx_runtime.jsx)(r$5, {})
 	}), /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Dropdown$3.Popover, { children: /* @__PURE__ */ (0, import_jsx_runtime.jsxs)(Dropdown$3.Menu, {
 		selectionMode: "single",
 		selectedKeys: selectedOption,
@@ -10216,14 +11785,14 @@ function UpdateButton({ packagesUpdate, update, isUpdating, checkForUpdates, che
 			textValue: labelsMap["all"],
 			children: [/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
 				className: "flex flex-col",
-				children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)(Label$12, { children: labelsMap["all"] }), /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Description$12, { children: descriptionsMap["all"] })]
+				children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)(Label$13, { children: labelsMap["all"] }), /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Description$13, { children: descriptionsMap["all"] })]
 			}), /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Dropdown$3.ItemIndicator, {})]
 		}), /* @__PURE__ */ (0, import_jsx_runtime.jsxs)(Dropdown$3.Item, {
 			id: "req",
 			textValue: labelsMap["req"],
 			children: [/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
 				className: "flex flex-col",
-				children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)(Label$12, { children: labelsMap["req"] }), /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Description$12, { children: descriptionsMap["req"] })]
+				children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)(Label$13, { children: labelsMap["req"] }), /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Description$13, { children: descriptionsMap["req"] })]
 			}), /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Dropdown$3.ItemIndicator, {})]
 		})]
 	}) })] })] });
@@ -10231,21 +11800,21 @@ function UpdateButton({ packagesUpdate, update, isUpdating, checkForUpdates, che
 //#endregion
 //#region extension/src/renderer/components/Python/PackageManagement/PackageManager/Header/Header.tsx
 var { Avatar: Avatar$2, Chip: Chip$2, ProgressBar: ProgressBar$3, SearchField: SearchField$2 } = await importShared("@heroui/react");
-var { useEffect: useEffect$18, useState: useState$19 } = await importShared("react");
+var { useEffect: useEffect$19, useState: useState$20 } = await importShared("react");
 function PackageManagerHeader({ searchValue, setSearchValue, packages, packagesUpdate, checkingUpdates, pythonPath, updated, refresh, title, isValidPython, checkForUpdates, id, projectPath, setIsUpdateTerminalOpen, setSelectedFilter, selectedFilter, selectedKeys, visibleItems, setIsUpdating, isUpdating }) {
-	const [isReqAvailable, setIsReqAvailable] = useState$19(false);
-	const [reqPackageCount, setReqPackageCount] = useState$19(0);
-	const [progressValue, setProgressValue] = useState$19(0);
-	const [avatarUrl, setAvatarUrl] = useState$19(void 0);
-	const [pythonVersion, setPythonVersion] = useState$19("");
-	useEffect$18(() => {
+	const [isReqAvailable, setIsReqAvailable] = useState$20(false);
+	const [reqPackageCount, setReqPackageCount] = useState$20(0);
+	const [progressValue, setProgressValue] = useState$20(0);
+	const [avatarUrl, setAvatarUrl] = useState$20(void 0);
+	const [pythonVersion, setPythonVersion] = useState$20("");
+	useEffect$19(() => {
 		const url = allCardsExt.find((item) => item.id === id)?.repoUrl;
 		if (url) {
 			const avatar = extractGitUrl(url).avatarUrl;
 			setAvatarUrl(cacheUrl(avatar));
 		}
 	}, [id]);
-	useEffect$18(() => {
+	useEffect$19(() => {
 		if (pythonPath) pIpc.getPythonVersion(pythonPath).then((version) => {
 			setPythonVersion(`${version.major}.${version.minor}.${version.patch}`);
 		}).catch(console.log);
@@ -10471,6 +12040,51 @@ var storageIpc = {
 	getAll: () => lynxIpc.invoke(storageChannels.getAll),
 	update: (key, updateData) => lynxIpc.invoke(storageChannels.update, key, updateData),
 	clear: () => lynxIpc.invoke(storageChannels.clear)
+};
+var storageUtilsIpc = {
+	send: {
+		addInstalledCard: (cardData) => lynxIpc.send(storageUtilsChannels.addInstalledCard, cardData),
+		removeInstalledCard: (cardId) => lynxIpc.send(storageUtilsChannels.removeInstalledCard, cardId),
+		addAutoUpdateCard: (cardId) => lynxIpc.send(storageUtilsChannels.addAutoUpdateCard, cardId),
+		removeAutoUpdateCard: (cardId) => lynxIpc.send(storageUtilsChannels.removeAutoUpdateCard, cardId),
+		addAutoUpdateExtensions: (cardId) => lynxIpc.send(storageUtilsChannels.addAutoUpdateExtensions, cardId),
+		removeAutoUpdateExtensions: (cardId) => lynxIpc.send(storageUtilsChannels.removeAutoUpdateExtensions, cardId),
+		updateCustomRunBehavior: (data) => lynxIpc.send(storageUtilsChannels.customRunBehavior, data),
+		setSystemStartup: (startup) => lynxIpc.send(storageUtilsChannels.setSystemStartup, startup),
+		addBrowserRecent: (recentEntry) => lynxIpc.send(storageUtilsChannels.addBrowserRecent, recentEntry),
+		addBrowserFavorite: (favoriteEntry) => lynxIpc.send(storageUtilsChannels.addBrowserFavorite, favoriteEntry),
+		addBrowserHistory: (historyEntry) => lynxIpc.send(storageUtilsChannels.addBrowserHistory, historyEntry),
+		addBrowserRecentFavIcon: (url, favIcon, title) => lynxIpc.send(storageUtilsChannels.addBrowserRecentFavIcon, url, favIcon, title),
+		removeBrowserRecent: (url) => lynxIpc.send(storageUtilsChannels.removeBrowserRecent, url),
+		removeBrowserFavorite: (url) => lynxIpc.send(storageUtilsChannels.removeBrowserFavorite, url),
+		removeBrowserHistory: (url) => lynxIpc.send(storageUtilsChannels.removeBrowserHistory, url),
+		setShowConfirm: (type, enable) => lynxIpc.send(storageUtilsChannels.setShowConfirm, type, enable),
+		addReadNotif: (id) => lynxIpc.send(storageUtilsChannels.addReadNotif, id),
+		setCardTerminalPreCommands: (id, commands) => lynxIpc.send(storageUtilsChannels.setCardTerminalPreCommands, id, commands)
+	},
+	invoke: {
+		pinnedCards: (opt, id, pinnedCards) => lynxIpc.invoke(storageUtilsChannels.pinnedCards, opt, id, pinnedCards),
+		preCommands: (opt, data) => lynxIpc.invoke(storageUtilsChannels.preCommands, opt, data),
+		customRun: (opt, data) => lynxIpc.invoke(storageUtilsChannels.customRun, opt, data),
+		preOpen: (opt, open) => lynxIpc.invoke(storageUtilsChannels.preOpen, opt, open),
+		getCardArguments: (cardId) => lynxIpc.invoke(storageUtilsChannels.getCardArguments, cardId),
+		setCardArguments: (cardId, args) => lynxIpc.invoke(storageUtilsChannels.setCardArguments, cardId, args),
+		recentlyUsedCards: (opt, id) => lynxIpc.invoke(storageUtilsChannels.recentlyUsedCards, opt, id),
+		homeCategory: (opt, data) => lynxIpc.invoke(storageUtilsChannels.homeCategory, opt, data),
+		unassignCard: (id, clearConfigs) => lynxIpc.invoke(storageUtilsChannels.unassignCard, id, clearConfigs),
+		getBrowserHistoryData: () => lynxIpc.invoke(storageUtilsChannels.getBrowserHistoryData)
+	},
+	on: {
+		onInstalledCards: (result) => lynxIpc.on(storageUtilsChannels.onInstalledCards, result),
+		onAutoUpdateCards: (result) => lynxIpc.on(storageUtilsChannels.onAutoUpdateCards, result),
+		onAutoUpdateExtensions: (result) => lynxIpc.on(storageUtilsChannels.onAutoUpdateExtensions, result),
+		onPinnedCardsChange: (result) => lynxIpc.on(storageUtilsChannels.onPinnedCardsChange, result),
+		onPreCommands: (result) => lynxIpc.on(storageUtilsChannels.onPreCommands, result),
+		onCustomRun: (result) => lynxIpc.on(storageUtilsChannels.onCustomRun, result),
+		onRecentlyUsedCardsChange: (result) => lynxIpc.on(storageUtilsChannels.onRecentlyUsedCardsChange, result),
+		onHomeCategory: (result) => lynxIpc.on(storageUtilsChannels.onHomeCategory, result),
+		onConfirmChange: (result) => lynxIpc.on(storageUtilsChannels.onConfirmChange, result)
+	}
 };
 //#endregion
 //#region src/renderer/mainWindow/redux/reducers/terminal.ts
@@ -25222,7 +26836,7 @@ var C$2 = class {
 			if (this._disposed) return _$1.None;
 			t && (e = e.bind(t));
 			let o = new N(e), d;
-			this._leakageMon && this._size >= Math.ceil(this._leakageMon.threshold * .2) && (o.stack = K$2.create(), d = this._leakageMon.check(o.stack, this._size + 1)), Ve$2 && (o.stack = K$2.create()), this._listeners ? this._listeners instanceof N ? (this._deliveryQueue ??= new Fe$1(), this._listeners = [this._listeners, o]) : this._listeners.push(o) : (this._options?.onWillAddFirstListener?.(this), this._listeners = o, this._options?.onDidAddFirstListener?.(this)), this._size++;
+			this._leakageMon && this._size >= Math.ceil(this._leakageMon.threshold * .2) && (o.stack = K$2.create(), d = this._leakageMon.check(o.stack, this._size + 1)), this._listeners ? this._listeners instanceof N ? (this._deliveryQueue ??= new Fe$1(), this._listeners = [this._listeners, o]) : this._listeners.push(o) : (this._options?.onWillAddFirstListener?.(this), this._listeners = o, this._options?.onDidAddFirstListener?.(this)), this._size++;
 			let E = me$1(() => {
 				re$2?.unregister(E), d?.(), this._removeListener(o);
 			});
@@ -28498,7 +30112,7 @@ var D$1 = class {
 			if (this._disposed) return B$1.None;
 			t && (e = e.bind(t));
 			let s = new Ge(e), o;
-			this._leakageMon && this._size >= Math.ceil(this._leakageMon.threshold * .2) && (s.stack = nt$1.create(), o = this._leakageMon.check(s.stack, this._size + 1)), Dn$1 && (s.stack = nt$1.create()), this._listeners ? this._listeners instanceof Ge ? (this._deliveryQueue ??= new wi$1(), this._listeners = [this._listeners, s]) : this._listeners.push(s) : (this._options?.onWillAddFirstListener?.(this), this._listeners = s, this._options?.onDidAddFirstListener?.(this)), this._size++;
+			this._leakageMon && this._size >= Math.ceil(this._leakageMon.threshold * .2) && (s.stack = nt$1.create(), o = this._leakageMon.check(s.stack, this._size + 1)), this._listeners ? this._listeners instanceof Ge ? (this._deliveryQueue ??= new wi$1(), this._listeners = [this._listeners, s]) : this._listeners.push(s) : (this._options?.onWillAddFirstListener?.(this), this._listeners = s, this._options?.onDidAddFirstListener?.(this)), this._size++;
 			let a = O(() => {
 				Pt$1?.unregister(a), o?.(), this._removeListener(s);
 			});
@@ -32047,7 +33661,7 @@ var v = class {
 			if (this._disposed) return D.None;
 			e && (t = t.bind(e));
 			let r = new Pt(t), n;
-			this._leakageMon && this._size >= Math.ceil(this._leakageMon.threshold * .2) && (r.stack = gi.create(), n = this._leakageMon.check(r.stack, this._size + 1)), fo && (r.stack = gi.create()), this._listeners ? this._listeners instanceof Pt ? (this._deliveryQueue ??= new jn(), this._listeners = [this._listeners, r]) : this._listeners.push(r) : (this._options?.onWillAddFirstListener?.(this), this._listeners = r, this._options?.onDidAddFirstListener?.(this)), this._size++;
+			this._leakageMon && this._size >= Math.ceil(this._leakageMon.threshold * .2) && (r.stack = gi.create(), n = this._leakageMon.check(r.stack, this._size + 1)), this._listeners ? this._listeners instanceof Pt ? (this._deliveryQueue ??= new jn(), this._listeners = [this._listeners, r]) : this._listeners.push(r) : (this._options?.onWillAddFirstListener?.(this), this._listeners = r, this._options?.onDidAddFirstListener?.(this)), this._size++;
 			let l = C(() => {
 				_r?.unregister(l), n?.(), this._removeListener(r);
 			});
@@ -33557,7 +35171,8 @@ var Nr = class s {
 	}
 	static start(t, e, i) {
 		i = i + 10;
-		return new s(t, e, Date.now() - 10, i);
+		let r = Date.now() - 10;
+		return new s(t, e, r, i);
 	}
 };
 function Aa(s) {
@@ -41092,20 +42707,20 @@ var triggerActions = triggerSlice.actions;
 triggerSlice.reducer;
 //#endregion
 //#region src/renderer/mainWindow/components/useXTerm.ts
-var { useCallback: useCallback$8, useEffect: useEffect$17, useRef: useRef$1 } = await importShared("react");
+var { useCallback: useCallback$8, useEffect: useEffect$18, useRef: useRef$2 } = await importShared("react");
 var FONT_FAMILY = "JetBrainsMono";
 var useXTerm = ({ id, terminalContainerRef, onReady, outputColor, serializeAddon, searchAddon, fontSize, scrollBack, cursorStyle, cursorInactiveStyle, blinkCursor, resizeDelay, enablePtyWrite, enableResizeNotify, minResizeCols, minResizeRows, onProgress, darkMode, dispatch, useConpty, enableLigatures, openLinkNewTab, type }) => {
 	const activeTab = useTabsState("activeTab");
-	const terminal = useRef$1(null);
-	const fitAddon = useRef$1(null);
-	const apiRef = useRef$1(null);
+	const terminal = useRef$2(null);
+	const fitAddon = useRef$2(null);
+	const apiRef = useRef$2(null);
 	const canResize = useCallback$8(() => {
 		if (minResizeCols === 0 && minResizeRows === 0) return true;
 		const dims = fitAddon.current?.proposeDimensions();
 		if (!dims) return false;
 		return dims.cols > minResizeCols && dims.rows > minResizeRows;
 	}, [minResizeCols, minResizeRows]);
-	useEffect$17(() => {
+	useEffect$18(() => {
 		const terminalContainer = terminalContainerRef.current;
 		if (!terminalContainer || terminal.current) return;
 		let xTerm = null;
@@ -41245,28 +42860,28 @@ var useXTerm = ({ id, terminalContainerRef, onReady, outputColor, serializeAddon
 			apiRef.current = null;
 		};
 	}, [id]);
-	useEffect$17(() => {
+	useEffect$18(() => {
 		const offData = ptyIpc.onData((dataID, data) => {
 			if (dataID === id) apiRef.current?.write(data);
 		});
 		return () => offData();
 	}, [id]);
-	useEffect$17(() => {
+	useEffect$18(() => {
 		if (terminal.current) terminal.current.options.theme = getTheme(darkMode);
 	}, [darkMode]);
-	useEffect$17(() => {
+	useEffect$18(() => {
 		if (terminal.current) {
 			terminal.current.options.fontSize = fontSize;
 			fitAddon.current?.fit();
 		}
 	}, [fontSize]);
-	useEffect$17(() => {
+	useEffect$18(() => {
 		if (terminal.current) terminal.current.options.scrollback = scrollBack;
 	}, [scrollBack]);
-	useEffect$17(() => {
+	useEffect$18(() => {
 		if (terminal.current) terminal.current.options.cursorBlink = blinkCursor;
 	}, [blinkCursor]);
-	useEffect$17(() => {
+	useEffect$18(() => {
 		if (terminal.current) {
 			terminal.current.options.cursorStyle = cursorStyle;
 			terminal.current.options.cursorInactiveStyle = cursorInactiveStyle;
@@ -41276,12 +42891,12 @@ var useXTerm = ({ id, terminalContainerRef, onReady, outputColor, serializeAddon
 };
 //#endregion
 //#region src/renderer/mainWindow/components/XTermCore.tsx
-var { forwardRef, memo: memo$1, useImperativeHandle, useRef } = await importShared("react");
+var { forwardRef, memo: memo$1, useImperativeHandle, useRef: useRef$1 } = await importShared("react");
 var { useDispatch: useDispatch$7 } = await importShared("react-redux");
 var MIN_RESIZE_COLS = 95;
 var MIN_RESIZE_ROWS = 22;
 var XTermCore = memo$1(forwardRef(({ id, type, onReady, className = "", serializeAddon, searchAddon, fontSize: fontSizeOverride, scrollBack: scrollBackOverride, cursorStyle: cursorStyleOverride, cursorInactiveStyle: cursorInactiveStyleOverride, blinkCursor: blinkCursorOverride, resizeDelay: resizeDelayOverride, enablePtyWrite = true, enableResizeNotify = true, minResizeCols = MIN_RESIZE_COLS, minResizeRows = MIN_RESIZE_ROWS, onProgress }, ref) => {
-	const terminalContainerRef = useRef(null);
+	const terminalContainerRef = useRef$1(null);
 	const dispatch = useDispatch$7();
 	const darkMode = useAppState("darkMode");
 	const terminalSettings = useTerminalStat();
@@ -41355,12 +42970,12 @@ function TerminalView() {
 }
 //#endregion
 //#region extension/src/renderer/components/Python/PackageManagement/PackageManager/Update-Modal.tsx
-var { Button: Button$13, Modal: Modal$4 } = await importShared("@heroui/react");
-var { memo, useEffect: useEffect$16, useState: useState$18 } = await importShared("react");
+var { Button: Button$14, Modal: Modal$4 } = await importShared("@heroui/react");
+var { memo, useEffect: useEffect$17, useState: useState$19 } = await importShared("react");
 var UpdateModal = memo(({ state }) => {
-	const [isDone, setIsDone] = useState$18(false);
-	const [showConfirm, setShowConfirm] = useState$18(false);
-	useEffect$16(() => {
+	const [isDone, setIsDone] = useState$19(false);
+	const [showConfirm, setShowConfirm] = useState$19(false);
+	useEffect$17(() => {
 		const offExit = ptyIpc.onExit((id) => {
 			if (id === "python-update") {
 				setIsDone(true);
@@ -41369,7 +42984,7 @@ var UpdateModal = memo(({ state }) => {
 		});
 		return () => offExit();
 	}, []);
-	useEffect$16(() => {
+	useEffect$17(() => {
 		if (!state.isOpen) setShowConfirm(false);
 	}, [state.isOpen]);
 	const handleCloseClick = () => {
@@ -41391,7 +43006,7 @@ var UpdateModal = memo(({ state }) => {
 				children: /* @__PURE__ */ (0, import_jsx_runtime.jsx)(EmptyStateCard, {
 					variant: "secondary",
 					className: "size-full py-4",
-					icon: /* @__PURE__ */ (0, import_jsx_runtime.jsx)(i$10, { className: "size-14 text-warning" }),
+					icon: /* @__PURE__ */ (0, import_jsx_runtime.jsx)(i$11, { className: "size-14 text-warning" }),
 					description: isDone ? "Close this window?" : "The command will still execute in the background.",
 					title: isDone ? "The terminal is done and exited" : "Are you sure you want to close this window?"
 				})
@@ -41401,18 +43016,18 @@ var UpdateModal = memo(({ state }) => {
 			})] }),
 			/* @__PURE__ */ (0, import_jsx_runtime.jsx)(Modal$4.Footer, { children: showConfirm ? /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
 				className: "flex w-full gap-2 justify-end",
-				children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)(Button$13, {
+				children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)(Button$14, {
 					size: "sm",
 					variant: "ghost",
 					onPress: cancelClose,
 					children: "Back to Terminal"
-				}), /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Button$13, {
+				}), /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Button$14, {
 					size: "sm",
 					variant: "danger-soft",
 					onPress: confirmClose,
 					children: "Close Window"
 				})]
-			}) : /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Button$13, {
+			}) : /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Button$14, {
 				size: "sm",
 				variant: "danger-soft",
 				onPress: handleCloseClick,
@@ -41424,23 +43039,23 @@ var UpdateModal = memo(({ state }) => {
 //#endregion
 //#region extension/src/renderer/components/Python/PackageManagement/PackageManager/PackageManagerModal.tsx
 var { Modal: Modal$3, useOverlayState: useOverlayState$4 } = await importShared("@heroui/react");
-var { useEffect: useEffect$15, useState: useState$17 } = await importShared("react");
+var { useEffect: useEffect$16, useState: useState$18 } = await importShared("react");
 function PackageManagerModal({ title = "Package Manager", actionButtons, state, pythonPath, id, projectPath, setPythonPath, onPackagesChanged }) {
-	const [isLoadingPackages, setIsLoadingPackages] = useState$17(false);
-	const [isCheckingUpdates, setIsCheckingUpdates] = useState$17(false);
-	const [isUpdating, setIsUpdating] = useState$17(false);
-	const [packagesChanged, setPackagesChanged] = useState$17(false);
-	const [packages, setPackages] = useState$17([]);
-	const [filteredPackages, setFilteredPackages] = useState$17([]);
-	const [packagesUpdate, setPackagesUpdate] = useState$17([]);
-	const [searchValue, setSearchValue] = useState$17("");
-	const [searchData, setSearchData] = useState$17([]);
-	const [isValidPython, setIsValidPython] = useState$17(true);
-	const [selectedFilter, setSelectedFilter] = useState$17("all");
-	const [items, setItems] = useState$17(searchData);
-	const [selectedKeys, setSelectedKeys] = useState$17(/* @__PURE__ */ new Set([]));
+	const [isLoadingPackages, setIsLoadingPackages] = useState$18(false);
+	const [isCheckingUpdates, setIsCheckingUpdates] = useState$18(false);
+	const [isUpdating, setIsUpdating] = useState$18(false);
+	const [packagesChanged, setPackagesChanged] = useState$18(false);
+	const [packages, setPackages] = useState$18([]);
+	const [filteredPackages, setFilteredPackages] = useState$18([]);
+	const [packagesUpdate, setPackagesUpdate] = useState$18([]);
+	const [searchValue, setSearchValue] = useState$18("");
+	const [searchData, setSearchData] = useState$18([]);
+	const [isValidPython, setIsValidPython] = useState$18(true);
+	const [selectedFilter, setSelectedFilter] = useState$18("all");
+	const [items, setItems] = useState$18(searchData);
+	const [selectedKeys, setSelectedKeys] = useState$18(/* @__PURE__ */ new Set([]));
 	const updateModal = useOverlayState$4();
-	useEffect$15(() => {
+	useEffect$16(() => {
 		switch (selectedFilter) {
 			case "all":
 				setFilteredPackages(packages);
@@ -41469,10 +43084,10 @@ function PackageManagerModal({ title = "Package Manager", actionButtons, state, 
 		packagesUpdate,
 		packages
 	]);
-	useEffect$15(() => {
+	useEffect$16(() => {
 		if (isEmpty(pythonPath)) setIsValidPython(false);
 	}, [pythonPath]);
-	useEffect$15(() => {
+	useEffect$16(() => {
 		setSearchData(filteredPackages.filter((item) => searchInStrings(searchValue, [item.name])));
 	}, [searchValue, filteredPackages]);
 	const closePackageManager = () => {
@@ -41530,7 +43145,7 @@ function PackageManagerModal({ title = "Package Manager", actionButtons, state, 
 			setIsLoadingPackages(false);
 		});
 	};
-	useEffect$15(() => {
+	useEffect$16(() => {
 		if (state.isOpen && !isEmpty(pythonPath)) getPackageList();
 		else {
 			setSearchData([]);
@@ -41630,16 +43245,16 @@ function PackageManagerModal({ title = "Package Manager", actionButtons, state, 
 }
 //#endregion
 //#region extension/src/renderer/components/CardMenuModal.tsx
-var { Button: Button$12, Description: Description$11, Popover: Popover$4 } = await importShared("@heroui/react");
-var { useEffect: useEffect$14, useMemo: useMemo$7, useState: useState$16 } = await importShared("react");
+var { Button: Button$13, Description: Description$12, Popover: Popover$4 } = await importShared("@heroui/react");
+var { useEffect: useEffect$15, useMemo: useMemo$7, useState: useState$17 } = await importShared("react");
 function CardMenuModal({ useCardOverlayState, useCardStore }) {
 	const id = useCardStore((state) => state.id);
 	const title = useCardStore((state) => state.title);
 	const webUI = useInstalledCard(id);
 	const state = useCardOverlayState(DepsModalKey);
-	const [pythonPath, setPythonPath] = useState$16("");
-	const [pythonVersion, setPythonVersion] = useState$16("");
-	useEffect$14(() => {
+	const [pythonPath, setPythonPath] = useState$17("");
+	const [pythonVersion, setPythonVersion] = useState$17("");
+	useEffect$15(() => {
 		if (pythonPath) pIpc.getPythonVersion(pythonPath).then((version) => {
 			setPythonVersion(`${version.major}.${version.minor}.${version.patch}`);
 		});
@@ -41649,7 +43264,7 @@ function CardMenuModal({ useCardOverlayState, useCardStore }) {
 		setPythonPath("");
 	};
 	const actionButtons = useMemo$7(() => {
-		return pythonPath ? /* @__PURE__ */ (0, import_jsx_runtime.jsxs)(Popover$4, { children: [/* @__PURE__ */ (0, import_jsx_runtime.jsxs)(Button$12, {
+		return pythonPath ? /* @__PURE__ */ (0, import_jsx_runtime.jsxs)(Popover$4, { children: [/* @__PURE__ */ (0, import_jsx_runtime.jsxs)(Button$13, {
 			size: "sm",
 			variant: "tertiary",
 			className: "h-7 text-warning/70",
@@ -41663,15 +43278,15 @@ function CardMenuModal({ useCardOverlayState, useCardStore }) {
 						className: "text-warning",
 						children: ["Unassign ", title]
 					}),
-					/* @__PURE__ */ (0, import_jsx_runtime.jsxs)(Description$11, { children: [
+					/* @__PURE__ */ (0, import_jsx_runtime.jsxs)(Description$12, { children: [
 						"This action will deselect ",
 						pythonVersion,
 						" for ",
 						title,
 						"."
 					] }),
-					/* @__PURE__ */ (0, import_jsx_runtime.jsx)(Description$11, { children: "Are you sure?" }),
-					/* @__PURE__ */ (0, import_jsx_runtime.jsx)(Button$12, {
+					/* @__PURE__ */ (0, import_jsx_runtime.jsx)(Description$12, { children: "Are you sure?" }),
+					/* @__PURE__ */ (0, import_jsx_runtime.jsx)(Button$13, {
 						size: "sm",
 						className: "mt-2",
 						variant: "danger-soft",
@@ -41694,52 +43309,43 @@ function CardMenuModal({ useCardOverlayState, useCardStore }) {
 	});
 }
 //#endregion
-//#region src/renderer/mainWindow/components/ToolsCard.tsx
-var { Avatar: Avatar$1, Card: Card$1, Description: Description$10, Label: Label$11 } = await importShared("@heroui/react");
+//#region src/renderer/mainWindow/pages/CardsContainer.tsx
+var { Card: Card$2, Description: Description$11, Label: Label$12 } = await importShared("@heroui/react");
 /**
-* A card component for the Tools page, featuring a spotlight effect and hover animations.
+* A standardized container component for grouping cards on the home page.
+* Includes a header with an icon, title, and subtitle, and a body for the content.
 */
-function ToolsCard({ title, description, icon, onPress, footer, avatarClassName }) {
-	return /* @__PURE__ */ (0, import_jsx_runtime.jsxs)(Card$1, {
-		className: "w-75 h-46 relative group transform border border-surface  hover:shadow-lg hover:scale-[1.02] transition-all duration-200 cursor-pointer",
-		onClick: onPress,
-		children: [
-			/* @__PURE__ */ (0, import_jsx_runtime.jsx)(Card$1.Header, { children: /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
-				className: "inline-flex items-center gap-2",
-				children: [typeof icon === "string" ? /* @__PURE__ */ (0, import_jsx_runtime.jsxs)(Avatar$1, {
-					className: `size-12 shrink-0 ring-LynxPurple ring-2 ${avatarClassName}`,
-					children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)(Avatar$1.Image, {
-						src: icon,
-						alt: title
-					}), /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Avatar$1.Fallback, { children: getFallbackString(title) })]
-				}) : /* @__PURE__ */ (0, import_jsx_runtime.jsx)("div", {
-					className: `size-12 rounded-full ring-2 ring-LynxPurple flex items-center justify-center  ${avatarClassName}`,
-					children: icon
-				}), /* @__PURE__ */ (0, import_jsx_runtime.jsx)("div", {
-					className: "flex flex-col pointer-events-none",
-					children: /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Label$11, { children: title })
-				})]
-			}) }),
-			/* @__PURE__ */ (0, import_jsx_runtime.jsx)(Card$1.Content, { children: /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Description$10, {
-				className: "line-clamp-3 text-xs",
-				children: description
-			}) }),
-			/* @__PURE__ */ (0, import_jsx_runtime.jsx)(Card$1.Footer, { children: footer })
-		]
+function CardsContainer({ children, icon, title, subTitle, extraClassNames }) {
+	return /* @__PURE__ */ (0, import_jsx_runtime.jsxs)(Card$2, {
+		variant: "secondary",
+		className: [extraClassNames].filter(Boolean).join(" "),
+		children: [/* @__PURE__ */ (0, import_jsx_runtime.jsxs)(Card$2.Header, { children: [/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
+			className: "flex flex-row items-center",
+			children: [icon, /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Label$12, {
+				className: "text-lg font-bold",
+				children: title
+			})]
+		}), /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Description$11, {
+			className: "text-sm",
+			children: subTitle
+		})] }), /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Card$2.Content, {
+			className: "overflow-hidden scrollbar-hide pt-2 pb-5 px-3",
+			children
+		})]
 	});
 }
 //#endregion
 //#region extension/src/renderer/components/Python/VirtualEnvironments/Venv_Associate.tsx
-var { Avatar, Button: Button$11, Chip: Chip$1, CloseButton, Dropdown: Dropdown$2, Label: Label$10 } = await importShared("@heroui/react");
-var { useCallback: useCallback$7, useEffect: useEffect$13, useState: useState$15 } = await importShared("react");
+var { Avatar: Avatar$1, Button: Button$12, Chip: Chip$1, CloseButton, Dropdown: Dropdown$2, Label: Label$11 } = await importShared("@heroui/react");
+var { useCallback: useCallback$7, useEffect: useEffect$14, useState: useState$16 } = await importShared("react");
 var { useDispatch: useDispatch$6 } = await importShared("react-redux");
 function Venv_Associate({ folder, type }) {
 	const associates = usePythonToolkitState("associates");
 	const installedCards = useCardsState("installedCards");
-	const [associated, setAssociated] = useState$15([]);
-	const [canBeAssociate, setCanBeAssociate] = useState$15([]);
+	const [associated, setAssociated] = useState$16([]);
+	const [canBeAssociate, setCanBeAssociate] = useState$16([]);
 	const dispatch = useDispatch$6();
-	useEffect$13(() => {
+	useEffect$14(() => {
 		const cardTitleMap = new Map(allCardsExt.map((card) => [card.id, card.title]));
 		const cardAvatarMap = new Map(allCardsExt.map((card) => [card.id, cacheUrl(extractGitUrl(card.repoUrl).avatarUrl)]));
 		const installedCardsWithTitles = installedCards.filter((card) => cardTitleMap.has(card.id)).map((card) => {
@@ -41751,15 +43357,17 @@ function Venv_Associate({ folder, type }) {
 			};
 		});
 		const associateIds = new Set(associates.map((item) => item.id));
-		setCanBeAssociate(installedCardsWithTitles.filter((card) => !associateIds.has(card.id) && ModulesThatSupportPython.includes(card.id)));
-		setAssociated(associates.filter((item) => item.dir === folder && installedCards.some((card) => card.id === item.id)).map((item) => {
+		const newItemsToAdd = installedCardsWithTitles.filter((card) => !associateIds.has(card.id) && ModulesThatSupportPython.includes(card.id));
+		setCanBeAssociate(newItemsToAdd);
+		const activeAssociatesWithTitles = associates.filter((item) => item.dir === folder && installedCards.some((card) => card.id === item.id)).map((item) => {
 			const id = item.id;
 			return {
 				avatarUrl: cardAvatarMap.get(id),
 				title: cardTitleMap.get(id) || "",
 				id
 			};
-		}));
+		});
+		setAssociated(activeAssociatesWithTitles);
 	}, [associates]);
 	const refreshAssociates = useCallback$7(() => {
 		pIpc.getAssociates().then((associates) => dispatch(PythonToolkitActions.setAssociates(associates || [])));
@@ -41788,12 +43396,12 @@ function Venv_Associate({ folder, type }) {
 				color: "success",
 				className: "gap-x-1",
 				children: [
-					/* @__PURE__ */ (0, import_jsx_runtime.jsxs)(Avatar, {
+					/* @__PURE__ */ (0, import_jsx_runtime.jsxs)(Avatar$1, {
 						className: "size-5",
-						children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)(Avatar.Image, {
+						children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)(Avatar$1.Image, {
 							alt: item.title,
 							src: item.avatarUrl
-						}), /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Avatar.Fallback, {
+						}), /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Avatar$1.Fallback, {
 							className: "text-xs",
 							children: getFallbackString(item.title)
 						})]
@@ -41809,7 +43417,7 @@ function Venv_Associate({ folder, type }) {
 		}), /* @__PURE__ */ (0, import_jsx_runtime.jsxs)(Dropdown$2, { children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)(LynxTooltip, {
 			delay: 300,
 			content: "Associate card",
-			children: /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Button$11, {
+			children: /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Button$12, {
 				size: "sm",
 				variant: "tertiary",
 				className: "shrink-0",
@@ -41825,23 +43433,23 @@ function Venv_Associate({ folder, type }) {
 			children: (item) => /* @__PURE__ */ (0, import_jsx_runtime.jsxs)(Dropdown$2.Item, {
 				textValue: item.title,
 				onPress: () => add(item.id),
-				children: [/* @__PURE__ */ (0, import_jsx_runtime.jsxs)(Avatar, {
+				children: [/* @__PURE__ */ (0, import_jsx_runtime.jsxs)(Avatar$1, {
 					className: "size-5",
-					children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)(Avatar.Image, {
+					children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)(Avatar$1.Image, {
 						alt: item.title,
 						src: item.avatarUrl
-					}), /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Avatar.Fallback, {
+					}), /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Avatar$1.Fallback, {
 						className: "text-xs",
 						children: getFallbackString(item.title)
 					})]
-				}), /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Label$10, { children: item.title })]
+				}), /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Label$11, { children: item.title })]
 			})
 		}) })] })]
 	}) });
 }
 //#endregion
 //#region extension/src/renderer/components/Python/EnvironmentCard.tsx
-var { Button: Button$10, Card, Label: Label$9, ProgressBar: ProgressBar$2, Spinner: Spinner$6 } = await importShared("@heroui/react");
+var { Button: Button$11, Card: Card$1, Label: Label$10, ProgressBar: ProgressBar$2, Spinner: Spinner$6 } = await importShared("@heroui/react");
 var { useDispatch: useDispatch$5 } = await importShared("react-redux");
 function EnvironmentCard({ title, subtitle, badges, actions, path, packages, diskUsage, maxDiskValue, onOpenPath, associationType, condaName, iconClassName = "text-blue-400", footer, isBusy, busyMessage }) {
 	const diskValue = diskUsage || 0;
@@ -41879,10 +43487,10 @@ function EnvironmentCard({ title, subtitle, badges, actions, path, packages, dis
 					children: busyMessage
 				})]
 			})
-		}), /* @__PURE__ */ (0, import_jsx_runtime.jsxs)(Card, {
+		}), /* @__PURE__ */ (0, import_jsx_runtime.jsxs)(Card$1, {
 			className: "group w-103 overflow-hidden border border-divider/70 bg-content1/90 p-0 shadow-sm transition-all duration-200 hover:border-divider hover:bg-content1 hover:shadow-md",
 			children: [
-				/* @__PURE__ */ (0, import_jsx_runtime.jsxs)(Card.Header, {
+				/* @__PURE__ */ (0, import_jsx_runtime.jsxs)(Card$1.Header, {
 					className: "flex flex-row items-start justify-between gap-x-3 px-4 pb-2.5 pt-3.5",
 					children: [/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
 						className: "min-w-0 flex-1",
@@ -41910,25 +43518,25 @@ function EnvironmentCard({ title, subtitle, badges, actions, path, packages, dis
 						children: actions
 					})]
 				}),
-				/* @__PURE__ */ (0, import_jsx_runtime.jsxs)(Card.Content, {
+				/* @__PURE__ */ (0, import_jsx_runtime.jsxs)(Card$1.Content, {
 					className: "flex flex-col gap-y-3 px-4 pb-3 pt-0 text-sm",
 					children: [
 						/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
 							className: "flex min-w-0 gap-2",
-							children: [/* @__PURE__ */ (0, import_jsx_runtime.jsxs)(Button$10, {
+							children: [/* @__PURE__ */ (0, import_jsx_runtime.jsxs)(Button$11, {
 								size: "sm",
 								variant: "tertiary",
 								onPress: onOpenPath,
 								className: "h-8 min-w-0 justify-start border border-divider/60 bg-surface-secondary/45 px-2.5 text-xs",
 								fullWidth: true,
-								children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)(i$19, { className: "size-3.5 shrink-0 text-muted" }), /* @__PURE__ */ (0, import_jsx_runtime.jsx)("span", {
+								children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)(i$20, { className: "size-3.5 shrink-0 text-muted" }), /* @__PURE__ */ (0, import_jsx_runtime.jsx)("span", {
 									className: "truncate font-JetBrainsMono",
 									children: path
 								})]
 							}), /* @__PURE__ */ (0, import_jsx_runtime.jsx)(LynxTooltip, {
 								delay: 300,
 								content: "Open terminal in environment",
-								children: /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Button$10, {
+								children: /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Button$11, {
 									size: "sm",
 									variant: "tertiary",
 									onPress: openTerminal,
@@ -41944,7 +43552,7 @@ function EnvironmentCard({ title, subtitle, badges, actions, path, packages, dis
 								className: "min-w-0",
 								children: [/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
 									className: "mb-1 flex items-center gap-x-1.5 text-xs text-muted",
-									children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)(i$8, { className: "size-3.5" }), /* @__PURE__ */ (0, import_jsx_runtime.jsx)("span", { children: "Packages" })]
+									children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)(i$9, { className: "size-3.5" }), /* @__PURE__ */ (0, import_jsx_runtime.jsx)("span", { children: "Packages" })]
 								}), /* @__PURE__ */ (0, import_jsx_runtime.jsx)("div", {
 									className: "text-base font-semibold leading-none text-foreground",
 									children: packageCount
@@ -41953,7 +43561,7 @@ function EnvironmentCard({ title, subtitle, badges, actions, path, packages, dis
 								className: "min-w-0 border-l border-divider/60 pl-2.5",
 								children: [/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
 									className: "mb-1 flex items-center gap-x-1.5 text-xs text-muted",
-									children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)(i$20, { className: "size-3.5" }), /* @__PURE__ */ (0, import_jsx_runtime.jsx)("span", { children: "Disk usage" })]
+									children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)(i$21, { className: "size-3.5" }), /* @__PURE__ */ (0, import_jsx_runtime.jsx)("span", { children: "Disk usage" })]
 								}), diskUsage === void 0 ? /* @__PURE__ */ (0, import_jsx_runtime.jsx)("div", {
 									className: "flex h-4 items-center",
 									children: /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Spinner$6, { size: "sm" })
@@ -41970,7 +43578,7 @@ function EnvironmentCard({ title, subtitle, badges, actions, path, packages, dis
 							maxValue: diskMax,
 							isIndeterminate: diskUsage === void 0,
 							children: [
-								/* @__PURE__ */ (0, import_jsx_runtime.jsx)(Label$9, {
+								/* @__PURE__ */ (0, import_jsx_runtime.jsx)(Label$10, {
 									className: "text-xs text-muted",
 									children: "Storage"
 								}),
@@ -41980,7 +43588,7 @@ function EnvironmentCard({ title, subtitle, badges, actions, path, packages, dis
 						})
 					]
 				}),
-				/* @__PURE__ */ (0, import_jsx_runtime.jsxs)(Card.Footer, {
+				/* @__PURE__ */ (0, import_jsx_runtime.jsxs)(Card$1.Footer, {
 					className: "flex-col gap-y-2 border-t border-divider/60 bg-surface-secondary/20 px-4 py-3",
 					children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)(Venv_Associate, {
 						folder: path,
@@ -41993,15 +43601,15 @@ function EnvironmentCard({ title, subtitle, badges, actions, path, packages, dis
 }
 //#endregion
 //#region extension/src/renderer/components/Python/InstalledPythons/InstalledCard.tsx
-var { AlertDialog, Button: Button$9, Chip, Description: Description$9, Dropdown: Dropdown$1, Label: Label$8, Popover: Popover$3, Separator: Separator$2, useOverlayState: useOverlayState$3 } = await importShared("@heroui/react");
-var { useCallback: useCallback$6, useMemo: useMemo$6, useState: useState$14 } = await importShared("react");
+var { AlertDialog, Button: Button$10, Chip, Description: Description$10, Dropdown: Dropdown$1, Label: Label$9, Popover: Popover$3, Separator: Separator$2, useOverlayState: useOverlayState$3 } = await importShared("@heroui/react");
+var { useCallback: useCallback$6, useMemo: useMemo$6, useState: useState$15 } = await importShared("react");
 function InstalledCard({ python, diskUsage, maxDiskValue, updateDefault, refresh }) {
 	const systemConfirm = useOverlayState$3();
 	const lynxConfirm = useOverlayState$3();
 	const size = useMemo$6(() => {
 		return diskUsage.find((usage) => usage.path === python.installFolder)?.value;
 	}, [diskUsage, python.installFolder]);
-	const [isUninstalling, setIsUninstalling] = useState$14(false);
+	const [isUninstalling, setIsUninstalling] = useState$15(false);
 	const uninstall = () => {
 		setPopoverUninstaller(false);
 		setIsUninstalling(true);
@@ -42024,7 +43632,7 @@ function InstalledCard({ python, diskUsage, maxDiskValue, updateDefault, refresh
 			case "other": return "border-warning/30 bg-warning/10 text-warning";
 		}
 	}, [python.installationType]);
-	const [popoverUninstaller, setPopoverUninstaller] = useState$14(false);
+	const [popoverUninstaller, setPopoverUninstaller] = useState$15(false);
 	const packageManagerModal = useOverlayState$3();
 	const defaultChip = useMemo$6(() => {
 		if (python.isDefault && python.isLynxHubDefault) return /* @__PURE__ */ (0, import_jsx_runtime.jsxs)(Chip, {
@@ -42032,21 +43640,21 @@ function InstalledCard({ python, diskUsage, maxDiskValue, updateDefault, refresh
 			variant: "soft",
 			color: "success",
 			className: "font-semibold! px-2",
-			children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)(i$6, {}), "System & LynxHub"]
+			children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)(i$7, {}), "System & LynxHub"]
 		});
 		if (python.isDefault) return /* @__PURE__ */ (0, import_jsx_runtime.jsxs)(Chip, {
 			size: "sm",
 			variant: "soft",
 			color: "default",
 			className: "font-semibold! px-2",
-			children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)(i$6, {}), "System"]
+			children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)(i$7, {}), "System"]
 		});
 		if (python.isLynxHubDefault) return /* @__PURE__ */ (0, import_jsx_runtime.jsxs)(Chip, {
 			size: "sm",
 			variant: "soft",
 			color: "accent",
 			className: "font-semibold! px-2",
-			children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)(i$6, {}), "LynxHub"]
+			children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)(i$7, {}), "LynxHub"]
 		});
 		return null;
 	}, [python]);
@@ -42108,17 +43716,17 @@ function InstalledCard({ python, diskUsage, maxDiskValue, updateDefault, refresh
 			/* @__PURE__ */ (0, import_jsx_runtime.jsxs)(Dropdown$1, { children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)(LynxTooltip, {
 				delay: 300,
 				content: "Python actions",
-				children: /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Button$9, {
+				children: /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Button$10, {
 					size: "sm",
 					variant: "tertiary",
 					isIconOnly: true,
-					children: /* @__PURE__ */ (0, import_jsx_runtime.jsx)(i$3, { className: "rotate-90" })
+					children: /* @__PURE__ */ (0, import_jsx_runtime.jsx)(i$4, { className: "rotate-90" })
 				})
 			}), /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Dropdown$1.Popover, { children: /* @__PURE__ */ (0, import_jsx_runtime.jsxs)(Dropdown$1.Menu, { children: [isWin && /* @__PURE__ */ (0, import_jsx_runtime.jsxs)(import_jsx_runtime.Fragment, { children: [/* @__PURE__ */ (0, import_jsx_runtime.jsxs)(Dropdown$1.Item, {
 				id: "system-default",
 				onPress: systemConfirm.open,
 				textValue: "Set as System Default",
-				children: [python.isDefault ? /* @__PURE__ */ (0, import_jsx_runtime.jsx)(i$22, { size: 16 }) : /* @__PURE__ */ (0, import_jsx_runtime.jsx)(i, { size: 16 }), /* @__PURE__ */ (0, import_jsx_runtime.jsxs)(Label$8, { children: [python.isDefault ? "Reset " : "Set ", /* @__PURE__ */ (0, import_jsx_runtime.jsx)("span", {
+				children: [python.isDefault ? /* @__PURE__ */ (0, import_jsx_runtime.jsx)(i$23, { size: 16 }) : /* @__PURE__ */ (0, import_jsx_runtime.jsx)(i$1, { size: 16 }), /* @__PURE__ */ (0, import_jsx_runtime.jsxs)(Label$9, { children: [python.isDefault ? "Reset " : "Set ", /* @__PURE__ */ (0, import_jsx_runtime.jsx)("span", {
 					className: "font-bold text-LynxPurple",
 					children: "System Default"
 				})] })]
@@ -42126,7 +43734,7 @@ function InstalledCard({ python, diskUsage, maxDiskValue, updateDefault, refresh
 				id: "lynxhub-default",
 				onPress: lynxConfirm.open,
 				textValue: "Set as LynxHub Default",
-				children: [python.isLynxHubDefault ? /* @__PURE__ */ (0, import_jsx_runtime.jsx)(i$22, { size: 16 }) : /* @__PURE__ */ (0, import_jsx_runtime.jsx)(i, { size: 16 }), /* @__PURE__ */ (0, import_jsx_runtime.jsxs)(Label$8, { children: [python.isDefault ? "Reset " : "Set ", /* @__PURE__ */ (0, import_jsx_runtime.jsx)("span", {
+				children: [python.isLynxHubDefault ? /* @__PURE__ */ (0, import_jsx_runtime.jsx)(i$23, { size: 16 }) : /* @__PURE__ */ (0, import_jsx_runtime.jsx)(i$1, { size: 16 }), /* @__PURE__ */ (0, import_jsx_runtime.jsxs)(Label$9, { children: [python.isDefault ? "Reset " : "Set ", /* @__PURE__ */ (0, import_jsx_runtime.jsx)("span", {
 					className: "font-bold text-accent",
 					children: "LynxHub Default"
 				})] })]
@@ -42134,7 +43742,7 @@ function InstalledCard({ python, diskUsage, maxDiskValue, updateDefault, refresh
 				id: "package-manager",
 				textValue: "Manage Packages",
 				onPress: packageManagerModal.open,
-				children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)(i$8, { className: "size-4" }), /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Label$8, { children: "Manage Packages" })]
+				children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)(i$9, { className: "size-4" }), /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Label$9, { children: "Manage Packages" })]
 			})] }) })] }),
 			/* @__PURE__ */ (0, import_jsx_runtime.jsx)(AlertDialog, {
 				isOpen: systemConfirm.isOpen,
@@ -42151,16 +43759,16 @@ function InstalledCard({ python, diskUsage, maxDiskValue, updateDefault, refresh
 					] })] }),
 					/* @__PURE__ */ (0, import_jsx_runtime.jsxs)(AlertDialog.Body, {
 						className: "flex flex-col gap-y-1",
-						children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)(Description$9, {
+						children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)(Description$10, {
 							className: "text-warning",
 							children: python.installFolder
-						}), /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Description$9, { children: "This updates the Python directory used at the front of PATH for system-default detection. Existing terminals may need to be restarted before they see the change." })]
+						}), /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Description$10, { children: "This updates the Python directory used at the front of PATH for system-default detection. Existing terminals may need to be restarted before they see the change." })]
 					}),
-					/* @__PURE__ */ (0, import_jsx_runtime.jsxs)(AlertDialog.Footer, { children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)(Button$9, {
+					/* @__PURE__ */ (0, import_jsx_runtime.jsxs)(AlertDialog.Footer, { children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)(Button$10, {
 						slot: "close",
 						variant: "ghost",
 						children: "No"
-					}), /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Button$9, {
+					}), /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Button$10, {
 						variant: "danger",
 						onPress: makeDefault,
 						children: "Yes"
@@ -42182,16 +43790,16 @@ function InstalledCard({ python, diskUsage, maxDiskValue, updateDefault, refresh
 					] })] }),
 					/* @__PURE__ */ (0, import_jsx_runtime.jsxs)(AlertDialog.Body, {
 						className: "flex flex-col gap-y-1",
-						children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)(Description$9, {
+						children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)(Description$10, {
 							className: "text-warning",
 							children: python.installFolder
-						}), /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Description$9, { children: "This changes the PATH used by LynxHub-run tools so new Python package operations use this installation first." })]
+						}), /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Description$10, { children: "This changes the PATH used by LynxHub-run tools so new Python package operations use this installation first." })]
 					}),
-					/* @__PURE__ */ (0, import_jsx_runtime.jsxs)(AlertDialog.Footer, { children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)(Button$9, {
+					/* @__PURE__ */ (0, import_jsx_runtime.jsxs)(AlertDialog.Footer, { children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)(Button$10, {
 						slot: "close",
 						variant: "ghost",
 						children: "No"
-					}), /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Button$9, {
+					}), /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Button$10, {
 						variant: "danger-soft",
 						onPress: makeLynxDefault,
 						children: "Yes"
@@ -42204,11 +43812,11 @@ function InstalledCard({ python, diskUsage, maxDiskValue, updateDefault, refresh
 				children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)(LynxTooltip, {
 					delay: 300,
 					content: "Remove Python",
-					children: /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Button$9, {
+					children: /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Button$10, {
 						size: "sm",
 						variant: "danger-soft",
 						isIconOnly: true,
-						children: /* @__PURE__ */ (0, import_jsx_runtime.jsx)(i$2, {})
+						children: /* @__PURE__ */ (0, import_jsx_runtime.jsx)(i$3, {})
 					})
 				}), /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Popover$3.Content, { children: /* @__PURE__ */ (0, import_jsx_runtime.jsxs)(Popover$3.Dialog, {
 					className: "max-w-sm",
@@ -42241,13 +43849,13 @@ function InstalledCard({ python, diskUsage, maxDiskValue, updateDefault, refresh
 										" and all its packages from your computer. Any AI using this installation will be disconnected."
 									]
 								}),
-								/* @__PURE__ */ (0, import_jsx_runtime.jsxs)(Button$9, {
+								/* @__PURE__ */ (0, import_jsx_runtime.jsxs)(Button$10, {
 									size: "sm",
 									variant: "danger",
 									className: "mt-2",
 									onPress: uninstall,
 									fullWidth: true,
-									children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)(i$2, {}), "Uninstall Permanently"]
+									children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)(i$3, {}), "Uninstall Permanently"]
 								})
 							] }),
 							/* @__PURE__ */ (0, import_jsx_runtime.jsx)(Separator$2, {}),
@@ -42260,7 +43868,7 @@ function InstalledCard({ python, diskUsage, maxDiskValue, updateDefault, refresh
 									className: "text-xs text-default-600 mt-1",
 									children: "Removes this entry from the list but does not delete the actual Python installation from your system. Any associated AI will be disconnected, but you can re-link them if you add this installation back later."
 								}),
-								/* @__PURE__ */ (0, import_jsx_runtime.jsxs)(Button$9, {
+								/* @__PURE__ */ (0, import_jsx_runtime.jsxs)(Button$10, {
 									size: "sm",
 									className: "mt-2",
 									variant: "danger-soft",
@@ -42288,27 +43896,27 @@ function InstalledCard({ python, diskUsage, maxDiskValue, updateDefault, refresh
 }
 //#endregion
 //#region extension/src/renderer/components/Python/InstalledPythons/Installer/CondaInstaller.tsx
-var { Button: Button$8, Description: Description$8, Input: Input$1, Label: Label$7, Link: Link$1, Popover: Popover$2, ProgressBar: ProgressBar$1, SearchField: SearchField$1, Spinner: Spinner$5 } = await importShared("@heroui/react");
-var { useEffect: useEffect$12, useState: useState$13 } = await importShared("react");
+var { Button: Button$9, Description: Description$9, Input: Input$1, Label: Label$8, Link: Link$1, Popover: Popover$2, ProgressBar: ProgressBar$1, SearchField: SearchField$1, Spinner: Spinner$5 } = await importShared("@heroui/react");
+var { useEffect: useEffect$13, useState: useState$14 } = await importShared("react");
 function InstallerConda({ refresh, installed, state, setCloseDisabled }) {
-	const [versions, setVersions] = useState$13([]);
-	const [searchVersions, setSearchVersions] = useState$13([]);
-	const [inputValue, setInputValue] = useState$13("");
-	const [loadingList, setLoadingList] = useState$13(false);
-	const [installingVersion, setInstallingVersion] = useState$13("");
-	const [percentage, setPercentage] = useState$13(0);
-	const [envName, setEnvName] = useState$13("");
-	const [isCondaInstalled, setIsCondaInstalled] = useState$13(void 0);
-	const [errorLoadingVersion, setErrorLoadingVersion] = useState$13({
+	const [versions, setVersions] = useState$14([]);
+	const [searchVersions, setSearchVersions] = useState$14([]);
+	const [inputValue, setInputValue] = useState$14("");
+	const [loadingList, setLoadingList] = useState$14(false);
+	const [installingVersion, setInstallingVersion] = useState$14("");
+	const [percentage, setPercentage] = useState$14(0);
+	const [envName, setEnvName] = useState$14("");
+	const [isCondaInstalled, setIsCondaInstalled] = useState$14(void 0);
+	const [errorLoadingVersion, setErrorLoadingVersion] = useState$14({
 		title: "Failed to fetch available Python versions",
 		description: "Please check your internet connection and try again. If the problem persists, please open an issue on GitHub."
 	});
-	useEffect$12(() => {
+	useEffect$13(() => {
 		pIpc.isCondaInstalled().then((result) => {
 			setIsCondaInstalled(result);
 		});
 	}, []);
-	useEffect$12(() => {
+	useEffect$13(() => {
 		if (isEmpty(inputValue)) setSearchVersions(versions);
 		else setSearchVersions(versions.filter((version) => version.startsWith(inputValue)));
 	}, [inputValue, versions]);
@@ -42317,12 +43925,13 @@ function InstallerConda({ refresh, installed, state, setCloseDisabled }) {
 		const getFreshData = () => {
 			pIpc.getAvailableConda().then((result) => {
 				pIpc.storage.setAvailableConda(result);
-				setVersions(result.filter((item) => !installed.includes(item)));
+				const filteredVersions = result.filter((item) => !installed.includes(item));
+				setVersions(filteredVersions);
 				setLoadingList(false);
 				setErrorLoadingVersion(void 0);
 			}).catch((e) => {
 				console.error("error getting fresh conda list: ", e);
-				if (e.message && isString(e.message)) setErrorLoadingVersion({
+				if (e.message && isString$1(e.message)) setErrorLoadingVersion({
 					title: "Failed to fetch available Python versions",
 					description: e.message
 				});
@@ -42347,7 +43956,7 @@ function InstallerConda({ refresh, installed, state, setCloseDisabled }) {
 			getFreshData();
 		});
 	};
-	useEffect$12(() => {
+	useEffect$13(() => {
 		if (state.isOpen) fetchPythonList(false);
 	}, [state.isOpen]);
 	const installPython = (version) => {
@@ -42370,7 +43979,7 @@ function InstallerConda({ refresh, installed, state, setCloseDisabled }) {
 	};
 	if (isCondaInstalled === void 0) return /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
 		className: "flex flex-col gap-y-2 items-center mt-2",
-		children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)(Spinner$5, { size: "lg" }), /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Description$8, {
+		children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)(Spinner$5, { size: "lg" }), /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Description$9, {
 			className: "text-sm",
 			children: "Checking for conda installation..."
 		})]
@@ -42400,12 +44009,12 @@ function InstallerConda({ refresh, installed, state, setCloseDisabled }) {
 		}), /* @__PURE__ */ (0, import_jsx_runtime.jsx)(LynxTooltip, {
 			delay: 300,
 			content: "Refresh from server",
-			children: /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Button$8, {
+			children: /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Button$9, {
 				variant: "tertiary",
 				className: "shrink-0",
 				onPress: () => fetchPythonList(true),
 				isIconOnly: true,
-				children: /* @__PURE__ */ (0, import_jsx_runtime.jsx)(i$22, {})
+				children: /* @__PURE__ */ (0, import_jsx_runtime.jsx)(i$23, {})
 			})
 		})]
 	}), errorLoadingVersion ? /* @__PURE__ */ (0, import_jsx_runtime.jsx)(EmptyStateCard, {
@@ -42413,7 +44022,7 @@ function InstallerConda({ refresh, installed, state, setCloseDisabled }) {
 		className: "mt-2 mx-4",
 		title: errorLoadingVersion.title,
 		description: errorLoadingVersion.description,
-		icon: /* @__PURE__ */ (0, import_jsx_runtime.jsx)(i$10, { className: "size-20 text-warning" })
+		icon: /* @__PURE__ */ (0, import_jsx_runtime.jsx)(i$11, { className: "size-20 text-warning" })
 	}) : /* @__PURE__ */ (0, import_jsx_runtime.jsx)("div", {
 		className: "px-4",
 		children: !isEmpty(installingVersion) ? /* @__PURE__ */ (0, import_jsx_runtime.jsxs)(ProgressBar$1, {
@@ -42421,7 +44030,7 @@ function InstallerConda({ refresh, installed, state, setCloseDisabled }) {
 			value: percentage,
 			isIndeterminate: percentage === 0 || percentage === 100,
 			children: [
-				/* @__PURE__ */ (0, import_jsx_runtime.jsxs)(Label$7, { children: [
+				/* @__PURE__ */ (0, import_jsx_runtime.jsxs)(Label$8, { children: [
 					"Installing Conda Python v",
 					installingVersion,
 					"..."
@@ -42431,23 +44040,23 @@ function InstallerConda({ refresh, installed, state, setCloseDisabled }) {
 			]
 		}) : loadingList ? /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
 			className: "flex flex-col gap-y-2 items-center mt-2",
-			children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)(Spinner$5, { size: "lg" }), /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Description$8, {
+			children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)(Spinner$5, { size: "lg" }), /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Description$9, {
 				className: "text-sm",
 				children: "Loading available python versions..."
 			})]
 		}) : isEmpty(searchVersions) ? /* @__PURE__ */ (0, import_jsx_runtime.jsx)(EmptyStateCard, {
 			className: "mt-2",
 			variant: "secondary",
-			icon: /* @__PURE__ */ (0, import_jsx_runtime.jsx)(i$16, { size: 34 }),
+			icon: /* @__PURE__ */ (0, import_jsx_runtime.jsx)(i$17, { size: 34 }),
 			description: "Nothing to install!"
 		}) : /* @__PURE__ */ (0, import_jsx_runtime.jsx)("div", {
 			className: "flex flex-col gap-y-1 my-2",
 			children: searchVersions.map((item) => /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
 				className: "flex items-center justify-between hover:bg-surface-secondary/50 rounded-2xl px-2 py-1 transition-colors duration-200",
-				children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)(Label$7, { children: item }), /* @__PURE__ */ (0, import_jsx_runtime.jsxs)(Popover$2, { children: [/* @__PURE__ */ (0, import_jsx_runtime.jsxs)(Button$8, {
+				children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)(Label$8, { children: item }), /* @__PURE__ */ (0, import_jsx_runtime.jsxs)(Popover$2, { children: [/* @__PURE__ */ (0, import_jsx_runtime.jsxs)(Button$9, {
 					size: "sm",
 					variant: "secondary",
-					children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)(i$24, {}), "Install"]
+					children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)(i$25, {}), "Install"]
 				}), /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Popover$2.Content, {
 					className: "max-w-64",
 					children: /* @__PURE__ */ (0, import_jsx_runtime.jsxs)(Popover$2.Dialog, {
@@ -42463,12 +44072,12 @@ function InstallerConda({ refresh, installed, state, setCloseDisabled }) {
 								placeholder: "Environment name...",
 								onChange: (e) => setEnvName(e.target.value)
 							}),
-							/* @__PURE__ */ (0, import_jsx_runtime.jsxs)(Button$8, {
+							/* @__PURE__ */ (0, import_jsx_runtime.jsxs)(Button$9, {
 								size: "sm",
 								onPress: () => installPython(item),
 								fullWidth: true,
 								children: [
-									/* @__PURE__ */ (0, import_jsx_runtime.jsx)(i$24, {}),
+									/* @__PURE__ */ (0, import_jsx_runtime.jsx)(i$25, {}),
 									"Install v",
 									item
 								]
@@ -42482,17 +44091,17 @@ function InstallerConda({ refresh, installed, state, setCloseDisabled }) {
 }
 //#endregion
 //#region extension/src/renderer/components/Python/InstalledPythons/Installer/OfficialInstaller.tsx
-var { Button: Button$7, Description: Description$7, Label: Label$6, Link, ProgressBar, SearchField, Spinner: Spinner$4 } = await importShared("@heroui/react");
-var { useEffect: useEffect$11, useState: useState$12 } = await importShared("react");
+var { Button: Button$8, Description: Description$8, Label: Label$7, Link, ProgressBar, SearchField, Spinner: Spinner$4 } = await importShared("@heroui/react");
+var { useEffect: useEffect$12, useState: useState$13 } = await importShared("react");
 function InstallerOfficial({ refresh, installed, state, setCloseDisabled }) {
-	const [versions, setVersions] = useState$12([]);
-	const [searchVersions, setSearchVersions] = useState$12([]);
-	const [loadingList, setLoadingList] = useState$12(false);
-	const [inputValue, setInputValue] = useState$12("");
-	const [installStage, setInstallStage] = useState$12();
-	const [downloadProgress, setDownloadProgress] = useState$12(void 0);
-	const [installingVersion, setInstallingVersion] = useState$12(void 0);
-	const [errorLoadingVersion, setErrorLoadingVersion] = useState$12(void 0);
+	const [versions, setVersions] = useState$13([]);
+	const [searchVersions, setSearchVersions] = useState$13([]);
+	const [loadingList, setLoadingList] = useState$13(false);
+	const [inputValue, setInputValue] = useState$13("");
+	const [installStage, setInstallStage] = useState$13();
+	const [downloadProgress, setDownloadProgress] = useState$13(void 0);
+	const [installingVersion, setInstallingVersion] = useState$13(void 0);
+	const [errorLoadingVersion, setErrorLoadingVersion] = useState$13(void 0);
 	const fetchPythonList = (refresh) => {
 		setLoadingList(true);
 		pIpc.storage.getAvailableOfficial().then((cachedList) => {
@@ -42501,11 +44110,12 @@ function InstallerOfficial({ refresh, installed, state, setCloseDisabled }) {
 				setLoadingList(false);
 			} else pIpc.getAvailableOfficial().then((result) => {
 				pIpc.storage.setAvailableOfficial(result);
-				setVersions(result.filter((item) => !installed.includes(item.version)));
+				const filteredVersions = result.filter((item) => !installed.includes(item.version));
+				setVersions(filteredVersions);
 				setLoadingList(false);
 				setErrorLoadingVersion(void 0);
 			}).catch((e) => {
-				if (e.message && isString(e.message)) if (e.message.toLowerCase().includes("deadsnakes")) setErrorLoadingVersion({
+				if (e.message && isString$1(e.message)) if (e.message.toLowerCase().includes("deadsnakes")) setErrorLoadingVersion({
 					title: "Deadsnakes PPA Missing",
 					description: "The application tried to add the Deadsnakes PPA but failed. Please add it manually by running the following commands : `sudo add-apt-repository -y ppa:deadsnakes/ppa` and then `sudo apt update`."
 				});
@@ -42520,10 +44130,10 @@ function InstallerOfficial({ refresh, installed, state, setCloseDisabled }) {
 			});
 		});
 	};
-	useEffect$11(() => {
+	useEffect$12(() => {
 		if (state.isOpen) fetchPythonList(false);
 	}, [state.isOpen]);
-	useEffect$11(() => {
+	useEffect$12(() => {
 		if (isEmpty(inputValue)) setSearchVersions(versions);
 		else setSearchVersions(versions.filter((version) => version.version.startsWith(inputValue)));
 	}, [inputValue, versions]);
@@ -42572,17 +44182,17 @@ function InstallerOfficial({ refresh, installed, state, setCloseDisabled }) {
 		}), /* @__PURE__ */ (0, import_jsx_runtime.jsx)(LynxTooltip, {
 			delay: 300,
 			content: "Refresh available Python versions",
-			children: /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Button$7, {
+			children: /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Button$8, {
 				variant: "tertiary",
 				onPress: () => fetchPythonList(true),
 				isIconOnly: true,
-				children: /* @__PURE__ */ (0, import_jsx_runtime.jsx)(i$22, {})
+				children: /* @__PURE__ */ (0, import_jsx_runtime.jsx)(i$23, {})
 			})
 		})]
 	}), errorLoadingVersion ? /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
 		className: "py-2 text-danger flex flex-col items-center justify-center gap-4 px-6",
 		children: [
-			/* @__PURE__ */ (0, import_jsx_runtime.jsx)(i$10, { className: "size-20" }),
+			/* @__PURE__ */ (0, import_jsx_runtime.jsx)(i$11, { className: "size-20" }),
 			/* @__PURE__ */ (0, import_jsx_runtime.jsx)("span", {
 				className: "text-lg",
 				children: errorLoadingVersion.title
@@ -42598,7 +44208,7 @@ function InstallerOfficial({ refresh, installed, state, setCloseDisabled }) {
 			className: "my-4",
 			isIndeterminate: true,
 			children: [
-				/* @__PURE__ */ (0, import_jsx_runtime.jsxs)(Label$6, { children: [
+				/* @__PURE__ */ (0, import_jsx_runtime.jsxs)(Label$7, { children: [
 					"Installing Python v",
 					installingVersion?.version,
 					"..."
@@ -42611,7 +44221,7 @@ function InstallerOfficial({ refresh, installed, state, setCloseDisabled }) {
 			isIndeterminate: !isDownloading,
 			value: (downloadProgress?.percentage || 0) * 100,
 			children: [
-				/* @__PURE__ */ (0, import_jsx_runtime.jsxs)(Label$6, { children: [
+				/* @__PURE__ */ (0, import_jsx_runtime.jsxs)(Label$7, { children: [
 					"Downloading ",
 					installingVersion?.url.split("/").pop(),
 					"..."
@@ -42621,14 +44231,14 @@ function InstallerOfficial({ refresh, installed, state, setCloseDisabled }) {
 			]
 		}) : loadingList ? /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
 			className: "flex flex-col gap-y-2 items-center mt-4",
-			children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)(Spinner$4, { size: "lg" }), /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Description$7, {
+			children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)(Spinner$4, { size: "lg" }), /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Description$8, {
 				className: "text-sm",
 				children: "Loading available python versions..."
 			})]
 		}) : isEmpty(searchVersions) ? /* @__PURE__ */ (0, import_jsx_runtime.jsx)(EmptyStateCard, {
 			className: "mt-2",
 			variant: "secondary",
-			icon: /* @__PURE__ */ (0, import_jsx_runtime.jsx)(i$16, { size: 34 }),
+			icon: /* @__PURE__ */ (0, import_jsx_runtime.jsx)(i$17, { size: 34 }),
 			description: "Nothing to install!"
 		}) : /* @__PURE__ */ (0, import_jsx_runtime.jsx)("div", {
 			className: "flex flex-col gap-y-1 my-2",
@@ -42637,11 +44247,11 @@ function InstallerOfficial({ refresh, installed, state, setCloseDisabled }) {
 				children: [/* @__PURE__ */ (0, import_jsx_runtime.jsxs)(Link, {
 					onPress: () => window.open(item.url),
 					children: [item.version, /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Link.Icon, {})]
-				}), /* @__PURE__ */ (0, import_jsx_runtime.jsxs)(Button$7, {
+				}), /* @__PURE__ */ (0, import_jsx_runtime.jsxs)(Button$8, {
 					size: "sm",
 					variant: "secondary",
 					onPress: () => installPython(item),
-					children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)(i$24, {}), "Install"]
+					children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)(i$25, {}), "Install"]
 				})]
 			}, item.version))
 		})
@@ -42649,11 +44259,11 @@ function InstallerOfficial({ refresh, installed, state, setCloseDisabled }) {
 }
 //#endregion
 //#region extension/src/renderer/components/Python/InstalledPythons/Installer/InstallerModal.tsx
-var { Modal: Modal$2, ScrollShadow, Tabs: Tabs$1 } = await importShared("@heroui/react");
-var { useMemo: useMemo$5, useState: useState$11 } = await importShared("react");
+var { Modal: Modal$2, ScrollShadow: ScrollShadow$1, Tabs: Tabs$2 } = await importShared("@heroui/react");
+var { useMemo: useMemo$5, useState: useState$12 } = await importShared("react");
 function InstallerModal({ state, refresh, installed }) {
-	const [closeDisabled, setCloseDisabled] = useState$11(false);
-	const [currentTab, setCurrentTab] = useState$11("official");
+	const [closeDisabled, setCloseDisabled] = useState$12(false);
+	const [currentTab, setCurrentTab] = useState$12("official");
 	const installedOfficial = useMemo$5(() => installed.filter((item) => item.installationType !== "conda").map((item) => item.version), [installed]);
 	const installedConda = useMemo$5(() => installed.filter((item) => item.installationType === "conda").map((item) => item.version), [installed]);
 	return /* @__PURE__ */ (0, import_jsx_runtime.jsxs)(TabModal, {
@@ -42665,22 +44275,22 @@ function InstallerModal({ state, refresh, installed }) {
 			/* @__PURE__ */ (0, import_jsx_runtime.jsx)(Modal$2.CloseTrigger, { isDisabled: closeDisabled }),
 			/* @__PURE__ */ (0, import_jsx_runtime.jsxs)(Modal$2.Header, {
 				className: "px-4",
-				children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)(Modal$2.Heading, { children: "Install a New Python Version" }), /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Tabs$1, {
+				children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)(Modal$2.Heading, { children: "Install a New Python Version" }), /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Tabs$2, {
 					className: "w-full",
 					selectedKey: currentTab,
 					onSelectionChange: setCurrentTab,
-					children: /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Tabs$1.ListContainer, { children: /* @__PURE__ */ (0, import_jsx_runtime.jsxs)(Tabs$1.List, { children: [/* @__PURE__ */ (0, import_jsx_runtime.jsxs)(Tabs$1.Tab, {
+					children: /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Tabs$2.ListContainer, { children: /* @__PURE__ */ (0, import_jsx_runtime.jsxs)(Tabs$2.List, { children: [/* @__PURE__ */ (0, import_jsx_runtime.jsxs)(Tabs$2.Tab, {
 						id: "official",
-						children: ["Official Python Releases", /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Tabs$1.Indicator, {})]
-					}), /* @__PURE__ */ (0, import_jsx_runtime.jsxs)(Tabs$1.Tab, {
+						children: ["Official Python Releases", /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Tabs$2.Indicator, {})]
+					}), /* @__PURE__ */ (0, import_jsx_runtime.jsxs)(Tabs$2.Tab, {
 						id: "conda",
-						children: ["Conda Environments", /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Tabs$1.Indicator, {})]
+						children: ["Conda Environments", /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Tabs$2.Indicator, {})]
 					})] }) })
 				})]
 			}),
 			/* @__PURE__ */ (0, import_jsx_runtime.jsx)(Modal$2.Body, {
 				className: "overflow-hidden",
-				children: /* @__PURE__ */ (0, import_jsx_runtime.jsxs)(ScrollShadow, {
+				children: /* @__PURE__ */ (0, import_jsx_runtime.jsxs)(ScrollShadow$1, {
 					className: "size-full",
 					children: [currentTab === "official" && /* @__PURE__ */ (0, import_jsx_runtime.jsx)(InstallerOfficial, {
 						state,
@@ -42700,14 +44310,14 @@ function InstallerModal({ state, refresh, installed }) {
 }
 //#endregion
 //#region extension/src/renderer/components/Python/InstalledPythons/InstalledPythons.tsx
-var { Button: Button$6, Description: Description$6, Spinner: Spinner$3, useOverlayState: useOverlayState$2 } = await importShared("@heroui/react");
-var { useCallback: useCallback$5, useEffect: useEffect$10, useState: useState$10 } = await importShared("react");
+var { Button: Button$7, Description: Description$7, Spinner: Spinner$3, useOverlayState: useOverlayState$2 } = await importShared("@heroui/react");
+var { useCallback: useCallback$5, useEffect: useEffect$11, useState: useState$11 } = await importShared("react");
 function InstalledPythons({ visible, installedPythons, setInstalledPythons, setIsLoadingPythons, isLoadingPythons }) {
-	const [isLocating, setIsLocating] = useState$10(false);
+	const [isLocating, setIsLocating] = useState$11(false);
 	const cacheStorageUsage = usePythonToolkitState("cacheStorageUsage");
-	const [diskUsage, setDiskUsage] = useState$10([]);
-	const [maxDiskValue, setMaxDiskValue] = useState$10(0);
-	useEffect$10(() => {
+	const [diskUsage, setDiskUsage] = useState$11([]);
+	const [maxDiskValue, setMaxDiskValue] = useState$11(0);
+	useEffect$11(() => {
 		diskUsage.forEach((disk) => {
 			setMaxDiskValue((prevState) => {
 				const size = disk.value || 0;
@@ -42744,7 +44354,7 @@ function InstalledPythons({ visible, installedPythons, setInstalledPythons, setI
 			else calcDiskUsage(python);
 		});
 	};
-	useEffect$10(() => {
+	useEffect$11(() => {
 		getInstalledPythons(false);
 	}, []);
 	const installModal = useOverlayState$2();
@@ -42808,21 +44418,21 @@ function InstalledPythons({ visible, installedPythons, setInstalledPythons, setI
 				}), /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
 					className: "justify-center items-center flex gap-x-2",
 					children: [
-						/* @__PURE__ */ (0, import_jsx_runtime.jsxs)(Button$6, {
+						/* @__PURE__ */ (0, import_jsx_runtime.jsxs)(Button$7, {
 							variant: "secondary",
 							onPress: installModal.open,
 							children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)(Plus, {}), "Install Version"]
 						}),
-						/* @__PURE__ */ (0, import_jsx_runtime.jsxs)(Button$6, {
+						/* @__PURE__ */ (0, import_jsx_runtime.jsxs)(Button$7, {
 							variant: "tertiary",
 							onPress: locateVenv,
 							isPending: isLocating,
-							children: [!isLocating && /* @__PURE__ */ (0, import_jsx_runtime.jsx)(i$19, {}), !isLocating && "Locate"]
+							children: [!isLocating && /* @__PURE__ */ (0, import_jsx_runtime.jsx)(i$20, {}), !isLocating && "Locate"]
 						}),
-						/* @__PURE__ */ (0, import_jsx_runtime.jsxs)(Button$6, {
+						/* @__PURE__ */ (0, import_jsx_runtime.jsxs)(Button$7, {
 							variant: "tertiary",
 							onPress: () => getInstalledPythons(true),
-							children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)(i$22, {}), "Refresh List"]
+							children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)(i$23, {}), "Refresh List"]
 						})
 					]
 				})]
@@ -42831,7 +44441,7 @@ function InstalledPythons({ visible, installedPythons, setInstalledPythons, setI
 				className: `flex flex-row flex-wrap gap-4 ${(isLoadingPythons || isEmpty(installedPythons)) && "justify-center"}`,
 				children: isLoadingPythons ? /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
 					className: "flex flex-col gap-y-2 items-center",
-					children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)(Spinner$3, { size: "lg" }), /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Description$6, {
+					children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)(Spinner$3, { size: "lg" }), /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Description$7, {
 						className: "text-sm",
 						children: "Loading Python installations..."
 					})]
@@ -49397,12 +51007,12 @@ var import_crypto_js = (/* @__PURE__ */ __commonJSMin(((exports, module) => {
 		return CryptoJS;
 	});
 })))();
-var { Button: Button$5, Dropdown, Label: Label$5, Popover: Popover$1, Separator: Separator$1, useOverlayState: useOverlayState$1 } = await importShared("@heroui/react");
-var { useCallback: useCallback$4, useEffect: useEffect$9, useMemo: useMemo$4, useState: useState$9 } = await importShared("react");
+var { Button: Button$6, Dropdown, Label: Label$6, Popover: Popover$1, Separator: Separator$1, useOverlayState: useOverlayState$1 } = await importShared("@heroui/react");
+var { useCallback: useCallback$4, useEffect: useEffect$10, useMemo: useMemo$4, useState: useState$10 } = await importShared("react");
 function VenvCard({ title, installedPackages, pythonVersion, folder, diskUsage, maxDiskValue, pythonPath, refresh, isInstallation }) {
-	const [popoverUninstaller, setPopoverUninstaller] = useState$9(false);
-	const [editedTitle, setEditedTitle] = useState$9(title);
-	useEffect$9(() => {
+	const [popoverUninstaller, setPopoverUninstaller] = useState$10(false);
+	const [editedTitle, setEditedTitle] = useState$10(title);
+	useEffect$10(() => {
 		pIpc.storage.getVenvCustomTitle().then((storedItems) => {
 			const existingTitle = storedItems.find((item) => item.path === (0, import_crypto_js.SHA256)(folder).toString());
 			if (existingTitle) setEditedTitle(existingTitle.title);
@@ -49411,7 +51021,7 @@ function VenvCard({ title, installedPackages, pythonVersion, folder, diskUsage, 
 	const size = useMemo$4(() => {
 		return diskUsage.find((usage) => usage.path === folder)?.value;
 	}, [diskUsage, folder]);
-	const [isRemoving, setIsRemoving] = useState$9(false);
+	const [isRemoving, setIsRemoving] = useState$10(false);
 	const remove = () => {
 		setPopoverUninstaller(false);
 		setIsRemoving(true);
@@ -49476,29 +51086,29 @@ function VenvCard({ title, installedPackages, pythonVersion, folder, diskUsage, 
 		actions: /* @__PURE__ */ (0, import_jsx_runtime.jsxs)(import_jsx_runtime.Fragment, { children: [/* @__PURE__ */ (0, import_jsx_runtime.jsxs)(Dropdown, { children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)(LynxTooltip, {
 			delay: 300,
 			content: "Environment actions",
-			children: /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Button$5, {
+			children: /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Button$6, {
 				size: "sm",
 				variant: "tertiary",
 				isIconOnly: true,
-				children: /* @__PURE__ */ (0, import_jsx_runtime.jsx)(i$3, { className: "rotate-90" })
+				children: /* @__PURE__ */ (0, import_jsx_runtime.jsx)(i$4, { className: "rotate-90" })
 			})
 		}), /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Dropdown.Popover, { children: /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Dropdown.Menu, { children: /* @__PURE__ */ (0, import_jsx_runtime.jsxs)(Dropdown.Item, {
 			id: "package-manager",
 			textValue: "Manage Packages",
 			onPress: packageManagerModal.open,
-			children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)(i$8, { className: "size-4" }), /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Label$5, { children: "Manage Packages" })]
+			children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)(i$9, { className: "size-4" }), /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Label$6, { children: "Manage Packages" })]
 		}) }) })] }), !isInstallation && /* @__PURE__ */ (0, import_jsx_runtime.jsxs)(Popover$1, {
 			isOpen: popoverUninstaller,
 			onOpenChange: setPopoverUninstaller,
 			children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)(LynxTooltip, {
 				delay: 300,
 				content: "Remove environment",
-				children: /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Button$5, {
+				children: /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Button$6, {
 					size: "sm",
 					variant: "danger-soft",
 					isPending: isRemoving,
 					isIconOnly: true,
-					children: /* @__PURE__ */ (0, import_jsx_runtime.jsx)(i$2, {})
+					children: /* @__PURE__ */ (0, import_jsx_runtime.jsx)(i$3, {})
 				})
 			}), /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Popover$1.Content, {
 				className: "max-w-sm",
@@ -49518,13 +51128,13 @@ function VenvCard({ title, installedPackages, pythonVersion, folder, diskUsage, 
 									"\" environment folder and all its contents from your computer. Any AI using this environment will be disconnected."
 								]
 							}),
-							/* @__PURE__ */ (0, import_jsx_runtime.jsxs)(Button$5, {
+							/* @__PURE__ */ (0, import_jsx_runtime.jsxs)(Button$6, {
 								size: "sm",
 								variant: "danger",
 								className: "mt-2",
 								onPress: remove,
 								fullWidth: true,
-								children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)(i$2, {}), "Delete Permanently"]
+								children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)(i$3, {}), "Delete Permanently"]
 							})
 						] }),
 						/* @__PURE__ */ (0, import_jsx_runtime.jsx)(Separator$1, {}),
@@ -49541,7 +51151,7 @@ function VenvCard({ title, installedPackages, pythonVersion, folder, diskUsage, 
 									"\" from the list but does not delete the environment's files from your system. Any associated AI will be disconnected, but you can re-link them if you add this environment back later."
 								]
 							}),
-							/* @__PURE__ */ (0, import_jsx_runtime.jsxs)(Button$5, {
+							/* @__PURE__ */ (0, import_jsx_runtime.jsxs)(Button$6, {
 								size: "sm",
 								className: "mt-2",
 								variant: "danger-soft",
@@ -49569,23 +51179,23 @@ function VenvCard({ title, installedPackages, pythonVersion, folder, diskUsage, 
 }
 //#endregion
 //#region extension/src/renderer/components/Python/VirtualEnvironments/VenvCreator.tsx
-var { Button: Button$4, Checkbox, Input, Label: Label$4, ListBox: ListBox$1, Popover, Select: Select$1, Spinner: Spinner$2, TextField } = await importShared("@heroui/react");
-var { useCallback: useCallback$3, useEffect: useEffect$8, useMemo: useMemo$3, useState: useState$8 } = await importShared("react");
+var { Button: Button$5, Checkbox, Input, Label: Label$5, ListBox: ListBox$1, Popover, Select: Select$1, Spinner: Spinner$2, TextField } = await importShared("@heroui/react");
+var { useCallback: useCallback$3, useEffect: useEffect$9, useMemo: useMemo$3, useState: useState$9 } = await importShared("react");
 function VenvCreator({ installedPythons, refresh, isLoadingPythons }) {
-	const [selectedVersion, setSelectedVersion] = useState$8(null);
-	const [targetFolder, setTargetFolder] = useState$8("");
-	const [envName, setEnvName] = useState$8("");
-	const [isCreating, setIsCreating] = useState$8(false);
-	const [isOpen, setIsOpen] = useState$8(false);
-	const [updatePip, setUpdatePip] = useState$8(true);
-	const [showUpgrade, setShowUpgrade] = useState$8(false);
-	useEffect$8(() => {
+	const [selectedVersion, setSelectedVersion] = useState$9(null);
+	const [targetFolder, setTargetFolder] = useState$9("");
+	const [envName, setEnvName] = useState$9("");
+	const [isCreating, setIsCreating] = useState$9(false);
+	const [isOpen, setIsOpen] = useState$9(false);
+	const [updatePip, setUpdatePip] = useState$9(true);
+	const [showUpgrade, setShowUpgrade] = useState$9(false);
+	useEffect$9(() => {
 		if (!isOpen) {
 			setTargetFolder("");
 			setEnvName("");
 		}
 	}, [isOpen]);
-	useEffect$8(() => {
+	useEffect$9(() => {
 		if (selectedVersion && typeof selectedVersion !== "number") {
 			const version = (0, import_semver.parse)(selectedVersion);
 			if (version && version.major >= 3 && version.minor >= 9) setShowUpgrade(true);
@@ -49603,7 +51213,7 @@ function VenvCreator({ installedPythons, refresh, isLoadingPythons }) {
 			setTargetFolder(folder || "");
 		});
 	}, []);
-	useEffect$8(() => {
+	useEffect$9(() => {
 		if (!isEmpty(installedPythons)) setSelectedVersion(installedPythons[0].version);
 	}, [installedPythons]);
 	const createEnv = useCallback$3(() => {
@@ -49638,7 +51248,7 @@ function VenvCreator({ installedPythons, refresh, isLoadingPythons }) {
 	return /* @__PURE__ */ (0, import_jsx_runtime.jsxs)(Popover, {
 		isOpen,
 		onOpenChange: setIsOpen,
-		children: [/* @__PURE__ */ (0, import_jsx_runtime.jsxs)(Button$4, {
+		children: [/* @__PURE__ */ (0, import_jsx_runtime.jsxs)(Button$5, {
 			variant: "secondary",
 			isPending: isLoadingPythons,
 			isDisabled: isEmpty(installedPythons),
@@ -49661,7 +51271,7 @@ function VenvCreator({ installedPythons, refresh, isLoadingPythons }) {
 							onChange: setEnvName,
 							isDisabled: isCreating,
 							autoFocus: true,
-							children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)(Label$4, { children: "Environment Name" }), /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Input, { placeholder: "e.g., my_env" })]
+							children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)(Label$5, { children: "Environment Name" }), /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Input, { placeholder: "e.g., my_env" })]
 						}),
 						/* @__PURE__ */ (0, import_jsx_runtime.jsxs)(Select$1, {
 							variant: "secondary",
@@ -49669,7 +51279,7 @@ function VenvCreator({ installedPythons, refresh, isLoadingPythons }) {
 							value: selectedVersion,
 							onChange: setSelectedVersion,
 							children: [
-								/* @__PURE__ */ (0, import_jsx_runtime.jsx)(Label$4, { children: "Python Version" }),
+								/* @__PURE__ */ (0, import_jsx_runtime.jsx)(Label$5, { children: "Python Version" }),
 								/* @__PURE__ */ (0, import_jsx_runtime.jsxs)(Select$1.Trigger, { children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)(Select$1.Value, {}), /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Select$1.Indicator, {})] }),
 								/* @__PURE__ */ (0, import_jsx_runtime.jsx)(Select$1.Popover, { children: /* @__PURE__ */ (0, import_jsx_runtime.jsx)(ListBox$1, {
 									items: installedPythons,
@@ -49690,13 +51300,13 @@ function VenvCreator({ installedPythons, refresh, isLoadingPythons }) {
 						}),
 						/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
 							className: "flex flex-col gap-y-2",
-							children: [/* @__PURE__ */ (0, import_jsx_runtime.jsxs)(Button$4, {
+							children: [/* @__PURE__ */ (0, import_jsx_runtime.jsxs)(Button$5, {
 								variant: "secondary",
 								isPending: isCreating,
 								onPress: selectFolder,
 								fullWidth: true,
-								children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)(i$19, {}), targetFolder || "Choose Destination Folder"]
-							}), /* @__PURE__ */ (0, import_jsx_runtime.jsxs)(Button$4, {
+								children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)(i$20, {}), targetFolder || "Choose Destination Folder"]
+							}), /* @__PURE__ */ (0, import_jsx_runtime.jsxs)(Button$5, {
 								onPress: createEnv,
 								isPending: isCreating,
 								isDisabled: disabledCreate,
@@ -49715,16 +51325,16 @@ function VenvCreator({ installedPythons, refresh, isLoadingPythons }) {
 }
 //#endregion
 //#region extension/src/renderer/components/Python/VirtualEnvironments/Venv.tsx
-var { Button: Button$3, Description: Description$5, Spinner: Spinner$1 } = await importShared("@heroui/react");
-var { useCallback: useCallback$2, useEffect: useEffect$7, useState: useState$7 } = await importShared("react");
+var { Button: Button$4, Description: Description$6, Spinner: Spinner$1 } = await importShared("@heroui/react");
+var { useCallback: useCallback$2, useEffect: useEffect$8, useState: useState$8 } = await importShared("react");
 function Venv({ visible, installedPythons, isLoadingPythons }) {
 	const cacheStorageUsage = usePythonToolkitState("cacheStorageUsage");
-	const [pythonVenvs, setPythonVenvs] = useState$7([]);
-	const [isLoading, setIsLoading] = useState$7(true);
-	const [isLocating, setIsLocating] = useState$7(false);
-	const [diskUsage, setDiskUsage] = useState$7([]);
-	const [maxDiskValue, setMaxDiskValue] = useState$7(0);
-	useEffect$7(() => {
+	const [pythonVenvs, setPythonVenvs] = useState$8([]);
+	const [isLoading, setIsLoading] = useState$8(true);
+	const [isLocating, setIsLocating] = useState$8(false);
+	const [diskUsage, setDiskUsage] = useState$8([]);
+	const [maxDiskValue, setMaxDiskValue] = useState$8(0);
+	useEffect$8(() => {
 		diskUsage.forEach((disk) => {
 			setMaxDiskValue((prevState) => {
 				const size = disk.value || 0;
@@ -49781,7 +51391,7 @@ function Venv({ visible, installedPythons, isLoadingPythons }) {
 			setIsLoading(false);
 		}).catch(console.warn);
 	}, [installedPythons, cacheStorageUsage]);
-	useEffect$7(() => {
+	useEffect$8(() => {
 		if (!isEmpty(installedPythons)) getVenvs();
 	}, [installedPythons]);
 	const locateVenv = () => {
@@ -49808,18 +51418,18 @@ function Venv({ visible, installedPythons, isLoadingPythons }) {
 					refresh: getVenvs,
 					installedPythons,
 					isLoadingPythons
-				}), /* @__PURE__ */ (0, import_jsx_runtime.jsxs)(Button$3, {
+				}), /* @__PURE__ */ (0, import_jsx_runtime.jsxs)(Button$4, {
 					variant: "tertiary",
 					onPress: locateVenv,
 					isPending: isLocating,
-					children: [!isLocating && /* @__PURE__ */ (0, import_jsx_runtime.jsx)(i$19, {}), "Locate"]
+					children: [!isLocating && /* @__PURE__ */ (0, import_jsx_runtime.jsx)(i$20, {}), "Locate"]
 				})]
 			})]
 		}), /* @__PURE__ */ (0, import_jsx_runtime.jsx)("div", {
 			className: "flex justify-start flex-row flex-wrap gap-4",
 			children: isLoading ? /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
 				className: "flex flex-col gap-y-2 items-center size-full",
-				children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)(Spinner$1, { size: "lg" }), /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Description$5, {
+				children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)(Spinner$1, { size: "lg" }), /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Description$6, {
 					className: "text-sm",
 					children: "Reading and validating venvs, please wait..."
 				})]
@@ -49838,6 +51448,135 @@ function Venv({ visible, installedPythons, isLoadingPythons }) {
 				installedPackages: venv.installedPackages
 			}, `${venv.title}_${index}_card`)) })
 		})]
+	});
+}
+//#endregion
+//#region extension/src/renderer/components/Python/PythonToolkitPage.tsx
+var { ScrollShadow, Tabs: Tabs$1 } = await importShared("@heroui/react");
+var { useState: useState$7 } = await importShared("react");
+function PythonToolkitPage() {
+	const [installedPythons, setInstalledPythons] = useState$7([]);
+	const [isLoadingPythons, setIsLoadingPythons] = useState$7(false);
+	const [currentTab, setCurrentTab] = useState$7("installation");
+	return /* @__PURE__ */ (0, import_jsx_runtime.jsx)("div", {
+		className: "size-full p-5",
+		children: /* @__PURE__ */ (0, import_jsx_runtime.jsxs)(CardsContainer, {
+			title: "Python Toolkit",
+			icon: /* @__PURE__ */ (0, import_jsx_runtime.jsx)(PythonIcon, { className: "size-6 mr-2" }),
+			extraClassNames: "mr-3 size-full overflow-hidden",
+			subTitle: "Manage Python versions, virtual environments, packages, requirements and more.",
+			children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)("div", {
+				className: "pt-5 pb-2 px-4",
+				children: /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Tabs$1, {
+					className: "w-full",
+					selectedKey: currentTab,
+					onSelectionChange: setCurrentTab,
+					children: /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Tabs$1.ListContainer, { children: /* @__PURE__ */ (0, import_jsx_runtime.jsxs)(Tabs$1.List, {
+						"aria-label": "Options",
+						children: [/* @__PURE__ */ (0, import_jsx_runtime.jsxs)(Tabs$1.Tab, {
+							id: "installation",
+							children: ["Installations", /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Tabs$1.Indicator, {})]
+						}), /* @__PURE__ */ (0, import_jsx_runtime.jsxs)(Tabs$1.Tab, {
+							id: "venv",
+							children: ["Virtual Environments", /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Tabs$1.Indicator, {})]
+						})]
+					}) })
+				})
+			}), /* @__PURE__ */ (0, import_jsx_runtime.jsxs)(ScrollShadow, {
+				className: "flex-1 p-4",
+				children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)(InstalledPythons, {
+					installedPythons,
+					isLoadingPythons,
+					visible: currentTab === "installation",
+					setIsLoadingPythons,
+					setInstalledPythons
+				}), /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Venv, {
+					visible: currentTab === "venv",
+					installedPythons,
+					isLoadingPythons
+				})]
+			})]
+		})
+	});
+}
+//#endregion
+//#region src/common/consts/ipcChannels/actions.ts
+/**
+* IPC channels for collecting and transmitting user actions.
+*/
+var actionChannels = { logAction: "actions:logAction" };
+//#endregion
+//#region src/renderer/shared/ipc/actions.ts
+var actionsIpc = { logAction: (payload) => lynxIpc.send(actionChannels.logAction, payload) };
+//#endregion
+//#region src/renderer/shared/sentry/Breadcrumbs.tsx
+var { useEffect: useEffect$7, useRef } = await importShared("react");
+var isEnabled = true;
+/**
+* Adds an informational renderer breadcrumb when breadcrumb collection is enabled.
+*/
+function AddBreadcrumb_Renderer(message) {
+	if (isEnabled) actionsIpc.logAction({
+		category: "renderer-actions",
+		message,
+		level: "info"
+	});
+}
+//#endregion
+//#region src/renderer/mainWindow/components/ToolsCard.tsx
+var { Avatar, Button: Button$3, Card, Description: Description$5, Label: Label$4 } = await importShared("@heroui/react");
+/**
+* A card component for the Tools page, featuring a spotlight effect and hover animations.
+*/
+function ToolsCard({ id, title, description, icon, onPress, footer, avatarClassName }) {
+	const isPinned = useIsPinnedCard(id || "");
+	return /* @__PURE__ */ (0, import_jsx_runtime.jsxs)(Card, {
+		className: "w-75 h-46 relative group transform border border-surface  hover:shadow-lg hover:scale-[1.02] transition-all duration-200 cursor-pointer",
+		onClick: () => {
+			AddBreadcrumb_Renderer(`Card Interaction: Clicked ToolsCard "${title}"`);
+			if (id) storageUtilsIpc.invoke.recentlyUsedCards("update", id);
+			onPress?.();
+		},
+		children: [
+			/* @__PURE__ */ (0, import_jsx_runtime.jsx)(Card.Header, { children: /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
+				className: "inline-flex items-center gap-2",
+				children: [typeof icon === "string" ? /* @__PURE__ */ (0, import_jsx_runtime.jsxs)(Avatar, {
+					className: `size-12 shrink-0 ring-LynxPurple ring-2 ${avatarClassName}`,
+					children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)(Avatar.Image, {
+						src: icon,
+						alt: title
+					}), /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Avatar.Fallback, { children: getFallbackString(title) })]
+				}) : /* @__PURE__ */ (0, import_jsx_runtime.jsx)("div", {
+					className: `size-12 rounded-full ring-2 ring-LynxPurple flex items-center justify-center  ${avatarClassName}`,
+					children: icon
+				}), /* @__PURE__ */ (0, import_jsx_runtime.jsx)("div", {
+					className: "flex flex-col pointer-events-none",
+					children: /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Label$4, { children: title })
+				})]
+			}) }),
+			/* @__PURE__ */ (0, import_jsx_runtime.jsx)(Card.Content, { children: /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Description$5, {
+				className: "line-clamp-3 text-xs",
+				children: description
+			}) }),
+			/* @__PURE__ */ (0, import_jsx_runtime.jsxs)(Card.Footer, {
+				className: "justify-between flex items-center",
+				children: [id ? /* @__PURE__ */ (0, import_jsx_runtime.jsx)("div", {
+					onClick: (e) => e.stopPropagation(),
+					className: "flex items-center gap-x-2",
+					children: /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Button$3, {
+						className: "shrink-0 -translate-x-2 opacity-0 transition duration-200 group-hover:translate-x-0 group-hover:opacity-100",
+						onPress: () => {
+							AddBreadcrumb_Renderer(`Pin ToolsCard: id:${id} , ${isPinned ? "remove" : "add"}`);
+							storageUtilsIpc.invoke.pinnedCards(isPinned ? "remove" : "add", id);
+						},
+						size: "sm",
+						variant: "ghost",
+						isIconOnly: true,
+						children: isPinned ? /* @__PURE__ */ (0, import_jsx_runtime.jsx)(r$3, { className: "size-3" }) : /* @__PURE__ */ (0, import_jsx_runtime.jsx)(i, { className: "size-3" })
+					})
+				}) : /* @__PURE__ */ (0, import_jsx_runtime.jsx)("div", {}), footer]
+			})
+		]
 	});
 }
 //#endregion
@@ -50360,7 +52099,7 @@ function CacheDirUsage() {
 			variant: "danger-soft",
 			isDisabled: !cacheStorageUsage,
 			fullWidth: true,
-			children: [!clearing && /* @__PURE__ */ (0, import_jsx_runtime.jsx)(i$7, {}), !clearing ? "Clear Cache" : "Clearing..."]
+			children: [!clearing && /* @__PURE__ */ (0, import_jsx_runtime.jsx)(i$8, {}), !clearing ? "Clear Cache" : "Clearing..."]
 		})]
 	});
 }
@@ -50533,13 +52272,14 @@ var { useOverlayState } = await importShared("@heroui/react");
 var { useDispatch: useDispatch$2 } = await importShared("react-redux");
 var title = "Python Toolkit";
 var desc = "Manage Python versions, virtual environments, packages, requirements and more.";
-function ToolsPage() {
+function PythonToolkitCard() {
 	const dispatch = useDispatch$2();
 	const settingsModal = useOverlayState();
 	const packageManagerModal = useOverlayState();
-	const openModal = () => {
-		packageManagerModal.open();
+	const handleOpen = () => {
 		pIpc.getAssociates().then((associates) => dispatch(PythonToolkitActions.setAssociates(associates || [])));
+		if (setActivePage) setActivePage("python-toolkit", "Python Toolkit");
+		else packageManagerModal.open();
 	};
 	return /* @__PURE__ */ (0, import_jsx_runtime.jsxs)(import_jsx_runtime.Fragment, { children: [
 		/* @__PURE__ */ (0, import_jsx_runtime.jsx)(SettingsModal, { state: settingsModal }),
@@ -50551,12 +52291,13 @@ function ToolsPage() {
 					variant: "tertiary",
 					onPress: settingsModal.open,
 					isIconOnly: true,
-					children: /* @__PURE__ */ (0, import_jsx_runtime.jsx)(i$9, {})
+					children: /* @__PURE__ */ (0, import_jsx_runtime.jsx)(i$10, {})
 				})
 			}),
 			title,
 			description: desc,
-			onPress: openModal,
+			id: "python-toolkit",
+			onPress: handleOpen,
 			icon: /* @__PURE__ */ (0, import_jsx_runtime.jsx)(PythonIcon, { className: "size-full p-0.5 text-yellow-400" })
 		}),
 		/* @__PURE__ */ (0, import_jsx_runtime.jsx)(PythonToolkitModal, { state: packageManagerModal })
@@ -50577,7 +52318,7 @@ function CustomHook() {
 		});
 		pIpc.onErrorGetVenvInfo((_, e) => {
 			const message = e.message;
-			if (message && isString(message)) {
+			if (message && isString$1(message)) {
 				if (message.toLowerCase().includes("no python at")) toastHolder?.bottom.danger("Python Not Found", {
 					timeout: 0,
 					description: /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", { children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)("span", {
@@ -50619,10 +52360,11 @@ var Installer_PythonSelector = (id, addAssociate) => function Selector() {
 		fetchAndSetPythonVenvs((items) => {
 			if (items.length > 0) {
 				const labels = getUniqueLabels(items.map((item) => item.dir));
-				setList(items.map((item, idx) => ({
+				const updated = items.map((item, idx) => ({
 					...item,
 					label: labels[idx]
-				})));
+				}));
+				setList(updated);
 			} else setList([]);
 		}, setIsLoading, onSelected);
 	}, []);
@@ -50648,7 +52390,7 @@ var Installer_PythonSelector = (id, addAssociate) => function Selector() {
 				className: "flex flex-col",
 				children: [/* @__PURE__ */ (0, import_jsx_runtime.jsxs)(Label, {
 					className: "flex flex-row items-center gap-x-2",
-					children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)(i$1, { className: "size-4 text-semi-muted" }), /* @__PURE__ */ (0, import_jsx_runtime.jsx)("span", { children: "Skip" })]
+					children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)(i$2, { className: "size-4 text-semi-muted" }), /* @__PURE__ */ (0, import_jsx_runtime.jsx)("span", { children: "Skip" })]
 				}), /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Description, { children: "Do not assign a specific environment. The LynxHub or system default will be used if required." })]
 			})
 		}, "skip"), ...list.map((item) => {
@@ -50722,7 +52464,7 @@ var Installer_PythonSelector = (id, addAssociate) => function Selector() {
 				}), /* @__PURE__ */ (0, import_jsx_runtime.jsxs)(Button, {
 					variant: "tertiary",
 					onPress: fetchList,
-					children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)(i$21, {}), "Refresh"]
+					children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)(i$22, {}), "Refresh"]
 				})]
 			}),
 			/* @__PURE__ */ (0, import_jsx_runtime.jsxs)(Alert, {
@@ -50797,15 +52539,29 @@ function listenForEvents(lynxAPI) {
 //#endregion
 //#region extension/src/renderer/Extension.tsx
 function InitialExtensions(lynxAPI) {
-	listenForEvents(lynxAPI);
+	if (lynxAPI.tabs) setTheActivePage(lynxAPI.tabs.setActivePage);
 	setCards(lynxAPI.modulesData?.allCards || []);
 	if (lynxAPI.toast) setToast(lynxAPI.toast);
+	listenForEvents(lynxAPI);
 	lynxAPI.addReducer([{
 		name: "pythonToolkit",
 		reducer: reducer_default
 	}]);
-	if (typeof window.LynxHub !== "undefined" && window.LynxHub.buildNumber && window.LynxHub.buildNumber > 45 || isDev() && APP_BUILD_NUMBER > 44) lynxAPI.customizePages.tools.add.cardsContainer(ToolsPage);
-	else lynxAPI.customizePages.tools.addComponent(ToolsPage);
+	lynxAPI.router.addPage({
+		id: "python-toolkit",
+		title: "Python Toolkit",
+		component: PythonToolkitPage,
+		icon: /* @__PURE__ */ (0, import_jsx_runtime.jsx)(PythonIcon, {}),
+		position: "hidden"
+	});
+	lynxAPI.cards.registerToolsCard?.({
+		id: "python-toolkit",
+		title: "Python Toolkit",
+		description: "Manage Python versions, virtual environments, packages, requirements and more.",
+		component: PythonToolkitCard,
+		where: "tools_page"
+	});
+	if (!lynxAPI.cards.registerToolsCard) lynxAPI.customizePages.tools.add.cardsContainer(PythonToolkitCard);
 	lynxAPI.cards.customize.menu.addSection([{
 		index: 1,
 		components: [CardMenu]
