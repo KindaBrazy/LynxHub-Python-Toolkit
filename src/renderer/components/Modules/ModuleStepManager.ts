@@ -32,6 +32,7 @@ export const getStep = (id: string) => {
     case AvailableModules.smartGallery:
     case AvailableModules.loraManager:
     case AvailableModules.chatTTS:
+    case AvailableModules.llamaFactory:
       index = 2;
       break;
     case AvailableModules.invoke:
