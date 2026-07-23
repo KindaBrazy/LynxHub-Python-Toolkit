@@ -1,4 +1,4 @@
-import { n as __commonJSMin } from "./react-Cp8GNDZx.js";
+import { n as __commonJSMin } from "./react-C_ms_8sA.js";
 //#region node_modules/react/cjs/react-jsx-runtime.production.js
 /**
 * @license React
@@ -10,7 +10,8 @@ import { n as __commonJSMin } from "./react-Cp8GNDZx.js";
 * LICENSE file in the root directory of this source tree.
 */
 var require_react_jsx_runtime_production = /* @__PURE__ */ __commonJSMin(((exports) => {
-	var REACT_ELEMENT_TYPE = Symbol.for("react.transitional.element"), REACT_FRAGMENT_TYPE = Symbol.for("react.fragment");
+	var REACT_ELEMENT_TYPE = Symbol.for("react.transitional.element");
+	var REACT_FRAGMENT_TYPE = Symbol.for("react.fragment");
 	function jsxProd(type, config, maybeKey) {
 		var key = null;
 		void 0 !== maybeKey && (key = "" + maybeKey);

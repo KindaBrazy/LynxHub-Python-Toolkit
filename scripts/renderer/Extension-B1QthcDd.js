@@ -1,6 +1,6 @@
-import { i as __toESM, n as __commonJSMin, r as __require, t as require_react } from "./react-Cp8GNDZx.js";
+import { i as __toESM, n as __commonJSMin, r as __require, t as require_react } from "./react-C_ms_8sA.js";
 import { r as importShared } from "./_virtual___federation_fn_import-ChPcBYrR.js";
-import { t as require_jsx_runtime } from "./jsx-runtime-DwPxM6n2.js";
+import { t as require_jsx_runtime } from "./jsx-runtime-9Wbp44U5.js";
 //#region extension/src/cross/CrossExtConstants.ts
 var ModulesThatSupportPython = [
 	"LSHQQYTIGER_SD",
@@ -20,7 +20,10 @@ var ModulesThatSupportPython = [
 	"LoLLMS_TG",
 	"Biagiomaf_SmartGallery",
 	"Willmiao_LoraManager",
-	"Rsxdalv_AG"
+	"Rsxdalv_AG",
+	"ChatTTS_2Noise",
+	"LlamaFactory_AI",
+	"Langflow_AI"
 ];
 var AvailableModules = {
 	a1: "Automatic1111_SD",
@@ -45,7 +48,10 @@ var AvailableModules = {
 	ag: "Gitmylo_AG",
 	aiToolkit: "Ostris_AI_Toolkit",
 	smartGallery: "Biagiomaf_SmartGallery",
-	loraManager: "Willmiao_LoraManager"
+	loraManager: "Willmiao_LoraManager",
+	chatTTS: "ChatTTS_2Noise",
+	llamaFactory: "LlamaFactory_AI",
+	langFlow: "Langflow_AI"
 };
 //#endregion
 //#region extension/src/renderer/consts.ts
@@ -136,6 +142,7 @@ var browserChannels = {
 	openZoom: "browser:openZoom",
 	openVolume: "browser:openVolume",
 	onZoomChanged: "browser:on-zoom-changed",
+	onActiveWindowChange: "browser:on-active-window-change",
 	onLinkHover: "browser:on-link-hover",
 	resizeLinkPreview: "browser:resize-link-preview",
 	resizeBrowserView: "browser:resize-browser-view",
@@ -170,7 +177,8 @@ var browserChannels = {
 	updateTabMuted: "volume:updateTabMuted",
 	onTabVolumeUpdate: "volume:onTabVolumeUpdate",
 	onTabMutedUpdate: "volume:onTabMutedUpdate",
-	onAudioStateChange: "volume:onAudioStateChange"
+	onAudioStateChange: "volume:onAudioStateChange",
+	executeJavaScript: "browser:execute-javascript"
 };
 //#endregion
 //#region src/renderer/shared/ipc/ipcEvents.ts
@@ -386,10 +394,10 @@ var browserIpc = {
 	send: {
 		resizeLinkPreview: (width) => lynxIpc.send(browserChannels.resizeLinkPreview, width),
 		resizeBrowserView: (data) => lynxIpc.send(browserChannels.resizeBrowserView, data),
-		createBrowser: (id) => lynxIpc.send(browserChannels.createBrowser, id),
+		createBrowser: (id, options) => lynxIpc.send(browserChannels.createBrowser, id, options),
 		removeBrowser: (id) => lynxIpc.send(browserChannels.removeBrowser, id),
 		loadURL: (id, url) => lynxIpc.send(browserChannels.loadURL, id, url),
-		setVisible: (id, visible) => lynxIpc.send(browserChannels.setVisible, id, visible),
+		setVisible: (id, visible, hideMode) => lynxIpc.send(browserChannels.setVisible, id, visible, hideMode),
 		openFindInPage: (id, customPosition) => lynxIpc.send(browserChannels.openFindInPage, id, customPosition),
 		openZoom: (id, customPosition) => lynxIpc.send(browserChannels.openZoom, id, customPosition),
 		openVolume: (data, customPosition) => lynxIpc.send(browserChannels.openVolume, data, customPosition),
@@ -422,14 +430,16 @@ var browserIpc = {
 		onTabVolumeUpdate: (callback) => lynxIpc.on(browserChannels.onTabVolumeUpdate, callback),
 		onTabMutedUpdate: (callback) => lynxIpc.on(browserChannels.onTabMutedUpdate, callback),
 		foundInPage: (callback) => lynxIpc.on(browserChannels.onFoundInPage, callback),
-		onZoomChanged: (callback) => lynxIpc.on(browserChannels.onZoomChanged, callback)
+		onZoomChanged: (callback) => lynxIpc.on(browserChannels.onZoomChanged, callback),
+		activeWindowChanged: (callback) => lynxIpc.on(browserChannels.onActiveWindowChange, callback)
 	},
 	invoke: {
 		clearCache: () => lynxIpc.invoke(browserChannels.clearCache),
 		clearCookies: () => lynxIpc.invoke(browserChannels.clearCookies),
 		getUserAgent: (type) => lynxIpc.invoke(browserChannels.getUserAgent, type),
 		setVolume: (id, volume) => invokeWithSoftTimeout(browserChannels.setVolume, "Volume set operation timed out", id, volume),
-		setMuted: (id, muted) => invokeWithSoftTimeout(browserChannels.setMuted, "Mute set operation timed out", id, muted)
+		setMuted: (id, muted) => invokeWithSoftTimeout(browserChannels.setMuted, "Mute set operation timed out", id, muted),
+		executeJavaScript: (id, script) => lynxIpc.invoke(browserChannels.executeJavaScript, id, script)
 	}
 };
 //#endregion
@@ -1590,7 +1600,21 @@ var settingsSlice = createSlice({
 		checkCustomUpdate: false,
 		searchValue: "",
 		searchWords: [],
-		selectedSection: ""
+		selectedSection: "",
+		floatChatAlwaysOnTop: true,
+		floatChatShowTaskbar: false,
+		floatChatRememberSize: false,
+		floatChatRememberPosition: false,
+		disableFloatChat: false,
+		floatChatKeepInBackground: true,
+		chatBridgeMaxWidth: "default",
+		bridgeDefaultView: "custom",
+		floatDefaultView: "custom",
+		chatSidebarCollapsed: false,
+		chatSidebarWidth: 240,
+		floatChatSidebarCollapsed: false,
+		floatChatSidebarWidth: 200,
+		pinnedThreads: []
 	},
 	name: "settings",
 	reducers: {
@@ -1677,7 +1701,8 @@ function objectToString(value) {
 //#endregion
 //#region node_modules/lodash-es/_baseGetTag.js
 /** `Object#toString` result references. */
-var nullTag = "[object Null]", undefinedTag = "[object Undefined]";
+var nullTag = "[object Null]";
+var undefinedTag = "[object Undefined]";
 /** Built-in value references. */
 var symToStringTag = Symbol$1 ? Symbol$1.toStringTag : void 0;
 /**
@@ -1791,7 +1816,8 @@ var isArray$1 = Array.isArray;
 /** Used as references for various `Number` constants. */
 var INFINITY = Infinity;
 /** Used to convert symbols to primitives and strings. */
-var symbolProto$2 = Symbol$1 ? Symbol$1.prototype : void 0, symbolToString = symbolProto$2 ? symbolProto$2.toString : void 0;
+var symbolProto$2 = Symbol$1 ? Symbol$1.prototype : void 0;
+var symbolToString = symbolProto$2 ? symbolProto$2.toString : void 0;
 /**
 * The base implementation of `_.toString` which doesn't convert nullish
 * values to empty strings.
@@ -1919,7 +1945,10 @@ function toNumber(value) {
 //#endregion
 //#region node_modules/lodash-es/isFunction.js
 /** `Object#toString` result references. */
-var asyncTag = "[object AsyncFunction]", funcTag$2 = "[object Function]", genTag$1 = "[object GeneratorFunction]", proxyTag = "[object Proxy]";
+var asyncTag = "[object AsyncFunction]";
+var funcTag$2 = "[object Function]";
+var genTag$1 = "[object GeneratorFunction]";
+var proxyTag = "[object Proxy]";
 /**
 * Checks if `value` is classified as a `Function` object.
 *
@@ -1995,7 +2024,8 @@ var reRegExpChar = /[\\^$.*+?()[\]{}|]/g;
 /** Used to detect host constructors (Safari). */
 var reIsHostCtor = /^\[object .+?Constructor\]$/;
 /** Used for built-in method references. */
-var funcProto = Function.prototype, objectProto$2 = Object.prototype;
+var funcProto = Function.prototype;
+var objectProto$2 = Object.prototype;
 /** Used to resolve the decompiled source of functions. */
 var funcToString = funcProto.toString;
 /** Used to check objects for own properties. */
@@ -2413,8 +2443,30 @@ var isBuffer = (Buffer$2 ? Buffer$2.isBuffer : void 0) || stubFalse;
 //#endregion
 //#region node_modules/lodash-es/_baseIsTypedArray.js
 /** `Object#toString` result references. */
-var argsTag$2 = "[object Arguments]", arrayTag$2 = "[object Array]", boolTag$3 = "[object Boolean]", dateTag$3 = "[object Date]", errorTag$2 = "[object Error]", funcTag$1 = "[object Function]", mapTag$6 = "[object Map]", numberTag$3 = "[object Number]", objectTag$3 = "[object Object]", regexpTag$3 = "[object RegExp]", setTag$6 = "[object Set]", stringTag$4 = "[object String]", weakMapTag$2 = "[object WeakMap]";
-var arrayBufferTag$3 = "[object ArrayBuffer]", dataViewTag$4 = "[object DataView]", float32Tag$2 = "[object Float32Array]", float64Tag$2 = "[object Float64Array]", int8Tag$2 = "[object Int8Array]", int16Tag$2 = "[object Int16Array]", int32Tag$2 = "[object Int32Array]", uint8Tag$2 = "[object Uint8Array]", uint8ClampedTag$2 = "[object Uint8ClampedArray]", uint16Tag$2 = "[object Uint16Array]", uint32Tag$2 = "[object Uint32Array]";
+var argsTag$2 = "[object Arguments]";
+var arrayTag$2 = "[object Array]";
+var boolTag$3 = "[object Boolean]";
+var dateTag$3 = "[object Date]";
+var errorTag$2 = "[object Error]";
+var funcTag$1 = "[object Function]";
+var mapTag$6 = "[object Map]";
+var numberTag$3 = "[object Number]";
+var objectTag$3 = "[object Object]";
+var regexpTag$3 = "[object RegExp]";
+var setTag$6 = "[object Set]";
+var stringTag$4 = "[object String]";
+var weakMapTag$2 = "[object WeakMap]";
+var arrayBufferTag$3 = "[object ArrayBuffer]";
+var dataViewTag$4 = "[object DataView]";
+var float32Tag$2 = "[object Float32Array]";
+var float64Tag$2 = "[object Float64Array]";
+var int8Tag$2 = "[object Int8Array]";
+var int16Tag$2 = "[object Int16Array]";
+var int32Tag$2 = "[object Int32Array]";
+var uint8Tag$2 = "[object Uint8Array]";
+var uint8ClampedTag$2 = "[object Uint8ClampedArray]";
+var uint16Tag$2 = "[object Uint16Array]";
+var uint32Tag$2 = "[object Uint32Array]";
 /** Used to identify `toStringTag` values of typed arrays. */
 var typedArrayTags = {};
 typedArrayTags[float32Tag$2] = typedArrayTags[float64Tag$2] = typedArrayTags[int8Tag$2] = typedArrayTags[int16Tag$2] = typedArrayTags[int32Tag$2] = typedArrayTags[uint8Tag$2] = typedArrayTags[uint8ClampedTag$2] = typedArrayTags[uint16Tag$2] = typedArrayTags[uint32Tag$2] = true;
@@ -3104,15 +3156,28 @@ function asciiToArray(string) {
 //#endregion
 //#region node_modules/lodash-es/_unicodeToArray.js
 /** Used to compose unicode character classes. */
-var rsAstralRange$1 = "\\ud800-\\udfff", rsComboRange$1 = "\\u0300-\\u036f\\ufe20-\\ufe2f\\u20d0-\\u20ff", rsVarRange$1 = "\\ufe0e\\ufe0f";
+var rsAstralRange$1 = "\\ud800-\\udfff";
+var rsComboRange$1 = "\\u0300-\\u036f\\ufe20-\\ufe2f\\u20d0-\\u20ff";
+var rsVarRange$1 = "\\ufe0e\\ufe0f";
 /** Used to compose unicode capture groups. */
-var rsAstral = "[" + rsAstralRange$1 + "]", rsCombo$1 = "[" + rsComboRange$1 + "]", rsFitz = "\\ud83c[\\udffb-\\udfff]", rsModifier$1 = "(?:" + rsCombo$1 + "|" + rsFitz + ")", rsNonAstral$1 = "[^" + rsAstralRange$1 + "]", rsRegional$1 = "(?:\\ud83c[\\udde6-\\uddff]){2}", rsSurrPair$1 = "[\\ud800-\\udbff][\\udc00-\\udfff]", rsZWJ$1 = "\\u200d";
+var rsAstral = "[" + rsAstralRange$1 + "]";
+var rsCombo$1 = "[" + rsComboRange$1 + "]";
+var rsFitz = "\\ud83c[\\udffb-\\udfff]";
+var rsModifier$1 = "(?:" + rsCombo$1 + "|" + rsFitz + ")";
+var rsNonAstral$1 = "[^" + rsAstralRange$1 + "]";
+var rsRegional$1 = "(?:\\ud83c[\\udde6-\\uddff]){2}";
+var rsSurrPair$1 = "[\\ud800-\\udbff][\\udc00-\\udfff]";
+var rsZWJ$1 = "\\u200d";
 /** Used to compose unicode regexes. */
-var reOptMod$1 = rsModifier$1 + "?", rsOptVar$1 = "[" + rsVarRange$1 + "]?", rsOptJoin$1 = "(?:" + rsZWJ$1 + "(?:" + [
+var reOptMod$1 = rsModifier$1 + "?";
+var rsOptVar$1 = "[" + rsVarRange$1 + "]?";
+var rsOptJoin$1 = "(?:" + rsZWJ$1 + "(?:" + [
 	rsNonAstral$1,
 	rsRegional$1,
 	rsSurrPair$1
-].join("|") + ")" + rsOptVar$1 + reOptMod$1 + ")*", rsSeq$1 = rsOptVar$1 + reOptMod$1 + rsOptJoin$1, rsSymbol = "(?:" + [
+].join("|") + ")" + rsOptVar$1 + reOptMod$1 + ")*";
+var rsSeq$1 = rsOptVar$1 + reOptMod$1 + rsOptJoin$1;
+var rsSymbol = "(?:" + [
 	rsNonAstral$1 + rsCombo$1 + "?",
 	rsCombo$1,
 	rsRegional$1,
@@ -3499,15 +3564,47 @@ function hasUnicodeWord(string) {
 //#endregion
 //#region node_modules/lodash-es/_unicodeWords.js
 /** Used to compose unicode character classes. */
-var rsAstralRange = "\\ud800-\\udfff", rsComboRange = "\\u0300-\\u036f\\ufe20-\\ufe2f\\u20d0-\\u20ff", rsDingbatRange = "\\u2700-\\u27bf", rsLowerRange = "a-z\\xdf-\\xf6\\xf8-\\xff", rsMathOpRange = "\\xac\\xb1\\xd7\\xf7", rsNonCharRange = "\\x00-\\x2f\\x3a-\\x40\\x5b-\\x60\\x7b-\\xbf", rsPunctuationRange = "\\u2000-\\u206f", rsSpaceRange = " \\t\\x0b\\f\\xa0\\ufeff\\n\\r\\u2028\\u2029\\u1680\\u180e\\u2000\\u2001\\u2002\\u2003\\u2004\\u2005\\u2006\\u2007\\u2008\\u2009\\u200a\\u202f\\u205f\\u3000", rsUpperRange = "A-Z\\xc0-\\xd6\\xd8-\\xde", rsVarRange = "\\ufe0e\\ufe0f", rsBreakRange = rsMathOpRange + rsNonCharRange + rsPunctuationRange + rsSpaceRange;
+var rsAstralRange = "\\ud800-\\udfff";
+var rsComboRange = "\\u0300-\\u036f\\ufe20-\\ufe2f\\u20d0-\\u20ff";
+var rsDingbatRange = "\\u2700-\\u27bf";
+var rsLowerRange = "a-z\\xdf-\\xf6\\xf8-\\xff";
+var rsMathOpRange = "\\xac\\xb1\\xd7\\xf7";
+var rsNonCharRange = "\\x00-\\x2f\\x3a-\\x40\\x5b-\\x60\\x7b-\\xbf";
+var rsPunctuationRange = "\\u2000-\\u206f";
+var rsSpaceRange = " \\t\\x0b\\f\\xa0\\ufeff\\n\\r\\u2028\\u2029\\u1680\\u180e\\u2000\\u2001\\u2002\\u2003\\u2004\\u2005\\u2006\\u2007\\u2008\\u2009\\u200a\\u202f\\u205f\\u3000";
+var rsUpperRange = "A-Z\\xc0-\\xd6\\xd8-\\xde";
+var rsVarRange = "\\ufe0e\\ufe0f";
+var rsBreakRange = rsMathOpRange + rsNonCharRange + rsPunctuationRange + rsSpaceRange;
 /** Used to compose unicode capture groups. */
-var rsApos = "['’]", rsBreak = "[" + rsBreakRange + "]", rsCombo = "[" + rsComboRange + "]", rsDigits = "\\d+", rsDingbat = "[" + rsDingbatRange + "]", rsLower = "[" + rsLowerRange + "]", rsMisc = "[^" + rsAstralRange + rsBreakRange + rsDigits + rsDingbatRange + rsLowerRange + rsUpperRange + "]", rsModifier = "(?:" + rsCombo + "|\\ud83c[\\udffb-\\udfff])", rsNonAstral = "[^" + rsAstralRange + "]", rsRegional = "(?:\\ud83c[\\udde6-\\uddff]){2}", rsSurrPair = "[\\ud800-\\udbff][\\udc00-\\udfff]", rsUpper = "[" + rsUpperRange + "]", rsZWJ = "\\u200d";
+var rsApos = "['’]";
+var rsBreak = "[" + rsBreakRange + "]";
+var rsCombo = "[" + rsComboRange + "]";
+var rsDigits = "\\d+";
+var rsDingbat = "[" + rsDingbatRange + "]";
+var rsLower = "[" + rsLowerRange + "]";
+var rsMisc = "[^" + rsAstralRange + rsBreakRange + rsDigits + rsDingbatRange + rsLowerRange + rsUpperRange + "]";
+var rsModifier = "(?:" + rsCombo + "|\\ud83c[\\udffb-\\udfff])";
+var rsNonAstral = "[^" + rsAstralRange + "]";
+var rsRegional = "(?:\\ud83c[\\udde6-\\uddff]){2}";
+var rsSurrPair = "[\\ud800-\\udbff][\\udc00-\\udfff]";
+var rsUpper = "[" + rsUpperRange + "]";
+var rsZWJ = "\\u200d";
 /** Used to compose unicode regexes. */
-var rsMiscLower = "(?:" + rsLower + "|" + rsMisc + ")", rsMiscUpper = "(?:" + rsUpper + "|" + rsMisc + ")", rsOptContrLower = "(?:" + rsApos + "(?:d|ll|m|re|s|t|ve))?", rsOptContrUpper = "(?:" + rsApos + "(?:D|LL|M|RE|S|T|VE))?", reOptMod = rsModifier + "?", rsOptVar = "[" + rsVarRange + "]?", rsOptJoin = "(?:" + rsZWJ + "(?:" + [
+var rsMiscLower = "(?:" + rsLower + "|" + rsMisc + ")";
+var rsMiscUpper = "(?:" + rsUpper + "|" + rsMisc + ")";
+var rsOptContrLower = "(?:" + rsApos + "(?:d|ll|m|re|s|t|ve))?";
+var rsOptContrUpper = "(?:" + rsApos + "(?:D|LL|M|RE|S|T|VE))?";
+var reOptMod = rsModifier + "?";
+var rsOptVar = "[" + rsVarRange + "]?";
+var rsOptJoin = "(?:" + rsZWJ + "(?:" + [
 	rsNonAstral,
 	rsRegional,
 	rsSurrPair
-].join("|") + ")" + rsOptVar + reOptMod + ")*", rsOrdLower = "\\d*(?:1st|2nd|3rd|(?![123])\\dth)(?=\\b|[A-Z_])", rsOrdUpper = "\\d*(?:1ST|2ND|3RD|(?![123])\\dTH)(?=\\b|[a-z_])", rsSeq = rsOptVar + reOptMod + rsOptJoin, rsEmoji = "(?:" + [
+].join("|") + ")" + rsOptVar + reOptMod + ")*";
+var rsOrdLower = "\\d*(?:1st|2nd|3rd|(?![123])\\dth)(?=\\b|[A-Z_])";
+var rsOrdUpper = "\\d*(?:1ST|2ND|3RD|(?![123])\\dTH)(?=\\b|[a-z_])";
+var rsSeq = rsOptVar + reOptMod + rsOptJoin;
+var rsEmoji = "(?:" + [
 	rsDingbat,
 	rsRegional,
 	rsSurrPair
@@ -3723,7 +3820,8 @@ var freeExports = typeof exports == "object" && exports && !exports.nodeType && 
 /** Detect free variable `module`. */
 var freeModule = freeExports && typeof module == "object" && module && !module.nodeType && module;
 /** Built-in value references. */
-var Buffer$1 = freeModule && freeModule.exports === freeExports ? root.Buffer : void 0, allocUnsafe = Buffer$1 ? Buffer$1.allocUnsafe : void 0;
+var Buffer$1 = freeModule && freeModule.exports === freeExports ? root.Buffer : void 0;
+var allocUnsafe = Buffer$1 ? Buffer$1.allocUnsafe : void 0;
 /**
 * Creates a clone of  `buffer`.
 *
@@ -3896,10 +3994,18 @@ var Set$1 = getNative(root, "Set");
 //#endregion
 //#region node_modules/lodash-es/_getTag.js
 /** `Object#toString` result references. */
-var mapTag$5 = "[object Map]", objectTag$2 = "[object Object]", promiseTag = "[object Promise]", setTag$5 = "[object Set]", weakMapTag$1 = "[object WeakMap]";
+var mapTag$5 = "[object Map]";
+var objectTag$2 = "[object Object]";
+var promiseTag = "[object Promise]";
+var setTag$5 = "[object Set]";
+var weakMapTag$1 = "[object WeakMap]";
 var dataViewTag$3 = "[object DataView]";
 /** Used to detect maps, sets, and weakmaps. */
-var dataViewCtorString = toSource(DataView$1), mapCtorString = toSource(Map$1), promiseCtorString = toSource(Promise$1), setCtorString = toSource(Set$1), weakMapCtorString = toSource(WeakMap$1);
+var dataViewCtorString = toSource(DataView$1);
+var mapCtorString = toSource(Map$1);
+var promiseCtorString = toSource(Promise$1);
+var setCtorString = toSource(Set$1);
+var weakMapCtorString = toSource(WeakMap$1);
 /**
 * Gets the `toStringTag` of `value`.
 *
@@ -3990,7 +4096,8 @@ function cloneRegExp(regexp) {
 //#endregion
 //#region node_modules/lodash-es/_cloneSymbol.js
 /** Used to convert symbols to primitives and strings. */
-var symbolProto$1 = Symbol$1 ? Symbol$1.prototype : void 0, symbolValueOf$1 = symbolProto$1 ? symbolProto$1.valueOf : void 0;
+var symbolProto$1 = Symbol$1 ? Symbol$1.prototype : void 0;
+var symbolValueOf$1 = symbolProto$1 ? symbolProto$1.valueOf : void 0;
 /**
 * Creates a clone of the `symbol` object.
 *
@@ -4018,8 +4125,25 @@ function cloneTypedArray(typedArray, isDeep) {
 //#endregion
 //#region node_modules/lodash-es/_initCloneByTag.js
 /** `Object#toString` result references. */
-var boolTag$2 = "[object Boolean]", dateTag$2 = "[object Date]", mapTag$4 = "[object Map]", numberTag$2 = "[object Number]", regexpTag$2 = "[object RegExp]", setTag$4 = "[object Set]", stringTag$3 = "[object String]", symbolTag$2 = "[object Symbol]";
-var arrayBufferTag$2 = "[object ArrayBuffer]", dataViewTag$2 = "[object DataView]", float32Tag$1 = "[object Float32Array]", float64Tag$1 = "[object Float64Array]", int8Tag$1 = "[object Int8Array]", int16Tag$1 = "[object Int16Array]", int32Tag$1 = "[object Int32Array]", uint8Tag$1 = "[object Uint8Array]", uint8ClampedTag$1 = "[object Uint8ClampedArray]", uint16Tag$1 = "[object Uint16Array]", uint32Tag$1 = "[object Uint32Array]";
+var boolTag$2 = "[object Boolean]";
+var dateTag$2 = "[object Date]";
+var mapTag$4 = "[object Map]";
+var numberTag$2 = "[object Number]";
+var regexpTag$2 = "[object RegExp]";
+var setTag$4 = "[object Set]";
+var stringTag$3 = "[object String]";
+var symbolTag$2 = "[object Symbol]";
+var arrayBufferTag$2 = "[object ArrayBuffer]";
+var dataViewTag$2 = "[object DataView]";
+var float32Tag$1 = "[object Float32Array]";
+var float64Tag$1 = "[object Float64Array]";
+var int8Tag$1 = "[object Int8Array]";
+var int16Tag$1 = "[object Int16Array]";
+var int32Tag$1 = "[object Int32Array]";
+var uint8Tag$1 = "[object Uint8Array]";
+var uint8ClampedTag$1 = "[object Uint8ClampedArray]";
+var uint16Tag$1 = "[object Uint16Array]";
+var uint32Tag$1 = "[object Uint32Array]";
 /**
 * Initializes an object clone based on its `toStringTag`.
 *
@@ -4141,10 +4265,36 @@ var isSet = nodeIsSet ? baseUnary(nodeIsSet) : baseIsSet;
 //#endregion
 //#region node_modules/lodash-es/_baseClone.js
 /** Used to compose bitmasks for cloning. */
-var CLONE_DEEP_FLAG$1 = 1, CLONE_FLAT_FLAG = 2, CLONE_SYMBOLS_FLAG$1 = 4;
+var CLONE_DEEP_FLAG$1 = 1;
+var CLONE_FLAT_FLAG = 2;
+var CLONE_SYMBOLS_FLAG$1 = 4;
 /** `Object#toString` result references. */
-var argsTag$1 = "[object Arguments]", arrayTag$1 = "[object Array]", boolTag$1 = "[object Boolean]", dateTag$1 = "[object Date]", errorTag$1 = "[object Error]", funcTag = "[object Function]", genTag = "[object GeneratorFunction]", mapTag$2 = "[object Map]", numberTag$1 = "[object Number]", objectTag$1 = "[object Object]", regexpTag$1 = "[object RegExp]", setTag$2 = "[object Set]", stringTag$2 = "[object String]", symbolTag$1 = "[object Symbol]", weakMapTag = "[object WeakMap]";
-var arrayBufferTag$1 = "[object ArrayBuffer]", dataViewTag$1 = "[object DataView]", float32Tag = "[object Float32Array]", float64Tag = "[object Float64Array]", int8Tag = "[object Int8Array]", int16Tag = "[object Int16Array]", int32Tag = "[object Int32Array]", uint8Tag = "[object Uint8Array]", uint8ClampedTag = "[object Uint8ClampedArray]", uint16Tag = "[object Uint16Array]", uint32Tag = "[object Uint32Array]";
+var argsTag$1 = "[object Arguments]";
+var arrayTag$1 = "[object Array]";
+var boolTag$1 = "[object Boolean]";
+var dateTag$1 = "[object Date]";
+var errorTag$1 = "[object Error]";
+var funcTag = "[object Function]";
+var genTag = "[object GeneratorFunction]";
+var mapTag$2 = "[object Map]";
+var numberTag$1 = "[object Number]";
+var objectTag$1 = "[object Object]";
+var regexpTag$1 = "[object RegExp]";
+var setTag$2 = "[object Set]";
+var stringTag$2 = "[object String]";
+var symbolTag$1 = "[object Symbol]";
+var weakMapTag = "[object WeakMap]";
+var arrayBufferTag$1 = "[object ArrayBuffer]";
+var dataViewTag$1 = "[object DataView]";
+var float32Tag = "[object Float32Array]";
+var float64Tag = "[object Float64Array]";
+var int8Tag = "[object Int8Array]";
+var int16Tag = "[object Int16Array]";
+var int32Tag = "[object Int32Array]";
+var uint8Tag = "[object Uint8Array]";
+var uint8ClampedTag = "[object Uint8ClampedArray]";
+var uint16Tag = "[object Uint16Array]";
+var uint32Tag = "[object Uint32Array]";
 /** Used to identify `toStringTag` values supported by `_.clone`. */
 var cloneableTags = {};
 cloneableTags[argsTag$1] = cloneableTags[arrayTag$1] = cloneableTags[arrayBufferTag$1] = cloneableTags[dataViewTag$1] = cloneableTags[boolTag$1] = cloneableTags[dateTag$1] = cloneableTags[float32Tag] = cloneableTags[float64Tag] = cloneableTags[int8Tag] = cloneableTags[int16Tag] = cloneableTags[int32Tag] = cloneableTags[mapTag$2] = cloneableTags[numberTag$1] = cloneableTags[objectTag$1] = cloneableTags[regexpTag$1] = cloneableTags[setTag$2] = cloneableTags[stringTag$2] = cloneableTags[symbolTag$1] = cloneableTags[uint8Tag] = cloneableTags[uint8ClampedTag] = cloneableTags[uint16Tag] = cloneableTags[uint32Tag] = true;
@@ -4208,7 +4358,8 @@ function baseClone(value, bitmask, customizer, key, object, stack) {
 //#endregion
 //#region node_modules/lodash-es/cloneDeep.js
 /** Used to compose bitmasks for cloning. */
-var CLONE_DEEP_FLAG = 1, CLONE_SYMBOLS_FLAG = 4;
+var CLONE_DEEP_FLAG = 1;
+var CLONE_SYMBOLS_FLAG = 4;
 /**
 * This method is like `_.clone` except that it recursively clones `value`.
 *
@@ -4337,7 +4488,8 @@ function cacheHas(cache, key) {
 //#endregion
 //#region node_modules/lodash-es/_equalArrays.js
 /** Used to compose bitmasks for value comparisons. */
-var COMPARE_PARTIAL_FLAG$3 = 1, COMPARE_UNORDERED_FLAG$1 = 2;
+var COMPARE_PARTIAL_FLAG$3 = 1;
+var COMPARE_UNORDERED_FLAG$1 = 2;
 /**
 * A specialized version of `baseIsEqualDeep` for arrays with support for
 * partial deep comparisons.
@@ -4419,12 +4571,23 @@ function setToArray(set) {
 //#endregion
 //#region node_modules/lodash-es/_equalByTag.js
 /** Used to compose bitmasks for value comparisons. */
-var COMPARE_PARTIAL_FLAG$2 = 1, COMPARE_UNORDERED_FLAG = 2;
+var COMPARE_PARTIAL_FLAG$2 = 1;
+var COMPARE_UNORDERED_FLAG = 2;
 /** `Object#toString` result references. */
-var boolTag = "[object Boolean]", dateTag = "[object Date]", errorTag = "[object Error]", mapTag$1 = "[object Map]", numberTag = "[object Number]", regexpTag = "[object RegExp]", setTag$1 = "[object Set]", stringTag$1 = "[object String]", symbolTag = "[object Symbol]";
-var arrayBufferTag = "[object ArrayBuffer]", dataViewTag = "[object DataView]";
+var boolTag = "[object Boolean]";
+var dateTag = "[object Date]";
+var errorTag = "[object Error]";
+var mapTag$1 = "[object Map]";
+var numberTag = "[object Number]";
+var regexpTag = "[object RegExp]";
+var setTag$1 = "[object Set]";
+var stringTag$1 = "[object String]";
+var symbolTag = "[object Symbol]";
+var arrayBufferTag = "[object ArrayBuffer]";
+var dataViewTag = "[object DataView]";
 /** Used to convert symbols to primitives and strings. */
-var symbolProto = Symbol$1 ? Symbol$1.prototype : void 0, symbolValueOf = symbolProto ? symbolProto.valueOf : void 0;
+var symbolProto = Symbol$1 ? Symbol$1.prototype : void 0;
+var symbolValueOf = symbolProto ? symbolProto.valueOf : void 0;
 /**
 * A specialized version of `baseIsEqualDeep` for comparing objects of
 * the same `toStringTag`.
@@ -4530,7 +4693,9 @@ function equalObjects(object, other, bitmask, customizer, equalFunc, stack) {
 /** Used to compose bitmasks for value comparisons. */
 var COMPARE_PARTIAL_FLAG = 1;
 /** `Object#toString` result references. */
-var argsTag = "[object Arguments]", arrayTag = "[object Array]", objectTag = "[object Object]";
+var argsTag = "[object Arguments]";
+var arrayTag = "[object Array]";
+var objectTag = "[object Object]";
 /** Used to check objects for own properties. */
 var hasOwnProperty$1 = Object.prototype.hasOwnProperty;
 /**
@@ -4619,7 +4784,8 @@ var now = function() {
 //#region node_modules/lodash-es/debounce.js
 /** Error message constants. */
 var FUNC_ERROR_TEXT = "Expected a function";
-var nativeMax = Math.max, nativeMin = Math.min;
+var nativeMax = Math.max;
+var nativeMin = Math.min;
 /**
 * Creates a debounced function that delays invoking `func` until after `wait`
 * milliseconds have elapsed since the last time the debounced function was
@@ -4770,7 +4936,8 @@ function isString$1(value) {
 //#endregion
 //#region node_modules/lodash-es/isEmpty.js
 /** `Object#toString` result references. */
-var mapTag = "[object Map]", setTag = "[object Set]";
+var mapTag = "[object Map]";
+var setTag = "[object Set]";
 /** Used to check objects for own properties. */
 var hasOwnProperty = Object.prototype.hasOwnProperty;
 /**
@@ -4922,7 +5089,7 @@ window.isPortable;
 //#endregion
 //#region node_modules/lucide-react/dist/esm/shared/src/utils/mergeClasses.mjs
 /**
-* @license lucide-react v1.24.0 - ISC
+* @license lucide-react v1.25.0 - ISC
 *
 * This source code is licensed under the ISC license.
 * See the LICENSE file in the root directory of this source tree.
@@ -4933,7 +5100,7 @@ var mergeClasses = (...classes) => classes.filter((className, index, array) => {
 //#endregion
 //#region node_modules/lucide-react/dist/esm/shared/src/utils/toKebabCase.mjs
 /**
-* @license lucide-react v1.24.0 - ISC
+* @license lucide-react v1.25.0 - ISC
 *
 * This source code is licensed under the ISC license.
 * See the LICENSE file in the root directory of this source tree.
@@ -4942,7 +5109,7 @@ var toKebabCase = (string) => string.replace(/([a-z0-9])([A-Z])/g, "$1-$2").toLo
 //#endregion
 //#region node_modules/lucide-react/dist/esm/shared/src/utils/toCamelCase.mjs
 /**
-* @license lucide-react v1.24.0 - ISC
+* @license lucide-react v1.25.0 - ISC
 *
 * This source code is licensed under the ISC license.
 * See the LICENSE file in the root directory of this source tree.
@@ -4951,7 +5118,7 @@ var toCamelCase = (string) => string.replace(/^([A-Z])|[\s-_]+(\w)/g, (match, p1
 //#endregion
 //#region node_modules/lucide-react/dist/esm/shared/src/utils/toPascalCase.mjs
 /**
-* @license lucide-react v1.24.0 - ISC
+* @license lucide-react v1.25.0 - ISC
 *
 * This source code is licensed under the ISC license.
 * See the LICENSE file in the root directory of this source tree.
@@ -4963,7 +5130,7 @@ var toPascalCase = (string) => {
 //#endregion
 //#region node_modules/lucide-react/dist/esm/defaultAttributes.mjs
 /**
-* @license lucide-react v1.24.0 - ISC
+* @license lucide-react v1.25.0 - ISC
 *
 * This source code is licensed under the ISC license.
 * See the LICENSE file in the root directory of this source tree.
@@ -4982,7 +5149,7 @@ var defaultAttributes = {
 //#endregion
 //#region node_modules/lucide-react/dist/esm/shared/src/utils/hasA11yProp.mjs
 /**
-* @license lucide-react v1.24.0 - ISC
+* @license lucide-react v1.25.0 - ISC
 *
 * This source code is licensed under the ISC license.
 * See the LICENSE file in the root directory of this source tree.
@@ -4994,7 +5161,7 @@ var hasA11yProp = (props) => {
 //#endregion
 //#region node_modules/lucide-react/dist/esm/context.mjs
 /**
-* @license lucide-react v1.24.0 - ISC
+* @license lucide-react v1.25.0 - ISC
 *
 * This source code is licensed under the ISC license.
 * See the LICENSE file in the root directory of this source tree.
@@ -5005,7 +5172,7 @@ var useLucideContext = () => useContext(LucideContext);
 //#endregion
 //#region node_modules/lucide-react/dist/esm/Icon.mjs
 /**
-* @license lucide-react v1.24.0 - ISC
+* @license lucide-react v1.25.0 - ISC
 *
 * This source code is licensed under the ISC license.
 * See the LICENSE file in the root directory of this source tree.
@@ -5029,7 +5196,7 @@ var Icon = forwardRef$2(({ color, size, strokeWidth, absoluteStrokeWidth, classN
 //#endregion
 //#region node_modules/lucide-react/dist/esm/createLucideIcon.mjs
 /**
-* @license lucide-react v1.24.0 - ISC
+* @license lucide-react v1.25.0 - ISC
 *
 * This source code is licensed under the ISC license.
 * See the LICENSE file in the root directory of this source tree.
@@ -5046,7 +5213,7 @@ var createLucideIcon = (iconName, iconNode) => {
 	return Component;
 };
 /**
-* @license lucide-react v1.24.0 - ISC
+* @license lucide-react v1.25.0 - ISC
 *
 * This source code is licensed under the ISC license.
 * See the LICENSE file in the root directory of this source tree.
@@ -5059,7 +5226,7 @@ var Plus = createLucideIcon("plus", [["path", {
 	key: "s699le"
 }]]);
 /**
-* @license lucide-react v1.24.0 - ISC
+* @license lucide-react v1.25.0 - ISC
 *
 * This source code is licensed under the ISC license.
 * See the LICENSE file in the root directory of this source tree.
@@ -5072,7 +5239,7 @@ var Terminal = createLucideIcon("terminal", [["path", {
 	key: "1yngyt"
 }]]);
 /**
-* @license lucide-react v1.24.0 - ISC
+* @license lucide-react v1.25.0 - ISC
 *
 * This source code is licensed under the ISC license.
 * See the LICENSE file in the root directory of this source tree.
@@ -5104,7 +5271,7 @@ var Unplug = createLucideIcon("unplug", [
 	}]
 ]);
 /**
-* @license lucide-react v1.24.0 - ISC
+* @license lucide-react v1.25.0 - ISC
 *
 * This source code is licensed under the ISC license.
 * See the LICENSE file in the root directory of this source tree.
@@ -5266,7 +5433,7 @@ var package_default = {
 	name: "lynxhub",
 	productName: "LynxHub",
 	desktopName: "ai.kindabrazy.lynxhub.desktop",
-	version: "3.5.6",
+	version: "3.5.7",
 	type: "module",
 	description: "Cross-platform, extensible terminal/browser for AI management",
 	main: "./out/main/index.cjs",
@@ -5282,7 +5449,7 @@ var package_default = {
 	homepage: "https://github.com/KindaBrazy/LynxHub",
 	appDetails: {
 		"title": "LynxHub",
-		"buildNumber": 53,
+		"buildNumber": 54,
 		"detailedDescription": "Open-source, cross-platform terminal and browser, designed for managing AI. Highly modular and extensible, it's the all-in-one environment for AI power users.",
 		"moduleApiVersion": "2.1.0",
 		"extensionApiVersion": "2.2.0"
@@ -5295,9 +5462,11 @@ var package_default = {
 		"fix-linter:node": "prettier --write src/main --list-different && eslint --fix src/main",
 		"fix-linter": "prettier --write src --list-different && eslint --fix src && tailwind-lint --auto --fix",
 		"fix-linter-ext": "prettier --write extension --list-different && eslint --fix extension && tailwind-lint --config ./extension/src/renderer/index.css --fix",
+		"fix-linter-module": "prettier --write module --list-different && eslint --fix module",
 		"validate:web": "npm run fix-linter:web && npm run typecheck:web",
 		"validate:node": "npm run fix-linter:node && npm run typecheck:node",
 		"validate:ext": "npm run fix-linter-ext && npm run typecheck",
+		"validate:module": "npm run fix-linter-module && npm run typecheck",
 		"validate": "npm run fix-linter && npm run typecheck",
 		"preview": "electron-vite preview --noSandbox",
 		"preview:skip": "electron-vite preview --noSandbox --skipBuild",
@@ -5335,10 +5504,11 @@ var package_default = {
 		"@sentry/react": "^10.62.0",
 		"axios": "^1.18.1",
 		"fix-path": "^5.0.0",
-		"fuse.js": "^7.4.2",
+		"flowtoken": "^1.0.40",
+		"fuse.js": "^7.5.0",
 		"graceful-fs": "^4.2.11",
 		"lowdb": "^7.0.1",
-		"node-pty": "^1.2.0-beta.13",
+		"node-pty": "^1.2.0-beta.14",
 		"prism-react-renderer": "^2.4.1",
 		"react-syntax-highlighter": "^16.1.1",
 		"semver": "^7.8.5",
@@ -5352,12 +5522,12 @@ var package_default = {
 		"@heroui/react": "^3.2.2",
 		"@heroui/styles": "^3.2.2",
 		"@icons-pack/react-simple-icons": "^13.13.0",
-		"@number-flow/react": "^0.6.1",
+		"@number-flow/react": "^0.6.2",
 		"@reduxjs/toolkit": "^2.12.0",
 		"@sentry/vite-plugin": "^5.3.0",
 		"@solar-icons/react-perf": "^2.1.1",
 		"@tailwindcss/typography": "^0.5.20",
-		"@tailwindcss/vite": "^4.3.2",
+		"@tailwindcss/vite": "^4.3.3",
 		"@types/decompress": "^4.2.7",
 		"@types/fontfaceobserver": "^2.1.3",
 		"@types/graceful-fs": "^4.1.9",
@@ -5369,7 +5539,8 @@ var package_default = {
 		"@types/react-syntax-highlighter": "^15.5.13",
 		"@types/semver": "^7.7.1",
 		"@types/serve-handler": "^6.1.4",
-		"@vitejs/plugin-react": "^6.0.3",
+		"@typescript/native": "npm:typescript@^7.0.2",
+		"@vitejs/plugin-react": "^6.0.4",
 		"@xterm/addon-canvas": "^0.7.0",
 		"@xterm/addon-clipboard": "^0.2.0",
 		"@xterm/addon-fit": "^0.11.0",
@@ -5383,31 +5554,32 @@ var package_default = {
 		"@xterm/xterm": "^6.0.0",
 		"chokidar": "^5.0.0",
 		"decompress": "^4.2.1",
-		"electron": "^43.1.0",
+		"electron": "^43.2.0",
 		"electron-builder": "^26.15.3",
 		"electron-dl": "^4.0.0",
 		"electron-log": "^5.4.4",
 		"electron-updater": "^6.8.9",
 		"electron-vite": "^6.0.0-beta.1",
-		"eslint": "^10.6.0",
+		"eslint": "^10.7.0",
 		"eslint-plugin-jsx-a11y": "^6.10.2",
 		"eslint-plugin-perfectionist": "^5.10.0",
 		"eslint-plugin-react": "^7.37.5",
 		"eslint-plugin-react-hooks": "^7.1.1",
-		"eslint-plugin-simple-import-sort": "^13.0.0",
+		"eslint-plugin-simple-import-sort": "^14.0.0",
 		"fontfaceobserver": "^2.3.0",
 		"framer-motion": "^12.42.2",
 		"globals": "^17.7.0",
 		"lodash-es": "^4.18.1",
-		"lucide-react": "^1.24.0",
+		"lucide-react": "^1.25.0",
 		"normalize-url": "^9.0.1",
 		"ogl": "^1.0.11",
-		"prettier": "^3.9.5",
-		"react": "^19.2.7",
-		"react-dom": "^19.2.7",
+		"prettier": "^3.9.6",
+		"react": "^19.2.8",
+		"react-aria": "^3.50.0",
+		"react-dom": "^19.2.8",
 		"react-error-boundary": "^6.1.2",
 		"react-highlight-words": "^0.21.0",
-		"react-intersection-observer": "^10.0.3",
+		"react-intersection-observer": "^10.1.0",
 		"react-markdown": "^10.1.0",
 		"react-redux": "^9.3.0",
 		"rehype-highlight": "^7.0.2",
@@ -5416,12 +5588,12 @@ var package_default = {
 		"remark-gfm": "^4.0.1",
 		"run-script-os": "^1.1.6",
 		"simple-git": "^3.36.0",
-		"tailwind-lint": "^0.12.0",
-		"tailwindcss": "^4.3.2",
+		"tailwind-lint": "^0.12.1",
+		"tailwindcss": "^4.3.3",
 		"three": "^0.185.1",
-		"typescript": "^6.0.3",
-		"typescript-eslint": "^8.63.0",
-		"vite": "^8.1.4"
+		"typescript": "npm:@typescript/typescript6@^6.0.2",
+		"typescript-eslint": "^8.65.0",
+		"vite": "^8.1.5"
 	},
 	allowScripts: {
 		"electron": true,
@@ -5466,9 +5638,10 @@ var PageID = {
 	agents: "agents_page",
 	dashboard: "dashboard_page",
 	plugins: "plugins_page",
-	settings: "settings_page"
+	settings: "settings_page",
+	chatBridge: "chatBridge_page"
 };
-PageID.home, PageID.imageGen, PageID.textGen, PageID.audioGen, PageID.tools, PageID.games, PageID.others, PageID.agents, PageID.dashboard, PageID.plugins, PageID.settings;
+PageID.home, PageID.imageGen, PageID.textGen, PageID.audioGen, PageID.tools, PageID.games, PageID.others, PageID.agents, PageID.dashboard, PageID.plugins, PageID.settings, PageID.chatBridge;
 //#endregion
 //#region src/renderer/mainWindow/utils/constants.tsx
 /**
@@ -5782,7 +5955,7 @@ function getFallbackString(value) {
 //#endregion
 //#region node_modules/fuse.js/dist/fuse.mjs
 /**
-* Fuse.js v7.4.2 - Lightweight fuzzy-search (http://fusejs.io)
+* Fuse.js v7.5.0 - Lightweight fuzzy-search (http://fusejs.io)
 *
 * Copyright (c) 2026 Kiro Risk (http://kiro.me)
 * All Rights Reserved. Apache Software License 2.0
@@ -5953,19 +6126,23 @@ var Config = Object.freeze({
 	...FuzzyOptions,
 	...AdvancedOptions
 });
+function isWordSeparator(code) {
+	return code >= 9 && code <= 13 || code === 32 || code === 160;
+}
 function norm(weight = 1, mantissa = 3) {
 	const cache = /* @__PURE__ */ new Map();
 	const m = Math.pow(10, mantissa);
 	return {
 		get(value) {
-			let numTokens = 1;
-			let inSpace = false;
-			for (let i = 0; i < value.length; i++) if (value.charCodeAt(i) === 32) {
-				if (!inSpace) {
+			let numTokens = 0;
+			let inWord = false;
+			for (let i = 0; i < value.length; i++) if (!isWordSeparator(value.charCodeAt(i))) {
+				if (!inWord) {
 					numTokens++;
-					inSpace = true;
+					inWord = true;
 				}
-			} else inSpace = false;
+			} else inWord = false;
+			if (numTokens === 0) numTokens = 1;
 			if (cache.has(numTokens)) return cache.get(numTokens);
 			const n = Math.round(m / Math.pow(numTokens, .5 * weight)) / m;
 			cache.set(numTokens, n);
@@ -6316,6 +6493,10 @@ var BitapSearch = class {
 		text = isCaseSensitive ? text : text.toLowerCase();
 		text = ignoreDiacritics ? stripDiacritics(text) : text;
 		if (this.pattern === text) {
+			if (text.length < this.options.minMatchCharLength) return {
+				isMatch: false,
+				score: 1
+			};
 			const result = {
 				isMatch: true,
 				score: 0
@@ -6720,33 +6901,31 @@ function computeScore(results, { ignoreFieldNorm = Config.ignoreFieldNorm }) {
 	});
 }
 var MaxHeap = class {
-	constructor(limit) {
+	constructor(limit, comparator) {
 		this.limit = limit;
 		this.heap = [];
+		this.comparator = comparator;
 	}
 	get size() {
 		return this.heap.length;
-	}
-	shouldInsert(score) {
-		return this.size < this.limit || score < this.heap[0].score;
 	}
 	insert(item) {
 		if (this.size < this.limit) {
 			this.heap.push(item);
 			this._bubbleUp(this.size - 1);
-		} else if (item.score < this.heap[0].score) {
+		} else if (this.comparator(item, this.heap[0]) < 0) {
 			this.heap[0] = item;
 			this._sinkDown(0);
 		}
 	}
-	extractSorted(sortFn) {
-		return this.heap.sort(sortFn);
+	extractSorted() {
+		return this.heap.sort(this.comparator);
 	}
 	_bubbleUp(i) {
 		const heap = this.heap;
 		while (i > 0) {
 			const parent = i - 1 >> 1;
-			if (heap[i].score <= heap[parent].score) break;
+			if (this.comparator(heap[i], heap[parent]) <= 0) break;
 			const tmp = heap[i];
 			heap[i] = heap[parent];
 			heap[parent] = tmp;
@@ -6761,8 +6940,8 @@ var MaxHeap = class {
 			i = largest;
 			const left = 2 * i + 1;
 			const right = 2 * i + 2;
-			if (left < len && heap[left].score > heap[largest].score) largest = left;
-			if (right < len && heap[right].score > heap[largest].score) largest = right;
+			if (left < len && this.comparator(heap[left], heap[largest]) > 0) largest = left;
+			if (right < len && this.comparator(heap[right], heap[largest]) > 0) largest = right;
 			if (largest !== i) {
 				const tmp = heap[i];
 				heap[i] = heap[largest];
@@ -7074,6 +7253,9 @@ var Fuse = class {
 	getIndex() {
 		return this._myIndex;
 	}
+	_normalizedKeys() {
+		return this._myIndex.keys.map((key) => this._keyStore.get(key.id) || key);
+	}
 	search(query, options) {
 		const { limit = -1 } = options || {};
 		const { includeMatches, includeScore, shouldSort, sortFn, ignoreFieldNorm } = this.options;
@@ -7085,10 +7267,12 @@ var Fuse = class {
 			if (isNumber(limit) && limit > -1) docs = docs.slice(0, limit);
 			return docs;
 		}
-		const useHeap = isNumber(limit) && limit > 0 && isString(query);
+		const useHeap = shouldSort && isNumber(limit) && limit > 0 && isString(query);
+		const comparator = sortFn;
+		const stable = (a, b) => comparator(a, b) || a.idx - b.idx;
 		let results;
 		if (useHeap) {
-			const heap = new MaxHeap(limit);
+			const heap = new MaxHeap(limit, stable);
 			if (isString(this._docs[0])) this._searchStringList(query, {
 				heap,
 				ignoreFieldNorm
@@ -7097,11 +7281,11 @@ var Fuse = class {
 				heap,
 				ignoreFieldNorm
 			});
-			results = heap.extractSorted(sortFn);
+			results = heap.extractSorted();
 		} else {
 			results = isString(query) ? isString(this._docs[0]) ? this._searchStringList(query) : this._searchObjectList(query) : this._searchLogical(query);
 			computeScore(results, { ignoreFieldNorm });
-			if (shouldSort) results.sort(sortFn);
+			if (shouldSort) results.sort(isString(query) ? stable : comparator);
 			if (isNumber(limit) && limit > -1) results = results.slice(0, limit);
 		}
 		return format(results, this._docs, {
@@ -7138,7 +7322,7 @@ var Fuse = class {
 					};
 					if (heap) {
 						result.score = computeScoreSingle(result.matches, { ignoreFieldNorm });
-						if (heap.shouldInsert(result.score)) heap.insert(result);
+						heap.insert(result);
 					} else results.push(result);
 				}
 			}
@@ -7147,13 +7331,14 @@ var Fuse = class {
 	}
 	_searchLogical(query) {
 		const expression = parse$2(query, this.options);
+		const keys = this._normalizedKeys();
 		const evaluate = (node, item, idx) => {
 			if (!("children" in node)) {
 				const { keyId, searcher } = node;
 				let matches;
 				if (keyId === null) {
 					matches = [];
-					this._myIndex.keys.forEach((key, keyIndex) => {
+					keys.forEach((key, keyIndex) => {
 						matches.push(...this._findMatches({
 							key,
 							value: item[keyIndex],
@@ -7208,7 +7393,8 @@ var Fuse = class {
 	_searchObjectList(query, { heap, ignoreFieldNorm } = {}) {
 		const searcher = this._getSearcher(query);
 		const requireAllTokens = this.options.useTokenSearch && this.options.tokenMatch === "all";
-		const { keys, records } = this._myIndex;
+		const { records } = this._myIndex;
+		const keys = this._normalizedKeys();
 		const results = heap ? null : [];
 		records.forEach(({ $: item, i: idx }) => {
 			if (!isDefined(item)) return;
@@ -7235,7 +7421,7 @@ var Fuse = class {
 				};
 				if (heap) {
 					result.score = computeScoreSingle(result.matches, { ignoreFieldNorm });
-					if (heap.shouldInsert(result.score)) heap.insert(result);
+					heap.insert(result);
 				} else results.push(result);
 			}
 		});
@@ -7303,7 +7489,7 @@ var Fuse = class {
 		return coverage.size === termCount;
 	}
 };
-Fuse.version = "7.4.2";
+Fuse.version = "7.5.0";
 Fuse.createIndex = createIndex;
 Fuse.parseIndex = parseIndex;
 Fuse.config = Config;
@@ -12098,6 +12284,7 @@ var createDefaultTerminalState = () => ({
 	cursorInactiveStyle: "outline",
 	blinkCursor: true,
 	resizeDelay: 100,
+	fontLoadTimeout: 3e3,
 	closeTabOnExit: false,
 	enableLigatures: false,
 	cdHistory: [],
@@ -15503,21 +15690,37 @@ var import_addon_canvas = (/* @__PURE__ */ __commonJSMin(((exports, module) => {
 *   http://bellard.org/jslinux/
 *   Copyright (c) 2011 Fabrice Bellard
 */
-var U$3 = "3.7.8", $$1 = U$3, f = typeof Buffer == "function", _$3 = typeof TextDecoder == "function" ? new TextDecoder() : void 0, C$3 = typeof TextEncoder == "function" ? new TextEncoder() : void 0, c = Array.prototype.slice.call("ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/="), d = ((e) => {
+var U$3 = "3.7.8";
+var $$1 = U$3;
+var f = typeof Buffer == "function";
+var _$3 = typeof TextDecoder == "function" ? new TextDecoder() : void 0;
+var C$3 = typeof TextEncoder == "function" ? new TextEncoder() : void 0;
+var c = Array.prototype.slice.call("ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/=");
+var d = ((e) => {
 	let t = {};
 	return e.forEach((r, o) => t[r] = o), t;
-})(c), k$2 = /^(?:[A-Za-z\d+\/]{4})*?(?:[A-Za-z\d+\/]{2}(?:==)?|[A-Za-z\d+\/]{3}=?)?$/, n$1 = String.fromCharCode.bind(String), B$2 = typeof Uint8Array.from == "function" ? Uint8Array.from.bind(Uint8Array) : (e) => new Uint8Array(Array.prototype.slice.call(e, 0)), S$1 = (e) => e.replace(/=/g, "").replace(/[+\/]/g, (t) => t == "+" ? "-" : "_"), I$1 = (e) => e.replace(/[^A-Za-z0-9\+\/]/g, ""), F$2 = (e) => {
+})(c);
+var k$2 = /^(?:[A-Za-z\d+\/]{4})*?(?:[A-Za-z\d+\/]{2}(?:==)?|[A-Za-z\d+\/]{3}=?)?$/;
+var n$1 = String.fromCharCode.bind(String);
+var B$2 = typeof Uint8Array.from == "function" ? Uint8Array.from.bind(Uint8Array) : (e) => new Uint8Array(Array.prototype.slice.call(e, 0));
+var S$1 = (e) => e.replace(/=/g, "").replace(/[+\/]/g, (t) => t == "+" ? "-" : "_");
+var I$1 = (e) => e.replace(/[^A-Za-z0-9\+\/]/g, "");
+var F$2 = (e) => {
 	let t, r, o, i, s = "", l = e.length % 3;
 	for (let a = 0; a < e.length;) {
 		if ((r = e.charCodeAt(a++)) > 255 || (o = e.charCodeAt(a++)) > 255 || (i = e.charCodeAt(a++)) > 255) throw new TypeError("invalid character found");
 		t = r << 16 | o << 8 | i, s += c[t >> 18 & 63] + c[t >> 12 & 63] + c[t >> 6 & 63] + c[t & 63];
 	}
 	return l ? s.slice(0, l - 3) + "===".substring(l) : s;
-}, m = typeof btoa == "function" ? (e) => btoa(e) : f ? (e) => Buffer.from(e, "binary").toString("base64") : F$2, b$1 = f ? (e) => Buffer.from(e).toString("base64") : (e) => {
+};
+var m = typeof btoa == "function" ? (e) => btoa(e) : f ? (e) => Buffer.from(e, "binary").toString("base64") : F$2;
+var b$1 = f ? (e) => Buffer.from(e).toString("base64") : (e) => {
 	let r = [];
 	for (let o = 0, i = e.length; o < i; o += 4096) r.push(n$1.apply(null, e.subarray(o, o + 4096)));
 	return m(r.join(""));
-}, x = (e, t = !1) => t ? S$1(b$1(e)) : b$1(e), H$3 = (e) => {
+};
+var x = (e, t = !1) => t ? S$1(b$1(e)) : b$1(e);
+var H$3 = (e) => {
 	if (e.length < 2) {
 		var t = e.charCodeAt(0);
 		return t < 128 ? e : t < 2048 ? n$1(192 | t >>> 6) + n$1(128 | t & 63) : n$1(224 | t >>> 12 & 15) + n$1(128 | t >>> 6 & 63) + n$1(128 | t & 63);
@@ -15525,7 +15728,14 @@ var U$3 = "3.7.8", $$1 = U$3, f = typeof Buffer == "function", _$3 = typeof Text
 		var t = 65536 + (e.charCodeAt(0) - 55296) * 1024 + (e.charCodeAt(1) - 56320);
 		return n$1(240 | t >>> 18 & 7) + n$1(128 | t >>> 12 & 63) + n$1(128 | t >>> 6 & 63) + n$1(128 | t & 63);
 	}
-}, J$3 = /[\uD800-\uDBFF][\uDC00-\uDFFFF]|[^\x00-\x7F]/g, P$1 = (e) => e.replace(J$3, H$3), T = f ? (e) => Buffer.from(e, "utf8").toString("base64") : C$3 ? (e) => b$1(C$3.encode(e)) : (e) => m(P$1(e)), p = (e, t = !1) => t ? S$1(T(e)) : T(e), v$2 = (e) => p(e, !0), q$2 = /[\xC0-\xDF][\x80-\xBF]|[\xE0-\xEF][\x80-\xBF]{2}|[\xF0-\xF7][\x80-\xBF]{3}/g, G$2 = (e) => {
+};
+var J$3 = /[\uD800-\uDBFF][\uDC00-\uDFFFF]|[^\x00-\x7F]/g;
+var P$1 = (e) => e.replace(J$3, H$3);
+var T = f ? (e) => Buffer.from(e, "utf8").toString("base64") : C$3 ? (e) => b$1(C$3.encode(e)) : (e) => m(P$1(e));
+var p = (e, t = !1) => t ? S$1(T(e)) : T(e);
+var v$2 = (e) => p(e, !0);
+var q$2 = /[\xC0-\xDF][\x80-\xBF]|[\xE0-\xEF][\x80-\xBF]{2}|[\xF0-\xF7][\x80-\xBF]{3}/g;
+var G$2 = (e) => {
 	switch (e.length) {
 		case 4:
 			var r = ((7 & e.charCodeAt(0)) << 18 | (63 & e.charCodeAt(1)) << 12 | (63 & e.charCodeAt(2)) << 6 | 63 & e.charCodeAt(3)) - 65536;
@@ -15533,22 +15743,33 @@ var U$3 = "3.7.8", $$1 = U$3, f = typeof Buffer == "function", _$3 = typeof Text
 		case 3: return n$1((15 & e.charCodeAt(0)) << 12 | (63 & e.charCodeAt(1)) << 6 | 63 & e.charCodeAt(2));
 		default: return n$1((31 & e.charCodeAt(0)) << 6 | 63 & e.charCodeAt(1));
 	}
-}, D$2 = (e) => e.replace(q$2, G$2), w$2 = (e) => {
+};
+var D$2 = (e) => e.replace(q$2, G$2);
+var w$2 = (e) => {
 	if (e = e.replace(/\s+/g, ""), !k$2.test(e)) throw new TypeError("malformed base64.");
 	e += "==".slice(2 - (e.length & 3));
 	let t, r, o, i = [];
 	for (let s = 0; s < e.length;) t = d[e.charAt(s++)] << 18 | d[e.charAt(s++)] << 12 | (r = d[e.charAt(s++)]) << 6 | (o = d[e.charAt(s++)]), r === 64 ? i.push(n$1(t >> 16 & 255)) : o === 64 ? i.push(n$1(t >> 16 & 255, t >> 8 & 255)) : i.push(n$1(t >> 16 & 255, t >> 8 & 255, t & 255));
 	return i.join("");
-}, y = typeof atob == "function" ? (e) => atob(I$1(e)) : f ? (e) => Buffer.from(e, "base64").toString("binary") : w$2, R$1 = f ? (e) => B$2(Buffer.from(e, "base64")) : (e) => B$2(y(e).split("").map((t) => t.charCodeAt(0))), E = (e) => R$1(O$2(e)), K$3 = f ? (e) => Buffer.from(e, "base64").toString("utf8") : _$3 ? (e) => _$3.decode(R$1(e)) : (e) => D$2(y(e)), O$2 = (e) => I$1(e.replace(/[-_]/g, (t) => t == "-" ? "+" : "/")), h$1 = (e) => K$3(O$2(e)), M$2 = (e) => {
+};
+var y = typeof atob == "function" ? (e) => atob(I$1(e)) : f ? (e) => Buffer.from(e, "base64").toString("binary") : w$2;
+var R$1 = f ? (e) => B$2(Buffer.from(e, "base64")) : (e) => B$2(y(e).split("").map((t) => t.charCodeAt(0)));
+var E = (e) => R$1(O$2(e));
+var K$3 = f ? (e) => Buffer.from(e, "base64").toString("utf8") : _$3 ? (e) => _$3.decode(R$1(e)) : (e) => D$2(y(e));
+var O$2 = (e) => I$1(e.replace(/[-_]/g, (t) => t == "-" ? "+" : "/"));
+var h$1 = (e) => K$3(O$2(e));
+var M$2 = (e) => {
 	if (typeof e != "string") return !1;
 	let t = e.replace(/\s+/g, "").replace(/={0,2}$/, "");
 	return !/[^\s0-9a-zA-Z\+/]/.test(t) || !/[^\s0-9a-zA-Z\-_]/.test(t);
-}, z$2 = (e) => ({
+};
+var z$2 = (e) => ({
 	value: e,
 	enumerable: !1,
 	writable: !0,
 	configurable: !0
-}), Z$2 = function() {
+});
+var Z$2 = function() {
 	let e = (t, r) => Object.defineProperty(String.prototype, t, z$2(r));
 	e("fromBase64", function() {
 		return h$1(this);
@@ -15561,7 +15782,8 @@ var U$3 = "3.7.8", $$1 = U$3, f = typeof Buffer == "function", _$3 = typeof Text
 	}), e("toUint8Array", function() {
 		return E(this);
 	});
-}, V$1 = function() {
+};
+var V$1 = function() {
 	let e = (t, r) => Object.defineProperty(Uint8Array.prototype, t, z$2(r));
 	e("toBase64", function(t) {
 		return x(this, t);
@@ -15570,9 +15792,11 @@ var U$3 = "3.7.8", $$1 = U$3, f = typeof Buffer == "function", _$3 = typeof Text
 	}), e("toBase64URL", function() {
 		return x(this, !0);
 	});
-}, Q$2 = () => {
+};
+var Q$2 = () => {
 	Z$2(), V$1();
-}, u = {
+};
+var u = {
 	version: U$3,
 	VERSION: $$1,
 	atob: y,
@@ -15624,14 +15848,16 @@ var j$2 = class {
 		let l = this._provider.writeText(o, s);
 		return l instanceof Promise ? l.then(() => !0) : !0;
 	}
-}, g$1 = class {
+};
+var g$1 = class {
 	async readText(t) {
 		return t !== "c" ? Promise.resolve("") : navigator.clipboard.readText();
 	}
 	async writeText(t, r) {
 		return t !== "c" ? Promise.resolve() : navigator.clipboard.writeText(r);
 	}
-}, A$1 = class {
+};
+var A$1 = class {
 	encodeText(t) {
 		return u.encode(t);
 	}
@@ -15654,7 +15880,9 @@ var j$2 = class {
 *   http://bellard.org/jslinux/
 *   Copyright (c) 2011 Fabrice Bellard
 */
-var h = 2, _$2 = 1, o$1 = class {
+var h = 2;
+var _$2 = 1;
+var o$1 = class {
 	activate(e) {
 		this._terminal = e;
 	}
@@ -15699,7 +15927,8 @@ var rl = Object.create;
 var Fa$1 = Object.defineProperty;
 var tl$1 = Object.getOwnPropertyDescriptor;
 var nl = Object.getOwnPropertyNames;
-var al$1 = Object.getPrototypeOf, sl$1 = Object.prototype.hasOwnProperty;
+var al$1 = Object.getPrototypeOf;
+var sl$1 = Object.prototype.hasOwnProperty;
 var me$2 = ((s) => typeof __require < "u" ? __require : typeof Proxy < "u" ? new Proxy(s, { get: (o, c) => (typeof __require < "u" ? __require : o)[c] }) : s)(function(s) {
 	if (typeof __require < "u") return __require.apply(this, arguments);
 	throw Error("Dynamic require of \"" + s + "\" is not supported");
@@ -25890,7 +26119,8 @@ var ue$1 = [
 	[65056, 65059],
 	[65279, 65279],
 	[65529, 65531]
-], qe$2 = [
+];
+var qe$2 = [
 	[68097, 68099],
 	[68101, 68102],
 	[68108, 68111],
@@ -25904,7 +26134,8 @@ var ue$1 = [
 	[917505, 917505],
 	[917536, 917631],
 	[917760, 917999]
-], A;
+];
+var A;
 function He$2(r, e) {
 	let t = 0, n = e.length - 1, o;
 	if (r < e[0][0] || r > e[n][1]) return !1;
@@ -25970,7 +26201,8 @@ var de$1 = class {
 	onUnexpectedExternalError(e) {
 		this.unexpectedErrorHandler(e);
 	}
-}, Ge$1 = new de$1();
+};
+var Ge$1 = new de$1();
 function Y$2(r) {
 	Je$1(r) || Ge$1.onUnexpectedError(r);
 }
@@ -26214,7 +26446,9 @@ var fe$2;
 	}
 	le.asyncToArray = V;
 })(fe$2 ||= {});
-var Xe$2 = !1, O$1 = null, ee$2 = class ee {
+var Xe$2 = !1;
+var O$1 = null;
+var ee$2 = class ee {
 	constructor() {
 		this.livingDisposables = /* @__PURE__ */ new Map();
 	}
@@ -26412,7 +26646,8 @@ var te$1 = class te {
 	}
 };
 te$1.DISABLE_DISPOSED_WARNING = !1;
-var U$2 = te$1, _$1 = class {
+var U$2 = te$1;
+var _$1 = class {
 	constructor() {
 		this._store = new U$2();
 		Te$2(this), he$2(this._store, this);
@@ -26432,7 +26667,8 @@ var P = class P {
 	}
 };
 P.Undefined = new P(void 0);
-var tt$1 = globalThis.performance && typeof globalThis.performance.now == "function", ne$1 = class r {
+var tt$1 = globalThis.performance && typeof globalThis.performance.now == "function";
+var ne$1 = class r {
 	static create(e) {
 		return new r(e);
 	}
@@ -26449,7 +26685,10 @@ var tt$1 = globalThis.performance && typeof globalThis.performance.now == "funct
 		return this._stopTime !== -1 ? this._stopTime - this._startTime : this._now() - this._startTime;
 	}
 };
-var nt$2 = !1, Ve$2 = !1, rt$2 = !1, it$1;
+var nt$2 = !1;
+var Ve$2 = !1;
+var rt$2 = !1;
+var it$1;
 ((Q) => {
 	Q.None = () => _$1.None;
 	function e(l) {
@@ -26729,7 +26968,8 @@ var M$1 = class M {
 	}
 };
 M$1.all = /* @__PURE__ */ new Set(), M$1._idPool = 0;
-var be$2 = M$1, We$2 = -1;
+var be$2 = M$1;
+var We$2 = -1;
 var ie$1 = class ie {
 	constructor(e, t, n = (ie._idPool++).toString(16).padStart(3, "0")) {
 		this._errorHandler = e;
@@ -26765,7 +27005,8 @@ var ie$1 = class ie {
 	}
 };
 ie$1._idPool = 1;
-var Ee$2 = ie$1, K$2 = class r {
+var Ee$2 = ie$1;
+var K$2 = class r {
 	constructor(e) {
 		this.value = e;
 	}
@@ -26777,26 +27018,33 @@ var Ee$2 = ie$1, K$2 = class r {
 `).slice(2).join(`
 `));
 	}
-}, De$2 = class extends Error {
+};
+var De$2 = class extends Error {
 	constructor(e, t) {
 		super(e), this.name = "ListenerLeakError", this.stack = t;
 	}
-}, Ae$2 = class extends Error {
+};
+var Ae$2 = class extends Error {
 	constructor(e, t) {
 		super(e), this.name = "ListenerRefusalError", this.stack = t;
 	}
-}, st$2 = 0, N = class {
+};
+var st$2 = 0;
+var N = class {
 	constructor(e) {
 		this.value = e;
 		this.id = st$2++;
 	}
-}, ot$2 = 2, at$2 = (r, e) => {
+};
+var ot$2 = 2;
+var at$2 = (r, e) => {
 	if (r instanceof N) e(r);
 	else for (let t = 0; t < r.length; t++) {
 		let n = r[t];
 		n && e(n);
 	}
-}, re$2;
+};
+var re$2;
 if (nt$2) {
 	let r = [];
 	setInterval(() => {
@@ -27180,7 +27428,8 @@ var ye$2 = [
 	[65056, 65071],
 	[65279, 65279],
 	[65529, 65531]
-], lt$2 = [
+];
+var lt$2 = [
 	[66045, 66045],
 	[66272, 66272],
 	[66422, 66426],
@@ -27298,7 +27547,8 @@ var ye$2 = [
 	[917505, 917505],
 	[917536, 917631],
 	[917760, 917999]
-], ge$2 = [
+];
+var ge$2 = [
 	[4352, 4447],
 	[8986, 8987],
 	[9001, 9002],
@@ -27360,7 +27610,8 @@ var ye$2 = [
 	[65128, 65131],
 	[65281, 65376],
 	[65504, 65510]
-], xt$2 = [
+];
+var xt$2 = [
 	[94176, 94179],
 	[94208, 100343],
 	[100352, 101106],
@@ -27414,7 +27665,8 @@ var ye$2 = [
 	[129680, 129685],
 	[131072, 196605],
 	[196608, 262141]
-], I;
+];
+var I;
 function je$2(r, e) {
 	let t = 0, n = e.length - 1, o;
 	if (r < e[0][0] || r > e[n][1]) return !1;
@@ -27592,7 +27844,8 @@ var wr$1 = Object.getOwnPropertyDescriptor;
 var Yi$1 = (i, e, t, n) => {
 	for (var s = n > 1 ? void 0 : n ? wr$1(e, t) : e, o = i.length - 1, r; o >= 0; o--) (r = i[o]) && (s = (n ? r(e, t, s) : r(s)) || s);
 	return n && s && Lr$1(e, t, s), s;
-}, Qi = (i, e) => (t, n) => e(t, n, i);
+};
+var Qi = (i, e) => (t, n) => e(t, n, i);
 var pi = class {
 	constructor() {
 		this.listeners = [], this.unexpectedErrorHandler = function(e) {
@@ -27630,7 +27883,8 @@ var pi = class {
 	onUnexpectedExternalError(e) {
 		this.unexpectedErrorHandler(e);
 	}
-}, Rr$1 = new pi();
+};
+var Rr$1 = new pi();
 function Pe(i) {
 	Dr$1(i) || Rr$1.onUnexpectedError(i);
 }
@@ -27874,7 +28128,9 @@ var _i$1;
 	}
 	W.asyncToArray = S;
 })(_i$1 ||= {});
-var Ar = !1, Ne$1 = null, gt$1 = class gt {
+var Ar = !1;
+var Ne$1 = null;
+var gt$1 = class gt {
 	constructor() {
 		this.livingDisposables = /* @__PURE__ */ new Map();
 	}
@@ -28072,7 +28328,8 @@ var xt$1 = class xt {
 	}
 };
 xt$1.DISABLE_DISPOSED_WARNING = !1;
-var fe$1 = xt$1, B$1 = class {
+var fe$1 = xt$1;
+var B$1 = class {
 	constructor() {
 		this._store = new fe$1();
 		Et(this), Qe(this._store, this);
@@ -28108,7 +28365,12 @@ var be$1 = class {
 		return this._value = void 0, e && Qe(e, null), e;
 	}
 };
-var Lt$1 = typeof process < "u" && "title" in process, Ze$1 = Lt$1 ? "node" : navigator.userAgent, bi$1 = Lt$1 ? "node" : navigator.platform, cn$1 = Ze$1.includes("Firefox"), dn$1 = Ze$1.includes("Edge"), vi$1 = /^((?!chrome|android).)*safari/i.test(Ze$1);
+var Lt$1 = typeof process < "u" && "title" in process;
+var Ze$1 = Lt$1 ? "node" : navigator.userAgent;
+var bi$1 = Lt$1 ? "node" : navigator.platform;
+var cn$1 = Ze$1.includes("Firefox");
+var dn$1 = Ze$1.includes("Edge");
+var vi$1 = /^((?!chrome|android).)*safari/i.test(Ze$1);
 function hn$1() {
 	if (!vi$1) return 0;
 	let i = Ze$1.match(/Version\/(\d+)/);
@@ -28129,10 +28391,15 @@ function hn$1() {
 bi$1.indexOf("Linux");
 /\bCrOS\b/.test(Ze$1);
 var pn$1 = "";
-var K$1 = 0, V = 0, C$1 = 0, U$1 = 0, Z = {
+var K$1 = 0;
+var V = 0;
+var C$1 = 0;
+var U$1 = 0;
+var Z = {
 	css: "#00000000",
 	rgba: 0
-}, X$1;
+};
+var X$1;
 ((n) => {
 	function i(s, o, r, a) {
 		return a !== void 0 ? `#${Oe(s)}${Oe(o)}${Oe(r)}${Oe(a)}` : `#${Oe(s)}${Oe(o)}${Oe(r)}`;
@@ -28357,7 +28624,14 @@ function wt$1() {
 function bn$1(i, e, t = 0) {
 	return (i - (Math.round(e) * 2 - t)) % (Math.round(e) * 2);
 }
-var j$1 = 0, z$1 = 0, me = !1, ge$1 = !1, Mt$1 = !1, J$1, Ti$1 = 0, At$1 = class {
+var j$1 = 0;
+var z$1 = 0;
+var me = !1;
+var ge$1 = !1;
+var Mt$1 = !1;
+var J$1;
+var Ti$1 = 0;
+var At$1 = class {
 	constructor(e, t, n, s, o, r) {
 		this._terminal = e;
 		this._optionService = t;
@@ -28435,7 +28709,8 @@ var j$1 = 0, z$1 = 0, me = !1, ge$1 = !1, Mt$1 = !1, J$1, Ti$1 = 0, At$1 = class
 		}), ge$1 && (Mt$1 ? z$1 = e.bg & -150994944 | z$1 | 50331648 : z$1 = e.bg & -16777216 | z$1 | 50331648), me && (j$1 = e.fg & -83886080 | j$1 | 50331648), this.result.fg & 67108864 && (ge$1 && !me && ((this.result.bg & 50331648) === 0 ? j$1 = this.result.fg & -134217728 | J$1.background.rgba >> 8 & 16777215 | 50331648 : j$1 = this.result.fg & -134217728 | this.result.bg & 67108863, me = !0), !ge$1 && me && ((this.result.fg & 50331648) === 0 ? z$1 = this.result.bg & -67108864 | J$1.foreground.rgba >> 8 & 16777215 | 50331648 : z$1 = this.result.bg & -67108864 | this.result.fg & 67108863, ge$1 = !0)), J$1 = void 0, this.result.bg = ge$1 ? z$1 : this.result.bg, this.result.fg = me ? j$1 : this.result.fg, this.result.ext &= 536870911, this.result.ext |= Ti$1 << 29 & 3758096384;
 	}
 };
-var gn$1 = .5, St$1 = cn$1 || dn$1 ? "bottom" : "ideographic";
+var gn$1 = .5;
+var St$1 = cn$1 || dn$1 ? "bottom" : "ideographic";
 var Hr = {
 	"▀": [{
 		x: 0,
@@ -28965,7 +29240,8 @@ var Hr = {
 		w: 8,
 		h: 2
 	}]
-}, Wr$1 = {
+};
+var Wr$1 = {
 	"░": [
 		[
 			1,
@@ -29469,7 +29745,8 @@ var Ot$1 = class {
 	clear() {
 		this._data = {};
 	}
-}, tt = class {
+};
+var tt = class {
 	constructor() {
 		this._data = new Ot$1();
 	}
@@ -29513,7 +29790,8 @@ var Ft = class {
 		}
 		this.clear();
 	}
-}, gi$1 = class extends Ft {
+};
+var gi$1 = class extends Ft {
 	_requestCallback(e) {
 		return setTimeout(() => e(this._createDeadline(16)));
 	}
@@ -29524,14 +29802,16 @@ var Ft = class {
 		let t = performance.now() + e;
 		return { timeRemaining: () => Math.max(0, t - performance.now()) };
 	}
-}, xi$1 = class extends Ft {
+};
+var xi$1 = class extends Ft {
 	_requestCallback(e) {
 		return requestIdleCallback(e);
 	}
 	_cancelCallback(e) {
 		cancelIdleCallback(e);
 	}
-}, wn$1 = !Lt$1 && "requestIdleCallback" in window ? xi$1 : gi$1;
+};
+var wn$1 = !Lt$1 && "requestIdleCallback" in window ? xi$1 : gi$1;
 var he$1 = class i {
 	constructor() {
 		this.fg = 0;
@@ -29658,7 +29938,8 @@ var he$1 = class i {
 	getUnderlineVariantOffset() {
 		return this.extended.underlineVariantOffset;
 	}
-}, it = class i {
+};
+var it = class i {
 	constructor(e = 0, t = 0) {
 		this._ext = 0;
 		this._urlId = 0;
@@ -29708,7 +29989,8 @@ var He$1 = class He {
 	}
 };
 He$1.Undefined = new He$1(void 0);
-var zr$1 = globalThis.performance && typeof globalThis.performance.now == "function", kt$1 = class i {
+var zr$1 = globalThis.performance && typeof globalThis.performance.now == "function";
+var kt$1 = class i {
 	static create(e) {
 		return new i(e);
 	}
@@ -29725,7 +30007,10 @@ var zr$1 = globalThis.performance && typeof globalThis.performance.now == "funct
 		return this._stopTime !== -1 ? this._stopTime - this._startTime : this._now() - this._startTime;
 	}
 };
-var qr$1 = !1, Dn$1 = !1, jr$1 = !1, ee$1;
+var qr$1 = !1;
+var Dn$1 = !1;
+var jr$1 = !1;
+var ee$1;
 ((se) => {
 	se.None = () => B$1.None;
 	function e(v) {
@@ -30005,7 +30290,8 @@ var We$1 = class We {
 	}
 };
 We$1.all = /* @__PURE__ */ new Set(), We$1._idPool = 0;
-var Ei$1 = We$1, Mn$1 = -1;
+var Ei$1 = We$1;
+var Mn$1 = -1;
 var Bt$1 = class Bt {
 	constructor(e, t, n = (Bt._idPool++).toString(16).padStart(3, "0")) {
 		this._errorHandler = e;
@@ -30041,7 +30327,8 @@ var Bt$1 = class Bt {
 	}
 };
 Bt$1._idPool = 1;
-var yi$1 = Bt$1, nt$1 = class i {
+var yi$1 = Bt$1;
+var nt$1 = class i {
 	constructor(e) {
 		this.value = e;
 	}
@@ -30053,26 +30340,33 @@ var yi$1 = Bt$1, nt$1 = class i {
 `).slice(2).join(`
 `));
 	}
-}, Ii$1 = class extends Error {
+};
+var Ii$1 = class extends Error {
 	constructor(e, t) {
 		super(e), this.name = "ListenerLeakError", this.stack = t;
 	}
-}, Li$1 = class extends Error {
+};
+var Li$1 = class extends Error {
 	constructor(e, t) {
 		super(e), this.name = "ListenerRefusalError", this.stack = t;
 	}
-}, Xr$1 = 0, Ge = class {
+};
+var Xr$1 = 0;
+var Ge = class {
 	constructor(e) {
 		this.value = e;
 		this.id = Xr$1++;
 	}
-}, Yr$1 = 2, Qr$1 = (i, e) => {
+};
+var Yr$1 = 2;
+var Qr$1 = (i, e) => {
 	if (i instanceof Ge) e(i);
 	else for (let t = 0; t < i.length; t++) {
 		let n = i[t];
 		n && e(n);
 	}
-}, Pt$1;
+};
+var Pt$1;
 if (qr$1) {
 	let i = [];
 	setInterval(() => {
@@ -30205,8 +30499,10 @@ var An = {
 		x: 0,
 		y: 0
 	}
-}, rt$1 = 2;
-var st$1, ae$1 = class i {
+};
+var rt$1 = 2;
+var st$1;
+var ae$1 = class i {
 	constructor(e, t, n) {
 		this._document = e;
 		this._config = t;
@@ -30578,7 +30874,8 @@ var st$1, ae$1 = class i {
 			}
 		};
 	}
-}, ot$1 = class {
+};
+var ot$1 = class {
 	constructor(e, t, n) {
 		this._usedPixels = 0;
 		this._glyphs = [];
@@ -30695,7 +30992,8 @@ function Ai$1(i) {
 		}
 	}
 }
-var Ut$1 = 600, Ht = class {
+var Ut$1 = 600;
+var Ht = class {
 	constructor(e, t) {
 		this._renderCallback = e;
 		this._coreBrowserService = t;
@@ -30888,7 +31186,14 @@ void main() {
   } ${e}
 }`;
 }
-var De$1 = 11, Ve$1 = De$1 * Float32Array.BYTES_PER_ELEMENT, rs$1 = 2, H$1 = 0, k, Fi$1 = 0, lt$1 = 0, Kt$1 = class extends B$1 {
+var De$1 = 11;
+var Ve$1 = De$1 * Float32Array.BYTES_PER_ELEMENT;
+var rs$1 = 2;
+var H$1 = 0;
+var k;
+var Fi$1 = 0;
+var lt$1 = 0;
+var Kt$1 = class extends B$1 {
 	constructor(t, n, s, o) {
 		super();
 		this._terminal = t;
@@ -31010,7 +31315,12 @@ var ki$1 = class {
 function Nn() {
 	return new ki$1();
 }
-var Ce$1 = 4, ze = 1, qe$1 = 2, Ct$1 = 3, Un$1 = 2147483648, Vt$1 = class {
+var Ce$1 = 4;
+var ze = 1;
+var qe$1 = 2;
+var Ct$1 = 3;
+var Un$1 = 2147483648;
+var Vt$1 = class {
 	constructor() {
 		this.cells = /* @__PURE__ */ new Uint32Array(0), this.lineLengths = /* @__PURE__ */ new Uint32Array(0), this.selection = Nn();
 	}
@@ -31036,7 +31346,8 @@ void main() {
   vec2 zeroToOne = a_position + (a_unitquad * a_size);
   gl_Position = u_projection * vec4(zeroToOne, 0.0, 1.0);
   v_color = a_color;
-}`, os$1 = `#version 300 es
+}`;
+var os$1 = `#version 300 es
 precision lowp float;
 
 in vec4 v_color;
@@ -31045,11 +31356,23 @@ out vec4 outColor;
 
 void main() {
   outColor = v_color;
-}`, Ee$1 = 8, Pi$1 = Ee$1 * Float32Array.BYTES_PER_ELEMENT, as$1 = 20 * Ee$1, zt$1 = class {
+}`;
+var Ee$1 = 8;
+var Pi$1 = Ee$1 * Float32Array.BYTES_PER_ELEMENT;
+var as$1 = 20 * Ee$1;
+var zt$1 = class {
 	constructor() {
 		this.attributes = new Float32Array(as$1), this.count = 0;
 	}
-}, xe$1 = 0, Hn$1 = 0, Wn$1 = 0, Gn$1 = 0, $n$1 = 0, Kn$1 = 0, Vn$1 = 0, qt = class extends B$1 {
+};
+var xe$1 = 0;
+var Hn$1 = 0;
+var Wn$1 = 0;
+var Gn$1 = 0;
+var $n$1 = 0;
+var Kn$1 = 0;
+var Vn$1 = 0;
+var qt = class extends B$1 {
 	constructor(t, n, s, o) {
 		super();
 		this._terminal = t;
@@ -31309,7 +31632,14 @@ if (typeof te.matchMedia == "function") {
 function qn$1() {
 	return Yt$1;
 }
-var Xe$1 = "en", ti$1 = !1, Xn = !1, Yn$1 = !1, ii$1 = Xe$1, ye$1, Ie$1 = globalThis, re$1;
+var Xe$1 = "en";
+var ti$1 = !1;
+var Xn = !1;
+var Yn$1 = !1;
+var ii$1 = Xe$1;
+var ye$1;
+var Ie$1 = globalThis;
+var re$1;
 typeof Ie$1.vscode < "u" && typeof Ie$1.vscode.process < "u" ? re$1 = Ie$1.vscode.process : typeof process < "u" && typeof process?.versions?.node == "string" && (re$1 = process);
 var _s$1 = typeof re$1?.versions?.electron == "string" && re$1?.type === "renderer";
 if (typeof re$1 == "object") {
@@ -31323,7 +31653,9 @@ if (typeof re$1 == "object") {
 } else typeof navigator == "object" && !_s$1 ? (ye$1 = navigator.userAgent, ye$1.indexOf("Windows"), ye$1.indexOf("Macintosh"), (ye$1.indexOf("Macintosh") >= 0 || ye$1.indexOf("iPad") >= 0 || ye$1.indexOf("iPhone") >= 0) && navigator.maxTouchPoints && navigator.maxTouchPoints, ti$1 = ye$1.indexOf("Linux") >= 0, ye$1?.indexOf("Mobi"), Yn$1 = !0, ii$1 = globalThis._VSCODE_NLS_LANGUAGE || Xe$1, navigator.language.toLowerCase()) : console.error("Unable to resolve platform.");
 var ri$1 = Xn;
 Yn$1 && typeof Ie$1.importScripts == "function" && Ie$1.origin;
-var _e$1 = ye$1, Me = ii$1, vs$1;
+var _e$1 = ye$1;
+var Me = ii$1;
+var vs$1;
 ((n) => {
 	function i() {
 		return Me;
@@ -31382,7 +31714,10 @@ var dt$1 = class {
 	strToKeyCode(e) {
 		return this._strToKeyCode[e.toLowerCase()] || 0;
 	}
-}, Hi$1 = new dt$1(), Jn$1 = new dt$1(), er$1 = new dt$1();
+};
+var Hi$1 = new dt$1();
+var Jn$1 = new dt$1();
+var er$1 = new dt$1();
 new Array(230);
 var tr$1;
 ((r) => {
@@ -31423,7 +31758,8 @@ var nr$1 = Object.freeze(function(i, e) {
 	return { dispose() {
 		clearTimeout(t);
 	} };
-}), Is$1;
+});
+var Is$1;
 ((n) => {
 	function i(s) {
 		return s === n.None || s === n.Cancelled || s instanceof Wi$1 ? !0 : !s || typeof s != "object" ? !1 : typeof s.isCancellationRequested == "boolean" && typeof s.onCancellationRequested == "function";
@@ -32024,7 +32360,8 @@ var ui$1 = class extends B$1 {
 			end: t
 		});
 	}
-}, Ci$1 = class extends he$1 {
+};
+var Ci$1 = class extends he$1 {
 	constructor(t, n, s) {
 		super();
 		this.content = 0;
@@ -32058,7 +32395,9 @@ var ui$1 = class extends B$1 {
 function mr$1(i, e, t = 0) {
 	return Math.max(Math.min(i, e), t);
 }
-var _r$1 = "di$target", br$1 = "di$dependencies", zi$1 = /* @__PURE__ */ new Map();
+var _r$1 = "di$target";
+var br$1 = "di$dependencies";
+var zi$1 = /* @__PURE__ */ new Map();
 function pe$1(i) {
 	if (zi$1.has(i)) return zi$1.get(i);
 	let e = function(t, n, s) {
@@ -32093,7 +32432,9 @@ var Hs$1 = {
 	warn: 3,
 	error: 4,
 	off: 5
-}, Ws$1 = "xterm.js: ", ci$1 = class extends B$1 {
+};
+var Ws$1 = "xterm.js: ";
+var ci$1 = class extends B$1 {
 	constructor(t) {
 		super();
 		this._optionsService = t;
@@ -32198,11 +32539,15 @@ var Ll = (s, t) => {
 var M = (s, t, e, i) => {
 	for (var r = i > 1 ? void 0 : i ? Rl(t, e) : t, n = s.length - 1, o; n >= 0; n--) (o = s[n]) && (r = (i ? o(t, e, r) : o(r)) || r);
 	return i && r && zs(t, e, r), r;
-}, S = (s, t) => (e, i) => t(e, i, s);
-var Gs = "Terminal input", mi = {
+};
+var S = (s, t) => (e, i) => t(e, i, s);
+var Gs = "Terminal input";
+var mi = {
 	get: () => Gs,
 	set: (s) => Gs = s
-}, $s = "Too much output to announce, navigate to rows manually to read", _i = {
+};
+var $s = "Too much output to announce, navigate to rows manually to read";
+var _i = {
 	get: () => $s,
 	set: (s) => $s = s
 };
@@ -32266,7 +32611,8 @@ var er = class {
 		}
 		return r;
 	}
-}, tr = class {
+};
+var tr = class {
 	constructor() {
 		this.interim = /* @__PURE__ */ new Uint8Array(3);
 	}
@@ -32471,7 +32817,8 @@ var De = class s {
 	getUnderlineVariantOffset() {
 		return this.extended.underlineVariantOffset;
 	}
-}, rt = class s {
+};
+var rt = class s {
 	constructor(t = 0, e = 0) {
 		this._ext = 0;
 		this._urlId = 0;
@@ -32562,7 +32909,9 @@ var q = class s extends De {
 		];
 	}
 };
-var js = "di$target", Hn = "di$dependencies", Fn = /* @__PURE__ */ new Map();
+var js = "di$target";
+var Hn = "di$dependencies";
+var Fn = /* @__PURE__ */ new Map();
 function Xs(s) {
 	return s[Hn] || [];
 }
@@ -32583,8 +32932,16 @@ function Pl(s, t, e) {
 		index: e
 	}], t[js] = t);
 }
-var F = ie("BufferService"), rr = ie("CoreMouseService"), ge = ie("CoreService"), Zs = ie("CharsetService"), xt = ie("InstantiationService");
-var nr = ie("LogService"), H = ie("OptionsService"), sr = ie("OscLinkService"), Js = ie("UnicodeService"), Be = ie("DecorationService");
+var F = ie("BufferService");
+var rr = ie("CoreMouseService");
+var ge = ie("CoreService");
+var Zs = ie("CharsetService");
+var xt = ie("InstantiationService");
+var nr = ie("LogService");
+var H = ie("OptionsService");
+var sr = ie("OscLinkService");
+var Js = ie("UnicodeService");
+var Be = ie("DecorationService");
 var wt = class {
 	constructor(t, e, i) {
 		this._bufferService = t;
@@ -32655,7 +33012,14 @@ WARNING: This link could potentially be dangerous`)) {
 		} else console.warn("Opening link blocked as opener could not be cleared");
 	}
 }
-var nt = ie("CharSizeService"), ae = ie("CoreBrowserService"), Dt = ie("MouseService"), ce = ie("RenderService"), Qs = ie("SelectionService"), or = ie("CharacterJoinerService"), Re = ie("ThemeService"), lr = ie("LinkProviderService");
+var nt = ie("CharSizeService");
+var ae = ie("CoreBrowserService");
+var Dt = ie("MouseService");
+var ce = ie("RenderService");
+var Qs = ie("SelectionService");
+var or = ie("CharacterJoinerService");
+var Re = ie("ThemeService");
+var lr = ie("LinkProviderService");
 var Wn = class {
 	constructor() {
 		this.listeners = [], this.unexpectedErrorHandler = function(t) {
@@ -32693,7 +33057,8 @@ var Wn = class {
 	onUnexpectedExternalError(t) {
 		this.unexpectedErrorHandler(t);
 	}
-}, Bl = new Wn();
+};
+var Bl = new Wn();
 function Lt(s) {
 	Nl(s) || Bl.onUnexpectedError(s);
 }
@@ -32721,7 +33086,8 @@ var ar = class s extends Error {
 	static isErrorNoTelemetry(t) {
 		return t.name === "CodeExpectedError";
 	}
-}, Rt = class s extends Error {
+};
+var Rt = class s extends Error {
 	constructor(t) {
 		super(t || "An unexpected bug occurred."), Object.setPrototypeOf(this, s.prototype);
 	}
@@ -32947,7 +33313,9 @@ var zn;
 	}
 	O.asyncToArray = R;
 })(zn ||= {});
-var Wl = !1, dt = null, hr = class hr {
+var Wl = !1;
+var dt = null;
+var hr = class hr {
 	constructor() {
 		this.livingDisposables = /* @__PURE__ */ new Map();
 	}
@@ -33148,7 +33516,8 @@ var dr = class dr {
 	}
 };
 dr.DISABLE_DISPOSED_WARNING = !1;
-var Ee = dr, D = class {
+var Ee = dr;
+var D = class {
 	constructor() {
 		this._store = new Ee();
 		fr(this), vi(this._store, this);
@@ -33191,7 +33560,8 @@ var kt = class kt {
 	}
 };
 kt.Undefined = new kt(void 0);
-var G = kt, Ct = class {
+var G = kt;
+var Ct = class {
 	constructor() {
 		this._first = G.Undefined;
 		this._last = G.Undefined;
@@ -33257,7 +33627,8 @@ var G = kt, Ct = class {
 		for (; t !== G.Undefined;) yield t.element, t = t.next;
 	}
 };
-var zl = globalThis.performance && typeof globalThis.performance.now == "function", mr = class s {
+var zl = globalThis.performance && typeof globalThis.performance.now == "function";
+var mr = class s {
 	static create(t) {
 		return new s(t);
 	}
@@ -33274,7 +33645,10 @@ var zl = globalThis.performance && typeof globalThis.performance.now == "functio
 		return this._stopTime !== -1 ? this._stopTime - this._startTime : this._now() - this._startTime;
 	}
 };
-var Gl = !1, fo = !1, $l = !1, $;
+var Gl = !1;
+var fo = !1;
+var $l = !1;
+var $;
 ((Qe) => {
 	Qe.None = () => D.None;
 	function t(y) {
@@ -33554,7 +33928,8 @@ var Mt = class Mt {
 	}
 };
 Mt.all = /* @__PURE__ */ new Set(), Mt._idPool = 0;
-var $n = Mt, po = -1;
+var $n = Mt;
+var po = -1;
 var br = class br {
 	constructor(t, e, i = (br._idPool++).toString(16).padStart(3, "0")) {
 		this._errorHandler = t;
@@ -33590,7 +33965,8 @@ var br = class br {
 	}
 };
 br._idPool = 1;
-var Vn = br, gi = class s {
+var Vn = br;
+var gi = class s {
 	constructor(t) {
 		this.value = t;
 	}
@@ -33602,26 +33978,33 @@ var Vn = br, gi = class s {
 `).slice(2).join(`
 `));
 	}
-}, qn = class extends Error {
+};
+var qn = class extends Error {
 	constructor(t, e) {
 		super(t), this.name = "ListenerLeakError", this.stack = e;
 	}
-}, Yn = class extends Error {
+};
+var Yn = class extends Error {
 	constructor(t, e) {
 		super(t), this.name = "ListenerRefusalError", this.stack = e;
 	}
-}, Vl = 0, Pt = class {
+};
+var Vl = 0;
+var Pt = class {
 	constructor(t) {
 		this.value = t;
 		this.id = Vl++;
 	}
-}, ql = 2, Yl = (s, t) => {
+};
+var ql = 2;
+var Yl = (s, t) => {
 	if (s instanceof Pt) t(s);
 	else for (let e = 0; e < s.length; e++) {
 		let i = s[e];
 		i && t(i);
 	}
-}, _r;
+};
+var _r;
 if (Gl) {
 	let s = [];
 	setInterval(() => {
@@ -33778,7 +34161,11 @@ function mo(s) {
 	return Si.INSTANCE.getZoomFactor(s);
 }
 Si.INSTANCE.onDidChangeFullscreen;
-var Ot = typeof navigator == "object" ? navigator.userAgent : "", Ei = Ot.indexOf("Firefox") >= 0, Bt = Ot.indexOf("AppleWebKit") >= 0, Ti = Ot.indexOf("Chrome") >= 0, Sr = !Ti && Ot.indexOf("Safari") >= 0;
+var Ot = typeof navigator == "object" ? navigator.userAgent : "";
+var Ei = Ot.indexOf("Firefox") >= 0;
+var Bt = Ot.indexOf("AppleWebKit") >= 0;
+var Ti = Ot.indexOf("Chrome") >= 0;
+var Sr = !Ti && Ot.indexOf("Safari") >= 0;
 Ot.indexOf("Electron/");
 Ot.indexOf("Android");
 var vr = !1;
@@ -33791,7 +34178,16 @@ if (typeof fe.matchMedia == "function") {
 function _o() {
 	return vr;
 }
-var Nt = "en", yr = !1, xr = !1, Ii = !1, vo = !1, go = !1, Ir = Nt, $e, Ve = globalThis, xe;
+var Nt = "en";
+var yr = !1;
+var xr = !1;
+var Ii = !1;
+var vo = !1;
+var go = !1;
+var Ir = Nt;
+var $e;
+var Ve = globalThis;
+var xe;
 typeof Ve.vscode < "u" && typeof Ve.vscode.process < "u" ? xe = Ve.vscode.process : typeof process < "u" && typeof process?.versions?.node == "string" && (xe = process);
 var ra = typeof xe?.versions?.electron == "string" && xe?.type === "renderer";
 if (typeof xe == "object") {
@@ -33803,10 +34199,14 @@ if (typeof xe == "object") {
 	} catch {}
 	vo = !0;
 } else typeof navigator == "object" && !ra ? ($e = navigator.userAgent, yr = $e.indexOf("Windows") >= 0, xr = $e.indexOf("Macintosh") >= 0, ($e.indexOf("Macintosh") >= 0 || $e.indexOf("iPad") >= 0 || $e.indexOf("iPhone") >= 0) && navigator.maxTouchPoints && navigator.maxTouchPoints, Ii = $e.indexOf("Linux") >= 0, $e?.indexOf("Mobi"), go = !0, Ir = globalThis._VSCODE_NLS_LANGUAGE || Nt, navigator.language.toLowerCase()) : console.error("Unable to resolve platform.");
-var wr = yr, Te = xr, Zn = Ii;
+var wr = yr;
+var Te = xr;
+var Zn = Ii;
 var Dr = vo;
 go && typeof Ve.importScripts == "function" && Ve.origin;
-var Fe = $e, st = Ir, sa;
+var Fe = $e;
+var st = Ir;
+var sa;
 ((i) => {
 	function s() {
 		return st;
@@ -33865,7 +34265,11 @@ var yi = class {
 	strToKeyCode(t) {
 		return this._strToKeyCode[t.toLowerCase()] || 0;
 	}
-}, Jn = new yi(), To = new yi(), Io = new yi(), yo = new Array(230);
+};
+var Jn = new yi();
+var To = new yi();
+var Io = new yi();
+var yo = new Array(230);
 var Qn;
 ((o) => {
 	function s(l) {
@@ -33966,7 +34370,10 @@ function ca(s) {
 	}
 	return yo[t] || 0;
 }
-var ua = Te ? 256 : 2048, ha = 512, da = 1024, fa = Te ? 2048 : 256;
+var ua = Te ? 256 : 2048;
+var ha = 512;
+var da = 1024;
+var fa = Te ? 2048 : 256;
 var ft = class {
 	constructor(t) {
 		this._standardKeyboardEventBrand = !0;
@@ -34093,7 +34500,8 @@ var Do = Object.freeze(function(s, t) {
 	return { dispose() {
 		clearTimeout(e);
 	} };
-}), ma;
+});
+var ma;
 ((i) => {
 	function s(r) {
 		return r === i.None || r === i.Cancelled || r instanceof ts ? !0 : !r || typeof r != "object" ? !1 : typeof r.isCancellationRequested == "boolean" && typeof r.onCancellationRequested == "function";
@@ -34123,7 +34531,8 @@ var ts = class {
 	dispose() {
 		this._emitter && (this._emitter.dispose(), this._emitter = null);
 	}
-}, Ye = class {
+};
+var Ye = class {
 	constructor(t, e) {
 		this._isDisposed = !1;
 		this._token = -1, typeof t == "function" && typeof e == "number" && this.setIfNotSet(t, e);
@@ -34146,7 +34555,8 @@ var ts = class {
 			this._token = -1, t();
 		}, e));
 	}
-}, kr = class {
+};
+var kr = class {
 	constructor() {
 		this.disposable = void 0;
 		this.isDisposed = !1;
@@ -34475,7 +34885,8 @@ function xa(s) {
 var os = function(t, e, i, r) {
 	let n = i;
 	return e === "click" || e === "mousedown" || e === "contextmenu" ? n = ya(be(t), i) : (e === "keydown" || e === "keypress" || e === "keyup") && (n = xa(i)), L(t, e, n, r);
-}, mt;
+};
+var mt;
 var Mr = class extends kr {
 	constructor(t) {
 		super(), this.defaultTarget = t && be(t);
@@ -34483,7 +34894,8 @@ var Mr = class extends kr {
 	cancelAndSet(t, e, i) {
 		return super.cancelAndSet(t, e, i ?? this.defaultTarget);
 	}
-}, Di = class {
+};
+var Di = class {
 	constructor(t, e = 0) {
 		this._runner = t, this.priority = e, this._canceled = !1;
 	}
@@ -34996,7 +35408,8 @@ var lt = class extends D {
 		return Pr.ignoreTarget(t);
 	}
 };
-var Uo = 11, Or = class extends lt {
+var Uo = 11;
+var Or = class extends lt {
 	constructor(t) {
 		super(), this._onActivate = t.onActivate, this.bgDomNode = document.createElement("div"), this.bgDomNode.className = "arrow-background", this.bgDomNode.style.position = "absolute", this.bgDomNode.style.width = t.bgWidth + "px", this.bgDomNode.style.height = t.bgHeight + "px", typeof t.top < "u" && (this.bgDomNode.style.top = "0px"), typeof t.left < "u" && (this.bgDomNode.style.left = "0px"), typeof t.bottom < "u" && (this.bgDomNode.style.bottom = "0px"), typeof t.right < "u" && (this.bgDomNode.style.right = "0px"), this.domNode = document.createElement("div"), this.domNode.className = t.className, this.domNode.style.position = "absolute", this.domNode.style.width = Uo + "px", this.domNode.style.height = Uo + "px", typeof t.top < "u" && (this.domNode.style.top = t.top + "px"), typeof t.left < "u" && (this.domNode.style.left = t.left + "px"), typeof t.bottom < "u" && (this.domNode.style.bottom = t.bottom + "px"), typeof t.right < "u" && (this.domNode.style.right = t.right + "px"), this._pointerMoveMonitor = this._register(new Wt()), this._register(os(this.bgDomNode, Y.POINTER_DOWN, (e) => this._arrowPointerDown(e))), this._register(os(this.domNode, Y.POINTER_DOWN, (e) => this._arrowPointerDown(e))), this._pointerdownRepeatTimer = this._register(new Mr()), this._pointerdownScheduleRepeatTimer = this._register(new Ye());
 	}
@@ -35049,7 +35462,8 @@ var cs = class s {
 			scrollTopChanged: a
 		};
 	}
-}, Ri = class extends D {
+};
+var Ri = class extends D {
 	constructor(e) {
 		super();
 		this._scrollableBrand = void 0;
@@ -35122,7 +35536,8 @@ var cs = class s {
 		let r = this._state;
 		r.equals(e) || (this._state = e, this._onScroll.fire(this._state.createScrollEvent(r, i)));
 	}
-}, Br = class {
+};
+var Br = class {
 	constructor(t, e, i) {
 		this.scrollLeft = t, this.scrollTop = e, this.isDone = i;
 	}
@@ -35220,7 +35635,8 @@ var Fr = class extends D {
 		this._revealTimer.cancel(), this._isVisible && (this._isVisible = !1, this._domNode?.setClassName(this._invisibleClassName + (t ? " fade" : "")));
 	}
 };
-var Ca = 140, Ut = class extends lt {
+var Ca = 140;
+var Ut = class extends lt {
 	constructor(t) {
 		super(), this._lazyRender = t.lazyRender, this._host = t.host, this._scrollable = t.scrollable, this._scrollByPage = t.scrollByPage, this._scrollbarState = t.scrollbarState, this._visibilityController = this._register(new Fr(t.visibility, "visible scrollbar " + t.extraScrollbarClassName, "invisible scrollbar " + t.extraScrollbarClassName)), this._visibilityController.setIsNeeded(this._scrollbarState.isNeeded()), this._pointerMoveMonitor = this._register(new Wt()), this._shouldRender = !0, this.domNode = _t(document.createElement("div")), this.domNode.setAttribute("role", "presentation"), this.domNode.setAttribute("aria-hidden", "true"), this._visibilityController.setDomNode(this.domNode), this.domNode.setPosition("absolute"), this._register(L(this.domNode.domNode, Y.POINTER_DOWN, (e) => this._domNodePointerDown(e)));
 	}
@@ -35464,11 +35880,15 @@ var Ur = class extends Ut {
 		this.updateScrollbarSize(t.vertical === 2 ? 0 : t.verticalScrollbarSize), this._scrollbarState.setOppositeScrollbarSize(0), this._visibilityController.setVisibility(t.vertical), this._scrollByPage = t.scrollByPage;
 	}
 };
-var Ma = 500, Ko = 50, zo = !0, us = class {
+var Ma = 500;
+var Ko = 50;
+var zo = !0;
+var us = class {
 	constructor(t, e, i) {
 		this.timestamp = t, this.deltaX = e, this.deltaY = i, this.score = 0;
 	}
-}, zr = class zr {
+};
+var zr = class zr {
 	constructor() {
 		this._capacity = 5, this._memory = [], this._front = -1, this._rear = -1;
 	}
@@ -35506,7 +35926,8 @@ var Ma = 500, Ko = 50, zo = !0, us = class {
 	}
 };
 zr.INSTANCE = new zr();
-var hs = zr, ds = class extends lt {
+var hs = zr;
+var ds = class extends lt {
 	constructor(e, i, r) {
 		super();
 		this._onScroll = this._register(new v());
@@ -35882,17 +36303,20 @@ var We = {
 	left: 0,
 	center: 0,
 	right: 0
-}, at = {
+};
+var at = {
 	full: 0,
 	left: 0,
 	center: 0,
 	right: 0
-}, Li = {
+};
+var Li = {
 	full: 0,
 	left: 0,
 	center: 0,
 	right: 0
-}, bt = class extends D {
+};
+var bt = class extends D {
 	constructor(e, i, r, n, o, l, a, u) {
 		super();
 		this._viewportElement = e;
@@ -36058,10 +36482,15 @@ $t = M([
 	S(4, ge),
 	S(5, ce)
 ], $t);
-var ue = 0, he = 0, de = 0, J = 0, ps = {
+var ue = 0;
+var he = 0;
+var de = 0;
+var J = 0;
+var ps = {
 	css: "#00000000",
 	rgba: 0
-}, j;
+};
+var j;
 ((i) => {
 	function s(r, n, o, l) {
 		return l !== void 0 ? `#${vt(r)}${vt(n)}${vt(o)}${vt(l)}` : `#${vt(r)}${vt(n)}${vt(o)}`;
@@ -36264,7 +36693,8 @@ var Vr = class extends De {
 			this.getCode()
 		];
 	}
-}, ct = class {
+};
+var ct = class {
 	constructor(t) {
 		this._bufferService = t;
 		this._characterJoiners = [];
@@ -36598,7 +37028,14 @@ var ms = class {
 function Yo() {
 	return new ms();
 }
-var _s = "xterm-dom-renderer-owner-", Le = "xterm-rows", jr = "xterm-fg-", jo = "xterm-bg-", ki = "xterm-focus", Xr = "xterm-selection", Na = 1, Yt = class extends D {
+var _s = "xterm-dom-renderer-owner-";
+var Le = "xterm-rows";
+var jr = "xterm-fg-";
+var jo = "xterm-bg-";
+var ki = "xterm-focus";
+var Xr = "xterm-selection";
+var Na = 1;
+var Yt = class extends D {
 	constructor(e, i, r, n, o, l, a, u, h, c, d, _, p, m) {
 		super();
 		this._terminal = e;
@@ -36766,7 +37203,8 @@ var Zr = class extends D {
 	_validateAndSet(e, i) {
 		e !== void 0 && e > 0 && i !== void 0 && i > 0 && (this._result.width = e, this._result.height = i);
 	}
-}, bs = class extends Zr {
+};
+var bs = class extends Zr {
 	constructor(e, i, r) {
 		super();
 		this._document = e;
@@ -36777,7 +37215,8 @@ var Zr = class extends D {
 	measure() {
 		return this._measureElement.style.fontFamily = this._optionsService.rawOptions.fontFamily, this._measureElement.style.fontSize = `${this._optionsService.rawOptions.fontSize}px`, this._validateAndSet(Number(this._measureElement.offsetWidth) / 32, Number(this._measureElement.offsetHeight)), this._result;
 	}
-}, vs = class extends Zr {
+};
+var vs = class extends Zr {
 	constructor(e) {
 		super();
 		this._optionsService = e;
@@ -36818,7 +37257,8 @@ var Jr = class extends D {
 	get isFocused() {
 		return this._cachedIsFocused === void 0 && (this._cachedIsFocused = this._isFocused && this._textarea.ownerDocument.hasFocus(), queueMicrotask(() => this._cachedIsFocused = void 0)), this._cachedIsFocused;
 	}
-}, gs = class extends D {
+};
+var gs = class extends D {
 	constructor(e) {
 		super();
 		this._parentWindow = e;
@@ -36926,7 +37366,12 @@ Ll(tn, {
 	isSafari: () => Zo,
 	isWindows: () => Es
 });
-var Mi = typeof process < "u" && "title" in process, Pi = Mi ? "node" : navigator.userAgent, Oi = Mi ? "node" : navigator.platform, Ss = Pi.includes("Firefox"), Fa = Pi.includes("Edge"), Zo = /^((?!chrome|android).)*safari/i.test(Pi);
+var Mi = typeof process < "u" && "title" in process;
+var Pi = Mi ? "node" : navigator.userAgent;
+var Oi = Mi ? "node" : navigator.platform;
+var Ss = Pi.includes("Firefox");
+var Fa = Pi.includes("Edge");
+var Zo = /^((?!chrome|android).)*safari/i.test(Pi);
 function Ha() {
 	if (!Zo) return 0;
 	let s = Pi.match(/Version\/(\d+)/);
@@ -36937,12 +37382,17 @@ var Zt = [
 	"MacIntel",
 	"MacPPC",
 	"Mac68K"
-].includes(Oi), Wa = Oi === "iPad", Ua = Oi === "iPhone", Es = [
+].includes(Oi);
+var Wa = Oi === "iPad";
+var Ua = Oi === "iPhone";
+var Es = [
 	"Windows",
 	"Win16",
 	"Win32",
 	"WinCE"
-].includes(Oi), Bi = Oi.indexOf("Linux") >= 0, Ts = /\bCrOS\b/.test(Pi);
+].includes(Oi);
+var Bi = Oi.indexOf("Linux") >= 0;
+var Ts = /\bCrOS\b/.test(Pi);
 var rn = class {
 	constructor() {
 		this._tasks = [];
@@ -36973,7 +37423,8 @@ var rn = class {
 		}
 		this.clear();
 	}
-}, Is = class extends rn {
+};
+var Is = class extends rn {
 	_requestCallback(t) {
 		return setTimeout(() => t(this._createDeadline(16)));
 	}
@@ -36984,14 +37435,17 @@ var rn = class {
 		let e = performance.now() + t;
 		return { timeRemaining: () => Math.max(0, e - performance.now()) };
 	}
-}, ys = class extends rn {
+};
+var ys = class extends rn {
 	_requestCallback(t) {
 		return requestIdleCallback(t);
 	}
 	_cancelCallback(t) {
 		cancelIdleCallback(t);
 	}
-}, Jt = !Mi && "requestIdleCallback" in window ? ys : Is, nn = class {
+};
+var Jt = !Mi && "requestIdleCallback" in window ? ys : Is;
+var nn = class {
 	constructor() {
 		this._queue = new Jt();
 	}
@@ -37271,7 +37725,11 @@ function ws(s, t) {
 	if (s.start.y > s.end.y) throw new Error(`Buffer range end (${s.end.x}, ${s.end.y}) cannot be before start (${s.start.x}, ${s.start.y})`);
 	return t * (s.end.y - s.start.y) + (s.end.x - s.start.x + 1);
 }
-var Ds = 50, Ya = 15, ja = 50, Xa = 500, Ja = /* @__PURE__ */ new RegExp("\xA0", "g");
+var Ds = 50;
+var Ya = 15;
+var ja = 50;
+var Xa = 500;
+var Ja = /* @__PURE__ */ new RegExp("\xA0", "g");
 var ei = class extends D {
 	constructor(e, i, r, n, o, l, a, u, h) {
 		super();
@@ -37669,10 +38127,16 @@ var re = Object.freeze((() => {
 	}
 	return s;
 })());
-var St = z.toColor("#ffffff"), Ki = z.toColor("#000000"), tl = z.toColor("#ffffff"), il = Ki, Ui = {
+var St = z.toColor("#ffffff");
+var Ki = z.toColor("#000000");
+var tl = z.toColor("#ffffff");
+var il = Ki;
+var Ui = {
 	css: "rgba(255, 255, 255, 0.3)",
 	rgba: 4294967117
-}, Qa = St, ti = class extends D {
+};
+var Qa = St;
+var ti = class extends D {
 	constructor(e) {
 		super();
 		this._optionsService = e;
@@ -37768,7 +38232,8 @@ var Rs = class {
 	get(t) {
 		return this._entries.get(t);
 	}
-}, ln = class {
+};
+var ln = class {
 	constructor() {
 		this._services = new Rs();
 		this._services.set(xt, this);
@@ -37798,7 +38263,9 @@ var ec = {
 	warn: 3,
 	error: 4,
 	off: 5
-}, tc = "xterm.js: ", ii = class extends D {
+};
+var tc = "xterm.js: ";
+var ii = class extends D {
 	constructor(e) {
 		super();
 		this._optionsService = e;
@@ -37919,7 +38386,10 @@ var zi = class extends D {
 	}
 };
 var B = 3;
-var X = Object.freeze(new De()), an = 0, Ls = 2, Ze = class s {
+var X = Object.freeze(new De());
+var an = 0;
+var Ls = 2;
+var Ze = class s {
 	constructor(t, e, i = !1) {
 		this.isWrapped = i;
 		this._combined = {};
@@ -38186,7 +38656,8 @@ var un = class un {
 };
 un._nextId = 1;
 var cn = un;
-var ne = {}, Je = ne.B;
+var ne = {};
+var Je = ne.B;
 ne[0] = {
 	"`": "◆",
 	a: "▒",
@@ -38337,7 +38808,8 @@ ne["="] = {
 	"}": "ü",
 	"~": "û"
 };
-var cl = 4294967295, $i = class {
+var cl = 4294967295;
+var $i = class {
 	constructor(t, e, i) {
 		this._hasScrollback = t;
 		this._optionsService = e;
@@ -38590,7 +39062,9 @@ var hn = class extends D {
 		this._normal.setupTabStops(e), this._alt.setupTabStops(e);
 	}
 };
-var ks = 2, Cs = 1, ni = class extends D {
+var ks = 2;
+var Cs = 1;
+var ni = class extends D {
 	constructor(e) {
 		super();
 		this.isUserScrolling = !1;
@@ -38689,7 +39163,8 @@ var si = {
 	termName: "xterm",
 	cancelEvents: !1,
 	overviewRuler: {}
-}, nc = [
+};
+var nc = [
 	"normal",
 	"bold",
 	"100",
@@ -38701,7 +39176,8 @@ var si = {
 	"700",
 	"800",
 	"900"
-], dn = class extends D {
+];
+var dn = class extends D {
 	constructor(e) {
 		super();
 		this._onOptionChange = this._register(new v());
@@ -38791,7 +39267,8 @@ function oi(s, t = 5) {
 	for (let i in s) e[i] = t <= 1 ? s[i] : s[i] && oi(s[i], t - 1);
 	return e;
 }
-var ul = Object.freeze({ insertMode: !1 }), hl = Object.freeze({
+var ul = Object.freeze({ insertMode: !1 });
+var hl = Object.freeze({
 	applicationCursorKeys: !1,
 	applicationKeypad: !1,
 	bracketedPasteMode: !1,
@@ -38802,7 +39279,8 @@ var ul = Object.freeze({ insertMode: !1 }), hl = Object.freeze({
 	sendFocus: !1,
 	synchronizedOutput: !1,
 	wraparound: !0
-}), li = class extends D {
+});
+var li = class extends D {
 	constructor(e, i, r) {
 		super();
 		this._bufferService = e;
@@ -38863,7 +39341,8 @@ function Ms(s, t) {
 	let e = (s.ctrl ? 16 : 0) | (s.shift ? 4 : 0) | (s.alt ? 8 : 0);
 	return s.button === 4 ? (e |= 64, e |= s.action) : (e |= s.button & 3, s.button & 4 && (e |= 64), s.button & 8 && (e |= 128), s.action === 32 ? e |= 32 : s.action === 0 && !t && (e |= 3)), e;
 }
-var Ps = String.fromCharCode, fl = {
+var Ps = String.fromCharCode;
+var fl = {
 	DEFAULT: (s) => {
 		let t = [
 			Ms(s, !1) + 32,
@@ -38880,7 +39359,8 @@ var Ps = String.fromCharCode, fl = {
 		let t = s.action === 0 && s.button !== 4 ? "m" : "M";
 		return `\x1B[<${Ms(s, !0)};${s.x};${s.y}${t}`;
 	}
-}, ai = class extends D {
+};
+var ai = class extends D {
 	constructor(e, i, r) {
 		super();
 		this._bufferService = e;
@@ -39088,7 +39568,8 @@ var Os = [
 	[65056, 65059],
 	[65279, 65279],
 	[65529, 65531]
-], ac = [
+];
+var ac = [
 	[68097, 68099],
 	[68101, 68102],
 	[68108, 68111],
@@ -39102,7 +39583,8 @@ var Os = [
 	[917505, 917505],
 	[917536, 917631],
 	[917760, 917999]
-], se;
+];
+var se;
 function cc(s, t) {
 	let e = 0, i = t.length - 1, r;
 	if (s < t[0][0] || s > t[i][1]) return !1;
@@ -39208,7 +39690,9 @@ function Bs(s) {
 	let e = s.buffer.lines.get(s.buffer.ybase + s.buffer.y - 1)?.get(s.cols - 1), i = s.buffer.lines.get(s.buffer.ybase + s.buffer.y);
 	i && e && (i.isWrapped = e[3] !== 0 && e[3] !== 32);
 }
-var Vi = 2147483647, uc = 256, ci = class s {
+var Vi = 2147483647;
+var uc = 256;
+var ci = class s {
 	constructor(t = 32, e = 32) {
 		this.maxLength = t;
 		this.maxSubParamsLength = e;
@@ -39281,7 +39765,8 @@ var Vi = 2147483647, uc = 256, ci = class s {
 		i[e - 1] = ~r ? Math.min(r * 10 + t, Vi) : t;
 	}
 };
-var qi = [], mn = class {
+var qi = [];
+var mn = class {
 	constructor() {
 		this._state = 0;
 		this._active = qi;
@@ -39357,7 +39842,8 @@ var qi = [], mn = class {
 			this._active = qi, this._id = -1, this._state = 0;
 		}
 	}
-}, pe = class {
+};
+var pe = class {
 	constructor(t) {
 		this._handler = t;
 		this._data = "";
@@ -39376,7 +39862,8 @@ var qi = [], mn = class {
 		return this._data = "", this._hitLimit = !1, e;
 	}
 };
-var Yi = [], _n = class {
+var Yi = [];
+var _n = class {
 	constructor() {
 		this._handlers = Object.create(null);
 		this._active = Yi;
@@ -39429,7 +39916,8 @@ var Yi = [], _n = class {
 		}
 		this._active = Yi, this._ident = 0;
 	}
-}, ji = new ci();
+};
+var ji = new ci();
 ji.addParam(0);
 var Xi = class {
 	constructor(t) {
@@ -39464,7 +39952,9 @@ var Fs = class {
 	addMany(t, e, i, r) {
 		for (let n = 0; n < t.length; n++) this.table[e << 8 | t[n]] = i << 4 | r;
 	}
-}, ke = 160, hc = function() {
+};
+var ke = 160;
+var hc = function() {
 	let s = new Fs(4095), e = Array.apply(null, Array(256)).map((a, u) => u), i = (a, u) => e.slice(a, u), r = i(32, 127), n = i(0, 24);
 	n.push(25), n.push.apply(n, i(28, 32));
 	let o = i(0, 14), l;
@@ -39519,7 +40009,8 @@ var Fs = class {
 		24,
 		26
 	], 13, 14, 0), s.add(ke, 0, 2, 0), s.add(ke, 8, 5, 8), s.add(ke, 6, 0, 6), s.add(ke, 11, 0, 11), s.add(ke, 13, 13, 13), s;
-}(), bn = class extends D {
+}();
+var bn = class extends D {
 	constructor(e = hc) {
 		super();
 		this._transitions = e;
@@ -39760,7 +40251,8 @@ var Fs = class {
 		}
 	}
 };
-var dc = /^([\da-f])\/([\da-f])\/([\da-f])$|^([\da-f]{2})\/([\da-f]{2})\/([\da-f]{2})$|^([\da-f]{3})\/([\da-f]{3})\/([\da-f]{3})$|^([\da-f]{4})\/([\da-f]{4})\/([\da-f]{4})$/, fc = /^[\da-f]+$/;
+var dc = /^([\da-f])\/([\da-f])\/([\da-f])$|^([\da-f]{2})\/([\da-f]{2})\/([\da-f]{2})$|^([\da-f]{3})\/([\da-f]{3})\/([\da-f]{3})$|^([\da-f]{4})\/([\da-f]{4})\/([\da-f]{4})$/;
+var fc = /^[\da-f]+$/;
 function Ws(s) {
 	if (!s) return;
 	let t = s.toLowerCase();
@@ -39813,7 +40305,9 @@ var mc = {
 	"+": 3,
 	"-": 1,
 	".": 2
-}, ut = 131072, _l = 10;
+};
+var ut = 131072;
+var _l = 10;
 function bl(s, t) {
 	if (s > 24) return t.setWinLines || !1;
 	switch (s) {
@@ -39842,7 +40336,9 @@ function bl(s, t) {
 	}
 	return !1;
 }
-var vl = 5e3, gl = 0, vn = class extends D {
+var vl = 5e3;
+var gl = 0;
+var vn = class extends D {
 	constructor(e, i, r, n, o, l, a, u, h = new bn()) {
 		super();
 		this._bufferService = e;
@@ -40788,7 +41284,8 @@ var vl = 5e3, gl = 0, vn = class extends D {
 	markRangeDirty(e, i) {
 		this._dirtyRowTracker.markRangeDirty(e, i);
 	}
-}, Zi = class {
+};
+var Zi = class {
 	constructor(t) {
 		this._bufferService = t;
 		this.clearRange();
@@ -40810,7 +41307,10 @@ Zi = M([S(0, F)], Zi);
 function Sl(s) {
 	return 0 <= s && s < 256;
 }
-var _c = 5e7, El = 12, bc = 50, gn = class extends D {
+var _c = 5e7;
+var El = 12;
+var bc = 50;
+var gn = class extends D {
 	constructor(e) {
 		super();
 		this._action = e;
@@ -40916,7 +41416,8 @@ var ui = class {
 	}
 };
 ui = M([S(0, F)], ui);
-var Tl = !1, Sn = class extends D {
+var Tl = !1;
+var Sn = class extends D {
 	constructor(e) {
 		super();
 		this._windowsWrappingHeuristics = this._register(new ye());
@@ -41154,7 +41655,8 @@ function Il(s, t, e, i) {
 	}
 	return r;
 }
-var ee = 0, En = class {
+var ee = 0;
+var En = class {
 	constructor(t) {
 		this._getKey = t;
 		this._array = [];
@@ -41224,7 +41726,9 @@ var ee = 0, En = class {
 		return e;
 	}
 };
-var Us = 0, yl = 0, Tn = class extends D {
+var Us = 0;
+var yl = 0;
+var Tn = class extends D {
 	constructor() {
 		super();
 		this._decorations = new En((e) => e?.marker.line);
@@ -41261,7 +41765,8 @@ var Us = 0, yl = 0, Tn = class extends D {
 			Us = o.options.x ?? 0, yl = Us + (o.options.width ?? 1), e >= Us && e < yl && (!r || (o.options.layer ?? "bottom") === r) && n(o);
 		});
 	}
-}, Ks = class extends Ee {
+};
+var Ks = class extends Ee {
 	constructor(e) {
 		super();
 		this.options = e;
@@ -41283,7 +41788,8 @@ var Us = 0, yl = 0, Tn = class extends D {
 		this._onDispose.fire(), super.dispose();
 	}
 };
-var Sc = 1e3, In = class {
+var Sc = 1e3;
+var In = class {
 	constructor(t, e = Sc) {
 		this._renderCallback = t;
 		this._debounceThresholdMS = e;
@@ -41311,7 +41817,8 @@ var Sc = 1e3, In = class {
 	}
 };
 var xl = 20;
-var wl = !1, Tt = class extends D {
+var wl = !1;
+var Tt = class extends D {
 	constructor(e, i, r, n) {
 		super();
 		this._terminal = e;
@@ -42167,7 +42674,9 @@ var Ln = class {
 		this._core.unicodeService.activeVersion = t;
 	}
 };
-var Ic = ["cols", "rows"], Ue = 0, Dl = class extends D {
+var Ic = ["cols", "rows"];
+var Ue = 0;
+var Dl = class extends D {
 	constructor(t) {
 		super(), this._core = this._register(new yn(t)), this._addonManager = this._register(new xn()), this._publicOptions = { ...this._core.options };
 		let e = (r) => this._core.options[r], i = (r, n) => {
@@ -42709,7 +43218,7 @@ triggerSlice.reducer;
 //#region src/renderer/mainWindow/components/useXTerm.ts
 var { useCallback: useCallback$8, useEffect: useEffect$18, useRef: useRef$2 } = await importShared("react");
 var FONT_FAMILY = "JetBrainsMono";
-var useXTerm = ({ id, terminalContainerRef, onReady, outputColor, serializeAddon, searchAddon, fontSize, scrollBack, cursorStyle, cursorInactiveStyle, blinkCursor, resizeDelay, enablePtyWrite, enableResizeNotify, minResizeCols, minResizeRows, onProgress, darkMode, dispatch, useConpty, enableLigatures, openLinkNewTab, type }) => {
+var useXTerm = ({ id, terminalContainerRef, onReady, outputColor, serializeAddon, searchAddon, fontSize, scrollBack, cursorStyle, cursorInactiveStyle, blinkCursor, resizeDelay, fontLoadTimeout, enablePtyWrite, enableResizeNotify, minResizeCols, minResizeRows, onProgress, darkMode, dispatch, useConpty, enableLigatures, openLinkNewTab, type }) => {
 	const activeTab = useTabsState("activeTab");
 	const terminal = useRef$2(null);
 	const fitAddon = useRef$2(null);
@@ -42833,7 +43342,7 @@ var useXTerm = ({ id, terminalContainerRef, onReady, outputColor, serializeAddon
 				onReady?.(apiRef.current);
 			});
 		};
-		new import_fontfaceobserver_standalone.default(FONT_FAMILY).load().then(() => loadTerminal(FONT_FAMILY)).catch(() => {
+		new import_fontfaceobserver_standalone.default(FONT_FAMILY).load(null, fontLoadTimeout).then(() => loadTerminal(FONT_FAMILY)).catch(() => {
 			loadTerminal();
 			topToast.warning("Terminal font failed to load. Using fallback.");
 		});
@@ -42895,7 +43404,7 @@ var { forwardRef, memo: memo$1, useImperativeHandle, useRef: useRef$1 } = await 
 var { useDispatch: useDispatch$7 } = await importShared("react-redux");
 var MIN_RESIZE_COLS = 95;
 var MIN_RESIZE_ROWS = 22;
-var XTermCore = memo$1(forwardRef(({ id, type, onReady, className = "", serializeAddon, searchAddon, fontSize: fontSizeOverride, scrollBack: scrollBackOverride, cursorStyle: cursorStyleOverride, cursorInactiveStyle: cursorInactiveStyleOverride, blinkCursor: blinkCursorOverride, resizeDelay: resizeDelayOverride, enablePtyWrite = true, enableResizeNotify = true, minResizeCols = MIN_RESIZE_COLS, minResizeRows = MIN_RESIZE_ROWS, onProgress }, ref) => {
+var XTermCore = memo$1(forwardRef(({ id, type, onReady, className = "", serializeAddon, searchAddon, fontSize: fontSizeOverride, scrollBack: scrollBackOverride, cursorStyle: cursorStyleOverride, cursorInactiveStyle: cursorInactiveStyleOverride, blinkCursor: blinkCursorOverride, resizeDelay: resizeDelayOverride, fontLoadTimeout: fontLoadTimeoutOverride, enablePtyWrite = true, enableResizeNotify = true, minResizeCols = MIN_RESIZE_COLS, minResizeRows = MIN_RESIZE_ROWS, onProgress }, ref) => {
 	const terminalContainerRef = useRef$1(null);
 	const dispatch = useDispatch$7();
 	const darkMode = useAppState("darkMode");
@@ -42906,6 +43415,7 @@ var XTermCore = memo$1(forwardRef(({ id, type, onReady, className = "", serializ
 	const cursorInactiveStyle = cursorInactiveStyleOverride ?? terminalSettings.cursorInactiveStyle;
 	const blinkCursor = blinkCursorOverride ?? terminalSettings.blinkCursor;
 	const resizeDelay = resizeDelayOverride ?? terminalSettings.resizeDelay;
+	const fontLoadTimeout = fontLoadTimeoutOverride ?? terminalSettings.fontLoadTimeout ?? 3e3;
 	const useConpty = terminalSettings.useConpty;
 	const enableLigatures = terminalSettings.enableLigatures;
 	const outputColor = terminalSettings.outputColor;
@@ -42924,6 +43434,7 @@ var XTermCore = memo$1(forwardRef(({ id, type, onReady, className = "", serializ
 		cursorInactiveStyle,
 		blinkCursor,
 		resizeDelay,
+		fontLoadTimeout,
 		enablePtyWrite,
 		enableResizeNotify,
 		minResizeCols,
@@ -52507,10 +53018,13 @@ var getStep = (id) => {
 		case AvailableModules.aiToolkit:
 		case AvailableModules.smartGallery:
 		case AvailableModules.loraManager:
+		case AvailableModules.chatTTS:
+		case AvailableModules.llamaFactory:
 			index = 2;
 			break;
 		case AvailableModules.invoke:
 		case AvailableModules.openWebui:
+		case AvailableModules.langFlow:
 		default:
 			index = 1;
 			break;
