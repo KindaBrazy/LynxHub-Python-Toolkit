@@ -17,6 +17,7 @@ export const ModulesThatSupportPython = [
   'Biagiomaf_SmartGallery',
   'Willmiao_LoraManager',
   'Rsxdalv_AG',
+  'ChatTTS_2Noise',
 ];
 
 export const AvailableModules = {
@@ -43,6 +44,7 @@ export const AvailableModules = {
   aiToolkit: 'Ostris_AI_Toolkit',
   smartGallery: 'Biagiomaf_SmartGallery',
   loraManager: 'Willmiao_LoraManager',
+  chatTTS: 'ChatTTS_2Noise',
 };
 
 /** @deprecated use Associates_StorageID instead */
