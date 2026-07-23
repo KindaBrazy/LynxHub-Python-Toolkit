@@ -37,6 +37,7 @@ export const getStep = (id: string) => {
       break;
     case AvailableModules.invoke:
     case AvailableModules.openWebui:
+    case AvailableModules.langFlow:
     default:
       index = 1;
       break;

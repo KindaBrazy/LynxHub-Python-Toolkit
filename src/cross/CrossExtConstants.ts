@@ -19,6 +19,7 @@ export const ModulesThatSupportPython = [
   'Rsxdalv_AG',
   'ChatTTS_2Noise',
   'LlamaFactory_AI',
+  'Langflow_AI',
 ];
 
 export const AvailableModules = {
@@ -47,6 +48,7 @@ export const AvailableModules = {
   loraManager: 'Willmiao_LoraManager',
   chatTTS: 'ChatTTS_2Noise',
   llamaFactory: 'LlamaFactory_AI',
+  langFlow: 'Langflow_AI',
 };
 
 /** @deprecated use Associates_StorageID instead */
