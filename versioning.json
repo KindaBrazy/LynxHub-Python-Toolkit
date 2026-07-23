@@ -1,6 +1,15 @@
 {
   "versions": [
     {
+      "version": "0.15.5",
+      "commit": "ff78831",
+      "engines": {
+        "extensionApi": "^2.2.0"
+      },
+      "stage": "early_access",
+      "platforms": ["win32", "linux", "darwin"]
+    },
+    {
       "version": "0.15.3",
       "commit": "8f77e08",
       "engines": {
@@ -92,6 +101,19 @@
     }
   ],
   "changes": [
+    {
+      "version": "0.15.5",
+      "date": "2026-07-23",
+      "items": [
+        {
+          "📌 Improvements": [
+            "Added support for ChatTTS.",
+            "Added support for LlamaFactory.",
+            "Added support for Langflow."
+          ]
+        }
+      ]
+    },
     {
       "version": "0.15.3",
       "date": "2026-07-13",
