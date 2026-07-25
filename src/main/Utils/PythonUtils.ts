@@ -38,6 +38,11 @@ export async function detectInstallationType(pythonPath: string): Promise<Python
 
 export async function parseVersion(pythonPath: string): Promise<ParsedPythonVersion> {
   return new Promise((resolve, reject) => {
+    if (!pythonPath || !existsSync(pythonPath)) {
+      reject(new Error(`Python binary does not exist at ${pythonPath}`));
+      return;
+    }
+
     const pythonProcess = spawn(pythonPath, ['--version']);
 
     let stdout = '';
@@ -49,6 +54,10 @@ export async function parseVersion(pythonPath: string): Promise<ParsedPythonVers
 
     pythonProcess.stderr.on('data', data => {
       stderr += data.toString();
+    });
+
+    pythonProcess.on('error', err => {
+      reject(err);
     });
 
     pythonProcess.on('close', code => {
@@ -112,6 +121,9 @@ export async function removeDir(dir: string): Promise<void> {
 }
 
 export async function getSitePackagesCount(pythonPath: string): Promise<number> {
+  if (!pythonPath || !existsSync(pythonPath)) {
+    throw new Error(`Python binary does not exist at ${pythonPath}`);
+  }
   const version = await parseVersion(pythonPath);
   return new Promise((resolve, reject) => {
     const supportImportLib = compare(`${version.major}.${version.minor}.${version.patch}`, '3.8.0') === 1;
@@ -162,6 +174,10 @@ export async function openDialogExt(options: OpenDialogOptions): Promise<string 
 
 function spawnAsync(command: string, args: string[]): Promise<string> {
   return new Promise((resolve, reject) => {
+    if (!command || !existsSync(command)) {
+      reject(new Error(`Command binary does not exist at ${command}`));
+      return;
+    }
     const child = spawn(command, args);
     let stdout = '';
     let stderr = '';

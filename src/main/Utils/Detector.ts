@@ -381,6 +381,7 @@ async function analyzePythonPath(pythonPath: string): Promise<PythonInstallation
  * @returns A PythonInstallation object if the path is valid, otherwise null.
  */
 export async function locatePythonInstallation(pythonPath: string): Promise<PythonInstallation | null> {
+  if (!pythonPath || !existsSync(pythonPath)) return null;
   const installation = await analyzePythonPath(pythonPath);
   if (installation) {
     addSavedPython(installation.installPath);
@@ -394,7 +395,13 @@ export default async function detectPythonInstallations(refresh: boolean): Promi
   const paths = new Set<string>();
 
   if (!refresh && !isNil(savedInstallations) && !isEmpty(savedInstallations)) {
-    savedInstallations.forEach(path => paths.add(path));
+    savedInstallations.forEach(path => {
+      if (existsSync(path)) {
+        paths.add(path);
+      } else {
+        removeSavedPython(path);
+      }
+    });
   } else {
     const pathSources = await Promise.all([findPythonInPath(), findInCommonLocations()]);
 

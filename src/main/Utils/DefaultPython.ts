@@ -157,6 +157,10 @@ async function setDefaultPythonWindows(pythonPath: string): Promise<void> {
     let getOutput = '';
     let getError = '';
 
+    getProc.on('error', err => {
+      reject(new Error(`Failed to spawn shell process: ${err.message}`));
+    });
+
     getProc.stdout.on('data', data => {
       getOutput += data.toString();
     });
@@ -189,6 +193,11 @@ async function setDefaultPythonWindows(pythonPath: string): Promise<void> {
       const setProc = spawn(powershellExe, ['-NoProfile', '-Command', setCmd]);
 
       let addError = '';
+
+      setProc.on('error', err => {
+        reject(new Error(`Failed to spawn shell process for update: ${err.message}`));
+      });
+
       setProc.stderr.on('data', data => {
         addError += data.toString();
       });
