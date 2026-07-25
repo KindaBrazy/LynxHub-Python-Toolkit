@@ -5,6 +5,7 @@ import {useInstalledCard} from '@lynx/utils/hooks';
 import {Unplug} from 'lucide-react';
 import {useEffect, useMemo, useState} from 'react';
 
+import {getOriginalCardId} from '../../cross/CrossExtConstants';
 import {DepsModalKey} from '../consts';
 import pIpc from '../PIpc';
 import PackageManagerModal from './Python/PackageManagement/PackageManager/PackageManagerModal';
@@ -15,7 +16,10 @@ export default function CardMenuModal({useCardOverlayState, useCardStore}: Props
   const id = useCardStore(state => state.id);
   const title = useCardStore(state => state.title);
 
-  const webUI = useInstalledCard(id);
+  const originalId = useMemo(() => getOriginalCardId(id), [id]);
+  const installedCardDirect = useInstalledCard(id);
+  const installedCardOriginal = useInstalledCard(originalId);
+  const webUI = installedCardDirect || installedCardOriginal;
 
   const state = useCardOverlayState(DepsModalKey);
 

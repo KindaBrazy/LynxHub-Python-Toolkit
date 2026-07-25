@@ -3,7 +3,7 @@ import {useCardOverlayState} from '@lynx/components/card/useCardOverlayState';
 import {UseCardStoreType} from '@lynx/plugins/extensions/types';
 import {useCallback} from 'react';
 
-import {ModulesThatSupportPython} from '../../cross/CrossExtConstants';
+import {isPythonSupportedModule} from '../../cross/CrossExtConstants';
 import {DepsModalKey} from '../consts';
 import {PythonIcon} from './SvgIcons';
 
@@ -20,7 +20,7 @@ export default function CardMenu({useCardStore, useCardOverlayState}: Props) {
     setMenuIsOpen(false);
   }, [setMenuIsOpen, state]);
 
-  if (!ModulesThatSupportPython.includes(id)) return null;
+  if (!isPythonSupportedModule(id)) return null;
 
   return (
     <>

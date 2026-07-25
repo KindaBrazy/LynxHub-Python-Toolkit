@@ -1,10 +1,10 @@
-import {AvailableModules, ModulesThatSupportPython} from '../../../cross/CrossExtConstants';
+import {AvailableModules, getOriginalCardId, isPythonSupportedModule} from '../../../cross/CrossExtConstants';
 import {PythonVenvSelectItem} from '../../../cross/CrossExtTypes';
 import pIpc from '../../PIpc';
 import {Installer_PythonSelector} from './Installer_PythonSelector';
 
 function associate(id: string, type: 'add' | 'remove', item?: PythonVenvSelectItem) {
-  if (type === 'add' && item && ModulesThatSupportPython.includes(id)) {
+  if (type === 'add' && item && isPythonSupportedModule(id)) {
     pIpc.addAssociate({id, dir: item.dir, type: item.type, condaName: item.condaName});
   } else if (type === 'remove') {
     pIpc.removeAssociate(id);
@@ -14,7 +14,7 @@ function associate(id: string, type: 'add' | 'remove', item?: PythonVenvSelectIt
 export const getStep = (id: string) => {
   let index: number;
 
-  switch (id) {
+  switch (getOriginalCardId(id)) {
     case AvailableModules.sdForge:
     case AvailableModules.comfyui:
     case AvailableModules.comfyuiZluda:

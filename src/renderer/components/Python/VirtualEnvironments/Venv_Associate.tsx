@@ -7,7 +7,7 @@ import {useCallback, useEffect, useState} from 'react';
 import {useDispatch} from 'react-redux';
 
 import {useCardsState} from '../../../../../../src/renderer/mainWindow/redux/reducers/cards';
-import {ModulesThatSupportPython} from '../../../../cross/CrossExtConstants';
+import {isPythonSupportedModule} from '../../../../cross/CrossExtConstants';
 import {allCardsExt} from '../../../DataHolder';
 import pIpc from '../../../PIpc';
 import {PythonToolkitActions, usePythonToolkitState} from '../../../reducer';
@@ -56,7 +56,7 @@ export default function Venv_Associate({folder, type}: Props) {
 
     // Determine new items that can be added (only supported modules)
     const newItemsToAdd = installedCardsWithTitles.filter(
-      card => !associateIds.has(card.id) && ModulesThatSupportPython.includes(card.id),
+      card => !associateIds.has(card.id) && isPythonSupportedModule(card.id),
     );
     setCanBeAssociate(newItemsToAdd);
 

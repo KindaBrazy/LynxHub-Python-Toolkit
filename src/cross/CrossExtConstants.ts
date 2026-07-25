@@ -22,6 +22,20 @@ export const ModulesThatSupportPython = [
   'Langflow_AI',
 ];
 
+/**
+ * Resolves the original card ID if the given ID is a duplicated card ID (e.g. "Automatic1111_SD_2" -> "Automatic1111_SD").
+ */
+export function getOriginalCardId(id: string): string {
+  return id.replace(/_\d+$/, '');
+}
+
+/**
+ * Checks if a card ID (or its duplicated variant) supports Python.
+ */
+export function isPythonSupportedModule(id: string): boolean {
+  return ModulesThatSupportPython.includes(getOriginalCardId(id));
+}
+
 export const AvailableModules = {
   a1: 'Automatic1111_SD',
   sdAmd: 'LSHQQYTIGER_SD',

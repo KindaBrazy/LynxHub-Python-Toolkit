@@ -1,13 +1,13 @@
 import {ExtensionRendererApi} from '@lynx/plugins/extensions/types/api';
 import {storageUtilsChannels} from '@lynx_common/consts/ipcChannels/storage';
 
-import {ModulesThatSupportPython} from '../cross/CrossExtConstants';
+import {isPythonSupportedModule} from '../cross/CrossExtConstants';
 import {getStep} from './components/Modules/ModuleStepManager';
 import pIpc from './PIpc';
 
 export default function listenForEvents(lynxAPI: ExtensionRendererApi) {
   lynxAPI.events.on('card_install_addStep', ({id, addStep}) => {
-    if (ModulesThatSupportPython.includes(id)) {
+    if (isPythonSupportedModule(id)) {
       const {index, title, content} = getStep(id);
       addStep(index, title, content);
     }
