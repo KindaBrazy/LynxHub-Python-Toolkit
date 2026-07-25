@@ -32,7 +32,9 @@ export default function Venv_Associate({folder, type}: Props) {
   useEffect(() => {
     // Map card IDs to their titles
     const cardTitleMap = new Map(allCardsExt.map(card => [card.id, card.title]));
-    const cardAvatarMap = new Map(allCardsExt.map(card => [card.id, cacheUrl(extractGitUrl(card.repoUrl).avatarUrl)]));
+    const cardAvatarMap = new Map(
+      allCardsExt.map(card => [card.id, cacheUrl(extractGitUrl(card.repoUrl || '').avatarUrl)]),
+    );
 
     // Get installed cards that exist in the map and attach avatar/title
     const installedCardsWithTitles: Item[] = installedCards
