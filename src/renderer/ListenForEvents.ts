@@ -19,6 +19,8 @@ export default function listenForEvents(lynxAPI: ExtensionRendererApi) {
     }
 
     const [cardData] = event.args as [{id: string; dir?: string}];
-    void pIpc.findAIVenv(cardData.id, cardData.dir);
+    pIpc.findAIVenv(cardData.id, cardData.dir).catch(err => {
+      console.error(`Error finding AI venv for card ${cardData.id}:`, err);
+    });
   });
 }

@@ -90,7 +90,7 @@ const pIpc = {
   getExePathAssociate: (item: AssociateItem | string): Promise<string | undefined> =>
     ipc.invoke(pythonChannels.getExePathAssociate, item),
 
-  findAIVenv: (id: string, folder: string | undefined): Promise<string> =>
+  findAIVenv: (id: string, folder: string | undefined): Promise<string | null> =>
     ipc.invoke(pythonChannels.findAIVenv, id, folder),
 
   getUpdatesReq: (reqFile: string, currentPackages: SitePackages_Info[]): Promise<SitePackages_Info[]> =>

@@ -143,10 +143,9 @@ async function findVenvFolder(dirPath: string): Promise<string | null> {
   }
 }
 
-// TODO: add try catch for all usage of this method
-export async function findAIVenv(id: string, folder: string | undefined) {
+export async function findAIVenv(id: string, folder: string | undefined): Promise<string | null> {
   try {
-    if (!folder) throw 'Provided folder is not correct.';
+    if (!folder) return null;
     const venvFolder = await findVenvFolder(folder);
     if (venvFolder) {
       const pythonExecutable = getVenvPythonPath(venvFolder);
@@ -154,9 +153,9 @@ export async function findAIVenv(id: string, folder: string | undefined) {
       addAssociate({id, dir: venvFolder, type: 'venv'});
       return pythonExecutable;
     }
-    throw 'Venv folder not Found';
+    return null;
   } catch (e) {
-    console.error(e);
-    throw e;
+    console.error(`Error finding virtual environment for card ${id}:`, e);
+    return null;
   }
 }

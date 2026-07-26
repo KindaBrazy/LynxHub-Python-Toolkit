@@ -42,7 +42,9 @@ export async function initialExtension(lynxApi: ExtensionMainApi, utils: MainExt
 
     if (!storeManager.getCustomData(IsAutoDetectedVenvs_StorageID)) {
       storeManager.getData('cards').installedCards.forEach(card => {
-        findAIVenv(card.id, card.dir);
+        findAIVenv(card.id, card.dir).catch(err => {
+          console.error(`Error auto-detecting venv for card ${card.id}:`, err);
+        });
       });
       storeManager.setCustomData(IsAutoDetectedVenvs_StorageID, true);
     }
