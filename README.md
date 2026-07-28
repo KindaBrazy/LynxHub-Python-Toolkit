@@ -2,12 +2,12 @@
 
 <img src="./resources/icon.png" height="128" alt="LynxHub Python Toolkit Extension Logo"/>
 
-# [LynxHub](https://github.com/KindaBrazy/LynxHub) Python Toolkit Extension
+# [LynxHub](https://github.com/TheLynxHub/LynxHub) Python Toolkit Extension
 
 ![Python Management Screenshot](./resources/venv.png)
 
 **Python Toolkit Extension** brings Python installation, virtual environment, package, and requirements management into
-[**LynxHub**](https://github.com/KindaBrazy/LynxHub). It is built for managing Python-backed AI tools and modules without
+[**LynxHub**](https://github.com/TheLynxHub/LynxHub). It is built for managing Python-backed AI tools and modules without
 leaving the LynxHub workspace.
 
 </div>
@@ -105,7 +105,7 @@ leaving the LynxHub workspace.
 
 ## ⬇️ Installation
 
-1. **[Install LynxHub](https://github.com/KindaBrazy/LynxHub):** Ensure that you have LynxHub installed on your system.
+1. **[Install LynxHub](https://github.com/TheLynxHub/LynxHub):** Ensure that you have LynxHub installed on your system.
 2. **Install Extension:** Install the Python Toolkit Extension from the LynxHub extension page.
 
 ## 🤝 Contribution
