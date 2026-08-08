@@ -2,7 +2,7 @@ import {Button, Chip, Description, Disclosure, Input, Label, Surface, TextField}
 import CopyClipboard from '@lynx/components/CopyClipboard';
 import LynxTooltip from '@lynx/components/LynxTooltip';
 import filesIpc from '@lynx_shared/ipc/files';
-import {BoxMinimalistic, Broom, Download, Import, Pen} from '@solar-icons/react-perf/BoldDuotone';
+import {BoxMinimalisticIcon, BroomIcon, DownloadIcon, ImportIcon, PenIcon} from '@solar-icons/react/bold-duotone';
 import {isEmpty} from 'lodash-es';
 import {X} from 'lucide-react';
 import {KeyboardEvent, useEffect, useRef, useState} from 'react';
@@ -235,11 +235,11 @@ export default function Installer({
       <div className="flex items-center justify-between">
         <div className="flex flex-wrap items-center gap-2">
           <Button size="sm" variant="tertiary" onPress={handleFileSelect}>
-            <Import />
+            <ImportIcon />
             Import requirements files
           </Button>
           <Button size="sm" variant="tertiary" onPress={handleRequirementsInstallSelect}>
-            <Download />
+            <DownloadIcon />
             Install requirements files
           </Button>
         </div>
@@ -254,7 +254,7 @@ export default function Installer({
             }}
             size="sm"
             variant="danger-soft">
-            <Broom className="size-3.5" />
+            <BroomIcon className="size-3.5" />
             Clear all
           </Button>
         )}
@@ -318,7 +318,7 @@ export default function Installer({
                     onPress={() => handleEditItem(pkg)}
                     className="size-4 shrink-0 opacity-50 transition-opacity group-hover:opacity-100 text-foreground"
                     isIconOnly>
-                    <Pen className="size-3" />
+                    <PenIcon className="size-3" />
                   </Button>
                 </LynxTooltip>
                 <LynxTooltip delay={300} content="Remove package">
@@ -345,7 +345,7 @@ export default function Installer({
             ' border-dashed border-content-quaternary/30'
           }
           variant="secondary">
-          <BoxMinimalistic className="size-10 text-yellow-600" />
+          <BoxMinimalisticIcon className="size-10 text-yellow-600" />
           <p className="text-sm text-content-secondary">No packages added yet</p>
           <p className="text-xs text-content-tertiary">Type above, import, or install requirements files</p>
         </Surface>

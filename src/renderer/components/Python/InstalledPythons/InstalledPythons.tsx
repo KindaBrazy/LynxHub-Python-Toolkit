@@ -1,7 +1,7 @@
 import {Button, Description, Spinner, useOverlayState} from '@heroui/react';
 import EmptyStateCard from '@lynx/components/EmptyStateCard';
 import filesIpc from '@lynx_shared/ipc/files';
-import {FolderOpen, Refresh} from '@solar-icons/react-perf/BoldDuotone';
+import {FolderOpenIcon, RefreshIcon} from '@solar-icons/react/bold-duotone';
 import {cloneDeep, isEmpty} from 'lodash-es';
 import {Plus} from 'lucide-react';
 import {Dispatch, SetStateAction, useCallback, useEffect, useState} from 'react';
@@ -176,11 +176,11 @@ export default function InstalledPythons({
             Install Version
           </Button>
           <Button variant="tertiary" onPress={locateVenv} isPending={isLocating}>
-            {!isLocating && <FolderOpen />}
+            {!isLocating && <FolderOpenIcon />}
             {!isLocating && 'Locate'}
           </Button>
           <Button variant="tertiary" onPress={() => getInstalledPythons(true)}>
-            <Refresh />
+            <RefreshIcon />
             Refresh List
           </Button>
         </div>

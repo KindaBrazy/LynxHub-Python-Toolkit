@@ -5,13 +5,13 @@ import TabModal from '@lynx/components/TabModal';
 import {searchInStrings} from '@lynx/utils';
 import filesIpc from '@lynx_shared/ipc/files';
 import {
-  Checklist,
-  Diskette,
-  DocumentsMinimalistic,
-  DocumentText,
-  Import,
-  ShieldWarning,
-} from '@solar-icons/react-perf/BoldDuotone';
+  ChecklistIcon,
+  DisketteIcon,
+  DocumentsMinimalisticIcon,
+  DocumentTextIcon,
+  ImportIcon,
+  ShieldWarningIcon,
+} from '@solar-icons/react/bold-duotone';
 import {isEmpty} from 'lodash-es';
 import {Plus, X} from 'lucide-react';
 import {Dispatch, SetStateAction, useEffect, useMemo, useRef, useState} from 'react';
@@ -280,7 +280,7 @@ export default function RequirementsModal({id, projectPath, setIsReqAvailable, s
           </div>
           <div className="flex flex-row gap-x-1 items-center w-full">
             <Button variant="tertiary" onPress={openFilePath} fullWidth>
-              <DocumentText />
+              <DocumentTextIcon />
               {filePath || 'Select or create requirements file'}
             </Button>
             <LynxTooltip delay={300} content="Deselect requirements file">
@@ -300,7 +300,7 @@ export default function RequirementsModal({id, projectPath, setIsReqAvailable, s
             {!isEmpty(filePath) && (
               <>
                 <Button variant="secondary" isPending={isImporting} onPress={handleImportRequirements}>
-                  {isImporting ? <Spinner size="sm" color="current" /> : <Import className="size-3.5" />}
+                  {isImporting ? <Spinner size="sm" color="current" /> : <ImportIcon className="size-3.5" />}
                   Import
                 </Button>
                 <Button variant="secondary" onPress={handleAddRequirement}>
@@ -316,7 +316,7 @@ export default function RequirementsModal({id, projectPath, setIsReqAvailable, s
             <div className="mr-4 mb-4 rounded-2xl border border-warning/25 bg-warning/5 p-3">
               <div className="flex flex-wrap items-center justify-between gap-2">
                 <div className="flex items-center gap-2 text-warning">
-                  <ShieldWarning className="size-5" />
+                  <ShieldWarningIcon className="size-5" />
                   <span className="text-sm font-medium">
                     {conflicts.length} import conflict{conflicts.length === 1 ? '' : 's'}
                   </span>
@@ -387,7 +387,7 @@ export default function RequirementsModal({id, projectPath, setIsReqAvailable, s
               <EmptyStateCard
                 variant="transparent"
                 className="size-full"
-                icon={<DocumentsMinimalistic className="size-20" />}
+                icon={<DocumentsMinimalisticIcon className="size-20" />}
                 title="Select or create a requirements file to continue."
               />
             </div>
@@ -407,7 +407,7 @@ export default function RequirementsModal({id, projectPath, setIsReqAvailable, s
                 }
                 variant="transparent"
                 className="size-full"
-                icon={<DocumentText className="size-20" />}
+                icon={<DocumentTextIcon className="size-20" />}
               />
             </div>
           ) : (
@@ -416,13 +416,13 @@ export default function RequirementsModal({id, projectPath, setIsReqAvailable, s
         </Modal.Body>
         <Modal.Footer className="py-3">
           <Button isPending={isSaving} onPress={handleSaveRequirements}>
-            {isSaving ? <Spinner size="sm" color="current" /> : <Diskette className="size-3.5" />}
+            {isSaving ? <Spinner size="sm" color="current" /> : <DisketteIcon className="size-3.5" />}
             {!isSaving && 'Save'}
           </Button>
         </Modal.Footer>
       </TabModal>
       <Button size="sm" variant="tertiary" onPress={state.open}>
-        <Checklist />
+        <ChecklistIcon />
         Requirements
       </Button>
     </>

@@ -11,7 +11,7 @@ import {
 import EmptyStateCard from '@lynx/components/EmptyStateCard';
 import LynxTooltip from '@lynx/components/LynxTooltip';
 import {formatSize} from '@lynx_common/utils';
-import {DownloadMinimalistic, Inbox, Refresh, ShieldWarning} from '@solar-icons/react-perf/BoldDuotone';
+import {DownloadMinimalisticIcon, InboxIcon, RefreshIcon, ShieldWarningIcon} from '@solar-icons/react/bold-duotone';
 import {isEmpty, isNil, isString} from 'lodash-es';
 import {Dispatch, SetStateAction, useEffect, useState} from 'react';
 
@@ -152,14 +152,14 @@ export default function InstallerOfficial({refresh, installed, state, setCloseDi
           </SearchField>
           <LynxTooltip delay={300} content="Refresh available Python versions">
             <Button variant="tertiary" onPress={() => fetchPythonList(true)} isIconOnly>
-              <Refresh />
+              <RefreshIcon />
             </Button>
           </LynxTooltip>
         </div>
       )}
       {errorLoadingVersion ? (
         <div className="py-2 text-danger flex flex-col items-center justify-center gap-4 px-6">
-          <ShieldWarning className="size-20" />
+          <ShieldWarningIcon className="size-20" />
           <span className="text-lg">{errorLoadingVersion.title}</span>
           <span className="text-warning text-sm">{errorLoadingVersion.description}</span>
         </div>
@@ -198,7 +198,7 @@ export default function InstallerOfficial({refresh, installed, state, setCloseDi
             <EmptyStateCard
               className="mt-2"
               variant="secondary"
-              icon={<Inbox size={34} />}
+              icon={<InboxIcon size={34} />}
               description="Nothing to install!"
             />
           ) : (
@@ -215,7 +215,7 @@ export default function InstallerOfficial({refresh, installed, state, setCloseDi
                     <Link.Icon />
                   </Link>
                   <Button size="sm" variant="secondary" onPress={() => installPython(item)}>
-                    <DownloadMinimalistic />
+                    <DownloadMinimalisticIcon />
                     Install
                   </Button>
                 </div>

@@ -12,8 +12,8 @@ import {
 } from '@heroui/react';
 import EmptyStateCard from '@lynx/components/EmptyStateCard';
 import LynxTooltip from '@lynx/components/LynxTooltip';
-import {DownloadMinimalistic, Inbox} from '@solar-icons/react-perf/BoldDuotone';
-import {Refresh, ShieldWarning} from '@solar-icons/react-perf/BoldDuotone';
+import {DownloadMinimalisticIcon, InboxIcon} from '@solar-icons/react/bold-duotone';
+import {RefreshIcon, ShieldWarningIcon} from '@solar-icons/react/bold-duotone';
 import {isEmpty, isNil, isString} from 'lodash-es';
 import {Dispatch, SetStateAction, useEffect, useState} from 'react';
 
@@ -177,7 +177,7 @@ export default function InstallerConda({refresh, installed, state, setCloseDisab
           </SearchField>
           <LynxTooltip delay={300} content="Refresh from server">
             <Button variant="tertiary" className="shrink-0" onPress={() => fetchPythonList(true)} isIconOnly>
-              <Refresh />
+              <RefreshIcon />
             </Button>
           </LynxTooltip>
         </div>
@@ -189,7 +189,7 @@ export default function InstallerConda({refresh, installed, state, setCloseDisab
           className="mt-2 mx-4"
           title={errorLoadingVersion.title}
           description={errorLoadingVersion.description}
-          icon={<ShieldWarning className="size-20 text-warning" />}
+          icon={<ShieldWarningIcon className="size-20 text-warning" />}
         />
       ) : (
         <div className="px-4">
@@ -210,7 +210,7 @@ export default function InstallerConda({refresh, installed, state, setCloseDisab
             <EmptyStateCard
               className="mt-2"
               variant="secondary"
-              icon={<Inbox size={34} />}
+              icon={<InboxIcon size={34} />}
               description="Nothing to install!"
             />
           ) : (
@@ -225,7 +225,7 @@ export default function InstallerConda({refresh, installed, state, setCloseDisab
                   <Label>{item}</Label>
                   <Popover>
                     <Button size="sm" variant="secondary">
-                      <DownloadMinimalistic />
+                      <DownloadMinimalisticIcon />
                       Install
                     </Button>
                     <Popover.Content className="max-w-64">
@@ -243,7 +243,7 @@ export default function InstallerConda({refresh, installed, state, setCloseDisab
                           onChange={e => setEnvName(e.target.value)}
                         />
                         <Button size="sm" onPress={() => installPython(item)} fullWidth>
-                          <DownloadMinimalistic />
+                          <DownloadMinimalisticIcon />
                           Install v{item}
                         </Button>
                       </Popover.Dialog>

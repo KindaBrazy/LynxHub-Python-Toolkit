@@ -3,8 +3,8 @@ import EmptyStateCard from '@lynx/components/EmptyStateCard';
 import LynxTooltip from '@lynx/components/LynxTooltip';
 import TabModal from '@lynx/components/TabModal';
 import {compare as pepCompare} from '@renovatebot/pep440';
-import {AltArrowDown, AltArrowUp} from '@solar-icons/react-perf/Bold';
-import {BoxMinimalistic, ShieldWarning} from '@solar-icons/react-perf/BoldDuotone';
+import {AltArrowDownIcon, AltArrowUpIcon} from '@solar-icons/react/bold';
+import {BoxMinimalisticIcon, ShieldWarningIcon} from '@solar-icons/react/bold-duotone';
 import {isEmpty} from 'lodash-es';
 import {memo, useCallback, useEffect, useMemo, useState} from 'react';
 
@@ -195,7 +195,7 @@ const PkgVersions = memo(({updated, item, pythonPath}: Props) => {
               <div className="flex flex-row gap-2 flex-wrap pl-10 mt-2 pr-4">
                 {filteredVersions.length > 0 ? (
                   filteredVersions.slice(0, 150).map(v => {
-                    const icon = v.disabled ? null : v.isUpgrade ? <AltArrowUp /> : <AltArrowDown />;
+                    const icon = v.disabled ? null : v.isUpgrade ? <AltArrowUpIcon /> : <AltArrowDownIcon />;
                     return (
                       <Button
                         variant={v.color}
@@ -214,7 +214,7 @@ const PkgVersions = memo(({updated, item, pythonPath}: Props) => {
                     variant="secondary"
                     className="size-full mr-6"
                     description="Something goes wrong, please try again!"
-                    icon={<ShieldWarning className="size-10 text-warning" />}
+                    icon={<ShieldWarningIcon className="size-10 text-warning" />}
                   />
                 )}
                 {filteredVersions.length > 150 && (
@@ -229,7 +229,7 @@ const PkgVersions = memo(({updated, item, pythonPath}: Props) => {
       </TabModal>
       <LynxTooltip delay={300} content="Change package version">
         <Button size="sm" variant="tertiary" isPending={!!changingTo} onPress={() => setIsOpen(true)} isIconOnly>
-          <BoxMinimalistic className="size-3.5" />
+          <BoxMinimalisticIcon className="size-3.5" />
         </Button>
       </LynxTooltip>
     </>

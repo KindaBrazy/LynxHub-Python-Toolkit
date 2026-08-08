@@ -1,7 +1,7 @@
 import {Button, Description, Spinner} from '@heroui/react';
 import EmptyStateCard from '@lynx/components/EmptyStateCard';
 import filesIpc from '@lynx_shared/ipc/files';
-import {FolderOpen} from '@solar-icons/react-perf/BoldDuotone';
+import {FolderOpenIcon} from '@solar-icons/react/bold-duotone';
 import {isEmpty} from 'lodash-es';
 import {useCallback, useEffect, useState} from 'react';
 
@@ -141,7 +141,7 @@ export default function Venv({visible, installedPythons, isLoadingPythons}: Prop
           <VenvCreator refresh={getVenvs} installedPythons={installedPythons} isLoadingPythons={isLoadingPythons} />
 
           <Button variant="tertiary" onPress={locateVenv} isPending={isLocating}>
-            {!isLocating && <FolderOpen />}
+            {!isLocating && <FolderOpenIcon />}
             Locate
           </Button>
         </div>

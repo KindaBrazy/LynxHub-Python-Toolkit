@@ -1,7 +1,7 @@
 import {Button, Dropdown, Label, Popover, Separator, useOverlayState} from '@heroui/react';
 import LynxTooltip from '@lynx/components/LynxTooltip';
 import filesIpc from '@lynx_shared/ipc/files';
-import {BoxMinimalistic, MenuDots, TrashBin2} from '@solar-icons/react-perf/BoldDuotone';
+import {BoxMinimalisticIcon, MenuDotsIcon, TrashBin2Icon} from '@solar-icons/react/bold-duotone';
 import {SHA256} from 'crypto-js';
 import {X} from 'lucide-react';
 import {FormEvent, useCallback, useEffect, useMemo, useState} from 'react';
@@ -133,13 +133,13 @@ export default function VenvCard({
             <Dropdown>
               <LynxTooltip delay={300} content="Environment actions">
                 <Button size="sm" variant="tertiary" isIconOnly>
-                  <MenuDots className="rotate-90" />
+                  <MenuDotsIcon className="rotate-90" />
                 </Button>
               </LynxTooltip>
               <Dropdown.Popover>
                 <Dropdown.Menu>
                   <Dropdown.Item id="package-manager" textValue="Manage Packages" onPress={packageManagerModal.open}>
-                    <BoxMinimalistic className="size-4" />
+                    <BoxMinimalisticIcon className="size-4" />
                     <Label>Manage Packages</Label>
                   </Dropdown.Item>
                 </Dropdown.Menu>
@@ -150,7 +150,7 @@ export default function VenvCard({
               <Popover isOpen={popoverUninstaller} onOpenChange={setPopoverUninstaller}>
                 <LynxTooltip delay={300} content="Remove environment">
                   <Button size="sm" variant="danger-soft" isPending={isRemoving} isIconOnly>
-                    <TrashBin2 />
+                    <TrashBin2Icon />
                   </Button>
                 </LynxTooltip>
                 <Popover.Content className="max-w-sm">
@@ -165,7 +165,7 @@ export default function VenvCard({
                           Any AI using this environment will be disconnected.
                         </p>
                         <Button size="sm" variant="danger" className="mt-2" onPress={remove} fullWidth>
-                          <TrashBin2 />
+                          <TrashBin2Icon />
                           Delete Permanently
                         </Button>
                       </div>

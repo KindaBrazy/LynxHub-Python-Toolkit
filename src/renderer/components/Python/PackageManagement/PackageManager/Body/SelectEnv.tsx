@@ -1,5 +1,5 @@
 import {Button, Description, Dropdown, Label, Spinner} from '@heroui/react';
-import {Restart} from '@solar-icons/react-perf/BoldDuotone';
+import {RestartIcon} from '@solar-icons/react/bold-duotone';
 import {Dispatch, SetStateAction, useCallback, useEffect, useState} from 'react';
 
 import {AssociateItem, PythonVenvSelectItem} from '../../../../../../cross/CrossExtTypes';
@@ -89,7 +89,7 @@ export default function SelectEnv({id, setPythonPath}: Props) {
         </Dropdown.Popover>
       </Dropdown>
       <Button variant="tertiary" onPress={fetchList}>
-        <Restart />
+        <RestartIcon />
         Refresh
       </Button>
     </div>

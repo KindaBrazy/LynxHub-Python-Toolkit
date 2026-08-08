@@ -1,5 +1,5 @@
 import {Button} from '@heroui/react';
-import {Broom} from '@solar-icons/react-perf/BoldDuotone';
+import {BroomIcon} from '@solar-icons/react/bold-duotone';
 import {useEffect, useState} from 'react';
 import {useDispatch} from 'react-redux';
 
@@ -56,7 +56,7 @@ export default function CacheDirUsage() {
         variant="danger-soft"
         isDisabled={!cacheStorageUsage}
         fullWidth>
-        {!clearing && <Broom />}
+        {!clearing && <BroomIcon />}
         {!clearing ? 'Clear Cache' : 'Clearing...'}
       </Button>
     </div>

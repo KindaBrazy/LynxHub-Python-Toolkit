@@ -3,7 +3,7 @@ import {useOverlayState} from '@heroui/react';
 import LynxTooltip from '@lynx/components/LynxTooltip';
 import {ToolsCard} from '@lynx/components/ToolsCard';
 import {AppDispatch} from '@lynx/redux/store';
-import {SettingsMinimalistic} from '@solar-icons/react-perf/BoldDuotone';
+import {SettingsMinimalisticIcon} from '@solar-icons/react/bold-duotone';
 import {useDispatch} from 'react-redux';
 
 import {setActivePage} from '../DataHolder';
@@ -38,7 +38,7 @@ export function PythonToolkitCard() {
         footer={
           <LynxTooltip delay={300} content="Settings">
             <Button variant="tertiary" onPress={settingsModal.open} isIconOnly>
-              <SettingsMinimalistic />
+              <SettingsMinimalisticIcon />
             </Button>
           </LynxTooltip>
         }

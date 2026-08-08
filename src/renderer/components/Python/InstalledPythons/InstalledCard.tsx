@@ -12,8 +12,14 @@ import {
 import LynxTooltip from '@lynx/components/LynxTooltip';
 import {isWin} from '@lynx_common/utils';
 import filesIpc from '@lynx_shared/ipc/files';
-import {BoxMinimalistic, CheckCircle, MenuDots, Refresh, TrashBin2} from '@solar-icons/react-perf/BoldDuotone';
-import {CheckRead} from '@solar-icons/react-perf/LineDuotone';
+import {
+  BoxMinimalisticIcon,
+  CheckCircleIcon,
+  MenuDotsIcon,
+  RefreshIcon,
+  TrashBin2Icon,
+} from '@solar-icons/react/bold-duotone';
+import {CheckReadIcon} from '@solar-icons/react/line-duotone';
 import {startCase} from 'lodash-es';
 import {X} from 'lucide-react';
 import {useCallback, useMemo, useState} from 'react';
@@ -81,7 +87,7 @@ export default function InstalledCard({python, diskUsage, maxDiskValue, updateDe
     if (python.isDefault && python.isLynxHubDefault) {
       return (
         <Chip size="sm" variant="soft" color="success" className="font-semibold! px-2">
-          <CheckCircle />
+          <CheckCircleIcon />
           System & LynxHub
         </Chip>
       );
@@ -90,7 +96,7 @@ export default function InstalledCard({python, diskUsage, maxDiskValue, updateDe
     if (python.isDefault) {
       return (
         <Chip size="sm" variant="soft" color="default" className="font-semibold! px-2">
-          <CheckCircle />
+          <CheckCircleIcon />
           System
         </Chip>
       );
@@ -99,7 +105,7 @@ export default function InstalledCard({python, diskUsage, maxDiskValue, updateDe
     if (python.isLynxHubDefault) {
       return (
         <Chip size="sm" variant="soft" color="accent" className="font-semibold! px-2">
-          <CheckCircle />
+          <CheckCircleIcon />
           LynxHub
         </Chip>
       );
@@ -192,7 +198,7 @@ export default function InstalledCard({python, diskUsage, maxDiskValue, updateDe
             <Dropdown>
               <LynxTooltip delay={300} content="Python actions">
                 <Button size="sm" variant="tertiary" isIconOnly>
-                  <MenuDots className="rotate-90" />
+                  <MenuDotsIcon className="rotate-90" />
                 </Button>
               </LynxTooltip>
               <Dropdown.Popover>
@@ -200,7 +206,7 @@ export default function InstalledCard({python, diskUsage, maxDiskValue, updateDe
                   {isWin && (
                     <>
                       <Dropdown.Item id="system-default" onPress={systemConfirm.open} textValue="Set as System Default">
-                        {python.isDefault ? <Refresh size={16} /> : <CheckRead size={16} />}
+                        {python.isDefault ? <RefreshIcon size={16} /> : <CheckReadIcon size={16} />}
                         <Label>
                           {python.isDefault ? 'Reset ' : 'Set '}
                           <span className="font-bold text-LynxPurple">System Default</span>
@@ -208,7 +214,7 @@ export default function InstalledCard({python, diskUsage, maxDiskValue, updateDe
                       </Dropdown.Item>
 
                       <Dropdown.Item id="lynxhub-default" onPress={lynxConfirm.open} textValue="Set as LynxHub Default">
-                        {python.isLynxHubDefault ? <Refresh size={16} /> : <CheckRead size={16} />}
+                        {python.isLynxHubDefault ? <RefreshIcon size={16} /> : <CheckReadIcon size={16} />}
                         <Label>
                           {python.isDefault ? 'Reset ' : 'Set '}
                           <span className="font-bold text-accent">LynxHub Default</span>
@@ -217,7 +223,7 @@ export default function InstalledCard({python, diskUsage, maxDiskValue, updateDe
                     </>
                   )}
                   <Dropdown.Item id="package-manager" textValue="Manage Packages" onPress={packageManagerModal.open}>
-                    <BoxMinimalistic className="size-4" />
+                    <BoxMinimalisticIcon className="size-4" />
                     <Label>Manage Packages</Label>
                   </Dropdown.Item>
                 </Dropdown.Menu>
@@ -290,7 +296,7 @@ export default function InstalledCard({python, diskUsage, maxDiskValue, updateDe
             <Popover isOpen={popoverUninstaller} onOpenChange={setPopoverUninstaller}>
               <LynxTooltip delay={300} content="Remove Python">
                 <Button size="sm" variant="danger-soft" isIconOnly>
-                  <TrashBin2 />
+                  <TrashBin2Icon />
                 </Button>
               </LynxTooltip>
               <Popover.Content>
@@ -324,7 +330,7 @@ export default function InstalledCard({python, diskUsage, maxDiskValue, updateDe
                         </p>
                       )}
                       <Button size="sm" variant="danger" className="mt-2" onPress={uninstall} fullWidth>
-                        <TrashBin2 />
+                        <TrashBin2Icon />
                         Uninstall Permanently
                       </Button>
                     </div>

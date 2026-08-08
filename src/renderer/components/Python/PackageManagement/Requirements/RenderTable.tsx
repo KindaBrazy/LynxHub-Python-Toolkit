@@ -1,5 +1,5 @@
 import {EmptyState, ScrollShadow, Table} from '@heroui/react';
-import {ListCross} from '@solar-icons/react-perf/BoldDuotone';
+import {ListCrossIcon} from '@solar-icons/react/bold-duotone';
 import {Dispatch, memo, RefObject, SetStateAction, useCallback} from 'react';
 
 import {RequirementData} from '../../../../../cross/CrossExtTypes';
@@ -59,7 +59,7 @@ const RenderTable = memo(({filteredReqs, setRequirements, scrollRef}: Props) => 
               renderEmptyState={() => (
                 <EmptyState
                   className={'flex h-full w-full flex-col items-center justify-center gap-y-2 text-center my-4'}>
-                  <ListCross className="size-12" />
+                  <ListCrossIcon className="size-12" />
                   <span className="text-sm text-muted">No results found</span>
                 </EmptyState>
               )}>

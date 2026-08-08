@@ -1,6 +1,6 @@
 import {Button, ButtonGroup, Description, Dropdown, Label, Selection} from '@heroui/react';
-import {AltArrowDown} from '@solar-icons/react-perf/Bold';
-import {Download, Magnifier} from '@solar-icons/react-perf/BoldDuotone';
+import {AltArrowDownIcon} from '@solar-icons/react/bold';
+import {DownloadIcon, MagnifierIcon} from '@solar-icons/react/bold-duotone';
 import {isEmpty} from 'lodash-es';
 import {Dispatch, SetStateAction, useEffect, useMemo, useState} from 'react';
 
@@ -114,18 +114,18 @@ export default function UpdateButton({
       variant="secondary"
       isPending={isUpdating}
       isDisabled={selectedKeys !== 'all' && selectedKeys.size === 0}>
-      {!isUpdating && <Download />}
+      {!isUpdating && <DownloadIcon />}
       {isUpdating ? <span>Updating ({selectedCount})...</span> : <span>Update {selectedCount}</span>}
     </Button>
   ) : (
     <ButtonGroup>
       <Button size="sm" variant="secondary" onPress={checkForUpdate} isPending={checkingUpdates}>
-        {!checkingUpdates && <Magnifier />}
+        {!checkingUpdates && <MagnifierIcon />}
         {labelsMap[selectedOptionValue]}
       </Button>
       <Dropdown>
         <Button size="sm" variant="tertiary" isDisabled={!isReqAvailable || checkingUpdates} isIconOnly>
-          <AltArrowDown />
+          <AltArrowDownIcon />
         </Button>
         <Dropdown.Popover>
           <Dropdown.Menu selectionMode="single" selectedKeys={selectedOption} onSelectionChange={setSelectedOption}>

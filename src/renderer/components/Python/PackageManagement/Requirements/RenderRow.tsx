@@ -1,6 +1,6 @@
 import {Button, Input, ListBox, Popover, Select, Table, TextArea, useOverlayState} from '@heroui/react';
 import LynxTooltip from '@lynx/components/LynxTooltip';
-import {Pen} from '@solar-icons/react-perf/BoldDuotone';
+import {PenIcon} from '@solar-icons/react/bold-duotone';
 import {X} from 'lucide-react';
 import {memo, useCallback, useEffect, useRef, useState} from 'react';
 
@@ -162,7 +162,7 @@ const RenderRow = memo(({item, index, onDelete, onUpdate}: Props) => {
           isOpen={editPop.isOpen}>
           <LynxTooltip delay={300} content="Edit Raw Line">
             <Button size="sm" className="ml-2" variant="tertiary" isIconOnly>
-              <Pen />
+              <PenIcon />
             </Button>
           </LynxTooltip>
           <Popover.Content placement="left">

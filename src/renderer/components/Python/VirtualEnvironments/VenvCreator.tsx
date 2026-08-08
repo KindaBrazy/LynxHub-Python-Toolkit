@@ -1,6 +1,6 @@
 import {Button, Checkbox, Input, Key, Label, ListBox, Popover, Select, Spinner, TextField} from '@heroui/react';
 import filesIpc from '@lynx_shared/ipc/files';
-import {FolderOpen} from '@solar-icons/react-perf/BoldDuotone';
+import {FolderOpenIcon} from '@solar-icons/react/bold-duotone';
 import {capitalize, isEmpty} from 'lodash-es';
 import {Plus} from 'lucide-react';
 import {useCallback, useEffect, useMemo, useState} from 'react';
@@ -137,7 +137,7 @@ export default function VenvCreator({installedPythons, refresh, isLoadingPythons
 
             <div className="flex flex-col gap-y-2">
               <Button variant="secondary" isPending={isCreating} onPress={selectFolder} fullWidth>
-                <FolderOpen />
+                <FolderOpenIcon />
                 {targetFolder || 'Choose Destination Folder'}
               </Button>
 

@@ -1,6 +1,6 @@
 import {Button, Popover} from '@heroui/react';
 import LynxTooltip from '@lynx/components/LynxTooltip';
-import {TrashBin2} from '@solar-icons/react-perf/BoldDuotone';
+import {TrashBin2Icon} from '@solar-icons/react/bold-duotone';
 import {Dispatch, SetStateAction, useCallback, useState} from 'react';
 
 import {PackageInfo, PackageUpdate} from '../../../../../../cross/CrossExtTypes';
@@ -42,7 +42,7 @@ export default function ActionButtons({item, removed, pythonPath, isUninstalling
       <Popover isOpen={isUninstallOpen} onOpenChange={setIsUninstallOpen}>
         <LynxTooltip delay={300} content="Remove package">
           <Button size="sm" variant="danger-soft" isPending={isUninstalling} isIconOnly>
-            <TrashBin2 />
+            <TrashBin2Icon />
           </Button>
         </LynxTooltip>
         <Popover.Content className="max-w-sm">

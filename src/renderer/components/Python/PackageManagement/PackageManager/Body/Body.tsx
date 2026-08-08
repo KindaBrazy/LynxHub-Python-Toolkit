@@ -1,6 +1,6 @@
 import {Checkbox, Description, ModalBody, ScrollShadow, Selection, Spinner, Table} from '@heroui/react';
 import EmptyStateCard from '@lynx/components/EmptyStateCard';
-import {ObjectScan} from '@solar-icons/react-perf/BoldDuotone';
+import {ObjectScanIcon} from '@solar-icons/react/bold-duotone';
 import {cloneDeep, isEmpty} from 'lodash-es';
 import {Dispatch, SetStateAction, useMemo} from 'react';
 
@@ -137,7 +137,7 @@ export default function PackageManagerBody({
                 title="No virtual environment detected"
                 description="Select the environment you'd like to use."
                 action={<SelectEnv id={id} setPythonPath={setPythonPath} />}
-                icon={<ObjectScan className="size-24 mb-4 text-warning-hover" />}
+                icon={<ObjectScanIcon className="size-24 mb-4 text-warning-hover" />}
               />
             )}
           </div>

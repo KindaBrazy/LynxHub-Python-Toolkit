@@ -1,6 +1,6 @@
 import {Alert, Button, Description, Key, Label, ListBox, Select, Spinner} from '@heroui/react';
-import {SkipNext} from '@solar-icons/react-perf/Bold';
-import {Restart} from '@solar-icons/react-perf/BoldDuotone';
+import {SkipNextIcon} from '@solar-icons/react/bold';
+import {RestartIcon} from '@solar-icons/react/bold-duotone';
 import {useCallback, useEffect, useMemo, useState} from 'react';
 import {useDispatch} from 'react-redux';
 
@@ -72,7 +72,7 @@ export const Installer_PythonSelector = (
         <ListBox.Item id="skip" key="skip" textValue="Skip">
           <div className="flex flex-col">
             <Label className="flex flex-row items-center gap-x-2">
-              <SkipNext className="size-4 text-semi-muted" />
+              <SkipNextIcon className="size-4 text-semi-muted" />
               <span>Skip</span>
             </Label>
             <Description>
@@ -150,7 +150,7 @@ export const Installer_PythonSelector = (
               </Select.Popover>
             </Select>
             <Button variant="tertiary" onPress={fetchList}>
-              <Restart />
+              <RestartIcon />
               Refresh
             </Button>
           </div>

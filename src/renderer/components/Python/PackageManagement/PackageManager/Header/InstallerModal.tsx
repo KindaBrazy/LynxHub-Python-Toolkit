@@ -1,6 +1,6 @@
 import {Alert, Button, Modal, ScrollShadow, useOverlayState} from '@heroui/react';
 import TabModal from '@lynx/components/TabModal';
-import {Download} from '@solar-icons/react-perf/BoldDuotone';
+import {DownloadIcon} from '@solar-icons/react/bold-duotone';
 import {Plus} from 'lucide-react';
 import {useEffect, useState} from 'react';
 
@@ -103,7 +103,7 @@ export default function InstallerModal({refresh, pythonPath}: Props) {
               Cancel
             </Button>
             <Button size="md" isPending={installing} onPress={handleInstall} isDisabled={isInstallDisabled} fullWidth>
-              <Download />
+              <DownloadIcon />
               {installing
                 ? 'Installing…'
                 : isRequirementsInstall

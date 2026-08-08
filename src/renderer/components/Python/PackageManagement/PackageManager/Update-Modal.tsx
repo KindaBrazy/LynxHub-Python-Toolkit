@@ -3,7 +3,7 @@ import {UseOverlayStateReturn} from '@heroui/react';
 import EmptyStateCard from '@lynx/components/EmptyStateCard';
 import TabModal from '@lynx/components/TabModal';
 import ptyIpc from '@lynx_shared/ipc/pty';
-import {ShieldWarning} from '@solar-icons/react-perf/BoldDuotone';
+import {ShieldWarningIcon} from '@solar-icons/react/bold-duotone';
 import {memo, useEffect, useState} from 'react';
 
 import TerminalView from './Terminal-View';
@@ -55,7 +55,7 @@ const UpdateModal = memo(({state}: Props) => {
             <EmptyStateCard
               variant="secondary"
               className="size-full py-4"
-              icon={<ShieldWarning className="size-14 text-warning" />}
+              icon={<ShieldWarningIcon className="size-14 text-warning" />}
               description={isDone ? 'Close this window?' : 'The command will still execute in the background.'}
               title={isDone ? 'The terminal is done and exited' : 'Are you sure you want to close this window?'}
             />

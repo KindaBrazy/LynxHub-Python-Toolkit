@@ -4,7 +4,7 @@ import {cardsActions} from '@lynx/redux/reducers/cards';
 import {useTabsState} from '@lynx/redux/reducers/tabs';
 import {terminalLineEnding} from '@lynx_common/utils';
 import ptyIpc from '@lynx_shared/ipc/pty';
-import {BoxMinimalistic, Diskette, FolderOpen} from '@solar-icons/react-perf/BoldDuotone';
+import {BoxMinimalisticIcon, DisketteIcon, FolderOpenIcon} from '@solar-icons/react/bold-duotone';
 import {Terminal} from 'lucide-react';
 import type {ReactNode} from 'react';
 import {useDispatch} from 'react-redux';
@@ -120,7 +120,7 @@ export default function EnvironmentCard({
               onPress={onOpenPath}
               className={'h-8 min-w-0 justify-start border border-divider/60 bg-surface-secondary/45 px-2.5 text-xs'}
               fullWidth>
-              <FolderOpen className="size-3.5 shrink-0 text-muted" />
+              <FolderOpenIcon className="size-3.5 shrink-0 text-muted" />
               <span className="truncate font-JetBrainsMono">{path}</span>
             </Button>
             <LynxTooltip delay={300} content="Open terminal in environment">
@@ -138,14 +138,14 @@ export default function EnvironmentCard({
           <div className="grid grid-cols-2 gap-2 rounded-3xl border border-divider/60 bg-surface-secondary/35 p-3">
             <div className="min-w-0">
               <div className="mb-1 flex items-center gap-x-1.5 text-xs text-muted">
-                <BoxMinimalistic className="size-3.5" />
+                <BoxMinimalisticIcon className="size-3.5" />
                 <span>Packages</span>
               </div>
               <div className="text-base font-semibold leading-none text-foreground">{packageCount}</div>
             </div>
             <div className="min-w-0 border-l border-divider/60 pl-2.5">
               <div className="mb-1 flex items-center gap-x-1.5 text-xs text-muted">
-                <Diskette className="size-3.5" />
+                <DisketteIcon className="size-3.5" />
                 <span>Disk usage</span>
               </div>
               {diskUsage === undefined ? (

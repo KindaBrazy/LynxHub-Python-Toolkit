@@ -1,5 +1,5 @@
 import {Button, Chip, TableCell} from '@heroui/react';
-import {DownloadMinimalistic, Refresh, ShieldWarning} from '@solar-icons/react-perf/BoldDuotone';
+import {DownloadMinimalisticIcon, RefreshIcon, ShieldWarningIcon} from '@solar-icons/react/bold-duotone';
 import {capitalize, startCase} from 'lodash-es';
 import {useCallback, useMemo, useState} from 'react';
 
@@ -86,7 +86,7 @@ export default function TableItem({
           onPress={update}
           isPending={isUpdating}
           className={item.isNew ? 'text-accent-hover' : 'text-success'}>
-          {item.isNew ? <DownloadMinimalistic /> : <Refresh />}
+          {item.isNew ? <DownloadMinimalisticIcon /> : <RefreshIcon />}
           {isUpdating ? 'Updating...' : item.isNew ? 'Install' : 'Update'}
         </Button>
       </TableCell>
@@ -106,7 +106,7 @@ export default function TableItem({
                 </Chip>
               ) : (
                 item.updateVersion && (
-                  <ShieldWarning
+                  <ShieldWarningIcon
                     className={`${getUpdateVersionColor(item.version, item.updateVersion)} size-[1.1rem]`}
                   />
                 )
