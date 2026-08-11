@@ -5,6 +5,7 @@ import {
   DefaultLynxPython_StorageID,
   IsAutoDetectedVenvs_StorageID,
   MaxRetry_StorageID,
+  SENTRY_DSN,
 } from '../cross/CrossExtConstants';
 import {AssociateItem, IdPathType} from '../cross/CrossExtTypes';
 import {getDefaultEnvPath, setAppManager, setNodePty, setStorage} from './DataHolder';
@@ -13,6 +14,8 @@ import {replacePythonPath} from './Utils/ExtMainUtils';
 import {findAIVenv} from './Utils/VirtualEnv/VenvUtils';
 
 export async function initialExtension(lynxApi: ExtensionMainApi, utils: MainExtensionUtils) {
+  lynxApi.initNodeSentry(SENTRY_DSN);
+
   utils.getAppManager().then(app => {
     setAppManager(app);
   });

@@ -83,3 +83,6 @@ export const FolderDiskUsage_StorageID = 'pythonToolkit_FolderDiskUsage';
 
 // Utils
 export const getDiskUsageID = (path: string) => `${FolderDiskUsage_StorageID}_${path}`;
+
+export const SENTRY_DSN =
+  'https://ebebe2a9dba29dcb11d32283b74ef6ff@o4509344104316928.ingest.us.sentry.io/4510227807928320';

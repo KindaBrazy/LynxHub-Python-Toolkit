@@ -2,6 +2,7 @@ import './index.css';
 
 import type {ExtensionRendererApi} from '@lynx/plugins/extensions/types/api';
 
+import {SENTRY_DSN} from '../cross/CrossExtConstants';
 import CardMenu from './components/CardMenu';
 import CardMenuModal from './components/CardMenuModal';
 import PythonToolkitPage from './components/Python/PythonToolkitPage';
@@ -15,6 +16,8 @@ import pIpc from './PIpc';
 import pythonToolkitReducer from './reducer';
 
 export function InitialExtensions(lynxAPI: ExtensionRendererApi) {
+  lynxAPI.initBrowserSentry(SENTRY_DSN);
+
   if (lynxAPI.tabs) setTheActivePage(lynxAPI.tabs.setActivePage);
   setCards(lynxAPI.modulesData?.allCards || []);
   if (lynxAPI.toast) setToast(lynxAPI.toast);
