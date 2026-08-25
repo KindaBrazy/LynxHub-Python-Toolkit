@@ -113,7 +113,7 @@ export default function TableItem({
               )}
             </div>
           </div>
-          <div className="text-bold text-sm text-default-400">
+          <div className="text-bold text-sm text-muted">
             <div className="flex flex-row items-center gap-x-1 text-xs">
               <span>{item.version}</span>
               {item.updateVersion && !item.isNew && (

@@ -32,7 +32,7 @@ export default function CustomHook() {
                 <code
                   className={
                     'px-2 py-1 h-fit font-JetBrainsMono whitespace-pre-line font-normal inline-block w-full' +
-                    ' whitespace-nowrap rounded-xl bg-warning-soft-hover text-nowrap text-warning-700 overflow-auto' +
+                    ' whitespace-nowrap rounded-xl bg-warning-soft-hover text-nowrap text-warning overflow-auto' +
                     ' text-sm'
                   }>
                   {message.replace("Error invoking remote method 'get-venvs': Error:", '')}

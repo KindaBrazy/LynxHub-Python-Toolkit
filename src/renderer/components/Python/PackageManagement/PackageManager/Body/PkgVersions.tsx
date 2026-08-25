@@ -218,7 +218,7 @@ const PkgVersions = memo(({updated, item, pythonPath}: Props) => {
                   />
                 )}
                 {filteredVersions.length > 150 && (
-                  <p className="text-xs text-foreground-400 w-full text-center mt-2">
+                  <p className="text-xs text-muted w-full text-center mt-2">
                     Showing first 150 versions. Use search to narrow down.
                   </p>
                 )}

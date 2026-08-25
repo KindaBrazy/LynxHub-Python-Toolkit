@@ -307,12 +307,12 @@ export default function InstalledCard({python, diskUsage, maxDiskValue, updateDe
                     <div>
                       <strong className="text-sm">Complete Uninstall</strong>
                       {python.installationType === 'conda' ? (
-                        <p className="text-xs text-default-600 mt-1">
+                        <p className="text-xs text-muted mt-1">
                           Permanently deletes the entire Conda environment "{python.condaName}" and all its packages
                           from your computer. Any AI using this environment will be disconnected.
                         </p>
                       ) : window.osPlatform === 'darwin' ? (
-                        <p className="text-xs text-default-600 mt-1">
+                        <p className="text-xs text-muted mt-1">
                           {python.installPath.includes('/Library/Frameworks/Python.framework')
                             ? `Removes Python ${python.version} from /Library/Frameworks and cleans up symlinks.
                              Admin password will be required.`
@@ -324,7 +324,7 @@ export default function InstalledCard({python, diskUsage, maxDiskValue, updateDe
                                Any AI using this installation will be disconnected.`}
                         </p>
                       ) : (
-                        <p className="text-xs text-default-600 mt-1">
+                        <p className="text-xs text-muted mt-1">
                           Permanently uninstalls Python version {python.version} and all its packages from your
                           computer. Any AI using this installation will be disconnected.
                         </p>
@@ -341,7 +341,7 @@ export default function InstalledCard({python, diskUsage, maxDiskValue, updateDe
                     {/* Option 2: Remove from List */}
                     <div>
                       <strong className="text-sm">Remove From List Only</strong>
-                      <p className="text-xs text-default-600 mt-1">
+                      <p className="text-xs text-muted mt-1">
                         Removes this entry from the list but does not delete the actual Python installation from your
                         system. Any associated AI will be disconnected, but you can re-link them if you add this
                         installation back later.

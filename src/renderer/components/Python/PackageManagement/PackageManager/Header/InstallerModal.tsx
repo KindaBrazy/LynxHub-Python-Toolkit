@@ -68,7 +68,7 @@ export default function InstallerModal({refresh, pythonPath}: Props) {
         <Modal.Header className="flex items-center gap-3 px-5 pb-0">
           <Modal.Heading className="text-base font-semibold">Package Installer</Modal.Heading>
           {(packageCount > 0 || isRequirementsInstall) && (
-            <span className="rounded-full bg-primary/10 px-2 py-0.5 text-xs font-medium text-primary">
+            <span className="rounded-full bg-accent/10 px-2 py-0.5 text-xs font-medium text-accent">
               {isRequirementsInstall
                 ? `${requirementsFileCount || 1} requirements file${requirementsFileCount !== 1 ? 's' : ''}`
                 : `${packageCount} selected`}
