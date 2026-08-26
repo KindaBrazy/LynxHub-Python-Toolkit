@@ -1,6 +1,15 @@
 {
   "versions": [
     {
+      "version": "0.15.6",
+      "commit": "6197424",
+      "engines": {
+        "extensionApi": "^2.2.0"
+      },
+      "stage": "early_access",
+      "platforms": ["win32", "linux", "darwin"]
+    },
+    {
       "version": "0.15.5",
       "commit": "ff78831",
       "engines": {
@@ -101,6 +110,29 @@
     }
   ],
   "changes": [
+    {
+      "version": "0.15.6",
+      "date": "2026-08-26",
+      "items": [
+        {
+          "📌 Improvements": [
+            "Added support for duplicated cards dependencies.",
+            "Added python executable validation before using it.",
+            "Improved error handling for cards venv finder."
+          ]
+        },
+        {
+          "🪲 Bug Fixes": ["Fixed associating error for projects without repository url."]
+        },
+        {
+          "📌 Minor Changes": [
+            "Support LynxHub v3.6",
+            "Update LynxHub URLs to reflect new organization location.",
+            "Updated some UI styles."
+          ]
+        }
+      ]
+    },
     {
       "version": "0.15.5",
       "date": "2026-07-23",
