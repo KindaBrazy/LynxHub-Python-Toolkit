@@ -1,3 +1,11 @@
+(function() {
+	try {
+		var e = "undefined" != typeof window ? window : "undefined" != typeof global ? global : "undefined" != typeof globalThis ? globalThis : "undefined" != typeof self ? self : {};
+		e.SENTRY_RELEASE = { id: "17561bda7d32de6a59c60e7229a41d6eb183b31a" };
+		var n = new e.Error().stack;
+		n && (e._sentryDebugIds = e._sentryDebugIds || {}, e._sentryDebugIds[n] = "7f3cf579-6522-40e4-a7da-80f90ba9ea0a", e._sentryDebugIdIdentifier = "sentry-dbid-7f3cf579-6522-40e4-a7da-80f90ba9ea0a");
+	} catch (e) {}
+})();
 Object.defineProperty(exports, Symbol.toStringTag, { value: "Module" });
 //#region \0rolldown/runtime.js
 var __create = Object.create;
@@ -34,7 +42,7 @@ var __copyProps = (to, from, except, desc) => {
 	}
 	return to;
 };
-var __toESM = (mod, isNodeMode, target) => (target = mod != null ? __create(__getProtoOf(mod)) : {}, __copyProps(isNodeMode || !mod || !mod.__esModule ? __defProp(target, "default", {
+var __toESM = (mod, isNodeMode, target) => (target = mod != null ? __create(__getProtoOf(mod)) : {}, __copyProps(isNodeMode || !mod || !mod.__esModule || !__hasOwnProp.call(mod, "default") ? __defProp(target, "default", {
 	value: mod,
 	enumerable: true
 }) : target, mod));
@@ -79,6 +87,7 @@ var CacheDirUsage_StorageID = "pythonToolkit_CacheDirUsage";
 var CardStartCommand_StorageID = "pythonToolkit_CardStartCommands";
 var Associates_StorageID = "pythonToolkit_associates";
 var IsAutoDetectedVenvs_StorageID = "pythonToolkit_IsAutoDetectedVenvs";
+var SENTRY_DSN = "https://ebebe2a9dba29dcb11d32283b74ef6ff@o4509344104316928.ingest.us.sentry.io/4510227807928320";
 //#endregion
 //#region extension/src/main/DataHolder.ts
 var storageManager = void 0;
@@ -272,8 +281,10 @@ function getRawTag(value) {
 		var unmasked = true;
 	} catch (e) {}
 	var result = nativeObjectToString$1.call(value);
-	if (unmasked) if (isOwn) value[symToStringTag$1] = tag;
-	else delete value[symToStringTag$1];
+	if (unmasked) {
+		if (isOwn) value[symToStringTag$1] = tag;
+		else delete value[symToStringTag$1];
+	}
 	return result;
 }
 //#endregion
@@ -410,7 +421,7 @@ var isArray$1 = Array.isArray;
 //#endregion
 //#region node_modules/lodash-es/_baseToString.js
 /** Used as references for various `Number` constants. */
-var INFINITY$1 = Infinity;
+var INFINITY$1 = 1 / 0;
 /** Used to convert symbols to primitives and strings. */
 var symbolProto$1 = Symbol$1 ? Symbol$1.prototype : void 0;
 var symbolToString = symbolProto$1 ? symbolProto$1.toString : void 0;
@@ -1559,7 +1570,7 @@ function castPath(value, object) {
 //#endregion
 //#region node_modules/lodash-es/_toKey.js
 /** Used as references for various `Number` constants. */
-var INFINITY = Infinity;
+var INFINITY = 1 / 0;
 /**
 * Converts `value` to a string key if it's not a string or symbol.
 *
@@ -3023,7 +3034,7 @@ var require_legacy_streams = /* @__PURE__ */ __commonJSMin(((exports, module) =>
 			this.paused = false;
 			this.flags = "r";
 			this.mode = 438;
-			this.bufferSize = 64 * 1024;
+			this.bufferSize = 65536;
 			options = options || {};
 			var keys = Object.keys(options);
 			for (var index = 0, length = keys.length; index < length; index++) {
@@ -3468,14 +3479,12 @@ var require_graceful_fs = /* @__PURE__ */ __commonJSMin(((exports, module) => {
 //#endregion
 //#region node_modules/semver/internal/constants.js
 var require_constants = /* @__PURE__ */ __commonJSMin(((exports, module) => {
-	var SEMVER_SPEC_VERSION = "2.0.0";
-	var MAX_LENGTH = 256;
-	var MAX_SAFE_INTEGER = Number.MAX_SAFE_INTEGER || 9007199254740991;
 	module.exports = {
-		MAX_LENGTH,
+		MAX_LENGTH: 256,
 		MAX_SAFE_COMPONENT_LENGTH: 16,
-		MAX_SAFE_BUILD_LENGTH: MAX_LENGTH - 6,
-		MAX_SAFE_INTEGER,
+		MAX_SAFE_BUILD_LENGTH: 250,
+		MAX_SAFE_INTEGER: Number.MAX_SAFE_INTEGER || 
+		/* istanbul ignore next */ 9007199254740991,
 		RELEASE_TYPES: [
 			"major",
 			"premajor",
@@ -3485,7 +3494,7 @@ var require_constants = /* @__PURE__ */ __commonJSMin(((exports, module) => {
 			"prepatch",
 			"prerelease"
 		],
-		SEMVER_SPEC_VERSION,
+		SEMVER_SPEC_VERSION: "2.0.0",
 		FLAG_INCLUDE_PRERELEASE: 1,
 		FLAG_LOOSE: 2
 	};
@@ -3623,9 +3632,10 @@ var require_semver$1 = /* @__PURE__ */ __commonJSMin(((exports, module) => {
 	module.exports = class SemVer {
 		constructor(version, options) {
 			options = parseOptions(options);
-			if (version instanceof SemVer) if (version.loose === !!options.loose && version.includePrerelease === !!options.includePrerelease) return version;
-			else version = version.version;
-			else if (typeof version !== "string") throw new TypeError(`Invalid version. Must be a string. Got type "${typeof version}".`);
+			if (version instanceof SemVer) {
+				if (version.loose === !!options.loose && version.includePrerelease === !!options.includePrerelease) return version;
+				else version = version.version;
+			} else if (typeof version !== "string") throw new TypeError(`Invalid version. Must be a string. Got type "${typeof version}".`);
 			if (version.length > MAX_LENGTH) throw new TypeError(`version is longer than ${MAX_LENGTH} characters`);
 			debug("SemVer", version, options);
 			this.options = options;
@@ -4073,9 +4083,7 @@ var require_truncate = /* @__PURE__ */ __commonJSMin(((exports, module) => {
 				version.minor = 0;
 				version.patch = 0;
 				break;
-			case "minor":
-				version.patch = 0;
-				break;
+			case "minor": version.patch = 0;
 		}
 		return version.format();
 	};
@@ -4124,8 +4132,10 @@ var require_range$1 = /* @__PURE__ */ __commonJSMin(((exports, module) => {
 	module.exports = class Range {
 		constructor(range, options) {
 			options = parseOptions(options);
-			if (range instanceof Range) if (range.loose === !!options.loose && range.includePrerelease === !!options.includePrerelease) return range;
-			else return new Range(range.raw, options);
+			if (range instanceof Range) {
+				if (range.loose === !!options.loose && range.includePrerelease === !!options.includePrerelease) return range;
+				else return new Range(range.raw, options);
+			}
 			if (range instanceof Comparator) {
 				this.raw = range.value;
 				this.set = [[range]];
@@ -4295,18 +4305,21 @@ var require_range$1 = /* @__PURE__ */ __commonJSMin(((exports, module) => {
 			let ret;
 			if (isX(M)) ret = "";
 			else if (isX(m)) ret = `>=${M}.0.0${z} <${+M + 1}.0.0-0`;
-			else if (isX(p)) if (M === "0") ret = `>=${M}.${m}.0${z} <${M}.${+m + 1}.0-0`;
-			else ret = `>=${M}.${m}.0${z} <${+M + 1}.0.0-0`;
-			else if (pr) {
+			else if (isX(p)) {
+				if (M === "0") ret = `>=${M}.${m}.0${z} <${M}.${+m + 1}.0-0`;
+				else ret = `>=${M}.${m}.0${z} <${+M + 1}.0.0-0`;
+			} else if (pr) {
 				debug("replaceCaret pr", pr);
-				if (M === "0") if (m === "0") ret = `>=${M}.${m}.${p}-${pr} <${M}.${m}.${+p + 1}-0`;
-				else ret = `>=${M}.${m}.${p}-${pr} <${M}.${+m + 1}.0-0`;
-				else ret = `>=${M}.${m}.${p}-${pr} <${+M + 1}.0.0-0`;
+				if (M === "0") {
+					if (m === "0") ret = `>=${M}.${m}.${p}-${pr} <${M}.${m}.${+p + 1}-0`;
+					else ret = `>=${M}.${m}.${p}-${pr} <${M}.${+m + 1}.0-0`;
+				} else ret = `>=${M}.${m}.${p}-${pr} <${+M + 1}.0.0-0`;
 			} else {
 				debug("no pr");
-				if (M === "0") if (m === "0") ret = `>=${M}.${m}.${p} <${M}.${m}.${+p + 1}-0`;
-				else ret = `>=${M}.${m}.${p} <${M}.${+m + 1}.0-0`;
-				else ret = `>=${M}.${m}.${p} <${+M + 1}.0.0-0`;
+				if (M === "0") {
+					if (m === "0") ret = `>=${M}.${m}.${p} <${M}.${m}.${+p + 1}-0`;
+					else ret = `>=${M}.${m}.${p} <${M}.${+m + 1}.0-0`;
+				} else ret = `>=${M}.${m}.${p} <${+M + 1}.0.0-0`;
 			}
 			debug("caret return", ret);
 			return ret;
@@ -4328,9 +4341,10 @@ var require_range$1 = /* @__PURE__ */ __commonJSMin(((exports, module) => {
 			const anyX = xp;
 			if (gtlt === "=" && anyX) gtlt = "";
 			pr = options.includePrerelease ? "-0" : "";
-			if (xM) if (gtlt === ">" || gtlt === "<") ret = "<0.0.0-0";
-			else ret = "*";
-			else if (gtlt && anyX) {
+			if (xM) {
+				if (gtlt === ">" || gtlt === "<") ret = "<0.0.0-0";
+				else ret = "*";
+			} else if (gtlt && anyX) {
 				if (xm) m = 0;
 				p = 0;
 				if (gtlt === ">") {
@@ -4404,8 +4418,10 @@ var require_comparator = /* @__PURE__ */ __commonJSMin(((exports, module) => {
 		}
 		constructor(comp, options) {
 			options = parseOptions(options);
-			if (comp instanceof Comparator) if (comp.loose === !!options.loose) return comp;
-			else comp = comp.value;
+			if (comp instanceof Comparator) {
+				if (comp.loose === !!options.loose) return comp;
+				else comp = comp.value;
+			}
 			comp = comp.trim().split(/\s+/).join(" ");
 			debug("comparator", comp, options);
 			this.options = options;
@@ -4725,11 +4741,15 @@ var require_subset = /* @__PURE__ */ __commonJSMin(((exports, module) => {
 	var minimumVersion = [new Comparator(">=0.0.0")];
 	var simpleSubset = (sub, dom, options) => {
 		if (sub === dom) return true;
-		if (sub.length === 1 && sub[0].semver === ANY) if (dom.length === 1 && dom[0].semver === ANY) return true;
-		else if (options.includePrerelease) sub = minimumVersionWithPreRelease;
-		else sub = minimumVersion;
-		if (dom.length === 1 && dom[0].semver === ANY) if (options.includePrerelease) return true;
-		else dom = minimumVersion;
+		if (sub.length === 1 && sub[0].semver === ANY) {
+			if (dom.length === 1 && dom[0].semver === ANY) return true;
+			else if (options.includePrerelease) sub = minimumVersionWithPreRelease;
+			else sub = minimumVersion;
+		}
+		if (dom.length === 1 && dom[0].semver === ANY) {
+			if (options.includePrerelease) return true;
+			else dom = minimumVersion;
+		}
 		const eqSet = /* @__PURE__ */ new Set();
 		let gt, lt;
 		for (const c of sub) if (c.operator === ">" || c.operator === ">=") gt = higherGT(gt, c, options);
@@ -4868,6 +4888,10 @@ async function detectInstallationType(pythonPath) {
 }
 async function parseVersion(pythonPath) {
 	return new Promise((resolve, reject) => {
+		if (!pythonPath || !(0, import_graceful_fs.existsSync)(pythonPath)) {
+			reject(/* @__PURE__ */ new Error(`Python binary does not exist at ${pythonPath}`));
+			return;
+		}
 		const pythonProcess = (0, node_child_process.spawn)(pythonPath, ["--version"]);
 		let stdout = "";
 		let stderr = "";
@@ -4876,6 +4900,9 @@ async function parseVersion(pythonPath) {
 		});
 		pythonProcess.stderr.on("data", (data) => {
 			stderr += data.toString();
+		});
+		pythonProcess.on("error", (err) => {
+			reject(err);
 		});
 		pythonProcess.on("close", (code) => {
 			if (code === 0) {
@@ -4925,9 +4952,11 @@ async function removeDir(dir) {
 	}
 }
 async function getSitePackagesCount(pythonPath) {
+	if (!pythonPath || !(0, import_graceful_fs.existsSync)(pythonPath)) throw new Error(`Python binary does not exist at ${pythonPath}`);
 	const version = await parseVersion(pythonPath);
 	return new Promise((resolve, reject) => {
-		(0, node_child_process.exec)(`"${pythonPath}" -c "${(0, import_semver.compare)(`${version.major}.${version.minor}.${version.patch}`, "3.8.0") === 1 ? `import importlib.metadata; print(len(list(importlib.metadata.distributions())))` : `import pkg_resources; print(len(list(pkg_resources.working_set)))`}"`, (error, stdout, stderr) => {
+		const command = (0, import_semver.compare)(`${version.major}.${version.minor}.${version.patch}`, "3.8.0") === 1 ? `import importlib.metadata; print(len(list(importlib.metadata.distributions())))` : `import pkg_resources; print(len(list(pkg_resources.working_set)))`;
+		(0, node_child_process.exec)(`"${pythonPath}" -c "${command}"`, (error, stdout, stderr) => {
 			if (error) {
 				reject(error);
 				return;
@@ -4960,6 +4989,10 @@ async function openDialogExt(options) {
 }
 function spawnAsync(command, args) {
 	return new Promise((resolve, reject) => {
+		if (!command || !(0, import_graceful_fs.existsSync)(command)) {
+			reject(/* @__PURE__ */ new Error(`Command binary does not exist at ${command}`));
+			return;
+		}
 		const child = (0, node_child_process.spawn)(command, args);
 		let stdout = "";
 		let stderr = "";
@@ -5044,11 +5077,13 @@ function createPythonVenv(options) {
 				resolve(false);
 				return;
 			}
-			if (stderr) if (stderr.includes("Error:")) {
-				console.error(`Error creating virtual environment: ${stderr}`);
-				resolve(false);
-				return;
-			} else console.warn(stderr);
+			if (stderr) {
+				if (stderr.includes("Error:")) {
+					console.error(`Error creating virtual environment: ${stderr}`);
+					resolve(false);
+					return;
+				} else console.warn(stderr);
+			}
 			console.log(stdout);
 			console.log(`Virtual environment created successfully at: ${venvPath}`);
 			updateVenvStorage(venvPath);
@@ -5061,7 +5096,8 @@ function createPythonVenv(options) {
 var execFileAsync$1 = (0, node_util.promisify)(node_child_process.execFile);
 async function getPythonVersion(venvPath) {
 	return new Promise((resolve, reject) => {
-		(0, node_child_process.exec)(`"${getVenvPythonPath(venvPath)}" --version`, (error, stdout, stderr) => {
+		const pythonExecutable = getVenvPythonPath(venvPath);
+		(0, node_child_process.exec)(`"${pythonExecutable}" --version`, (error, stdout, stderr) => {
 			if (error) {
 				reject(error);
 				return;
@@ -5091,7 +5127,8 @@ async function checkPipInstallation(exePath) {
 			resolve();
 		} catch (e) {
 			console.log("pip not found. Attempting to install pip...");
-			(0, node_child_process.exec)(`"${exePath}" -m ensurepip --default-pip`, (installError, _, installStderr) => {
+			const installPipCommand = `"${exePath}" -m ensurepip --default-pip`;
+			(0, node_child_process.exec)(installPipCommand, (installError, _, installStderr) => {
 				if (installError) return reject(`Error installing pip: ${installError.message}`);
 				if (installStderr) console.warn(`stderr during pip installation: ${installStderr}`);
 				console.log("pip installed successfully.");
@@ -5118,8 +5155,10 @@ function getVenvPythonPath(venvPath) {
 function isVenvDirectory(dirPath) {
 	try {
 		if (!(0, import_graceful_fs.existsSync)(dirPath)) return false;
-		if (!(0, import_graceful_fs.existsSync)(getVenvPythonPath(dirPath))) return false;
-		return (0, import_graceful_fs.existsSync)((0, node_os.platform)() === "win32" ? (0, node_path.join)(dirPath, "Lib") : (0, node_path.join)(dirPath, "lib"));
+		const pythonExePath = getVenvPythonPath(dirPath);
+		if (!(0, import_graceful_fs.existsSync)(pythonExePath)) return false;
+		const libPath = (0, node_os.platform)() === "win32" ? (0, node_path.join)(dirPath, "Lib") : (0, node_path.join)(dirPath, "lib");
+		return (0, import_graceful_fs.existsSync)(libPath);
 	} catch (err) {
 		console.error(`Error checking if directory is a venv: ${err}`);
 		return false;
@@ -5144,7 +5183,7 @@ async function findVenvFolder(dirPath) {
 }
 async function findAIVenv(id, folder) {
 	try {
-		if (!folder) throw "Provided folder is not correct.";
+		if (!folder) return null;
 		const venvFolder = await findVenvFolder(folder);
 		if (venvFolder) {
 			const pythonExecutable = getVenvPythonPath(venvFolder);
@@ -5156,10 +5195,10 @@ async function findAIVenv(id, folder) {
 			});
 			return pythonExecutable;
 		}
-		throw "Venv folder not Found";
+		return null;
 	} catch (e) {
-		console.error(e);
-		throw e;
+		console.error(`Error finding virtual environment for card ${id}:`, e);
+		return null;
 	}
 }
 //#endregion
@@ -5234,12 +5273,16 @@ function getExePathAssociate(target) {
 			const isWin = (0, node_os.platform)() === "win32";
 			switch (item.type) {
 				case "venv": return (0, node_path.resolve)(getVenvPythonPath(item.dir));
-				case "conda":
+				case "conda": {
 					if (isWin) return (0, node_path.resolve)((0, node_path.join)(item.dir, "python.exe"));
-					return (0, node_path.resolve)(item.dir.endsWith("/bin") ? (0, node_path.join)(item.dir, "python") : (0, node_path.join)(item.dir, "bin", "python"));
-				default:
+					const pythonPath = item.dir.endsWith("/bin") ? (0, node_path.join)(item.dir, "python") : (0, node_path.join)(item.dir, "bin", "python");
+					return (0, node_path.resolve)(pythonPath);
+				}
+				default: {
 					if (isWin) return (0, node_path.resolve)((0, node_path.join)(item.dir, "python.exe"));
-					return (0, node_path.resolve)(item.dir.endsWith("/bin") ? (0, node_path.join)(item.dir, "python") : (0, node_path.join)(item.dir, "bin", "python"));
+					const pythonPath = item.dir.endsWith("/bin") ? (0, node_path.join)(item.dir, "python") : (0, node_path.join)(item.dir, "bin", "python");
+					return (0, node_path.resolve)(pythonPath);
+				}
 			}
 		};
 		if (isString$1(target)) {
@@ -5531,7 +5574,7 @@ var import_lib = /* @__PURE__ */ __toESM((/* @__PURE__ */ __commonJSMin(((export
 	var rRel = new RegExp(`^\\.${rSlash.source}`);
 	var getNotFoundError = (cmd) => Object.assign(/* @__PURE__ */ new Error(`not found: ${cmd}`), { code: "ENOENT" });
 	var getPathInfo = (cmd, { path: optPath = process.env.PATH, pathExt: optPathExt = process.env.PATHEXT, delimiter: optDelimiter = delimiter }) => {
-		const pathEnv = cmd.match(rSlash) ? [""] : [...isWindows ? [process.cwd()] : [], ...(optPath || "").split(optDelimiter)];
+		const pathEnv = cmd.match(rSlash) ? [""] : [...isWindows ? [process.cwd()] : [], ...(optPath || /* istanbul ignore next: very unusual */ "").split(optDelimiter)];
 		if (isWindows) {
 			const pathExtExe = optPathExt || [
 				".EXE",
@@ -5704,9 +5747,7 @@ async function setDefaultPython(pythonPath) {
 			case "darwin":
 				await setDefaultPythonMacOS(pythonPath);
 				break;
-			case "linux":
-				await setDefaultPythonLinux(pythonPath);
-				break;
+			case "linux": await setDefaultPythonLinux(pythonPath);
 		}
 		setStoredSystemDefaultPython(pythonPath);
 		console.log(`Python ${pythonPath} set as default`);
@@ -5784,6 +5825,9 @@ async function setDefaultPythonWindows(pythonPath) {
 		]);
 		let getOutput = "";
 		let getError = "";
+		getProc.on("error", (err) => {
+			reject(/* @__PURE__ */ new Error(`Failed to spawn shell process: ${err.message}`));
+		});
 		getProc.stdout.on("data", (data) => {
 			getOutput += data.toString();
 		});
@@ -5809,6 +5853,9 @@ async function setDefaultPythonWindows(pythonPath) {
 				setCmd
 			]);
 			let addError = "";
+			setProc.on("error", (err) => {
+				reject(/* @__PURE__ */ new Error(`Failed to spawn shell process for update: ${err.message}`));
+			});
 			setProc.stderr.on("data", (data) => {
 				addError += data.toString();
 			});
@@ -6134,6 +6181,7 @@ async function analyzePythonPath(pythonPath) {
 * @returns A PythonInstallation object if the path is valid, otherwise null.
 */
 async function locatePythonInstallation(pythonPath) {
+	if (!pythonPath || !(0, import_graceful_fs.existsSync)(pythonPath)) return null;
 	const installation = await analyzePythonPath(pythonPath);
 	if (installation) addSavedPython(installation.installPath);
 	return installation;
@@ -6142,7 +6190,10 @@ async function detectPythonInstallations(refresh) {
 	const storageManager = getStorage();
 	const savedInstallations = storageManager?.getCustomData(STORAGE_INSTALLED_KEY);
 	const paths = /* @__PURE__ */ new Set();
-	if (!refresh && !isNil(savedInstallations) && !isEmpty(savedInstallations)) savedInstallations.forEach((path) => paths.add(path));
+	if (!refresh && !isNil(savedInstallations) && !isEmpty(savedInstallations)) savedInstallations.forEach((path) => {
+		if ((0, import_graceful_fs.existsSync)(path)) paths.add(path);
+		else removeSavedPython(path);
+	});
 	else {
 		(await Promise.all([findPythonInPath(), findInCommonLocations()])).flat().forEach((path) => paths.add(path));
 		storageManager?.setCustomData(STORAGE_INSTALLED_KEY, Array.from(paths));
@@ -14203,10 +14254,7 @@ async function installPython(filePath, version) {
 			case "linux":
 				await installOnLinux(version.version);
 				break;
-			case "darwin":
-				await installOnMacOS(filePath);
-				break;
-			default: break;
+			case "darwin": await installOnMacOS(filePath);
 		}
 		console.log(`Python ${version.version} installed successfully`);
 	} catch (err) {
@@ -14305,7 +14353,8 @@ async function installOnMacOS(installerPath) {
 //#region extension/src/main/Utils/PackageManager/PackageManager.ts
 async function getSitePackagesInfo(pythonExePath) {
 	return new Promise((resolve, reject) => {
-		(0, node_child_process.exec)(`"${pythonExePath}" -m pip list --format json`, (error, stdout, stderr) => {
+		const command = `"${pythonExePath}" -m pip list --format json`;
+		(0, node_child_process.exec)(command, (error, stdout, stderr) => {
 			if (error) {
 				reject(`Error getting site packages: ${error.message}`);
 				return;
@@ -14326,7 +14375,8 @@ async function getSitePackagesInfo(pythonExePath) {
 }
 async function installPythonPackage(pythonExePath, commands) {
 	return new Promise((resolve, reject) => {
-		(0, node_child_process.exec)(`"${pythonExePath}" -m pip install ${commands} --disable-pip-version-check`, (error, stdout, stderr) => {
+		const command = `"${pythonExePath}" -m pip install ${commands} --disable-pip-version-check`;
+		(0, node_child_process.exec)(command, (error, stdout, stderr) => {
 			if (error) {
 				reject(/* @__PURE__ */ new Error(`Error installing package: ${error.message}\nStderr: ${stderr}`));
 				return;
@@ -14338,7 +14388,8 @@ async function installPythonPackage(pythonExePath, commands) {
 }
 async function uninstallPythonPackage(pythonExePath, packageName) {
 	return new Promise((resolve, reject) => {
-		(0, node_child_process.exec)(`"${pythonExePath}" -m pip uninstall -y "${packageName}"`, (error, stdout, stderr) => {
+		const command = `"${pythonExePath}" -m pip uninstall -y "${packageName}"`;
+		(0, node_child_process.exec)(command, (error, stdout, stderr) => {
 			if (error) {
 				reject(`Error uninstalling package ${packageName}: ${error.message}\nstderr: ${stderr}`);
 				return;
@@ -14365,11 +14416,12 @@ async function changePythonPackageVersion(pythonPath, packageName, cVersion, tVe
 			reject(`Invalid target version provided: ${targetVersion}. Please use a valid semantic version.`);
 			return;
 		}
-		(0, node_child_process.exec)(constructChangeVersionCommand(pythonPath, {
+		const changeVersionCommand = constructChangeVersionCommand(pythonPath, {
 			packageName,
 			currentVersion,
 			targetVersion
-		}), (error, stdout, stderr) => {
+		});
+		(0, node_child_process.exec)(changeVersionCommand, (error, stdout, stderr) => {
 			if (error) {
 				reject(`Error changing version of ${packageName}: ${error.message}`);
 				return;
@@ -14756,6 +14808,7 @@ var isBlob = kindOfTest("Blob");
 * @returns {boolean} True if value is a FileList, otherwise false
 */
 var isFileList = kindOfTest("FileList");
+var isSet = kindOfTest("Set");
 /**
 * Determine if a value is a Stream
 *
@@ -15177,11 +15230,20 @@ var toJSONObject = (obj) => {
 			if (isBuffer(source)) return source;
 			if (!("toJSON" in source)) {
 				visited.add(source);
-				const target = isArray(source) ? [] : {};
-				forEach(source, (value, key) => {
-					const reducedValue = visit(value);
-					!isUndefined(reducedValue) && (target[key] = reducedValue);
-				});
+				let target;
+				if (isSet(source)) {
+					target = [];
+					for (const value of source) {
+						const reducedValue = visit(value);
+						!isUndefined(reducedValue) && target.push(reducedValue);
+					}
+				} else {
+					target = isArray(source) ? [] : {};
+					forEach(source, (value, key) => {
+						const reducedValue = visit(value);
+						!isUndefined(reducedValue) && (target[key] = reducedValue);
+					});
+				}
 				visited.delete(source);
 				return target;
 			}
@@ -15352,10 +15414,12 @@ var parseHeaders_default = (rawHeaders) => {
 		i = line.indexOf(":");
 		key = line.substring(0, i).trim().toLowerCase();
 		val = line.substring(i + 1).trim();
-		if (!key || parsed[key] && ignoreDuplicateOf[key]) return;
-		if (key === "set-cookie") if (parsed[key]) parsed[key].push(val);
-		else parsed[key] = [val];
-		else parsed[key] = parsed[key] ? parsed[key] + ", " + val : val;
+		const hasKey = utils_default.hasOwnProp(parsed, key);
+		if (!key || hasKey && utils_default.hasOwnProp(ignoreDuplicateOf, key)) return;
+		if (key === "set-cookie") {
+			if (hasKey) parsed[key].push(val);
+			else parsed[key] = [val];
+		} else parsed[key] = hasKey ? parsed[key] + ", " + val : val;
 	});
 	return parsed;
 };
@@ -15407,6 +15471,69 @@ function parseTokens(str) {
 	let match;
 	while (match = tokensRE.exec(str)) tokens[match[1]] = match[2];
 	return tokens;
+}
+var parameterNameRE = /^[!#$%&'*+\-.^_`|~0-9A-Za-z]+$/;
+function trimOWS(value) {
+	let start = 0;
+	let end = value.length;
+	while (start < end) {
+		const code = value.charCodeAt(start);
+		if (code !== 9 && code !== 32) break;
+		start += 1;
+	}
+	while (end > start) {
+		const code = value.charCodeAt(end - 1);
+		if (code !== 9 && code !== 32) break;
+		end -= 1;
+	}
+	return start === 0 && end === value.length ? value : value.slice(start, end);
+}
+function decodeQuotedString(value) {
+	const last = value.length - 1;
+	if (last < 1 || value.charCodeAt(0) !== 34 || value.charCodeAt(last) !== 34) return value;
+	let decoded = "";
+	for (let i = 1; i < last; i++) {
+		const code = value.charCodeAt(i);
+		if (code === 34) return value;
+		if (code === 92) {
+			i += 1;
+			if (i >= last) return value;
+		}
+		decoded += value[i];
+	}
+	return decoded;
+}
+function parseParameters(value) {
+	const parameters = Object.create(null);
+	const str = String(value);
+	let start = 0;
+	let quoted = false;
+	let escaped = false;
+	function parseParameter(end) {
+		const part = trimOWS(str.slice(start, end));
+		const equals = part.indexOf("=");
+		if (equals < 1) return;
+		const name = trimOWS(part.slice(0, equals));
+		if (!parameterNameRE.test(name)) return;
+		const normalizedName = name.toLowerCase();
+		if (normalizedName === "__proto__" || normalizedName === "constructor" || normalizedName === "prototype") return;
+		const parameterValue = trimOWS(part.slice(equals + 1));
+		parameters[normalizedName] = decodeQuotedString(parameterValue);
+	}
+	for (let i = 0; i < str.length; i++) {
+		const code = str.charCodeAt(i);
+		if (quoted) {
+			if (escaped) escaped = false;
+			else if (code === 92) escaped = true;
+			else if (code === 34) quoted = false;
+		} else if (code === 34) quoted = true;
+		else if (code === 44 || code === 59) {
+			parseParameter(i);
+			start = i + 1;
+		}
+	}
+	parseParameter(str.length);
+	return parameters;
 }
 var isValidHeaderName = (str) => /^[-_a-zA-Z0-9^`|~,!#$%&'*+.]+$/.test(str.trim());
 function matchHeaderValue(context, value, header, filter, isHeaderNameFilter) {
@@ -15552,13 +15679,17 @@ var AxiosHeaders = class {
 		return Object.entries(this.toJSON()).map(([header, value]) => header + ": " + value).join("\n");
 	}
 	getSetCookie() {
-		return this.get("set-cookie") || [];
+		const value = this.get("set-cookie");
+		return utils_default.isArray(value) ? value : value == null || value === false ? [] : [value];
 	}
 	get [Symbol.toStringTag]() {
 		return "AxiosHeaders";
 	}
 	static from(thing) {
 		return thing instanceof this ? thing : new this(thing);
+	}
+	static parseParameters(value) {
+		return parseParameters(value);
 	}
 	static concat(first, ...targets) {
 		const computed = new this(first);
@@ -15641,9 +15772,27 @@ function redactConfig(config, redactKeys) {
 	};
 	return visit(config);
 }
+function stringifySafely$1(value) {
+	try {
+		return String(value);
+	} catch (err) {
+		return "";
+	}
+}
+function aggregateErrorMessage(error) {
+	return error.errors.map((entry) => {
+		try {
+			return entry && entry.message ? stringifySafely$1(entry.message) : stringifySafely$1(entry);
+		} catch (err) {
+			return "";
+		}
+	}).filter(Boolean).join("; ") || error.name || "AggregateError";
+}
 var AxiosError = class AxiosError extends Error {
 	static from(error, code, config, request, response, customProps) {
-		const axiosError = new AxiosError(error.message, code || error.code, config, request, response);
+		let message = error.message;
+		if (!message && utils_default.isArray(error.errors) && error.errors.length) message = aggregateErrorMessage(error);
+		const axiosError = new AxiosError(message, code || error.code, config, request, response);
 		Object.defineProperty(axiosError, "cause", {
 			__proto__: null,
 			value: error,
@@ -15728,7 +15877,7 @@ var require_delayed_stream = /* @__PURE__ */ __commonJSMin(((exports, module) =>
 	function DelayedStream() {
 		this.source = null;
 		this.dataSize = 0;
-		this.maxDataSize = 1024 * 1024;
+		this.maxDataSize = 1048576;
 		this.pauseStream = true;
 		this._maxDataSizeExceeded = false;
 		this._released = false;
@@ -15808,7 +15957,7 @@ var require_combined_stream = /* @__PURE__ */ __commonJSMin(((exports, module) =
 		this.writable = false;
 		this.readable = true;
 		this.dataSize = 0;
-		this.maxDataSize = 2 * 1024 * 1024;
+		this.maxDataSize = 2097152;
 		this.pauseStreams = true;
 		this._released = false;
 		this._streams = [];
@@ -24064,13 +24213,15 @@ var require_es_set_tostringtag = /* @__PURE__ */ __commonJSMin(((exports, module
 		var overrideIfSet = arguments.length > 2 && !!arguments[2] && arguments[2].force;
 		var nonConfigurable = arguments.length > 2 && !!arguments[2] && arguments[2].nonConfigurable;
 		if (typeof overrideIfSet !== "undefined" && typeof overrideIfSet !== "boolean" || typeof nonConfigurable !== "undefined" && typeof nonConfigurable !== "boolean") throw new $TypeError("if provided, the `overrideIfSet` and `nonConfigurable` options must be booleans");
-		if (toStringTag && (overrideIfSet || !hasOwn(object, toStringTag))) if ($defineProperty) $defineProperty(object, toStringTag, {
-			configurable: !nonConfigurable,
-			enumerable: false,
-			value,
-			writable: false
-		});
-		else object[toStringTag] = value;
+		if (toStringTag && (overrideIfSet || !hasOwn(object, toStringTag))) {
+			if ($defineProperty) $defineProperty(object, toStringTag, {
+				configurable: !nonConfigurable,
+				enumerable: false,
+				value,
+				writable: false
+			});
+			else object[toStringTag] = value;
+		}
 	};
 }));
 //#endregion
@@ -24156,15 +24307,16 @@ var FormData_default = (/* @__PURE__ */ __toESM((/* @__PURE__ */ __commonJSMin((
 		if (!options.knownLength) this._valuesToMeasure.push(value);
 	};
 	FormData.prototype._lengthRetriever = function(value, callback) {
-		if (hasOwn(value, "fd")) if (value.end != void 0 && value.end != Infinity && value.start != void 0) callback(null, value.end + 1 - (value.start ? value.start : 0));
-		else fs.stat(value.path, function(err, stat) {
-			if (err) {
-				callback(err);
-				return;
-			}
-			callback(null, stat.size - (value.start ? value.start : 0));
-		});
-		else if (hasOwn(value, "httpVersion")) callback(null, Number(value.headers["content-length"]));
+		if (hasOwn(value, "fd")) {
+			if (value.end != void 0 && value.end != Infinity && value.start != void 0) callback(null, value.end + 1 - (value.start ? value.start : 0));
+			else fs.stat(value.path, function(err, stat) {
+				if (err) {
+					callback(err);
+					return;
+				}
+				callback(null, stat.size - (value.start ? value.start : 0));
+			});
+		} else if (hasOwn(value, "httpVersion")) callback(null, Number(value.headers["content-length"]));
 		else if (hasOwn(value, "httpModule")) {
 			value.on("response", function(response) {
 				value.pause();
@@ -24327,6 +24479,16 @@ var FormData_default = (/* @__PURE__ */ __toESM((/* @__PURE__ */ __commonJSMin((
 	setToStringTag(FormData.prototype, "FormData");
 	module.exports = FormData;
 })))(), 1)).default;
+//#endregion
+//#region node_modules/axios/lib/platform/node/classes/Buffer.js
+var Buffer_default = {
+	isBufferAvailable() {
+		return typeof Buffer !== "undefined";
+	},
+	from(value) {
+		return Buffer.from(value);
+	}
+};
 /**
 * Determines if the given thing is a array or js object.
 *
@@ -24424,7 +24586,7 @@ function toFormData(obj, formData, options) {
 		if (!useBlob && utils_default.isBlob(value)) throw new AxiosError("Blob is not supported. Use a Buffer instead.");
 		if (utils_default.isArrayBuffer(value) || utils_default.isTypedArray(value)) {
 			if (useBlob && typeof _Blob === "function") return new _Blob([value]);
-			if (typeof Buffer !== "undefined") return Buffer.from(value);
+			if (Buffer_default && Buffer_default.isBufferAvailable()) return Buffer_default.from(value);
 			throw new AxiosError("Blob is not supported. Use a Buffer instead.", AxiosError.ERR_NOT_SUPPORT);
 		}
 		return value;
@@ -24762,7 +24924,7 @@ function throwIfDepthExceeded(index) {
 */
 function parsePropPath(name) {
 	const path = [];
-	const pattern = /\w+|\[(\w*)]/g;
+	const pattern = /[^.[\]]+|\[([^.[\]]*)]/g;
 	let match;
 	while ((match = pattern.exec(name)) !== null) {
 		throwIfDepthExceeded(path.length);
@@ -25014,7 +25176,10 @@ function isAbsoluteURL(url) {
 * @returns {string} The combined URL
 */
 function combineURLs(baseURL, relativeURL) {
-	return relativeURL ? baseURL.replace(/\/?\/$/, "") + "/" + relativeURL.replace(/^\/+/, "") : baseURL;
+	if (!relativeURL) return baseURL;
+	let end = baseURL.length;
+	while (end > 0 && baseURL.charCodeAt(end - 1) === 47) end--;
+	return baseURL.slice(0, end) + "/" + relativeURL.replace(/^\/+/, "");
 }
 //#endregion
 //#region node_modules/axios/lib/core/buildFullPath.js
@@ -25028,8 +25193,24 @@ function stripLeadingC0ControlOrSpace(url) {
 function normalizeURLForProtocolCheck(url) {
 	return stripLeadingC0ControlOrSpace(url).replace(httpProtocolControlCharacters, "");
 }
+function redactFragment(fragment) {
+	if (!fragment) return fragment;
+	return fragment.replace(/(^|&)([^=&]*=)?[^&]+/g, (match, separator, parameterName = "") => {
+		return `${separator}${parameterName}${REDACTED}`;
+	});
+}
+function redactSensitiveURLParts(url) {
+	const redactedURL = url.replace(/^(https?:\/{0,2})[^/?#]*@/i, `$1${REDACTED}@`);
+	const fragmentIndex = redactedURL.indexOf("#");
+	const redactedURLWithoutFragment = (fragmentIndex === -1 ? redactedURL : redactedURL.slice(0, fragmentIndex)).replace(/([?&][^=&#]*=)[^&#]*/g, `$1${REDACTED}`);
+	if (fragmentIndex === -1) return redactedURLWithoutFragment;
+	return `${redactedURLWithoutFragment}#${redactFragment(redactedURL.slice(fragmentIndex + 1))}`;
+}
 function assertValidHttpProtocolURL(url, config) {
-	if (typeof url === "string" && malformedHttpProtocol.test(normalizeURLForProtocolCheck(url))) throw new AxiosError("Invalid URL: missing \"//\" after protocol", AxiosError.ERR_INVALID_URL, config);
+	if (typeof url === "string") {
+		const normalizedURL = normalizeURLForProtocolCheck(url);
+		if (malformedHttpProtocol.test(normalizedURL)) throw new AxiosError(`Invalid URL ${JSON.stringify(redactSensitiveURLParts(normalizedURL))}: missing "//" after protocol`, AxiosError.ERR_INVALID_URL, config);
+	}
 }
 /**
 * Creates a new URL by combining the baseURL with the requestedURL,
@@ -25378,15 +25559,16 @@ var require_common = /* @__PURE__ */ __commonJSMin(((exports, module) => {
 			let templateIndex = 0;
 			let starIndex = -1;
 			let matchIndex = 0;
-			while (searchIndex < search.length) if (templateIndex < template.length && (template[templateIndex] === search[searchIndex] || template[templateIndex] === "*")) if (template[templateIndex] === "*") {
-				starIndex = templateIndex;
-				matchIndex = searchIndex;
-				templateIndex++;
-			} else {
-				searchIndex++;
-				templateIndex++;
-			}
-			else if (starIndex !== -1) {
+			while (searchIndex < search.length) if (templateIndex < template.length && (template[templateIndex] === search[searchIndex] || template[templateIndex] === "*")) {
+				if (template[templateIndex] === "*") {
+					starIndex = templateIndex;
+					matchIndex = searchIndex;
+					templateIndex++;
+				} else {
+					searchIndex++;
+					templateIndex++;
+				}
+			} else if (starIndex !== -1) {
 				templateIndex = starIndex + 1;
 				matchIndex++;
 				searchIndex = matchIndex;
@@ -25656,9 +25838,11 @@ var require_supports_color = /* @__PURE__ */ __commonJSMin(((exports, module) =>
 	var forceColor;
 	if (hasFlag("no-color") || hasFlag("no-colors") || hasFlag("color=false") || hasFlag("color=never")) forceColor = 0;
 	else if (hasFlag("color") || hasFlag("colors") || hasFlag("color=true") || hasFlag("color=always")) forceColor = 1;
-	if ("FORCE_COLOR" in env) if (env.FORCE_COLOR === "true") forceColor = 1;
-	else if (env.FORCE_COLOR === "false") forceColor = 0;
-	else forceColor = env.FORCE_COLOR.length === 0 ? 1 : Math.min(parseInt(env.FORCE_COLOR, 10), 3);
+	if ("FORCE_COLOR" in env) {
+		if (env.FORCE_COLOR === "true") forceColor = 1;
+		else if (env.FORCE_COLOR === "false") forceColor = 0;
+		else forceColor = env.FORCE_COLOR.length === 0 ? 1 : Math.min(parseInt(env.FORCE_COLOR, 10), 3);
+	}
 	function translateLevel(level) {
 		if (level === 0) return false;
 		return {
@@ -26077,10 +26261,12 @@ var require_src = /* @__PURE__ */ __commonJSMin(((exports, module) => {
 					onerror(/* @__PURE__ */ new Error("`callback` is not defined"));
 					return;
 				}
-				if (!this.promisifiedCallback) if (this.callback.length >= 3) {
-					debug("Converting legacy callback function to promise");
-					this.promisifiedCallback = promisify_1.default(this.callback);
-				} else this.promisifiedCallback = this.callback;
+				if (!this.promisifiedCallback) {
+					if (this.callback.length >= 3) {
+						debug("Converting legacy callback function to promise");
+						this.promisifiedCallback = promisify_1.default(this.callback);
+					} else this.promisifiedCallback = this.callback;
+				}
 				if (typeof timeoutMs === "number" && timeoutMs > 0) timeoutId = setTimeout(ontimeout, timeoutMs);
 				if ("port" in opts && typeof opts.port !== "number") opts.port = Number(opts.port);
 				try {
@@ -26640,7 +26826,7 @@ var require_follow_redirects = /* @__PURE__ */ __commonJSMin(((exports, module) 
 	function wrap(protocols) {
 		var exports$1 = {
 			maxRedirects: 21,
-			maxBodyLength: 10 * 1024 * 1024
+			maxBodyLength: 10485760
 		};
 		var nativeProtocols = {};
 		Object.keys(protocols).forEach(function(scheme) {
@@ -26784,7 +26970,7 @@ var require_follow_redirects = /* @__PURE__ */ __commonJSMin(((exports, module) 
 }));
 //#endregion
 //#region node_modules/axios/lib/env/data.js
-var VERSION = "1.18.1";
+var VERSION = "1.19.0";
 //#endregion
 //#region node_modules/axios/lib/helpers/parseProtocol.js
 function parseProtocol(url) {
@@ -26829,13 +27015,36 @@ function fromDataURI(uri, asBlob, options) {
 	throw new AxiosError("Unsupported protocol " + protocol, AxiosError.ERR_NOT_SUPPORT);
 }
 //#endregion
+//#region node_modules/axios/lib/core/setFormDataHeaders.js
+var FORM_DATA_CONTENT_HEADERS = ["content-type", "content-length"];
+/**
+* Apply the headers generated by a FormData implementation to the request headers,
+* honoring the `formDataHeaderPolicy` option: with 'content-only', copy only the
+* content-* headers; otherwise merge all of them.
+*
+* @param {AxiosHeaders} headers - the request headers to mutate
+* @param {Object | null | undefined} formHeaders - headers produced by the FormData implementation
+* @param {String} [policy] - the resolved `formDataHeaderPolicy` config value
+*
+* @returns {void}
+*/
+function setFormDataHeaders(headers, formHeaders, policy) {
+	if (policy !== "content-only") {
+		headers.set(formHeaders);
+		return;
+	}
+	Object.entries(formHeaders || {}).forEach(([key, val]) => {
+		if (FORM_DATA_CONTENT_HEADERS.includes(key.toLowerCase())) headers.set(key, val);
+	});
+}
+//#endregion
 //#region node_modules/axios/lib/helpers/AxiosTransformStream.js
 var kInternals = Symbol("internals");
 var AxiosTransformStream = class extends stream.default.Transform {
 	constructor(options) {
 		options = utils_default.toFlatObject(options, {
 			maxRate: 0,
-			chunkSize: 64 * 1024,
+			chunkSize: 65536,
 			minChunkSize: 100,
 			timeWindow: 500,
 			ticksRate: 2,
@@ -27097,6 +27306,72 @@ var isIPv4Loopback = (host) => {
 	if (parts[0] !== "127") return false;
 	return parts.every((p) => /^\d+$/.test(p) && Number(p) >= 0 && Number(p) <= 255);
 };
+/**
+* Canonicalize an IPv4 address written in shorthand, octal, or hex form into
+* dotted-decimal. IPv6 addresses and non-IP strings are returned unchanged so
+* the existing IPv4-mapped IPv6 unmap path and the isLoopback path can still
+* see them.
+*
+* Shorthand expansion mirrors Node's URL parser: literal parts fill from the
+* left, the final part fills the remaining octets from the right with
+* zero-padding on the left.
+*   127.1     -> 127.0.0.1
+*   127.0.1   -> 127.0.0.1
+*   1.2.3     -> 1.2.0.3
+*
+* Each octet is parsed with an explicit base: 16 for `0x`/`0X` prefix, 8 for
+* zero-prefixed multi-digit all-`0-7` parts, 10 otherwise. Zero-prefixed
+* decimal-looking parts that contain `8` or `9` are rejected to match Node's
+* URL parser, and the comparison layer falls through to non-bypass if either
+* side rejects the form (fail-safe).
+*
+* Returns the input unchanged on any parse failure, out-of-range octet, or
+* unusual shape (1-part, 5+ parts) so the comparison layer fails closed.
+*/
+var parseIPv4Octet = (text) => {
+	if (/^0[xX][0-9a-fA-F]+$/.test(text)) {
+		const n = parseInt(text.slice(2), 16);
+		return Number.isFinite(n) ? n : null;
+	}
+	if (text.length > 1 && /^0[0-7]+$/.test(text)) {
+		const n = parseInt(text, 8);
+		return Number.isFinite(n) ? n : null;
+	}
+	if (text.length > 1 && /^0[0-9]+$/.test(text)) return null;
+	if (/^[0-9]+$/.test(text)) {
+		const n = parseInt(text, 10);
+		return Number.isFinite(n) ? n : null;
+	}
+	return null;
+};
+var normalizeIPAddress = (host) => {
+	if (typeof host !== "string" || !host || host.indexOf(":") !== -1) return host;
+	let h = host;
+	if (h.charAt(0) === "[" && h.charAt(h.length - 1) === "]") h = h.slice(1, -1);
+	h = h.replace(/\.+$/, "");
+	if (!/^[0-9.xXa-fA-F]+$/.test(h)) return host;
+	const parts = h.split(".");
+	if (parts.some((p) => p === "")) return host;
+	if (parts.length === 4) {
+		const octets = parts.map(parseIPv4Octet);
+		if (octets.some((n) => n === null || n < 0 || n > 255)) return host;
+		return octets.join(".");
+	}
+	if (parts.length > 4) return host;
+	if (parts.length === 1) return host;
+	const literalOctets = parts.slice(0, -1);
+	const tail = parts[parts.length - 1];
+	const tailSlots = 4 - literalOctets.length;
+	const tailValue = parseIPv4Octet(tail);
+	if (tailValue === null) return host;
+	const maxTail = (1 << 8 * tailSlots) - 1;
+	if (tailValue < 0 || tailValue > maxTail) return host;
+	const tailOctets = new Array(tailSlots).fill(0);
+	for (let i = tailSlots - 1, v = tailValue; i >= 0; i--, v >>= 8) tailOctets[i] = v & 255;
+	const literal = literalOctets.map(parseIPv4Octet);
+	if (literal.some((n) => n === null || n < 0 || n > 255)) return host;
+	return [...literal, ...tailOctets].join(".");
+};
 var isIPv6ZeroGroup = (group) => /^0{1,4}$/.test(group);
 var isIPv6Unspecified = (host) => {
 	if (host === "::") return true;
@@ -27179,7 +27454,10 @@ var unmapIPv4MappedIPv6 = (host) => {
 var normalizeNoProxyHost = (hostname) => {
 	if (!hostname) return hostname;
 	if (hostname.charAt(0) === "[" && hostname.charAt(hostname.length - 1) === "]") hostname = hostname.slice(1, -1);
-	return unmapIPv4MappedIPv6(hostname.replace(/\.+$/, ""));
+	const trimmed = hostname.replace(/\.+$/, "");
+	const ipv4 = normalizeIPAddress(trimmed);
+	if (ipv4 !== trimmed) return ipv4;
+	return unmapIPv4MappedIPv6(trimmed);
 };
 function shouldBypassProxy(location) {
 	let parsed;
@@ -27195,6 +27473,7 @@ function shouldBypassProxy(location) {
 	const hostname = normalizeNoProxyHost(parsed.hostname.toLowerCase());
 	return noProxy.split(/[\s,]+/).some((entry) => {
 		if (!entry) return false;
+		if (entry === "*") return true;
 		let [entryHost, entryPort] = parseNoProxyEntry(entry);
 		entryHost = normalizeNoProxyHost(entryHost);
 		if (!entryHost) return false;
@@ -27285,7 +27564,7 @@ var progressEventReducer = (listener, isDownloadStream, freq = 3) => {
 		if (!e || typeof e.loaded !== "number") return;
 		const rawLoaded = e.loaded;
 		const total = e.lengthComputable ? e.total : void 0;
-		const loaded = total != null ? Math.min(rawLoaded, total) : rawLoaded;
+		const loaded = Math.max(0, total != null ? Math.min(rawLoaded, total) : rawLoaded);
 		const progressBytes = Math.max(0, loaded - bytesNotified);
 		const rate = _speedometer(progressBytes);
 		bytesNotified = Math.max(bytesNotified, loaded);
@@ -27310,57 +27589,68 @@ var progressEventDecorator = (total, throttled) => {
 		loaded
 	}), throttled[1]];
 };
-var asyncDecorator = (fn) => (...args) => utils_default.asap(() => fn(...args));
+var asyncDecorator = (fn, scheduler = utils_default.asap) => (...args) => scheduler(() => fn(...args));
 //#endregion
 //#region node_modules/axios/lib/helpers/estimateDataURLDecodedBytes.js
 /**
-* Estimate decoded byte length of a data:// URL *without* allocating large buffers.
-* - For base64: compute exact decoded size using length and padding;
-*               handle %XX at the character-count level (no string allocation).
-* - For non-base64: compute the exact percent-decoded UTF-8 byte length.
-*
-* @param {string} url
-* @returns {number}
+* Estimate data: URL byte lengths *without* allocating large buffers.
+* - Fetch percent-decodes a base64 body before decoding it.
+* - Node's Buffer.from(body, 'base64') sizes its backing allocation from the
+*   raw body, including ignored characters and content after padding.
+* - Non-base64 data is percent-decoded and then encoded as UTF-8.
 */
 var isHexDigit = (charCode) => charCode >= 48 && charCode <= 57 || charCode >= 65 && charCode <= 70 || charCode >= 97 && charCode <= 102;
 var isPercentEncodedByte = (str, i, len) => i + 2 < len && isHexDigit(str.charCodeAt(i + 1)) && isHexDigit(str.charCodeAt(i + 2));
-function estimateDataURLDecodedBytes(url) {
+var hexValue = (charCode) => charCode <= 57 ? charCode - 48 : (charCode & 223) - 55;
+var isBase64Char = (charCode) => charCode >= 65 && charCode <= 90 || charCode >= 97 && charCode <= 122 || charCode >= 48 && charCode <= 57 || charCode === 43 || charCode === 47 || charCode === 45 || charCode === 95;
+var isBase64Whitespace = (charCode) => charCode === 9 || charCode === 10 || charCode === 12 || charCode === 13 || charCode === 32;
+var base64Bytes = (significant) => {
+	const groups = Math.floor(significant / 4);
+	const remainder = significant % 4;
+	return groups * 3 + (remainder === 2 ? 1 : remainder === 3 ? 2 : 0);
+};
+var estimateBase64BufferAllocation = (body) => {
+	const len = body.length;
+	let padding = 0;
+	if (len > 0 && body.charCodeAt(len - 1) === 61) {
+		padding++;
+		if (len > 1 && body.charCodeAt(len - 2) === 61) padding++;
+	}
+	return Math.floor((len - padding) * 3 / 4);
+};
+var estimatePercentDecodedBase64Bytes = (body) => {
+	const len = body.length;
+	let significant = 0;
+	let padding = 0;
+	let invalid = false;
+	for (let i = 0; i < len; i++) {
+		let code = body.charCodeAt(i);
+		if (code === 37 && isPercentEncodedByte(body, i, len)) {
+			code = hexValue(body.charCodeAt(i + 1)) * 16 + hexValue(body.charCodeAt(i + 2));
+			i += 2;
+		}
+		if (isBase64Whitespace(code)) continue;
+		if (code === 61) {
+			padding++;
+			continue;
+		}
+		if (!isBase64Char(code) || padding > 0) {
+			invalid = true;
+			continue;
+		}
+		significant++;
+	}
+	if (invalid || padding > 2 || padding > 0 && (significant + padding) % 4 !== 0 || significant % 4 === 1) return estimateBase64BufferAllocation(body);
+	return base64Bytes(significant);
+};
+var estimateDataURLBytes = (url, estimateBase64) => {
 	if (!url || typeof url !== "string") return 0;
 	if (!url.startsWith("data:")) return 0;
 	const comma = url.indexOf(",");
 	if (comma < 0) return 0;
 	const meta = url.slice(5, comma);
 	const body = url.slice(comma + 1);
-	if (/;base64/i.test(meta)) {
-		let effectiveLen = body.length;
-		const len = body.length;
-		for (let i = 0; i < len; i++) if (body.charCodeAt(i) === 37 && i + 2 < len) {
-			const a = body.charCodeAt(i + 1);
-			const b = body.charCodeAt(i + 2);
-			if (isHexDigit(a) && isHexDigit(b)) {
-				effectiveLen -= 2;
-				i += 2;
-			}
-		}
-		let pad = 0;
-		let idx = len - 1;
-		const tailIsPct3D = (j) => j >= 2 && body.charCodeAt(j - 2) === 37 && body.charCodeAt(j - 1) === 51 && (body.charCodeAt(j) === 68 || body.charCodeAt(j) === 100);
-		if (idx >= 0) {
-			if (body.charCodeAt(idx) === 61) {
-				pad++;
-				idx--;
-			} else if (tailIsPct3D(idx)) {
-				pad++;
-				idx -= 3;
-			}
-		}
-		if (pad === 1 && idx >= 0) {
-			if (body.charCodeAt(idx) === 61) pad++;
-			else if (tailIsPct3D(idx)) pad++;
-		}
-		const bytes = Math.floor(effectiveLen / 4) * 3 - (pad || 0);
-		return bytes > 0 ? bytes : 0;
-	}
+	if (/;base64/i.test(meta)) return estimateBase64(body);
 	let bytes = 0;
 	for (let i = 0, len = body.length; i < len; i++) {
 		const c = body.charCodeAt(i);
@@ -27378,6 +27668,25 @@ function estimateDataURLDecodedBytes(url) {
 		} else bytes += 3;
 	}
 	return bytes;
+};
+/**
+* Estimate the percent-decoded payload size used by Fetch data: URLs.
+*
+* @param {string} url
+* @returns {number}
+*/
+function estimateDataURLDecodedBytes(url) {
+	const fragmentIndex = typeof url === "string" ? url.indexOf("#") : -1;
+	return estimateDataURLBytes(fragmentIndex === -1 ? url : url.slice(0, fragmentIndex), estimatePercentDecodedBase64Bytes);
+}
+/**
+* Estimate the Buffer backing allocation used by Node's raw base64 decoder.
+*
+* @param {string} url
+* @returns {number}
+*/
+function estimateDataURLBufferAllocation(url) {
+	return estimateDataURLBytes(url, estimateBase64BufferAllocation);
 }
 //#endregion
 //#region node_modules/axios/lib/adapters/http.js
@@ -27399,18 +27708,9 @@ var isBrotliSupported = utils_default.isFunction(zlib.default.createBrotliDecomp
 var isZstdSupported = utils_default.isFunction(zlib.default.createZstdDecompress);
 var ACCEPT_ENCODING = "gzip, compress, deflate" + (isBrotliSupported ? ", br" : "");
 var ACCEPT_ENCODING_WITH_ZSTD = ACCEPT_ENCODING + (isZstdSupported ? ", zstd" : "");
+var scheduleProgress = typeof process !== "undefined" && process.nextTick ? process.nextTick.bind(process) : utils_default.asap;
 var { http: httpFollow, https: httpsFollow } = import_follow_redirects.default;
 var isHttps = /https:?/;
-var FORM_DATA_CONTENT_HEADERS$1 = ["content-type", "content-length"];
-function setFormDataHeaders$1(headers, formHeaders, policy) {
-	if (policy !== "content-only") {
-		headers.set(formHeaders);
-		return;
-	}
-	Object.entries(formHeaders).forEach(([key, val]) => {
-		if (FORM_DATA_CONTENT_HEADERS$1.includes(key.toLowerCase())) headers.set(key, val);
-	});
-}
 var kAxiosSocketListener = Symbol("axios.http.socketListener");
 var kAxiosCurrentReq = Symbol("axios.http.currentReq");
 var kAxiosInstalledTunnel = Symbol("axios.http.installedTunnel");
@@ -27440,10 +27740,11 @@ function getTunnelingAgent(agentOptions, userHttpsAgent) {
 	const cache = userHttpsAgent ? tunnelingAgentCacheUser.get(userHttpsAgent) || tunnelingAgentCacheUser.set(userHttpsAgent, /* @__PURE__ */ new Map()).get(userHttpsAgent) : tunnelingAgentCache;
 	let agent = cache.get(key);
 	if (agent) return agent;
-	agent = new import_dist.default(userHttpsAgent && userHttpsAgent.options ? {
+	const merged = userHttpsAgent && userHttpsAgent.options ? {
 		...userHttpsAgent.options,
 		...agentOptions
-	} : agentOptions);
+	} : agentOptions;
+	agent = new import_dist.default(merged);
 	if (userHttpsAgent && userHttpsAgent.options) {
 		const originTLSOptions = { ...userHttpsAgent.options };
 		const callback = agent.callback;
@@ -27729,7 +28030,7 @@ var http_default = isHttpAdapterSupported && function httpAdapter(config) {
 		const protocol = parsed.protocol || supportedProtocols[0];
 		if (protocol === "data:") {
 			if (maxContentLength > -1) {
-				if (estimateDataURLDecodedBytes(String(own("url") || fullPath || "")) > maxContentLength) return reject(new AxiosError("maxContentLength size of " + maxContentLength + " exceeded", AxiosError.ERR_BAD_RESPONSE, config));
+				if (estimateDataURLBufferAllocation(String(own("url") || fullPath || "")) > maxContentLength) return reject(new AxiosError("maxContentLength size of " + maxContentLength + " exceeded", AxiosError.ERR_BAD_RESPONSE, config));
 			}
 			let convertedData;
 			if (method !== "GET") return settle(resolve, reject, {
@@ -27757,7 +28058,7 @@ var http_default = isHttpAdapterSupported && function httpAdapter(config) {
 		}
 		if (supportedProtocols.indexOf(protocol) === -1) return reject(new AxiosError("Unsupported protocol " + protocol, AxiosError.ERR_BAD_REQUEST, config));
 		const headers = AxiosHeaders.from(config.headers).normalize();
-		headers.set("User-Agent", "axios/1.18.1", false);
+		headers.set("User-Agent", "axios/1.19.0", false);
 		const { onUploadProgress, onDownloadProgress } = config;
 		const maxRate = config.maxRate;
 		let maxUploadRate = void 0;
@@ -27767,11 +28068,11 @@ var http_default = isHttpAdapterSupported && function httpAdapter(config) {
 			data = formDataToStream(data, (formHeaders) => {
 				headers.set(formHeaders);
 			}, {
-				tag: `axios-1.18.1-boundary`,
+				tag: `axios-1.19.0-boundary`,
 				boundary: userBoundary && userBoundary[1] || void 0
 			});
 		} else if (utils_default.isFormData(data) && utils_default.isFunction(data.getHeaders) && data.getHeaders !== Object.prototype.getHeaders) {
-			setFormDataHeaders$1(headers, data.getHeaders(), own("formDataHeaderPolicy"));
+			setFormDataHeaders(headers, data.getHeaders(), own("formDataHeaderPolicy"));
 			if (!headers.hasContentLength()) try {
 				const knownLength = await util.default.promisify(data.getLength).call(data);
 				Number.isFinite(knownLength) && knownLength >= 0 && headers.setContentLength(knownLength);
@@ -27795,7 +28096,7 @@ var http_default = isHttpAdapterSupported && function httpAdapter(config) {
 		if (data && (onUploadProgress || maxUploadRate)) {
 			if (!utils_default.isStream(data)) data = stream.default.Readable.from(data, { objectMode: false });
 			data = stream.default.pipeline([data, new AxiosTransformStream({ maxRate: utils_default.toFiniteNumber(maxUploadRate) })], utils_default.noop);
-			onUploadProgress && data.on("progress", flushOnFinish(data, progressEventDecorator(contentLength, progressEventReducer(asyncDecorator(onUploadProgress), false, 3))));
+			onUploadProgress && data.on("progress", flushOnFinish(data, progressEventDecorator(contentLength, progressEventReducer(asyncDecorator(onUploadProgress, scheduleProgress), false, 3))));
 		}
 		let auth = void 0;
 		const configAuth = own("auth");
@@ -27905,7 +28206,7 @@ var http_default = isHttpAdapterSupported && function httpAdapter(config) {
 			const responseLength = utils_default.toFiniteNumber(res.headers["content-length"]);
 			if (onDownloadProgress || maxDownloadRate) {
 				const transformStream = new AxiosTransformStream({ maxRate: utils_default.toFiniteNumber(maxDownloadRate) });
-				onDownloadProgress && transformStream.on("progress", flushOnFinish(transformStream, progressEventDecorator(responseLength, progressEventReducer(asyncDecorator(onDownloadProgress), true, 3))));
+				onDownloadProgress && transformStream.on("progress", flushOnFinish(transformStream, progressEventDecorator(responseLength, progressEventReducer(asyncDecorator(onDownloadProgress, scheduleProgress), true, 3))));
 				streams.push(transformStream);
 			}
 			let responseStream = res;
@@ -27931,12 +28232,10 @@ var http_default = isHttpAdapterSupported && function httpAdapter(config) {
 							delete res.headers["content-encoding"];
 						}
 						break;
-					case "zstd":
-						if (isZstdSupported) {
-							streams.push(zlib.default.createZstdDecompress(zstdOptions));
-							delete res.headers["content-encoding"];
-						}
-						break;
+					case "zstd": if (isZstdSupported) {
+						streams.push(zlib.default.createZstdDecompress(zstdOptions));
+						delete res.headers["content-encoding"];
+					}
 				}
 			}
 			responseStream = streams.length > 1 ? stream.default.pipeline(streams, utils_default.noop) : streams[0];
@@ -28015,7 +28314,7 @@ var http_default = isHttpAdapterSupported && function httpAdapter(config) {
 		});
 		const boundSockets = /* @__PURE__ */ new Set();
 		req.on("socket", function handleRequestSocket(socket) {
-			if (typeof socket.setKeepAlive === "function") socket.setKeepAlive(true, 1e3 * 60);
+			if (typeof socket.setKeepAlive === "function") socket.setKeepAlive(true, 6e4);
 			if (!socket[kAxiosSocketListener]) {
 				socket.on("error", function handleSocketError(err) {
 					const current = socket[kAxiosCurrentReq];
@@ -28123,6 +28422,10 @@ var cookies_default = platform_default.hasStandardBrowserEnv ? {
 //#endregion
 //#region node_modules/axios/lib/core/mergeConfig.js
 var headersToObject = (thing) => thing instanceof AxiosHeaders ? { ...thing } : thing;
+var ownEnumerableKeys = (thing) => {
+	if (Object.getOwnPropertySymbols && Object.getOwnPropertyDescriptor) return Object.keys(thing).concat(Object.getOwnPropertySymbols(thing).filter((symbol) => Object.getOwnPropertyDescriptor(thing, symbol).enumerable));
+	return Object.keys(thing);
+};
 /**
 * Config-specific merge-function which creates a new config-object
 * by merging two configuration objects together.
@@ -28162,9 +28465,11 @@ function mergeConfig(config1, config2) {
 	}
 	function getMergedTransitionalOption(prop) {
 		const transitional2 = utils_default.hasOwnProp(config2, "transitional") ? config2.transitional : void 0;
-		if (!utils_default.isUndefined(transitional2)) if (utils_default.isPlainObject(transitional2)) {
-			if (utils_default.hasOwnProp(transitional2, prop)) return transitional2[prop];
-		} else return;
+		if (!utils_default.isUndefined(transitional2)) {
+			if (utils_default.isPlainObject(transitional2)) {
+				if (utils_default.hasOwnProp(transitional2, prop)) return transitional2[prop];
+			} else return;
+		}
 		const transitional1 = utils_default.hasOwnProp(config1, "transitional") ? config1.transitional : void 0;
 		if (utils_default.isPlainObject(transitional1) && utils_default.hasOwnProp(transitional1, prop)) return transitional1[prop];
 	}
@@ -28204,7 +28509,7 @@ function mergeConfig(config1, config2) {
 		validateStatus: mergeDirectKeys,
 		headers: (a, b, prop) => mergeDeepProperties(headersToObject(a), headersToObject(b), prop, true)
 	};
-	utils_default.forEach(Object.keys({
+	utils_default.forEach(ownEnumerableKeys({
 		...config1,
 		...config2
 	}), function computeConfigValue(prop) {
@@ -28213,22 +28518,14 @@ function mergeConfig(config1, config2) {
 		const configValue = merge(utils_default.hasOwnProp(config1, prop) ? config1[prop] : void 0, utils_default.hasOwnProp(config2, prop) ? config2[prop] : void 0, prop);
 		utils_default.isUndefined(configValue) && merge !== mergeDirectKeys || (config[prop] = configValue);
 	});
-	if (utils_default.hasOwnProp(config2, "validateStatus") && utils_default.isUndefined(config2.validateStatus) && getMergedTransitionalOption("validateStatusUndefinedResolves") === false) if (utils_default.hasOwnProp(config1, "validateStatus")) config.validateStatus = getMergedValue(void 0, config1.validateStatus);
-	else delete config.validateStatus;
+	if (utils_default.hasOwnProp(config2, "validateStatus") && utils_default.isUndefined(config2.validateStatus) && getMergedTransitionalOption("validateStatusUndefinedResolves") === false) {
+		if (utils_default.hasOwnProp(config1, "validateStatus")) config.validateStatus = getMergedValue(void 0, config1.validateStatus);
+		else delete config.validateStatus;
+	}
 	return config;
 }
 //#endregion
 //#region node_modules/axios/lib/helpers/resolveConfig.js
-var FORM_DATA_CONTENT_HEADERS = ["content-type", "content-length"];
-function setFormDataHeaders(headers, formHeaders, policy) {
-	if (policy !== "content-only") {
-		headers.set(formHeaders);
-		return;
-	}
-	Object.entries(formHeaders || {}).forEach(([key, val]) => {
-		if (FORM_DATA_CONTENT_HEADERS.includes(key.toLowerCase())) headers.set(key, val);
-	});
-}
 /**
 * Encode a UTF-8 string to a Latin-1 byte string for use with btoa().
 * This is a modern replacement for the deprecated unescape(encodeURIComponent(str)) pattern.
@@ -28401,7 +28698,14 @@ var composeSignals = (signals, timeout) => {
 		});
 		signals = null;
 	};
-	signals.forEach((signal) => signal.addEventListener("abort", onabort, { once: true }));
+	signals.forEach((signal) => {
+		if (aborted) return;
+		if (signal.aborted) {
+			onabort.call(signal);
+			return;
+		}
+		signal.addEventListener("abort", onabort, { once: true });
+	});
 	const { signal } = controller;
 	signal.unsubscribe = () => utils_default.asap(unsubscribe);
 	return signal;
@@ -28476,7 +28780,7 @@ var trackStream = (stream, chunkSize, onProgress, onFinish) => {
 };
 //#endregion
 //#region node_modules/axios/lib/adapters/fetch.js
-var DEFAULT_CHUNK_SIZE = 64 * 1024;
+var DEFAULT_CHUNK_SIZE = 65536;
 var { isFunction } = utils_default;
 /**
 * Encode a UTF-8 string to a Latin-1 byte string for use with btoa().
@@ -29051,11 +29355,13 @@ var Axios = class {
 			advertiseZstdAcceptEncoding: validators.transitional(validators.boolean),
 			validateStatusUndefinedResolves: validators.transitional(validators.boolean)
 		}, false);
-		if (paramsSerializer != null) if (utils_default.isFunction(paramsSerializer)) config.paramsSerializer = { serialize: paramsSerializer };
-		else validator_default.assertOptions(paramsSerializer, {
-			encode: validators.function,
-			serialize: validators.function
-		}, true);
+		if (paramsSerializer != null) {
+			if (utils_default.isFunction(paramsSerializer)) config.paramsSerializer = { serialize: paramsSerializer };
+			else validator_default.assertOptions(paramsSerializer, {
+				encode: validators.function,
+				serialize: validators.function
+			}, true);
+		}
 		if (config.allowAbsoluteUrls !== void 0) {} else if (this.defaults.allowAbsoluteUrls !== void 0) config.allowAbsoluteUrls = this.defaults.allowAbsoluteUrls;
 		else config.allowAbsoluteUrls = true;
 		validator_default.assertOptions(config, {
@@ -29108,16 +29414,25 @@ var Axios = class {
 			const onFulfilled = requestInterceptorChain[i++];
 			const onRejected = requestInterceptorChain[i++];
 			try {
-				newConfig = onFulfilled(newConfig);
+				newConfig = onFulfilled ? onFulfilled(newConfig) : newConfig;
 			} catch (error) {
-				onRejected.call(this, error);
+				if (!onRejected) {
+					promise = Promise.reject(error);
+					break;
+				}
+				try {
+					const rejectedResult = onRejected.call(this, error);
+					if (utils_default.isThenable(rejectedResult)) promise = Promise.resolve(rejectedResult).then(() => dispatchRequest.call(this, newConfig));
+				} catch (rejectedError) {
+					promise = Promise.reject(rejectedError);
+				}
 				break;
 			}
 		}
-		try {
+		if (!promise) try {
 			promise = dispatchRequest.call(this, newConfig);
 		} catch (error) {
-			return Promise.reject(error);
+			promise = Promise.reject(error);
 		}
 		i = 0;
 		len = responseInterceptorChain.length;
@@ -29356,6 +29671,7 @@ var HttpStatusCode = {
 	LoopDetected: 508,
 	NotExtended: 510,
 	NetworkAuthenticationRequired: 511,
+	WebServerReturnsAnUnknownError: 520,
 	WebServerIsDown: 521,
 	ConnectionTimedOut: 522,
 	OriginIsUnreachable: 523,
@@ -29536,7 +29852,8 @@ async function saveRequirements(filePath, requirements) {
 			return updatedRequirement ? [formatRequirementLine(updatedRequirement)] : [];
 		});
 		updatedLines.push(...appendedRequirements.map(formatRequirementLine));
-		(0, import_graceful_fs.writeFileSync)(filePath, updatedLines.join(eol) + (hadTrailingEol ? eol : ""), "utf-8");
+		const updatedContent = updatedLines.join(eol) + (hadTrailingEol ? eol : "");
+		(0, import_graceful_fs.writeFileSync)(filePath, updatedContent, "utf-8");
 		return true;
 	} catch (error) {
 		console.error("Error saving requirements file:", error);
@@ -29652,9 +29969,10 @@ async function getLatestPipPackageVersion(packageName, maxRetries = 5, signal) {
 		} catch (error) {
 			if (axios.isCancel(error)) return null;
 			if (attempt === maxRetries) {
-				if (axios.isAxiosError(error)) if (error.response?.status === 404) console.error(`Package ${packageName} not found on PyPI after ${maxRetries} attempts.`);
-				else console.error(`Error fetching package info for ${packageName} after ${maxRetries} attempts:`, error.message);
-				else console.error(`An unexpected error occurred for ${packageName} after ${maxRetries} attempts:`, error);
+				if (axios.isAxiosError(error)) {
+					if (error.response?.status === 404) console.error(`Package ${packageName} not found on PyPI after ${maxRetries} attempts.`);
+					else console.error(`Error fetching package info for ${packageName} after ${maxRetries} attempts:`, error.message);
+				} else console.error(`An unexpected error occurred for ${packageName} after ${maxRetries} attempts:`, error);
 				break;
 			}
 			const delay = Math.pow(2, attempt) * 100;
@@ -29675,9 +29993,10 @@ async function getPipPackageAllVersions(packageName) {
 			return null;
 		}
 	} catch (error) {
-		if (axios.isAxiosError(error)) if (error.response?.status === 404) console.error(`Package ${packageName} not found on PyPI.`);
-		else console.error(`Error fetching package info for ${packageName}:`, error.message);
-		else console.error(`An unexpected error occurred for ${packageName}:`, error);
+		if (axios.isAxiosError(error)) {
+			if (error.response?.status === 404) console.error(`Package ${packageName} not found on PyPI.`);
+			else console.error(`Error fetching package info for ${packageName}:`, error.message);
+		} else console.error(`An unexpected error occurred for ${packageName}:`, error);
 		return null;
 	}
 }
@@ -30222,6 +30541,7 @@ function ListenForChannels(nodePty) {
 //#endregion
 //#region extension/src/main/lynxExtension.ts
 async function initialExtension(lynxApi, utils) {
+	lynxApi.initNodeSentry(SENTRY_DSN);
 	utils.getAppManager().then((app) => {
 		setAppManager(app);
 	});
@@ -30246,7 +30566,9 @@ async function initialExtension(lynxApi, utils) {
 		}
 		if (!storeManager.getCustomData("pythonToolkit_IsAutoDetectedVenvs")) {
 			storeManager.getData("cards").installedCards.forEach((card) => {
-				findAIVenv(card.id, card.dir);
+				findAIVenv(card.id, card.dir).catch((err) => {
+					console.error(`Error auto-detecting venv for card ${card.id}:`, err);
+				});
 			});
 			storeManager.setCustomData(IsAutoDetectedVenvs_StorageID, true);
 		}
@@ -30255,3 +30577,5 @@ async function initialExtension(lynxApi, utils) {
 }
 //#endregion
 exports.initialExtension = initialExtension;
+
+//# sourceMappingURL=mainEntry.cjs.map

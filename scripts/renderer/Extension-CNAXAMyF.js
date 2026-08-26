@@ -1,6 +1,14 @@
-import { i as __toESM, n as __commonJSMin, r as __require, t as require_react } from "./react-C_ms_8sA.js";
-import { r as importShared } from "./_virtual___federation_fn_import-ChPcBYrR.js";
-import { t as require_jsx_runtime } from "./jsx-runtime-9Wbp44U5.js";
+(function() {
+	try {
+		var e = "undefined" != typeof window ? window : "undefined" != typeof global ? global : "undefined" != typeof globalThis ? globalThis : "undefined" != typeof self ? self : {};
+		e.SENTRY_RELEASE = { id: "17561bda7d32de6a59c60e7229a41d6eb183b31a" };
+		var n = new e.Error().stack;
+		n && (e._sentryDebugIds = e._sentryDebugIds || {}, e._sentryDebugIds[n] = "915cc920-d199-4cb6-890b-089ffbd74952", e._sentryDebugIdIdentifier = "sentry-dbid-915cc920-d199-4cb6-890b-089ffbd74952");
+	} catch (e) {}
+})();
+import { i as __toESM, n as __commonJSMin, r as __require, t as require_react } from "./react-B4vIjiTj.js";
+import { r as importShared } from "./_virtual___federation_fn_import-BRUIZv03.js";
+import { t as require_jsx_runtime } from "./jsx-runtime-Bi35aC4E.js";
 //#region extension/src/cross/CrossExtConstants.ts
 var ModulesThatSupportPython = [
 	"LSHQQYTIGER_SD",
@@ -25,6 +33,18 @@ var ModulesThatSupportPython = [
 	"LlamaFactory_AI",
 	"Langflow_AI"
 ];
+/**
+* Resolves the original card ID if the given ID is a duplicated card ID (e.g. "Automatic1111_SD_2" -> "Automatic1111_SD").
+*/
+function getOriginalCardId(id) {
+	return id.replace(/_\d+$/, "");
+}
+/**
+* Checks if a card ID (or its duplicated variant) supports Python.
+*/
+function isPythonSupportedModule(id) {
+	return ModulesThatSupportPython.includes(getOriginalCardId(id));
+}
 var AvailableModules = {
 	a1: "Automatic1111_SD",
 	sdAmd: "LSHQQYTIGER_SD",
@@ -53,6 +73,7 @@ var AvailableModules = {
 	llamaFactory: "LlamaFactory_AI",
 	langFlow: "Langflow_AI"
 };
+var SENTRY_DSN = "https://ebebe2a9dba29dcb11d32283b74ef6ff@o4509344104316928.ingest.us.sentry.io/4510227807928320";
 //#endregion
 //#region extension/src/renderer/consts.ts
 var DepsModalKey = "pt_deps";
@@ -112,16 +133,16 @@ function PythonIcon(props) {
 //#endregion
 //#region extension/src/renderer/components/CardMenu.tsx
 var { DropdownItem, DropdownSection, Separator: Separator$3 } = await importShared("@heroui/react");
-var { useCallback: useCallback$17 } = await importShared("react");
+var { useCallback: useCallback$18 } = await importShared("react");
 function CardMenu({ useCardStore, useCardOverlayState }) {
 	const state = useCardOverlayState(DepsModalKey);
 	const id = useCardStore((state) => state.id);
 	const setMenuIsOpen = useCardStore((state) => state.setMenuIsOpen);
-	const onPress = useCallback$17(() => {
+	const onPress = useCallback$18(() => {
 		state.open();
 		setMenuIsOpen(false);
 	}, [setMenuIsOpen, state]);
-	if (!ModulesThatSupportPython.includes(id)) return null;
+	if (!isPythonSupportedModule(id)) return null;
 	return /* @__PURE__ */ (0, import_jsx_runtime.jsxs)(import_jsx_runtime.Fragment, { children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)(DropdownSection, { children: /* @__PURE__ */ (0, import_jsx_runtime.jsxs)(DropdownItem, {
 		onPress,
 		children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)(PythonIcon, {}), "Dependencies"]
@@ -811,7 +832,7 @@ var objectTraps = {
 		const value = source[prop];
 		if (state.finalized_ || !isDraftable(value)) return value;
 		if (isArrayWithStringProp && state.operationMethod && arrayPlugin?.isMutatingArrayMethod(state.operationMethod) && isArrayIndex(prop)) return value;
-		if (value === peek(state.base_, prop)) {
+		if (value === peek(state.base_, prop) || isRelocatedBaseRef(state, prop, value)) {
 			prepareCopy(state);
 			const childKey = state.type_ === 1 ? +prop : prop;
 			const childDraft = createProxy(state.scope_, value, state, childKey);
@@ -843,7 +864,7 @@ var objectTraps = {
 			prepareCopy(state);
 			markChanged(state);
 		}
-		if (state.copy_[prop] === value && (value !== void 0 || prop in state.copy_) || Number.isNaN(value) && Number.isNaN(state.copy_[prop])) return true;
+		if (state.copy_[prop] === value && (value !== void 0 || has(state.copy_, prop, state.type_)) || Number.isNaN(value) && Number.isNaN(state.copy_[prop])) return true;
 		state.copy_[prop] = value;
 		state.assigned_.set(prop, true);
 		handleCrossReference(state, prop, value);
@@ -897,6 +918,10 @@ arrayTraps.set = function(state, prop, value) {
 function peek(draft, prop) {
 	const state = draft[DRAFT_STATE];
 	return (state ? latest(state) : draft)[prop];
+}
+function isRelocatedBaseRef(state, prop, value) {
+	if (state.type_ !== 1 || !state.allIndicesReassigned_ || state.assigned_?.get(prop) || !isDraftable(value) || value[DRAFT_STATE]) return false;
+	return state.baseRefs_.has(value);
 }
 function readPropFromProto(state, source, prop) {
 	const desc = getDescriptorFromProto(source, prop);
@@ -1186,20 +1211,22 @@ function createReducer(initialState, mapOrBuilderCallback) {
 		let caseReducers = [actionsMap[action.type], ...finalActionMatchers.filter(({ matcher }) => matcher(action)).map(({ reducer: reducer2 }) => reducer2)];
 		if (caseReducers.filter((cr) => !!cr).length === 0) caseReducers = [finalDefaultCaseReducer];
 		return caseReducers.reduce((previousState, caseReducer) => {
-			if (caseReducer) if (isDraft(previousState)) {
-				const result = caseReducer(previousState, action);
-				if (result === void 0) return previousState;
-				return result;
-			} else if (!isDraftable(previousState)) {
-				const result = caseReducer(previousState, action);
-				if (result === void 0) {
-					if (previousState === null) return previousState;
-					throw Error("A case reducer on a non-draftable value must not return undefined");
-				}
-				return result;
-			} else return produce(previousState, (draft) => {
-				return caseReducer(draft, action);
-			});
+			if (caseReducer) {
+				if (isDraft(previousState)) {
+					const result = caseReducer(previousState, action);
+					if (result === void 0) return previousState;
+					return result;
+				} else if (!isDraftable(previousState)) {
+					const result = caseReducer(previousState, action);
+					if (result === void 0) {
+						if (previousState === null) return previousState;
+						throw Error("A case reducer on a non-draftable value must not return undefined");
+					}
+					return result;
+				} else return produce(previousState, (draft) => {
+					return caseReducer(draft, action);
+				});
+			}
 			return previousState;
 		}, state);
 	}
@@ -1495,7 +1522,7 @@ var cardsSlice = createSlice({
 			if (!state.browserDomReadyIds.includes(action.payload)) state.browserDomReadyIds.push(action.payload);
 		},
 		addRunningEmpty: (state, action) => {
-			const { tabId, type } = action.payload;
+			const { tabId, type, dir } = action.payload;
 			const id = `${tabId}_${type}`;
 			const currentView = type === "browser" ? "browser" : "terminal";
 			state.runningCard.push({
@@ -1505,7 +1532,7 @@ var cardsSlice = createSlice({
 				isEmptyRunning: true
 			});
 			if (type !== "terminal") browserIpc.send.createBrowser(id);
-			if (type !== "browser") ptyIpc.emptyProcess(id);
+			if (type !== "browser") ptyIpc.emptyProcess(id, dir);
 		},
 		addRunningCard: (state, action) => {
 			const { tabId, id } = action.payload;
@@ -1589,6 +1616,7 @@ var settingsSlice = createSlice({
 		closeTabConfirm: true,
 		terminateAIConfirm: true,
 		exitSignalConfirm: true,
+		forceReloadConfirm: true,
 		openLastSize: false,
 		updatedModules: [],
 		newModules: [],
@@ -1600,21 +1628,7 @@ var settingsSlice = createSlice({
 		checkCustomUpdate: false,
 		searchValue: "",
 		searchWords: [],
-		selectedSection: "",
-		floatChatAlwaysOnTop: true,
-		floatChatShowTaskbar: false,
-		floatChatRememberSize: false,
-		floatChatRememberPosition: false,
-		disableFloatChat: false,
-		floatChatKeepInBackground: true,
-		chatBridgeMaxWidth: "default",
-		bridgeDefaultView: "custom",
-		floatDefaultView: "custom",
-		chatSidebarCollapsed: false,
-		chatSidebarWidth: 240,
-		floatChatSidebarCollapsed: false,
-		floatChatSidebarWidth: 200,
-		pinnedThreads: []
+		selectedSection: ""
 	},
 	name: "settings",
 	reducers: {
@@ -1624,7 +1638,7 @@ var settingsSlice = createSlice({
 		setSearchValue: (state, action) => {
 			const searchValue = action.payload;
 			state.searchValue = searchValue;
-			state.searchWords = searchValue ? searchValue.split(/\s+/) : [];
+			state.searchWords = searchValue ? searchValue.split(/\s+/).filter(Boolean) : [];
 		}
 	}
 });
@@ -1676,8 +1690,10 @@ function getRawTag(value) {
 		var unmasked = true;
 	} catch (e) {}
 	var result = nativeObjectToString$1.call(value);
-	if (unmasked) if (isOwn) value[symToStringTag$1] = tag;
-	else delete value[symToStringTag$1];
+	if (unmasked) {
+		if (isOwn) value[symToStringTag$1] = tag;
+		else delete value[symToStringTag$1];
+	}
 	return result;
 }
 //#endregion
@@ -1814,7 +1830,7 @@ var isArray$1 = Array.isArray;
 //#endregion
 //#region node_modules/lodash-es/_baseToString.js
 /** Used as references for various `Number` constants. */
-var INFINITY = Infinity;
+var INFINITY = 1 / 0;
 /** Used to convert symbols to primitives and strings. */
 var symbolProto$2 = Symbol$1 ? Symbol$1.prototype : void 0;
 var symbolToString = symbolProto$2 ? symbolProto$2.toString : void 0;
@@ -5068,7 +5084,7 @@ var startCase = createCompounder(function(result, word, index) {
 });
 //#endregion
 //#region src/renderer/mainWindow/utils/hooks.tsx
-var { Fragment: Fragment$1, useEffect: useEffect$31, useRef: useRef$7, useState: useState$35 } = await importShared("react");
+var { Fragment: Fragment$1, useEffect: useEffect$31, useState: useState$35 } = await importShared("react");
 /**
 * Hook to get an installed card by its ID.
 * @param cardId - The ID of the card to find
@@ -5089,7 +5105,7 @@ window.isPortable;
 //#endregion
 //#region node_modules/lucide-react/dist/esm/shared/src/utils/mergeClasses.mjs
 /**
-* @license lucide-react v1.25.0 - ISC
+* @license lucide-react v1.33.0 - ISC
 *
 * This source code is licensed under the ISC license.
 * See the LICENSE file in the root directory of this source tree.
@@ -5100,7 +5116,7 @@ var mergeClasses = (...classes) => classes.filter((className, index, array) => {
 //#endregion
 //#region node_modules/lucide-react/dist/esm/shared/src/utils/toKebabCase.mjs
 /**
-* @license lucide-react v1.25.0 - ISC
+* @license lucide-react v1.33.0 - ISC
 *
 * This source code is licensed under the ISC license.
 * See the LICENSE file in the root directory of this source tree.
@@ -5109,7 +5125,7 @@ var toKebabCase = (string) => string.replace(/([a-z0-9])([A-Z])/g, "$1-$2").toLo
 //#endregion
 //#region node_modules/lucide-react/dist/esm/shared/src/utils/toCamelCase.mjs
 /**
-* @license lucide-react v1.25.0 - ISC
+* @license lucide-react v1.33.0 - ISC
 *
 * This source code is licensed under the ISC license.
 * See the LICENSE file in the root directory of this source tree.
@@ -5118,7 +5134,7 @@ var toCamelCase = (string) => string.replace(/^([A-Z])|[\s-_]+(\w)/g, (match, p1
 //#endregion
 //#region node_modules/lucide-react/dist/esm/shared/src/utils/toPascalCase.mjs
 /**
-* @license lucide-react v1.25.0 - ISC
+* @license lucide-react v1.33.0 - ISC
 *
 * This source code is licensed under the ISC license.
 * See the LICENSE file in the root directory of this source tree.
@@ -5130,7 +5146,7 @@ var toPascalCase = (string) => {
 //#endregion
 //#region node_modules/lucide-react/dist/esm/defaultAttributes.mjs
 /**
-* @license lucide-react v1.25.0 - ISC
+* @license lucide-react v1.33.0 - ISC
 *
 * This source code is licensed under the ISC license.
 * See the LICENSE file in the root directory of this source tree.
@@ -5149,7 +5165,7 @@ var defaultAttributes = {
 //#endregion
 //#region node_modules/lucide-react/dist/esm/shared/src/utils/hasA11yProp.mjs
 /**
-* @license lucide-react v1.25.0 - ISC
+* @license lucide-react v1.33.0 - ISC
 *
 * This source code is licensed under the ISC license.
 * See the LICENSE file in the root directory of this source tree.
@@ -5161,18 +5177,18 @@ var hasA11yProp = (props) => {
 //#endregion
 //#region node_modules/lucide-react/dist/esm/context.mjs
 /**
-* @license lucide-react v1.25.0 - ISC
+* @license lucide-react v1.33.0 - ISC
 *
 * This source code is licensed under the ISC license.
 * See the LICENSE file in the root directory of this source tree.
 */
-var { createContext, useContext, useMemo: useMemo$14, createElement: createElement$2 } = await importShared("react");
-var LucideContext = createContext({});
-var useLucideContext = () => useContext(LucideContext);
+var { createContext: createContext$1, useContext: useContext$1, useMemo: useMemo$15, createElement: createElement$2 } = await importShared("react");
+var LucideContext = createContext$1({});
+var useLucideContext = () => useContext$1(LucideContext);
 //#endregion
 //#region node_modules/lucide-react/dist/esm/Icon.mjs
 /**
-* @license lucide-react v1.25.0 - ISC
+* @license lucide-react v1.33.0 - ISC
 *
 * This source code is licensed under the ISC license.
 * See the LICENSE file in the root directory of this source tree.
@@ -5196,7 +5212,7 @@ var Icon = forwardRef$2(({ color, size, strokeWidth, absoluteStrokeWidth, classN
 //#endregion
 //#region node_modules/lucide-react/dist/esm/createLucideIcon.mjs
 /**
-* @license lucide-react v1.25.0 - ISC
+* @license lucide-react v1.33.0 - ISC
 *
 * This source code is licensed under the ISC license.
 * See the LICENSE file in the root directory of this source tree.
@@ -5213,7 +5229,7 @@ var createLucideIcon = (iconName, iconNode) => {
 	return Component;
 };
 /**
-* @license lucide-react v1.25.0 - ISC
+* @license lucide-react v1.33.0 - ISC
 *
 * This source code is licensed under the ISC license.
 * See the LICENSE file in the root directory of this source tree.
@@ -5226,7 +5242,7 @@ var Plus = createLucideIcon("plus", [["path", {
 	key: "s699le"
 }]]);
 /**
-* @license lucide-react v1.25.0 - ISC
+* @license lucide-react v1.33.0 - ISC
 *
 * This source code is licensed under the ISC license.
 * See the LICENSE file in the root directory of this source tree.
@@ -5239,7 +5255,7 @@ var Terminal = createLucideIcon("terminal", [["path", {
 	key: "1yngyt"
 }]]);
 /**
-* @license lucide-react v1.25.0 - ISC
+* @license lucide-react v1.33.0 - ISC
 *
 * This source code is licensed under the ISC license.
 * See the LICENSE file in the root directory of this source tree.
@@ -5271,7 +5287,7 @@ var Unplug = createLucideIcon("unplug", [
 	}]
 ]);
 /**
-* @license lucide-react v1.25.0 - ISC
+* @license lucide-react v1.33.0 - ISC
 *
 * This source code is licensed under the ISC license.
 * See the LICENSE file in the root directory of this source tree.
@@ -5429,27 +5445,32 @@ var pIpc = {
 		setVenvCustomTitle: (value) => ipc.send(pythonStorageChannels.setVenvCustomTitle, value)
 	}
 };
+//#endregion
+//#region src/renderer/mainWindow/layouts/tabs/TabContext.tsx
+var { createContext, useContext } = await importShared("react");
+var TabContext = createContext(void 0);
+var useCurrentTabId = () => useContext(TabContext);
 var package_default = {
 	name: "lynxhub",
 	productName: "LynxHub",
 	desktopName: "ai.kindabrazy.lynxhub.desktop",
-	version: "3.5.7",
+	version: "3.6.0",
 	type: "module",
 	description: "Cross-platform, extensible terminal/browser for AI management",
 	main: "./out/main/index.cjs",
 	author: {
-		"name": "KindaBrazy",
+		"name": "TheLynxHub",
 		"email": "kindofbrazy@gmail.com"
 	},
 	repository: {
 		"type": "git",
-		"url": "https://github.com/KindaBrazy/LynxHub"
+		"url": "https://github.com/TheLynxHub/LynxHub"
 	},
 	license: "AGPL-3.0",
-	homepage: "https://github.com/KindaBrazy/LynxHub",
+	homepage: "https://github.com/TheLynxHub/LynxHub",
 	appDetails: {
 		"title": "LynxHub",
-		"buildNumber": 54,
+		"buildNumber": 66,
 		"detailedDescription": "Open-source, cross-platform terminal and browser, designed for managing AI. Highly modular and extensible, it's the all-in-one environment for AI power users.",
 		"moduleApiVersion": "2.1.0",
 		"extensionApiVersion": "2.2.0"
@@ -5461,7 +5482,7 @@ var package_default = {
 		"fix-linter:web": "prettier --write src/renderer --list-different && eslint --fix src/renderer && tailwind-lint --auto --fix",
 		"fix-linter:node": "prettier --write src/main --list-different && eslint --fix src/main",
 		"fix-linter": "prettier --write src --list-different && eslint --fix src && tailwind-lint --auto --fix",
-		"fix-linter-ext": "prettier --write extension --list-different && eslint --fix extension && tailwind-lint --config ./extension/src/renderer/index.css --fix",
+		"fix-linter-ext": "prettier --write extension --list-different && eslint --fix extension",
 		"fix-linter-module": "prettier --write module --list-different && eslint --fix module",
 		"validate:web": "npm run fix-linter:web && npm run typecheck:web",
 		"validate:node": "npm run fix-linter:node && npm run typecheck:node",
@@ -5473,14 +5494,16 @@ var package_default = {
 		"dev": "run-script-os",
 		"dev:win32": "electron-vite dev",
 		"dev:default": "electron-vite dev --noSandbox",
+		"dev:win:metrics": "electron-vite dev -- --log-metrics",
+		"dev:test": "electron-vite dev --remote-debugging-port=9222",
 		"prof": "electron-vite dev -w --noSandbox -- --js-flags=\"--prof\"",
 		"dev:srouce": "electron-vite dev -w --noSandbox --sourcemap",
 		"postinstall": "node node_modules/electron/install.js && electron-builder install-app-deps",
 		"build": "electron-vite build",
 		"rebuild": "electron-builder node-gyp-rebuild",
 		"removeDotExtension": "node fixExtension.js",
-		"build:extension": "rimraf extension_out && electron-vite build --config extension/electron.vite.config.ts && npm run removeDotExtension",
-		"build:module": "rimraf module_out && npx --prefix module rolldown --config module/rolldown.config.mjs",
+		"build:extension": "rimraf extension_out && electron-vite build --config extension/electron.vite.config.ts && npm run removeDotExtension && node zipScripts.js extension_out",
+		"build:module": "rimraf module_out && npx --prefix module rolldown --config module/rolldown.config.mjs && node zipScripts.js module_out",
 		"build:unpack": "npm run build && electron-builder --dir --config electron-builder_x64.config.cjs",
 		"build:win_x64": "npm run build && electron-builder --win --config electron-builder_x64.config.cjs --publish never",
 		"build:win_arm": "npm run build && electron-builder --win --config electron-builder_arm.config.cjs --publish never",
@@ -5499,12 +5522,14 @@ var package_default = {
 	dependencies: {
 		"@electron-toolkit/preload": "^3.0.2",
 		"@electron-toolkit/utils": "^4.0.0",
+		"@lynxhub/7zip": "^0.10.1",
 		"@originjs/vite-plugin-federation": "^1.4.1",
-		"@sentry/electron": "^7.15.0",
-		"@sentry/react": "^10.62.0",
-		"axios": "^1.18.1",
+		"@sentry/electron": "^7.17.0",
+		"@sentry/react": "^10.70.0",
+		"axios": "^1.19.0",
+		"better-sqlite3": "^13.0.3",
+		"drizzle-orm": "^0.45.2",
 		"fix-path": "^5.0.0",
-		"flowtoken": "^1.0.40",
 		"fuse.js": "^7.5.0",
 		"graceful-fs": "^4.2.11",
 		"lowdb": "^7.0.1",
@@ -5513,34 +5538,37 @@ var package_default = {
 		"react-syntax-highlighter": "^16.1.1",
 		"semver": "^7.8.5",
 		"tree-kill": "^1.2.2",
-		"zustand": "^5.0.14"
+		"zustand": "^5.0.15"
 	},
 	devDependencies: {
 		"@electron-toolkit/eslint-config-prettier": "^3.0.0",
 		"@electron-toolkit/tsconfig": "^2.0.0",
 		"@eslint/js": "^10.0.1",
-		"@heroui/react": "^3.2.2",
-		"@heroui/styles": "^3.2.2",
-		"@icons-pack/react-simple-icons": "^13.13.0",
+		"@heroui/react": "^3.2.4",
+		"@heroui/styles": "^3.2.4",
+		"@icons-pack/react-simple-icons": "^13.15.1",
 		"@number-flow/react": "^0.6.2",
+		"@react-aria/i18n": "^3.13.1",
+		"@react-aria/ssr": "^3.10.1",
+		"@react-aria/utils": "^3.34.1",
 		"@reduxjs/toolkit": "^2.12.0",
-		"@sentry/vite-plugin": "^5.3.0",
-		"@solar-icons/react-perf": "^2.1.1",
+		"@sentry/vite-plugin": "^5.4.0",
+		"@solar-icons/react": "^2.1.0",
 		"@tailwindcss/typography": "^0.5.20",
 		"@tailwindcss/vite": "^4.3.3",
-		"@types/decompress": "^4.2.7",
+		"@types/better-sqlite3": "^9.6.0",
 		"@types/fontfaceobserver": "^2.1.3",
 		"@types/graceful-fs": "^4.1.9",
 		"@types/lodash-es": "^4.17.12",
 		"@types/node": "^24.13.2",
-		"@types/react": "^19.2.17",
-		"@types/react-dom": "^19.2.3",
+		"@types/react": "^19.2.18",
+		"@types/react-dom": "^19.2.4",
 		"@types/react-highlight-words": "^0.20.1",
 		"@types/react-syntax-highlighter": "^15.5.13",
-		"@types/semver": "^7.7.1",
+		"@types/semver": "^7.8.0",
 		"@types/serve-handler": "^6.1.4",
 		"@typescript/native": "npm:typescript@^7.0.2",
-		"@vitejs/plugin-react": "^6.0.4",
+		"@vitejs/plugin-react": "^6.1.0",
 		"@xterm/addon-canvas": "^0.7.0",
 		"@xterm/addon-clipboard": "^0.2.0",
 		"@xterm/addon-fit": "^0.11.0",
@@ -5553,53 +5581,58 @@ var package_default = {
 		"@xterm/addon-webgl": "^0.19.0",
 		"@xterm/xterm": "^6.0.0",
 		"chokidar": "^5.0.0",
-		"decompress": "^4.2.1",
-		"electron": "^43.2.0",
+		"drizzle-kit": "^0.31.10",
+		"electron": "^43.4.0",
 		"electron-builder": "^26.15.3",
 		"electron-dl": "^4.0.0",
 		"electron-log": "^5.4.4",
 		"electron-updater": "^6.8.9",
 		"electron-vite": "^6.0.0-beta.1",
-		"eslint": "^10.7.0",
+		"eslint": "^10.9.0",
 		"eslint-plugin-jsx-a11y": "^6.10.2",
-		"eslint-plugin-perfectionist": "^5.10.0",
+		"eslint-plugin-perfectionist": "^5.10.1",
 		"eslint-plugin-react": "^7.37.5",
 		"eslint-plugin-react-hooks": "^7.1.1",
 		"eslint-plugin-simple-import-sort": "^14.0.0",
 		"fontfaceobserver": "^2.3.0",
-		"framer-motion": "^12.42.2",
-		"globals": "^17.7.0",
+		"framer-motion": "^13.1.1",
+		"globals": "^17.11.0",
 		"lodash-es": "^4.18.1",
-		"lucide-react": "^1.25.0",
+		"lucide-react": "^1.33.0",
 		"normalize-url": "^9.0.1",
 		"ogl": "^1.0.11",
 		"prettier": "^3.9.6",
 		"react": "^19.2.8",
-		"react-aria": "^3.50.0",
+		"react-aria": "^3.51.0",
+		"react-aria-components": "^1.20.0",
 		"react-dom": "^19.2.8",
-		"react-error-boundary": "^6.1.2",
+		"react-error-boundary": "^6.1.3",
 		"react-highlight-words": "^0.21.0",
-		"react-intersection-observer": "^10.1.0",
+		"react-intersection-observer": "^11.0.0",
 		"react-markdown": "^10.1.0",
 		"react-redux": "^9.3.0",
 		"rehype-highlight": "^7.0.2",
+		"rehype-katex": "^7.0.1",
 		"rehype-raw": "^7.0.0",
 		"rehype-slug": "^6.0.0",
 		"remark-gfm": "^4.0.1",
+		"remark-math": "^6.0.0",
+		"remark-supersub": "^1.0.0",
 		"run-script-os": "^1.1.6",
 		"simple-git": "^3.36.0",
 		"tailwind-lint": "^0.12.1",
 		"tailwindcss": "^4.3.3",
 		"three": "^0.185.1",
 		"typescript": "npm:@typescript/typescript6@^6.0.2",
-		"typescript-eslint": "^8.65.0",
-		"vite": "^8.1.5"
+		"typescript-eslint": "^8.67.0",
+		"vite": "^8.2.2"
 	},
 	allowScripts: {
 		"electron": true,
 		"esbuild": true,
 		"node-pty": true,
-		"@sentry/cli": true
+		"@sentry/cli": true,
+		"better-sqlite3": true
 	}
 };
 //#endregion
@@ -5624,6 +5657,10 @@ var APP_VERSION_V = `V${APP_VERSION}`;
 `${APP_NAME}${APP_VERSION}`;
 `${APP_NAME}${APP_VERSION_V}`;
 APP_VERSION_V.split("-").map((v) => capitalize(v)).join(" ");
+var GITHUB_ORG = "https://github.com/TheLynxHub";
+`${GITHUB_ORG}`;
+`${GITHUB_ORG}`;
+`${GITHUB_ORG}`;
 /**
 * Page IDs used for navigation.
 */
@@ -5638,10 +5675,9 @@ var PageID = {
 	agents: "agents_page",
 	dashboard: "dashboard_page",
 	plugins: "plugins_page",
-	settings: "settings_page",
-	chatBridge: "chatBridge_page"
+	settings: "settings_page"
 };
-PageID.home, PageID.imageGen, PageID.textGen, PageID.audioGen, PageID.tools, PageID.games, PageID.others, PageID.agents, PageID.dashboard, PageID.plugins, PageID.settings, PageID.chatBridge;
+PageID.home, PageID.imageGen, PageID.textGen, PageID.audioGen, PageID.tools, PageID.games, PageID.others, PageID.agents, PageID.dashboard, PageID.plugins, PageID.settings;
 //#endregion
 //#region src/renderer/mainWindow/utils/constants.tsx
 /**
@@ -5727,13 +5763,15 @@ var tabsSlice = createSlice({
 			const tabIdToRemove = action.payload;
 			const tabIndexToRemove = state.tabs.findIndex((tab) => tab.id === tabIdToRemove);
 			state.tabs = state.tabs.filter((tab) => tab.id !== tabIdToRemove);
-			if (state.activeTab === tabIdToRemove) if (state.tabs.length > 0) {
-				const newActiveTabIndex = Math.min(tabIndexToRemove, state.tabs.length - 1);
-				state.activeTab = state.tabs[newActiveTabIndex].id;
-				state.activePage = state.tabs[newActiveTabIndex].pageID;
-			} else {
-				state.activeTab = defaultTabItem.id;
-				state.activePage = defaultTabItem.pageID;
+			if (state.activeTab === tabIdToRemove) {
+				if (state.tabs.length > 0) {
+					const newActiveTabIndex = Math.min(tabIndexToRemove, state.tabs.length - 1);
+					state.activeTab = state.tabs[newActiveTabIndex].id;
+					state.activePage = state.tabs[newActiveTabIndex].pageID;
+				} else {
+					state.activeTab = defaultTabItem.id;
+					state.activePage = defaultTabItem.pageID;
+				}
 			}
 			if (state.tabs.length <= 0) state.tabs = [defaultTabItem];
 		},
@@ -5817,6 +5855,32 @@ var tabsSlice = createSlice({
 				};
 			}
 			state.activePage = action.payload.pageID;
+		},
+		togglePinTab: (state, action) => {
+			const tabId = action.payload;
+			const tabIndex = state.tabs.findIndex((t) => t.id === tabId);
+			if (tabIndex === -1) return;
+			const currentTab = state.tabs[tabIndex];
+			const nextPinned = !currentTab.isPinned;
+			state.tabs[tabIndex] = {
+				...currentTab,
+				isPinned: nextPinned
+			};
+			const pinned = state.tabs.filter((t) => t.isPinned);
+			const unpinned = state.tabs.filter((t) => !t.isPinned);
+			state.tabs = [...pinned, ...unpinned];
+		},
+		toggleTabIconOnly: (state, action) => {
+			const tabId = action.payload;
+			state.tabs = updateTabById(state.tabs, tabId, (tab) => ({
+				...tab,
+				showIconOnly: !tab.showIconOnly
+			}));
+		},
+		reorderTabs: (state, action) => {
+			const pinned = action.payload.filter((t) => t.isPinned);
+			const unpinned = action.payload.filter((t) => !t.isPinned);
+			state.tabs = [...pinned, ...unpinned];
 		}
 	}
 });
@@ -5829,23 +5893,51 @@ tabsSlice.reducer;
 //#endregion
 //#region src/renderer/mainWindow/components/TabModal.tsx
 var { Modal: Modal$8 } = await importShared("@heroui/react");
-var { useEffect: useEffect$30, useState: useState$34 } = await importShared("react");
+var { useCallback: useCallback$17, useEffect: useEffect$30, useMemo: useMemo$14, useState: useState$34 } = await importShared("react");
 var { UNSAFE_PortalProvider: UNSAFE_PortalProvider$1 } = await importShared("react-aria");
-function TabModal({ isOpen, onOpenChange, children, size = "cover", isDismissable = false, backdropVariant, dialogClassName, containerClassName, isKeyboardDismissDisabled }) {
+function TabModal({ isOpen, onOpenChange, children, size = "cover", isDismissable = true, backdropVariant, dialogClassName, containerClassName, isKeyboardDismissDisabled, tabId: explicitTabId }) {
+	const contextTabId = useCurrentTabId();
 	const activeTab = useTabsState("activeTab");
-	const [targetContainer, setTargetContainer] = useState$34(null);
+	const runningCards = useCardsState("runningCard");
+	const resolvedTabId = explicitTabId ?? contextTabId;
+	const [targetContainer, setTargetContainer] = useState$34(() => {
+		if (typeof document === "undefined") return null;
+		return resolvedTabId ? document.getElementById(`${resolvedTabId}_wrapper`) : null;
+	});
+	const currentRunningCard = useMemo$14(() => runningCards.find((card) => card.tabId === (resolvedTabId ?? activeTab)), [
+		runningCards,
+		resolvedTabId,
+		activeTab
+	]);
 	useEffect$30(() => {
-		setTargetContainer(isOpen ? document.getElementById(`${activeTab}_wrapper`) : null);
-	}, [isOpen]);
+		if (!isOpen) {
+			setTargetContainer(null);
+			return;
+		}
+		if (resolvedTabId) setTargetContainer(document.getElementById(`${resolvedTabId}_wrapper`));
+		else setTargetContainer(null);
+	}, [isOpen, resolvedTabId]);
+	useEffect$30(() => {
+		if (isOpen && currentRunningCard && currentRunningCard.currentView === "browser") {
+			browserIpc.send.setVisible(currentRunningCard.id, false);
+			return () => {
+				browserIpc.send.setVisible(currentRunningCard.id, true);
+			};
+		}
+	}, [isOpen, currentRunningCard]);
+	const handleBackdropClick = useCallback$17((e) => {
+		if (isDismissable && e.target instanceof HTMLElement && e.target.closest(".modal__backdrop, .modal__container") && !e.target.closest(".modal__dialog")) onOpenChange?.(false);
+	}, [isDismissable, onOpenChange]);
 	return /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Modal$8, {
 		isOpen,
 		onOpenChange,
-		children: targetContainer && /* @__PURE__ */ (0, import_jsx_runtime.jsx)(UNSAFE_PortalProvider$1, {
+		children: targetContainer ? /* @__PURE__ */ (0, import_jsx_runtime.jsx)(UNSAFE_PortalProvider$1, {
 			getContainer: () => targetContainer,
 			children: /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Modal$8.Backdrop, {
 				className: "h-full",
+				isDismissable: false,
 				variant: backdropVariant,
-				isDismissable,
+				onClick: handleBackdropClick,
 				isKeyboardDismissDisabled,
 				children: /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Modal$8.Container, {
 					size,
@@ -5858,6 +5950,21 @@ function TabModal({ isOpen, onOpenChange, children, size = "cover", isDismissabl
 							children
 						})
 					})
+				})
+			})
+		}) : /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Modal$8.Backdrop, {
+			className: "h-full",
+			isDismissable: false,
+			variant: backdropVariant,
+			onClick: handleBackdropClick,
+			isKeyboardDismissDisabled,
+			children: /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Modal$8.Container, {
+				size,
+				scroll: "inside",
+				className: `h-full max-h-full ${containerClassName}`,
+				children: /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Modal$8.Dialog, {
+					className: size === "cover" ? `h-full max-h-full ${dialogClassName}` : dialogClassName,
+					children
 				})
 			})
 		})
@@ -5924,9 +6031,9 @@ var terminalLineEnding = isWin ? "\r" : "\n";
 */
 function formatSize(size) {
 	if (!size) return "0KB";
-	if (size < 1024 * 1024) return `${(size / 1024).toFixed(2)} KB`;
-	else if (size < 1024 * 1024 * 1024) return `${(size / (1024 * 1024)).toFixed(2)} MB`;
-	else return `${(size / (1024 * 1024 * 1024)).toFixed(2)} GB`;
+	if (size < 1048576) return `${(size / 1024).toFixed(2)} KB`;
+	else if (size < 1073741824) return `${(size / 1048576).toFixed(2)} MB`;
+	else return `${(size / 1073741824).toFixed(2)} GB`;
 }
 //#endregion
 //#region src/common/utils/urlUtils.ts
@@ -7530,19 +7637,29 @@ function searchInStrings(searchText, targetTexts) {
 	if (isEmpty(searchText) || !targetTexts) return true;
 	const filteredTexts = targetTexts.filter(Boolean);
 	if (filteredTexts.length === 0) return false;
-	return new entry_default(filteredTexts, { threshold: .4 }).search(searchText).length > 0;
+	const normalizedQuery = searchText.trim().toLowerCase();
+	if (!normalizedQuery) return true;
+	if (filteredTexts.some((text) => text.toLowerCase().includes(normalizedQuery))) return true;
+	const words = normalizedQuery.split(/\s+/).filter(Boolean);
+	if (words.length > 1) {
+		if (words.every((word) => filteredTexts.some((text) => text.toLowerCase().includes(word)))) return true;
+	}
+	if (normalizedQuery.length >= 3) return new entry_default(filteredTexts, {
+		threshold: .25,
+		ignoreLocation: true,
+		minMatchCharLength: 2
+	}).search(searchText).length > 0;
+	return false;
 }
 //#endregion
 //#region node_modules/semver/internal/constants.js
 var require_constants = /* @__PURE__ */ __commonJSMin(((exports, module) => {
-	var SEMVER_SPEC_VERSION = "2.0.0";
-	var MAX_LENGTH = 256;
-	var MAX_SAFE_INTEGER = Number.MAX_SAFE_INTEGER || 9007199254740991;
 	module.exports = {
-		MAX_LENGTH,
+		MAX_LENGTH: 256,
 		MAX_SAFE_COMPONENT_LENGTH: 16,
-		MAX_SAFE_BUILD_LENGTH: MAX_LENGTH - 6,
-		MAX_SAFE_INTEGER,
+		MAX_SAFE_BUILD_LENGTH: 250,
+		MAX_SAFE_INTEGER: Number.MAX_SAFE_INTEGER || 
+		/* istanbul ignore next */ 9007199254740991,
 		RELEASE_TYPES: [
 			"major",
 			"premajor",
@@ -7552,7 +7669,7 @@ var require_constants = /* @__PURE__ */ __commonJSMin(((exports, module) => {
 			"prepatch",
 			"prerelease"
 		],
-		SEMVER_SPEC_VERSION,
+		SEMVER_SPEC_VERSION: "2.0.0",
 		FLAG_INCLUDE_PRERELEASE: 1,
 		FLAG_LOOSE: 2
 	};
@@ -7690,9 +7807,10 @@ var require_semver$1 = /* @__PURE__ */ __commonJSMin(((exports, module) => {
 	module.exports = class SemVer {
 		constructor(version, options) {
 			options = parseOptions(options);
-			if (version instanceof SemVer) if (version.loose === !!options.loose && version.includePrerelease === !!options.includePrerelease) return version;
-			else version = version.version;
-			else if (typeof version !== "string") throw new TypeError(`Invalid version. Must be a string. Got type "${typeof version}".`);
+			if (version instanceof SemVer) {
+				if (version.loose === !!options.loose && version.includePrerelease === !!options.includePrerelease) return version;
+				else version = version.version;
+			} else if (typeof version !== "string") throw new TypeError(`Invalid version. Must be a string. Got type "${typeof version}".`);
 			if (version.length > MAX_LENGTH) throw new TypeError(`version is longer than ${MAX_LENGTH} characters`);
 			debug("SemVer", version, options);
 			this.options = options;
@@ -8140,9 +8258,7 @@ var require_truncate = /* @__PURE__ */ __commonJSMin(((exports, module) => {
 				version.minor = 0;
 				version.patch = 0;
 				break;
-			case "minor":
-				version.patch = 0;
-				break;
+			case "minor": version.patch = 0;
 		}
 		return version.format();
 	};
@@ -8191,8 +8307,10 @@ var require_range = /* @__PURE__ */ __commonJSMin(((exports, module) => {
 	module.exports = class Range {
 		constructor(range, options) {
 			options = parseOptions(options);
-			if (range instanceof Range) if (range.loose === !!options.loose && range.includePrerelease === !!options.includePrerelease) return range;
-			else return new Range(range.raw, options);
+			if (range instanceof Range) {
+				if (range.loose === !!options.loose && range.includePrerelease === !!options.includePrerelease) return range;
+				else return new Range(range.raw, options);
+			}
 			if (range instanceof Comparator) {
 				this.raw = range.value;
 				this.set = [[range]];
@@ -8362,18 +8480,21 @@ var require_range = /* @__PURE__ */ __commonJSMin(((exports, module) => {
 			let ret;
 			if (isX(M)) ret = "";
 			else if (isX(m)) ret = `>=${M}.0.0${z} <${+M + 1}.0.0-0`;
-			else if (isX(p)) if (M === "0") ret = `>=${M}.${m}.0${z} <${M}.${+m + 1}.0-0`;
-			else ret = `>=${M}.${m}.0${z} <${+M + 1}.0.0-0`;
-			else if (pr) {
+			else if (isX(p)) {
+				if (M === "0") ret = `>=${M}.${m}.0${z} <${M}.${+m + 1}.0-0`;
+				else ret = `>=${M}.${m}.0${z} <${+M + 1}.0.0-0`;
+			} else if (pr) {
 				debug("replaceCaret pr", pr);
-				if (M === "0") if (m === "0") ret = `>=${M}.${m}.${p}-${pr} <${M}.${m}.${+p + 1}-0`;
-				else ret = `>=${M}.${m}.${p}-${pr} <${M}.${+m + 1}.0-0`;
-				else ret = `>=${M}.${m}.${p}-${pr} <${+M + 1}.0.0-0`;
+				if (M === "0") {
+					if (m === "0") ret = `>=${M}.${m}.${p}-${pr} <${M}.${m}.${+p + 1}-0`;
+					else ret = `>=${M}.${m}.${p}-${pr} <${M}.${+m + 1}.0-0`;
+				} else ret = `>=${M}.${m}.${p}-${pr} <${+M + 1}.0.0-0`;
 			} else {
 				debug("no pr");
-				if (M === "0") if (m === "0") ret = `>=${M}.${m}.${p} <${M}.${m}.${+p + 1}-0`;
-				else ret = `>=${M}.${m}.${p} <${M}.${+m + 1}.0-0`;
-				else ret = `>=${M}.${m}.${p} <${+M + 1}.0.0-0`;
+				if (M === "0") {
+					if (m === "0") ret = `>=${M}.${m}.${p} <${M}.${m}.${+p + 1}-0`;
+					else ret = `>=${M}.${m}.${p} <${M}.${+m + 1}.0-0`;
+				} else ret = `>=${M}.${m}.${p} <${+M + 1}.0.0-0`;
 			}
 			debug("caret return", ret);
 			return ret;
@@ -8395,9 +8516,10 @@ var require_range = /* @__PURE__ */ __commonJSMin(((exports, module) => {
 			const anyX = xp;
 			if (gtlt === "=" && anyX) gtlt = "";
 			pr = options.includePrerelease ? "-0" : "";
-			if (xM) if (gtlt === ">" || gtlt === "<") ret = "<0.0.0-0";
-			else ret = "*";
-			else if (gtlt && anyX) {
+			if (xM) {
+				if (gtlt === ">" || gtlt === "<") ret = "<0.0.0-0";
+				else ret = "*";
+			} else if (gtlt && anyX) {
 				if (xm) m = 0;
 				p = 0;
 				if (gtlt === ">") {
@@ -8471,8 +8593,10 @@ var require_comparator = /* @__PURE__ */ __commonJSMin(((exports, module) => {
 		}
 		constructor(comp, options) {
 			options = parseOptions(options);
-			if (comp instanceof Comparator) if (comp.loose === !!options.loose) return comp;
-			else comp = comp.value;
+			if (comp instanceof Comparator) {
+				if (comp.loose === !!options.loose) return comp;
+				else comp = comp.value;
+			}
 			comp = comp.trim().split(/\s+/).join(" ");
 			debug("comparator", comp, options);
 			this.options = options;
@@ -8792,11 +8916,15 @@ var require_subset = /* @__PURE__ */ __commonJSMin(((exports, module) => {
 	var minimumVersion = [new Comparator(">=0.0.0")];
 	var simpleSubset = (sub, dom, options) => {
 		if (sub === dom) return true;
-		if (sub.length === 1 && sub[0].semver === ANY) if (dom.length === 1 && dom[0].semver === ANY) return true;
-		else if (options.includePrerelease) sub = minimumVersionWithPreRelease;
-		else sub = minimumVersion;
-		if (dom.length === 1 && dom[0].semver === ANY) if (options.includePrerelease) return true;
-		else dom = minimumVersion;
+		if (sub.length === 1 && sub[0].semver === ANY) {
+			if (dom.length === 1 && dom[0].semver === ANY) return true;
+			else if (options.includePrerelease) sub = minimumVersionWithPreRelease;
+			else sub = minimumVersion;
+		}
+		if (dom.length === 1 && dom[0].semver === ANY) {
+			if (options.includePrerelease) return true;
+			else dom = minimumVersion;
+		}
 		const eqSet = /* @__PURE__ */ new Set();
 		let gt, lt;
 		for (const c of sub) if (c.operator === ">" || c.operator === ">=") gt = higherGT(gt, c, options);
@@ -8940,7 +9068,7 @@ function formatSizeMB(mb) {
 }
 function bytesToMegabytes(bytes) {
 	if (bytes < 0) throw new Error("Bytes value cannot be negative");
-	const megabytes = bytes / (1024 * 1024);
+	const megabytes = bytes / 1048576;
 	return parseFloat(megabytes.toFixed(2));
 }
 function parseWheelFilename(filename) {
@@ -9025,16 +9153,16 @@ var setToast = (t) => toastHolder = t;
 var setTheActivePage = (api) => setActivePage = api;
 //#endregion
 //#region src/renderer/mainWindow/components/EmptyStateCard.tsx
-var { Card: Card$3, cn: cn$3 } = await importShared("@heroui/react");
+var { Card: Card$3, cn: cn$4 } = await importShared("@heroui/react");
 /**
 * Reusable empty-state container with consistent HeroUI card styling.
 */
 function EmptyStateCard({ className, bodyClassName, icon, title, description, action, children, variant }) {
 	return /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Card$3, {
 		variant,
-		className: cn$3("border border-surface-secondary/70 p-0", className),
+		className: cn$4("border border-surface-secondary/70 p-0", className),
 		children: /* @__PURE__ */ (0, import_jsx_runtime.jsxs)(Card$3.Content, {
-			className: cn$3("flex items-center justify-center gap-y-2 px-6 py-10 text-center", bodyClassName),
+			className: cn$4("flex items-center justify-center gap-y-2 px-6 py-10 text-center", bodyClassName),
 			children: [
 				icon,
 				typeof title === "string" ? /* @__PURE__ */ (0, import_jsx_runtime.jsx)("h3", {
@@ -9052,125 +9180,185 @@ function EmptyStateCard({ className, bodyClassName, icon, title, description, ac
 	});
 }
 //#endregion
-//#region node_modules/@solar-icons/react-perf/dist/lib/IconBase.mjs
+//#region node_modules/@solar-icons/react/dist/lib/IconBase.mjs
 var { forwardRef: e } = await importShared("react");
-var r$30 = e((e, r) => {
-	let { alt: i, color: a = `currentColor`, size: o = `1em`, mirrored: s = !1, children: c, ...l } = e;
+var r$30 = `solar`;
+function i$27(e) {
+	return e[`aria-label`] !== void 0 || e.title !== void 0;
+}
+var a = e(({ alt: e, color: a, size: o, strokeWidth: s, secondaryColor: c, secondaryOpacity: l, iconName: u, isolated: d, children: f, ...p }, m) => {
+	let h = u ? `${r$30} solar-${u}` : r$30, g = p.className, _ = g ? `${h} ${g}` : h, v = !!e || i$27(p), y = { ...p.style ?? {} };
+	if (d && (y[`--solar-secondary-color`] = `initial`, y[`--solar-secondary-opacity`] = `initial`), a !== void 0 && (y.color = a), o !== void 0) {
+		let e = typeof o == `number` ? `${o}px` : o;
+		y.width = e, y.height = e;
+	}
+	s !== void 0 && (y.strokeWidth = String(s)), c && (y[`--solar-secondary-color`] = c), l != null && (y[`--solar-secondary-opacity`] = String(l));
+	let b = o === void 0 ? d ? `24px` : `1em` : void 0, x = o === void 0 ? d ? `24px` : `1em` : void 0;
+	o === void 0 && !d && (`fontSize` in y || (y.fontSize = `var(--solar-size, 24px)`));
+	let S = a === void 0 ? d ? `currentColor` : `var(--solar-color, currentColor)` : void 0, C = s === void 0 ? d ? `1.5` : `var(--solar-stroke-width, 1.5)` : void 0;
 	return (0, import_jsx_runtime.jsxs)(`svg`, {
-		ref: r,
+		ref: m,
 		xmlns: `http://www.w3.org/2000/svg`,
-		width: o,
-		height: o,
-		color: a,
 		fill: `none`,
 		viewBox: `0 0 24 24`,
-		transform: s ? `scale(-1, 1)` : void 0,
-		...l,
-		children: [!!i && (0, import_jsx_runtime.jsx)(`title`, { children: i }), c]
+		...p,
+		className: _,
+		style: Object.keys(y).length > 0 ? y : void 0,
+		width: b,
+		height: x,
+		color: S,
+		strokeWidth: C,
+		...!v && { "aria-hidden": `true` },
+		children: [!!e && (0, import_jsx_runtime.jsx)(`title`, { children: e }), f]
 	});
 });
-r$30.displayName = `IconBase`;
 //#endregion
-//#region node_modules/@solar-icons/react-perf/dist/icons/arrows-action/BoldDuotone/Download.mjs
+//#region node_modules/@solar-icons/react/dist/icons/bold-duotone/box-minimalistic.mjs
 var { forwardRef: t$29 } = await importShared("react");
-var i$26 = t$29((t, i) => (0, import_jsx_runtime.jsxs)(r$30, {
+var i$26 = t$29((t, i) => (0, import_jsx_runtime.jsxs)(a, {
 	ref: i,
 	...t,
-	children: [(0, import_jsx_runtime.jsx)(`path`, {
-		opacity: `0.5`,
-		d: `M22 16.0003V15.0003C22 12.1718 21.9998 10.7581 21.1211 9.8794C20.2424 9.00072 18.8282 9.00072 15.9998 9.00072H7.99977C5.17135 9.00072 3.75713 9.00072 2.87845 9.8794C2 10.7579 2 12.1711 2 14.9981V15.0003V16.0003C2 18.8287 2 20.2429 2.87868 21.1216C3.75736 22.0003 5.17157 22.0003 8 22.0003H16H16C18.8284 22.0003 20.2426 22.0003 21.1213 21.1216C22 20.2429 22 18.8287 22 16.0003Z`,
-		fill: `currentColor`
-	}), (0, import_jsx_runtime.jsx)(`path`, {
-		fillRule: `evenodd`,
-		clipRule: `evenodd`,
-		d: `M12 1.25C11.5858 1.25 11.25 1.58579 11.25 2L11.25 12.9726L9.56943 11.0119C9.29986 10.6974 8.82639 10.661 8.51189 10.9306C8.1974 11.2001 8.16098 11.6736 8.43054 11.9881L11.4305 15.4881C11.573 15.6543 11.781 15.75 12 15.75C12.2189 15.75 12.4269 15.6543 12.5694 15.4881L15.5694 11.9881C15.839 11.6736 15.8026 11.2001 15.4881 10.9306C15.1736 10.661 14.7001 10.6974 14.4305 11.0119L12.75 12.9726L12.75 2C12.75 1.58579 12.4142 1.25 12 1.25Z`,
-		fill: `currentColor`
-	})]
-}));
-i$26.displayName = `Download`;
-//#endregion
-//#region node_modules/@solar-icons/react-perf/dist/icons/arrows-action/BoldDuotone/DownloadMinimalistic.mjs
-var { forwardRef: t$28 } = await importShared("react");
-var i$25 = t$28((t, i) => (0, import_jsx_runtime.jsxs)(r$30, {
-	ref: i,
-	...t,
-	children: [(0, import_jsx_runtime.jsx)(`path`, {
-		opacity: `0.5`,
-		fillRule: `evenodd`,
-		clipRule: `evenodd`,
-		d: `M3 14.25C3.41421 14.25 3.75 14.5858 3.75 15C3.75 16.4354 3.75159 17.4365 3.85315 18.1919C3.9518 18.9257 4.13225 19.3142 4.40901 19.591C4.68577 19.8678 5.07435 20.0482 5.80812 20.1469C6.56347 20.2484 7.56459 20.25 9 20.25H15C16.4354 20.25 17.4365 20.2484 18.1919 20.1469C18.9257 20.0482 19.3142 19.8678 19.591 19.591C19.8678 19.3142 20.0482 18.9257 20.1469 18.1919C20.2484 17.4365 20.25 16.4354 20.25 15C20.25 14.5858 20.5858 14.25 21 14.25C21.4142 14.25 21.75 14.5858 21.75 15V15.0549C21.75 16.4225 21.75 17.5248 21.6335 18.3918C21.5125 19.2919 21.2536 20.0497 20.6517 20.6516C20.0497 21.2536 19.2919 21.5125 18.3918 21.6335C17.5248 21.75 16.4225 21.75 15.0549 21.75H8.94513C7.57754 21.75 6.47522 21.75 5.60825 21.6335C4.70814 21.5125 3.95027 21.2536 3.34835 20.6517C2.74643 20.0497 2.48754 19.2919 2.36652 18.3918C2.24996 17.5248 2.24998 16.4225 2.25 15.0549C2.25 15.0366 2.25 15.0183 2.25 15C2.25 14.5858 2.58579 14.25 3 14.25Z`,
-		fill: `currentColor`
-	}), (0, import_jsx_runtime.jsx)(`path`, {
-		fillRule: `evenodd`,
-		clipRule: `evenodd`,
-		d: `M12 16.75C12.2106 16.75 12.4114 16.6615 12.5535 16.5061L16.5535 12.1311C16.833 11.8254 16.8118 11.351 16.5061 11.0715C16.2004 10.792 15.726 10.8132 15.4465 11.1189L12.75 14.0682V3C12.75 2.58579 12.4142 2.25 12 2.25C11.5858 2.25 11.25 2.58579 11.25 3V14.0682L8.55353 11.1189C8.27403 10.8132 7.79963 10.792 7.49393 11.0715C7.18823 11.351 7.16698 11.8254 7.44648 12.1311L11.4465 16.5061C11.5886 16.6615 11.7894 16.75 12 16.75Z`,
-		fill: `currentColor`
-	})]
-}));
-i$25.displayName = `DownloadMinimalistic`;
-//#endregion
-//#region node_modules/@solar-icons/react-perf/dist/icons/arrows-action/BoldDuotone/Import.mjs
-var { forwardRef: t$27 } = await importShared("react");
-var i$24 = t$27((t, i) => (0, import_jsx_runtime.jsxs)(r$30, {
-	ref: i,
-	...t,
-	children: [(0, import_jsx_runtime.jsx)(`path`, {
-		opacity: `0.5`,
-		d: `M4 12C4 16.4183 7.58172 20 12 20C16.4183 20 20 16.4183 20 12L4 12Z`,
-		fill: `currentColor`
-	}), (0, import_jsx_runtime.jsx)(`path`, {
-		fillRule: `evenodd`,
-		clipRule: `evenodd`,
-		d: `M15.5303 10.4697C15.2374 10.1768 14.7626 10.1768 14.4697 10.4697L12.75 12.1893L12.75 4C12.75 3.58579 12.4142 3.25 12 3.25C11.5858 3.25 11.25 3.58579 11.25 4L11.25 12.1893L9.53033 10.4697C9.23744 10.1768 8.76256 10.1768 8.46967 10.4697C8.17678 10.7626 8.17678 11.2374 8.46967 11.5303L11.4697 14.5303C11.7626 14.8232 12.2374 14.8232 12.5303 14.5303L15.5303 11.5303C15.8232 11.2374 15.8232 10.7626 15.5303 10.4697Z`,
-		fill: `currentColor`
-	})]
-}));
-i$24.displayName = `Import`;
-//#endregion
-//#region node_modules/@solar-icons/react-perf/dist/icons/arrows/BoldDuotone/Refresh.mjs
-var { forwardRef: t$26 } = await importShared("react");
-var i$23 = t$26((t, i) => (0, import_jsx_runtime.jsxs)(r$30, {
-	ref: i,
-	...t,
-	children: [(0, import_jsx_runtime.jsx)(`path`, {
-		d: `M12.0789 2.25C7.2854 2.25 3.34478 5.913 2.96055 10.5833H2.00002C1.69614 10.5833 1.42229 10.7667 1.30655 11.0477C1.19081 11.3287 1.25606 11.6517 1.47178 11.8657L3.15159 13.5324C3.444 13.8225 3.91567 13.8225 4.20808 13.5324L5.88789 11.8657C6.10361 11.6517 6.16886 11.3287 6.05312 11.0477C5.93738 10.7667 5.66353 10.5833 5.35965 10.5833H4.4668C4.84652 6.75167 8.10479 3.75 12.0789 3.75C14.8484 3.75 17.2727 5.20845 18.6156 7.39279C18.8325 7.74565 19.2944 7.85585 19.6473 7.63892C20.0002 7.42199 20.1104 6.96007 19.8934 6.60721C18.2871 3.99427 15.3873 2.25 12.0789 2.25Z`,
-		fill: `currentColor`
-	}), (0, import_jsx_runtime.jsx)(`path`, {
-		opacity: `0.5`,
-		d: `M20.8412 10.4666C20.5491 10.1778 20.0789 10.1778 19.7868 10.4666L18.1005 12.1333C17.8842 12.3471 17.8185 12.6703 17.934 12.9517C18.0496 13.233 18.3236 13.4167 18.6278 13.4167H19.5269C19.1456 17.2462 15.876 20.25 11.8828 20.25C9.10034 20.25 6.66595 18.7903 5.31804 16.6061C5.10051 16.2536 4.63841 16.1442 4.28591 16.3618C3.93342 16.5793 3.82401 17.0414 4.04154 17.3939C5.65416 20.007 8.56414 21.75 11.8828 21.75C16.6907 21.75 20.6476 18.0892 21.0332 13.4167H22.0002C22.3044 13.4167 22.5784 13.233 22.694 12.9517C22.8096 12.6703 22.7438 12.3471 22.5275 12.1333L20.8412 10.4666Z`,
-		fill: `currentColor`
-	})]
-}));
-i$23.displayName = `Refresh`;
-//#endregion
-//#region node_modules/@solar-icons/react-perf/dist/icons/arrows/BoldDuotone/Restart.mjs
-var { forwardRef: t$25 } = await importShared("react");
-var i$22 = t$25((t, i) => (0, import_jsx_runtime.jsxs)(r$30, {
-	ref: i,
-	...t,
-	children: [(0, import_jsx_runtime.jsx)(`path`, {
-		opacity: `0.5`,
-		fillRule: `evenodd`,
-		clipRule: `evenodd`,
-		d: `M6.87348 7.87338C9.01606 5.7308 12.1674 5.20902 14.8007 6.31041L15.9309 5.18019C12.6515 3.53111 8.55119 4.07435 5.81282 6.81272C2.39573 10.2298 2.39573 15.77 5.81282 19.1871C9.2299 22.6042 14.7701 22.6042 18.1872 19.1871C20.1746 17.1997 21.0057 14.4933 20.6819 11.9072C20.6304 11.4962 20.2555 11.2048 19.8445 11.2562C19.4335 11.3077 19.142 11.6826 19.1935 12.0936C19.4622 14.24 18.7727 16.4802 17.1265 18.1264C14.2952 20.9577 9.70478 20.9577 6.87348 18.1264C4.04217 15.2951 4.04217 10.7047 6.87348 7.87338Z`,
-		fill: `currentColor`
-	}), (0, import_jsx_runtime.jsx)(`path`, {
-		d: `M18.7212 4.20119C18.7212 3.89785 18.5384 3.62437 18.2582 3.50828C17.9779 3.3922 17.6553 3.45637 17.4408 3.67086L15.9314 5.18028L14.8012 6.3105L13.1982 7.9135C12.9837 8.128 12.9195 8.45059 13.0356 8.73085C13.1517 9.0111 13.4252 9.19383 13.7285 9.19383H17.9712C18.3854 9.19383 18.7212 8.85805 18.7212 8.44383V4.20119Z`,
-		fill: `currentColor`
-	})]
-}));
-i$22.displayName = `Restart`;
-//#endregion
-//#region node_modules/@solar-icons/react-perf/dist/icons/devices/BoldDuotone/Diskette.mjs
-var { forwardRef: t$24 } = await importShared("react");
-var i$21 = t$24((t, i) => (0, import_jsx_runtime.jsxs)(r$30, {
-	ref: i,
-	...t,
+	iconName: `box-minimalistic-bold-duotone`,
 	children: [
 		(0, import_jsx_runtime.jsx)(`path`, {
-			opacity: `0.5`,
-			d: `M20.5355 20.5355C22 19.0711 22 16.714 22 12C22 11.6585 22 11.4878 21.9848 11.3142C21.9142 10.5049 21.586 9.71257 21.0637 9.09034C20.9516 8.95687 20.828 8.83317 20.5806 8.58578L15.4142 3.41944C15.1668 3.17206 15.0431 3.04835 14.9097 2.93631C14.2874 2.414 13.4951 2.08581 12.6858 2.01515C12.5122 2 12.3415 2 12 2C7.28595 2 4.92893 2 3.46447 3.46447C2 4.92893 2 7.28595 2 12C2 16.714 2 19.0711 3.46447 20.5355C4.1485 21.2196 5.02727 21.5841 6.25 21.7784L7.75 21.9313C8.9058 22 10.2996 22 12 22C13.7004 22 15.0942 22 16.25 21.9313L17.75 21.7784C18.9727 21.5841 19.8515 21.2196 20.5355 20.5355Z`,
+			d: `M17.5774 4.43152L15.5774 3.38197C13.8218 2.46066 12.944 2 11.9997 2C11.0554 2 10.1776 2.46066 8.42197 3.38197L6.42197 4.43152C4.31821 5.53552 3.24291 6.09982 2.6377 7.07264L11.9997 12L21.3617 7.07264C20.7564 6.09982 19.6811 5.53552 17.5774 4.43152Z`,
+			fill: `currentColor`,
+			style: {
+				color: `var(--solar-secondary-color, currentColor)`,
+				opacity: `var(--solar-secondary-opacity, 0.5)`
+			}
+		}),
+		(0, import_jsx_runtime.jsx)(`path`, {
+			d: `M17.5774 4.43152L15.5774 3.38197C13.8218 2.46066 12.944 2 11.9997 2C11.0554 2 10.1776 2.46066 8.42197 3.38197L6.42197 4.43152C4.31821 5.53552 3.24291 6.09982 2.6377 7.07264L11.9997 12L21.3617 7.07264C20.7564 6.09982 19.6811 5.53552 17.5774 4.43152Z`,
+			fill: `currentColor`,
+			style: {
+				color: `var(--solar-secondary-color, currentColor)`,
+				opacity: `var(--solar-secondary-opacity, 0.5)`
+			}
+		}),
+		(0, import_jsx_runtime.jsx)(`path`, {
+			d: `M21.4026 7.13986C21.3893 7.11727 21.3758 7.09491 21.362 7.07275L12 12.0001V22.0001C12.9443 22.0001 13.8221 21.5395 15.5777 20.6181L17.5777 19.5686C19.7294 18.4395 20.8052 17.8749 21.4026 16.8604C22 15.8459 22 14.5834 22 12.0586V11.9416C22 9.41678 22 8.15436 21.4026 7.13986Z`,
+			fill: `currentColor`,
+			style: {
+				color: `var(--solar-secondary-color, currentColor)`,
+				opacity: `var(--solar-secondary-opacity, 0.5)`
+			}
+		}),
+		(0, import_jsx_runtime.jsx)(`path`, {
+			d: `M8.42229 20.6181C10.1779 21.5395 11.0557 22.0001 12 22.0001V12.0001L2.63802 7.07275C2.62423 7.09491 2.6107 7.11727 2.5974 7.13986C2 8.15436 2 9.41678 2 11.9416V12.0586C2 14.5834 2 15.8459 2.5974 16.8604C3.19479 17.8749 4.27063 18.4395 6.42229 19.5686L8.42229 20.6181Z`,
 			fill: `currentColor`
+		})
+	]
+}));
+//#endregion
+//#region node_modules/@solar-icons/react/dist/icons/bold-duotone/broom.mjs
+var { forwardRef: t$28 } = await importShared("react");
+var i$25 = t$28((t, i) => (0, import_jsx_runtime.jsxs)(a, {
+	ref: i,
+	...t,
+	iconName: `broom-bold-duotone`,
+	children: [
+		(0, import_jsx_runtime.jsx)(`path`, {
+			d: `M22.53 2.53033C22.8229 2.23743 22.8229 1.76256 22.53 1.46967C22.2371 1.17678 21.7622 1.17678 21.4693 1.46967L19.0674 3.87162C19.2692 4.01476 19.4617 4.17674 19.6425 4.35756C19.8232 4.53824 19.985 4.7306 20.1281 4.93221L22.53 2.53033Z`,
+			fill: `currentColor`,
+			style: {
+				color: `var(--solar-secondary-color, currentColor)`,
+				opacity: `var(--solar-secondary-opacity, 0.5)`
+			}
+		}),
+		(0, import_jsx_runtime.jsx)(`path`, {
+			d: `M2.44853 11.4112L3.18962 12.6294C5.22275 15.9716 8.02819 18.777 11.3703 20.8102L12.5886 21.5514C14.4872 22.5205 16.9425 21.8979 18.0027 19.8899C18.5037 18.941 18.9798 17.8776 19.2819 16.8209C19.7699 15.1139 19.9408 13.5611 19.9945 12.4895C20.0266 11.8492 20.0426 11.529 19.8902 11.1334C19.7378 10.7378 19.4738 10.4738 18.9456 9.9457L14.1203 5.12119C13.6288 4.62976 13.383 4.38404 13.0133 4.23177C12.6435 4.07951 12.3489 4.08069 11.7597 4.08306C10.6466 4.08753 8.97556 4.20429 7.17896 4.71789C6.12226 5.01998 5.05883 5.49608 4.11001 5.99706C2.10201 7.05728 1.47943 9.51262 2.44853 11.4112Z`,
+			fill: `currentColor`,
+			style: {
+				color: `var(--solar-secondary-color, currentColor)`,
+				opacity: `var(--solar-secondary-opacity, 0.5)`
+			}
+		}),
+		(0, import_jsx_runtime.jsx)(`path`, {
+			d: `M19.6426 4.35756C17.9067 2.62162 15.0922 2.62175 13.3562 4.35764L13.3184 4.39549C13.5498 4.55102 13.774 4.77521 14.1201 5.12119L18.9454 9.9457C19.2472 10.2475 19.4628 10.463 19.6205 10.6662L19.6427 10.644C21.3786 8.90807 21.3785 6.09349 19.6426 4.35756Z`,
+			fill: `currentColor`
+		})
+	]
+}));
+//#endregion
+//#region node_modules/@solar-icons/react/dist/icons/bold-duotone/check-circle.mjs
+var { forwardRef: t$27 } = await importShared("react");
+var i$24 = t$27((t, i) => (0, import_jsx_runtime.jsxs)(a, {
+	ref: i,
+	...t,
+	iconName: `check-circle-bold-duotone`,
+	children: [(0, import_jsx_runtime.jsx)(`path`, {
+		d: `M22 12C22 17.5228 17.5228 22 12 22C6.47715 22 2 17.5228 2 12C2 6.47715 6.47715 2 12 2C17.5228 2 22 6.47715 22 12Z`,
+		fill: `currentColor`,
+		style: {
+			color: `var(--solar-secondary-color, currentColor)`,
+			opacity: `var(--solar-secondary-opacity, 0.5)`
+		}
+	}), (0, import_jsx_runtime.jsx)(`path`, {
+		d: `M16.0303 8.96967C16.3232 9.26256 16.3232 9.73744 16.0303 10.0303L11.0303 15.0303C10.7374 15.3232 10.2626 15.3232 9.96967 15.0303L7.96967 13.0303C7.67678 12.7374 7.67678 12.2626 7.96967 11.9697C8.26256 11.6768 8.73744 11.6768 9.03033 11.9697L10.5 13.4393L12.7348 11.2045L14.9697 8.96967C15.2626 8.67678 15.7374 8.67678 16.0303 8.96967Z`,
+		fill: `currentColor`
+	})]
+}));
+//#endregion
+//#region node_modules/@solar-icons/react/dist/icons/bold-duotone/checklist.mjs
+var { forwardRef: t$26 } = await importShared("react");
+var i$23 = t$26((t, i) => (0, import_jsx_runtime.jsxs)(a, {
+	ref: i,
+	...t,
+	iconName: `checklist-bold-duotone`,
+	children: [(0, import_jsx_runtime.jsxs)(`g`, {
+		style: {
+			color: `var(--solar-secondary-color, currentColor)`,
+			opacity: `var(--solar-secondary-opacity, 0.5)`
+		},
+		children: [(0, import_jsx_runtime.jsx)(`path`, {
+			d: `M8.04832 9.48826C8.33094 9.79108 8.31458 10.2657 8.01176 10.5483L3.72605 14.5483C3.57393 14.6903 3.36967 14.7627 3.1621 14.7482C2.95453 14.7337 2.7623 14.6336 2.63138 14.4719L1.41709 12.9719C1.15647 12.65 1.20618 12.1777 1.52813 11.9171C1.85007 11.6564 2.32234 11.7062 2.58296 12.0281L3.29089 12.9026L6.98829 9.45171C7.2911 9.16909 7.76569 9.18545 8.04832 9.48826Z`,
+			fill: `currentColor`
+		}), (0, import_jsx_runtime.jsx)(`path`, {
+			d: `M11.25 12C11.25 11.5858 11.5858 11.25 12 11.25H22C22.4142 11.25 22.75 11.5858 22.75 12C22.75 12.4142 22.4142 12.75 22 12.75H12C11.5858 12.75 11.25 12.4142 11.25 12Z`,
+			fill: `currentColor`
+		})]
+	}), (0, import_jsx_runtime.jsx)(`path`, {
+		fillRule: `evenodd`,
+		clipRule: `evenodd`,
+		d: `M8.04832 2.48826C8.33094 2.79108 8.31458 3.26567 8.01176 3.54829L3.72605 7.54829C3.57393 7.69027 3.36967 7.76267 3.1621 7.74818C2.95453 7.7337 2.7623 7.63363 2.63138 7.4719L1.41709 5.9719C1.15647 5.64996 1.20618 5.17769 1.52813 4.91707C1.85007 4.65645 2.32234 4.70616 2.58296 5.0281L3.29089 5.90261L6.98829 2.45171C7.2911 2.16909 7.76569 2.18545 8.04832 2.48826ZM11.25 5C11.25 4.58579 11.5858 4.25 12 4.25H22C22.4142 4.25 22.75 4.58579 22.75 5C22.75 5.41422 22.4142 5.75 22 5.75H12C11.5858 5.75 11.25 5.41422 11.25 5ZM8.04832 16.4883C8.33094 16.7911 8.31458 17.2657 8.01176 17.5483L3.72605 21.5483C3.57393 21.6903 3.36967 21.7627 3.1621 21.7482C2.95453 21.7337 2.7623 21.6336 2.63138 21.4719L1.41709 19.9719C1.15647 19.65 1.20618 19.1777 1.52813 18.9171C1.85007 18.6564 2.32234 18.7062 2.58296 19.0281L3.29089 19.9026L6.98829 16.4517C7.2911 16.1691 7.76569 16.1855 8.04832 16.4883ZM11.25 19C11.25 18.5858 11.5858 18.25 12 18.25H22C22.4142 18.25 22.75 18.5858 22.75 19C22.75 19.4142 22.4142 19.75 22 19.75H12C11.5858 19.75 11.25 19.4142 11.25 19Z`,
+		fill: `currentColor`
+	})]
+}));
+//#endregion
+//#region node_modules/@solar-icons/react/dist/icons/bold-duotone/copy.mjs
+var { forwardRef: t$25 } = await importShared("react");
+var i$22 = t$25((t, i) => (0, import_jsx_runtime.jsxs)(a, {
+	ref: i,
+	...t,
+	iconName: `copy-bold-duotone`,
+	children: [(0, import_jsx_runtime.jsx)(`path`, {
+		d: `M4.17157 3.17157C3 4.34315 3 6.22876 3 10V12C3 15.7712 3 17.6569 4.17157 18.8284C4.78913 19.446 5.6051 19.738 6.79105 19.8761C6.59961 19.0353 6.59961 17.8796 6.59961 16.2167V11.3974C6.59961 8.6712 6.59961 7.3081 7.44314 6.46118C8.28667 5.61426 9.64432 5.61426 12.3596 5.61426H15.2396C16.8915 5.61426 18.0409 5.61426 18.8777 5.80494C18.7403 4.61146 18.4484 3.79154 17.8284 3.17157C16.6569 2 14.7712 2 11 2C7.22876 2 5.34315 2 4.17157 3.17157Z`,
+		fill: `currentColor`,
+		style: {
+			color: `var(--solar-secondary-color, currentColor)`,
+			opacity: `var(--solar-secondary-opacity, 0.5)`
+		}
+	}), (0, import_jsx_runtime.jsx)(`path`, {
+		d: `M6.59961 11.3974C6.59961 8.67119 6.59961 7.3081 7.44314 6.46118C8.28667 5.61426 9.64432 5.61426 12.3596 5.61426H15.2396C17.9549 5.61426 19.3125 5.61426 20.1561 6.46118C20.9996 7.3081 20.9996 8.6712 20.9996 11.3974V16.2167C20.9996 18.9429 20.9996 20.306 20.1561 21.1529C19.3125 21.9998 17.9549 21.9998 15.2396 21.9998H12.3596C9.64432 21.9998 8.28667 21.9998 7.44314 21.1529C6.59961 20.306 6.59961 18.9429 6.59961 16.2167V11.3974Z`,
+		fill: `currentColor`
+	})]
+}));
+//#endregion
+//#region node_modules/@solar-icons/react/dist/icons/bold-duotone/diskette.mjs
+var { forwardRef: t$24 } = await importShared("react");
+var i$21 = t$24((t, i) => (0, import_jsx_runtime.jsxs)(a, {
+	ref: i,
+	...t,
+	iconName: `diskette-bold-duotone`,
+	children: [
+		(0, import_jsx_runtime.jsx)(`path`, {
+			d: `M20.5355 20.5355C22 19.0711 22 16.714 22 12C22 11.6585 22 11.4878 21.9848 11.3142C21.9142 10.5049 21.586 9.71257 21.0637 9.09034C20.9516 8.95687 20.828 8.83317 20.5806 8.58578L15.4142 3.41944C15.1668 3.17206 15.0431 3.04835 14.9097 2.93631C14.2874 2.414 13.4951 2.08581 12.6858 2.01515C12.5122 2 12.3415 2 12 2C7.28595 2 4.92893 2 3.46447 3.46447C2 4.92893 2 7.28595 2 12C2 16.714 2 19.0711 3.46447 20.5355C4.1485 21.2196 5.02727 21.5841 6.25 21.7784L7.75 21.9313C8.9058 22 10.2996 22 12 22C13.7004 22 15.0942 22 16.25 21.9313L17.75 21.7784C18.9727 21.5841 19.8515 21.2196 20.5355 20.5355Z`,
+			fill: `currentColor`,
+			style: {
+				color: `var(--solar-secondary-color, currentColor)`,
+				opacity: `var(--solar-secondary-opacity, 0.5)`
+			}
 		}),
 		(0, import_jsx_runtime.jsx)(`path`, {
 			d: `M7 7.25C6.58579 7.25 6.25 7.58579 6.25 8C6.25 8.41421 6.58579 8.75 7 8.75H13C13.4142 8.75 13.75 8.41421 13.75 8C13.75 7.58579 13.4142 7.25 13 7.25H7Z`,
@@ -9182,109 +9370,21 @@ var i$21 = t$24((t, i) => (0, import_jsx_runtime.jsxs)(r$30, {
 		})
 	]
 }));
-i$21.displayName = `Diskette`;
 //#endregion
-//#region node_modules/@solar-icons/react-perf/dist/icons/folders/BoldDuotone/FolderOpen.mjs
+//#region node_modules/@solar-icons/react/dist/icons/bold-duotone/document-text.mjs
 var { forwardRef: t$23 } = await importShared("react");
-var i$20 = t$23((t, i) => (0, import_jsx_runtime.jsxs)(r$30, {
+var i$20 = t$23((t, i) => (0, import_jsx_runtime.jsxs)(a, {
 	ref: i,
 	...t,
-	children: [(0, import_jsx_runtime.jsx)(`path`, {
-		fillRule: `evenodd`,
-		clipRule: `evenodd`,
-		d: `M3.35791 12.7787C2.74772 13.7201 2.99956 15.0291 3.50323 17.647C3.8658 19.5316 4.04709 20.4738 4.67523 21.0991C4.8382 21.2614 5.02054 21.4052 5.2186 21.5277C5.98195 21.9999 6.99539 21.9999 9.02227 21.9999H15.9777C18.0046 21.9999 19.0181 21.9999 19.7814 21.5277C19.9795 21.4052 20.1618 21.2614 20.3248 21.0991C20.9529 20.4738 21.1342 19.5316 21.4968 17.647C22.0004 15.0291 22.2523 13.7201 21.6421 12.7787C21.4864 12.5384 21.2943 12.321 21.0721 12.1332C20.2011 11.3975 18.7933 11.3975 15.9777 11.3975H9.02227C6.20667 11.3975 4.79888 11.3975 3.92792 12.1332C3.70566 12.321 3.51363 12.5384 3.35791 12.7787ZM9.69518 17.1806C9.69518 16.7814 10.0376 16.4577 10.4601 16.4577H14.5398C14.9622 16.4577 15.3047 16.7814 15.3047 17.1806C15.3047 17.5798 14.9622 17.9035 14.5398 17.9035H10.4601C10.0376 17.9035 9.69518 17.5798 9.69518 17.1806Z`,
-		fill: `currentColor`
-	}), (0, import_jsx_runtime.jsx)(`path`, {
-		opacity: `0.5`,
-		d: `M3.5762 12.4846C3.68271 12.3586 3.80034 12.241 3.92792 12.1332C4.79888 11.3975 6.20667 11.3975 9.02227 11.3975H15.9777C18.7933 11.3975 20.2011 11.3975 21.0721 12.1332C21.2 12.2413 21.3179 12.3592 21.4247 12.4857V9.75579C21.4247 8.84687 21.4247 8.09279 21.3394 7.49156C21.2494 6.85704 21.0531 6.29458 20.5839 5.83245C20.5074 5.75707 20.4266 5.68552 20.342 5.61807C19.8302 5.21023 19.2167 5.04345 18.5222 4.96608C17.8531 4.89155 17.0102 4.89157 15.9769 4.89158L15.6242 4.89158C14.6421 4.89158 14.29 4.88587 13.9711 4.80533C13.7837 4.75802 13.604 4.69195 13.4352 4.60878C13.151 4.46867 12.9033 4.25762 12.2077 3.64132L11.7336 3.22128C11.5345 3.04489 11.3987 2.9245 11.2531 2.81755C10.6284 2.35879 9.86779 2.08132 9.07145 2.01534C8.88602 1.99998 8.6968 1.99999 8.41356 2.00002L8.29714 2.00001C7.65647 1.9999 7.23365 1.99983 6.86652 2.0612C5.26167 2.32947 3.96392 3.45143 3.64782 4.93575C3.57591 5.27344 3.57602 5.66035 3.57619 6.21853L3.5762 12.4846Z`,
-		fill: `currentColor`
-	})]
-}));
-i$20.displayName = `FolderOpen`;
-//#endregion
-//#region node_modules/@solar-icons/react-perf/dist/icons/list/BoldDuotone/Checklist.mjs
-var { forwardRef: t$22 } = await importShared("react");
-var i$19 = t$22((t, i) => (0, import_jsx_runtime.jsxs)(r$30, {
-	ref: i,
-	...t,
-	children: [(0, import_jsx_runtime.jsx)(`path`, {
-		fillRule: `evenodd`,
-		clipRule: `evenodd`,
-		d: `M8.04832 2.48826C8.33094 2.79108 8.31458 3.26567 8.01176 3.54829L3.72605 7.54829C3.57393 7.69027 3.36967 7.76267 3.1621 7.74818C2.95453 7.7337 2.7623 7.63363 2.63138 7.4719L1.41709 5.9719C1.15647 5.64996 1.20618 5.17769 1.52813 4.91707C1.85007 4.65645 2.32234 4.70616 2.58296 5.0281L3.29089 5.90261L6.98829 2.45171C7.2911 2.16909 7.76569 2.18545 8.04832 2.48826ZM11.25 5C11.25 4.58579 11.5858 4.25 12 4.25H22C22.4142 4.25 22.75 4.58579 22.75 5C22.75 5.41422 22.4142 5.75 22 5.75H12C11.5858 5.75 11.25 5.41422 11.25 5ZM8.04832 16.4883C8.33094 16.7911 8.31458 17.2657 8.01176 17.5483L3.72605 21.5483C3.57393 21.6903 3.36967 21.7627 3.1621 21.7482C2.95453 21.7337 2.7623 21.6336 2.63138 21.4719L1.41709 19.9719C1.15647 19.65 1.20618 19.1777 1.52813 18.9171C1.85007 18.6564 2.32234 18.7062 2.58296 19.0281L3.29089 19.9026L6.98829 16.4517C7.2911 16.1691 7.76569 16.1855 8.04832 16.4883ZM11.25 19C11.25 18.5858 11.5858 18.25 12 18.25H22C22.4142 18.25 22.75 18.5858 22.75 19C22.75 19.4142 22.4142 19.75 22 19.75H12C11.5858 19.75 11.25 19.4142 11.25 19Z`,
-		fill: `currentColor`
-	}), (0, import_jsx_runtime.jsxs)(`g`, {
-		opacity: `0.5`,
-		children: [(0, import_jsx_runtime.jsx)(`path`, {
-			d: `M8.04832 9.48826C8.33094 9.79108 8.31458 10.2657 8.01176 10.5483L3.72605 14.5483C3.57393 14.6903 3.36967 14.7627 3.1621 14.7482C2.95453 14.7337 2.7623 14.6336 2.63138 14.4719L1.41709 12.9719C1.15647 12.65 1.20618 12.1777 1.52813 11.9171C1.85007 11.6564 2.32234 11.7062 2.58296 12.0281L3.29089 12.9026L6.98829 9.45171C7.2911 9.16909 7.76569 9.18545 8.04832 9.48826Z`,
-			fill: `currentColor`
-		}), (0, import_jsx_runtime.jsx)(`path`, {
-			d: `M11.25 12C11.25 11.5858 11.5858 11.25 12 11.25H22C22.4142 11.25 22.75 11.5858 22.75 12C22.75 12.4142 22.4142 12.75 22 12.75H12C11.5858 12.75 11.25 12.4142 11.25 12Z`,
-			fill: `currentColor`
-		})]
-	})]
-}));
-i$19.displayName = `Checklist`;
-//#endregion
-//#region node_modules/@solar-icons/react-perf/dist/icons/list/BoldDuotone/ListCross.mjs
-var { forwardRef: t$21 } = await importShared("react");
-var i$18 = t$21((t, i) => (0, import_jsx_runtime.jsxs)(r$30, {
-	ref: i,
-	...t,
-	children: [(0, import_jsx_runtime.jsx)(`path`, {
-		opacity: `0.5`,
-		fillRule: `evenodd`,
-		clipRule: `evenodd`,
-		d: `M2.25 6C2.25 5.58579 2.58579 5.25 3 5.25H21C21.4142 5.25 21.75 5.58579 21.75 6C21.75 6.41421 21.4142 6.75 21 6.75H3C2.58579 6.75 2.25 6.41421 2.25 6ZM2.25 10C2.25 9.58579 2.58579 9.25 3 9.25H21C21.4142 9.25 21.75 9.58579 21.75 10C21.75 10.4142 21.4142 10.75 21 10.75H3C2.58579 10.75 2.25 10.4142 2.25 10ZM2.25 14C2.25 13.5858 2.58579 13.25 3 13.25H11C11.4142 13.25 11.75 13.5858 11.75 14C11.75 14.4142 11.4142 14.75 11 14.75H3C2.58579 14.75 2.25 14.4142 2.25 14ZM2.25 18C2.25 17.5858 2.58579 17.25 3 17.25H11C11.4142 17.25 11.75 17.5858 11.75 18C11.75 18.4142 11.4142 18.75 11 18.75H3C2.58579 18.75 2.25 18.4142 2.25 18Z`,
-		fill: `currentColor`
-	}), (0, import_jsx_runtime.jsx)(`path`, {
-		d: `M14.4697 12.9697C14.7626 12.6768 15.2374 12.6768 15.5303 12.9697L17.5 14.9393L19.4697 12.9697C19.7626 12.6768 20.2374 12.6768 20.5303 12.9697C20.8232 13.2626 20.8232 13.7374 20.5303 14.0303L18.5607 16L20.5303 17.9697C20.8232 18.2626 20.8232 18.7374 20.5303 19.0303C20.2374 19.3232 19.7626 19.3232 19.4697 19.0303L17.5 17.0607L15.5303 19.0303C15.2374 19.3232 14.7626 19.3232 14.4697 19.0303C14.1768 18.7374 14.1768 18.2626 14.4697 17.9697L16.4393 16L14.4697 14.0303C14.1768 13.7374 14.1768 13.2626 14.4697 12.9697Z`,
-		fill: `currentColor`
-	})]
-}));
-i$18.displayName = `ListCross`;
-//#endregion
-//#region node_modules/@solar-icons/react-perf/dist/icons/messages/BoldDuotone/Inbox.mjs
-var { forwardRef: t$20 } = await importShared("react");
-var i$17 = t$20((t, i) => (0, import_jsx_runtime.jsxs)(r$30, {
-	ref: i,
-	...t,
-	children: [(0, import_jsx_runtime.jsx)(`path`, {
-		opacity: `0.5`,
-		d: `M1 12C1 6.81455 1 4.22183 2.61091 2.61091C4.22183 1 6.81455 1 12 1C17.1854 1 19.7782 1 21.3891 2.61091C23 4.22183 23 6.81455 23 12C23 17.1854 23 19.7782 21.3891 21.3891C19.7782 23 17.1854 23 12 23C6.81455 23 4.22183 23 2.61091 21.3891C1 19.7782 1 17.1854 1 12Z`,
-		fill: `currentColor`
-	}), (0, import_jsx_runtime.jsx)(`path`, {
-		d: `M2.61091 21.3887C4.22183 22.9996 6.81455 22.9996 12 22.9996C17.1854 22.9996 19.7782 22.9996 21.3891 21.3887C22.8818 19.896 22.9913 17.5602 22.9994 13.0996H19.5237C18.528 13.0996 18.0302 13.0996 17.5926 13.3009C17.155 13.5022 16.831 13.8801 16.183 14.6361L16.183 14.6361L15.517 15.4131L15.517 15.4131C14.869 16.1691 14.545 16.5471 14.1074 16.7483C13.6698 16.9496 13.172 16.9496 12.1763 16.9496H11.8237C10.828 16.9496 10.3302 16.9496 9.89257 16.7483C9.45496 16.5471 9.13097 16.1691 8.48298 15.4131L7.81701 14.6361C7.16903 13.8801 6.84504 13.5022 6.40743 13.3009C5.96982 13.0996 5.47197 13.0996 4.47629 13.0996H1C1.00803 17.5602 1.11818 19.896 2.61091 21.3887Z`,
-		fill: `currentColor`
-	})]
-}));
-i$17.displayName = `Inbox`;
-//#endregion
-//#region node_modules/@solar-icons/react-perf/dist/icons/messages/BoldDuotone/Pen.mjs
-var { forwardRef: t$19 } = await importShared("react");
-var i$16 = t$19((t, i) => (0, import_jsx_runtime.jsxs)(r$30, {
-	ref: i,
-	...t,
-	children: [(0, import_jsx_runtime.jsx)(`path`, {
-		opacity: `0.5`,
-		d: `M20.8487 8.71306C22.3844 7.17735 22.3844 4.68748 20.8487 3.15178C19.313 1.61607 16.8231 1.61607 15.2874 3.15178L14.4004 4.03882C14.4125 4.0755 14.4251 4.11268 14.4382 4.15035C14.7633 5.0875 15.3768 6.31601 16.5308 7.47002C17.6848 8.62403 18.9133 9.23749 19.8505 9.56262C19.888 9.57563 19.925 9.58817 19.9615 9.60026L20.8487 8.71306Z`,
-		fill: `currentColor`
-	}), (0, import_jsx_runtime.jsx)(`path`, {
-		d: `M14.4386 4L14.4004 4.03819C14.4125 4.07487 14.4251 4.11206 14.4382 4.14973C14.7633 5.08687 15.3768 6.31538 16.5308 7.4694C17.6848 8.62341 18.9133 9.23686 19.8505 9.56199C19.8876 9.57489 19.9243 9.58733 19.9606 9.59933L11.4001 18.1598C10.823 18.7369 10.5343 19.0255 10.2162 19.2737C9.84082 19.5665 9.43469 19.8175 9.00498 20.0223C8.6407 20.1959 8.25351 20.3249 7.47918 20.583L3.39584 21.9442C3.01478 22.0712 2.59466 21.972 2.31063 21.688C2.0266 21.4039 1.92743 20.9838 2.05445 20.6028L3.41556 16.5194C3.67368 15.7451 3.80273 15.3579 3.97634 14.9936C4.18114 14.5639 4.43213 14.1578 4.7249 13.7824C4.97307 13.4643 5.26165 13.1757 5.83874 12.5986L14.4386 4Z`,
-		fill: `currentColor`
-	})]
-}));
-i$16.displayName = `Pen`;
-//#endregion
-//#region node_modules/@solar-icons/react-perf/dist/icons/notes/BoldDuotone/DocumentText.mjs
-var { forwardRef: t$18 } = await importShared("react");
-var i$15 = t$18((t, i) => (0, import_jsx_runtime.jsxs)(r$30, {
-	ref: i,
-	...t,
+	iconName: `document-text-bold-duotone`,
 	children: [
 		(0, import_jsx_runtime.jsx)(`path`, {
-			opacity: `0.5`,
 			d: `M3 10C3 6.22876 3 4.34315 4.17157 3.17157C5.34315 2 7.22876 2 11 2H13C16.7712 2 18.6569 2 19.8284 3.17157C21 4.34315 21 6.22876 21 10V14C21 17.7712 21 19.6569 19.8284 20.8284C18.6569 22 16.7712 22 13 22H11C7.22876 22 5.34315 22 4.17157 20.8284C3 19.6569 3 17.7712 3 14V10Z`,
-			fill: `currentColor`
+			fill: `currentColor`,
+			style: {
+				color: `var(--solar-secondary-color, currentColor)`,
+				opacity: `var(--solar-secondary-opacity, 0.5)`
+			}
 		}),
 		(0, import_jsx_runtime.jsx)(`path`, {
 			fillRule: `evenodd`,
@@ -9306,20 +9406,18 @@ var i$15 = t$18((t, i) => (0, import_jsx_runtime.jsxs)(r$30, {
 		})
 	]
 }));
-i$15.displayName = `DocumentText`;
 //#endregion
-//#region node_modules/@solar-icons/react-perf/dist/icons/notes/BoldDuotone/DocumentsMinimalistic.mjs
-var { forwardRef: t$17 } = await importShared("react");
-var i$14 = t$17((t, i) => (0, import_jsx_runtime.jsxs)(r$30, {
+//#region node_modules/@solar-icons/react/dist/icons/bold-duotone/documents-minimalistic.mjs
+var { forwardRef: t$22 } = await importShared("react");
+var i$19 = t$22((t, i) => (0, import_jsx_runtime.jsxs)(a, {
 	ref: i,
 	...t,
-	children: [(0, import_jsx_runtime.jsx)(`path`, {
-		fillRule: `evenodd`,
-		clipRule: `evenodd`,
-		d: `M10.75 2H12.75C15.5784 2 16.9926 2 17.8713 2.87868C18.75 3.75736 18.75 5.17157 18.75 8V16C18.75 18.8284 18.75 20.2426 17.8713 21.1213C16.9926 22 15.5784 22 12.75 22H10.75C7.92157 22 6.50736 22 5.62868 21.1213C4.75 20.2426 4.75 18.8284 4.75 16V8C4.75 5.17157 4.75 3.75736 5.62868 2.87868C6.50736 2 7.92157 2 10.75 2ZM8 13C8 12.5858 8.33579 12.25 8.75 12.25H14.75C15.1642 12.25 15.5 12.5858 15.5 13C15.5 13.4142 15.1642 13.75 14.75 13.75H8.75C8.33579 13.75 8 13.4142 8 13ZM8 9C8 8.58579 8.33579 8.25 8.75 8.25H14.75C15.1642 8.25 15.5 8.58579 15.5 9C15.5 9.41421 15.1642 9.75 14.75 9.75H8.75C8.33579 9.75 8 9.41421 8 9ZM8 17C8 16.5858 8.33579 16.25 8.75 16.25H11.75C12.1642 16.25 12.5 16.5858 12.5 17C12.5 17.4142 12.1642 17.75 11.75 17.75H8.75C8.33579 17.75 8 17.4142 8 17Z`,
-		fill: `currentColor`
-	}), (0, import_jsx_runtime.jsxs)(`g`, {
-		opacity: `0.5`,
+	iconName: `documents-minimalistic-bold-duotone`,
+	children: [(0, import_jsx_runtime.jsxs)(`g`, {
+		style: {
+			color: `var(--solar-secondary-color, currentColor)`,
+			opacity: `var(--solar-secondary-opacity, 0.5)`
+		},
 		children: [(0, import_jsx_runtime.jsx)(`path`, {
 			fillRule: `evenodd`,
 			clipRule: `evenodd`,
@@ -9331,41 +9429,225 @@ var i$14 = t$17((t, i) => (0, import_jsx_runtime.jsxs)(r$30, {
 			d: `M21.75 4.25C22.1642 4.25 22.5 4.58579 22.5 5V19C22.5 19.4142 22.1642 19.75 21.75 19.75C21.3358 19.75 21 19.4142 21 19V5C21 4.58579 21.3358 4.25 21.75 4.25Z`,
 			fill: `currentColor`
 		})]
+	}), (0, import_jsx_runtime.jsx)(`path`, {
+		fillRule: `evenodd`,
+		clipRule: `evenodd`,
+		d: `M10.75 2H12.75C15.5784 2 16.9926 2 17.8713 2.87868C18.75 3.75736 18.75 5.17157 18.75 8V16C18.75 18.8284 18.75 20.2426 17.8713 21.1213C16.9926 22 15.5784 22 12.75 22H10.75C7.92157 22 6.50736 22 5.62868 21.1213C4.75 20.2426 4.75 18.8284 4.75 16V8C4.75 5.17157 4.75 3.75736 5.62868 2.87868C6.50736 2 7.92157 2 10.75 2ZM8 13C8 12.5858 8.33579 12.25 8.75 12.25H14.75C15.1642 12.25 15.5 12.5858 15.5 13C15.5 13.4142 15.1642 13.75 14.75 13.75H8.75C8.33579 13.75 8 13.4142 8 13ZM8 9C8 8.58579 8.33579 8.25 8.75 8.25H14.75C15.1642 8.25 15.5 8.58579 15.5 9C15.5 9.41421 15.1642 9.75 14.75 9.75H8.75C8.33579 9.75 8 9.41421 8 9ZM8 17C8 16.5858 8.33579 16.25 8.75 16.25H11.75C12.1642 16.25 12.5 16.5858 12.5 17C12.5 17.4142 12.1642 17.75 11.75 17.75H8.75C8.33579 17.75 8 17.4142 8 17Z`,
+		fill: `currentColor`
 	})]
 }));
-i$14.displayName = `DocumentsMinimalistic`;
 //#endregion
-//#region node_modules/@solar-icons/react-perf/dist/icons/search/BoldDuotone/Magnifier.mjs
-var { forwardRef: t$16 } = await importShared("react");
-var i$13 = t$16((t, i) => (0, import_jsx_runtime.jsxs)(r$30, {
+//#region node_modules/@solar-icons/react/dist/icons/bold-duotone/download.mjs
+var { forwardRef: t$21 } = await importShared("react");
+var i$18 = t$21((t, i) => (0, import_jsx_runtime.jsxs)(a, {
 	ref: i,
 	...t,
+	iconName: `download-bold-duotone`,
 	children: [(0, import_jsx_runtime.jsx)(`path`, {
-		opacity: `0.5`,
-		d: `M20.3133 11.1566C20.3133 16.2137 16.2137 20.3133 11.1566 20.3133C6.09956 20.3133 2 16.2137 2 11.1566C2 6.09956 6.09956 2 11.1566 2C16.2137 2 20.3133 6.09956 20.3133 11.1566Z`,
+		d: `M22 16.0003V15.0003C22 12.1718 21.9998 10.7581 21.1211 9.8794C20.2424 9.00072 18.8282 9.00072 15.9998 9.00072H7.99977C5.17135 9.00072 3.75713 9.00072 2.87845 9.8794C2 10.7579 2 12.1711 2 14.9981V15.0003V16.0003C2 18.8287 2 20.2429 2.87868 21.1216C3.75736 22.0003 5.17157 22.0003 8 22.0003H16H16C18.8284 22.0003 20.2426 22.0003 21.1213 21.1216C22 20.2429 22 18.8287 22 16.0003Z`,
+		fill: `currentColor`,
+		style: {
+			color: `var(--solar-secondary-color, currentColor)`,
+			opacity: `var(--solar-secondary-opacity, 0.5)`
+		}
+	}), (0, import_jsx_runtime.jsx)(`path`, {
+		fillRule: `evenodd`,
+		clipRule: `evenodd`,
+		d: `M12 1.25C11.5858 1.25 11.25 1.58579 11.25 2L11.25 12.9726L9.56943 11.0119C9.29986 10.6974 8.82639 10.661 8.51189 10.9306C8.1974 11.2001 8.16098 11.6736 8.43054 11.9881L11.4305 15.4881C11.573 15.6543 11.781 15.75 12 15.75C12.2189 15.75 12.4269 15.6543 12.5694 15.4881L15.5694 11.9881C15.839 11.6736 15.8026 11.2001 15.4881 10.9306C15.1736 10.661 14.7001 10.6974 14.4305 11.0119L12.75 12.9726L12.75 2C12.75 1.58579 12.4142 1.25 12 1.25Z`,
 		fill: `currentColor`
+	})]
+}));
+//#endregion
+//#region node_modules/@solar-icons/react/dist/icons/bold-duotone/download-minimalistic.mjs
+var { forwardRef: t$20 } = await importShared("react");
+var i$17 = t$20((t, i) => (0, import_jsx_runtime.jsxs)(a, {
+	ref: i,
+	...t,
+	iconName: `download-minimalistic-bold-duotone`,
+	children: [(0, import_jsx_runtime.jsx)(`path`, {
+		fillRule: `evenodd`,
+		clipRule: `evenodd`,
+		d: `M3 14.25C3.41421 14.25 3.75 14.5858 3.75 15C3.75 16.4354 3.75159 17.4365 3.85315 18.1919C3.9518 18.9257 4.13225 19.3142 4.40901 19.591C4.68577 19.8678 5.07435 20.0482 5.80812 20.1469C6.56347 20.2484 7.56459 20.25 9 20.25H15C16.4354 20.25 17.4365 20.2484 18.1919 20.1469C18.9257 20.0482 19.3142 19.8678 19.591 19.591C19.8678 19.3142 20.0482 18.9257 20.1469 18.1919C20.2484 17.4365 20.25 16.4354 20.25 15C20.25 14.5858 20.5858 14.25 21 14.25C21.4142 14.25 21.75 14.5858 21.75 15V15.0549C21.75 16.4225 21.75 17.5248 21.6335 18.3918C21.5125 19.2919 21.2536 20.0497 20.6517 20.6516C20.0497 21.2536 19.2919 21.5125 18.3918 21.6335C17.5248 21.75 16.4225 21.75 15.0549 21.75H8.94513C7.57754 21.75 6.47522 21.75 5.60825 21.6335C4.70814 21.5125 3.95027 21.2536 3.34835 20.6517C2.74643 20.0497 2.48754 19.2919 2.36652 18.3918C2.24996 17.5248 2.24998 16.4225 2.25 15.0549C2.25 15.0366 2.25 15.0183 2.25 15C2.25 14.5858 2.58579 14.25 3 14.25Z`,
+		fill: `currentColor`,
+		style: {
+			color: `var(--solar-secondary-color, currentColor)`,
+			opacity: `var(--solar-secondary-opacity, 0.5)`
+		}
+	}), (0, import_jsx_runtime.jsx)(`path`, {
+		fillRule: `evenodd`,
+		clipRule: `evenodd`,
+		d: `M12 16.75C12.2106 16.75 12.4114 16.6615 12.5535 16.5061L16.5535 12.1311C16.833 11.8254 16.8118 11.351 16.5061 11.0715C16.2004 10.792 15.726 10.8132 15.4465 11.1189L12.75 14.0682V3C12.75 2.58579 12.4142 2.25 12 2.25C11.5858 2.25 11.25 2.58579 11.25 3V14.0682L8.55353 11.1189C8.27403 10.8132 7.79963 10.792 7.49393 11.0715C7.18823 11.351 7.16698 11.8254 7.44648 12.1311L11.4465 16.5061C11.5886 16.6615 11.7894 16.75 12 16.75Z`,
+		fill: `currentColor`
+	})]
+}));
+//#endregion
+//#region node_modules/@solar-icons/react/dist/icons/bold-duotone/filter.mjs
+var { forwardRef: t$19 } = await importShared("react");
+var i$16 = t$19((t, i) => (0, import_jsx_runtime.jsxs)(a, {
+	ref: i,
+	...t,
+	iconName: `filter-bold-duotone`,
+	children: [(0, import_jsx_runtime.jsx)(`path`, {
+		d: `M21.9998 6.50448V5.81466C21.9998 4.48782 21.9998 3.8244 21.5605 3.4122C21.1211 3 20.414 3 18.9998 3L8.81543 13.1844C8.86481 13.3129 8.90498 13.447 8.93625 13.5872C8.99981 13.8722 8.99981 14.2058 8.99981 14.8729L8.99981 17.5424C8.99981 18.452 8.99981 18.9067 9.25173 19.2613C9.50366 19.6158 9.95109 19.7907 10.846 20.1406C12.7246 20.875 13.6639 21.2422 14.3319 20.8244C14.9998 20.4066 14.9998 19.4519 14.9998 17.5424V14.8729C14.9998 14.2058 14.9998 13.8722 15.0634 13.5872C15.1957 12.9935 15.4878 12.5095 15.9623 12.0976C16.1901 11.8998 16.5083 11.7206 17.1448 11.3624L20.0578 9.72255C21.0063 9.18858 21.4806 8.9216 21.7402 8.49142C21.9998 8.06124 21.9998 7.54232 21.9998 6.50448Z`,
+		fill: `currentColor`,
+		style: {
+			color: `var(--solar-secondary-color, currentColor)`,
+			opacity: `var(--solar-secondary-opacity, 0.5)`
+		}
+	}), (0, import_jsx_runtime.jsx)(`path`, {
+		fillRule: `evenodd`,
+		clipRule: `evenodd`,
+		d: `M5 3H19L8.81562 13.1844C8.65593 12.7689 8.39992 12.4122 8.03751 12.0976C7.80967 11.8998 7.49146 11.7206 6.85504 11.3624L3.94202 9.72255C2.99347 9.18858 2.5192 8.9216 2.2596 8.49142C2 8.06124 2 7.54232 2 6.50448V5.81466C2 4.48782 2 3.8244 2.43934 3.4122C2.87868 3 3.58579 3 5 3Z`,
+		fill: `currentColor`
+	})]
+}));
+//#endregion
+//#region node_modules/@solar-icons/react/dist/icons/bold-duotone/folder-open.mjs
+var { forwardRef: t$18 } = await importShared("react");
+var i$15 = t$18((t, i) => (0, import_jsx_runtime.jsxs)(a, {
+	ref: i,
+	...t,
+	iconName: `folder-open-bold-duotone`,
+	children: [(0, import_jsx_runtime.jsx)(`path`, {
+		d: `M3.5762 12.4846C3.68271 12.3586 3.80034 12.241 3.92792 12.1332C4.79888 11.3975 6.20667 11.3975 9.02227 11.3975H15.9777C18.7933 11.3975 20.2011 11.3975 21.0721 12.1332C21.2 12.2413 21.3179 12.3592 21.4247 12.4857V9.75579C21.4247 8.84687 21.4247 8.09279 21.3394 7.49156C21.2494 6.85704 21.0531 6.29458 20.5839 5.83245C20.5074 5.75707 20.4266 5.68552 20.342 5.61807C19.8302 5.21023 19.2167 5.04345 18.5222 4.96608C17.8531 4.89155 17.0102 4.89157 15.9769 4.89158L15.6242 4.89158C14.6421 4.89158 14.29 4.88587 13.9711 4.80533C13.7837 4.75802 13.604 4.69195 13.4352 4.60878C13.151 4.46867 12.9033 4.25762 12.2077 3.64132L11.7336 3.22128C11.5345 3.04489 11.3987 2.9245 11.2531 2.81755C10.6284 2.35879 9.86779 2.08132 9.07145 2.01534C8.88602 1.99998 8.6968 1.99999 8.41356 2.00002L8.29714 2.00001C7.65647 1.9999 7.23365 1.99983 6.86652 2.0612C5.26167 2.32947 3.96392 3.45143 3.64782 4.93575C3.57591 5.27344 3.57602 5.66035 3.57619 6.21853L3.5762 12.4846Z`,
+		fill: `currentColor`,
+		style: {
+			color: `var(--solar-secondary-color, currentColor)`,
+			opacity: `var(--solar-secondary-opacity, 0.5)`
+		}
+	}), (0, import_jsx_runtime.jsx)(`path`, {
+		fillRule: `evenodd`,
+		clipRule: `evenodd`,
+		d: `M3.35791 12.7787C2.74772 13.7201 2.99956 15.0291 3.50323 17.647C3.8658 19.5316 4.04709 20.4738 4.67523 21.0991C4.8382 21.2614 5.02054 21.4052 5.2186 21.5277C5.98195 21.9999 6.99539 21.9999 9.02227 21.9999H15.9777C18.0046 21.9999 19.0181 21.9999 19.7814 21.5277C19.9795 21.4052 20.1618 21.2614 20.3248 21.0991C20.9529 20.4738 21.1342 19.5316 21.4968 17.647C22.0004 15.0291 22.2523 13.7201 21.6421 12.7787C21.4864 12.5384 21.2943 12.321 21.0721 12.1332C20.2011 11.3975 18.7933 11.3975 15.9777 11.3975H9.02227C6.20667 11.3975 4.79888 11.3975 3.92792 12.1332C3.70566 12.321 3.51363 12.5384 3.35791 12.7787ZM9.69518 17.1806C9.69518 16.7814 10.0376 16.4577 10.4601 16.4577H14.5398C14.9622 16.4577 15.3047 16.7814 15.3047 17.1806C15.3047 17.5798 14.9622 17.9035 14.5398 17.9035H10.4601C10.0376 17.9035 9.69518 17.5798 9.69518 17.1806Z`,
+		fill: `currentColor`
+	})]
+}));
+//#endregion
+//#region node_modules/@solar-icons/react/dist/icons/bold-duotone/import.mjs
+var { forwardRef: t$17 } = await importShared("react");
+var i$14 = t$17((t, i) => (0, import_jsx_runtime.jsxs)(a, {
+	ref: i,
+	...t,
+	iconName: `import-bold-duotone`,
+	children: [(0, import_jsx_runtime.jsx)(`path`, {
+		d: `M4 12C4 16.4183 7.58172 20 12 20C16.4183 20 20 16.4183 20 12L4 12Z`,
+		fill: `currentColor`,
+		style: {
+			color: `var(--solar-secondary-color, currentColor)`,
+			opacity: `var(--solar-secondary-opacity, 0.5)`
+		}
+	}), (0, import_jsx_runtime.jsx)(`path`, {
+		fillRule: `evenodd`,
+		clipRule: `evenodd`,
+		d: `M15.5303 10.4697C15.2374 10.1768 14.7626 10.1768 14.4697 10.4697L12.75 12.1893L12.75 4C12.75 3.58579 12.4142 3.25 12 3.25C11.5858 3.25 11.25 3.58579 11.25 4L11.25 12.1893L9.53033 10.4697C9.23744 10.1768 8.76256 10.1768 8.46967 10.4697C8.17678 10.7626 8.17678 11.2374 8.46967 11.5303L11.4697 14.5303C11.7626 14.8232 12.2374 14.8232 12.5303 14.5303L15.5303 11.5303C15.8232 11.2374 15.8232 10.7626 15.5303 10.4697Z`,
+		fill: `currentColor`
+	})]
+}));
+//#endregion
+//#region node_modules/@solar-icons/react/dist/icons/bold-duotone/inbox.mjs
+var { forwardRef: t$16 } = await importShared("react");
+var i$13 = t$16((t, i) => (0, import_jsx_runtime.jsxs)(a, {
+	ref: i,
+	...t,
+	iconName: `inbox-bold-duotone`,
+	children: [(0, import_jsx_runtime.jsx)(`path`, {
+		d: `M1 12C1 6.81455 1 4.22183 2.61091 2.61091C4.22183 1 6.81455 1 12 1C17.1854 1 19.7782 1 21.3891 2.61091C23 4.22183 23 6.81455 23 12C23 17.1854 23 19.7782 21.3891 21.3891C19.7782 23 17.1854 23 12 23C6.81455 23 4.22183 23 2.61091 21.3891C1 19.7782 1 17.1854 1 12Z`,
+		fill: `currentColor`,
+		style: {
+			color: `var(--solar-secondary-color, currentColor)`,
+			opacity: `var(--solar-secondary-opacity, 0.5)`
+		}
+	}), (0, import_jsx_runtime.jsx)(`path`, {
+		d: `M2.61091 21.3887C4.22183 22.9996 6.81455 22.9996 12 22.9996C17.1854 22.9996 19.7782 22.9996 21.3891 21.3887C22.8818 19.896 22.9913 17.5602 22.9994 13.0996H19.5237C18.528 13.0996 18.0302 13.0996 17.5926 13.3009C17.155 13.5022 16.831 13.8801 16.183 14.6361L16.183 14.6361L15.517 15.4131L15.517 15.4131C14.869 16.1691 14.545 16.5471 14.1074 16.7483C13.6698 16.9496 13.172 16.9496 12.1763 16.9496H11.8237C10.828 16.9496 10.3302 16.9496 9.89257 16.7483C9.45496 16.5471 9.13097 16.1691 8.48298 15.4131L7.81701 14.6361C7.16903 13.8801 6.84504 13.5022 6.40743 13.3009C5.96982 13.0996 5.47197 13.0996 4.47629 13.0996H1C1.00803 17.5602 1.11818 19.896 2.61091 21.3887Z`,
+		fill: `currentColor`
+	})]
+}));
+//#endregion
+//#region node_modules/@solar-icons/react/dist/icons/bold-duotone/list-cross.mjs
+var { forwardRef: t$15 } = await importShared("react");
+var i$12 = t$15((t, i) => (0, import_jsx_runtime.jsxs)(a, {
+	ref: i,
+	...t,
+	iconName: `list-cross-bold-duotone`,
+	children: [(0, import_jsx_runtime.jsx)(`path`, {
+		fillRule: `evenodd`,
+		clipRule: `evenodd`,
+		d: `M2.25 6C2.25 5.58579 2.58579 5.25 3 5.25H21C21.4142 5.25 21.75 5.58579 21.75 6C21.75 6.41421 21.4142 6.75 21 6.75H3C2.58579 6.75 2.25 6.41421 2.25 6ZM2.25 10C2.25 9.58579 2.58579 9.25 3 9.25H21C21.4142 9.25 21.75 9.58579 21.75 10C21.75 10.4142 21.4142 10.75 21 10.75H3C2.58579 10.75 2.25 10.4142 2.25 10ZM2.25 14C2.25 13.5858 2.58579 13.25 3 13.25H11C11.4142 13.25 11.75 13.5858 11.75 14C11.75 14.4142 11.4142 14.75 11 14.75H3C2.58579 14.75 2.25 14.4142 2.25 14ZM2.25 18C2.25 17.5858 2.58579 17.25 3 17.25H11C11.4142 17.25 11.75 17.5858 11.75 18C11.75 18.4142 11.4142 18.75 11 18.75H3C2.58579 18.75 2.25 18.4142 2.25 18Z`,
+		fill: `currentColor`,
+		style: {
+			color: `var(--solar-secondary-color, currentColor)`,
+			opacity: `var(--solar-secondary-opacity, 0.5)`
+		}
+	}), (0, import_jsx_runtime.jsx)(`path`, {
+		d: `M14.4697 12.9697C14.7626 12.6768 15.2374 12.6768 15.5303 12.9697L17.5 14.9393L19.4697 12.9697C19.7626 12.6768 20.2374 12.6768 20.5303 12.9697C20.8232 13.2626 20.8232 13.7374 20.5303 14.0303L18.5607 16L20.5303 17.9697C20.8232 18.2626 20.8232 18.7374 20.5303 19.0303C20.2374 19.3232 19.7626 19.3232 19.4697 19.0303L17.5 17.0607L15.5303 19.0303C15.2374 19.3232 14.7626 19.3232 14.4697 19.0303C14.1768 18.7374 14.1768 18.2626 14.4697 17.9697L16.4393 16L14.4697 14.0303C14.1768 13.7374 14.1768 13.2626 14.4697 12.9697Z`,
+		fill: `currentColor`
+	})]
+}));
+//#endregion
+//#region node_modules/@solar-icons/react/dist/icons/bold-duotone/magnifier.mjs
+var { forwardRef: t$14 } = await importShared("react");
+var i$11 = t$14((t, i) => (0, import_jsx_runtime.jsxs)(a, {
+	ref: i,
+	...t,
+	iconName: `magnifier-bold-duotone`,
+	children: [(0, import_jsx_runtime.jsx)(`path`, {
+		d: `M20.3133 11.1566C20.3133 16.2137 16.2137 20.3133 11.1566 20.3133C6.09956 20.3133 2 16.2137 2 11.1566C2 6.09956 6.09956 2 11.1566 2C16.2137 2 20.3133 6.09956 20.3133 11.1566Z`,
+		fill: `currentColor`,
+		style: {
+			color: `var(--solar-secondary-color, currentColor)`,
+			opacity: `var(--solar-secondary-opacity, 0.5)`
+		}
 	}), (0, import_jsx_runtime.jsx)(`path`, {
 		d: `M17.1001 18.1219L20.7664 21.7882C21.0487 22.0705 21.5064 22.0705 21.7887 21.7882C22.071 21.5059 22.071 21.0482 21.7887 20.7659L18.1224 17.0996C17.809 17.4666 17.4671 17.8085 17.1001 18.1219Z`,
 		fill: `currentColor`
 	})]
 }));
-i$13.displayName = `Magnifier`;
 //#endregion
-//#region node_modules/@solar-icons/react-perf/dist/icons/security/BoldDuotone/ObjectScan.mjs
-var { forwardRef: t$15 } = await importShared("react");
-var i$12 = t$15((t, i) => (0, import_jsx_runtime.jsxs)(r$30, {
+//#region node_modules/@solar-icons/react/dist/icons/bold-duotone/menu-dots.mjs
+var { forwardRef: t$13 } = await importShared("react");
+var i$10 = t$13((t, i) => (0, import_jsx_runtime.jsxs)(a, {
 	ref: i,
 	...t,
+	iconName: `menu-dots-bold-duotone`,
 	children: [
+		(0, import_jsx_runtime.jsx)(`path`, {
+			d: `M14 12C14 13.1046 13.1046 14 12 14C10.8954 14 10 13.1046 10 12C10 10.8954 10.8954 10 12 10C13.1046 10 14 10.8954 14 12Z`,
+			fill: `currentColor`,
+			style: {
+				color: `var(--solar-secondary-color, currentColor)`,
+				opacity: `var(--solar-secondary-opacity, 0.5)`
+			}
+		}),
+		(0, import_jsx_runtime.jsx)(`path`, {
+			d: `M7 12C7 13.1046 6.10457 14 5 14C3.89543 14 3 13.1046 3 12C3 10.8954 3.89543 10 5 10C6.10457 10 7 10.8954 7 12Z`,
+			fill: `currentColor`
+		}),
+		(0, import_jsx_runtime.jsx)(`path`, {
+			d: `M21 12C21 13.1046 20.1046 14 19 14C17.8954 14 17 13.1046 17 12C17 10.8954 17.8954 10 19 10C20.1046 10 21 10.8954 21 12Z`,
+			fill: `currentColor`
+		})
+	]
+}));
+//#endregion
+//#region node_modules/@solar-icons/react/dist/icons/bold-duotone/object-scan.mjs
+var { forwardRef: t$12 } = await importShared("react");
+var i$9 = t$12((t, i) => (0, import_jsx_runtime.jsxs)(a, {
+	ref: i,
+	...t,
+	iconName: `object-scan-bold-duotone`,
+	children: [
+		(0, import_jsx_runtime.jsx)(`path`, {
+			d: `M10 5.5H14C15.8856 5.5 16.8284 5.5 17.4142 6.08579C17.9642 6.63575 17.9978 7.5004 17.9999 9.16448L18 12.0167V14.5C18 16.3856 18 17.3284 17.4142 17.9142C16.8284 18.5 15.8856 18.5 14 18.5H10C8.11438 18.5 7.17157 18.5 6.58579 17.9142C6 17.3284 6 16.3856 6 14.5V12.0167L6.00013 9.16449C6.00219 7.5004 6.03582 6.63575 6.58579 6.08579C7.17157 5.5 8.11438 5.5 10 5.5Z`,
+			fill: `currentColor`,
+			style: {
+				color: `var(--solar-secondary-color, currentColor)`,
+				opacity: `var(--solar-secondary-opacity, 0.5)`
+			}
+		}),
 		(0, import_jsx_runtime.jsx)(`path`, {
 			fillRule: `evenodd`,
 			clipRule: `evenodd`,
 			d: `M9.94358 1.25L10 1.25C10.4142 1.25 10.75 1.58579 10.75 2C10.75 2.41421 10.4142 2.75 10 2.75C8.09318 2.75 6.73851 2.75159 5.71085 2.88976C4.70476 3.02502 4.12511 3.27869 3.7019 3.7019C3.27869 4.12511 3.02502 4.70476 2.88976 5.71085C2.75159 6.73851 2.75 8.09318 2.75 10C2.75 10.4142 2.41421 10.75 2 10.75C1.58579 10.75 1.25 10.4142 1.25 10L1.25 9.94358C1.24998 8.10582 1.24997 6.65019 1.40314 5.51098C1.56076 4.33856 1.89288 3.38961 2.64124 2.64124C3.38961 1.89288 4.33856 1.56076 5.51098 1.40314C6.65019 1.24997 8.10582 1.24998 9.94358 1.25ZM18.2892 2.88976C17.2615 2.75159 15.9068 2.75 14 2.75C13.5858 2.75 13.25 2.41421 13.25 2C13.25 1.58579 13.5858 1.25 14 1.25L14.0564 1.25C15.8942 1.24998 17.3498 1.24997 18.489 1.40314C19.6614 1.56076 20.6104 1.89288 21.3588 2.64124C22.1071 3.38961 22.4392 4.33856 22.5969 5.51098C22.75 6.65019 22.75 8.10583 22.75 9.94359V10C22.75 10.4142 22.4142 10.75 22 10.75C21.5858 10.75 21.25 10.4142 21.25 10C21.25 8.09318 21.2484 6.73851 21.1102 5.71085C20.975 4.70476 20.7213 4.12511 20.2981 3.7019C19.8749 3.27869 19.2952 3.02502 18.2892 2.88976ZM2 13.25C2.41421 13.25 2.75 13.5858 2.75 14C2.75 15.9068 2.75159 17.2615 2.88976 18.2892C3.02502 19.2952 3.27869 19.8749 3.7019 20.2981C4.12511 20.7213 4.70476 20.975 5.71085 21.1102C6.73851 21.2484 8.09318 21.25 10 21.25C10.4142 21.25 10.75 21.5858 10.75 22C10.75 22.4142 10.4142 22.75 10 22.75H9.94359C8.10583 22.75 6.65019 22.75 5.51098 22.5969C4.33856 22.4392 3.38961 22.1071 2.64124 21.3588C1.89288 20.6104 1.56076 19.6614 1.40314 18.489C1.24997 17.3498 1.24998 15.8942 1.25 14.0564L1.25 14C1.25 13.5858 1.58579 13.25 2 13.25ZM22 13.25C22.4142 13.25 22.75 13.5858 22.75 14V14.0564C22.75 15.8942 22.75 17.3498 22.5969 18.489C22.4392 19.6614 22.1071 20.6104 21.3588 21.3588C20.6104 22.1071 19.6614 22.4392 18.489 22.5969C17.3498 22.75 15.8942 22.75 14.0564 22.75H14C13.5858 22.75 13.25 22.4142 13.25 22C13.25 21.5858 13.5858 21.25 14 21.25C15.9068 21.25 17.2615 21.2484 18.2892 21.1102C19.2952 20.975 19.8749 20.7213 20.2981 20.2981C20.7213 19.8749 20.975 19.2952 21.1102 18.2892C21.2484 17.2615 21.25 15.9068 21.25 14C21.25 13.5858 21.5858 13.25 22 13.25Z`,
-			fill: `currentColor`
-		}),
-		(0, import_jsx_runtime.jsx)(`path`, {
-			opacity: `0.5`,
-			d: `M10 5.5H14C15.8856 5.5 16.8284 5.5 17.4142 6.08579C17.9642 6.63575 17.9978 7.5004 17.9999 9.16448L18 12.0167V14.5C18 16.3856 18 17.3284 17.4142 17.9142C16.8284 18.5 15.8856 18.5 14 18.5H10C8.11438 18.5 7.17157 18.5 6.58579 17.9142C6 17.3284 6 16.3856 6 14.5V12.0167L6.00013 9.16449C6.00219 7.5004 6.03582 6.63575 6.58579 6.08579C7.17157 5.5 8.11438 5.5 10 5.5Z`,
 			fill: `currentColor`
 		}),
 		(0, import_jsx_runtime.jsx)(`path`, {
@@ -9374,18 +9656,101 @@ var i$12 = t$15((t, i) => (0, import_jsx_runtime.jsxs)(r$30, {
 		})
 	]
 }));
-i$12.displayName = `ObjectScan`;
 //#endregion
-//#region node_modules/@solar-icons/react-perf/dist/icons/security/BoldDuotone/ShieldWarning.mjs
-var { forwardRef: t$14 } = await importShared("react");
-var i$11 = t$14((t, i) => (0, import_jsx_runtime.jsxs)(r$30, {
+//#region node_modules/@solar-icons/react/dist/icons/bold-duotone/pen.mjs
+var { forwardRef: t$11 } = await importShared("react");
+var i$8 = t$11((t, i) => (0, import_jsx_runtime.jsxs)(a, {
 	ref: i,
 	...t,
+	iconName: `pen-bold-duotone`,
+	children: [(0, import_jsx_runtime.jsx)(`path`, {
+		d: `M20.8487 8.71306C22.3844 7.17735 22.3844 4.68748 20.8487 3.15178C19.313 1.61607 16.8231 1.61607 15.2874 3.15178L14.4004 4.03882C14.4125 4.0755 14.4251 4.11268 14.4382 4.15035C14.7633 5.0875 15.3768 6.31601 16.5308 7.47002C17.6848 8.62403 18.9133 9.23749 19.8505 9.56262C19.888 9.57563 19.925 9.58817 19.9615 9.60026L20.8487 8.71306Z`,
+		fill: `currentColor`,
+		style: {
+			color: `var(--solar-secondary-color, currentColor)`,
+			opacity: `var(--solar-secondary-opacity, 0.5)`
+		}
+	}), (0, import_jsx_runtime.jsx)(`path`, {
+		d: `M14.4386 4L14.4004 4.03819C14.4125 4.07487 14.4251 4.11206 14.4382 4.14973C14.7633 5.08687 15.3768 6.31538 16.5308 7.4694C17.6848 8.62341 18.9133 9.23686 19.8505 9.56199C19.8876 9.57489 19.9243 9.58733 19.9606 9.59933L11.4001 18.1598C10.823 18.7369 10.5343 19.0255 10.2162 19.2737C9.84082 19.5665 9.43469 19.8175 9.00498 20.0223C8.6407 20.1959 8.25351 20.3249 7.47918 20.583L3.39584 21.9442C3.01478 22.0712 2.59466 21.972 2.31063 21.688C2.0266 21.4039 1.92743 20.9838 2.05445 20.6028L3.41556 16.5194C3.67368 15.7451 3.80273 15.3579 3.97634 14.9936C4.18114 14.5639 4.43213 14.1578 4.7249 13.7824C4.97307 13.4643 5.26165 13.1757 5.83874 12.5986L14.4386 4Z`,
+		fill: `currentColor`
+	})]
+}));
+//#endregion
+//#region node_modules/@solar-icons/react/dist/icons/bold-duotone/refresh.mjs
+var { forwardRef: t$10 } = await importShared("react");
+var i$7 = t$10((t, i) => (0, import_jsx_runtime.jsxs)(a, {
+	ref: i,
+	...t,
+	iconName: `refresh-bold-duotone`,
+	children: [(0, import_jsx_runtime.jsx)(`path`, {
+		d: `M20.8412 10.4666C20.5491 10.1778 20.0789 10.1778 19.7868 10.4666L18.1005 12.1333C17.8842 12.3471 17.8185 12.6703 17.934 12.9517C18.0496 13.233 18.3236 13.4167 18.6278 13.4167H19.5269C19.1456 17.2462 15.876 20.25 11.8828 20.25C9.10034 20.25 6.66595 18.7903 5.31804 16.6061C5.10051 16.2536 4.63841 16.1442 4.28591 16.3618C3.93342 16.5793 3.82401 17.0414 4.04154 17.3939C5.65416 20.007 8.56414 21.75 11.8828 21.75C16.6907 21.75 20.6476 18.0892 21.0332 13.4167H22.0002C22.3044 13.4167 22.5784 13.233 22.694 12.9517C22.8096 12.6703 22.7438 12.3471 22.5275 12.1333L20.8412 10.4666Z`,
+		fill: `currentColor`,
+		style: {
+			color: `var(--solar-secondary-color, currentColor)`,
+			opacity: `var(--solar-secondary-opacity, 0.5)`
+		}
+	}), (0, import_jsx_runtime.jsx)(`path`, {
+		d: `M12.0789 2.25C7.2854 2.25 3.34478 5.913 2.96055 10.5833H2.00002C1.69614 10.5833 1.42229 10.7667 1.30655 11.0477C1.19081 11.3287 1.25606 11.6517 1.47178 11.8657L3.15159 13.5324C3.444 13.8225 3.91567 13.8225 4.20808 13.5324L5.88789 11.8657C6.10361 11.6517 6.16886 11.3287 6.05312 11.0477C5.93738 10.7667 5.66353 10.5833 5.35965 10.5833H4.4668C4.84652 6.75167 8.10479 3.75 12.0789 3.75C14.8484 3.75 17.2727 5.20845 18.6156 7.39279C18.8325 7.74565 19.2944 7.85585 19.6473 7.63892C20.0002 7.42199 20.1104 6.96007 19.8934 6.60721C18.2871 3.99427 15.3873 2.25 12.0789 2.25Z`,
+		fill: `currentColor`
+	})]
+}));
+//#endregion
+//#region node_modules/@solar-icons/react/dist/icons/bold-duotone/restart.mjs
+var { forwardRef: t$9 } = await importShared("react");
+var i$6 = t$9((t, i) => (0, import_jsx_runtime.jsxs)(a, {
+	ref: i,
+	...t,
+	iconName: `restart-bold-duotone`,
+	children: [(0, import_jsx_runtime.jsx)(`path`, {
+		fillRule: `evenodd`,
+		clipRule: `evenodd`,
+		d: `M6.87348 7.87338C9.01606 5.7308 12.1674 5.20902 14.8007 6.31041L15.9309 5.18019C12.6515 3.53111 8.55119 4.07435 5.81282 6.81272C2.39573 10.2298 2.39573 15.77 5.81282 19.1871C9.2299 22.6042 14.7701 22.6042 18.1872 19.1871C20.1746 17.1997 21.0057 14.4933 20.6819 11.9072C20.6304 11.4962 20.2555 11.2048 19.8445 11.2562C19.4335 11.3077 19.142 11.6826 19.1935 12.0936C19.4622 14.24 18.7727 16.4802 17.1265 18.1264C14.2952 20.9577 9.70478 20.9577 6.87348 18.1264C4.04217 15.2951 4.04217 10.7047 6.87348 7.87338Z`,
+		fill: `currentColor`,
+		style: {
+			color: `var(--solar-secondary-color, currentColor)`,
+			opacity: `var(--solar-secondary-opacity, 0.5)`
+		}
+	}), (0, import_jsx_runtime.jsx)(`path`, {
+		d: `M18.7212 4.20119C18.7212 3.89785 18.5384 3.62437 18.2582 3.50828C17.9779 3.3922 17.6553 3.45637 17.4408 3.67086L15.9314 5.18028L14.8012 6.3105L13.1982 7.9135C12.9837 8.128 12.9195 8.45059 13.0356 8.73085C13.1517 9.0111 13.4252 9.19383 13.7285 9.19383H17.9712C18.3854 9.19383 18.7212 8.85805 18.7212 8.44383V4.20119Z`,
+		fill: `currentColor`
+	})]
+}));
+//#endregion
+//#region node_modules/@solar-icons/react/dist/icons/bold-duotone/settings-minimalistic.mjs
+var { forwardRef: t$8 } = await importShared("react");
+var i$5 = t$8((t, i) => (0, import_jsx_runtime.jsxs)(a, {
+	ref: i,
+	...t,
+	iconName: `settings-minimalistic-bold-duotone`,
+	children: [(0, import_jsx_runtime.jsx)(`path`, {
+		fillRule: `evenodd`,
+		clipRule: `evenodd`,
+		d: `M12.4277 2C11.3139 2 10.2995 2.6007 8.27081 3.80211L7.58466 4.20846C5.55594 5.40987 4.54158 6.01057 3.98466 7C3.42773 7.98943 3.42773 9.19084 3.42773 11.5937V12.4063C3.42773 14.8092 3.42773 16.0106 3.98466 17C4.54158 17.9894 5.55594 18.5901 7.58466 19.7915L8.27081 20.1979C10.2995 21.3993 11.3139 22 12.4277 22C13.5416 22 14.5559 21.3993 16.5847 20.1979L17.2708 19.7915C19.2995 18.5901 20.3139 17.9894 20.8708 17C21.4277 16.0106 21.4277 14.8092 21.4277 12.4063V11.5937C21.4277 9.19084 21.4277 7.98943 20.8708 7C20.3139 6.01057 19.2995 5.40987 17.2708 4.20846L16.5847 3.80211C14.5559 2.6007 13.5416 2 12.4277 2Z`,
+		fill: `currentColor`,
+		style: {
+			color: `var(--solar-secondary-color, currentColor)`,
+			opacity: `var(--solar-secondary-opacity, 0.5)`
+		}
+	}), (0, import_jsx_runtime.jsx)(`path`, {
+		d: `M12.4277 8.25C10.3567 8.25 8.67773 9.92893 8.67773 12C8.67773 14.0711 10.3567 15.75 12.4277 15.75C14.4988 15.75 16.1777 14.0711 16.1777 12C16.1777 9.92893 14.4988 8.25 12.4277 8.25Z`,
+		fill: `currentColor`
+	})]
+}));
+//#endregion
+//#region node_modules/@solar-icons/react/dist/icons/bold-duotone/shield-warning.mjs
+var { forwardRef: t$7 } = await importShared("react");
+var i$4 = t$7((t, i) => (0, import_jsx_runtime.jsxs)(a, {
+	ref: i,
+	...t,
+	iconName: `shield-warning-bold-duotone`,
 	children: [
 		(0, import_jsx_runtime.jsx)(`path`, {
-			opacity: `0.5`,
 			d: `M3 10.4167C3 7.21907 3 5.62028 3.37752 5.08241C3.75503 4.54454 5.25832 4.02996 8.26491 3.00079L8.83772 2.80472C10.405 2.26824 11.1886 2 12 2C12.8114 2 13.595 2.26824 15.1623 2.80472L15.7351 3.00079C18.7417 4.02996 20.245 4.54454 20.6225 5.08241C21 5.62028 21 7.21907 21 10.4167V11.9914C21 17.6294 16.761 20.3655 14.1014 21.5273C13.38 21.8424 13.0193 22 12 22C10.9807 22 10.62 21.8424 9.89856 21.5273C7.23896 20.3655 3 17.6294 3 11.9914V10.4167Z`,
-			fill: `currentColor`
+			fill: `currentColor`,
+			style: {
+				color: `var(--solar-secondary-color, currentColor)`,
+				opacity: `var(--solar-secondary-opacity, 0.5)`
+			}
 		}),
 		(0, import_jsx_runtime.jsx)(`path`, {
 			d: `M12 7.25C12.4142 7.25 12.75 7.58579 12.75 8V12C12.75 12.4142 12.4142 12.75 12 12.75C11.5858 12.75 11.25 12.4142 11.25 12V8C11.25 7.58579 11.5858 7.25 12 7.25Z`,
@@ -9397,162 +9762,25 @@ var i$11 = t$14((t, i) => (0, import_jsx_runtime.jsxs)(r$30, {
 		})
 	]
 }));
-i$11.displayName = `ShieldWarning`;
 //#endregion
-//#region node_modules/@solar-icons/react-perf/dist/icons/settings/BoldDuotone/SettingsMinimalistic.mjs
-var { forwardRef: t$13 } = await importShared("react");
-var i$10 = t$13((t, i) => (0, import_jsx_runtime.jsxs)(r$30, {
-	ref: i,
-	...t,
-	children: [(0, import_jsx_runtime.jsx)(`path`, {
-		opacity: `0.5`,
-		fillRule: `evenodd`,
-		clipRule: `evenodd`,
-		d: `M12.4277 2C11.3139 2 10.2995 2.6007 8.27081 3.80211L7.58466 4.20846C5.55594 5.40987 4.54158 6.01057 3.98466 7C3.42773 7.98943 3.42773 9.19084 3.42773 11.5937V12.4063C3.42773 14.8092 3.42773 16.0106 3.98466 17C4.54158 17.9894 5.55594 18.5901 7.58466 19.7915L8.27081 20.1979C10.2995 21.3993 11.3139 22 12.4277 22C13.5416 22 14.5559 21.3993 16.5847 20.1979L17.2708 19.7915C19.2995 18.5901 20.3139 17.9894 20.8708 17C21.4277 16.0106 21.4277 14.8092 21.4277 12.4063V11.5937C21.4277 9.19084 21.4277 7.98943 20.8708 7C20.3139 6.01057 19.2995 5.40987 17.2708 4.20846L16.5847 3.80211C14.5559 2.6007 13.5416 2 12.4277 2Z`,
-		fill: `currentColor`
-	}), (0, import_jsx_runtime.jsx)(`path`, {
-		d: `M12.4277 8.25C10.3567 8.25 8.67773 9.92893 8.67773 12C8.67773 14.0711 10.3567 15.75 12.4277 15.75C14.4988 15.75 16.1777 14.0711 16.1777 12C16.1777 9.92893 14.4988 8.25 12.4277 8.25Z`,
-		fill: `currentColor`
-	})]
-}));
-i$10.displayName = `SettingsMinimalistic`;
-//#endregion
-//#region node_modules/@solar-icons/react-perf/dist/icons/ui/BoldDuotone/BoxMinimalistic.mjs
-var { forwardRef: t$12 } = await importShared("react");
-var i$9 = t$12((t, i) => (0, import_jsx_runtime.jsxs)(r$30, {
-	ref: i,
-	...t,
-	children: [
-		(0, import_jsx_runtime.jsx)(`path`, {
-			d: `M8.42229 20.6181C10.1779 21.5395 11.0557 22.0001 12 22.0001V12.0001L2.63802 7.07275C2.62423 7.09491 2.6107 7.11727 2.5974 7.13986C2 8.15436 2 9.41678 2 11.9416V12.0586C2 14.5834 2 15.8459 2.5974 16.8604C3.19479 17.8749 4.27063 18.4395 6.42229 19.5686L8.42229 20.6181Z`,
-			fill: `currentColor`
-		}),
-		(0, import_jsx_runtime.jsx)(`path`, {
-			opacity: `0.7`,
-			d: `M17.5774 4.43152L15.5774 3.38197C13.8218 2.46066 12.944 2 11.9997 2C11.0554 2 10.1776 2.46066 8.42197 3.38197L6.42197 4.43152C4.31821 5.53552 3.24291 6.09982 2.6377 7.07264L11.9997 12L21.3617 7.07264C20.7564 6.09982 19.6811 5.53552 17.5774 4.43152Z`,
-			fill: `currentColor`
-		}),
-		(0, import_jsx_runtime.jsx)(`path`, {
-			opacity: `0.5`,
-			d: `M21.4026 7.13986C21.3893 7.11727 21.3758 7.09491 21.362 7.07275L12 12.0001V22.0001C12.9443 22.0001 13.8221 21.5395 15.5777 20.6181L17.5777 19.5686C19.7294 18.4395 20.8052 17.8749 21.4026 16.8604C22 15.8459 22 14.5834 22 12.0586V11.9416C22 9.41678 22 8.15436 21.4026 7.13986Z`,
-			fill: `currentColor`
-		})
-	]
-}));
-i$9.displayName = `BoxMinimalistic`;
-//#endregion
-//#region node_modules/@solar-icons/react-perf/dist/icons/ui/BoldDuotone/Broom.mjs
-var { forwardRef: t$11 } = await importShared("react");
-var i$8 = t$11((t, i) => (0, import_jsx_runtime.jsxs)(r$30, {
-	ref: i,
-	...t,
-	children: [
-		(0, import_jsx_runtime.jsx)(`path`, {
-			opacity: `0.5`,
-			d: `M22.53 2.53033C22.8229 2.23743 22.8229 1.76256 22.53 1.46967C22.2371 1.17678 21.7622 1.17678 21.4693 1.46967L19.0674 3.87162C19.2692 4.01476 19.4617 4.17674 19.6425 4.35756C19.8232 4.53824 19.985 4.7306 20.1281 4.93221L22.53 2.53033Z`,
-			fill: `currentColor`
-		}),
-		(0, import_jsx_runtime.jsx)(`path`, {
-			opacity: `0.5`,
-			d: `M2.44853 11.4112L3.18962 12.6294C5.22275 15.9716 8.02819 18.777 11.3703 20.8102L12.5886 21.5514C14.4872 22.5205 16.9425 21.8979 18.0027 19.8899C18.5037 18.941 18.9798 17.8776 19.2819 16.8209C19.7699 15.1139 19.9408 13.5611 19.9945 12.4895C20.0266 11.8492 20.0426 11.529 19.8902 11.1334C19.7378 10.7378 19.4738 10.4738 18.9456 9.9457L14.1203 5.12119C13.6288 4.62976 13.383 4.38404 13.0133 4.23177C12.6435 4.07951 12.3489 4.08069 11.7597 4.08306C10.6466 4.08753 8.97556 4.20429 7.17896 4.71789C6.12226 5.01998 5.05883 5.49608 4.11001 5.99706C2.10201 7.05728 1.47943 9.51262 2.44853 11.4112Z`,
-			fill: `currentColor`
-		}),
-		(0, import_jsx_runtime.jsx)(`path`, {
-			d: `M19.6426 4.35756C17.9067 2.62162 15.0922 2.62175 13.3562 4.35764L13.3184 4.39549C13.5498 4.55102 13.774 4.77521 14.1201 5.12119L18.9454 9.9457C19.2472 10.2475 19.4628 10.463 19.6205 10.6662L19.6427 10.644C21.3786 8.90807 21.3785 6.09349 19.6426 4.35756Z`,
-			fill: `currentColor`
-		})
-	]
-}));
-i$8.displayName = `Broom`;
-//#endregion
-//#region node_modules/@solar-icons/react-perf/dist/icons/ui/BoldDuotone/CheckCircle.mjs
-var { forwardRef: t$10 } = await importShared("react");
-var i$7 = t$10((t, i) => (0, import_jsx_runtime.jsxs)(r$30, {
-	ref: i,
-	...t,
-	children: [(0, import_jsx_runtime.jsx)(`path`, {
-		opacity: `0.5`,
-		d: `M22 12C22 17.5228 17.5228 22 12 22C6.47715 22 2 17.5228 2 12C2 6.47715 6.47715 2 12 2C17.5228 2 22 6.47715 22 12Z`,
-		fill: `currentColor`
-	}), (0, import_jsx_runtime.jsx)(`path`, {
-		d: `M16.0303 8.96967C16.3232 9.26256 16.3232 9.73744 16.0303 10.0303L11.0303 15.0303C10.7374 15.3232 10.2626 15.3232 9.96967 15.0303L7.96967 13.0303C7.67678 12.7374 7.67678 12.2626 7.96967 11.9697C8.26256 11.6768 8.73744 11.6768 9.03033 11.9697L10.5 13.4393L12.7348 11.2045L14.9697 8.96967C15.2626 8.67678 15.7374 8.67678 16.0303 8.96967Z`,
-		fill: `currentColor`
-	})]
-}));
-i$7.displayName = `CheckCircle`;
-//#endregion
-//#region node_modules/@solar-icons/react-perf/dist/icons/ui/BoldDuotone/Copy.mjs
-var { forwardRef: t$9 } = await importShared("react");
-var i$6 = t$9((t, i) => (0, import_jsx_runtime.jsxs)(r$30, {
-	ref: i,
-	...t,
-	children: [(0, import_jsx_runtime.jsx)(`path`, {
-		d: `M6.59961 11.3974C6.59961 8.67119 6.59961 7.3081 7.44314 6.46118C8.28667 5.61426 9.64432 5.61426 12.3596 5.61426H15.2396C17.9549 5.61426 19.3125 5.61426 20.1561 6.46118C20.9996 7.3081 20.9996 8.6712 20.9996 11.3974V16.2167C20.9996 18.9429 20.9996 20.306 20.1561 21.1529C19.3125 21.9998 17.9549 21.9998 15.2396 21.9998H12.3596C9.64432 21.9998 8.28667 21.9998 7.44314 21.1529C6.59961 20.306 6.59961 18.9429 6.59961 16.2167V11.3974Z`,
-		fill: `currentColor`
-	}), (0, import_jsx_runtime.jsx)(`path`, {
-		opacity: `0.5`,
-		d: `M4.17157 3.17157C3 4.34315 3 6.22876 3 10V12C3 15.7712 3 17.6569 4.17157 18.8284C4.78913 19.446 5.6051 19.738 6.79105 19.8761C6.59961 19.0353 6.59961 17.8796 6.59961 16.2167V11.3974C6.59961 8.6712 6.59961 7.3081 7.44314 6.46118C8.28667 5.61426 9.64432 5.61426 12.3596 5.61426H15.2396C16.8915 5.61426 18.0409 5.61426 18.8777 5.80494C18.7403 4.61146 18.4484 3.79154 17.8284 3.17157C16.6569 2 14.7712 2 11 2C7.22876 2 5.34315 2 4.17157 3.17157Z`,
-		fill: `currentColor`
-	})]
-}));
-i$6.displayName = `Copy`;
-//#endregion
-//#region node_modules/@solar-icons/react-perf/dist/icons/ui/BoldDuotone/Filter.mjs
-var { forwardRef: t$8 } = await importShared("react");
-var i$5 = t$8((t, i) => (0, import_jsx_runtime.jsxs)(r$30, {
-	ref: i,
-	...t,
-	children: [(0, import_jsx_runtime.jsx)(`path`, {
-		fillRule: `evenodd`,
-		clipRule: `evenodd`,
-		d: `M5 3H19L8.81562 13.1844C8.65593 12.7689 8.39992 12.4122 8.03751 12.0976C7.80967 11.8998 7.49146 11.7206 6.85504 11.3624L3.94202 9.72255C2.99347 9.18858 2.5192 8.9216 2.2596 8.49142C2 8.06124 2 7.54232 2 6.50448V5.81466C2 4.48782 2 3.8244 2.43934 3.4122C2.87868 3 3.58579 3 5 3Z`,
-		fill: `currentColor`
-	}), (0, import_jsx_runtime.jsx)(`path`, {
-		opacity: `0.5`,
-		d: `M21.9998 6.50448V5.81466C21.9998 4.48782 21.9998 3.8244 21.5605 3.4122C21.1211 3 20.414 3 18.9998 3L8.81543 13.1844C8.86481 13.3129 8.90498 13.447 8.93625 13.5872C8.99981 13.8722 8.99981 14.2058 8.99981 14.8729L8.99981 17.5424C8.99981 18.452 8.99981 18.9067 9.25173 19.2613C9.50366 19.6158 9.95109 19.7907 10.846 20.1406C12.7246 20.875 13.6639 21.2422 14.3319 20.8244C14.9998 20.4066 14.9998 19.4519 14.9998 17.5424V14.8729C14.9998 14.2058 14.9998 13.8722 15.0634 13.5872C15.1957 12.9935 15.4878 12.5095 15.9623 12.0976C16.1901 11.8998 16.5083 11.7206 17.1448 11.3624L20.0578 9.72255C21.0063 9.18858 21.4806 8.9216 21.7402 8.49142C21.9998 8.06124 21.9998 7.54232 21.9998 6.50448Z`,
-		fill: `currentColor`
-	})]
-}));
-i$5.displayName = `Filter`;
-//#endregion
-//#region node_modules/@solar-icons/react-perf/dist/icons/ui/BoldDuotone/MenuDots.mjs
-var { forwardRef: t$7 } = await importShared("react");
-var i$4 = t$7((t, i) => (0, import_jsx_runtime.jsxs)(r$30, {
-	ref: i,
-	...t,
-	children: [
-		(0, import_jsx_runtime.jsx)(`path`, {
-			d: `M7 12C7 13.1046 6.10457 14 5 14C3.89543 14 3 13.1046 3 12C3 10.8954 3.89543 10 5 10C6.10457 10 7 10.8954 7 12Z`,
-			fill: `currentColor`
-		}),
-		(0, import_jsx_runtime.jsx)(`path`, {
-			d: `M21 12C21 13.1046 20.1046 14 19 14C17.8954 14 17 13.1046 17 12C17 10.8954 17.8954 10 19 10C20.1046 10 21 10.8954 21 12Z`,
-			fill: `currentColor`
-		}),
-		(0, import_jsx_runtime.jsx)(`path`, {
-			opacity: `0.5`,
-			d: `M14 12C14 13.1046 13.1046 14 12 14C10.8954 14 10 13.1046 10 12C10 10.8954 10.8954 10 12 10C13.1046 10 14 10.8954 14 12Z`,
-			fill: `currentColor`
-		})
-	]
-}));
-i$4.displayName = `MenuDots`;
-//#endregion
-//#region node_modules/@solar-icons/react-perf/dist/icons/ui/BoldDuotone/TrashBin2.mjs
+//#region node_modules/@solar-icons/react/dist/icons/bold-duotone/trash-bin-2.mjs
 var { forwardRef: t$6 } = await importShared("react");
-var i$3 = t$6((t, i) => (0, import_jsx_runtime.jsxs)(r$30, {
+var i$3 = t$6((t, i) => (0, import_jsx_runtime.jsxs)(a, {
 	ref: i,
 	...t,
+	iconName: `trash-bin-2-bold-duotone`,
 	children: [(0, import_jsx_runtime.jsx)(`path`, {
+		d: `M11.6068 21.9998H12.3937C15.1012 21.9998 16.4549 21.9998 17.3351 21.1366C18.2153 20.2734 18.3054 18.8575 18.4855 16.0256L18.745 11.945C18.8427 10.4085 18.8916 9.6402 18.45 9.15335C18.0084 8.6665 17.2628 8.6665 15.7714 8.6665H8.22905C6.73771 8.6665 5.99204 8.6665 5.55047 9.15335C5.10891 9.6402 5.15777 10.4085 5.25549 11.945L5.515 16.0256C5.6951 18.8575 5.78515 20.2734 6.66534 21.1366C7.54553 21.9998 8.89927 21.9998 11.6068 21.9998Z`,
+		fill: `currentColor`,
+		style: {
+			color: `var(--solar-secondary-color, currentColor)`,
+			opacity: `var(--solar-secondary-opacity, 0.5)`
+		}
+	}), (0, import_jsx_runtime.jsx)(`path`, {
 		d: `M2.75 6.16667C2.75 5.70644 3.09538 5.33335 3.52143 5.33335L6.18567 5.3329C6.71502 5.31841 7.18202 4.95482 7.36214 4.41691C7.36688 4.40277 7.37232 4.38532 7.39185 4.32203L7.50665 3.94993C7.5769 3.72179 7.6381 3.52303 7.72375 3.34536C8.06209 2.64349 8.68808 2.1561 9.41147 2.03132C9.59457 1.99973 9.78848 1.99987 10.0111 2.00002H13.4891C13.7117 1.99987 13.9056 1.99973 14.0887 2.03132C14.8121 2.1561 15.4381 2.64349 15.7764 3.34536C15.8621 3.52303 15.9233 3.72179 15.9935 3.94993L16.1083 4.32203C16.1279 4.38532 16.1333 4.40277 16.138 4.41691C16.3182 4.95482 16.8778 5.31886 17.4071 5.33335H19.9786C20.4046 5.33335 20.75 5.70644 20.75 6.16667C20.75 6.62691 20.4046 7 19.9786 7H3.52143C3.09538 7 2.75 6.62691 2.75 6.16667Z`,
 		fill: `currentColor`
-	}), (0, import_jsx_runtime.jsx)(`path`, {
-		opacity: `0.5`,
-		d: `M11.6068 21.9998H12.3937C15.1012 21.9998 16.4549 21.9998 17.3351 21.1366C18.2153 20.2734 18.3054 18.8575 18.4855 16.0256L18.745 11.945C18.8427 10.4085 18.8916 9.6402 18.45 9.15335C18.0084 8.6665 17.2628 8.6665 15.7714 8.6665H8.22905C6.73771 8.6665 5.99204 8.6665 5.55047 9.15335C5.10891 9.6402 5.15777 10.4085 5.25549 11.945L5.515 16.0256C5.6951 18.8575 5.78515 20.2734 6.66534 21.1366C7.54553 21.9998 8.89927 21.9998 11.6068 21.9998Z`,
-		fill: `currentColor`
 	})]
 }));
-i$3.displayName = `TrashBin2`;
 //#endregion
 //#region extension/src/renderer/Utils.ts
 var cacheUrl = (url) => {
@@ -9670,7 +9898,7 @@ function SelectEnv({ id, setPythonPath }) {
 		}) })] }), /* @__PURE__ */ (0, import_jsx_runtime.jsxs)(Button$26, {
 			variant: "tertiary",
 			onPress: fetchList,
-			children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)(i$22, {}), "Refresh"]
+			children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)(i$6, {}), "Refresh"]
 		})]
 	});
 }
@@ -9850,47 +10078,48 @@ function calculateKey(input) {
 	];
 }
 //#endregion
-//#region node_modules/@solar-icons/react-perf/dist/icons/arrows/Bold/AltArrowDown.mjs
+//#region node_modules/@solar-icons/react/dist/icons/bold/alt-arrow-down.mjs
 var { forwardRef: t$5 } = await importShared("react");
-var r$5 = t$5((t, r) => (0, import_jsx_runtime.jsx)(r$30, {
+var r$5 = t$5((t, r) => (0, import_jsx_runtime.jsx)(a, {
 	ref: r,
 	...t,
+	iconName: `alt-arrow-down-bold`,
 	children: (0, import_jsx_runtime.jsx)(`path`, {
 		d: `M12.3704 15.8351L18.8001 9.20467C19.2013 8.79094 18.9581 8 18.4297 8H5.5703C5.04189 8 4.79869 8.79094 5.1999 9.20467L11.6296 15.8351C11.8427 16.0549 12.1573 16.0549 12.3704 15.8351Z`,
 		fill: `currentColor`
 	})
 }));
-r$5.displayName = `AltArrowDown`;
 //#endregion
-//#region node_modules/@solar-icons/react-perf/dist/icons/arrows/Bold/AltArrowUp.mjs
+//#region node_modules/@solar-icons/react/dist/icons/bold/alt-arrow-up.mjs
 var { forwardRef: t$4 } = await importShared("react");
-var r$4 = t$4((t, r) => (0, import_jsx_runtime.jsx)(r$30, {
+var r$4 = t$4((t, r) => (0, import_jsx_runtime.jsx)(a, {
 	ref: r,
 	...t,
+	iconName: `alt-arrow-up-bold`,
 	children: (0, import_jsx_runtime.jsx)(`path`, {
 		d: `M12.3704 8.16485L18.8001 14.7953C19.2013 15.2091 18.9581 16 18.4297 16H5.5703C5.04189 16 4.79869 15.2091 5.1999 14.7953L11.6296 8.16485C11.8427 7.94505 12.1573 7.94505 12.3704 8.16485Z`,
 		fill: `currentColor`
 	})
 }));
-r$4.displayName = `AltArrowUp`;
 //#endregion
-//#region node_modules/@solar-icons/react-perf/dist/icons/ui/Bold/Pin.mjs
+//#region node_modules/@solar-icons/react/dist/icons/bold/pin.mjs
 var { forwardRef: t$3 } = await importShared("react");
-var r$3 = t$3((t, r) => (0, import_jsx_runtime.jsx)(r$30, {
+var r$3 = t$3((t, r) => (0, import_jsx_runtime.jsx)(a, {
 	ref: r,
 	...t,
+	iconName: `pin-bold`,
 	children: (0, import_jsx_runtime.jsx)(`path`, {
 		d: `M19.1835 7.80516L16.2188 4.83755C14.1921 2.8089 13.1788 1.79457 12.0904 2.03468C11.0021 2.2748 10.5086 3.62155 9.5217 6.31506L8.85373 8.1381C8.59063 8.85617 8.45908 9.2152 8.22239 9.49292C8.11619 9.61754 7.99536 9.72887 7.86251 9.82451C7.56644 10.0377 7.19811 10.1392 6.46145 10.3423C4.80107 10.8 3.97088 11.0289 3.65804 11.5721C3.5228 11.8069 3.45242 12.0735 3.45413 12.3446C3.45809 12.9715 4.06698 13.581 5.28476 14.8L6.69935 16.2163L2.22345 20.6964C1.92552 20.9946 1.92552 21.4782 2.22345 21.7764C2.52138 22.0746 3.00443 22.0746 3.30236 21.7764L7.77841 17.2961L9.24441 18.7635C10.4699 19.9902 11.0827 20.6036 11.7134 20.6045C11.9792 20.6049 12.2404 20.5358 12.4713 20.4041C13.0192 20.0914 13.2493 19.2551 13.7095 17.5825C13.9119 16.8472 14.013 16.4795 14.2254 16.1835C14.3184 16.054 14.4262 15.9358 14.5468 15.8314C14.8221 15.593 15.1788 15.459 15.8922 15.191L17.7362 14.4981C20.4 13.4973 21.7319 12.9969 21.9667 11.9115C22.2014 10.826 21.1954 9.81905 19.1835 7.80516Z`,
 		fill: `currentColor`
 	})
 }));
-r$3.displayName = `Pin`;
 //#endregion
-//#region node_modules/@solar-icons/react-perf/dist/icons/video/Bold/SkipNext.mjs
+//#region node_modules/@solar-icons/react/dist/icons/bold/skip-next.mjs
 var { forwardRef: t$2 } = await importShared("react");
-var i$2 = t$2((t, i) => (0, import_jsx_runtime.jsxs)(r$30, {
+var i$2 = t$2((t, i) => (0, import_jsx_runtime.jsxs)(a, {
 	ref: i,
 	...t,
+	iconName: `skip-next-bold`,
 	children: [(0, import_jsx_runtime.jsx)(`path`, {
 		d: `M16.6598 14.6474C18.4467 13.4935 18.4467 10.5065 16.6598 9.35258L5.87083 2.38548C4.13419 1.26402 2 2.72368 2 5.0329V18.9671C2 21.2763 4.13419 22.736 5.87083 21.6145L16.6598 14.6474Z`,
 		fill: `currentColor`
@@ -9899,11 +10128,10 @@ var i$2 = t$2((t, i) => (0, import_jsx_runtime.jsxs)(r$30, {
 		fill: `currentColor`
 	})]
 }));
-i$2.displayName = `SkipNext`;
 //#endregion
 //#region extension/src/renderer/components/Python/PackageManagement/PackageManager/Body/PkgVersions.tsx
 var { Button: Button$25, Chip: Chip$6, Description: Description$17, Input: Input$4, Modal: Modal$7, ProgressBar: ProgressBar$4, ScrollShadow: ScrollShadow$5 } = await importShared("@heroui/react");
-var { memo: memo$7, useCallback: useCallback$15, useEffect: useEffect$28, useMemo: useMemo$13, useState: useState$32 } = await importShared("react");
+var { memo: memo$8, useCallback: useCallback$15, useEffect: useEffect$28, useMemo: useMemo$13, useState: useState$32 } = await importShared("react");
 var calculateUpdateType = (current, target) => {
 	if (isEmpty(target) || isEmpty(current)) return {
 		color: "tertiary",
@@ -9931,7 +10159,7 @@ var calculateUpdateType = (current, target) => {
 		};
 	}
 };
-var PkgVersions = memo$7(({ updated, item, pythonPath }) => {
+var PkgVersions = memo$8(({ updated, item, pythonPath }) => {
 	const [availableVersion, setAvailableVersion] = useState$32(null);
 	const [changingTo, setChangingTo] = useState$32(void 0);
 	const [isLoadingVersions, setIsLoadingVersions] = useState$32(false);
@@ -10098,9 +10326,9 @@ var PkgVersions = memo$7(({ updated, item, pythonPath }) => {
 							variant: "secondary",
 							className: "size-full mr-6",
 							description: "Something goes wrong, please try again!",
-							icon: /* @__PURE__ */ (0, import_jsx_runtime.jsx)(i$11, { className: "size-10 text-warning" })
+							icon: /* @__PURE__ */ (0, import_jsx_runtime.jsx)(i$4, { className: "size-10 text-warning" })
 						}), filteredVersions.length > 150 && /* @__PURE__ */ (0, import_jsx_runtime.jsx)("p", {
-							className: "text-xs text-foreground-400 w-full text-center mt-2",
+							className: "text-xs text-muted w-full text-center mt-2",
 							children: "Showing first 150 versions. Use search to narrow down."
 						})]
 					})]
@@ -10116,7 +10344,7 @@ var PkgVersions = memo$7(({ updated, item, pythonPath }) => {
 			isPending: !!changingTo,
 			onPress: () => setIsOpen(true),
 			isIconOnly: true,
-			children: /* @__PURE__ */ (0, import_jsx_runtime.jsx)(i$9, { className: "size-3.5" })
+			children: /* @__PURE__ */ (0, import_jsx_runtime.jsx)(i$26, { className: "size-3.5" })
 		})
 	})] });
 });
@@ -10167,7 +10395,7 @@ function ActionButtons({ item, removed, pythonPath, isUninstalling, setIsUninsta
 									children: "Uninstall Package"
 								}),
 								/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("p", {
-									className: "text-xs text-default-600",
+									className: "text-xs text-muted",
 									children: [
 										"This runs pip uninstall for \"",
 										item.name,
@@ -10182,7 +10410,7 @@ function ActionButtons({ item, removed, pythonPath, isUninstalling, setIsUninsta
 											children: "Command preview"
 										}),
 										/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("p", {
-											className: "mt-1 break-all font-JetBrainsMono text-xs text-default-700",
+											className: "mt-1 break-all font-JetBrainsMono text-xs text-foreground/80",
 											children: [
 												"\"",
 												pythonPath,
@@ -10196,7 +10424,7 @@ function ActionButtons({ item, removed, pythonPath, isUninstalling, setIsUninsta
 											children: "Package"
 										}),
 										/* @__PURE__ */ (0, import_jsx_runtime.jsx)("p", {
-											className: "mt-1 break-all font-JetBrainsMono text-xs text-default-700",
+											className: "mt-1 break-all font-JetBrainsMono text-xs text-foreground/80",
 											children: item.name
 										}),
 										/* @__PURE__ */ (0, import_jsx_runtime.jsx)("p", {
@@ -10204,7 +10432,7 @@ function ActionButtons({ item, removed, pythonPath, isUninstalling, setIsUninsta
 											children: "Python executable"
 										}),
 										/* @__PURE__ */ (0, import_jsx_runtime.jsx)("p", {
-											className: "mt-1 break-all font-JetBrainsMono text-xs text-default-700",
+											className: "mt-1 break-all font-JetBrainsMono text-xs text-foreground/80",
 											children: pythonPath
 										})
 									]
@@ -10269,7 +10497,7 @@ function TableItem({ item, pythonPath, updated, removed, columnKey, isSelected, 
 		onPress: update,
 		isPending: isUpdating,
 		className: item.isNew ? "text-accent-hover" : "text-success",
-		children: [item.isNew ? /* @__PURE__ */ (0, import_jsx_runtime.jsx)(i$25, {}) : /* @__PURE__ */ (0, import_jsx_runtime.jsx)(i$23, {}), isUpdating ? "Updating..." : item.isNew ? "Install" : "Update"]
+		children: [item.isNew ? /* @__PURE__ */ (0, import_jsx_runtime.jsx)(i$17, {}) : /* @__PURE__ */ (0, import_jsx_runtime.jsx)(i$7, {}), isUpdating ? "Updating..." : item.isNew ? "Install" : "Update"]
 	}) }) : /* @__PURE__ */ (0, import_jsx_runtime.jsx)(TableCell, {});
 	else if (columnKey === "name") return /* @__PURE__ */ (0, import_jsx_runtime.jsx)(TableCell, { children: /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
 		className: "flex flex-col",
@@ -10282,10 +10510,10 @@ function TableItem({ item, pythonPath, updated, removed, columnKey, isSelected, 
 					color: "accent",
 					variant: "tertiary",
 					children: "New"
-				}) : item.updateVersion && /* @__PURE__ */ (0, import_jsx_runtime.jsx)(i$11, { className: `${getUpdateVersionColor(item.version, item.updateVersion)} size-[1.1rem]` })]
+				}) : item.updateVersion && /* @__PURE__ */ (0, import_jsx_runtime.jsx)(i$4, { className: `${getUpdateVersionColor(item.version, item.updateVersion)} size-[1.1rem]` })]
 			})
 		}), /* @__PURE__ */ (0, import_jsx_runtime.jsx)("div", {
-			className: "text-bold text-sm text-default-400",
+			className: "text-bold text-sm text-muted",
 			children: /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
 				className: "flex flex-row items-center gap-x-1 text-xs",
 				children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)("span", { children: item.version }), item.updateVersion && !item.isNew && /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("span", { children: [
@@ -10404,7 +10632,7 @@ function PackageManagerBody({ id, items, isLoading, pythonPath, updated, removed
 							id,
 							setPythonPath
 						}),
-						icon: /* @__PURE__ */ (0, import_jsx_runtime.jsx)(i$12, { className: "size-24 mb-4 text-warning-hover" })
+						icon: /* @__PURE__ */ (0, import_jsx_runtime.jsx)(i$9, { className: "size-24 mb-4 text-warning-hover" })
 					})
 				})
 			})
@@ -10414,8 +10642,8 @@ function PackageManagerBody({ id, items, isLoading, pythonPath, updated, removed
 //#endregion
 //#region extension/src/renderer/components/Python/PackageManagement/PackageManager/Footer/CloseBtn.tsx
 var { Button: Button$22, CloseButton: CloseButton$1, Description: Description$15, Popover: Popover$6 } = await importShared("@heroui/react");
-var { memo: memo$6, useCallback: useCallback$12, useState: useState$29 } = await importShared("react");
-var CloseBtn = memo$6(({ isCheckingUpdates, isUpdating, closePackageManager }) => {
+var { memo: memo$7, useCallback: useCallback$12, useState: useState$29 } = await importShared("react");
+var CloseBtn = memo$7(({ isCheckingUpdates, isUpdating, closePackageManager }) => {
 	const [isOpen, setIsOpen] = useState$29(false);
 	const closePopover = useCallback$12(() => {
 		setIsOpen(false);
@@ -10544,7 +10772,7 @@ var filesIpc = {
 //#endregion
 //#region extension/src/renderer/components/Python/PackageManagement/Requirements/RenderRow.tsx
 var { Button: Button$21, Input: Input$3, ListBox: ListBox$2, Popover: Popover$5, Select: Select$2, Table: Table$1, TextArea, useOverlayState: useOverlayState$7 } = await importShared("@heroui/react");
-var { memo: memo$5, useCallback: useCallback$11, useEffect: useEffect$26, useRef: useRef$6, useState: useState$27 } = await importShared("react");
+var { memo: memo$6, useCallback: useCallback$11, useEffect: useEffect$26, useRef: useRef$6, useState: useState$27 } = await importShared("react");
 var OPERATORS = [
 	{
 		id: "all",
@@ -10579,7 +10807,7 @@ var OPERATORS = [
 		label: "~="
 	}
 ];
-var RenderRow = memo$5(({ item, index, onDelete, onUpdate }) => {
+var RenderRow = memo$6(({ item, index, onDelete, onUpdate }) => {
 	const [localName, setLocalName] = useState$27(item.name || "");
 	const [localVersion, setLocalVersion] = useState$27(item.version || "");
 	const [localOperator, setLocalOperator] = useState$27(item.versionOperator || "all");
@@ -10719,7 +10947,7 @@ var RenderRow = memo$5(({ item, index, onDelete, onUpdate }) => {
 							className: "ml-2",
 							variant: "tertiary",
 							isIconOnly: true,
-							children: /* @__PURE__ */ (0, import_jsx_runtime.jsx)(i$16, {})
+							children: /* @__PURE__ */ (0, import_jsx_runtime.jsx)(i$8, {})
 						})
 					}), /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Popover$5.Content, {
 						placement: "left",
@@ -10744,8 +10972,8 @@ RenderRow.displayName = "RenderRow";
 //#endregion
 //#region extension/src/renderer/components/Python/PackageManagement/Requirements/RenderTable.tsx
 var { EmptyState, ScrollShadow: ScrollShadow$3, Table } = await importShared("@heroui/react");
-var { memo: memo$4, useCallback: useCallback$10 } = await importShared("react");
-var RenderTable = memo$4(({ filteredReqs, setRequirements, scrollRef }) => {
+var { memo: memo$5, useCallback: useCallback$10 } = await importShared("react");
+var RenderTable = memo$5(({ filteredReqs, setRequirements, scrollRef }) => {
 	const handleUpdate = useCallback$10((index, updated) => {
 		setRequirements((prev) => {
 			const newState = [...prev];
@@ -10781,7 +11009,7 @@ var RenderTable = memo$4(({ filteredReqs, setRequirements, scrollRef }) => {
 			] }), /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Table.Body, {
 				renderEmptyState: () => /* @__PURE__ */ (0, import_jsx_runtime.jsxs)(EmptyState, {
 					className: "flex h-full w-full flex-col items-center justify-center gap-y-2 text-center my-4",
-					children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)(i$18, { className: "size-12" }), /* @__PURE__ */ (0, import_jsx_runtime.jsx)("span", {
+					children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)(i$12, { className: "size-12" }), /* @__PURE__ */ (0, import_jsx_runtime.jsx)("span", {
 						className: "text-sm text-muted",
 						children: "No results found"
 					})]
@@ -11012,7 +11240,7 @@ function RequirementsModal({ id, projectPath, setIsReqAvailable, setReqPackageCo
 							variant: "tertiary",
 							onPress: openFilePath,
 							fullWidth: true,
-							children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)(i$15, {}), filePath || "Select or create requirements file"]
+							children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)(i$20, {}), filePath || "Select or create requirements file"]
 						}), /* @__PURE__ */ (0, import_jsx_runtime.jsx)(LynxTooltip, {
 							delay: 300,
 							content: "Deselect requirements file",
@@ -11045,7 +11273,7 @@ function RequirementsModal({ id, projectPath, setIsReqAvailable, setReqPackageCo
 							children: [isImporting ? /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Spinner$7, {
 								size: "sm",
 								color: "current"
-							}) : /* @__PURE__ */ (0, import_jsx_runtime.jsx)(i$24, { className: "size-3.5" }), "Import"]
+							}) : /* @__PURE__ */ (0, import_jsx_runtime.jsx)(i$14, { className: "size-3.5" }), "Import"]
 						}), /* @__PURE__ */ (0, import_jsx_runtime.jsxs)(Button$20, {
 							variant: "secondary",
 							onPress: handleAddRequirement,
@@ -11062,7 +11290,7 @@ function RequirementsModal({ id, projectPath, setIsReqAvailable, setReqPackageCo
 						className: "flex flex-wrap items-center justify-between gap-2",
 						children: [/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
 							className: "flex items-center gap-2 text-warning",
-							children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)(i$11, { className: "size-5" }), /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("span", {
+							children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)(i$4, { className: "size-5" }), /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("span", {
 								className: "text-sm font-medium",
 								children: [
 									conflicts.length,
@@ -11167,7 +11395,7 @@ function RequirementsModal({ id, projectPath, setIsReqAvailable, setReqPackageCo
 					children: /* @__PURE__ */ (0, import_jsx_runtime.jsx)(EmptyStateCard, {
 						variant: "transparent",
 						className: "size-full",
-						icon: /* @__PURE__ */ (0, import_jsx_runtime.jsx)(i$14, { className: "size-20" }),
+						icon: /* @__PURE__ */ (0, import_jsx_runtime.jsx)(i$19, { className: "size-20" }),
 						title: "Select or create a requirements file to continue."
 					})
 				}) : isEmpty(requirements) ? /* @__PURE__ */ (0, import_jsx_runtime.jsx)("div", {
@@ -11194,7 +11422,7 @@ function RequirementsModal({ id, projectPath, setIsReqAvailable, setReqPackageCo
 						}),
 						variant: "transparent",
 						className: "size-full",
-						icon: /* @__PURE__ */ (0, import_jsx_runtime.jsx)(i$15, { className: "size-20" })
+						icon: /* @__PURE__ */ (0, import_jsx_runtime.jsx)(i$20, { className: "size-20" })
 					})
 				}) : /* @__PURE__ */ (0, import_jsx_runtime.jsx)(RenderTable, {
 					scrollRef,
@@ -11218,12 +11446,12 @@ function RequirementsModal({ id, projectPath, setIsReqAvailable, setReqPackageCo
 		size: "sm",
 		variant: "tertiary",
 		onPress: state.open,
-		children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)(i$19, {}), "Requirements"]
+		children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)(i$23, {}), "Requirements"]
 	})] });
 }
 //#endregion
 //#region extension/src/renderer/components/Python/PackageManagement/PackageManager/Header/FilterButton.tsx
-var { Button: Button$19, cn: cn$2, Dropdown: Dropdown$4, Label: Label$15 } = await importShared("@heroui/react");
+var { Button: Button$19, cn: cn$3, Dropdown: Dropdown$4, Label: Label$15 } = await importShared("@heroui/react");
 var { useEffect: useEffect$24, useState: useState$25 } = await importShared("react");
 function FilterButton({ setSelectedFilter, updateAvailable, className }) {
 	const [selectedKeys, setSelectedKeys] = useState$25(/* @__PURE__ */ new Set(["all"]));
@@ -11242,9 +11470,9 @@ function FilterButton({ setSelectedFilter, updateAvailable, className }) {
 		content: "Filter packages",
 		children: /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Button$19, {
 			variant: "tertiary",
-			className: cn$2("shrink-0", className),
+			className: cn$3("shrink-0", className),
 			isIconOnly: true,
-			children: /* @__PURE__ */ (0, import_jsx_runtime.jsx)(i$5, {})
+			children: /* @__PURE__ */ (0, import_jsx_runtime.jsx)(i$16, {})
 		})
 	}), /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Dropdown$4.Popover, { children: /* @__PURE__ */ (0, import_jsx_runtime.jsxs)(Dropdown$4.Menu, {
 		selectionMode: "single",
@@ -11294,51 +11522,57 @@ function FilterButton({ setSelectedFilter, updateAvailable, className }) {
 	}) })] });
 }
 //#endregion
-//#region node_modules/@solar-icons/react-perf/dist/icons/messages/LineDuotone/CheckRead.mjs
+//#region node_modules/@solar-icons/react/dist/icons/line-duotone/check-read.mjs
 var { forwardRef: t$1 } = await importShared("react");
-var i$1 = t$1((t, i) => (0, import_jsx_runtime.jsxs)(r$30, {
+var i$1 = t$1((t, i) => (0, import_jsx_runtime.jsxs)(a, {
 	ref: i,
 	...t,
+	iconName: `check-read-line-duotone`,
 	children: [(0, import_jsx_runtime.jsx)(`path`, {
-		opacity: `0.5`,
 		d: `M4 12.9L7.14286 16.5L15 7.5`,
 		stroke: `currentColor`,
-		strokeWidth: `1.5`,
 		strokeLinecap: `round`,
-		strokeLinejoin: `round`
+		strokeLinejoin: `round`,
+		style: {
+			color: `var(--solar-secondary-color, currentColor)`,
+			opacity: `var(--solar-secondary-opacity, 0.5)`
+		}
 	}), (0, import_jsx_runtime.jsx)(`path`, {
 		d: `M20.0002 7.5625L11.4286 16.5625L11.0002 16`,
 		stroke: `currentColor`,
-		strokeWidth: `1.5`,
 		strokeLinecap: `round`,
 		strokeLinejoin: `round`
 	})]
 }));
-i$1.displayName = `CheckRead`;
 //#endregion
-//#region node_modules/@solar-icons/react-perf/dist/icons/ui/LineDuotone/Pin.mjs
+//#region node_modules/@solar-icons/react/dist/icons/line-duotone/pin.mjs
 var { forwardRef: t } = await importShared("react");
-var i = t((t, i) => (0, import_jsx_runtime.jsxs)(r$30, {
+var i = t((t, i) => (0, import_jsx_runtime.jsxs)(a, {
 	ref: i,
 	...t,
+	iconName: `pin-line-duotone`,
 	children: [(0, import_jsx_runtime.jsx)(`path`, {
-		d: `M15.9894 4.9502L16.52 4.42014L16.52 4.42014L15.9894 4.9502ZM19.0717 8.03562L18.5411 8.56568L18.5411 8.56568L19.0717 8.03562ZM8.73845 19.429L8.20785 19.9591L8.73845 19.429ZM4.62176 15.3081L5.15236 14.7781L4.62176 15.3081ZM17.567 14.9943L17.3032 14.2922L17.567 14.9943ZM15.6499 15.7146L15.9137 16.4167L15.6499 15.7146ZM8.33227 8.38177L7.62805 8.12375H7.62805L8.33227 8.38177ZM9.02673 6.48636L9.73095 6.74438L9.02673 6.48636ZM5.84512 10.6735L6.04445 11.3965H6.04445L5.84512 10.6735ZM7.30174 10.1351L6.86354 9.52646L6.86354 9.52646L7.30174 10.1351ZM7.6759 9.79038L8.24673 10.2768H8.24673L7.6759 9.79038ZM14.2511 16.3805L14.7421 16.9475L14.7421 16.9475L14.2511 16.3805ZM13.3807 18.2012L12.6575 18.0022V18.0022L13.3807 18.2012ZM13.917 16.7466L13.3076 16.3094L13.3076 16.3094L13.917 16.7466ZM2.71854 12.7552L1.96855 12.76V12.76L2.71854 12.7552ZM2.93053 11.9521L2.28061 11.5778H2.28061L2.93053 11.9521ZM11.3053 21.3431L11.3064 20.5931H11.3064L11.3053 21.3431ZM12.0933 21.1347L11.7216 20.4833L11.7216 20.4833L12.0933 21.1347ZM11.6973 2.03606L11.8589 2.76845L11.6973 2.03606ZM15.4588 5.48026L18.5411 8.56568L19.6023 7.50556L16.52 4.42014L15.4588 5.48026ZM9.26905 18.8989L5.15236 14.7781L4.09116 15.8382L8.20785 19.9591L9.26905 18.8989ZM17.3032 14.2922L15.3861 15.0125L15.9137 16.4167L17.8308 15.6964L17.3032 14.2922ZM9.03649 8.63979L9.73095 6.74438L8.32251 6.22834L7.62805 8.12375L9.03649 8.63979ZM6.04445 11.3965C6.75591 11.2003 7.29726 11.0625 7.73995 10.7438L6.86354 9.52646C6.6906 9.65097 6.46608 9.72428 5.64578 9.95044L6.04445 11.3965ZM7.62805 8.12375C7.3351 8.92332 7.24345 9.14153 7.10507 9.30391L8.24673 10.2768C8.60048 9.86175 8.78237 9.33337 9.03649 8.63979L7.62805 8.12375ZM7.73995 10.7438C7.92704 10.6091 8.09719 10.4523 8.24673 10.2768L7.10507 9.30391C7.03377 9.38757 6.95268 9.46229 6.86354 9.52646L7.73995 10.7438ZM15.3861 15.0125C14.697 15.2714 14.1717 15.4571 13.7601 15.8135L14.7421 16.9475C14.9029 16.8082 15.1193 16.7152 15.9137 16.4167L15.3861 15.0125ZM14.1038 18.4001C14.3291 17.5813 14.4022 17.3569 14.5263 17.1838L13.3076 16.3094C12.9903 16.7517 12.853 17.2919 12.6575 18.0022L14.1038 18.4001ZM13.7601 15.8135C13.5904 15.9605 13.4385 16.1269 13.3076 16.3094L14.5263 17.1838C14.5888 17.0968 14.6612 17.0175 14.7421 16.9475L13.7601 15.8135ZM5.15236 14.7781C4.50623 14.1313 4.06806 13.691 3.78374 13.3338C3.49842 12.9753 3.46896 12.8201 3.46852 12.7505L1.96855 12.76C1.97223 13.3422 2.26135 13.8297 2.6101 14.2679C2.95984 14.7073 3.47123 15.2176 4.09116 15.8382L5.15236 14.7781ZM5.64578 9.95044C4.80056 10.1835 4.10403 10.3743 3.58304 10.5835C3.06349 10.792 2.57124 11.0732 2.28061 11.5778L3.58045 12.3264C3.61507 12.2663 3.717 12.146 4.14187 11.9755C4.56531 11.8055 5.16345 11.6394 6.04445 11.3965L5.64578 9.95044ZM3.46852 12.7505C3.46758 12.6016 3.50623 12.4553 3.58045 12.3264L2.28061 11.5778C2.07362 11.9372 1.96593 12.3452 1.96855 12.76L3.46852 12.7505ZM8.20785 19.9591C8.83172 20.5836 9.34472 21.0987 9.78654 21.4506C10.2271 21.8015 10.718 22.0922 11.3042 22.0931L11.3064 20.5931C11.237 20.593 11.0815 20.5644 10.7211 20.2773C10.3619 19.9912 9.91931 19.5499 9.26905 18.8989L8.20785 19.9591ZM12.6575 18.0022C12.4133 18.8897 12.2463 19.4924 12.0752 19.9188C11.9034 20.3467 11.7822 20.4487 11.7216 20.4833L12.4651 21.7861C12.9741 21.4956 13.2573 21.0004 13.4672 20.4775C13.6777 19.9532 13.8695 19.2516 14.1038 18.4001L12.6575 18.0022ZM11.3042 22.0931C11.7113 22.0937 12.1115 21.9879 12.4651 21.7861L11.7216 20.4833C11.5951 20.5555 11.452 20.5933 11.3064 20.5931L11.3042 22.0931ZM18.5411 8.56568C19.6046 9.63022 20.3403 10.3695 20.7918 10.9788C21.2353 11.5774 21.2864 11.8959 21.2322 12.1464L22.6983 12.4634C22.8882 11.5854 22.5383 10.8162 21.997 10.0857C21.4636 9.36592 20.6306 8.53486 19.6023 7.50556L18.5411 8.56568ZM17.8308 15.6964C19.1922 15.1849 20.2941 14.773 21.0771 14.3384C21.8719 13.8973 22.5084 13.3416 22.6983 12.4634L21.2322 12.1464C21.178 12.3968 21.0002 12.6655 20.3492 13.0268C19.6865 13.3946 18.7113 13.7632 17.3032 14.2922L17.8308 15.6964ZM16.52 4.42014C15.4841 3.3832 14.6481 2.54353 13.9246 2.00638C13.1909 1.46165 12.4175 1.10912 11.5357 1.30367L11.8589 2.76845C12.1086 2.71335 12.4278 2.7633 13.0305 3.21075C13.6434 3.66579 14.3877 4.40801 15.4588 5.48026L16.52 4.42014ZM9.73095 6.74438C10.2526 5.32075 10.6162 4.33403 10.9813 3.66315C11.3403 3.00338 11.6091 2.82357 11.8589 2.76845L11.5357 1.30367C10.6541 1.49819 10.1006 2.14332 9.6637 2.94618C9.23286 3.73793 8.82695 4.85154 8.32251 6.22834L9.73095 6.74438Z`,
-		fill: `currentColor`
+		d: `M2 21.9998L6.65323 17.3418`,
+		stroke: `currentColor`,
+		strokeLinecap: `round`,
+		style: {
+			color: `var(--solar-secondary-color, currentColor)`,
+			opacity: `var(--solar-secondary-opacity, 0.5)`
+		}
 	}), (0, import_jsx_runtime.jsx)(`path`, {
-		opacity: `0.5`,
-		d: `M1.4694 21.4697C1.17666 21.7627 1.1769 22.2376 1.46994 22.5304C1.76298 22.8231 2.23786 22.8229 2.5306 22.5298L1.4694 21.4697ZM7.18383 17.8719C7.47657 17.5788 7.47633 17.1039 7.18329 16.8112C6.89024 16.5185 6.41537 16.5187 6.12263 16.8117L7.18383 17.8719ZM2.5306 22.5298L7.18383 17.8719L6.12263 16.8117L1.4694 21.4697L2.5306 22.5298Z`,
-		fill: `currentColor`
+		d: `M19.0717 8.03562L15.9894 4.9502C13.8824 2.84101 12.8289 1.78641 11.6973 2.03606C10.5658 2.28571 10.0528 3.68593 9.02673 6.48636L8.33227 8.38177C8.05874 9.12835 7.92197 9.50164 7.6759 9.79038C7.56548 9.91994 7.43986 10.0357 7.30174 10.1351C6.99393 10.3567 6.61099 10.4623 5.84512 10.6735C4.11889 11.1494 3.25578 11.3873 2.93053 11.9521C2.78993 12.1962 2.71676 12.4734 2.71854 12.7552C2.72266 13.4071 3.35569 14.0408 4.62176 15.3081L8.73845 19.429C10.0126 20.7044 10.6496 21.3421 11.3053 21.3431C11.5816 21.3435 11.8533 21.2717 12.0933 21.1347C12.663 20.8096 12.9022 19.9401 13.3807 18.2012C13.591 17.4366 13.6962 17.0543 13.917 16.7466C14.0136 16.6119 14.1258 16.489 14.2511 16.3805C14.5373 16.1326 14.9082 15.9933 15.6499 15.7146L17.567 14.9943C20.3365 13.9537 21.7212 13.4335 21.9652 12.3049C22.2093 11.1764 21.1634 10.1295 19.0717 8.03562Z`,
+		stroke: `currentColor`,
+		strokeLinecap: `round`
 	})]
 }));
-i.displayName = `Pin`;
 //#endregion
 //#region src/renderer/mainWindow/components/CopyClipboard.tsx
 var { Button: Button$18 } = await importShared("@heroui/react");
-var { memo: memo$3, useCallback: useCallback$9, useEffect: useEffect$23, useRef: useRef$4, useState: useState$24 } = await importShared("react");
+var { memo: memo$4, useCallback: useCallback$9, useEffect: useEffect$23, useRef: useRef$4, useState: useState$24 } = await importShared("react");
 /**
 * A reusable button component that copies text to clipboard and shows a success state.
 */
-var CopyClipboard = memo$3(({ showTooltip = true, tooltipTitle, contentToCopy, className, onCopy }) => {
+var CopyClipboard = memo$4(({ showTooltip = true, tooltipTitle, contentToCopy, className, onCopy }) => {
 	const [copied, setCopied] = useState$24(false);
 	const timeoutRef = useRef$4(null);
 	useEffect$23(() => {
@@ -11367,7 +11601,7 @@ var CopyClipboard = memo$3(({ showTooltip = true, tooltipTitle, contentToCopy, c
 			onPress: handleCopy,
 			className,
 			isIconOnly: true,
-			children: copied ? /* @__PURE__ */ (0, import_jsx_runtime.jsx)(i$1, { className: "size-5 animate-appearance-in" }) : /* @__PURE__ */ (0, import_jsx_runtime.jsx)(i$6, { className: "size-4 animate-appearance-in" })
+			children: copied ? /* @__PURE__ */ (0, import_jsx_runtime.jsx)(i$1, { className: "size-5 animate-appearance-in" }) : /* @__PURE__ */ (0, import_jsx_runtime.jsx)(i$22, { className: "size-4 animate-appearance-in" })
 		})
 	});
 });
@@ -11377,9 +11611,10 @@ var { Button: Button$17, Chip: Chip$3, Description: Description$14, Disclosure, 
 var { useEffect: useEffect$22, useRef: useRef$3, useState: useState$23 } = await importShared("react");
 var buildPackageString = (pkg) => {
 	let pkgStr;
-	if (pkg.url) if (pkg.originalLine && pkg.originalLine.includes(" @ ")) pkgStr = `${pkg.name} @ ${pkg.url}`;
-	else pkgStr = pkg.url;
-	else {
+	if (pkg.url) {
+		if (pkg.originalLine && pkg.originalLine.includes(" @ ")) pkgStr = `${pkg.name} @ ${pkg.url}`;
+		else pkgStr = pkg.url;
+	} else {
 		pkgStr = pkg.name;
 		if (pkg.extras && pkg.extras.length > 0) pkgStr += `[${pkg.extras.join(",")}]`;
 		if (pkg.version) pkgStr += `${pkg.versionOperator || "=="}${pkg.version}`;
@@ -11529,12 +11764,12 @@ function Installer({ isOpen, setInstallCommand, setIsInstallDisabled, setPackage
 						size: "sm",
 						variant: "tertiary",
 						onPress: handleFileSelect,
-						children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)(i$24, {}), "Import requirements files"]
+						children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)(i$14, {}), "Import requirements files"]
 					}), /* @__PURE__ */ (0, import_jsx_runtime.jsxs)(Button$17, {
 						size: "sm",
 						variant: "tertiary",
 						onPress: handleRequirementsInstallSelect,
-						children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)(i$26, {}), "Install requirements files"]
+						children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)(i$18, {}), "Install requirements files"]
 					})]
 				}), (!isEmpty(packages) || requirementsFilePaths.length > 0) && /* @__PURE__ */ (0, import_jsx_runtime.jsxs)(Button$17, {
 					onPress: () => {
@@ -11546,7 +11781,7 @@ function Installer({ isOpen, setInstallCommand, setIsInstallDisabled, setPackage
 					},
 					size: "sm",
 					variant: "danger-soft",
-					children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)(i$8, { className: "size-3.5" }), "Clear all"]
+					children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)(i$25, { className: "size-3.5" }), "Clear all"]
 				})]
 			}),
 			/* @__PURE__ */ (0, import_jsx_runtime.jsxs)(TextField$1, {
@@ -11621,7 +11856,7 @@ function Installer({ isOpen, setInstallCommand, setIsInstallDisabled, setPackage
 									onPress: () => handleEditItem(pkg),
 									className: "size-4 shrink-0 opacity-50 transition-opacity group-hover:opacity-100 text-foreground",
 									isIconOnly: true,
-									children: /* @__PURE__ */ (0, import_jsx_runtime.jsx)(i$16, { className: "size-3" })
+									children: /* @__PURE__ */ (0, import_jsx_runtime.jsx)(i$8, { className: "size-3" })
 								})
 							}),
 							/* @__PURE__ */ (0, import_jsx_runtime.jsx)(LynxTooltip, {
@@ -11651,7 +11886,7 @@ function Installer({ isOpen, setInstallCommand, setIsInstallDisabled, setPackage
 				className: "flex flex-col items-center justify-center gap-2 rounded-2xl p-8 text-center border-2 border-dashed border-content-quaternary/30",
 				variant: "secondary",
 				children: [
-					/* @__PURE__ */ (0, import_jsx_runtime.jsx)(i$9, { className: "size-10 text-yellow-600" }),
+					/* @__PURE__ */ (0, import_jsx_runtime.jsx)(i$26, { className: "size-10 text-yellow-600" }),
 					/* @__PURE__ */ (0, import_jsx_runtime.jsx)("p", {
 						className: "text-sm text-content-secondary",
 						children: "No packages added yet"
@@ -11822,7 +12057,7 @@ function InstallerModal$1({ refresh, pythonPath }) {
 					className: "text-base font-semibold",
 					children: "Package Installer"
 				}), (packageCount > 0 || isRequirementsInstall) && /* @__PURE__ */ (0, import_jsx_runtime.jsx)("span", {
-					className: "rounded-full bg-primary/10 px-2 py-0.5 text-xs font-medium text-primary",
+					className: "rounded-full bg-accent/10 px-2 py-0.5 text-xs font-medium text-accent",
 					children: isRequirementsInstall ? `${requirementsFileCount || 1} requirements file${requirementsFileCount !== 1 ? "s" : ""}` : `${packageCount} selected`
 				})]
 			}),
@@ -11863,7 +12098,7 @@ function InstallerModal$1({ refresh, pythonPath }) {
 						onPress: handleInstall,
 						isDisabled: isInstallDisabled,
 						fullWidth: true,
-						children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)(i$26, {}), installing ? "Installing…" : isRequirementsInstall ? "Install Requirements" : `Install${packageCount > 0 ? ` ${packageCount} Package${packageCount !== 1 ? "s" : ""}` : " Packages"}`]
+						children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)(i$18, {}), installing ? "Installing…" : isRequirementsInstall ? "Install Requirements" : `Install${packageCount > 0 ? ` ${packageCount} Package${packageCount !== 1 ? "s" : ""}` : " Packages"}`]
 					})]
 				})]
 			})
@@ -11918,9 +12153,7 @@ function UpdateButton({ packagesUpdate, update, isUpdating, checkForUpdates, che
 				case "req":
 					percentage = checkedCount.length / reqPackageCount;
 					break;
-				case "all":
-					percentage = checkedCount.length / allPackageCount;
-					break;
+				case "all": percentage = checkedCount.length / allPackageCount;
 			}
 			setProgressValue(percentage * 100);
 		}
@@ -11945,7 +12178,7 @@ function UpdateButton({ packagesUpdate, update, isUpdating, checkForUpdates, che
 		variant: "secondary",
 		isPending: isUpdating,
 		isDisabled: selectedKeys !== "all" && selectedKeys.size === 0,
-		children: [!isUpdating && /* @__PURE__ */ (0, import_jsx_runtime.jsx)(i$26, {}), isUpdating ? /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("span", { children: [
+		children: [!isUpdating && /* @__PURE__ */ (0, import_jsx_runtime.jsx)(i$18, {}), isUpdating ? /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("span", { children: [
 			"Updating (",
 			selectedCount,
 			")..."
@@ -11955,7 +12188,7 @@ function UpdateButton({ packagesUpdate, update, isUpdating, checkForUpdates, che
 		variant: "secondary",
 		onPress: checkForUpdate,
 		isPending: checkingUpdates,
-		children: [!checkingUpdates && /* @__PURE__ */ (0, import_jsx_runtime.jsx)(i$13, {}), labelsMap[selectedOptionValue]]
+		children: [!checkingUpdates && /* @__PURE__ */ (0, import_jsx_runtime.jsx)(i$11, {}), labelsMap[selectedOptionValue]]
 	}), /* @__PURE__ */ (0, import_jsx_runtime.jsxs)(Dropdown$3, { children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)(Button$15, {
 		size: "sm",
 		variant: "tertiary",
@@ -12290,7 +12523,8 @@ var createDefaultTerminalState = () => ({
 	cdHistory: [],
 	quickCommands: [],
 	sendYWithExit: false,
-	openLinkNewTab: false
+	openLinkNewTab: false,
+	autoExitSignalBeforeKill: false
 });
 var terminalSlice = createSlice({
 	initialState: createDefaultTerminalState(),
@@ -12505,7 +12739,10 @@ var appChannels = {
 	checkGitInstalled: "app:checkGitInstalled",
 	checkPwsh7Installed: "app:checkPwsh7Installed",
 	disableLoadingAnimations: "app:disableLoadingAnimations",
-	onOnline: "app:onOnline"
+	onOnline: "app:onOnline",
+	getCliArgs: "app:getCliArgs",
+	getProcessMetrics: "app:getProcessMetrics",
+	logProcessMetrics: "app:logProcessMetrics"
 };
 //#endregion
 //#region src/renderer/shared/ipc/application.ts
@@ -12518,7 +12755,8 @@ var applicationIpc = {
 		setProgressBar: (progress, options) => lynxIpc.send(appChannels.setProgressBar, progress, options),
 		updateDownload: () => lynxIpc.send(appChannels.updateDownload),
 		updateCancel: () => lynxIpc.send(appChannels.updateCancel),
-		updateInstall: () => lynxIpc.send(appChannels.updateInstall)
+		updateInstall: () => lynxIpc.send(appChannels.updateInstall),
+		logProcessMetrics: () => lynxIpc.send(appChannels.logProcessMetrics)
 	},
 	invoke: {
 		getSystemDarkMode: () => lynxIpc.invoke(appChannels.getSystemDarkMode),
@@ -12529,7 +12767,9 @@ var applicationIpc = {
 		isValidDataPath: (dir) => lynxIpc.invoke(appChannels.isValidDataPath, dir),
 		checkGitInstalled: () => lynxIpc.invoke(appChannels.checkGitInstalled),
 		checkPwsh7Installed: () => lynxIpc.invoke(appChannels.checkPwsh7Installed),
-		disableLoadingAnimations: () => lynxIpc.invoke(appChannels.disableLoadingAnimations)
+		disableLoadingAnimations: () => lynxIpc.invoke(appChannels.disableLoadingAnimations),
+		getCliArgs: () => lynxIpc.invoke(appChannels.getCliArgs),
+		getProcessMetrics: () => lynxIpc.invoke(appChannels.getProcessMetrics)
 	},
 	on: {
 		windowStateChange: (result) => lynxIpc.on(appChannels.onChangeState, result),
@@ -16041,9 +16281,7 @@ var Ua$1 = q$1((Pr, Ta) => {
 					case 18:
 						for (l = ue(e, 7, 11); l; --l) X[f++] = 0;
 						break;
-					default:
-						X[f++] = v;
-						break;
+					default: X[f++] = v;
 				}
 			}
 			Ee(r, X, 0, n), Ee(t, X, n, a);
@@ -18361,9 +18599,7 @@ var Ua$1 = q$1((Pr, Ta) => {
 				case 3:
 					this.names = [];
 					break;
-				default:
-					this.names = [];
-					break;
+				default: this.names = [];
 			}
 		}
 		rt.prototype.nameToGlyphIndex = function(e) {
@@ -20280,9 +20516,7 @@ var Ua$1 = q$1((Pr, Ta) => {
 			switch (e) {
 				case 0: return st;
 				case 1: return Pi[t] || Di[r];
-				case 3:
-					if (r === 1 || r === 10) return st;
-					break;
+				case 3: if (r === 1 || r === 10) return st;
 			}
 		}
 		function Mi(e, r, t) {
@@ -21173,7 +21407,6 @@ var Ua$1 = q$1((Pr, Ta) => {
 				case 2.5:
 					t.numberOfGlyphs = n.parseUShort(), t.offset = new Array(t.numberOfGlyphs);
 					for (var f = 0; f < t.numberOfGlyphs; f++) t.offset[f] = n.parseChar();
-					break;
 			}
 			return t;
 		}
@@ -23703,9 +23936,7 @@ var Ua$1 = q$1((Pr, Ta) => {
 					case "GSUB":
 						y = R;
 						break;
-					case "meta":
-						G = R;
-						break;
+					case "meta": G = R;
 				}
 			}
 			var ce = J(a, O);
@@ -23923,14 +24154,14 @@ var Ba$1 = q$1((zf, Aa) => {
 	var cl = wa(), We = Symbol("max"), Ae = Symbol("length"), er = Symbol("lengthCalculator"), dr = Symbol("allowStale"), Ve = Symbol("maxAge"), Ie = Symbol("dispose"), Ca = Symbol("noDisposeOnSet"), re = Symbol("lruList"), Ue = Symbol("cache"), Ia = Symbol("updateAgeOnGet"), yt = () => 1, bt = class {
 		constructor(o) {
 			if (typeof o == "number" && (o = { max: o }), o || (o = {}), o.max && (typeof o.max != "number" || o.max < 0)) throw new TypeError("max must be a non-negative number");
-			this[We] = o.max || Infinity;
+			this[We] = o.max || 1 / 0;
 			let h = o.length || yt;
 			if (this[er] = typeof h != "function" ? yt : h, this[dr] = o.stale || !1, o.maxAge && typeof o.maxAge != "number") throw new TypeError("maxAge must be a number");
 			this[Ve] = o.maxAge || 0, this[Ie] = o.dispose, this[Ca] = o.noDisposeOnSet || !1, this[Ia] = o.updateAgeOnGet || !1, this.reset();
 		}
 		set max(o) {
 			if (typeof o != "number" || o < 0) throw new TypeError("max must be a non-negative number");
-			this[We] = o || Infinity, pr(this);
+			this[We] = o || 1 / 0, pr(this);
 		}
 		get max() {
 			return this[We];
@@ -25156,9 +25387,7 @@ var as$2 = q$1((Vt) => {
 		switch (s) {
 			case 0: return Wt;
 			case 1: return Xl[c] || Vl[o];
-			case 3:
-				if (o === 1 || o === 10) return Wt;
-				break;
+			case 3: if (o === 1 || o === 10) return Wt;
 		}
 	}
 	function jl(s, o) {
@@ -25566,9 +25795,7 @@ var Ts$2 = ol$1(q$1((mr) => {
 								break;
 						}
 						break;
-					case 8:
-						for (let [B, W] of U.subtables.entries()) I.push(Lf.default(W, B));
-						break;
+					case 8: for (let [B, W] of U.subtables.entries()) I.push(Lf.default(W, B));
 				}
 				let z = If.default(kf.default(I));
 				this._lookupTrees.push({
@@ -25640,7 +25867,7 @@ var Ts$2 = ol$1(q$1((mr) => {
 		_getNextLookup(o, c) {
 			let h = {
 				index: null,
-				first: Infinity,
+				first: 1 / 0,
 				last: -1
 			};
 			for (let p = 0; p < o.length; p++) {
@@ -25948,12 +26175,10 @@ var o = class {
 						value: a || this._pr
 					};
 					break;
-				case 3:
-					this.progress = {
-						state: r,
-						value: this._pr
-					};
-					break;
+				case 3: this.progress = {
+					state: r,
+					value: this._pr
+				};
 			}
 			return !0;
 		}), this._onChange = new t._core._onData.constructor(), this.onChange = this._onChange.event;
@@ -28368,7 +28593,7 @@ var be$1 = class {
 var Lt$1 = typeof process < "u" && "title" in process;
 var Ze$1 = Lt$1 ? "node" : navigator.userAgent;
 var bi$1 = Lt$1 ? "node" : navigator.platform;
-var cn$1 = Ze$1.includes("Firefox");
+var cn$2 = Ze$1.includes("Firefox");
 var dn$1 = Ze$1.includes("Edge");
 var vi$1 = /^((?!chrome|android).)*safari/i.test(Ze$1);
 function hn$1() {
@@ -28710,7 +28935,7 @@ var At$1 = class {
 	}
 };
 var gn$1 = .5;
-var St$1 = cn$1 || dn$1 ? "bottom" : "ideographic";
+var St$1 = cn$2 || dn$1 ? "bottom" : "ideographic";
 var Hr = {
 	"▀": [{
 		x: 0,
@@ -30617,9 +30842,7 @@ var ae$1 = class i {
 				let r = he$1.toColorRGB(t);
 				o = X$1.toColor(r[0], r[1], r[2]);
 				break;
-			default:
-				n ? o = Ue$1.opaque(this._config.colors.foreground) : o = this._config.colors.background;
-				break;
+			default: n ? o = Ue$1.opaque(this._config.colors.foreground) : o = this._config.colors.background;
 		}
 		return this._config.allowTransparency || (o = Ue$1.opaque(o)), o;
 	}
@@ -30729,9 +30952,7 @@ var ae$1 = class i {
 							Ir
 						]), this._tmpCtx.moveTo(N, P), this._tmpCtx.lineTo(ne, P);
 						break;
-					default:
-						this._tmpCtx.moveTo(N, P), this._tmpCtx.lineTo(ne, P);
-						break;
+					default: this._tmpCtx.moveTo(N, P), this._tmpCtx.lineTo(ne, P);
 				}
 				this._tmpCtx.stroke(), this._tmpCtx.restore();
 			}
@@ -38655,7 +38876,7 @@ var un = class un {
 	}
 };
 un._nextId = 1;
-var cn = un;
+var cn$1 = un;
 var ne = {};
 var Je = ne.B;
 ne[0] = {
@@ -39006,7 +39227,7 @@ var $i = class {
 		this.markers.length = 0, this._isClearing = !1;
 	}
 	addMarker(t) {
-		let e = new cn(t);
+		let e = new cn$1(t);
 		return this.markers.push(e), e.register(this.lines.onTrim((i) => {
 			e.line -= i, e.line < 0 && e.dispose();
 		})), e.register(this.lines.onInsert((i) => {
@@ -39251,9 +39472,7 @@ var dn = class extends D {
 			case "cols":
 				if (!i && i !== 0) throw new Error(`${e} must be numeric, value: ${i}`);
 				break;
-			case "windowsPty":
-				i = i ?? {};
-				break;
+			case "windowsPty": i = i ?? {};
 		}
 		return i;
 	}
@@ -40150,7 +40369,6 @@ var bn = class extends D {
 				case 5:
 					if (n = e[this._parseStack.chunkPos], a = this._oscParser.end(n !== 24 && n !== 26, r), a) return a;
 					n === 27 && (this._parseStack.transition |= 1), this._params.reset(), this._params.addParam(0), this._collect = 0;
-					break;
 			}
 			this._parseStack.state = 0, l = this._parseStack.chunkPos + 1, this.precedingJoinState = 0, this.currentState = this._parseStack.transition & 15;
 		}
@@ -40245,7 +40463,6 @@ var bn = class extends D {
 				case 6:
 					if (a = this._oscParser.end(n !== 24 && n !== 26), a) return this._preserveStack(5, [], 0, o, u), a;
 					n === 27 && (o |= 1), this._params.reset(), this._params.addParam(0), this._collect = 0, this.precedingJoinState = 0;
-					break;
 			}
 			this.currentState = o & 15;
 		}
@@ -40709,7 +40926,6 @@ var vn = class extends D {
 			case 3:
 				let n = this._activeBuffer.lines.length - this._bufferService.rows;
 				n > 0 && (this._activeBuffer.lines.trimStart(n), this._activeBuffer.ybase = Math.max(this._activeBuffer.ybase - n, 0), this._activeBuffer.ydisp = Math.max(this._activeBuffer.ydisp - n, 0), this._onScroll.fire(0));
-				break;
 		}
 		return !0;
 	}
@@ -40721,9 +40937,7 @@ var vn = class extends D {
 			case 1:
 				this._eraseInBufferLine(this._activeBuffer.y, 0, this._activeBuffer.x + 1, !1, i);
 				break;
-			case 2:
-				this._eraseInBufferLine(this._activeBuffer.y, 0, this._bufferService.cols, !0, i);
-				break;
+			case 2: this._eraseInBufferLine(this._activeBuffer.y, 0, this._bufferService.cols, !0, i);
 		}
 		return this._dirtyRowTracker.markDirty(this._activeBuffer.y), !0;
 	}
@@ -41049,7 +41263,6 @@ var vn = class extends D {
 			case 6:
 				let i = this._activeBuffer.y + 1, r = this._activeBuffer.x + 1;
 				this._coreService.triggerDataEvent(`${b.ESC}[${i};${r}R`);
-				break;
 		}
 		return !0;
 	}
@@ -41058,11 +41271,6 @@ var vn = class extends D {
 			case 6:
 				let i = this._activeBuffer.y + 1, r = this._activeBuffer.x + 1;
 				this._coreService.triggerDataEvent(`${b.ESC}[?${i};${r}R`);
-				break;
-			case 15: break;
-			case 25: break;
-			case 26: break;
-			case 53: break;
 		}
 		return !0;
 	}
@@ -41083,9 +41291,7 @@ var vn = class extends D {
 					this._coreService.decPrivateModes.cursorStyle = "underline";
 					break;
 				case 5:
-				case 6:
-					this._coreService.decPrivateModes.cursorStyle = "bar";
-					break;
+				case 6: this._coreService.decPrivateModes.cursorStyle = "bar";
 			}
 			let r = i % 2 === 1;
 			this._coreService.decPrivateModes.cursorBlink = r;
@@ -41112,9 +41318,7 @@ var vn = class extends D {
 			case 22:
 				(i === 0 || i === 2) && (this._windowTitleStack.push(this._windowTitle), this._windowTitleStack.length > _l && this._windowTitleStack.shift()), (i === 0 || i === 1) && (this._iconNameStack.push(this._iconName), this._iconNameStack.length > _l && this._iconNameStack.shift());
 				break;
-			case 23:
-				(i === 0 || i === 2) && this._windowTitleStack.length && this.setTitle(this._windowTitleStack.pop()), (i === 0 || i === 1) && this._iconNameStack.length && this.setIconName(this._iconNameStack.pop());
-				break;
+			case 23: (i === 0 || i === 2) && this._windowTitleStack.length && this.setTitle(this._windowTitleStack.pop()), (i === 0 || i === 1) && this._iconNameStack.length && this.setIconName(this._iconNameStack.pop());
 		}
 		return !0;
 	}
@@ -41637,21 +41841,19 @@ function Il(s, t, e, i) {
 		case 123:
 			n ? r.key = b.ESC + "[24;" + (n + 1) + "~" : r.key = b.ESC + "[24~";
 			break;
-		default:
-			if (s.ctrlKey && !s.shiftKey && !s.altKey && !s.metaKey) s.keyCode >= 65 && s.keyCode <= 90 ? r.key = String.fromCharCode(s.keyCode - 64) : s.keyCode === 32 ? r.key = b.NUL : s.keyCode >= 51 && s.keyCode <= 55 ? r.key = String.fromCharCode(s.keyCode - 51 + 27) : s.keyCode === 56 ? r.key = b.DEL : s.keyCode === 219 ? r.key = b.ESC : s.keyCode === 220 ? r.key = b.FS : s.keyCode === 221 && (r.key = b.GS);
-			else if ((!e || i) && s.altKey && !s.metaKey) {
-				let l = gc[s.keyCode]?.[s.shiftKey ? 1 : 0];
-				if (l) r.key = b.ESC + l;
-				else if (s.keyCode >= 65 && s.keyCode <= 90) {
-					let a = s.ctrlKey ? s.keyCode - 64 : s.keyCode + 32, u = String.fromCharCode(a);
-					s.shiftKey && (u = u.toUpperCase()), r.key = b.ESC + u;
-				} else if (s.keyCode === 32) r.key = b.ESC + (s.ctrlKey ? b.NUL : " ");
-				else if (s.key === "Dead" && s.code.startsWith("Key")) {
-					let a = s.code.slice(3, 4);
-					s.shiftKey || (a = a.toLowerCase()), r.key = b.ESC + a, r.cancel = !0;
-				}
-			} else e && !s.altKey && !s.ctrlKey && !s.shiftKey && s.metaKey ? s.keyCode === 65 && (r.type = 1) : s.key && !s.ctrlKey && !s.altKey && !s.metaKey && s.keyCode >= 48 && s.key.length === 1 ? r.key = s.key : s.key && s.ctrlKey && (s.key === "_" && (r.key = b.US), s.key === "@" && (r.key = b.NUL));
-			break;
+		default: if (s.ctrlKey && !s.shiftKey && !s.altKey && !s.metaKey) s.keyCode >= 65 && s.keyCode <= 90 ? r.key = String.fromCharCode(s.keyCode - 64) : s.keyCode === 32 ? r.key = b.NUL : s.keyCode >= 51 && s.keyCode <= 55 ? r.key = String.fromCharCode(s.keyCode - 51 + 27) : s.keyCode === 56 ? r.key = b.DEL : s.keyCode === 219 ? r.key = b.ESC : s.keyCode === 220 ? r.key = b.FS : s.keyCode === 221 && (r.key = b.GS);
+		else if ((!e || i) && s.altKey && !s.metaKey) {
+			let l = gc[s.keyCode]?.[s.shiftKey ? 1 : 0];
+			if (l) r.key = b.ESC + l;
+			else if (s.keyCode >= 65 && s.keyCode <= 90) {
+				let a = s.ctrlKey ? s.keyCode - 64 : s.keyCode + 32, u = String.fromCharCode(a);
+				s.shiftKey && (u = u.toUpperCase()), r.key = b.ESC + u;
+			} else if (s.keyCode === 32) r.key = b.ESC + (s.ctrlKey ? b.NUL : " ");
+			else if (s.key === "Dead" && s.code.startsWith("Key")) {
+				let a = s.code.slice(3, 4);
+				s.shiftKey || (a = a.toLowerCase()), r.key = b.ESC + a, r.cancel = !0;
+			}
+		} else e && !s.altKey && !s.ctrlKey && !s.shiftKey && s.metaKey ? s.keyCode === 65 && (r.type = 1) : s.key && !s.ctrlKey && !s.altKey && !s.metaKey && s.keyCode >= 48 && s.key.length === 1 ? r.key = s.key : s.key && s.ctrlKey && (s.key === "_" && (r.key = b.US), s.key === "@" && (r.key = b.NUL));
 	}
 	return r;
 }
@@ -42208,9 +42410,7 @@ var yn = class extends Sn {
 						this._themeService.modifyColors((a) => a[l] = j.toColor(...i.color));
 					}
 					break;
-				case 2:
-					this._themeService.restoreColor(i.index);
-					break;
+				case 2: this._themeService.restoreColor(i.index);
 			}
 		}
 	}
@@ -42768,9 +42968,7 @@ var Dl = class extends D {
 			case "DRAG":
 				e = "drag";
 				break;
-			case "ANY":
-				e = "any";
-				break;
+			case "ANY": e = "any";
 		}
 		return {
 			applicationCursorKeysMode: t.applicationCursorKeys,
@@ -42908,10 +43106,10 @@ var Dl = class extends D {
 		};
 	}
 	_verifyIntegers(...t) {
-		for (Ue of t) if (Ue === Infinity || isNaN(Ue) || Ue % 1 !== 0) throw new Error("This API only accepts integers");
+		for (Ue of t) if (Ue === 1 / 0 || isNaN(Ue) || Ue % 1 !== 0) throw new Error("This API only accepts integers");
 	}
 	_verifyPositiveIntegers(...t) {
-		for (Ue of t) if (Ue && (Ue === Infinity || isNaN(Ue) || Ue % 1 !== 0 || Ue < 0)) throw new Error("This API only accepts positive integers");
+		for (Ue of t) if (Ue && (Ue === 1 / 0 || isNaN(Ue) || Ue % 1 !== 0 || Ue < 0)) throw new Error("This API only accepts positive integers");
 	}
 };
 //#endregion
@@ -43141,14 +43339,15 @@ function createToastFunction(queue) {
 }
 //#endregion
 //#region src/renderer/mainWindow/layouts/ToastProviders.tsx
-var { Toast, ToastContent, ToastDescription, ToastIndicator, ToastQueue, ToastTitle } = await importShared("@heroui/react");
-var { memo: memo$2 } = await importShared("react");
+var { cn, Toast, ToastContent, ToastDescription, ToastIndicator, ToastQueue, ToastTitle } = await importShared("@heroui/react");
+var { memo: memo$3 } = await importShared("react");
 var bottomQueue = new ToastQueue({ maxVisibleToasts: 3 });
 var topQueue = new ToastQueue({ maxVisibleToasts: 3 });
 var topToast = createToastFunction(topQueue);
 createToastFunction(bottomQueue);
-memo$2(() => {
+memo$3(() => {
 	return /* @__PURE__ */ (0, import_jsx_runtime.jsxs)(import_jsx_runtime.Fragment, { children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)(Toast.Provider, {
+		width: 480,
 		placement: "top",
 		queue: topQueue,
 		children: ({ toast: toastItem }) => {
@@ -43157,19 +43356,23 @@ memo$2(() => {
 				placement: "top",
 				toast: toastItem,
 				variant: content.variant,
-				className: "border border-border notDraggable",
+				className: "border border-border notDraggable py-3.5 px-4.5",
 				children: [
 					/* @__PURE__ */ (0, import_jsx_runtime.jsx)(ToastIndicator, { variant: content.variant }),
 					/* @__PURE__ */ (0, import_jsx_runtime.jsxs)(ToastContent, {
-						className: "min-w-0 pr-4",
+						className: "min-w-0 flex-1 pr-2",
 						children: [content.title ? /* @__PURE__ */ (0, import_jsx_runtime.jsx)(ToastTitle, { children: content.title }) : null, content.description ? /* @__PURE__ */ (0, import_jsx_runtime.jsx)(ToastDescription, { children: content.description }) : null]
 					}),
-					content.actionProps ? /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Toast.ActionButton, { ...content.actionProps }) : null,
+					content.actionProps ? /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Toast.ActionButton, {
+						...content.actionProps,
+						className: cn("self-center shrink-0 ml-auto", content.actionProps.className)
+					}) : null,
 					/* @__PURE__ */ (0, import_jsx_runtime.jsx)(Toast.CloseButton, { className: "notDraggable" })
 				]
 			});
 		}
 	}), /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Toast.Provider, {
+		width: 480,
 		queue: bottomQueue,
 		placement: "bottom end",
 		children: ({ toast: toastItem }) => {
@@ -43178,14 +43381,17 @@ memo$2(() => {
 				toast: toastItem,
 				placement: "bottom end",
 				variant: content.variant,
-				className: "border border-border py-4 px-5",
+				className: "border border-border py-3.5 px-4.5",
 				children: [
 					/* @__PURE__ */ (0, import_jsx_runtime.jsx)(ToastIndicator, { variant: content.variant }),
 					/* @__PURE__ */ (0, import_jsx_runtime.jsxs)(ToastContent, {
-						className: "min-w-0 pr-4",
+						className: "min-w-0 flex-1 pr-2",
 						children: [content.title ? /* @__PURE__ */ (0, import_jsx_runtime.jsx)(ToastTitle, { children: content.title }) : null, content.description ? /* @__PURE__ */ (0, import_jsx_runtime.jsx)(ToastDescription, { children: content.description }) : null]
 					}),
-					content.actionProps ? /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Toast.ActionButton, { ...content.actionProps }) : null,
+					content.actionProps ? /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Toast.ActionButton, {
+						...content.actionProps,
+						className: cn("self-center shrink-0 ml-auto", content.actionProps.className)
+					}) : null,
 					/* @__PURE__ */ (0, import_jsx_runtime.jsx)(Toast.CloseButton, {})
 				]
 			});
@@ -43224,10 +43430,15 @@ var useXTerm = ({ id, terminalContainerRef, onReady, outputColor, serializeAddon
 	const fitAddon = useRef$2(null);
 	const apiRef = useRef$2(null);
 	const canResize = useCallback$8(() => {
-		if (minResizeCols === 0 && minResizeRows === 0) return true;
-		const dims = fitAddon.current?.proposeDimensions();
-		if (!dims) return false;
-		return dims.cols > minResizeCols && dims.rows > minResizeRows;
+		if (!fitAddon.current) return false;
+		try {
+			const dims = fitAddon.current.proposeDimensions();
+			if (!dims || dims.cols <= 0 || dims.rows <= 0) return false;
+			if (minResizeCols === 0 && minResizeRows === 0) return true;
+			return dims.cols > minResizeCols && dims.rows > minResizeRows;
+		} catch {
+			return false;
+		}
 	}, [minResizeCols, minResizeRows]);
 	useEffect$18(() => {
 		const terminalContainer = terminalContainerRef.current;
@@ -43282,7 +43493,15 @@ var useXTerm = ({ id, terminalContainerRef, onReady, outputColor, serializeAddon
 				if (destroyed || !termRef) return;
 				if (renderMode === "webgl") try {
 					const webglAddon = new xr$1();
-					webglAddon.onContextLoss(() => webglAddon.dispose());
+					webglAddon.onContextLoss(() => {
+						console.warn("WebGL context lost, falling back to CanvasAddon");
+						webglAddon.dispose();
+						try {
+							if (!destroyed && termRef) termRef.loadAddon(new import_addon_canvas.CanvasAddon());
+						} catch (canvasErr) {
+							console.warn("Failed to load CanvasAddon as WebGL context loss fallback:", canvasErr);
+						}
+					});
 					termRef.loadAddon(webglAddon);
 				} catch (e) {
 					console.warn("Failed to load WebGL addon, falling back to canvas:", e);
@@ -43316,7 +43535,8 @@ var useXTerm = ({ id, terminalContainerRef, onReady, outputColor, serializeAddon
 					});
 				}
 				try {
-					fitRef?.fit();
+					if (canResize()) fitRef?.fit();
+					if (enableResizeNotify && termRef) ptyIpc.resize(id, termRef.cols, termRef.rows);
 				} catch (e) {
 					console.warn("Failed to fit terminal:", e);
 				}
@@ -43327,6 +43547,9 @@ var useXTerm = ({ id, terminalContainerRef, onReady, outputColor, serializeAddon
 					clear: () => {
 						termRef?.clear();
 						ptyIpc.clear(id);
+					},
+					reset: () => {
+						termRef?.reset();
 					},
 					getSelection: () => termRef?.getSelection() || "",
 					clearSelection: () => termRef?.clearSelection(),
@@ -43350,12 +43573,22 @@ var useXTerm = ({ id, terminalContainerRef, onReady, outputColor, serializeAddon
 		const handleResize = () => {
 			clearTimeout(resizeTimeoutId);
 			resizeTimeoutId = setTimeout(() => {
-				if (canResize()) fitAddon.current?.fit();
+				if (!terminal.current || !fitAddon.current) return;
+				if (canResize()) try {
+					fitAddon.current.fit();
+				} catch (e) {
+					console.warn("Failed to fit terminal on resize:", e);
+				}
 			}, resizeDelay);
 		};
 		window.addEventListener("resize", handleResize);
+		const resizeObserver = new ResizeObserver(() => {
+			handleResize();
+		});
+		resizeObserver.observe(terminalContainer);
 		return () => {
 			destroyed = true;
+			resizeObserver.disconnect();
 			window.removeEventListener("resize", handleResize);
 			clearTimeout(resizeTimeoutId);
 			if (rafId !== null) {
@@ -43364,7 +43597,11 @@ var useXTerm = ({ id, terminalContainerRef, onReady, outputColor, serializeAddon
 			}
 			onResizeDisposable?.dispose();
 			onDataDisposable?.dispose();
-			terminal.current?.dispose();
+			try {
+				terminal.current?.dispose();
+			} catch (e) {
+				console.warn("Error disposing terminal:", e);
+			}
 			terminal.current = null;
 			apiRef.current = null;
 		};
@@ -43381,9 +43618,13 @@ var useXTerm = ({ id, terminalContainerRef, onReady, outputColor, serializeAddon
 	useEffect$18(() => {
 		if (terminal.current) {
 			terminal.current.options.fontSize = fontSize;
-			fitAddon.current?.fit();
+			try {
+				if (canResize()) fitAddon.current?.fit();
+			} catch (e) {
+				console.warn("Failed to fit terminal on fontSize change:", e);
+			}
 		}
-	}, [fontSize]);
+	}, [fontSize, canResize]);
 	useEffect$18(() => {
 		if (terminal.current) terminal.current.options.scrollback = scrollBack;
 	}, [scrollBack]);
@@ -43400,11 +43641,11 @@ var useXTerm = ({ id, terminalContainerRef, onReady, outputColor, serializeAddon
 };
 //#endregion
 //#region src/renderer/mainWindow/components/XTermCore.tsx
-var { forwardRef, memo: memo$1, useImperativeHandle, useRef: useRef$1 } = await importShared("react");
+var { forwardRef, memo: memo$2, useImperativeHandle, useRef: useRef$1 } = await importShared("react");
 var { useDispatch: useDispatch$7 } = await importShared("react-redux");
 var MIN_RESIZE_COLS = 95;
 var MIN_RESIZE_ROWS = 22;
-var XTermCore = memo$1(forwardRef(({ id, type, onReady, className = "", serializeAddon, searchAddon, fontSize: fontSizeOverride, scrollBack: scrollBackOverride, cursorStyle: cursorStyleOverride, cursorInactiveStyle: cursorInactiveStyleOverride, blinkCursor: blinkCursorOverride, resizeDelay: resizeDelayOverride, fontLoadTimeout: fontLoadTimeoutOverride, enablePtyWrite = true, enableResizeNotify = true, minResizeCols = MIN_RESIZE_COLS, minResizeRows = MIN_RESIZE_ROWS, onProgress }, ref) => {
+var XTermCore = memo$2(forwardRef(({ id, type, onReady, className = "", serializeAddon, searchAddon, fontSize: fontSizeOverride, scrollBack: scrollBackOverride, cursorStyle: cursorStyleOverride, cursorInactiveStyle: cursorInactiveStyleOverride, blinkCursor: blinkCursorOverride, resizeDelay: resizeDelayOverride, fontLoadTimeout: fontLoadTimeoutOverride, enablePtyWrite = true, enableResizeNotify = true, minResizeCols = MIN_RESIZE_COLS, minResizeRows = MIN_RESIZE_ROWS, onProgress }, ref) => {
 	const terminalContainerRef = useRef$1(null);
 	const dispatch = useDispatch$7();
 	const darkMode = useAppState("darkMode");
@@ -43450,6 +43691,7 @@ var XTermCore = memo$1(forwardRef(({ id, type, onReady, className = "", serializ
 		terminal: null,
 		fitAddon: null,
 		clear: () => {},
+		reset: () => {},
 		getSelection: () => "",
 		clearSelection: () => {},
 		write: () => {},
@@ -43482,8 +43724,8 @@ function TerminalView() {
 //#endregion
 //#region extension/src/renderer/components/Python/PackageManagement/PackageManager/Update-Modal.tsx
 var { Button: Button$14, Modal: Modal$4 } = await importShared("@heroui/react");
-var { memo, useEffect: useEffect$17, useState: useState$19 } = await importShared("react");
-var UpdateModal = memo(({ state }) => {
+var { memo: memo$1, useEffect: useEffect$17, useState: useState$19 } = await importShared("react");
+var UpdateModal = memo$1(({ state }) => {
 	const [isDone, setIsDone] = useState$19(false);
 	const [showConfirm, setShowConfirm] = useState$19(false);
 	useEffect$17(() => {
@@ -43517,7 +43759,7 @@ var UpdateModal = memo(({ state }) => {
 				children: /* @__PURE__ */ (0, import_jsx_runtime.jsx)(EmptyStateCard, {
 					variant: "secondary",
 					className: "size-full py-4",
-					icon: /* @__PURE__ */ (0, import_jsx_runtime.jsx)(i$11, { className: "size-14 text-warning" }),
+					icon: /* @__PURE__ */ (0, import_jsx_runtime.jsx)(i$4, { className: "size-14 text-warning" }),
 					description: isDone ? "Close this window?" : "The command will still execute in the background.",
 					title: isDone ? "The terminal is done and exited" : "Are you sure you want to close this window?"
 				})
@@ -43586,9 +43828,7 @@ function PackageManagerModal({ title = "Package Manager", actionButtons, state, 
 			case "patch":
 				setFilteredPackages(packages.filter((item) => packagesUpdate.some((update) => item.name === update.name && getUpdateType(item.version, update.version) === "patch")));
 				break;
-			case "others":
-				setFilteredPackages(packages.filter((item) => packagesUpdate.some((update) => item.name === update.name && getUpdateType(item.version, update.version) === null)));
-				break;
+			case "others": setFilteredPackages(packages.filter((item) => packagesUpdate.some((update) => item.name === update.name && getUpdateType(item.version, update.version) === null)));
 		}
 	}, [
 		selectedFilter,
@@ -43761,7 +44001,10 @@ var { useEffect: useEffect$15, useMemo: useMemo$7, useState: useState$17 } = awa
 function CardMenuModal({ useCardOverlayState, useCardStore }) {
 	const id = useCardStore((state) => state.id);
 	const title = useCardStore((state) => state.title);
-	const webUI = useInstalledCard(id);
+	const originalId = useMemo$7(() => getOriginalCardId(id), [id]);
+	const installedCardDirect = useInstalledCard(id);
+	const installedCardOriginal = useInstalledCard(originalId);
+	const webUI = installedCardDirect || installedCardOriginal;
 	const state = useCardOverlayState(DepsModalKey);
 	const [pythonPath, setPythonPath] = useState$17("");
 	const [pythonVersion, setPythonVersion] = useState$17("");
@@ -43858,7 +44101,7 @@ function Venv_Associate({ folder, type }) {
 	const dispatch = useDispatch$6();
 	useEffect$14(() => {
 		const cardTitleMap = new Map(allCardsExt.map((card) => [card.id, card.title]));
-		const cardAvatarMap = new Map(allCardsExt.map((card) => [card.id, cacheUrl(extractGitUrl(card.repoUrl).avatarUrl)]));
+		const cardAvatarMap = new Map(allCardsExt.map((card) => [card.id, cacheUrl(extractGitUrl(card.repoUrl || "").avatarUrl)]));
 		const installedCardsWithTitles = installedCards.filter((card) => cardTitleMap.has(card.id)).map((card) => {
 			const id = card.id;
 			return {
@@ -43868,7 +44111,7 @@ function Venv_Associate({ folder, type }) {
 			};
 		});
 		const associateIds = new Set(associates.map((item) => item.id));
-		const newItemsToAdd = installedCardsWithTitles.filter((card) => !associateIds.has(card.id) && ModulesThatSupportPython.includes(card.id));
+		const newItemsToAdd = installedCardsWithTitles.filter((card) => !associateIds.has(card.id) && isPythonSupportedModule(card.id));
 		setCanBeAssociate(newItemsToAdd);
 		const activeAssociatesWithTitles = associates.filter((item) => item.dir === folder && installedCards.some((card) => card.id === item.id)).map((item) => {
 			const id = item.id;
@@ -44040,7 +44283,7 @@ function EnvironmentCard({ title, subtitle, badges, actions, path, packages, dis
 								onPress: onOpenPath,
 								className: "h-8 min-w-0 justify-start border border-divider/60 bg-surface-secondary/45 px-2.5 text-xs",
 								fullWidth: true,
-								children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)(i$20, { className: "size-3.5 shrink-0 text-muted" }), /* @__PURE__ */ (0, import_jsx_runtime.jsx)("span", {
+								children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)(i$15, { className: "size-3.5 shrink-0 text-muted" }), /* @__PURE__ */ (0, import_jsx_runtime.jsx)("span", {
 									className: "truncate font-JetBrainsMono",
 									children: path
 								})]
@@ -44063,7 +44306,7 @@ function EnvironmentCard({ title, subtitle, badges, actions, path, packages, dis
 								className: "min-w-0",
 								children: [/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
 									className: "mb-1 flex items-center gap-x-1.5 text-xs text-muted",
-									children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)(i$9, { className: "size-3.5" }), /* @__PURE__ */ (0, import_jsx_runtime.jsx)("span", { children: "Packages" })]
+									children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)(i$26, { className: "size-3.5" }), /* @__PURE__ */ (0, import_jsx_runtime.jsx)("span", { children: "Packages" })]
 								}), /* @__PURE__ */ (0, import_jsx_runtime.jsx)("div", {
 									className: "text-base font-semibold leading-none text-foreground",
 									children: packageCount
@@ -44151,21 +44394,21 @@ function InstalledCard({ python, diskUsage, maxDiskValue, updateDefault, refresh
 			variant: "soft",
 			color: "success",
 			className: "font-semibold! px-2",
-			children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)(i$7, {}), "System & LynxHub"]
+			children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)(i$24, {}), "System & LynxHub"]
 		});
 		if (python.isDefault) return /* @__PURE__ */ (0, import_jsx_runtime.jsxs)(Chip, {
 			size: "sm",
 			variant: "soft",
 			color: "default",
 			className: "font-semibold! px-2",
-			children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)(i$7, {}), "System"]
+			children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)(i$24, {}), "System"]
 		});
 		if (python.isLynxHubDefault) return /* @__PURE__ */ (0, import_jsx_runtime.jsxs)(Chip, {
 			size: "sm",
 			variant: "soft",
 			color: "accent",
 			className: "font-semibold! px-2",
-			children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)(i$7, {}), "LynxHub"]
+			children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)(i$24, {}), "LynxHub"]
 		});
 		return null;
 	}, [python]);
@@ -44231,13 +44474,13 @@ function InstalledCard({ python, diskUsage, maxDiskValue, updateDefault, refresh
 					size: "sm",
 					variant: "tertiary",
 					isIconOnly: true,
-					children: /* @__PURE__ */ (0, import_jsx_runtime.jsx)(i$4, { className: "rotate-90" })
+					children: /* @__PURE__ */ (0, import_jsx_runtime.jsx)(i$10, { className: "rotate-90" })
 				})
 			}), /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Dropdown$1.Popover, { children: /* @__PURE__ */ (0, import_jsx_runtime.jsxs)(Dropdown$1.Menu, { children: [isWin && /* @__PURE__ */ (0, import_jsx_runtime.jsxs)(import_jsx_runtime.Fragment, { children: [/* @__PURE__ */ (0, import_jsx_runtime.jsxs)(Dropdown$1.Item, {
 				id: "system-default",
 				onPress: systemConfirm.open,
 				textValue: "Set as System Default",
-				children: [python.isDefault ? /* @__PURE__ */ (0, import_jsx_runtime.jsx)(i$23, { size: 16 }) : /* @__PURE__ */ (0, import_jsx_runtime.jsx)(i$1, { size: 16 }), /* @__PURE__ */ (0, import_jsx_runtime.jsxs)(Label$9, { children: [python.isDefault ? "Reset " : "Set ", /* @__PURE__ */ (0, import_jsx_runtime.jsx)("span", {
+				children: [python.isDefault ? /* @__PURE__ */ (0, import_jsx_runtime.jsx)(i$7, { size: 16 }) : /* @__PURE__ */ (0, import_jsx_runtime.jsx)(i$1, { size: 16 }), /* @__PURE__ */ (0, import_jsx_runtime.jsxs)(Label$9, { children: [python.isDefault ? "Reset " : "Set ", /* @__PURE__ */ (0, import_jsx_runtime.jsx)("span", {
 					className: "font-bold text-LynxPurple",
 					children: "System Default"
 				})] })]
@@ -44245,7 +44488,7 @@ function InstalledCard({ python, diskUsage, maxDiskValue, updateDefault, refresh
 				id: "lynxhub-default",
 				onPress: lynxConfirm.open,
 				textValue: "Set as LynxHub Default",
-				children: [python.isLynxHubDefault ? /* @__PURE__ */ (0, import_jsx_runtime.jsx)(i$23, { size: 16 }) : /* @__PURE__ */ (0, import_jsx_runtime.jsx)(i$1, { size: 16 }), /* @__PURE__ */ (0, import_jsx_runtime.jsxs)(Label$9, { children: [python.isDefault ? "Reset " : "Set ", /* @__PURE__ */ (0, import_jsx_runtime.jsx)("span", {
+				children: [python.isLynxHubDefault ? /* @__PURE__ */ (0, import_jsx_runtime.jsx)(i$7, { size: 16 }) : /* @__PURE__ */ (0, import_jsx_runtime.jsx)(i$1, { size: 16 }), /* @__PURE__ */ (0, import_jsx_runtime.jsxs)(Label$9, { children: [python.isDefault ? "Reset " : "Set ", /* @__PURE__ */ (0, import_jsx_runtime.jsx)("span", {
 					className: "font-bold text-accent",
 					children: "LynxHub Default"
 				})] })]
@@ -44253,7 +44496,7 @@ function InstalledCard({ python, diskUsage, maxDiskValue, updateDefault, refresh
 				id: "package-manager",
 				textValue: "Manage Packages",
 				onPress: packageManagerModal.open,
-				children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)(i$9, { className: "size-4" }), /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Label$9, { children: "Manage Packages" })]
+				children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)(i$26, { className: "size-4" }), /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Label$9, { children: "Manage Packages" })]
 			})] }) })] }),
 			/* @__PURE__ */ (0, import_jsx_runtime.jsx)(AlertDialog, {
 				isOpen: systemConfirm.isOpen,
@@ -44340,20 +44583,20 @@ function InstalledCard({ python, diskUsage, maxDiskValue, updateDefault, refresh
 									children: "Complete Uninstall"
 								}),
 								python.installationType === "conda" ? /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("p", {
-									className: "text-xs text-default-600 mt-1",
+									className: "text-xs text-muted mt-1",
 									children: [
 										"Permanently deletes the entire Conda environment \"",
 										python.condaName,
 										"\" and all its packages from your computer. Any AI using this environment will be disconnected."
 									]
 								}) : window.osPlatform === "darwin" ? /* @__PURE__ */ (0, import_jsx_runtime.jsx)("p", {
-									className: "text-xs text-default-600 mt-1",
+									className: "text-xs text-muted mt-1",
 									children: python.installPath.includes("/Library/Frameworks/Python.framework") ? `Removes Python ${python.version} from /Library/Frameworks and cleans up symlinks.
                              Admin password will be required.` : python.installPath.includes("/opt/homebrew") || python.installPath.includes("/usr/local/Cellar") ? `Uninstalls Python ${python.version} via Homebrew (brew uninstall).
                                Any AI using this installation will be disconnected.` : `Permanently uninstalls Python ${python.version} and all its packages.
                                Any AI using this installation will be disconnected.`
 								}) : /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("p", {
-									className: "text-xs text-default-600 mt-1",
+									className: "text-xs text-muted mt-1",
 									children: [
 										"Permanently uninstalls Python version ",
 										python.version,
@@ -44376,7 +44619,7 @@ function InstalledCard({ python, diskUsage, maxDiskValue, updateDefault, refresh
 									children: "Remove From List Only"
 								}),
 								/* @__PURE__ */ (0, import_jsx_runtime.jsx)("p", {
-									className: "text-xs text-default-600 mt-1",
+									className: "text-xs text-muted mt-1",
 									children: "Removes this entry from the list but does not delete the actual Python installation from your system. Any associated AI will be disconnected, but you can re-link them if you add this installation back later."
 								}),
 								/* @__PURE__ */ (0, import_jsx_runtime.jsxs)(Button$10, {
@@ -44525,7 +44768,7 @@ function InstallerConda({ refresh, installed, state, setCloseDisabled }) {
 				className: "shrink-0",
 				onPress: () => fetchPythonList(true),
 				isIconOnly: true,
-				children: /* @__PURE__ */ (0, import_jsx_runtime.jsx)(i$23, {})
+				children: /* @__PURE__ */ (0, import_jsx_runtime.jsx)(i$7, {})
 			})
 		})]
 	}), errorLoadingVersion ? /* @__PURE__ */ (0, import_jsx_runtime.jsx)(EmptyStateCard, {
@@ -44533,7 +44776,7 @@ function InstallerConda({ refresh, installed, state, setCloseDisabled }) {
 		className: "mt-2 mx-4",
 		title: errorLoadingVersion.title,
 		description: errorLoadingVersion.description,
-		icon: /* @__PURE__ */ (0, import_jsx_runtime.jsx)(i$11, { className: "size-20 text-warning" })
+		icon: /* @__PURE__ */ (0, import_jsx_runtime.jsx)(i$4, { className: "size-20 text-warning" })
 	}) : /* @__PURE__ */ (0, import_jsx_runtime.jsx)("div", {
 		className: "px-4",
 		children: !isEmpty(installingVersion) ? /* @__PURE__ */ (0, import_jsx_runtime.jsxs)(ProgressBar$1, {
@@ -44558,7 +44801,7 @@ function InstallerConda({ refresh, installed, state, setCloseDisabled }) {
 		}) : isEmpty(searchVersions) ? /* @__PURE__ */ (0, import_jsx_runtime.jsx)(EmptyStateCard, {
 			className: "mt-2",
 			variant: "secondary",
-			icon: /* @__PURE__ */ (0, import_jsx_runtime.jsx)(i$17, { size: 34 }),
+			icon: /* @__PURE__ */ (0, import_jsx_runtime.jsx)(i$13, { size: 34 }),
 			description: "Nothing to install!"
 		}) : /* @__PURE__ */ (0, import_jsx_runtime.jsx)("div", {
 			className: "flex flex-col gap-y-1 my-2",
@@ -44567,7 +44810,7 @@ function InstallerConda({ refresh, installed, state, setCloseDisabled }) {
 				children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)(Label$8, { children: item }), /* @__PURE__ */ (0, import_jsx_runtime.jsxs)(Popover$2, { children: [/* @__PURE__ */ (0, import_jsx_runtime.jsxs)(Button$9, {
 					size: "sm",
 					variant: "secondary",
-					children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)(i$25, {}), "Install"]
+					children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)(i$17, {}), "Install"]
 				}), /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Popover$2.Content, {
 					className: "max-w-64",
 					children: /* @__PURE__ */ (0, import_jsx_runtime.jsxs)(Popover$2.Dialog, {
@@ -44588,7 +44831,7 @@ function InstallerConda({ refresh, installed, state, setCloseDisabled }) {
 								onPress: () => installPython(item),
 								fullWidth: true,
 								children: [
-									/* @__PURE__ */ (0, import_jsx_runtime.jsx)(i$25, {}),
+									/* @__PURE__ */ (0, import_jsx_runtime.jsx)(i$17, {}),
 									"Install v",
 									item
 								]
@@ -44626,15 +44869,16 @@ function InstallerOfficial({ refresh, installed, state, setCloseDisabled }) {
 				setLoadingList(false);
 				setErrorLoadingVersion(void 0);
 			}).catch((e) => {
-				if (e.message && isString$1(e.message)) if (e.message.toLowerCase().includes("deadsnakes")) setErrorLoadingVersion({
-					title: "Deadsnakes PPA Missing",
-					description: "The application tried to add the Deadsnakes PPA but failed. Please add it manually by running the following commands : `sudo add-apt-repository -y ppa:deadsnakes/ppa` and then `sudo apt update`."
-				});
-				else setErrorLoadingVersion({
-					title: "Failed to fetch Python versions",
-					description: e.message
-				});
-				else setErrorLoadingVersion({
+				if (e.message && isString$1(e.message)) {
+					if (e.message.toLowerCase().includes("deadsnakes")) setErrorLoadingVersion({
+						title: "Deadsnakes PPA Missing",
+						description: "The application tried to add the Deadsnakes PPA but failed. Please add it manually by running the following commands : `sudo add-apt-repository -y ppa:deadsnakes/ppa` and then `sudo apt update`."
+					});
+					else setErrorLoadingVersion({
+						title: "Failed to fetch Python versions",
+						description: e.message
+					});
+				} else setErrorLoadingVersion({
 					title: "Failed to fetch Python versions",
 					description: "Please check your internet connection and try again. If the problem persists, please open an issue on GitHub."
 				});
@@ -44660,9 +44904,7 @@ function InstallerOfficial({ refresh, installed, state, setCloseDisabled }) {
 					if (stage === "downloading") setDownloadProgress(progress);
 				});
 				break;
-			case "linux":
-				setInstallStage("installing");
-				break;
+			case "linux": setInstallStage("installing");
 		}
 		pIpc.installOfficial(version).then(() => {
 			refresh(true);
@@ -44697,13 +44939,13 @@ function InstallerOfficial({ refresh, installed, state, setCloseDisabled }) {
 				variant: "tertiary",
 				onPress: () => fetchPythonList(true),
 				isIconOnly: true,
-				children: /* @__PURE__ */ (0, import_jsx_runtime.jsx)(i$23, {})
+				children: /* @__PURE__ */ (0, import_jsx_runtime.jsx)(i$7, {})
 			})
 		})]
 	}), errorLoadingVersion ? /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
 		className: "py-2 text-danger flex flex-col items-center justify-center gap-4 px-6",
 		children: [
-			/* @__PURE__ */ (0, import_jsx_runtime.jsx)(i$11, { className: "size-20" }),
+			/* @__PURE__ */ (0, import_jsx_runtime.jsx)(i$4, { className: "size-20" }),
 			/* @__PURE__ */ (0, import_jsx_runtime.jsx)("span", {
 				className: "text-lg",
 				children: errorLoadingVersion.title
@@ -44749,7 +44991,7 @@ function InstallerOfficial({ refresh, installed, state, setCloseDisabled }) {
 		}) : isEmpty(searchVersions) ? /* @__PURE__ */ (0, import_jsx_runtime.jsx)(EmptyStateCard, {
 			className: "mt-2",
 			variant: "secondary",
-			icon: /* @__PURE__ */ (0, import_jsx_runtime.jsx)(i$17, { size: 34 }),
+			icon: /* @__PURE__ */ (0, import_jsx_runtime.jsx)(i$13, { size: 34 }),
 			description: "Nothing to install!"
 		}) : /* @__PURE__ */ (0, import_jsx_runtime.jsx)("div", {
 			className: "flex flex-col gap-y-1 my-2",
@@ -44762,7 +45004,7 @@ function InstallerOfficial({ refresh, installed, state, setCloseDisabled }) {
 					size: "sm",
 					variant: "secondary",
 					onPress: () => installPython(item),
-					children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)(i$25, {}), "Install"]
+					children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)(i$17, {}), "Install"]
 				})]
 			}, item.version))
 		})
@@ -44938,12 +45180,12 @@ function InstalledPythons({ visible, installedPythons, setInstalledPythons, setI
 							variant: "tertiary",
 							onPress: locateVenv,
 							isPending: isLocating,
-							children: [!isLocating && /* @__PURE__ */ (0, import_jsx_runtime.jsx)(i$20, {}), !isLocating && "Locate"]
+							children: [!isLocating && /* @__PURE__ */ (0, import_jsx_runtime.jsx)(i$15, {}), !isLocating && "Locate"]
 						}),
 						/* @__PURE__ */ (0, import_jsx_runtime.jsxs)(Button$7, {
 							variant: "tertiary",
 							onPress: () => getInstalledPythons(true),
-							children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)(i$23, {}), "Refresh List"]
+							children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)(i$7, {}), "Refresh List"]
 						})
 					]
 				})]
@@ -45511,7 +45753,7 @@ var require_core = /* @__PURE__ */ __commonJSMin(((exports, module) => {
 					if (messageUpdate) this._append(messageUpdate);
 					return this._doFinalize();
 				},
-				blockSize: 512 / 32,
+				blockSize: 16,
 				/**
 				* Creates a shortcut function to a hasher's object interface.
 				*
@@ -46762,7 +47004,7 @@ var require_sha512 = /* @__PURE__ */ __commonJSMin(((exports, module) => {
 					clone._hash = this._hash.clone();
 					return clone;
 				},
-				blockSize: 1024 / 32
+				blockSize: 32
 			});
 			/**
 			* Shortcut function to the hasher's object interface.
@@ -47712,7 +47954,7 @@ var require_pbkdf2 = /* @__PURE__ */ __commonJSMin(((exports, module) => {
 				* @property {number} iterations The number of iterations to perform. Default: 250000
 				*/
 				cfg: Base.extend({
-					keySize: 128 / 32,
+					keySize: 4,
 					hasher: SHA256,
 					iterations: 25e4
 				}),
@@ -47826,7 +48068,7 @@ var require_evpkdf = /* @__PURE__ */ __commonJSMin(((exports, module) => {
 				* @property {number} iterations The number of iterations to perform. Default: 1
 				*/
 				cfg: Base.extend({
-					keySize: 128 / 32,
+					keySize: 4,
 					hasher: MD5,
 					iterations: 1
 				}),
@@ -48034,8 +48276,8 @@ var require_cipher_core = /* @__PURE__ */ __commonJSMin(((exports, module) => {
 					if (dataUpdate) this._append(dataUpdate);
 					return this._doFinalize();
 				},
-				keySize: 128 / 32,
-				ivSize: 128 / 32,
+				keySize: 4,
+				ivSize: 4,
 				_ENC_XFORM_MODE: 1,
 				_DEC_XFORM_MODE: 2,
 				/**
@@ -48277,7 +48519,7 @@ processBlock: function(words, offset) {
 					}
 					return finalProcessedBlocks;
 				},
-				blockSize: 128 / 32
+				blockSize: 4
 			});
 			/**
 			* A collection of cipher parameters.
@@ -48503,7 +48745,7 @@ processBlock: function(words, offset) {
 			*     var derivedParams = CryptoJS.kdf.OpenSSL.execute('Password', 256/32, 128/32, 'saltsalt');
 			*/
 execute: function(password, keySize, ivSize, salt, hasher) {
-				if (!salt) salt = WordArray.random(64 / 8);
+				if (!salt) salt = WordArray.random(8);
 				if (!hasher) var key = EvpKDF.create({ keySize: keySize + ivSize }).compute(password, salt);
 				else var key = EvpKDF.create({
 					keySize: keySize + ivSize,
@@ -49084,7 +49326,7 @@ var require_aes = /* @__PURE__ */ __commonJSMin(((exports, module) => {
 					M[offset + 2] = t2;
 					M[offset + 3] = t3;
 				},
-				keySize: 256 / 32
+				keySize: 8
 			});
 			/**
 			* Shortcut functions to the cipher's object interface.
@@ -49845,9 +50087,9 @@ var require_tripledes = /* @__PURE__ */ __commonJSMin(((exports, module) => {
 					M[offset] = this._lBlock;
 					M[offset + 1] = this._rBlock;
 				},
-				keySize: 64 / 32,
-				ivSize: 64 / 32,
-				blockSize: 64 / 32
+				keySize: 2,
+				ivSize: 2,
+				blockSize: 2
 			});
 			function exchangeLR(offset, mask) {
 				var t = (this._lBlock >>> offset ^ this._rBlock) & mask;
@@ -49892,9 +50134,9 @@ var require_tripledes = /* @__PURE__ */ __commonJSMin(((exports, module) => {
 					this._des2.encryptBlock(M, offset);
 					this._des1.decryptBlock(M, offset);
 				},
-				keySize: 192 / 32,
-				ivSize: 64 / 32,
-				blockSize: 64 / 32
+				keySize: 6,
+				ivSize: 2,
+				blockSize: 2
 			});
 			/**
 			* Shortcut functions to the cipher's object interface.
@@ -49950,7 +50192,7 @@ var require_rc4 = /* @__PURE__ */ __commonJSMin(((exports, module) => {
 				_doProcessBlock: function(M, offset) {
 					M[offset] ^= generateKeystreamWord.call(this);
 				},
-				keySize: 256 / 32,
+				keySize: 8,
 				ivSize: 0
 			});
 			function generateKeystreamWord() {
@@ -50090,8 +50332,8 @@ var require_rabbit = /* @__PURE__ */ __commonJSMin(((exports, module) => {
 						M[offset + i] ^= S[i];
 					}
 				},
-				blockSize: 128 / 32,
-				ivSize: 64 / 32
+				blockSize: 4,
+				ivSize: 2
 			});
 			function nextState() {
 				var X = this._X;
@@ -50110,7 +50352,9 @@ var require_rabbit = /* @__PURE__ */ __commonJSMin(((exports, module) => {
 					var gx = X[i] + C[i];
 					var ga = gx & 65535;
 					var gb = gx >>> 16;
-					G[i] = ((ga * ga >>> 17) + ga * gb >>> 15) + gb * gb ^ ((gx & 4294901760) * gx | 0) + ((gx & 65535) * gx | 0);
+					var gh = ((ga * ga >>> 17) + ga * gb >>> 15) + gb * gb;
+					var gl = ((gx & 4294901760) * gx | 0) + ((gx & 65535) * gx | 0);
+					G[i] = gh ^ gl;
 				}
 				X[0] = G[0] + (G[7] << 16 | G[7] >>> 16) + (G[6] << 16 | G[6] >>> 16) | 0;
 				X[1] = G[1] + (G[0] << 8 | G[0] >>> 24) + G[7] | 0;
@@ -50220,8 +50464,8 @@ var require_rabbit_legacy = /* @__PURE__ */ __commonJSMin(((exports, module) => 
 						M[offset + i] ^= S[i];
 					}
 				},
-				blockSize: 128 / 32,
-				ivSize: 64 / 32
+				blockSize: 4,
+				ivSize: 2
 			});
 			function nextState() {
 				var X = this._X;
@@ -50240,7 +50484,9 @@ var require_rabbit_legacy = /* @__PURE__ */ __commonJSMin(((exports, module) => 
 					var gx = X[i] + C[i];
 					var ga = gx & 65535;
 					var gb = gx >>> 16;
-					G[i] = ((ga * ga >>> 17) + ga * gb >>> 15) + gb * gb ^ ((gx & 4294901760) * gx | 0) + ((gx & 65535) * gx | 0);
+					var gh = ((ga * ga >>> 17) + ga * gb >>> 15) + gb * gb;
+					var gl = ((gx & 4294901760) * gx | 0) + ((gx & 65535) * gx | 0);
+					G[i] = gh ^ gl;
 				}
 				X[0] = G[0] + (G[7] << 16 | G[7] >>> 16) + (G[6] << 16 | G[6] >>> 16) | 0;
 				X[1] = G[1] + (G[0] << 8 | G[0] >>> 24) + G[7] | 0;
@@ -51454,9 +51700,9 @@ var require_blowfish = /* @__PURE__ */ __commonJSMin(((exports, module) => {
 					M[offset] = res.left;
 					M[offset + 1] = res.right;
 				},
-				blockSize: 64 / 32,
-				keySize: 128 / 32,
-				ivSize: 64 / 32
+				blockSize: 2,
+				keySize: 4,
+				ivSize: 2
 			});
 			/**
 			* Shortcut functions to the cipher's object interface.
@@ -51601,13 +51847,13 @@ function VenvCard({ title, installedPackages, pythonVersion, folder, diskUsage, 
 				size: "sm",
 				variant: "tertiary",
 				isIconOnly: true,
-				children: /* @__PURE__ */ (0, import_jsx_runtime.jsx)(i$4, { className: "rotate-90" })
+				children: /* @__PURE__ */ (0, import_jsx_runtime.jsx)(i$10, { className: "rotate-90" })
 			})
 		}), /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Dropdown.Popover, { children: /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Dropdown.Menu, { children: /* @__PURE__ */ (0, import_jsx_runtime.jsxs)(Dropdown.Item, {
 			id: "package-manager",
 			textValue: "Manage Packages",
 			onPress: packageManagerModal.open,
-			children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)(i$9, { className: "size-4" }), /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Label$6, { children: "Manage Packages" })]
+			children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)(i$26, { className: "size-4" }), /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Label$6, { children: "Manage Packages" })]
 		}) }) })] }), !isInstallation && /* @__PURE__ */ (0, import_jsx_runtime.jsxs)(Popover$1, {
 			isOpen: popoverUninstaller,
 			onOpenChange: setPopoverUninstaller,
@@ -51632,7 +51878,7 @@ function VenvCard({ title, installedPackages, pythonVersion, folder, diskUsage, 
 								children: "Delete Environment"
 							}),
 							/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("p", {
-								className: "text-xs text-default-600 mt-1",
+								className: "text-xs text-muted mt-1",
 								children: [
 									"Permanently deletes the \"",
 									title,
@@ -51655,7 +51901,7 @@ function VenvCard({ title, installedPackages, pythonVersion, folder, diskUsage, 
 								children: "Remove From List Only"
 							}),
 							/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("p", {
-								className: "text-xs text-default-600 mt-1",
+								className: "text-xs text-muted mt-1",
 								children: [
 									"Removes \"",
 									title,
@@ -51816,7 +52062,7 @@ function VenvCreator({ installedPythons, refresh, isLoadingPythons }) {
 								isPending: isCreating,
 								onPress: selectFolder,
 								fullWidth: true,
-								children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)(i$20, {}), targetFolder || "Choose Destination Folder"]
+								children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)(i$15, {}), targetFolder || "Choose Destination Folder"]
 							}), /* @__PURE__ */ (0, import_jsx_runtime.jsxs)(Button$5, {
 								onPress: createEnv,
 								isPending: isCreating,
@@ -51933,7 +52179,7 @@ function Venv({ visible, installedPythons, isLoadingPythons }) {
 					variant: "tertiary",
 					onPress: locateVenv,
 					isPending: isLocating,
-					children: [!isLocating && /* @__PURE__ */ (0, import_jsx_runtime.jsx)(i$20, {}), "Locate"]
+					children: [!isLocating && /* @__PURE__ */ (0, import_jsx_runtime.jsx)(i$15, {}), "Locate"]
 				})]
 			})]
 		}), /* @__PURE__ */ (0, import_jsx_runtime.jsx)("div", {
@@ -52282,11 +52528,12 @@ var import_main = /* @__PURE__ */ __toESM((/* @__PURE__ */ __commonJSMin(((expor
 					if (chunk.highlight) {
 						highlightIndex++;
 						var highlightClass = void 0;
-						if (typeof highlightClassName === "object") if (!caseSensitive) {
-							highlightClassName = memoizedLowercaseProps(highlightClassName);
-							highlightClass = highlightClassName[text.toLowerCase()];
-						} else highlightClass = highlightClassName[text];
-						else highlightClass = highlightClassName;
+						if (typeof highlightClassName === "object") {
+							if (!caseSensitive) {
+								highlightClassName = memoizedLowercaseProps(highlightClassName);
+								highlightClass = highlightClassName[text.toLowerCase()];
+							} else highlightClass = highlightClassName[text];
+						} else highlightClass = highlightClassName;
 						var isActive = highlightIndex === +activeIndex;
 						highlightClassNames = highlightClass + " " + (isActive ? activeClassName : "");
 						highlightStyles = isActive === true && activeStyle != null ? Object.assign({}, highlightStyle, activeStyle) : highlightStyle;
@@ -52496,6 +52743,7 @@ var import_main = /* @__PURE__ */ __toESM((/* @__PURE__ */ __commonJSMin(((expor
 		})
 	]);
 })))(), 1);
+var { memo } = await importShared("react");
 /**
 * Renders text matching the active settings search terminology with a highlight wrapper.
 * Will render text minimally without highlights if empty or no text provided.
@@ -52508,6 +52756,11 @@ var SettingsSearchHighlight = ({ text, children, className, highlightClassName }
 		className,
 		children: content
 	});
+	const lowerContent = content.toLowerCase();
+	if (!searchWords.some((word) => word && lowerContent.includes(word.toLowerCase()))) return /* @__PURE__ */ (0, import_jsx_runtime.jsx)("span", {
+		className,
+		children: content
+	});
 	return /* @__PURE__ */ (0, import_jsx_runtime.jsx)(import_main.default, {
 		className,
 		searchWords,
@@ -52516,6 +52769,7 @@ var SettingsSearchHighlight = ({ text, children, className, highlightClassName }
 		autoEscape: true
 	});
 };
+var SettingsSearchHighlight_default = memo(SettingsSearchHighlight);
 //#endregion
 //#region src/renderer/mainWindow/components/LynxSwitch.tsx
 var { Description: Description$4, Surface, Switch } = await importShared("@heroui/react");
@@ -52553,11 +52807,11 @@ function LynxSwitch({ enabled = false, onEnabledChange, title, description, isDi
 					className: "flex flex-row items-center gap-x-2",
 					children: [icon, /* @__PURE__ */ (0, import_jsx_runtime.jsx)("span", {
 						className: "text-sm cursor-pointer",
-						children: /* @__PURE__ */ (0, import_jsx_runtime.jsx)(SettingsSearchHighlight, { text: title })
+						children: /* @__PURE__ */ (0, import_jsx_runtime.jsx)(SettingsSearchHighlight_default, { text: title })
 					})]
 				}), description && /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Description$4, {
 					className: "pointer-events-none p-0",
-					children: typeof description === "string" ? /* @__PURE__ */ (0, import_jsx_runtime.jsx)(SettingsSearchHighlight, {
+					children: typeof description === "string" ? /* @__PURE__ */ (0, import_jsx_runtime.jsx)(SettingsSearchHighlight_default, {
 						text: description,
 						className: "text-xs text-muted"
 					}) : /* @__PURE__ */ (0, import_jsx_runtime.jsx)("div", {
@@ -52610,7 +52864,7 @@ function CacheDirUsage() {
 			variant: "danger-soft",
 			isDisabled: !cacheStorageUsage,
 			fullWidth: true,
-			children: [!clearing && /* @__PURE__ */ (0, import_jsx_runtime.jsx)(i$8, {}), !clearing ? "Clear Cache" : "Clearing..."]
+			children: [!clearing && /* @__PURE__ */ (0, import_jsx_runtime.jsx)(i$25, {}), !clearing ? "Clear Cache" : "Clearing..."]
 		})]
 	});
 }
@@ -52674,9 +52928,7 @@ function PkgString() {
 			case "startCase":
 				setExampleResult(startCase(exampleName));
 				break;
-			default:
-				setExampleResult(exampleName);
-				break;
+			default: setExampleResult(exampleName);
 		}
 		dispatch(PythonToolkitActions.setPkgDisplay(valueText));
 		pIpc.setPkgDisplay(valueText);
@@ -52802,7 +53054,7 @@ function PythonToolkitCard() {
 					variant: "tertiary",
 					onPress: settingsModal.open,
 					isIconOnly: true,
-					children: /* @__PURE__ */ (0, import_jsx_runtime.jsx)(i$10, {})
+					children: /* @__PURE__ */ (0, import_jsx_runtime.jsx)(i$5, {})
 				})
 			}),
 			title,
@@ -52836,7 +53088,7 @@ function CustomHook() {
 						className: "whitespace-pre-line",
 						children: "Required Python version is missing. Please install it, so LynxHub can validate your environment.\nDetails:\n"
 					}), /* @__PURE__ */ (0, import_jsx_runtime.jsx)("code", {
-						className: "px-2 py-1 h-fit font-JetBrainsMono whitespace-pre-line font-normal inline-block w-full whitespace-nowrap rounded-xl bg-warning-soft-hover text-nowrap text-warning-700 overflow-auto text-sm",
+						className: "px-2 py-1 h-fit font-JetBrainsMono whitespace-pre-line font-normal inline-block w-full whitespace-nowrap rounded-xl bg-warning-soft-hover text-nowrap text-warning overflow-auto text-sm",
 						children: message.replace("Error invoking remote method 'get-venvs': Error:", "")
 					})] })
 				});
@@ -52975,7 +53227,7 @@ var Installer_PythonSelector = (id, addAssociate) => function Selector() {
 				}), /* @__PURE__ */ (0, import_jsx_runtime.jsxs)(Button, {
 					variant: "tertiary",
 					onPress: fetchList,
-					children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)(i$22, {}), "Refresh"]
+					children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)(i$6, {}), "Refresh"]
 				})]
 			}),
 			/* @__PURE__ */ (0, import_jsx_runtime.jsxs)(Alert, {
@@ -52991,7 +53243,7 @@ var Installer_PythonSelector = (id, addAssociate) => function Selector() {
 //#endregion
 //#region extension/src/renderer/components/Modules/ModuleStepManager.ts
 function associate(id, type, item) {
-	if (type === "add" && item && ModulesThatSupportPython.includes(id)) pIpc.addAssociate({
+	if (type === "add" && item && isPythonSupportedModule(id)) pIpc.addAssociate({
 		id,
 		dir: item.dir,
 		type: item.type,
@@ -53001,7 +53253,7 @@ function associate(id, type, item) {
 }
 var getStep = (id) => {
 	let index;
-	switch (id) {
+	switch (getOriginalCardId(id)) {
 		case AvailableModules.sdForge:
 		case AvailableModules.comfyui:
 		case AvailableModules.comfyuiZluda:
@@ -53025,9 +53277,7 @@ var getStep = (id) => {
 		case AvailableModules.invoke:
 		case AvailableModules.openWebui:
 		case AvailableModules.langFlow:
-		default:
-			index = 1;
-			break;
+		default: index = 1;
 	}
 	return {
 		index,
@@ -53039,7 +53289,7 @@ var getStep = (id) => {
 //#region extension/src/renderer/ListenForEvents.ts
 function listenForEvents(lynxAPI) {
 	lynxAPI.events.on("card_install_addStep", ({ id, addStep }) => {
-		if (ModulesThatSupportPython.includes(id)) {
+		if (isPythonSupportedModule(id)) {
 			const { index, title, content } = getStep(id);
 			addStep(index, title, content);
 		}
@@ -53047,12 +53297,15 @@ function listenForEvents(lynxAPI) {
 	lynxAPI.ipcEvents.onChannel("before", storageUtilsChannels.addInstalledCard, (event) => {
 		if (event.method !== "send") return;
 		const [cardData] = event.args;
-		pIpc.findAIVenv(cardData.id, cardData.dir);
+		pIpc.findAIVenv(cardData.id, cardData.dir).catch((err) => {
+			console.error(`Error finding AI venv for card ${cardData.id}:`, err);
+		});
 	});
 }
 //#endregion
 //#region extension/src/renderer/Extension.tsx
 function InitialExtensions(lynxAPI) {
+	lynxAPI.initBrowserSentry(SENTRY_DSN);
 	if (lynxAPI.tabs) setTheActivePage(lynxAPI.tabs.setActivePage);
 	setCards(lynxAPI.modulesData?.allCards || []);
 	if (lynxAPI.toast) setToast(lynxAPI.toast);
@@ -53093,3 +53346,5 @@ function InitialExtensions(lynxAPI) {
 }
 //#endregion
 export { InitialExtensions as t };
+
+//# sourceMappingURL=Extension-CNAXAMyF.js.map
