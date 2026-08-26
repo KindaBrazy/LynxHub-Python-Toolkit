@@ -115,7 +115,7 @@
       "date": "2026-08-26",
       "items": [
         {
-          "📌 Improvements": [
+          "⚡ Improvements": [
             "Added support for duplicated cards dependencies.",
             "Added python executable validation before using it.",
             "Improved error handling for cards venv finder."
@@ -138,7 +138,7 @@
       "date": "2026-07-23",
       "items": [
         {
-          "📌 Improvements": [
+          "⚡ Improvements": [
             "Added support for ChatTTS.",
             "Added support for LlamaFactory.",
             "Added support for Langflow."
@@ -151,7 +151,7 @@
       "date": "2026-07-13",
       "items": [
         {
-          "📌 Improvements": [
+          "⚡ Improvements": [
             "The toolkit now opens directly on the page instead of in a modal.",
             "Cards can now be pinned and displayed within home categories."
           ]
@@ -163,7 +163,7 @@
       "date": "2026-06-30",
       "items": [
         {
-          "📌 Improvements": [
+          "⚡ Improvements": [
             "Refined scrollbar styling for a cleaner UI.",
             "Added official support for LynxHub v3.5.5"
           ]
